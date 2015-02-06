@@ -29,7 +29,13 @@ var app = angular.module('InterventionApp', ['ngTable','truncate']).
         });
     }
 
-
+        $http.get('/data/interventions/all').success(function(data) {
+           console.timeEnd("get interventions data");
+            $scope.newData = data;
+            $scope.tableParams.reload();
+            $scope.tableParams.total(data.length)
+          });
+        });
                                                     // Limit the results to 25 on the first shot
     $scope.getInterventionList({ q: "", limit: 100, sort: "-numOs"}, function(data) {
         $scope.newData = data;
@@ -58,13 +64,7 @@ var app = angular.module('InterventionApp', ['ngTable','truncate']).
 
          console.time("get interventions data");
 
-        $http.get('/data/interventions/all').success(function(data) {
-           console.timeEnd("get interventions data");
-            $scope.newData = data;
-            $scope.tableParams.reload();
-            $scope.tableParams.total(data.length)
-          });
-        });
+
         /* --------------------- */
         /*     BOOTSTRAP THEME   */
         /* --------------------- */ 

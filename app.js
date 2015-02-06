@@ -34,7 +34,7 @@ var port = (process.env.PORT || 8080);
     app.use(cookieParser());
     app.use(express.static(path.join(__dirname, 'public')));
     app.use(express.static(path.join(__dirname, 'bower_components')));
-   // app.use(require('compression')());  
+    app.use(require('compression')());  
 
     app.use('/', routes);
     app.use('/users', users);
