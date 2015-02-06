@@ -21,6 +21,16 @@ router.get('/data/interventions/find/:query', function(req, res) {
 });
 
 
+router.get('/cache', function(req, res) {
+        req.app.get("schemaDB").interventionModel.find()
+        .sort('-numOs')
+        .select('-_id -__v -commentaires -produits -remarque -prixFinal ')
+        .exec(function (err, interList){ 
+        req.app.get("cache").put("all", interList);
+        res.send(req.app.get("cache").get("all"));
+      }); 
+});
+
 router.get('/data/interventions/all', function(req, res) {
      console.log("get cache", Date.now());
     var data = req.app.get("cache").get("all");
@@ -38,6 +48,15 @@ router.get('/data/interventions/all', function(req, res) {
       }); 
     }
 });
+
+/*
+query             1423187577384
+get cache         1423187577489  105
+send cached       1423187577490  106
+send cached fin   1423187580293  2909
+results           1423187585063  7 679
+
+*/
 
 
 
