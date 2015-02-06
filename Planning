@@ -1,0 +1,55 @@
+
+MODULE INTERVENTION
+
+	Liste des interventions
+
+			- Demander a ben pour la fusion ajoutePar - modifiePar - envoyePar
+			- hamburger menu sidebar:
+				interventions
+					en cours
+					a verifier
+					annulés
+				Devis
+					en cours
+					envoyé
+					en attente
+				Relaces
+					facture mais pas de reglement client
+					Intervenu mais pas de cheque recu
+
+			- Formulaire d'ajout Intervention
+
+			- Server/client api pour Update des infos d'une intervention (sécurisé)
+
+			- Accordéon EdisonPro pour prévisualiser les infos
+
+			- Filtres pour chaques liste d'intervention :
+
+				Group by Jour
+
+				Selecteurs jours/semaine/mois  | telepro | etats
+
+			- Context Menu personnalisé -> fonctions
+
+			- Checkbox + ContextMenuMultiple
+
+			- Switch plus grosse images/ligne
+
+	Fiche D'intervention
+
+			- Virer les trucs Inutiles
+			- Sauvegarder les données dans les EVENTS
+
+	Profil 
+			- Photo Employé du moi
+			- Stats d'interventions
+			- Historique Logs
+			- Heures d'arrivés departs
+			- Classement Ligue 1
+
+	Tableau de bords
+			- Classement + inter (V1)
+			- Historique Logs
+
+Module Comptabilité
+

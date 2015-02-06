@@ -1,0 +1,71 @@
+<!--   <div id="sidebar" class="sidebar-offcanvas">
+  
+      <div class="col-md-12">
+         <h3>Vues</h3>
+         <br>
+        <ul class="nav nav-pills nav-stacked" ng-repeat="fltr in interFilters">
+          <li ng-class="{active : fltr.id == selectedFilter}" ng-click="changeFilter($index)">
+              <a href="#loltoto">{{fltr.title}}</a>
+           </li>
+        </ul> 
+      </div>
+  </div> -->
+
+<div class="side-menu">
+    
+
+
+
+    <!-- Main Menu -->
+ <div class="side-menu-container">
+  <ul class="nav navbar-nav">
+   <li style="height: 74px;border: none;" >
+        <h3 style="float:left;margin-left:10%;margin-top:7%">Vues</h3>
+        <button type="button" class="btn" style="background:transparent;float:right;margin-top: 6px;">
+        <span style="color: black;" class="fa fa-align-justify fa-2x"></span></button></a></li>
+   <li><a href="#"><span class="glyphicon glyphicon-send"></span>Nouvelle Intervention</a></li>
+
+      <!-- Dropdown-->
+  <li class="panel panel-default" id="dropdown" >
+      <a data-toggle="collapse" href="#dropdown-lvl1"  ng-click="changeFilter(0)">
+          <span class="glyphicon glyphicon-user"></span> Interventions <span class="caret"></span>
+      </a>
+      <!-- Dropdown level 1 -->
+      <div id="dropdown-lvl1" class="panel-collapse collapse"><div class="panel-body"><ul class="nav navbar-nav">
+                    <li 
+                     ng-click="changeFilter($index)" ng-repeat="fltr in interFilters | filter:{ type: 0 }" ng-class="{'active-filter' : $index == selectedFilter}">
+                    <a href="#" >{{fltr.title}}</a></li>
+                </ul>
+            </div>
+        </div>
+    </li>
+  <li class="panel panel-default" id="dropdown" >
+      <a data-toggle="collapse" href="#dropdown-lvl2"  >
+          <span class="glyphicon glyphicon-user"></span> Devis <span class="caret"></span>
+      </a>
+      <!-- Dropdown level 1 -->
+      <div id="dropdown-lvl2" class="panel-collapse collapse"><div class="panel-body"><ul class="nav navbar-nav">
+                    <li 
+                     ng-click="changeFilter($index)" ng-repeat="fltr in interFilters | filter:{ type: 1 }" ng-class="{'active-filter' : $index == selectedFilter}">
+                    <a href="#" >{{fltr.title}}</a></li>
+                </ul>
+            </div>
+        </div>
+    </li>
+      <li class="panel panel-default" id="dropdown" >
+      <a data-toggle="collapse" href="#dropdown-lvl3">
+          <span class="glyphicon glyphicon-user"></span> Relances <span class="caret"></span>
+      </a>
+      <!-- Dropdown level 1 -->
+      <div id="dropdown-lvl3" class="panel-collapse collapse"><div class="panel-body"><ul class="nav navbar-nav">
+                    <li 
+                     ng-click="changeFilter($index)" ng-repeat="fltr in interFilters | filter:{ type: 2 }" ng-class="{'active-filter' : $index == selectedFilter}">
+                    <a href="#" >{{fltr.title}}</a></li>
+                </ul>
+            </div>
+        </div>
+    </li>
+        </ul>
+    </div><!-- /.navbar-collapse -->
+
+    </div>

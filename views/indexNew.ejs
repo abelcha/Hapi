@@ -1,0 +1,120 @@
+
+
+
+<!DOCTYPE html>
+<html ng-app="InterventionApp">
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">   
+  <link rel="shortcut icon" href="/img/favicon.ico" />
+  <link rel="stylesheet"  href="/ng-table/ng-table.css">
+  <link id="BootstrapDefaultTheme" rel="stylesheet" href="/bootswatch/sandstone/bootstrap.css">
+  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/nprogress/nprogress.css">
+  <style type="text/css">
+  </style>
+  </head>
+  <body oncontextmenu="return false;" ng-controller="InterventionController as interCtrl" >
+    <% include partials/navbar %>
+
+    <title>All</title>
+<div class="row-offcanvas row-offcanvas-left">
+<%include partials/sidebar %>
+  <div id="main">
+  <%include partials/topFilters %>
+
+    <div class="col-md-12" style="height:250px;pointer-events: none;" ></div>
+    <div class="col-md-12" id="main-table" >
+          <table style="background:white;" ng-table="tableParams" class="table table-bordered table-hover table-hover table-striped" id="table-list"  show-filter="true">
+            <tbody id="tbody-list">
+              <tr data-id="{{info.numOs}}" ng-repeat-start="info in $data" ng-click="ClickOnRow($event, info.numOs)"  ng-class="{warning : isInSelection(info.numOs)}" >
+                <td  data-title="'OS'" sortable="'numOs'" filter="{ 'numOs': 'text' }">
+                    <strong>{{info.numOs}}</strong>
+                </td>
+                <td data-title="'Ajouté Par'" sortable="'ajoutepar'" filter="{ 'ajoutePar': 'text' }">
+                  {{info.ajoutePar}}
+                </td>
+                <td  data-title="'Cat.'" sortable="'categorie'" filter="{ 'categorie': 'text' }">
+                   <img  ng-src="/img/categorie/{{info.categorie}}2.png" alt="" style="width:28px;max-height: 28px;">
+                </td>
+                <td class="date-length" data-title="'Date Ajout'" sortable="'dateAjout'" filter="{ 'dateAjout': 'text' }">
+                      {{info.dateAjout | date:"dd/MM/yy"}}
+                      {{info.dateAjout | date:"HH'h'mm"}}
+                </td>
+                <td class="variable-length" data-title="'Client'" sortable="'nom'" filter="{ 'nom': 'text' }">
+                  {{info.civilite}}
+                  <strong>{{info.nom |  characters:18 :true}}</strong>  
+                </td>
+                <td  class="variable-length" data-title="'Ville'" sortable="'ville'" filter="{ 'ville': 'text' }">
+                    {{info.ville  |  characters:15 :true }}
+                </td>
+                <td   data-title="'CP'" sortable="'cp'" filter="{ 'cp': 'text' }">
+                  <strong> {{info.cp.substring(0,2)}}</strong>{{info.cp.substring(2,5)}}
+                </td>
+                <td  class="variable-length" data-title="'Artisan'" sortable="'artisan'" filter="{ 'artisan': 'text' }">
+                    <strong>{{interCtrl.artisan[info.artisan] |  characters:15 :true || ""}}</strong>
+                </td>
+                <td class="date-length"  data-title="'Date Intervention'" sortable="'dateInter'" filter="{ 'dateInter': 'text' }">
+                  <!-- the date is not 01/01/1970 -->
+                    <div ng-show="info.dateInter[0] != 1">
+                      {{info.dateInter | date:"MM/dd/yy" || ""}}
+                      {{info.dateInter | date:"hh'h'mm" || ""}}
+                    </div>
+                </td>
+                <td  data-title="'Etat Inter'" sortable="'etatInter'" >
+                   <img  ng-src="/img/etat/etat2_{{info.etatInter}}.png" alt="" style="width:25px">
+                </td>
+              </tr>
+              <tr style="display:none"></tr>
+              <tr ng-repeat-end ng-show="rowIsClicked(info.numOs);">
+                <td colspan="42">
+                  <div style="height:300px;background:white"> 
+                  <div style="float:left;text-align:left;margin:30px">
+                  {{info.civilite}}
+                  <strong>{{info.nom}}</strong>
+                  <br>
+                  {{info.description}}
+                  <br>
+                  {{info.numero}} {{info.rue}} {{info.cp}}, {{info.ville}}
+                  <br>
+                  <strong>{{interCtrl.artisan[info.artisan] || ""}}</strong>
+                  </div>
+                      <img  style="height:280px;float:right;margin-right:30px;margin-left:30px" ng-if="info.numOs == clickedRow" ng-src="https://maps.googleapis.com/maps/api/staticmap?center=46.52863469527167,2.43896484375&markers=color:red%7Clabel:S%7C{{info.lat}},{{info.lng}}&zoom=5&size=330x330&key=AIzaSyDfbBWT4mYv_Qig4LVl3LQKuAimAzfEblk">
+ <!--                     <img  style="height:280px;float:right" ng-if="info.numOs == clickedRow" 
+                      ng-src="https://maps.googleapis.com/maps/api/staticmap?center={{info.lat}},{{info.lng}}&markers=color:red%7Clabel:S%7C{{info.lat}},{{info.lng}}&zoom=10&size=280x280&key=AIzaSyDfbBWT4mYv_Qig4LVl3LQKuAimAzfEblk">
+ -->
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+    <br><br><br><br><br>
+    </div>
+    <% include partials/context %>
+
+  </div>
+
+
+</div><!--/row-offcanvas -->
+   
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.8/angular.min.js"></script>
+    <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/angular-bootstrap/ui-bootstrap.min.js"></script>
+    <script type="text/javascript" src="/ng-table/ng-table.js"></script> 
+    <script type="text/javascript"  src="/angular-truncate/src/truncate.js"></script>
+    <script src="/js/artisans.js"></script>
+    <script type="text/javascript"  src="/nprogress/nprogress.js"></script>
+    <script src="/js/InterventionController.js"></script>
+  <script type="text/javascript">
+
+//Temporary hack got to change this with factory/angular
+function changeTheme(theme) {
+    $('#BootstrapDefaultTheme').attr("href", "/bootswatch/" + theme + "/bootstrap.css")
+  }
+
+</script>
+  </body>
+</html>
