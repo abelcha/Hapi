@@ -1,8 +1,6 @@
 var express = require('express');
 var app = express();
 var http = require('http').Server(app);
-var io = require('socket.io')(http);
-
 var port = (process.env.PORT || 8080);
 
 // Configuration of the server 
@@ -70,14 +68,6 @@ var port = (process.env.PORT || 8080);
     //         error: {}
     //     });
     // });
-
-io.on('connection', function(socket){
-  console.log('a user connected');
-   socket.on('message', function(msg){
-    console.log(msg);
-    io.emit('message', msg);
-  });
-});
 
 
 http.listen(port, function(){
