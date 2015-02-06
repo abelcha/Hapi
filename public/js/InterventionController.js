@@ -57,15 +57,14 @@ var app = angular.module('InterventionApp', ['ngTable','truncate']).
                // Then get all the inters
 
          console.time("get interventions data");
-        console.log("query ", Date.now());
+
         $http.get('/data/interventions/all').success(function(data) {
-          console.log("results ", Date.now());
            console.timeEnd("get interventions data");
-          $scope.newData = data;
-          $scope.tableParams.reload();
-          $scope.tableParams.total(data.length)
+            $scope.newData = data;
+            $scope.tableParams.reload();
+            $scope.tableParams.total(data.length)
+          });
         });
-    });
         /* --------------------- */
         /*     BOOTSTRAP THEME   */
         /* --------------------- */ 
