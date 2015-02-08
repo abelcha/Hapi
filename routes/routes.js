@@ -11,6 +11,15 @@ router.get('/data/interventions/find/:query', function(req, res) {
   }); 
 });
 
+router.get('/clearCache', function(req, res) {
+        req.app.get("schemaDB").interventionModel.find()
+        .sort('-numOs')
+        .select('-_id id telepro dateAjout add.v add.cp sst cat nom civ pmntCli pmntSst etat dateInter')
+        .exec(function (err, interList){ 
+        req.app.get("cache").put("all", interList);
+        res.json(interList);
+      }); 
+});
 
 router.get('/data/interventions/all', function(req, res) {
 
@@ -20,7 +29,7 @@ router.get('/data/interventions/all', function(req, res) {
     } else {
         req.app.get("schemaDB").interventionModel.find()
         .sort('-numOs')
-        .select('id telepro dateAjout add sst cat nom prenom civ pmntCli pmntSst etat dateInter')
+        .select('id telepro dateAjout add.ville add.cp sst cat nom prenom civ pmntCli pmntSst etat dateInter')
         .exec(function (err, interList){ 
         req.app.get("cache").put("all", interList);
         res.json(interList);
