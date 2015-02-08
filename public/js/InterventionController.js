@@ -408,19 +408,44 @@ $scope.isInSelection = function(id) {
 
 
       $scope.toggleSidebar = function(i) {
-        if ($('.side-menu').css('margin-left') == "0px") {
+        var offset = (typeof i !== 'undefined' ? 77 : 0); 
+        if (i == 0 || $('.side-menu').css('margin-left') == "0px") {
            $(".side-menu>div>ul>li:not(.toggleButton)").css("visibility", "hidden")
-           $('.side-body').css('margin-left', "63px");
-           $('.side-menu').css('margin-left', "-160px");
+           $('.side-body').css('margin-left', (  63 - offset) +"px");
+           $('.side-menu').css('margin-left', (-160 - offset) + "px");
 
         }
         else {
-           $('.side-body').css('margin-left', "220px");
+           $('.side-body').css('margin-left', (offset ? 0 :220) + "px");
            $('.side-menu').css('margin-left', "0px");
            $(".side-menu>div>ul>li:not(.toggleButton)").css("visibility", "visible")
         }
         $('.fa-bars.fa-2x').toggleClass('fa-rotate-270');
       }
+
+
+
+  //responsivité
+  $scope.wResize = function() {
+      var wSize = $(window).width();
+       if (wSize < 480)
+         $scope.rowPriority = 4;
+       else if (wSize < 768)
+        $scope.rowPriority = 3;
+      else if (wSize < 992)
+         $scope.rowPriority = 2;
+      else if (wSize < 1200)
+          $scope.rowPriority = 1;
+      else
+          $scope.rowPriority = 0;
+  };
+
+  $( window ).resize(function() {
+
+    $scope.wResize();
+    console.log($scope.rowPriority);
+  });
+  $scope.wResize();
 
 
 }).config(['$locationProvider', function($locationProvider){

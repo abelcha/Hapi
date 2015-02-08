@@ -13,7 +13,7 @@
   <style type="text/css">
   </style>
   </head>
-  <body oncontextmenu="return false;" ng-controller="InterventionController as interCtrl" >
+  <body oncontextmenu="return false;" ng-controller="InterventionController as interCtrl" ng-swipe-right="toggleSidebar();" ng-swipe-left="toggleSidebar(0);">
  <% include partials/navbar %> 
 
 
@@ -27,9 +27,6 @@
     <!-- Main Content -->
     <div class="container-fluid">
         <div class="side-body">
-         <div class="jumbotron" style="height:200px" ng-swipe-left="lol = 'toto'">
-           {{lol}}
-         </div>
 
           <%include partials/tabs %>
           <table style="background:white;" ng-table="tableParams" class="table table-bordered table-hover table-hover table-striped" id="table-list"  show-filter="true">
@@ -46,7 +43,7 @@
                      {{info.cat}}
                    </button>
                 </td>
-                <td class="date-length" data-title="'Date Ajout'" sortable="'dateAjout'" filter="{ 'dateAjout': 'text' }">
+                <td class="date-length" data-title="'Date Ajout'" sortable="'dateAjout'" filter="{ 'dateAjout': 'text' }" >
                       {{info.dateAjout | date:"dd/MM/yy"}}
                       {{info.dateAjout | date:"HH'h'mm"}}
                 </td>
