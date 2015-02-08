@@ -24,6 +24,7 @@ var port = (process.env.PORT || 8080);
     app.set('view engine', 'ejs');
     app.set("schemaDB", require("./modules/schemaDB.js"))
     app.set("cache", require('memory-cache'));
+    app.set("jsonpack", require('jsonpack/main'))
     // uncomment after placing your favicon in /public
     //app.use(favicon(__dirname + '/public/favicon.ico'));
     //app.use(logger('dev'));

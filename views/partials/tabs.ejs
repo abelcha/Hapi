@@ -1,0 +1,28 @@
+<div class="col-md-12" style="padding:0">
+            <div class="panel with-nav-tabs panel-default" style="margin:0">
+                <div class="panel-heading">
+                    <ul class="nav nav-tabs hidden-xs hidden-sm">
+                        <li ng-click='setTelepro(-1)' ng-class="selectedTelepro === -1 ? 'active' : ''" >
+                             <a href="javascript:void(0)">Tous</a></li>
+                        <li ng-click='setTelepro($index)'
+                            ng-class="$index == selectedTelepro ? 'active' : ''" 
+                            ng-repeat="t in telepro"><a href="javascript:void(0)">{{t.name}}</a>
+                        </li>
+                    </ul>
+
+                    <ul class="nav nav-tabs dropdown hidden-md hidden-lg">
+                        <li >
+                            <a href="#" data-toggle="dropdown">Télépro <span class="caret"></span></a>
+                                <ul class="dropdown-menu" role="menu">
+                          <li ng-click='setTelepro(-1)' ng-class="selectedTelepro === -1 ? 'active' : ''" >
+                             <a href="javascript:void(0)">Tous</a></li>
+                        <li ng-click='setTelepro($index)'
+                            ng-class="$index == selectedTelepro ? 'active' : ''" 
+                            ng-repeat="t in telepro"><a href="javascript:void(0)">{{t.name}}</a>
+                        </li>
+                                </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>

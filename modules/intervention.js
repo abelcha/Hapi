@@ -24,43 +24,42 @@ exports.translateData = function(data, callback) {
 		var tmp = {
 
 			//	InfoAuto
-					numOs : d.id,
-					ajoutePar: d.ajoute_par,
-					dateAjout: new Date(d.t_stamp * 1000),
-					modifiePar: d.modifie_par,
-
+					id: 		d.id,
+					telepro: 	d.ajoute_par,
+					dateAjout: 	new Date(d.t_stamp * 1000),
 			//	},
 			//	InfoIntervention : {
-					categorie: d.categorie,
-					artisan: d.id_sst_selectionne,
-					etatInter: d.etat_intervention,
+					cat: 		d.categorie,
+					sst: 		d.id_sst_selectionne,
+					etat: 		d.etat_intervention,
 					dateInter:  new Date(d.t_stamp_intervention * 1000),
-					description: d.description,
-					remarque: d.remarque,
-					commentaires: [{c: d.remarque_interne, a:null, d:null}],
-					produits : d.devis,
-					prixAnnonce:d.prix_ht_annonce,
-					prixFinal: d.prix_ht_final,
+					desc: 		d.description,
+					remarque: 	d.remarque,
+					comments: 	[{c: d.remarque_interne, a:null, d:null}],
+					produits : 	d.devis,
+					prixAnn: 	d.prix_ht_annonce,
+					prixFin: 	d.prix_ht_final,
 			//	},
 
 			//	InfoClient : {
-					civilite: d.civilite,
-					prenom: d.prenom,
-					nom: d.nom,
-					email: d.email,
-					telephone: d.tel1,
+					civ: 		d.civilite,
+					prenom: 	d.prenom,
+					nom: 		d.nom,
+					email: 		d.email,
+					telephone: 	d.tel1,
 			//		adresse: {
-						numero: d.numero,
-						rue: d.adresse,
-						ville: d.ville,
-						cp: d.code_postal,
-						lat: d.lat,
-						lng: d.lng,
-			//		}
+					add: {
+						n: 		d.numero,
+						r: 		d.adresse,
+						v: 		d.ville,
+						cp: 	d.code_postal,
+						lt: 	d.lat,
+						lg: 	d.lng,
+					},
 			//	}
 			//infocompta : {
-				paiementArtisan: d.date_paiement_client == null ? null : new Date(d.date_paiement_client * 1000),
-				paiementClient: d.date_paiement_sst == null ? null : new Date(d.date_paiement_sst * 1000)
+					pmntCli: d.date_paiement_client == null ? null : new Date(d.date_paiement_client * 1000),
+					pmntSst: d.date_paiement_sst == null ? null : new Date(d.date_paiement_sst * 1000)
 
 			// }
 		};

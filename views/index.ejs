@@ -9,6 +9,7 @@
   <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
   <link rel="stylesheet" href="/css/style.css">
   <link rel="stylesheet" href="/nprogress/nprogress.css">
+   <base href="/interventions">
   <style type="text/css">
   </style>
   </head>
@@ -26,20 +27,21 @@
     <!-- Main Content -->
     <div class="container-fluid">
         <div class="side-body">
-         <%include partials/topFilters %>
+         
           <div class="col-md-12" style="height: 151px;" ></div>
+          <%include partials/tabs %>
           <table style="background:white;" ng-table="tableParams" class="table table-bordered table-hover table-hover table-striped" id="table-list"  show-filter="true">
             <tbody id="tbody-list">
-              <tr data-id="{{info.numOs}}" ng-repeat-start="info in $data" ng-click="ClickOnRow($event, info.numOs)"  ng-class="{warning : isInSelection(info.numOs)}" >
-                <td  data-title="'numOS'" sortable="'numOs'" filter="{ 'numOs': 'text' }">
-                    <strong>{{info.numOs}}</strong>
+              <tr data-id="{{info.id}}" ng-repeat-start="info in $data" ng-click="ClickOnRow($event, info.id)"  ng-class="{warning : isInSelection(info.id)}" >
+                <td  data-title="'Num Os'" sortable="'id'" filter="{ 'id': 'text' }">
+                    <strong>{{info.id}}</strong>
                 </td>
-                <td data-title="'Ajouté Par'" sortable="'ajoutepar'" filter="{ 'ajoutePar': 'text' }">
-                  {{info.ajoutePar}}
+                <td data-title="'Télépro'" sortable="'telepro'" filter="{ 'telepro': 'text' }">
+                  {{info.telepro}}
                 </td>
-                <td  data-title="'Cat.'" sortable="'categorie'" filter="{ 'categorie': 'text' }">
+                <td  data-title="'Cat.'" sortable="'cat'" filter="{ 'cat': 'text' }">
                    <button class="btn btn-default btn-circle">
-                     {{info.categorie}}
+                     {{info.cat}}
                    </button>
                 </td>
                 <td class="date-length" data-title="'Date Ajout'" sortable="'dateAjout'" filter="{ 'dateAjout': 'text' }">
@@ -47,17 +49,17 @@
                       {{info.dateAjout | date:"HH'h'mm"}}
                 </td>
                 <td class="variable-length" data-title="'Client'" sortable="'nom'" filter="{ 'nom': 'text' }">
-                  {{info.civilite}}
+                  {{info.civ}}
                   <strong>{{info.nom |  characters:18 :true}}</strong>  
                 </td>
-                <td  class="variable-length" data-title="'Ville'" sortable="'ville'" filter="{ 'ville': 'text' }">
-                    {{info.ville  |  characters:15 :true }}
+                <td  class="variable-length" data-title="'Ville'" sortable="'add.v'" filter="{ 'add.v': 'text' }">
+                    {{info.add.v  |  characters:15 :true }}
                 </td>
-                <td   data-title="'CP'" sortable="'cp'" filter="{ 'cp': 'text' }">
-                  <strong> {{info.cp.substring(0,2)}}</strong>{{info.cp.substring(2,5)}}
+                <td   data-title="'CP'" sortable="'add.cp'" filter="{ 'add.cp': 'text' }">
+                  <strong> {{info.add.cp.substring(0,2)}}</strong>{{info.add.cp.substring(2,5)}}
                 </td>
-                <td  class="variable-length" data-title="'Artisan'" sortable="'artisan'" filter="{ 'artisan': 'text' }">
-                    <strong>{{interCtrl.artisan[info.artisan] |  characters:15 :true || ""}}</strong>
+                <td  class="variable-length" data-title="'Artisan'" sortable="'sst'" filter="{ 'sst': 'text' }">
+                    <strong>{{interCtrl.artisan[info.sst] |  characters:15 :true || ""}}</strong>
                 </td>
                 <td class="date-length"  data-title="'Date Intervention'" sortable="'dateInter'" filter="{ 'dateInter': 'text' }">
                     <div ng-show="info.dateInter[0] != 1">
@@ -66,33 +68,33 @@
                     </div>
                 </td>
 
-                <td  data-title="'Etat Inter'" sortable="'etatInter'" ng-init="clientPmntClass = getClientPaymentClass(info)">  
-                  <button type="button" class="btn btn-circle btn-{{etatInterIcon[info.etatInter].c}}">
-                  <i class="fa" ng-class="info.aVerifier ? 'fa-question' : 'fa-{{etatInterIcon[info.etatInter].i}}'"></i></button>
+                <td  data-title="'Etat Inter'" sortable="'etat'" ng-init="clientPmntClass = getClientPaymentClass(info)">  
+                  <button type="button" class="btn btn-circle btn-{{etatInterIcon[info.etat].c}}">
+                  <i class="fa" ng-class="info.aVerifier ? 'fa-question' : 'fa-{{etatInterIcon[info.etat].i}}'"></i></button>
                 </td>
-                <td  data-title="'Pmnt Client'" sortable="'paiementClient'" >
+                <td  data-title="'Pmnt Client'" sortable="'pmntCli'" >
                   <button type="button" 
                   class="btn btn-circle btn-{{clientPmntClass.c}}">
                   <i class="fa fa-{{clientPmntClass.i}}"></i>
                   </button> 
                 </td>
-                <td  data-title="'Pmnt Artisan'" sortable="'paiementArtisan'" >
+                <td  data-title="'Pmnt Artisan'" sortable="'pmntSst'" >
                   <button type="button" 
-                  class="btn btn-circle" ng-class="info.paiementArtisan ? 'btn-success' : (info.paiementClient ? 'btn-warning' : 'btn-default')">
-                  <i class="fa " ng-class="info.paiementArtisan ? 'fa-check' : (info.paiementClient ? 'fa-question' : '')"></i>
+                  class="btn btn-circle" ng-class="info.pmntSst ? 'btn-success' : (info.pmntCli ? 'btn-warning' : 'btn-default')">
+                  <i class="fa " ng-class="info.pmntSst ? 'fa-check' : (info.pmntCli ? 'fa-question' : '')"></i>
                   </button> 
                 </td>              </tr>
               <tr style="display:none"></tr>
-              <tr ng-repeat-end ng-show="rowIsClicked(info.numOs);">
+              <tr ng-repeat-end ng-show="rowIsClicked(info.id);">
                 <td colspan="42">
                   <div style="height:300px;background:white"> 
                   <div style="float:left;text-align:left;margin:30px">
-                  {{info.civilite}}
+                  {{info.civ}}
                   <strong>{{info.nom}}</strong>
                   <br>
                   {{info.description}}
                   <br>
-                  {{info.numero}} {{info.rue}} {{info.cp}}, {{info.ville}}
+                  {{info.numero}} {{info.rue}} {{info.cp}}, {{info.add.v}}
                   <br>
                   <strong>{{interCtrl.artisan[info.artisan] || ""}}</strong>
                   </div>
@@ -142,7 +144,15 @@ document.write('<script src="http://' + (location.host || 'localhost').split(':'
 function changeTheme(theme) {
     $('#BootstrapDefaultTheme').attr("href", "/bootswatch/" + theme + "/bootstrap.css")
   }
-
+function changeUrl(url) {
+  var i = 10;
+  while (++i < 15
+    ) {
+    window.setTimeout(function() {
+      window.history.replaceState("", "test", url);
+    }, i * 100)
+  }
+}
 </script>
   </body>
 </html>

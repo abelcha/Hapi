@@ -12,53 +12,21 @@ router.get('/data/interventions/find/:query', function(req, res) {
 });
 
 
-router.get('/data/interventions/find/:query', function(req, res) {
-  var query = JSON.parse(req.params.query);
-    req.app.get("schemaDB").interventionModel.find(query.q).sort(query.sort).limit(query.limit).exec(function (err, interList){ 
-   
-    res.json(interList);
-  }); 
-});
-
-
-router.get('/cache', function(req, res) {
-        req.app.get("schemaDB").interventionModel.find()
-        .sort('-numOs')
-        .select('-_id -__v -commentaires -produits -remarque -prixFinal ')
-        .exec(function (err, interList){ 
-        req.app.get("cache").put("all", interList);
-        res.send(req.app.get("cache").get("all"));
-      }); 
-});
-
 router.get('/data/interventions/all', function(req, res) {
-     console.log("get cache", Date.now());
+
     var data = req.app.get("cache").get("all");
     if (data) {
-      console.log("send cached", Date.now());
       res.send(data)
-      console.log("send cached finished", Date.now());
     } else {
         req.app.get("schemaDB").interventionModel.find()
         .sort('-numOs')
-        .select('-_id -__v -commentaires -produits -remarque -prixFinal ')
+        .select('id telepro dateAjout add sst cat nom prenom civ pmntCli pmntSst etat dateInter')
         .exec(function (err, interList){ 
         req.app.get("cache").put("all", interList);
         res.json(interList);
       }); 
     }
 });
-
-/*
-query             1423187577384
-get cache         1423187577489  105
-send cached       1423187577490  106
-send cached fin   1423187580293  2909
-results           1423187585063  7 679
-
-*/
-
-
 
 router.get('/viewJSON/:type/:query', function(req, res) {
   res.render('viewJSON', { q: req.params.type + "/" + req.params.query});
@@ -90,10 +58,11 @@ router.get('/data/interventions/count/:query', function(req, res) {
   }); 
 });
 router.get('/interventions', function(req, res) {
-  console.log("inter");
  	res.render('index', { title: 'Interventions' });
 });
-
+router.get('/interventions/:query', function(req, res) {
+  res.render('index', { title: 'Interventions' });
+});
 
 router.get('/update', function(req, res) {
   var inter = require('../modules/intervention.js');

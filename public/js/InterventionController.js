@@ -1,7 +1,6 @@
 var app = angular.module('InterventionApp', ['ngTable','truncate']).
-  controller('InterventionController', function($scope, $filter, $http, ngTableParams) {
+  controller('InterventionController', function($scope, $filter, $http, $location, ngTableParams) {
     this.artisan = artisan;
-
                 /* ------------------------------*/
                 /*        CORE DATA LOADING      */
                 /*                               */
@@ -19,7 +18,7 @@ var app = angular.module('InterventionApp', ['ngTable','truncate']).
 
         });
     };
-                    
+     
           // Then get all the inters
     $scope.reloadInterventions = function($scope, $http, query) {
       $scope.getInterventionList(query, function(data) {
@@ -29,13 +28,6 @@ var app = angular.module('InterventionApp', ['ngTable','truncate']).
         });
     }
 
-        $http.get('/data/interventions/all').success(function(data) {
-           console.timeEnd("get interventions data");
-            $scope.newData = data;
-            $scope.tableParams.reload();
-            $scope.tableParams.total(data.length)
-          });
-        });
                                                     // Limit the results to 25 on the first shot
     $scope.getInterventionList({ q: "", limit: 100, sort: "-numOs"}, function(data) {
         $scope.newData = data;
@@ -63,7 +55,13 @@ var app = angular.module('InterventionApp', ['ngTable','truncate']).
                // Then get all the inters
 
          console.time("get interventions data");
-
+        $http.get('/data/interventions/all').success(function(data) {
+           console.timeEnd("get interventions data");
+            $scope.newData = data;
+            $scope.tableParams.reload();
+            $scope.tableParams.total(data.length)
+          });
+        });
 
         /* --------------------- */
         /*     BOOTSTRAP THEME   */
@@ -136,12 +134,12 @@ var app = angular.module('InterventionApp', ['ngTable','truncate']).
     // type : {0: Inteventions, 1:devis, 3:relances}
     $scope.interFilters = [
                     {type:0, title:"Toutes les Interventions",  cleanTitle:'All', filter: {}},
-                    {type:0,title:"Interventions en Cours", cleanTitle:'enCours', filter: {etatInter:"ENC"}},
-                    {type:0,title:"Interventions à Prog.", cleanTitle:'aProgrammer', filter: {etatInter:"APR"}},
-                    {type:0,title:"Interventions Annulés", cleanTitle:'annules', filter: {etatInter:"ANN"}},
-                    {type:0,title:"Interventions Confirmés", cleanTitle:'intervenu', filter: {etatInter:"INT"}},
-                    {type:0,title:"A Vérifié", cleanTitle:'aVerifier', filter: {etatInter:"INT"}}, // et pas payé
-                    {type:1,title:"Devis en cours", cleanTitle:'DevisEnCours', filter: {etatInter:"DEV"}},
+                    {type:0,title:"Interventions en Cours", cleanTitle:'enCours', filter: {etat:"ENC"}},
+                    {type:0,title:"Interventions à Prog.", cleanTitle:'aProgrammer', filter: {etat:"APR"}},
+                    {type:0,title:"Interventions Annulés", cleanTitle:'annules', filter: {etat:"ANN"}},
+                    {type:0,title:"Interventions Confirmés", cleanTitle:'confirmer', filter: {etat:"INT"}},
+                    {type:0,title:"A Vérifié", cleanTitle:'aVerifier', filter: {etat:"INT"}}, // et pas payé
+                    {type:1,title:"Devis en cours", cleanTitle:'DevisEnCours', filter: {etat:"DEV"}},
                     {type:1, title:"Devis Acceptés", cleanTitle:'DevisAccepte'},
                     {type:2, title:"Relances Clients", cleanTitle:'RelancesClients'},
                     {type:2, title:"Relances Artisan", cleanTitle:'RelancesArtisan'}
@@ -153,6 +151,7 @@ var app = angular.module('InterventionApp', ['ngTable','truncate']).
     $scope.changeFilter = function(fltr) {
         $scope.selectedFilter = fltr;
         $scope.tableParams.$params.filter = $scope.interFilters[fltr].filter;
+        $scope.updateUrl();
     }
 
                 /* ------------------------------*/
@@ -161,12 +160,25 @@ var app = angular.module('InterventionApp', ['ngTable','truncate']).
                 /* ------------------------------*/  
 
 
+    $scope.updateUrl = function() {
+      $location.path("/interventions" + 
+                  "/" + ($scope.selectedTelepro !== -1 ? $scope.telepro[$scope.selectedTelepro].login : "All") +
+                  "/" +($scope.selectedDate ?  $scope.interDate[$scope.selectedDate] : "All"));
+      $location.hash($scope.interFilters[$scope.selectedFilter].cleanTitle);
+    };
+
     $scope.selectedTelepro = -1;
-    $scope.setSelectedTelepro = function(telepro) {
-       // $scope.$apply(function() {
-          $scope.selectedTelepro = telepro;
-        //});
+    $scope.setTelepro = function(telepro) {
+
+      if (telepro === -1) {
+         delete $scope.tableParams.$params.filter.telepro;
+      } else {
+          $scope.tableParams.$params.filter.telepro = $scope.telepro[telepro].login;
+      }
+      $scope.selectedTelepro = telepro;
+      $scope.updateUrl();
     }
+
     $scope.countTelepro = function(telepro) {
         // copy of telepro
         var tmp =  JSON.parse(JSON.stringify($scope.tableParams.$params.filter));
@@ -178,13 +190,24 @@ var app = angular.module('InterventionApp', ['ngTable','truncate']).
     };
     $scope.nbrDisplayed = 0;
     $scope.telepro = [
-      {name:"Benjamin", login:"boukris_b", id: 0},
-      {name:"Tayeb", login:"tayeb", id: 1},
-      {name:"Harald", login:"harald", id: 2},
-      {name:"Jeremie", login:"jeremie", id: 3},
-      {name:"Eliran", login:"eliran", id: 4},
-      {name:"Thomas", login:"thomas", id: 5},
+      {name:"Benjamin", login:"boukris_b"},
+      {name:"Tayeb", login:"tayeb"},
+      {name:"Harald", login:"harald"},
+      {name:"Jeremie", login:"jeremie"},
+      {name:"Eliran", login:"eliran"},
+      {name:"Thomas", login:"thomas"},
     ];
+
+
+    $scope.interDate = [
+      {cleanTitle:"All",    fr:"Toutes"},
+      {cleanTitle:"Today",  fr:"Jour"},
+      {cleanTitle:"Week",   fr:"Semaine"},
+      {cleanTitle:"Month",  fr:"Mois"},
+    ]
+    $scope.setDate = function(date) {
+
+    }
 
 
                 /* ------------------------------*/
@@ -346,10 +369,10 @@ $scope.isInSelection = function(id) {
 
         var dtInter = Date.parse(info.dateInter);
 
-        info.aVerifier = (info.etatInter == 'ENC' && (dtInter + hour) < Date.now());
-        if (info.paiementClient)
+        info.aVerifier = (info.etat == 'ENC' && (dtInter + hour) < Date.now());
+        if (info.pmntCli)
           return ({c: 'success', i:'check'});
-        if (info.etatInter == 'INT') {
+        if (info.etat == 'INT') {
           var dateDiff =  Date.now() - dtInter;
           return (dateDiff > (4 * week) ?  {c: 'danger',  i: 'warning'} : 
                   dateDiff > (2 * week) ?  {c: 'warning', i: 'question'} : 
@@ -364,4 +387,6 @@ $scope.isInSelection = function(id) {
 
 
 
-});
+}).config(['$locationProvider', function($locationProvider){
+    $locationProvider.html5Mode(true).hashPrefix('!');
+}]);;

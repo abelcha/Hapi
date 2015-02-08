@@ -9,39 +9,39 @@ module.exports.mongoose = mongoose;
 
 module.exports.interventionSchema = new mongoose.Schema({
 	//	InfoAuto 
-			numOs : Number,
-			ajoutePar: String,
-			dateAjout: Date,
-			modifiePar: String,
-
+			id : 		Number,
+			telepro: 	String,
+			dateAjout: 	Date,
 	//	InfoIntervention
-			dateInter: Date,
-			categorie: String,
-			artisan: Number,
-			etatInter: String,
-			description: String,
-			prixAnnonce: Number,
-			prixFinal: Number,
-			modeReglement:String,
-			remarque: String, 
-			commentaires:[],
-			produits: {},
+			dateInter:  Date,
+			cat: 		String,
+			sst: 		Number,
+			etat:  		String,
+			desc: 		String,
+			prixAnn: 	Number,
+			prixFin: 	Number,
+			modeRegl: 	String,
+			remarque: 	String, 
+			comments:   [],
+			produits:   {},
 
 	//	InfoClient
-			civilite: String,
-			prenom: String,
-			nom: String,
-			email: String,
-			telephone: String,
+			civ: 		String,
+			prenom: 	String,
+			nom: 		String,
+			email: 		String,
+			tel1: 		String,
 	//		adresse
-				numero: Number,
-				rue: String,
-				ville: String,
-				cp: String,
-				lat: Number,
-				lng: Number,
-		paiementArtisan: Date,
-		paiementClient: Date
+			add: {
+				n: 		Number,
+				r: 		String,
+				v: 		String,
+				cp: 	String,
+				lt: 	Number,
+				lg: 	Number,
+			},
+			pmntCli: 		Date,
+			pmntSst: 		Date
 	});
 
 module.exports.interventionModel = mongoose.model('intervention', module.exports.interventionSchema);
