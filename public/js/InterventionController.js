@@ -1,4 +1,4 @@
-var app = angular.module('InterventionApp', ['ngTable','truncate']).
+var app = angular.module('InterventionApp', ['ngTable','truncate', 'ngTouch']).
   controller('InterventionController', function($scope, $filter, $http, $location, ngTableParams) {
     this.artisan = artisan;
                 /* ------------------------------*/
@@ -114,6 +114,20 @@ var app = angular.module('InterventionApp', ['ngTable','truncate']).
     }
 
 
+          /* -------------------------------------------------------------*/
+          /* ----------------            FILTERS           ---------------*/
+          /* ----------------                              ---------------*/
+          /* -------------------------------------------------------------*/  
+
+    $scope.updateUrl = function() {
+      $location.path("/interventions" + 
+                  "/" + ($scope.selectedTelepro !== -1 ? $scope.telepro[$scope.selectedTelepro].url : "All") +
+                  "/" +($scope.selectedDate ?  $scope.interDate[$scope.selectedDate].url : "All"));
+
+
+    };
+
+
                 /* ------------------------------*/
                 /*        SELECTED FILTER        */
                 /*    Left Filter categories     */
@@ -121,37 +135,53 @@ var app = angular.module('InterventionApp', ['ngTable','truncate']).
 
     // date => 0 -> ajd / 1 => semaine / 2 => mois / 3 => ALL
 
-    $scope.interShortCuts = [
-      {idFilter:1, title:"En Cours", date: 0},
-      {idFilter:0, title:"Ajoutés",  date: 0},
-      {idFilter:2, title:"A Prog.",  date: 0},
-      {idFilter:5, title:"A Vérif.",  date: 2},
-      {idFilter:4, title:"Devis",  date: 0}
-
-    ];
-
 
     // type : {0: Inteventions, 1:devis, 3:relances}
-    $scope.interFilters = [
-                    {type:0, title:"Toutes les Interventions",  cleanTitle:'All', filter: {}},
-                    {type:0,title:"Interventions en Cours", cleanTitle:'enCours', filter: {etat:"ENC"}},
-                    {type:0,title:"Interventions à Prog.", cleanTitle:'aProgrammer', filter: {etat:"APR"}},
-                    {type:0,title:"Interventions Annulés", cleanTitle:'annules', filter: {etat:"ANN"}},
-                    {type:0,title:"Interventions Confirmés", cleanTitle:'confirmer', filter: {etat:"INT"}},
-                    {type:0,title:"A Vérifié", cleanTitle:'aVerifier', filter: {etat:"INT"}}, // et pas payé
-                    {type:1,title:"Devis en cours", cleanTitle:'DevisEnCours', filter: {etat:"DEV"}},
-                    {type:1, title:"Devis Acceptés", cleanTitle:'DevisAccepte'},
-                    {type:2, title:"Relances Clients", cleanTitle:'RelancesClients'},
-                    {type:2, title:"Relances Artisan", cleanTitle:'RelancesArtisan'}
+    $scope.interFilters = [{
+                title:"Interventions", 
+                icon:'truck',
+                list: [
+                      {id:0, title:"Toutes les Interventions",  cleanTitle:'All', filter: {}},
+                      {id:1, title:"Interventions en Cours", cleanTitle:'En_Cours', filter: {etat:"ENC"}},
+                      {id:2, title:"Interventions à Prog.", cleanTitle:'A_Programmer', filter: {etat:"APR"}},
+                      {id:3, title:"Interventions Annulés", cleanTitle:'Annules', filter: {etat:"ANN"}},
+                      {id:4, title:"Interventions Confirmés", cleanTitle:'Confirmer', filter: {etat:"INT"}},
+                      {id:5, title:"A Vérifié", cleanTitle:'aVerifier', filter: {etat:"INT"}}, // et pas payé
+                ]},{
+                 title:"Devis", 
+                 icon:'building-o',
+                 list: [
+                      {id:6,title:"Tous les Devis", cleanTitle:'DevisEnCours', filter: {etat:"DEV"}},
+                      {id:7,title:"Devis en cours", cleanTitle:'DevisEnCours', filter: {etat:"DEV"}},
+                      {id:8, title:"Devis Acceptés", cleanTitle:'DevisAccepte'},
+                ]},{
+                  title:"Relances",
+                  icon:'bell',
+                  list: [
+                      {id:9, title:"Relances Clients", cleanTitle:'RelancesClients'},
+                      {id:10, title:"Relances Artisan", cleanTitle:'RelancesArtisan'}
+                ]}
     ];
 
-    $scope.selectedFilter = 0;
-   
 
+    $scope.selectedFilter = 0;
+    $scope.getFilter = function(callback) {
+      $scope.interFilters.forEach(function(e, i) {
+          e.list.forEach(function(e, i){
+              if ($scope.selectedFilter == e.id)
+                callback(e);
+          })
+      })
+      return (null);
+    }
     $scope.changeFilter = function(fltr) {
         $scope.selectedFilter = fltr;
-        $scope.tableParams.$params.filter = $scope.interFilters[fltr].filter;
-        $scope.updateUrl();
+        $scope.getFilter(function(newFilter) {
+          $scope.tableParams.$params.filter = newFilter.filter;
+          $scope.updateUrl();
+          $location.hash(newFilter.cleanTitle);
+        })
+
     }
 
                 /* ------------------------------*/
@@ -160,12 +190,6 @@ var app = angular.module('InterventionApp', ['ngTable','truncate']).
                 /* ------------------------------*/  
 
 
-    $scope.updateUrl = function() {
-      $location.path("/interventions" + 
-                  "/" + ($scope.selectedTelepro !== -1 ? $scope.telepro[$scope.selectedTelepro].login : "All") +
-                  "/" +($scope.selectedDate ?  $scope.interDate[$scope.selectedDate] : "All"));
-      $location.hash($scope.interFilters[$scope.selectedFilter].cleanTitle);
-    };
 
     $scope.selectedTelepro = -1;
     $scope.setTelepro = function(telepro) {
@@ -200,10 +224,10 @@ var app = angular.module('InterventionApp', ['ngTable','truncate']).
 
 
     $scope.interDate = [
-      {cleanTitle:"All",    fr:"Toutes"},
-      {cleanTitle:"Today",  fr:"Jour"},
-      {cleanTitle:"Week",   fr:"Semaine"},
-      {cleanTitle:"Month",  fr:"Mois"},
+      {cleanTitle:"All",    fr:"Toutes", url:"_"},
+      {cleanTitle:"Today",  fr:"Jour", url:"Today"},
+      {cleanTitle:"Week",   fr:"Semaine", url:"Week"},
+      {cleanTitle:"Month",  fr:"Mois", url:"Month"},
     ]
     $scope.setDate = function(date) {
 
@@ -383,8 +407,20 @@ $scope.isInSelection = function(id) {
 
 
 
+      $scope.toggleSidebar = function(i) {
+        if ($('.side-menu').css('margin-left') == "0px") {
+           $(".side-menu>div>ul>li:not(.toggleButton)").css("visibility", "hidden")
+           $('.side-body').css('margin-left', "63px");
+           $('.side-menu').css('margin-left', "-160px");
 
-
+        }
+        else {
+           $('.side-body').css('margin-left', "220px");
+           $('.side-menu').css('margin-left', "0px");
+           $(".side-menu>div>ul>li:not(.toggleButton)").css("visibility", "visible")
+        }
+        $('.fa-bars.fa-2x').toggleClass('fa-rotate-270');
+      }
 
 
 }).config(['$locationProvider', function($locationProvider){

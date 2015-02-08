@@ -72,6 +72,10 @@ router.get('/interventions', function(req, res) {
 router.get('/interventions/:query', function(req, res) {
   res.render('index', { title: 'Interventions' });
 });
+router.get('/interventions/:query/:test', function(req, res) {
+  res.render('index', { title: 'Interventions' });
+});
+
 
 router.get('/update', function(req, res) {
   var inter = require('../modules/intervention.js');

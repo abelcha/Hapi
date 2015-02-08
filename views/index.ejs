@@ -3,7 +3,7 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">   
-  <link rel="shortcut icon" href="/img/favicon.ico" />
+  <link rel="shortcut icon" href="https://angularjs.org/favicon.ico" />
   <link rel="stylesheet"  href="/ng-table/ng-table.css">
   <link id="BootstrapDefaultTheme" rel="stylesheet" href="/bootswatch/classic/bootstrap.css">
   <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
@@ -27,8 +27,10 @@
     <!-- Main Content -->
     <div class="container-fluid">
         <div class="side-body">
-         
-          <div class="col-md-12" style="height: 151px;" ></div>
+         <div class="jumbotron" style="height:200px" ng-swipe-left="alert('swipe')">
+           
+         </div>
+
           <%include partials/tabs %>
           <table style="background:white;" ng-table="tableParams" class="table table-bordered table-hover table-hover table-striped" id="table-list"  show-filter="true">
             <tbody id="tbody-list">
@@ -100,19 +102,6 @@
                   </div>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
                   </div>
                 </td>
               </tr>
@@ -122,37 +111,21 @@
     </div>
      <% include partials/context %>
 </div>
-   
-
-
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.8/angular.min.js"></script>
+     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.8/angular-touch.min.js"></script>
     <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="/angular-bootstrap/ui-bootstrap.min.js"></script>
-    <script type="text/javascript" src="/ng-table/ng-table.js"></script> 
+    <script type="text/javascript" src="/ng-table/ng-table.js"></script> t>
     <script type="text/javascript"  src="/angular-truncate/src/truncate.js"></script>
     <script src="/js/artisans.js"></script>
-    <script type="text/javascript"  src="/nprogress/nprogress.js"></script>
     <script src="/js/InterventionController.js"></script>
+    <script type="text/javascript" src="/hammer.js/hammer.min.js"></script>
   <script type="text/javascript">
 
 document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 
   'script>')
 
 
-//Temporary hack got to change this with factory/angular
-function changeTheme(theme) {
-    $('#BootstrapDefaultTheme').attr("href", "/bootswatch/" + theme + "/bootstrap.css")
-  }
-function changeUrl(url) {
-  var i = 10;
-  while (++i < 15
-    ) {
-    window.setTimeout(function() {
-      window.history.replaceState("", "test", url);
-    }, i * 100)
-  }
-}
 </script>
   </body>
 </html>

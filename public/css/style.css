@@ -1,7 +1,9 @@
 
 
 
-
+.fa {
+  transition: transform 0.5s ease;
+}
 
 .btn-circle {
   width: 30px;
@@ -145,7 +147,10 @@ button:focus {outline:0 !important;}
 
 
 .side-menu {
-
+-webkit-transition: margin 0.65s ease;
+-moz-transition: margin 0.65s ease;
+-o-transition: margin 0.65s ease;
+transition: margin 0.65s ease;
   overflow: scroll;
   position: fixed;
   width: 238px;
@@ -284,6 +289,10 @@ border-right: 6px solid #D4D4D4
 }
 /* Main body section */
 .side-body {
+  -webkit-transition: margin 0.65s ease;
+  -moz-transition: margin 0.65s ease;
+  -o-transition: margin 0.65s ease;
+  transition: margin 0.65s ease;
   margin-left: 220px;
 }
 /* small screen */
