@@ -72,7 +72,7 @@ var app = angular.module('InterventionApp', ['ngTable','truncate', 'ngTouch']).
     $scope.changeTheme = function(theme) {
      changeTheme(theme)
     }
-
+    $scope.lol = "qsdsqqdsqsdqsd";
     $scope.themes = ["ben", "cerulean", "cosmo","classic", "cyborg", "darkly", "flatly", "journal", "lumen", "paper", "readable", "sandstone", "simplex", "slate", "spacelab", "superhero", "united", "yeti"];
 
 
