@@ -1,5 +1,13 @@
-var app = angular.module('InterventionApp', ['ngTable','truncate', 'ngTouch']).
-  controller('InterventionController', function($scope, $filter, $http, $location, ngTableParams) {
+var app = angular.module('InterventionApp', ['ngTable','truncate', 'ngTouch']);
+
+app.run(function($rootScope) {
+    $rootScope.age = 5;
+    $rootScope.user = {'firstName': 'Maurice', 'lastName': 'Moss' };
+  });
+
+app.controller('InterventionController', function($scope, $filter, $http, $location, ngTableParams) {
+
+
     this.artisan = artisan;
                 /* ------------------------------*/
                 /*        CORE DATA LOADING      */
@@ -7,6 +15,42 @@ var app = angular.module('InterventionApp', ['ngTable','truncate', 'ngTouch']).
                 /* ------------------------------*/  
 
     // The only way to update data
+
+
+      $scope.etatInterIcon = {
+        INT: {c:'success', i:'check'},
+        ENC: {c:'warning', i:'refresh'},
+        APR: {c:'default', i:''},
+        ANN: {c:'danger', i:'close'},
+        DEV: {c:'info', i:'align-justify'}
+      }
+
+    var setClientPaymentClass = function(info) {
+      var hour = 1000 * 60 * 60;
+      var week = hour * 24 * 7;
+
+      var dtInter = Date.parse(info.dateInter);
+
+      info.aVerifier = (info.etat == 'ENC' && (dtInter + hour) < Date.now());
+      if (info.pmntCli)
+        return ({c: 'success', i:'check'});
+      if (info.etat == 'INT') {
+        var dateDiff =  Date.now() - dtInter;
+        return (dateDiff > (4 * week) ?  {c: 'danger',  i: 'warning'} : 
+                dateDiff > (2 * week) ?  {c: 'warning', i: 'question'} : 
+                {c: 'warning', i:'circle-thin'} );
+      }
+      return ({c: 'default', i:''});
+    }
+
+
+
+    function initData(inter) {
+      inter.hide = false;
+      inter.ClientPaymentClass = setClientPaymentClass(inter);
+      return (inter);
+    }
+
     var getData = function() { return ($scope.newData); }
 
     // Make query to server callback the results
@@ -18,23 +62,14 @@ var app = angular.module('InterventionApp', ['ngTable','truncate', 'ngTouch']).
 
         });
     };
-     
-          // Then get all the inters
-    $scope.reloadInterventions = function($scope, $http, query) {
-      $scope.getInterventionList(query, function(data) {
-          $scope.newData = data;
-          $scope.tableParams.reload();
-          $scope.tableParams.total(data.length)
-        });
-    }
-
-                                                    // Limit the results to 25 on the first shot
-    $scope.getInterventionList({ q: "", limit: 100, sort: "-numOs"}, function(data) {
-        $scope.newData = data;
+                                // Limit the results to 25 on the first shot
+    $scope.getInterventionList({ q: "", limit: 100, sort: "-id"}, function(data) {
+        $scope.newData = data.map(initData);;
         $scope.tableParams = new ngTableParams({
             page: 1, // show first page
             count: 100,
-            filter: {}
+            filter: {hide: false},
+            sorting:{id:'desc'}
         }, {
             total: getData().length, // length of data
             getData: function($defer, params) {
@@ -57,23 +92,11 @@ var app = angular.module('InterventionApp', ['ngTable','truncate', 'ngTouch']).
          console.time("get interventions data");
         $http.get('/data/interventions/all').success(function(data) {
            console.timeEnd("get interventions data");
-            $scope.newData = data;
+            $scope.newData = data.map(initData);
             $scope.tableParams.reload();
-            $scope.tableParams.total(data.length)
+            //$scope.tableParams.total(data.length)
           });
         });
-
-        /* --------------------- */
-        /*     BOOTSTRAP THEME   */
-        /* --------------------- */ 
-
-
-    // Ugly hack to refresh theme on select
-    $scope.changeTheme = function(theme) {
-     changeTheme(theme)
-    }
-    $scope.lol = "qsdsqqdsqsdqsd";
-    $scope.themes = ["ben", "cerulean", "cosmo","classic", "cyborg", "darkly", "flatly", "journal", "lumen", "paper", "readable", "sandstone", "simplex", "slate", "spacelab", "superhero", "united", "yeti"];
 
 
         /* --------------------- */
@@ -179,6 +202,10 @@ var app = angular.module('InterventionApp', ['ngTable','truncate', 'ngTouch']).
         $scope.getFilter(function(newFilter) {
           $scope.tableParams.$params.filter = newFilter.filter;
           $scope.updateUrl();
+          if ($scope.selectedTelepro != -1)
+             $scope.tableParams.$params.filter.telepro = getTelepro().login;
+          $scope.tableParams.$params.filter.hide = false;
+           console.log($scope.tableParams);
           $location.hash(newFilter.cleanTitle);
         })
 
@@ -189,30 +216,6 @@ var app = angular.module('InterventionApp', ['ngTable','truncate', 'ngTouch']).
                 /*   filter by telepro / number  */
                 /* ------------------------------*/  
 
-
-
-    $scope.selectedTelepro = -1;
-    $scope.setTelepro = function(telepro) {
-
-      if (telepro === -1) {
-         delete $scope.tableParams.$params.filter.telepro;
-      } else {
-          $scope.tableParams.$params.filter.telepro = $scope.telepro[telepro].login;
-      }
-      $scope.selectedTelepro = telepro;
-      $scope.updateUrl();
-    }
-
-    $scope.countTelepro = function(telepro) {
-        // copy of telepro
-        var tmp =  JSON.parse(JSON.stringify($scope.tableParams.$params.filter));
-        tmp.ajoutePar = telepro.login;
-        $http.get('/data/interventions/count/' + JSON.stringify( {q : tmp } )).success(function(data) {
-           telepro.count = data; 
-           $scope.nbrDisplayed += data;
-        });
-    };
-    $scope.nbrDisplayed = 0;
     $scope.telepro = [
       {name:"Benjamin", login:"boukris_b"},
       {name:"Tayeb", login:"tayeb"},
@@ -222,15 +225,49 @@ var app = angular.module('InterventionApp', ['ngTable','truncate', 'ngTouch']).
       {name:"Thomas", login:"thomas"},
     ];
 
+    $scope.selectedTelepro = -1;
+    var getTelepro = function() {
+      return ($scope.telepro[$scope.selectedTelepro])
+    }
+    $scope.setTelepro = function(telepro) {
 
+      $scope.selectedTelepro = telepro;
+      if (telepro === -1) {
+         delete $scope.tableParams.$params.filter.telepro;
+      } else {
+          $scope.tableParams.$params.filter.telepro = getTelepro().login;
+      }
+      $scope.tableParams.reload();
+      $scope.updateUrl();
+    }
+
+
+    $scope.getDaysInMillisec = function(dayNbr) {
+      var d = new Date;
+      var hoursToday = (d.getHours * 3600000) + (d.getMinutes * 60000);
+      var day = 1000 * 60 * 60 * 24;
+      return (dayNbr * hoursToday)
+    }
+
+    $scope.selectedDate = 0;
     $scope.interDate = [
-      {cleanTitle:"All",    fr:"Toutes", url:"_"},
-      {cleanTitle:"Today",  fr:"Jour", url:"Today"},
-      {cleanTitle:"Week",   fr:"Semaine", url:"Week"},
-      {cleanTitle:"Month",  fr:"Mois", url:"Month"},
+      {cleanTitle:"All",    fr:"Toutes", url:"ALL",   ts:0},
+      {cleanTitle:"Today",  fr:"Jour", url:"Today",   ts:(1000 * 60 * 60 * 24)},
+      {cleanTitle:"Week",   fr:"Semaine", url:"Week", ts:(1000 * 60 * 60 * 24 * 7)},
+      {cleanTitle:"Month",  fr:"Mois", url:"Month",   ts:(1000 * 60 * 60 * 24 * 7 * 4)},
     ]
-    $scope.setDate = function(date) {
-
+     $scope.getSectedDate= function(telepro) {
+        return ( $scope.interDate[$scope.selectedDate].ts);
+    }
+    $scope.setDate= function(date) {
+      $scope.selectedDate = date;
+      $scope.updateUrl()
+      var limit = Date.now() - $scope.interDate[date].ts;
+      $scope.newData.forEach(function(e, i) {
+        var ts = new Date(e.dateAjout).getTime();
+        e.hide = ($scope.selectedDate != 0 && (ts - limit <= 0));
+      });
+      $scope.tableParams.reload();
     }
 
 
@@ -269,6 +306,7 @@ $scope.isInSelection = function(id) {
 }
 
     $scope.ClickOnRow = function(event, id) {
+      console.log($scope.tableParams);
       event.preventDefault();
       event.stopPropagation();
     if (event.metaKey || event.ctrlKey) {
@@ -332,14 +370,14 @@ $scope.isInSelection = function(id) {
         }
     }
 
-    // document.addEventListener("dblclick", function(e){
-    //   //If it's a row
-    //  if (isDescendant(document.getElementById('tbody-list'), e.toElement)) {
-    //     // We get the closest tr ID
-    //     var cell = getClosestParent('TR', e.toElement);
-    //     alert("Ouvre la fiche " + cell.dataset.id)
-    //  }
-    // });
+    document.addEventListener("dblclick", function(e){
+      //If it's a row
+     if (isDescendant(document.getElementById('tbody-list'), e.toElement)) {
+        // We get the closest tr ID
+        var cell = getClosestParent('TR', e.toElement);
+        alert("Ouvre la fiche " + cell.dataset.id)
+     }
+    });
 
 
 
@@ -379,31 +417,6 @@ $scope.isInSelection = function(id) {
 
 
 
-        $scope.etatInterIcon = {
-          INT: {c:'success', i:'check'},
-          ENC: {c:'warning', i:'refresh'},
-          APR: {c:'default', i:''},
-          ANN: {c:'danger', i:'close'},
-          DEV: {c:'info', i:'align-justify'}
-        }
-
-      $scope.getClientPaymentClass = function(info) {
-        var hour = 1000 * 60 * 60;
-        var week = hour * 24 * 7;
-
-        var dtInter = Date.parse(info.dateInter);
-
-        info.aVerifier = (info.etat == 'ENC' && (dtInter + hour) < Date.now());
-        if (info.pmntCli)
-          return ({c: 'success', i:'check'});
-        if (info.etat == 'INT') {
-          var dateDiff =  Date.now() - dtInter;
-          return (dateDiff > (4 * week) ?  {c: 'danger',  i: 'warning'} : 
-                  dateDiff > (2 * week) ?  {c: 'warning', i: 'question'} : 
-                  {c: 'warning', i:'circle-thin'} );
-        }
-        return ({c: 'default', i:''});
-      }
 
 
 
@@ -411,8 +424,8 @@ $scope.isInSelection = function(id) {
         var offset = (typeof i !== 'undefined' ? 77 : 0); 
         if (i == 0 || $('.side-menu').css('margin-left') == "0px") {
            $(".side-menu>div>ul>li:not(.toggleButton)").css("visibility", "hidden")
-           $('.side-body').css('margin-left', (  63 - offset) +"px");
-           $('.side-menu').css('margin-left', (-160 - offset) + "px");
+           $('.side-body').css('margin-left', (  34 - offset) +"px");
+           $('.side-menu').css('margin-left', (-186 - offset) + "px");
 
         }
         else {
@@ -448,6 +461,7 @@ $scope.isInSelection = function(id) {
   $scope.wResize();
 
 
-}).config(['$locationProvider', function($locationProvider){
-    $locationProvider.html5Mode(true).hashPrefix('!');
-}]);;
+})
+.config(['$locationProvider', function($locationProvider){
+    $locationProvider.html5Mode(true).hashPrefix('!')
+}])

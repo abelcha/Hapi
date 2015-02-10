@@ -6,7 +6,7 @@
   <link rel="shortcut icon" href="https://angularjs.org/favicon.ico" />
   <link rel="stylesheet"  href="/ng-table/ng-table.css">
   <link id="BootstrapDefaultTheme" rel="stylesheet" href="/bootswatch/classic/bootstrap.css">
-  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="/font-awesome/css/font-awesome.min.css" rel="stylesheet">
   <link rel="stylesheet" href="/css/style.css">
   <link rel="stylesheet" href="/nprogress/nprogress.css">
    <base href="/interventions">
@@ -18,11 +18,7 @@
 
 
 <div class="row">
-    <!-- uncomment code for absolute positioning tweek see top comment in css -->
-    <!-- <div class="absolute-wrapper"> </div> -->
-    <!-- Menu -->
 
-    
 <% include partials/sidebar %> 
     <!-- Main Content -->
     <div class="container-fluid">
@@ -31,11 +27,12 @@
           <%include partials/tabs %>
           <table style="background:white;" ng-table="tableParams" class="table table-bordered table-hover table-hover table-striped" id="table-list"  show-filter="true">
             <tbody id="tbody-list">
-              <tr data-id="{{info.id}}" ng-repeat-start="info in $data" ng-click="ClickOnRow($event, info.id)"  ng-class="{warning : isInSelection(info.id)}" >
+              <tr data-id="{{info.id}}" ng-repeat-start="info in $data" ng-click="ClickOnRow($event, info.id)"  
+              ng-class="{warning : isInSelection(info.id)}">
                 <td  data-title="'Num Os'" sortable="'id'" filter="{ 'id': 'text' }">
                     <strong>{{info.id}}</strong>
                 </td>
-                <td data-title="'Télépro'" sortable="'telepro'" filter="{ 'telepro': 'text' }">
+                <td data-title="'Télépro'" sortable="'telepro'" filter="{ 'telepro': 'select' }">
                   {{info.telepro}}
                 </td>
                 <td  data-title="'Cat.'" sortable="'cat'" filter="{ 'cat': 'text' }">
@@ -57,24 +54,25 @@
                 <td   data-title="'CP'" sortable="'add.cp'" filter="{ 'add.cp': 'text' }">
                   <strong> {{info.add.cp.substring(0,2)}}</strong>{{info.add.cp.substring(2,5)}}
                 </td>
-                <td  class="variable-length" data-title="'Artisan'" sortable="'sst'" filter="{ 'sst': 'text' }">
+                <td  class="variable-length" data-title="'Artisan'" sortable="'sst'" 
+                filter="{ 'sst': 'text' }" >
                     <strong>{{interCtrl.artisan[info.sst] |  characters:15 :true || ""}}</strong>
                 </td>
                 <td class="date-length"  data-title="'Date Intervention'" sortable="'dateInter'" filter="{ 'dateInter': 'text' }">
                     <div ng-show="info.dateInter[0] != 1">
                       {{info.dateInter | date:"dd/MM/yy" || ""}}
-                      {{info.dateInter | date:"hh'h'mm" || ""}}
+                      {{info.dateInter | date:"HH'h'mm" || ""}}
                     </div>
                 </td>
 
-                <td  data-title="'Etat Inter'" sortable="'etat'" ng-init="clientPmntClass = getClientPaymentClass(info)">  
+                <td  data-title="'Etat Inter'" sortable="'etat'">  
                   <button type="button" class="btn btn-circle btn-{{etatInterIcon[info.etat].c}}">
                   <i class="fa" ng-class="info.aVerifier ? 'fa-question' : 'fa-{{etatInterIcon[info.etat].i}}'"></i></button>
                 </td>
                 <td  data-title="'Pmnt Client'" sortable="'pmntCli'" >
                   <button type="button" 
-                  class="btn btn-circle btn-{{clientPmntClass.c}}">
-                  <i class="fa fa-{{clientPmntClass.i}}"></i>
+                  class="btn btn-circle btn-{{info.ClientPaymentClass.c}}">
+                  <i class="fa fa-{{info.ClientPaymentClass.i}}"></i>
                   </button> 
                 </td>
                 <td  data-title="'Pmnt Artisan'" sortable="'pmntSst'" >
@@ -108,15 +106,15 @@
     </div>
      <% include partials/context %>
 </div>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.8/angular.min.js"></script>
-     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.8/angular-touch.min.js"></script>
-    <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="/ng-table/ng-table.js"></script> t>
-    <script type="text/javascript"  src="/angular-truncate/src/truncate.js"></script>
-    <script src="/js/artisans.js"></script>
-    <script src="/js/InterventionController.js"></script>
-    <script type="text/javascript" src="/hammer.js/hammer.min.js"></script>
+    <script src="/angular/angular.min.js"             ></script>
+    <script src="/angular-touch/angular-touch.min.js" ></script>
+    <script src="/jquery/dist/jquery.min.js"          ></script>
+    <script src="/bootstrap/dist/js/bootstrap.min.js" ></script>
+    <script src="/ng-table/ng-table.js"               ></script>
+    <script src="/angular-truncate/src/truncate.js"   ></script>
+    <script src="/js/artisans.js"                     ></script>
+    <script src="/js/InterventionController.js"       ></script>
+    <script src="/hammer.js/hammer.min.js"            ></script>
   <script type="text/javascript">
 
 document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 

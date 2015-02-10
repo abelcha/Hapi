@@ -13,7 +13,7 @@ router.get('/data/interventions/find/:query', function(req, res) {
 
 router.get('/clearCache', function(req, res) {
         req.app.get("schemaDB").interventionModel.find()
-        .sort('-numOs')
+        .sort('-id')
         .select('-_id id telepro dateAjout add.v add.cp sst cat nom civ pmntCli pmntSst etat dateInter')
         .exec(function (err, interList){ 
         req.app.get("cache").put("all", interList);
@@ -28,8 +28,8 @@ router.get('/data/interventions/all', function(req, res) {
       res.send(data)
     } else {
         req.app.get("schemaDB").interventionModel.find()
-        .sort('-numOs')
-        .select('id telepro dateAjout add.ville add.cp sst cat nom prenom civ pmntCli pmntSst etat dateInter')
+        .sort('-id')
+        .select('-_id id telepro dateAjout add.v add.cp sst cat nom prenom civ pmntCli pmntSst etat dateInter')
         .exec(function (err, interList){ 
         req.app.get("cache").put("all", interList);
         res.json(interList);
@@ -80,9 +80,11 @@ router.get('/interventions/:query/:test', function(req, res) {
 router.get('/update', function(req, res) {
   var inter = require('../modules/intervention.js');
   inter.dumpData(function(interList){
-  	req.app.get("schemaDB").interventionModel.create(interList, function(err) {
-			  console.log(interList);
-        res.render('index', { title: 'Express', interList: {} });
+  	req.app.get("schemaDB").interventionModel.remove({}, function (err) {
+      req.app.get("schemaDB").interventionModel.create(interList, function(err) {
+  			  console.log(interList);
+          res.render('index', { title: 'Express', interList: {} });
+      }); 
 		});
   });
 });
