@@ -1,3 +1,10 @@
+var getDaysInMillisec = function(dayNbr) {
+      var d = new Date;
+      var hoursToday = (d.getHours() * 3600000) + (d.getMinutes() * 60000);
+      var day = 1000 * 60 * 60 * 24;
+      return (dayNbr * day + hoursToday)
+}
+
 module.exports = {
     selectedFilter : 0,
     pageTitle: "Interventions",
@@ -52,16 +59,31 @@ module.exports = {
     ],
 
     getTelepro: function(name) {
-      //  console.log("=>", name)
       for (var k in this.telepro) {
-
-        if (this.telepro[k].login == name) {
+        if (this.telepro[k].login == name)
           return (k);
-        }
       }
       return (-1);
     },
 
+
+
+
+
+    selectedDate: 0,
+    interDate: [
+      {cleanTitle:"All",    fr:"Toutes", url:"ALL",   ts:0},
+      {cleanTitle:"Today",  fr:"Jour", url:"Today",   ts:getDaysInMillisec(0)},
+      {cleanTitle:"Week",   fr:"Semaine", url:"Week", ts:getDaysInMillisec(7)},
+      {cleanTitle:"Month",  fr:"Mois", url:"Month",   ts:getDaysInMillisec(28)},
+    ],
+    getDate: function(name) {
+      for (var k in this.interDate) {
+        if (this.interDate[k].url == name)
+          return (k);
+      }
+      return (0);
+    },
 
 
     parseFilter: function(query) {
@@ -69,13 +91,12 @@ module.exports = {
       self.selectedFilter = 0;
       self.selectedTelepro = -1;
       query.forEach(function(e, i) {
-
         if (!self.selectedFilter)
           self.selectedFilter = self.getFilter(e);
-        if (self.selectedTelepro == -1) {
+        if (self.selectedTelepro == -1)
           self.selectedTelepro = self.getTelepro(e);
-          console.log(self.selectedTelepro);
-        }
+        if (!self.selectedDate)
+          self.selectedDate = self.getDate(e);
       });
     }
 }

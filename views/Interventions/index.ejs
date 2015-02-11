@@ -35,7 +35,7 @@
               <tr data-id="{{info.id}}" ng-repeat-start="info in $data" ng-click="ClickOnRow($event, info.id)"  
               ng-class="{warning : isInSelection(info.id)}">
                 <td  data-title="'Num Os'" sortable="'id'" filter="{ 'id': 'text' }">
-                    <strong>{{info.id}}</strong>
+                    <strong>{{info.hide}}{{info.id}}</strong>
                 </td>
                 <td data-title="'Télépro'" sortable="'telepro'" filter="{ 'telepro': 'select' }">
                   {{info.telepro}}

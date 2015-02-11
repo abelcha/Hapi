@@ -3,21 +3,7 @@
 
 app.controller('SideBarController', function($scope, $rootScope, $location) {
 
-  $scope.toggleSidebar = function(i) {
-    var offset = (typeof i !== 'undefined' ? 77 : 0); 
-    if (i == 0 || $('.side-menu').css('margin-left') == "0px") {
-       $(".side-menu>div>ul>li:not(.toggleButton)").css("visibility", "hidden")
-       $('.side-body').css('margin-left', (  34 - offset) +"px");
-       $('.side-menu').css('margin-left', (-186 - offset) + "px");
 
-    }
-    else {
-       $('.side-body').css('margin-left', (offset ? 0 :220) + "px");
-       $('.side-menu').css('margin-left', "0px");
-       $(".side-menu>div>ul>li:not(.toggleButton)").css("visibility", "visible")
-    }
-    $('.fa-bars.fa-2x').toggleClass('fa-rotate-270');
-  }
 
   $rootScope.getFilter = function() {
     for (var k in $rootScope.config.interFilters) {
@@ -43,6 +29,21 @@ app.controller('SideBarController', function($scope, $rootScope, $location) {
 
 });
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 app.controller('TabsController', function($scope, $rootScope, $location) {
 
     $rootScope.updateUrl = function() {
@@ -51,8 +52,8 @@ app.controller('TabsController', function($scope, $rootScope, $location) {
         url += $rootScope.getFilter().cleanTitle;
       if ($rootScope.config.selectedTelepro !== -1)
         url += ':' + $rootScope.getTelepro().login;
-      if ($scope.selectedDate)
-        url += ':' + getDate().url;
+      if ($rootScope.config.selectedDate)
+        url += ':' + $rootScope.getDate().url;
       $location.path("/inters/" + url) ;
       $rootScope.config.pageTitle = url != "" ? url : "Interventions";
       
@@ -75,37 +76,43 @@ app.controller('TabsController', function($scope, $rootScope, $location) {
     }
 
 
-    var getDaysInMillisec = function(dayNbr) {
-      var d = new Date;
-      var hoursToday = (d.getHours() * 3600000) + (d.getMinutes() * 60000);
-      console.log(hoursToday)
-      var day = 1000 * 60 * 60 * 24;
-      return (dayNbr * day + hoursToday)
-    }
 
-    $scope.selectedDate = 0;
-    $scope.interDate = [
-      {cleanTitle:"All",    fr:"Toutes", url:"ALL",   ts:0},
-      {cleanTitle:"Today",  fr:"Jour", url:"Today",   ts:getDaysInMillisec(0)},
-      {cleanTitle:"Week",   fr:"Semaine", url:"Week", ts:getDaysInMillisec(7)},
-      {cleanTitle:"Month",  fr:"Mois", url:"Month",   ts:getDaysInMillisec(28)},
-    ]
 
-    $scope.setDate= function(date) {
-      $scope.selectedDate = date;
+
+    $rootScope.setDate = function(date, reload) {
+      $rootScope.config.selectedDate = date;
       $rootScope.updateUrl()
-      var limit = Date.now() - $scope.interDate[date].ts;
+      var limit = Date.now() - $rootScope.config.interDate[date].ts;
       $rootScope.newData.forEach(function(e, i) {
         var ts = new Date(e.dateAjout).getTime();
-        e.hide = ($scope.selectedDate != 0 && (ts - limit <= 0));
+        e.hide = ($rootScope.config.selectedDate != 0 && (ts - limit <= 0));
       });
-      $rootScope.tableParams.reload();
+      if (reload)
+        $rootScope.tableParams.reload();
     }
 
-    var getDate = function() {
-      return $scope.interDate[$scope.selectedDate];
+    $rootScope.getDate = function() {
+      return $rootScope.config.interDate[$rootScope.config.selectedDate];
     }
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 app.controller('InterventionController', function($scope, $rootScope, $filter, $http, $location, ngTableParams) {
 
@@ -147,9 +154,18 @@ app.controller('InterventionController', function($scope, $rootScope, $filter, $
 
 
 
+
+    function initDateFilters(e) {
+        var limit = Date.now() - $rootScope.getDate().ts;
+        var ts = new Date(e.dateAjout).getTime();
+        e.hide = ($rootScope.config.selectedDate != 0 && (ts - limit <= 0));
+    }
+
     function initData(inter) {
       inter.hide = false;
       inter.ClientPaymentClass = setClientPaymentClass(inter);
+      if ($rootScope.config.selectedDate)
+       initDateFilters(inter);
       return (inter);
     }
     var initFilters = function() {
@@ -197,7 +213,6 @@ app.controller('InterventionController', function($scope, $rootScope, $filter, $
             }
         });
                // Then get all the inters
-               console.log($rootScope.tableParams);
          console.time("get interventions data");
         $http.get('/data/interventions/all').success(function(data) {
            console.timeEnd("get interventions data");
@@ -207,206 +222,6 @@ app.controller('InterventionController', function($scope, $rootScope, $filter, $
           });
         });
 
-
-        /* --------------------- */
-        /*   CLICK CONTEXT MENU  */
-        /* --------------------- */ 
-
-    $scope.contextMenu  = [{display:true, title: "Liste Inters SST", only:1},
-                          {display:true, title: "Voir la fiche SST", only:1},
-                          {display:true, title: "Appeler SST", only:1},
-                          {display:true, title: "Envoyer SMS", only:1},
-                          {display:true, title: "Appeler Client", only:2},
-                          {display:true, title: "Envoyer SMS Client", only:2},
-                          {display:true, title: "Annuler L'inter", only:0},
-                          {display:true, title: "Confirmer l'inter", only:0},
-                          {display:true, title: "Envoyer l'inter", only:0}];
-
-
-    function getClickedElementType() {
-      // Self Explaining
-      if (selectedRow.getAttribute('data-title') == "'Client'")
-        return (2);
-      else if (selectedRow.getAttribute('data-title') == "'Artisan'")
-        return (1);
-      else
-        return (0)
-    }
-
-    $scope.refreshContextMenu = function() {
-      // We want this to apply to angular scope
-      $scope.$apply(function() {
-        // Get the clicked Element Type (1 -> artisan  |  2 -> client | 3 -> else)
-          var elementType = getClickedElementType();
-              for (key in $scope.contextMenu) {
-                // Is true if the context menu line correspond to the TD clicked
-                   $scope.contextMenu[key].display = elementType == $scope.contextMenu[key].only;
-              }
-        });
-    }
-
-
-
-$scope.multipleSelection = false;
-$scope.rowSelection = [];
-
-$scope.addInSelection = function(id) {
-         
-     $scope.clickedRow = -1;
-
-     if ($scope.isInSelection(id)) {
-         $scope.rowSelection.splice($scope.isInSelection(id) - 1, 1);     
-    } else {
-         $scope.rowSelection.push(id);
-    }
-  //  console.log($scope.rowSelection);
-};
-
-
-
-$scope.isInSelection = function(id) {
-  return($scope.rowSelection.indexOf(id) + 1);
-}
-
-    $scope.ClickOnRow = function(event, id) {
-      console.log($rootScope.tableParams);
-      event.preventDefault();
-      event.stopPropagation();
-    if (event.metaKey || event.ctrlKey) {
-            return ($scope.addInSelection(id));
-    } else{
-      if ($scope.rowSelection.length == 0)
-         $scope.clickedRow = $scope.rowIsClicked(id) ? -1 : id;
-      $scope.rowSelection = [];
-    } 
-      //console.log(id);
-   /*   
-   */
-    };
-                /* ------------------------------*/
-                /*          ROW PREVIEW          */
-                /*    edisonpro like preview     */
-                /* ------------------------------*/  
-
-
-    $scope.clickedRow = -1;
-    $scope.rowIsClicked = function(id) {
-    //  console.log(id + " == " + this.clickedRow);
-      return ($scope.clickedRow == id);
-    };
-
-
-
-    $scope.hideSidebar = function() {
-      alert("hide");
-    }
-
-                /* --------------*/
-                /* Mouses Events */
-                /* --------------*/
-
-    var contextStyle = document.getElementById('context-menu').style;
-    var selectedRow = null;
-
-    function isDescendant(parent, child) {
-         var node = child.parentNode;
-         while (node != null) {
-             if (node == parent) {
-                 return true;
-             }
-             node = node.parentNode;
-         }
-         return false;
-    }
-
-    function getClosestParent(tag, node) {
-      while (node.tagName !== tag) {
-        node = node.parentNode;
-      }
-      return (node);
-    }
-
-    function resetSelectedRowColor(){
-          if (selectedRow != null) {
-            selectedRow.parentNode.style.backgroundColor = "";
-            selectedRow = null;
-        }
-    }
-
-    document.addEventListener("dblclick", function(e){
-      //If it's a row
-     if (isDescendant(document.getElementById('tbody-list'), e.toElement)) {
-        // We get the closest tr ID
-        var cell = getClosestParent('TR', e.toElement);
-        alert("Ouvre la fiche " + cell.dataset.id)
-     }
-    });
-
-
-
-    // document.addEventListener("scroll", function(){
-    //   var newPadding =  (document.body.scrollTop > 0 ? document.body.scrollTop : 0); 
-    //     document.getElementById('sidebar').style.paddingTop = newPadding * 2 + "px";
-    // });
-
-
-
-    document.addEventListener("mousedown", function(e){
-      // If it's a right click And the element clicked is in the table
-        if (e.which === 3 && isDescendant(document.getElementById('tbody-list'), e.toElement)){
-
-          contextStyle.left = e.clientX + "px";     //
-          contextStyle.top = e.clientY + "px";      // We show the context menu
-          contextStyle.display = "block";           //
-          resetSelectedRowColor();                  // Reset the row color
-          // Select the closest Parent TD
-          selectedRow = getClosestParent('TD', e.toElement)
-          // Set row color to blue
-          selectedRow.parentNode.style.backgroundColor = "rgba(33, 150, 243, 0.12)";
-           // Refresh the context menu
-          $scope.refreshContextMenu();
-        } else {
-          // Hide the context menu and hide color anyway
-          contextStyle.display = "none";
-          resetSelectedRowColor();
-      }
-  });
-
-
-                /* ------------------------------*/
-                /*          BUTTONS              */
-                /*    graphical img based on     */
-                /* ------------------------------*/  
-
-
-
-
-
-
-
-
-
-  //responsivité
-  $scope.wResize = function() {
-      var wSize = $(window).width();
-       if (wSize < 480)
-         $scope.rowPriority = 4;
-       else if (wSize < 768)
-        $scope.rowPriority = 3;
-      else if (wSize < 992)
-         $scope.rowPriority = 2;
-      else if (wSize < 1200)
-          $scope.rowPriority = 1;
-      else
-          $scope.rowPriority = 0;
-  };
-
-  $( window ).resize(function() {
-
-    $scope.wResize();
-    console.log($scope.rowPriority);
-  });
-  $scope.wResize();
 
 
 })

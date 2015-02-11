@@ -74,6 +74,7 @@ router.get('/inters', function(req, res) {
 router.get('/inters/:query', function(req, res) {
   var config = require("../modules/config.js");
   config.parseFilter(req.params.query.split(':'));
+  console.log(config);
   res.render('Interventions', {config:config});
 });
 

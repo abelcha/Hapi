@@ -21,12 +21,14 @@
     }
     .nav-tabs>li>a {
         color:black;
+        padding: 10px 7px;
     }
+
 </style>
 
 <div class="col-md-12" style="padding:0;z-index:0" ng-controller="TabsController as tCtrl">
             <div class="panel with-nav-tabs panel-default" style="margin:0;" >
-                <div class="col-md-6 col-sm-6 col-xs-6 panel-heading" >
+                <div class="col-md-7 col-sm-7 col-xs-7 panel-heading" >
                     <ul class="nav nav-tabs hidden-xs hidden-sm" style="border-bottom:0">
                         <li ng-click='setTelepro(-1)' ng-class="config.selectedTelepro === -1 ? 'active' : ''" >
                              <a href="javascript:void(0)">Tous</a></li>
@@ -48,22 +50,24 @@
                         </li>
                     </ul>
                 </div>
-                <div class="col-md-6 col-sm-6 col-xs-6 panel-heading" >
+                <div class="col-md-5 col-sm-5 col-xs-5 panel-heading">
                     <ul class="nav nav-tabs hidden-xs hidden-sm" >
-                        <li ng-click='setDate($index)'
-                            ng-class="$index == selectedDate ? 'active' : ''" 
-                            ng-repeat="t in interDate"><a href="javascript:void(0)">{{t.fr}}</a>
+                        <li ng-click='setDate($index, true)'
+                            ng-class="$index == config.selectedDate ? 'active' : ''" 
+                            ng-repeat="t in config.interDate"><a href="javascript:void(0)">{{t.fr}}</a>
                         </li>
                     </ul>
                     <ul class="nav nav-tabs dropdown hidden-md hidden-lg" style="z-index:42">
-                            <ul class="dropdown-menu" role="menu">
-                                <li ng-click='setDate($index)'
-                                ng-class="$index == selectedDate ? 'active' : ''" 
-                                ng-repeat="t in interDate"><a href="javascript:void(0)">{{t.fr}}</a>
+                             <li ><a href="#" data-toggle="dropdown">Dates <span class="caret"></span></a>
+                                <ul class="dropdown-menu" role="menu">
+                            <li ng-click='setDate(0)' ng-class="config.selectedDate === -1 ? 'active' : ''" >
+                                <a href="javascript:void(0)">Tous</a></li>
+                            <li ng-click='setDate($index, true)'
+                                ng-class="$index == config.selectedDate ? 'active' : ''" 
+                                ng-repeat="t in config.interDate"><a href="javascript:void(0)">{{t.fr}}</a>
                              </li>
                             </ul>
                         </li>
                     </ul>
-                </div>
             </div>
 </div>
