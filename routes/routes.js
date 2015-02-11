@@ -66,15 +66,17 @@ router.get('/data/interventions/count/:query', function(req, res) {
     res.json(interList);
   }); 
 });
-router.get('/interventions', function(req, res) {
- 	res.render('index', { title: 'Interventions' });
+router.get('/inters', function(req, res) {
+  var config = require("../modules/config.js")
+ 	res.render('Interventions', {config:config});
 });
-router.get('/interventions/:query', function(req, res) {
-  res.render('index', { title: 'Interventions' });
+
+router.get('/inters/:query', function(req, res) {
+  var config = require("../modules/config.js");
+  config.parseFilter(req.params.query.split(':'));
+  res.render('Interventions', {config:config});
 });
-router.get('/interventions/:query/:test', function(req, res) {
-  res.render('index', { title: 'Interventions' });
-});
+
 
 
 router.get('/update', function(req, res) {

@@ -10,14 +10,14 @@
   <link rel="stylesheet" href="/css/style.css">
   <link rel="stylesheet" href="/nprogress/nprogress.css">
    <base href="/interventions">
-  <style type="text/css">
-  </style>
+  <title>{{config.pageTitle}}</title>
   </head>
-  <body oncontextmenu="return false;" ng-controller="InterventionController as interCtrl" ng-swipe-right="toggleSidebar();" ng-swipe-left="toggleSidebar(0);">
+   <!-- ng-swipe-right="toggleSidebar();" ng-swipe-left="toggleSidebar(0);" -->
+  <body oncontextmenu="return false;" >
  <% include partials/navbar %> 
 
 
-<div class="row">
+<div class="row" >
 
 <% include partials/sidebar %> 
     <!-- Main Content -->
@@ -25,7 +25,12 @@
         <div class="side-body">
 
           <%include partials/tabs %>
-          <table style="background:white;" ng-table="tableParams" class="table table-bordered table-hover table-hover table-striped" id="table-list"  show-filter="true">
+          <table ng-controller="InterventionController as interCtrl" 
+                style="background:white;" 
+                ng-table="tableParams" 
+                class="table table-bordered table-hover table-hover table-striped" 
+                id="table-list"  
+                show-filter="true">
             <tbody id="tbody-list">
               <tr data-id="{{info.id}}" ng-repeat-start="info in $data" ng-click="ClickOnRow($event, info.id)"  
               ng-class="{warning : isInSelection(info.id)}">
@@ -113,14 +118,13 @@
     <script src="/ng-table/ng-table.js"               ></script>
     <script src="/angular-truncate/src/truncate.js"   ></script>
     <script src="/js/artisans.js"                     ></script>
+    <script type="text/javascript">
+    var app = angular.module('InterventionApp', ['ngTable','truncate', 'ngTouch'])
+              app.run(function($rootScope) {
+                  $rootScope.config = <%- JSON.stringify(config); %>
+              });
+
+    </script>
     <script src="/js/InterventionController.js"       ></script>
-    <script src="/hammer.js/hammer.min.js"            ></script>
-  <script type="text/javascript">
-
-document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 
-  'script>')
-
-
-</script>
   </body>
 </html>
