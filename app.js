@@ -34,7 +34,8 @@ app.use(compress());
     app.use(cookieParser());
     app.use(express.static(path.join(__dirname, 'public')));
     app.use(express.static(path.join(__dirname, 'bower_components')));
-
+    app.use(express.static(path.join(__dirname, 'controllers')));
+    app.use(express.static(path.join(__dirname, 'modules')));
     app.use('/', routes);
     app.use('/users', users);
 

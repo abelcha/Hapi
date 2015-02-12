@@ -12,25 +12,25 @@ module.exports = {
             title:"Interventions", 
             icon:'truck',
             list: [
-                  {id:0, title:"Toutes les Interventions",  cleanTitle:'All', filter: {}},
-                  {id:1, title:"Interventions en Cours", cleanTitle:'encours', filter: {etat:"ENC"}},
-                  {id:2, title:"Interventions à Prog.", cleanTitle:'aprogr', filter: {etat:"APR"}},
-                  {id:3, title:"Interventions Annulés", cleanTitle:'annules', filter: {etat:"ANN"}},
-                  {id:4, title:"Interventions Confirmés", cleanTitle:'confirmes', filter: {etat:"INT"}},
-                  {id:5, title:"A Vérifié", cleanTitle:'aVerifier', filter: {etat:"INT"}}, // et pas payé
+                  {id:0, type:0, title:"Toutes les Interventions",  cleanTitle:'All', filter: {}},
+                  {id:1, type:0, title:"Interventions en Cours", cleanTitle:'encours', filter: {etat:"ENC"}},
+                  {id:2, type:0, title:"Interventions à Prog.", cleanTitle:'aprogr', filter: {etat:"APR"}},
+                  {id:3, type:0, title:"Interventions Annulés", cleanTitle:'annules', filter: {etat:"ANN"}},
+                  {id:4, type:0, title:"Interventions Confirmés", cleanTitle:'confirmes', filter: {etat:"INT"}},
+                  {id:5, type:0, title:"A Vérifié", cleanTitle:'aVerifier', filter: {etat:"INT"}}, // et pas payé
             ]},{
              title:"Devis", 
              icon:'building-o',
              list: [
-                  {id:6,title:"Tous les Devis", cleanTitle:'DevisEnCours', filter: {etat:"DEV"}},
-                  {id:7,title:"Devis en cours", cleanTitle:'DevisEnCours', filter: {etat:"DEV"}},
-                  {id:8, title:"Devis Acceptés", cleanTitle:'DevisAccepte'},
+                  {id:6, type:1, title:"Tous les Devis", cleanTitle:'DevisEnCours', filter: {etat:"DEV"}},
+                  {id:7, type:1, title:"Devis en cours", cleanTitle:'DevisEnCours', filter: {etat:"DEV"}},
+                  {id:8, type:1, title:"Devis Acceptés", cleanTitle:'DevisAccepte'},
             ]},{
               title:"Relances",
               icon:'bell',
               list: [
-                  {id:9, title:"Relances Clients", cleanTitle:'RelancesClients'},
-                  {id:10, title:"Relances Artisan", cleanTitle:'RelancesArtisan'}
+                  {id:9 , type:2, title:"Relances Clients", cleanTitle:'RelancesClients'},
+                  {id:10, type:2, title:"Relances Artisan", cleanTitle:'RelancesArtisan'}
             ]}
     ],
       getFilter: function(cleanTitle) {

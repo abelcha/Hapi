@@ -8,7 +8,8 @@
   <link id="BootstrapDefaultTheme" rel="stylesheet" href="/bootswatch/classic/bootstrap.css">
   <link href="/font-awesome/css/font-awesome.min.css" rel="stylesheet">
   <link rel="stylesheet" href="/css/style.css">
-  <link rel="stylesheet" href="/nprogress/nprogress.css">
+  <link rel="stylesheet" href="/vex/css/vex.css">
+  <link rel="stylesheet" href="/vex/css/vex-theme-os.css">
    <base href="/interventions">
   <title>{{config.pageTitle}}</title>
   </head>
@@ -32,10 +33,10 @@
                 id="table-list"  
                 show-filter="true">
             <tbody id="tbody-list">
-              <tr data-id="{{info.id}}" ng-repeat-start="info in $data" ng-click="ClickOnRow($event, info.id)"  
+              <tr data-id="{{info.id}}" ng-repeat-start="info in $data" ng-click="ClickOnRow($event, info)"  
               ng-class="{warning : isInSelection(info.id)}">
                 <td  data-title="'Num Os'" sortable="'id'" filter="{ 'id': 'text' }">
-                    <strong>{{info.hide}}{{info.id}}</strong>
+                    <strong>{{info.id}}</strong>
                 </td>
                 <td data-title="'Télépro'" sortable="'telepro'" filter="{ 'telepro': 'select' }">
                   {{info.telepro}}
@@ -71,37 +72,39 @@
                 </td>
 
                 <td  data-title="'Etat Inter'" sortable="'etat'">  
-                  <button type="button" class="btn btn-circle btn-{{etatInterIcon[info.etat].c}}">
-                  <i class="fa" ng-class="info.aVerifier ? 'fa-question' : 'fa-{{etatInterIcon[info.etat].i}}'"></i></button>
+                  <button type="button" class="modal-win btn btn-circle btn-{{etatInterIcon[info.etat].c}}">
+                  <i class="modal-win fa" ng-class="info.aVerifier ? 'fa-question' : 'fa-{{etatInterIcon[info.etat].i}}'"></i></button>
                 </td>
                 <td  data-title="'Pmnt Client'" sortable="'pmntCli'" >
                   <button type="button" 
-                  class="btn btn-circle btn-{{info.ClientPaymentClass.c}}">
-                  <i class="fa fa-{{info.ClientPaymentClass.i}}"></i>
+                  class="modal-win  btn btn-circle btn-{{info.ClientPaymentClass.c}}">
+                  <i class="modal-win fa fa-{{info.ClientPaymentClass.i}}"></i>
                   </button> 
                 </td>
                 <td  data-title="'Pmnt Artisan'" sortable="'pmntSst'" >
                   <button type="button" 
-                  class="btn btn-circle" ng-class="info.pmntSst ? 'btn-success' : (info.pmntCli ? 'btn-warning' : 'btn-default')">
-                  <i class="fa " ng-class="info.pmntSst ? 'fa-check' : (info.pmntCli ? 'fa-question' : '')"></i>
+                  class="modal-win btn btn-circle" ng-class="info.pmntSst ? 'btn-success' : (info.pmntCli ? 'btn-warning' : 'btn-default')">
+                  <i class="modal-win fa " ng-class="info.pmntSst ? 'fa-check' : (info.pmntCli ? 'fa-question' : '')"></i>
                   </button> 
                 </td>              </tr>
               <tr style="display:none"></tr>
-              <tr ng-repeat-end ng-show="rowIsClicked(info.id);">
-                <td colspan="42">
-                  <div style="height:300px;background:white"> 
-                  <div style="float:left;text-align:left;margin:30px">
-                  {{info.civ}}
-                  <strong>{{info.nom}}</strong>
-                  <br>
-                  {{info.description}}
-                  <br>
-                  {{info.numero}} {{info.rue}} {{info.cp}}, {{info.add.v}}
-                  <br>
-                  <strong>{{interCtrl.artisan[info.artisan] || ""}}</strong>
-                  </div>
-
-
+              <tr ng-repeat-end ng-class="info.id == clickedRow ? 'show-preview' : 'hide-preview'">
+                <td colspan="42" style="z-index:-12312312">
+                  <div style="height:0px;background:white;"> 
+                    <div class="row">
+                      <div class="col-md-12">
+                        <div class="col-md-6">
+                         <strong>{{info.prixAnn}}</strong>
+                          <strong>{{info.nom}}</strong>
+                          <br>
+                          {{info._id | json}}
+                          <br>
+                          {{info.numero}} {{info.rue}} {{info.cp}}, {{info.add.v}}
+                          <br>
+                          <strong>{{interCtrl.artisan[info.artisan] || ""}}</strong>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </td>
               </tr>
@@ -117,6 +120,8 @@
     <script src="/bootstrap/dist/js/bootstrap.min.js" ></script>
     <script src="/ng-table/ng-table.js"               ></script>
     <script src="/angular-truncate/src/truncate.js"   ></script>
+     <script src="/vex/js/vex.combined.min.js"        ></script>
+     <script>vex.defaultOptions.className = 'vex-theme-os';</script>
     <script src="/js/artisans.js"                     ></script>
     <script type="text/javascript">
     var app = angular.module('InterventionApp', ['ngTable','truncate', 'ngTouch'])
@@ -125,6 +130,8 @@
               });
 
     </script>
-    <script src="/js/InterventionController.js"       ></script>
+    <script src="/InterventionController.js"       ></script>
+     <script src="/TabsController.js"       ></script>
+     <script src="/SideBarController.js"       ></script>
   </body>
 </html>

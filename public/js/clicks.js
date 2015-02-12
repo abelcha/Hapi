@@ -54,36 +54,11 @@ $scope.addInSelection = function(id) {
 
 
 
-$scope.isInSelection = function(id) {
-  return($scope.rowSelection.indexOf(id) + 1);
-}
-
-    $scope.ClickOnRow = function(event, id) {
-      console.log($rootScope.tableParams);
-      event.preventDefault();
-      event.stopPropagation();
-    if (event.metaKey || event.ctrlKey) {
-            return ($scope.addInSelection(id));
-    } else{
-      if ($scope.rowSelection.length == 0)
-         $scope.clickedRow = $scope.rowIsClicked(id) ? -1 : id;
-      $scope.rowSelection = [];
-    } 
-      //console.log(id);
-   /*   
-   */
-    };
                 /* ------------------------------*/
                 /*          ROW PREVIEW          */
                 /*    edisonpro like preview     */
                 /* ------------------------------*/  
 
-
-    $scope.clickedRow = -1;
-    $scope.rowIsClicked = function(id) {
-    //  console.log(id + " == " + this.clickedRow);
-      return ($scope.clickedRow == id);
-    };
 
 
 
@@ -171,21 +146,7 @@ $scope.isInSelection = function(id) {
 
 
 
-  $scope.toggleSidebar = function(i) {
-    var offset = (typeof i !== 'undefined' ? 77 : 0); 
-    if (i == 0 || $('.side-menu').css('margin-left') == "0px") {
-       $(".side-menu>div>ul>li:not(.toggleButton)").css("visibility", "hidden")
-       $('.side-body').css('margin-left', (  34 - offset) +"px");
-       $('.side-menu').css('margin-left', (-186 - offset) + "px");
 
-    }
-    else {
-       $('.side-body').css('margin-left', (offset ? 0 :220) + "px");
-       $('.side-menu').css('margin-left', "0px");
-       $(".side-menu>div>ul>li:not(.toggleButton)").css("visibility", "visible")
-    }
-    $('.fa-bars.fa-2x').toggleClass('fa-rotate-270');
-  }
 
 
 

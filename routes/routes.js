@@ -11,6 +11,14 @@ router.get('/data/interventions/find/:query', function(req, res) {
   }); 
 });
 
+router.get('/data/interventions/findOne/:query', function(req, res) {
+  var query = JSON.parse(req.params.query);
+    req.app.get("schemaDB").interventionModel.findOne(query, function (err, data){ 
+      res.json(data);
+  }); 
+});
+
+
 router.get('/clearCache', function(req, res) {
         req.app.get("schemaDB").interventionModel.find()
         .sort('-id')
@@ -78,6 +86,9 @@ router.get('/inters/:query', function(req, res) {
   res.render('Interventions', {config:config});
 });
 
+router.get('/etats', function(req, res) {
+  res.render('Interventions/etats', {});
+});
 
 
 router.get('/update', function(req, res) {

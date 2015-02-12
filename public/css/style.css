@@ -1,5 +1,26 @@
 
 
+.show-preview {
+  -webkit-transition: height 0.5s ease;
+-moz-transition: height 0.5s ease;
+-o-transition: height 0.5s ease;
+transition: height 0.5s ease;
+  height:350px;
+}
+
+.hide-preview>td {
+  display: none;
+}
+
+.hide-preview{
+  -webkit-transition: height 0.5s ease;
+  -moz-transition: height 0.5s ease;
+  -o-transition: height 0.5s ease;
+  transition: height 0.5s ease;
+  height:0px;
+}
+
+
 
 .fa {
   transition: transform 0.5s ease;
@@ -174,7 +195,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', end
 }
 
 .active-filter {
-border-right: 6px solid #D4D4D4
+border-right: 10px solid #D4D4D4
 }
 
 .side-menu .navbar-nav .active a {
