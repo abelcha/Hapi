@@ -25,7 +25,7 @@ exports.translateData = function(data, callback) {
 
 			//	InfoAuto
 					id: 		d.id,
-					telepro: 	d.ajoute_par,
+					telepro: 	d.ajoute_par == "" ? "boukris_b" : d.ajoute_par,
 					dateAjout: 	new Date(d.t_stamp * 1000),
 			//	},
 			//	InfoIntervention : {
@@ -39,7 +39,9 @@ exports.translateData = function(data, callback) {
 					produits : 	d.devis,
 					prixAnn: 	d.prix_ht_annonce,
 					prixFin: 	d.prix_ht_final,
-			//	},
+					modeRegl: 	d.mode_reglement,
+					reglSP: 	!d.fact,
+ 			//	},
 
 			//	InfoClient : {
 					civ: 		d.civilite,
@@ -63,6 +65,19 @@ exports.translateData = function(data, callback) {
 
 			// }
 		};
+		if (d.fact === true) {
+			console.log("facture");
+			tmp.facture = {
+					dateEnvoie:new Date(d.date_edition_facture * 1000),
+					envoyePar:d.facture_edite_par,
+					add: {
+						n: 		d.numero_facture,
+						r: 		d.adresse_facture,
+						v: 		d.ville_facture,
+						cp: 	d.code_postal_facture
+					},
+			}
+		}
 		stock.push(tmp);
 	}
 	

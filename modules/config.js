@@ -17,7 +17,7 @@ module.exports = {
                   {id:2, type:0, title:"Interventions à Prog.", cleanTitle:'aprogr', filter: {etat:"APR"}},
                   {id:3, type:0, title:"Interventions Annulés", cleanTitle:'annules', filter: {etat:"ANN"}},
                   {id:4, type:0, title:"Interventions Confirmés", cleanTitle:'confirmes', filter: {etat:"INT"}},
-                  {id:5, type:0, title:"A Vérifié", cleanTitle:'aVerifier', filter: {etat:"INT"}}, // et pas payé
+                  {id:5, type:0, title:"A Vérifié", cleanTitle:'aVerifier', filter: {aVerifier:true}}, // et pas payé
             ]},{
              title:"Devis", 
              icon:'building-o',
@@ -29,8 +29,16 @@ module.exports = {
               title:"Relances",
               icon:'bell',
               list: [
-                  {id:9 , type:2, title:"Relances Clients", cleanTitle:'RelancesClients'},
-                  {id:10, type:2, title:"Relances Artisan", cleanTitle:'RelancesArtisan'}
+                  {id:9 , type:2, title:"Relances Sst", cleanTitle:'RelancesSst', filter:{ClientPmntClass: "SP0"}, grouping:"artisan"},
+                  {id:10 , type:2, title:"Relances Sst Urgentes", cleanTitle:'RelancesSstUrgent', filter:{ClientPmntClass: "SP03"}, grouping:"artisan"},
+                  {id:11, type:2, title:"Relance Client", cleanTitle:'RelancesClient', filter:{ClientPmntClass: "FCT0", reglSP:false}},
+                  {id:12, type:2, title:"Relance Client Urgentes", cleanTitle:'RelancesClientUrgent', filter:{ClientPmntClass: "FCT03", reglSP:false}}
+            ]},{
+              title:"Comptabilité",
+              icon:'dollar',
+              list: [
+                  {id:13 , type:3, title:"Bordeau de remise", cleanTitle:'BordereauDeRemise', filter:{SstPmntClass:"OK"}, grouping: 'jourPmntSst', orderBy:'id'},
+                  {id:14 , type:3, title:"SST à payer", cleanTitle:'SstAPayé', filter:{ClientPmntClass:"OK", SstPmntClass:"NO"}},
             ]}
     ],
       getFilter: function(cleanTitle) {
@@ -39,6 +47,8 @@ module.exports = {
         for (var x in self.interFilters[k].list) {
           e = self.interFilters[k].list[x];
           if (e.cleanTitle === cleanTitle) {
+            if (typeof e.grouping !== 'undefined')
+              self.selectedGrouping = e.grouping;
             return (e.id);
           }
         }
@@ -86,10 +96,21 @@ module.exports = {
     },
 
 
+
+    interGrouping: [
+      {name: 'Aucun', grouping: 'NOPE'},
+      {name: 'Artisan', grouping: 'artisan'},
+      {name: 'Telepro', grouping: 'telepro'},
+      {name: "Jour",    grouping: 'jour'}
+    ],
+
+    selectedGrouping: "NOPE",
+
     parseFilter: function(query) {
       var self = this;
       self.selectedFilter = 0;
       self.selectedTelepro = -1;
+      self.selectedGrouping = "NOPE";
       query.forEach(function(e, i) {
         if (!self.selectedFilter)
           self.selectedFilter = self.getFilter(e);

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html ng-app="InterventionApp">
+
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">   
@@ -8,13 +9,14 @@
   <link id="BootstrapDefaultTheme" rel="stylesheet" href="/bootswatch/classic/bootstrap.css">
   <link href="/font-awesome/css/font-awesome.min.css" rel="stylesheet">
   <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/ContextMenu/css/submenu.css">
   <link rel="stylesheet" href="/vex/css/vex.css">
   <link rel="stylesheet" href="/vex/css/vex-theme-os.css">
    <base href="/interventions">
   <title>{{config.pageTitle}}</title>
   </head>
    <!-- ng-swipe-right="toggleSidebar();" ng-swipe-left="toggleSidebar(0);" -->
-  <body oncontextmenu="return false;" >
+  <body oncontextmenu="return false;" class="open-sidebar">
  <% include partials/navbar %> 
 
 
@@ -22,116 +24,38 @@
 
 <% include partials/sidebar %> 
     <!-- Main Content -->
-    <div class="container-fluid">
+    <div class="container-fluid" style="padding-right:0px">
         <div class="side-body">
 
           <%include partials/tabs %>
-          <table ng-controller="InterventionController as interCtrl" 
-                style="background:white;" 
-                ng-table="tableParams" 
-                class="table table-bordered table-hover table-hover table-striped" 
-                id="table-list"  
-                show-filter="true">
-            <tbody id="tbody-list">
-              <tr data-id="{{info.id}}" ng-repeat-start="info in $data" ng-click="ClickOnRow($event, info)"  
-              ng-class="{warning : isInSelection(info.id)}">
-                <td  data-title="'Num Os'" sortable="'id'" filter="{ 'id': 'text' }">
-                    <strong>{{info.id}}</strong>
-                </td>
-                <td data-title="'Télépro'" sortable="'telepro'" filter="{ 'telepro': 'select' }">
-                  {{info.telepro}}
-                </td>
-                <td  data-title="'Cat.'" sortable="'cat'" filter="{ 'cat': 'text' }">
-                   <button class="btn btn-default btn-circle">
-                     {{info.cat}}
-                   </button>
-                </td>
-                <td class="date-length" data-title="'Date Ajout'" sortable="'dateAjout'" filter="{ 'dateAjout': 'text' }" >
-                      {{info.dateAjout | date:"dd/MM/yy"}}
-                      {{info.dateAjout | date:"HH'h'mm"}}
-                </td>
-                <td class="variable-length" data-title="'Client'" sortable="'nom'" filter="{ 'nom': 'text' }">
-                  {{info.civ}}
-                  <strong>{{info.nom |  characters:18 :true}}</strong>  
-                </td>
-                <td  class="variable-length" data-title="'Ville'" sortable="'add.v'" filter="{ 'add.v': 'text' }">
-                    {{info.add.v  |  characters:15 :true }}
-                </td>
-                <td   data-title="'CP'" sortable="'add.cp'" filter="{ 'add.cp': 'text' }">
-                  <strong> {{info.add.cp.substring(0,2)}}</strong>{{info.add.cp.substring(2,5)}}
-                </td>
-                <td  class="variable-length" data-title="'Artisan'" sortable="'sst'" 
-                filter="{ 'sst': 'text' }" >
-                    <strong>{{interCtrl.artisan[info.sst] |  characters:15 :true || ""}}</strong>
-                </td>
-                <td class="date-length"  data-title="'Date Intervention'" sortable="'dateInter'" filter="{ 'dateInter': 'text' }">
-                    <div ng-show="info.dateInter[0] != 1">
-                      {{info.dateInter | date:"dd/MM/yy" || ""}}
-                      {{info.dateInter | date:"HH'h'mm" || ""}}
-                    </div>
-                </td>
+          <%include partials/table-grouping %>
 
-                <td  data-title="'Etat Inter'" sortable="'etat'">  
-                  <button type="button" class="modal-win btn btn-circle btn-{{etatInterIcon[info.etat].c}}">
-                  <i class="modal-win fa" ng-class="info.aVerifier ? 'fa-question' : 'fa-{{etatInterIcon[info.etat].i}}'"></i></button>
-                </td>
-                <td  data-title="'Pmnt Client'" sortable="'pmntCli'" >
-                  <button type="button" 
-                  class="modal-win  btn btn-circle btn-{{info.ClientPaymentClass.c}}">
-                  <i class="modal-win fa fa-{{info.ClientPaymentClass.i}}"></i>
-                  </button> 
-                </td>
-                <td  data-title="'Pmnt Artisan'" sortable="'pmntSst'" >
-                  <button type="button" 
-                  class="modal-win btn btn-circle" ng-class="info.pmntSst ? 'btn-success' : (info.pmntCli ? 'btn-warning' : 'btn-default')">
-                  <i class="modal-win fa " ng-class="info.pmntSst ? 'fa-check' : (info.pmntCli ? 'fa-question' : '')"></i>
-                  </button> 
-                </td>              </tr>
-              <tr style="display:none"></tr>
-              <tr ng-repeat-end ng-class="info.id == clickedRow ? 'show-preview' : 'hide-preview'">
-                <td colspan="42" style="z-index:-12312312">
-                  <div style="height:0px;background:white;"> 
-                    <div class="row">
-                      <div class="col-md-12">
-                        <div class="col-md-6">
-                         <strong>{{info.prixAnn}}</strong>
-                          <strong>{{info.nom}}</strong>
-                          <br>
-                          {{info._id | json}}
-                          <br>
-                          {{info.numero}} {{info.rue}} {{info.cp}}, {{info.add.v}}
-                          <br>
-                          <strong>{{interCtrl.artisan[info.artisan] || ""}}</strong>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table> 
         </div>
     </div>
-     <% include partials/context %>
 </div>
-    <script src="/angular/angular.min.js"             ></script>
-    <script src="/angular-touch/angular-touch.min.js" ></script>
-    <script src="/jquery/dist/jquery.min.js"          ></script>
-    <script src="/bootstrap/dist/js/bootstrap.min.js" ></script>
-    <script src="/ng-table/ng-table.js"               ></script>
-    <script src="/angular-truncate/src/truncate.js"   ></script>
-     <script src="/vex/js/vex.combined.min.js"        ></script>
-     <script>vex.defaultOptions.className = 'vex-theme-os';</script>
+    <script src="/angular/angular.min.js"                 ></script>
+    <script src="/angular-touch/angular-touch.min.js"     ></script>
+    <script src="/jquery/dist/jquery.min.js"              ></script>
+    <script src="/bootstrap/dist/js/bootstrap.min.js"     ></script>
+    <script src="/ng-table/ng-table.js"                   ></script>
+    <script src="/angular-truncate/src/truncate.js"       ></script>
+    <script src="/vex/js/vex.combined.min.js"             ></script>
+    <script src="/moment/min/moment.min.js"               ></script>
+    <script src="/ContextMenu/js/ContextMenu.min.js"      ></script>
+    <script>vex.defaultOptions.className = 'vex-theme-os';</script>
     <script src="/js/artisans.js"                     ></script>
     <script type="text/javascript">
     var app = angular.module('InterventionApp', ['ngTable','truncate', 'ngTouch'])
               app.run(function($rootScope) {
                   $rootScope.config = <%- JSON.stringify(config); %>
               });
-
+      var modalBox = false;
     </script>
-    <script src="/Controllers/InterventionController.js"       ></script>
-     <script src="/Controllers/TabsController.js"       ></script>
-     <script src="/Controllers/SideBarController.js"       ></script>
+      <script src="/Controllers/InterventionController.js"       ></script>
+     <script src="/Controllers/TabsController.js"                ></script>
+     <script src="/Controllers/SideBarController.js"             ></script>
+     <script src="/Controllers/ContextMenuController.js"         ></script>
+    <% include partials/context %>
+    
   </body>
 </html>

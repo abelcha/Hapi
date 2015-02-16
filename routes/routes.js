@@ -22,7 +22,7 @@ router.get('/data/interventions/findOne/:query', function(req, res) {
 router.get('/clearCache', function(req, res) {
         req.app.get("schemaDB").interventionModel.find()
         .sort('-id')
-        .select('-_id id telepro dateAjout add.v add.cp sst cat nom civ pmntCli pmntSst etat dateInter')
+        .select('-_id id telepro dateAjout add.v add.cp sst cat nom civ pmntCli pmntSst etat dateInter prixAnn reglSP')
         .exec(function (err, interList){ 
         req.app.get("cache").put("all", interList);
         res.json(interList);
@@ -37,13 +37,18 @@ router.get('/data/interventions/all', function(req, res) {
     } else {
         req.app.get("schemaDB").interventionModel.find()
         .sort('-id')
-        .select('-_id id telepro dateAjout add.v add.cp sst cat nom prenom civ pmntCli pmntSst etat dateInter')
+        .select('-_id id telepro dateAjout add.v add.cp sst cat nom civ pmntCli pmntSst etat dateInter prixAnn reglSP')
         .exec(function (err, interList){ 
         req.app.get("cache").put("all", interList);
         res.json(interList);
       }); 
     }
 });
+
+router.get('/test', function(req, res) {
+  res.render('interventions/test', {});
+});
+
 
 router.get('/viewJSON/:type/:query', function(req, res) {
   res.render('viewJSON', { q: req.params.type + "/" + req.params.query});
@@ -82,12 +87,15 @@ router.get('/inters', function(req, res) {
 router.get('/inters/:query', function(req, res) {
   var config = require("../modules/config.js");
   config.parseFilter(req.params.query.split(':'));
-  console.log(config);
   res.render('Interventions', {config:config});
 });
 
 router.get('/etats', function(req, res) {
   res.render('Interventions/etats', {});
+});
+
+router.get('/gmap', function(req, res) {
+  res.render('gmap', {});
 });
 
 

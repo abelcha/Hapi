@@ -30,10 +30,18 @@ app.controller('TabsController', function($scope, $rootScope, $location) {
     }
 
 
+ $rootScope.setGrouping = function(grouping, reload) {
+      $rootScope.config.selectedGrouping = grouping;
+      $rootScope.tableParams.settings().groupBy = grouping;
+      $rootScope.tableParams.$params.sorting = {}
+      $rootScope.tableParams.$params.sorting[grouping] = "asc"
+      if (reload)
+        $rootScope.tableParams.reload();
+    }
 
 
 
-    $rootScope.setDate = function(date, reload) {
+    $rootScope.setDate = function(date) {
       $rootScope.config.selectedDate = date;
       $rootScope.updateUrl()
       var limit = Date.now() - $rootScope.config.interDate[date].ts;
@@ -41,7 +49,6 @@ app.controller('TabsController', function($scope, $rootScope, $location) {
         var ts = new Date(e.dateAjout).getTime();
         e.hide = ($rootScope.config.selectedDate != 0 && (ts - limit <= 0));
       });
-      if (reload)
         $rootScope.tableParams.reload();
     }
 

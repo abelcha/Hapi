@@ -1,68 +1,21 @@
 
 <style type="text/css">
     
-    #context-menu-container ul {
-    margin: 0px;
-    padding: 4px 0;
-    list-style: none;
-    min-width: 160px;
-    background: white;
-    white-space: nowrap;
-    }
-    #context-menu {
-    display: none;
-    font-family: "Open Sans","lucida grande","Segoe UI",arial,verdana,"lucida sans unicode",tahoma,sans-serif;
-    font-size: 13px;
-    color: #3d464d;
-    font-weight: 900;
-    position: absolute;
-    z-index: 501;
-    }
-    .chat-bubble, .chat-bubble-bottom {
-    border: 1px solid #bdc4c9;
-    }
-    .chat-bubble {
-    -moz-box-shadow: 0px 1px 2px rgba(0,0,0,0.1),inset 0 0 0 #000;
-    -webkit-box-shadow: 0px 1px 2px rgba(0,0,0,0.1),inset 0 0 0 #000;
-    box-shadow: 0px 1px 2px rgba(0,0,0,0.1),inset 0 0 0 #000;
-    }
-    #context-menu li.action {
-    height: 34px;
-    }
-    #context-menu li.primary {
-    position: relative;
-    }
-    #context-menu li:hover {
-        background-color: whitesmoke;
-    }
-    user agent stylesheetli {
-    display: list-item;
-    text-align: -webkit-match-parent;
-    }
-#context-menu-container ul {
-margin: 0px;
-padding: 4px 0;
-list-style: none;
-min-width: 160px;
-white-space: nowrap;
-}
-#context-menu button {
-min-width: 160px;
-height: 100%;
-padding: 8px 8px;
-margin: 0;
-text-align: left;
-vertical-align: middle;
-background-color: transparent;
-border: none;
-}
 #context-menu button:focus {outline:0;}
 </style>
-<div id="context-menu-container">
-    <ul id="context-menu" class="chat-bubble menu " style="left: 605px; top: 147px;">
+
+
+
+<div ng-controller="ContextMenuController"id="context-menu-container" ng-show="rightClickedRow !== -1">
+    <ul id="contextMenu" class="dropdown-menu" role="menu" style="  display: block;
+  position: absolute;">
+    <li  ng-repeat="link in contextMenu | orderBy:id" ng-show="link.display"><a  href="#">{{link.title}}</a></li>
+   <!--  <li class="divider"></li> -->
+</ul>
+<!--     <ul id="context-menu" class="chat-bubble menu " style="left: 605px; top: 147px;">
         <li class="action primary" ng-repeat="link in contextMenu" ng-show="link.display">
                 <button>{{link.title}}</button>
         </li>
 
-    </ul>
+    </ul> -->
 </div>

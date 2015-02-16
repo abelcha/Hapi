@@ -21,6 +21,8 @@ module.exports.interventionSchema = new mongoose.Schema({
 			prixAnn: 	Number,
 			prixFin: 	Number,
 			modeRegl: 	String,
+			reglSP: 	Boolean,
+			facture: 	{},
 			remarque: 	String, 
 			comments:   [],
 			produits:   {},

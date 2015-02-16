@@ -5,13 +5,24 @@ app.controller('InterventionController', function($scope, $rootScope, $filter, $
     this.artisan = artisan;
 
       $scope.etatInterIcon = {
-        INT: {c:'success', i:'check'},
-        ENC: {c:'warning', i:'refresh'},
-        APR: {c:'default', i:''},
-        ANN: {c:'danger', i:'close'},
-        DEV: {c:'info', i:'align-justify'}
+        INT: {c:'success', i: 'check'},
+        ENC: {c:'warning', i: 'refresh'},
+        APR: {c:'default', i: ''},
+        ANN: {c:'danger',  i: 'close'},
+        DEV: {c:'info',    i: 'align-justify'}
       }
 
+      $scope.etatPmntIcon = {
+        OK:   {c: 'success', i: 'check'},
+        FCT1:  {c:'info',     i: 'circle-thin'},
+        FCT02:  {c:'info',     i: 'question'},
+        FCT03:  {c:'primary',  i: 'warning'},
+        SP1:  {c: 'warning', i: 'circle-thin'},
+        SP02:  {c: 'warning', i: 'question'},
+        SP03:  {c: 'danger',  i: 'warning'},
+        DEF:  {c: 'default',oi: ''}
+      }
+ 
     var setClientPaymentClass = function(info) {
       var hour = 1000 * 60 * 60;
       var week = hour * 24 * 7;
@@ -20,16 +31,15 @@ app.controller('InterventionController', function($scope, $rootScope, $filter, $
 
       info.aVerifier = (info.etat == 'ENC' && (dtInter + hour) < Date.now());
       if (info.pmntCli)
-        return ({c: 'success', i:'check'});
+        return ("OK");
       if (info.etat == 'INT') {
         var dateDiff =  Date.now() - dtInter;
-        return (dateDiff > (4 * week) ?  {c: 'danger',  i: 'warning'} : 
-                dateDiff > (2 * week) ?  {c: 'warning', i: 'question'} : 
-                {c: 'warning', i:'circle-thin'} );
+        var rtn = info.reglSP ? "SP" : "FCT";
+        rtn += (dateDiff > (4 * week) ?  "03" : dateDiff > (2 * week) ? "02" : "1");
+        return (rtn);
       }
-      return ({c: 'default', i:''});
+      return ("DEF");
     }
-
 
 
 
@@ -41,7 +51,12 @@ app.controller('InterventionController', function($scope, $rootScope, $filter, $
 
     function initData(inter) {
       inter.hide = false;
-      inter.ClientPaymentClass = setClientPaymentClass(inter);
+      inter.ClientPmntClass = setClientPaymentClass(inter);
+      inter.SstPmntClass = (inter.pmntSst === null ? "NO" : "OK");
+      inter.artisan = inter.sst && artisan[inter.sst] ? artisan[inter.sst].nom : "A Programmer";
+      inter.jour = moment(inter.dateAjout).format('ll');
+      if (inter.pmntSst)
+        inter.jourPmntSst = moment(inter.pmntSst).format('ll');
       if ($rootScope.config.selectedDate)
        initDateFilters(inter);
       return (inter);
@@ -72,11 +87,11 @@ app.controller('InterventionController', function($scope, $rootScope, $filter, $
     $scope.getInterventionList({ q: "", limit: 100, sort: "-id"}, function(data) {
         $rootScope.newData = data.map(initData);
         $rootScope.tableParams = new ngTableParams({
-            page: 1, // show first page
-            count: 100,
-            filter: initFilters(),
-            sorting:{id:'desc'}
-        }, {
+        page: 1,            // show first page
+        filter: initFilters(),
+        count: 100          // count per page
+    }, {
+            groupBy:$rootScope.config.selectedGrouping,
             total: getData().length, // length of data
             getData: function($defer, params) {
                 var filteredData = getData();
@@ -91,8 +106,9 @@ app.controller('InterventionController', function($scope, $rootScope, $filter, $
              // No idea why it work
             $scope: {
                 $data: {}
-            }
-        });
+            },
+            filterDelay:100
+    });
                // Then get all the inters
          console.time("get interventions data");
         $http.get('/data/interventions/all').success(function(data) {
@@ -109,12 +125,8 @@ app.controller('InterventionController', function($scope, $rootScope, $filter, $
 
 
 
-
-
-
-
-
 var openDialog = function() {
+  $('body>.row').addClass("blurred");
   vex.dialog.open({
     message: 'Enter your username and password:',
     input: "<input name=\"username\" type=\"text\" placeholder=\"Username\" required />\n<input name=\"password\" type=\"password\" placeholder=\"Password\" required />",
@@ -126,6 +138,8 @@ var openDialog = function() {
       })
     ],
     callback: function(data) {
+      $('body>.row').removeClass("blurred");
+      modalBox = false;
       if (data === false) {
         return console.log('Cancelled');
       }
@@ -139,8 +153,8 @@ var openDialog = function() {
 $scope.clickedRowData = {};
 $scope.clickedRow = -1;
 $scope.rowSelection = [];
-
-
+$scope.categories= {"PL" : "Plomberie", "EL": "Électricité", "VT" : "Vitrerie", "SR" : "Serrurerie", "CH": "Chauffage"};
+//$scope.modeReglement = {'CHQ': }
 $scope.isInSelection = function(id) {
   return($scope.rowSelection.indexOf(id) + 1);
 }
@@ -159,23 +173,24 @@ $scope.addInSelection = function(id) {
 
 var openPreview = function(info) {
    $scope.clickedRow = (info.id == $scope.clickedRow) ? -1 : info.id;
+    window.setTimeout(function(){
+            $("[data-id='" + info.id + "']").next().next().find(".col-md-12").removeClass('hide');
+    }, 250);
    if ($scope.clickedRow === -1)
       return (0);
-    console.time("load data");
     $http.get('/data/interventions/findOne/' + JSON.stringify({id:info.id})).success(function(data) {
-        console.timeEnd("load data");
-        console.log(data);
-       // $scope.$apply(function() {
           $scope.clickedRowData = data;
-        //}); 
     });
+
 }
+
+
     
   $scope.ClickOnRow = function(event, info) {
-
-//console.log($rootScope.newData);
-      event.preventDefault();
-      event.stopPropagation();
+    if ($rootScope.rightClickedRow !== -1) {
+        $rootScope.rightClickedRow = -1;
+        return;
+    }
     if ($(event.target).is('.modal-win')) {
       return (openDialog());
     }
@@ -190,11 +205,10 @@ var openPreview = function(info) {
 
 
 })
+
 .config(['$locationProvider', function($locationProvider){
     $locationProvider.html5Mode(true).hashPrefix('!')
 }])
-
-
 
 
 

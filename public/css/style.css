@@ -1,22 +1,56 @@
+body.open-sidebar > .row > .container-fluid > .side-body {
+  margin-left: 220px; 
+}
 
+body.open-sidebar > .row >.side-menu {
+  margin-left:0px
+}
+
+body.closed-sidebar > .row >.side-menu>div>ul>li:not(.toggleButton) {
+  visibility: hidden;
+}
+
+
+body.closed-sidebar > .row > .container-fluid > .side-body {
+  margin-left: 34px; 
+}
+
+body.closed-sidebar > .row >.side-menu {
+  margin-left:-186px
+}
+
+body.open-sidebar > .row >.side-menu>div>ul>li:not(.toggleButton) {
+  visibility: visible;
+}
+
+
+.ng-table-group>td>a>strong {
+  color:black;
+  font-size:22px;
+}
 
 .show-preview {
-  -webkit-transition: height 0.5s ease;
--moz-transition: height 0.5s ease;
--o-transition: height 0.5s ease;
-transition: height 0.5s ease;
+  -webkit-transition: height 0.15s ease;
+-moz-transition: height 0.15s ease;
+-o-transition: height 0.15s ease;
+transition: height 0.15s ease;
   height:350px;
 }
+
+.blurred {
+  -webkit-filter: blur(8px);
+}
+
 
 .hide-preview>td {
   display: none;
 }
 
 .hide-preview{
-  -webkit-transition: height 0.5s ease;
-  -moz-transition: height 0.5s ease;
-  -o-transition: height 0.5s ease;
-  transition: height 0.5s ease;
+  -webkit-transition: height 0.15s ease;
+  -moz-transition: height 0.15s ease;
+  -o-transition: height 0.15s ease;
+  transition: height 0.15s ease;
   height:0px;
 }
 
@@ -108,7 +142,7 @@ td {
 
 /* Smooth transitions */
 *{
-    transition: all 100ms ease;
+    /*transition: all 100ms ease;*/
 }
 
 /*  Avoid default margin on page pagination: ;*/

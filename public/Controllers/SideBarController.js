@@ -3,18 +3,7 @@ app.controller('SideBarController', function($scope, $rootScope, $location) {
 
 
   $scope.toggleSidebar = function(i) {
-    var offset = (typeof i !== 'undefined' ? 77 : 0); 
-    if (i == 0 || $('.side-menu').css('margin-left') == "0px") {
-       $(".side-menu>div>ul>li:not(.toggleButton)").css("visibility", "hidden")
-       $('.side-body').css('margin-left', (  34 - offset) +"px");
-       $('.side-menu').css('margin-left', (-186 - offset) + "px");
-
-    }
-    else {
-       $('.side-body').css('margin-left', (offset ? 0 :220) + "px");
-       $('.side-menu').css('margin-left', "0px");
-       $(".side-menu>div>ul>li:not(.toggleButton)").css("visibility", "visible")
-    }
+    $('body').toggleClass('closed-sidebar').toggleClass('open-sidebar');
     $('.fa-bars.fa-2x').toggleClass('fa-rotate-270');
   }
   
@@ -30,6 +19,7 @@ app.controller('SideBarController', function($scope, $rootScope, $location) {
     }
     return (null);
   }
+
   $scope.changeFilter = function(fltr) {
       $rootScope.config.selectedFilter = fltr;
       var newFilter = $rootScope.getFilter();
@@ -38,6 +28,8 @@ app.controller('SideBarController', function($scope, $rootScope, $location) {
       $rootScope.tableParams.$params.filter.hide = false;
       if (typeof selectedTelepro !== "undefined")
         $rootScope.tableParams.$params.filter.telepro = selectedTelepro;
+      if (newFilter.grouping)
+       $rootScope.setGrouping(newFilter.grouping, false)
       $rootScope.updateUrl();
   }
 
