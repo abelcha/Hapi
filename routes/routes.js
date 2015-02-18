@@ -94,8 +94,23 @@ router.get('/etats', function(req, res) {
   res.render('Interventions/etats', {});
 });
 
+
+
+
 router.get('/gmap', function(req, res) {
   res.render('gmap', {});
+});
+
+router.get('/artisan', function(req, res) {
+  var inter = require('../modules/artisan.js');
+  inter.dumpData(function(artisanList){
+    req.app.get("schemaDB").artisanModel.remove({}, function (err) {
+      req.app.get("schemaDB").artisanModel.create(artisanList, function(err) {
+      //    console.log(artisanList);
+          res.render('index', { title: 'Express', artisanList: {} });
+      }); 
+    });
+  });
 });
 
 
@@ -104,11 +119,30 @@ router.get('/update', function(req, res) {
   inter.dumpData(function(interList){
   	req.app.get("schemaDB").interventionModel.remove({}, function (err) {
       req.app.get("schemaDB").interventionModel.create(interList, function(err) {
-  			  console.log(interList);
+  			  //console.log(interList);
           res.render('index', { title: 'Express', interList: {} });
       }); 
 		});
   });
 });
+
+
+router.get('/mail', function(req, res) {
+  var mail = require("../modules/edison-mail.js")
+  var rtn = mail.sendMail({
+    content :{
+      name:"M. Chalier", 
+      title:"Changement d'adresse", 
+      textFile:"ChangementAdresse",
+      template:"basic"
+    },
+    options : {
+      adress:"abel@chalier.me"
+    }
+  });
+   res.end( rtn)
+});
+
+
 
 module.exports = router;

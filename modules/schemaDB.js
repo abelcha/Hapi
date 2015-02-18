@@ -44,6 +44,35 @@ module.exports.interventionSchema = new mongoose.Schema({
 			},
 			pmntCli: 		Date,
 			pmntSst: 		Date
-	});
+});
 
+
+module.exports.artisanSchema = new mongoose.Schema({
+	id: 			Number,
+	civ: 			String,
+	nomSociete: 	String,
+	nomRep: 		String,
+	prenomRep: 		String,
+	categories:		[],
+	formeJuridique: String,
+	email: 			String,
+	tel1: 			String,
+	tel2: 			String,
+	archive: 		Boolean,
+	dateAjout: 		Date,
+	ajoutePar: 		String,
+	add: {
+		n: 		Number,
+		r: 		String,
+		v: 		String,
+		cp: 	String,
+		lt: 	Number,
+		lg: 	Number,
+	},
+
+
+});
+
+
+module.exports.artisanModel = mongoose.model('artisan', module.exports.artisanSchema);
 module.exports.interventionModel = mongoose.model('intervention', module.exports.interventionSchema);

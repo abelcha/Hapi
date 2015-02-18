@@ -85,10 +85,6 @@ exports.translateData = function(data, callback) {
 	callback(stock);
 };
 
-exports.pushDatatoDB = function(DB, data, callback) {
-callback(data);
-};
-
 
 exports.dumpData = function(callback) {
 	var that = this;
