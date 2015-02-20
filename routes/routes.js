@@ -3,6 +3,22 @@ var router = express.Router();
 
 /* GET home page. */
 
+function auth(req, res, next) {
+
+    // do any checks you want to in here
+//console.log(req.isAuthenticated());
+//console.log(req.user);
+    // CHECK THE USER STORED IN SESSION FOR A CUSTOM VARIABLE
+    // you can do this however you want with whatever variables you set up
+    //if (req.user.authenticated)
+        return next();
+
+    // IF A USER ISN'T LOGGED IN, THEN REDIRECT THEM SOMEWHERE
+    res.redirect('/');
+}
+
+
+
 router.get('/data/interventions/find/:query', function(req, res) {
   var query = JSON.parse(req.params.query);
     req.app.get("schemaDB").interventionModel.find(query.q).sort(query.sort).limit(query.limit).exec(function (err, interList){ 
@@ -79,7 +95,7 @@ router.get('/data/interventions/count/:query', function(req, res) {
     res.json(interList);
   }); 
 });
-router.get('/inters', function(req, res) {
+router.get('/inters', auth, function(req, res) {
   var config = require("../modules/config.js")
  	res.render('Interventions', {config:config});
 });
@@ -90,7 +106,7 @@ router.get('/inters/:query', function(req, res) {
   res.render('Interventions', {config:config});
 });
 
-router.get('/etats', function(req, res) {
+router.get('/etats', auth,  function(req, res) {
   res.render('Interventions/etats', {});
 });
 
@@ -114,6 +130,7 @@ router.get('/artisan', function(req, res) {
 });
 
 
+
 router.get('/update', function(req, res) {
   var inter = require('../modules/intervention.js');
   inter.dumpData(function(interList){
@@ -127,22 +144,40 @@ router.get('/update', function(req, res) {
 });
 
 
-router.get('/mail', function(req, res) {
+router.get('/mail', auth, function(req, res) {  
   var mail = require("../modules/edison-mail.js")
-  var rtn = mail.sendMail({
-    content :{
-      name:"M. Chalier", 
-      title:"Changement d'adresse", 
-      textFile:"ChangementAdresse",
-      template:"basic"
-    },
-    options : {
-      adress:"abel@chalier.me"
-    }
+  req.app.get("schemaDB").artisanModel
+        .find()
+        .select("nomSociete -_id id nomRep dateAjout add email tel1 tel2 archive")
+        .exec(function (err, ssts){ 
+            ssts.forEach(function(e, i) {
+               rtn = mail.sendMail({
+                  name:"M. " + e.nomRep, 
+                  title:"Déménagement de nos locaux et de nos services", 
+                  textFile:"ChangementAdresse",
+                  template:"basic",
+                  adress:e.email
+
+              });
+            });
+      res.end( rtn)
   });
-   res.end( rtn)
 });
 
+router.get('/address', function(req, res) {  
+  req.app.get("schemaDB").artisanModel
+        .find({archive:false, dateAjout:{$lte: new Date("2014-09-01")}})
+        .select("nomSociete -_id id nomRep dateAjout add email tel1 tel2 archive")
+        .exec(function (err, ssts){ 
+       res.render("TMP/address", {ssts:ssts})
+      });
+});
+
+router.get('/', function(req, res) {
+
+  res.render('Login/login', { title: 'Express', interList: {} });
+
+});
 
 
 module.exports = router;

@@ -16,41 +16,25 @@ module.exports.renderMail = function(content) {
 }
 
 module.exports.sendMail = function(data) {
-//	return (this.renderMail(data.content))
+//	
 
-var sendgrid = require("sendgrid")("app33756489@heroku.com", "63tqwed2");
-var email = new sendgrid.Email();
- 
-email.addTo("abel.chalier@epitech.eu");
-email.setFrom("you@youremail.com");
-email.setSubject("Sending with SendGrid is Fun");
-email.setHtml("and easy to do anywhere, even with Node.js");
-sendgrid.send(email, function(err, json) {
-  if (err) { return console.error(err); }
-  console.log(json);
-});
+var postmark = require("postmark");
+var client = new postmark.Client("b2c424bc-af2b-4175-b76f-c863bb3915c3");
+console.log(data.name + " - " + data.adress)
+ /*
+client.sendEmail({
+    "From": "intervention@edison-services.fr", 
+    "To": data.adress, 
+    "Subject": data.title, 
+    "HtmlBody": this.renderMail(data)
+}, function(error, success) {
+    if(error) {
+        console.error("Unable to send via postmark: " + error.message);
+        return;
+    }
+    console.info("Sent to postmark for delivery")
 
-	/*var nodemailer = require("nodemailer");
-	var smtpTransport = nodemailer.createTransport({
-	   service: "Gmail",
-	   auth: {
-	       user: "jeremie.edison@gmail.com",
-	       pass: "edison123456"
-	   }
-	});
+});*/
+return (this.renderMail(data))
 
-	smtpTransport.sendMail({
-	   from: "Edison <intervention@edison-services.fr>", // sender address
-	   to: "Abel <abel@chalier.me>", // comma separated list of receivers
-	   subject: data.options.title, // Subject line
-	   html: this.renderMail(data.content),
-	}, function(error, response){
-	   if(error){
-	   	console.log(error);
-	       return(error);
-	   }else{
-	   	console.log(response);
-	       return("Message sent: " + response.message);
-	   }
-	});*/
 }
