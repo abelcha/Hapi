@@ -10,7 +10,8 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-
+var session      = require('express-session');
+var flash    = require('connect-flash');
 // Database
 var mongo = require('mongodb');
 
@@ -24,49 +25,37 @@ var users = require('./routes/users');
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
-app.set("schemaDB", require("./modules/schemaDB.js"))
-app.set("cache", require('memory-cache'));
+var _db = require("./modules/schemaDB.js");
+var memCache = require('memory-cache');
+
+
+
 
 var passport = require('passport');
-var LocalStrategy = require('passport-local').Strategy;
-app.use(compress());  
+var passportConfig = require('./config/passport')(passport); // pass passport for configuration
+
+
+// set up our express application
+//app.use(morgan('dev')); // log every request to the console
+app.use(cookieParser()); // read cookies (needed for auth)
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
+app.use(bodyParser.urlencoded({ extended: true }));
 
-/*  AUTHENTIFICATION */
+app.set('view engine', 'ejs'); // set up ejs for templating
 
-//app.use(passport.session({ secret: 'keyboard cat' }));
+// required for passport
+app.use(compress());  
+//app.use(session({ secret: 'ilovescotchscotchyscotchscotch' })); // session secret
+app.use(session(passportConfig));
 app.use(passport.initialize());
-app.use(passport.session());
+app.use(passport.session()); // persistent login sessions
+app.use(flash()); // use connect-flash for flash messages stored in session
+
+// routes ======================================================================
 
 
-passport.serializeUser(function(user, done) {
-  console.log("serialize()")
-  done(null, user);
-});
+require('./routes/routes.js')(app, _db, passport, memCache); // load our routes and pass in our app and fully configured passport
 
-passport.deserializeUser(function(user, done) {
-  console.log("deser")
-  done(null, user);
-});
-
-passport.use(new LocalStrategy(
-  function(username, password, done) {
-   if (username == "abel" && password == "123") {
-     return done(null, {toto:"abel", lol:42});
-   }
-    return done(null, false);
-  }
-));
-
-
-app.post('/login', function(req, res, next) {
-    console.log("user : ", req.body.username);
-    console.log("password : ", req.body.password);
-    passport.authenticate('local', { successRedirect: '/inters',
-                                     failureRedirect: '/' })(req, res, next);
-});
 
 /*  !AUTHENTIFICATION */
 
@@ -75,8 +64,6 @@ app.use(express.static(path.join(__dirname, 'bower_components')));
 app.use(express.static(path.join(__dirname, 'controllers')));
 app.use(express.static(path.join(__dirname, 'modules')));
 app.use('/', routes);
-app.use('/users', users);
-
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -105,4 +92,3 @@ http.listen(port, function(){
   console.log('listening on *:' + port);
 });
 
-var schema = app.get("schemaDB");

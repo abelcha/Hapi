@@ -73,6 +73,22 @@ module.exports.artisanSchema = new mongoose.Schema({
 
 });
 
+module.exports.userSchema = new mongoose.Schema({
+	
+	portable:String,
+	email:String,
+	nom:String,
+	prenom:String,
+	pseudo:String,
+	login:String,
+	service:String,
+	ligne:String,
+	root:Boolean,
+	password:String,
+	activated:Boolean
+});
 
+
+module.exports.userModel = mongoose.model('user', module.exports.userSchema);
 module.exports.artisanModel = mongoose.model('artisan', module.exports.artisanSchema);
 module.exports.interventionModel = mongoose.model('intervention', module.exports.interventionSchema);
