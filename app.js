@@ -32,7 +32,7 @@ var memCache = require('memory-cache');
 
 
 var passport = require('passport');
-var passportConfig = require('./config/passport')(passport); // pass passport for configuration
+var passportConfig = require('./config/passport')(passport, _db); // pass passport for configuration
 
 
 // set up our express application

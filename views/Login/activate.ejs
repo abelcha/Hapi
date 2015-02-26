@@ -2,11 +2,11 @@
 <html>
 <head>
     <title>
-        Edison Services
+        Activer votre compte
     </title>
 <!-- Latest compiled and minified CSS -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
-
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.2.0/animate.min.css">
   <link rel="shortcut icon" href="https://angularjs.org/favicon.ico" />
 
 
@@ -20,7 +20,7 @@
     
     body {
         background-color: #444;
-        background: url(/img/login2.jpg);
+        background: url(/img/stardust.png);
  background-size: auto; 
     }
     .form-signin input[type="text"] {
@@ -78,11 +78,12 @@
                                         <label class="panel-login">
                                             <div class="login_result"></div>
                                         </label>
-                                        <input class="form-control" readonly value="chalie_a">
-                                        <i>* Entrer votre mot de passe pour confirmer votre compte</i>
-                                        <input class="form-control" placeholder="Mot de Passe" name="Password" type="password">
-                                        <input class="form-control" placeholder="Confirmation" name="password2" type="password">
-                                        <input class="btn btn-lg btn-success btn-block" type="submit" value="Confirmer">
+                                        <input style="display:none" name="id" value="<%-data.id %>"/>
+                                        <input class="form-control" placeholder="Utilisateur" value="<%- data.login %>" name="username" type="text" readonly>
+                                        <input class="form-control" placeholder="Mot de passe" id="passwordbo" name="password" type="password">
+                                        <input class="form-control" placeholder="Confirmation" name="confirmation" type="password">
+                                        <br></br>
+                                        <input class="btn btn-lg btn-success btn-block" type="submit" id="login" value="Activer">
                                     </fieldset>
                                 </form>
                             </div>
@@ -93,5 +94,49 @@
 <!-- Latest compiled and minified JavaScript -->
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+<script src="/remarkable-bootstrap-growl/bootstrap-notify.min.js"></script>
+<script type="text/javascript">
+function notify(title, message, type) {
+ $.notify({
+    title: title,
+    message: message
+  }, {
+    animate: {
+      enter: 'animated bounceInDown',
+      exit: 'animated bounceOutUp'
+    },
+    template: '<div data-notify="container" class="col-xs-11 col-sm-3 alert alert-{0}" role="alert">' +
+              '<img data-notify="icon" class="img-circle pull-left">' +
+              '<span data-notify="title"><strong>{1}</strong></span><br>' +
+              '<span data-notify="message">{2}</span>' +
+              '</div>',
+    type:type
+  }); 
+}
+
+$('form').submit(function(event) {
+  event.preventDefault();
+  $.ajax({
+    url: '/activate',
+    type: 'POST',
+    dataType: 'json',
+    data: $(this).serialize(),
+  })
+  .done(function(data) {
+    console.log(data);
+    if (data.status == 'ERR')
+      notify('Erreur', data.flash, 'danger');
+    else {
+      notify('Succes', data.flash, 'success');
+      window.setTimeout(function() { window.location = "/#<%- data.login %>" }, 800)
+    }
+  });
+
+$(function() {
+    $('#password').focus();
+})
+
+});
+</script>
     </body>
 </html>

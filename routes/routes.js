@@ -1,4 +1,4 @@
-var _config = require("../modules/config.js");
+var _config = require("../config/interventions.js");
 var _user = require('./users.js');
 var _data = require('./data.js');
 module.exports = function(app, _db, passport, memCache) {
@@ -20,11 +20,11 @@ app.get('/viewJSON/:type/:query', _user.isLoggedIn, function(req, res) {
 });
 
 
-app.get('/inters', _user.isLoggedIn,  function(req, res) {
+app.get('/interventions', _user.isLoggedIn,  function(req, res) {
  	res.render('Interventions', {config:_config});
 });
 
-app.get('/inters/:query',_user.isLoggedIn,  function(req, res) {
+app.get('/interventions/:query',_user.isLoggedIn,  function(req, res) {
   
   _config.parseFilter(req.params.query.split(':'));
   res.render('Interventions', {config:_config});

@@ -1,6 +1,6 @@
 var V = require('validator');
 var $ = require('string');
-var db = require("../modules/schemaDB.js");
+var _db = require("../modules/schemaDB.js");
 
 V.extend('isTelephone', function (telephone) {
 	return ($(telephone).startsWith('0') && telephone.length == 10 && $(telephone).isNumeric());
@@ -17,9 +17,23 @@ function checkRequired(form, tab) {
 
 
 
+module.exports.password = function(form, callback) {
+
+	_db.userModel.findOne({_id:form.id, activated:false}, function (err, result) {
+		if (result === null)
+			return callback({status:'ERR', flash:"L'utilisateur n'éxiste pas"});
+		if (form.password != form.confirmation)
+			return callback({status:'ERR', flash:"Les deux mots de passes ne correspondent pas"});
+		if (form.password.length < 6)
+			return callback({status:'ERR', flash:"Le mot de passe est trop court (6 caractères min.)"});
+		return callback({status:'OK', flash:"Le mot de passe à été enregistré"});
+	});
+};
+
 module.exports.signup = function(form, callback) {
 
-db.userModel.findOne({login:form.login}, function (err, result) {
+
+_db.userModel.findOne({login:form.login}, function (err, result) {
 	if (result !== null)
 		return callback({status:'ERR', flash:form.login + " : cet utilisateur existe deja"});
 

@@ -6,7 +6,7 @@
     </title>
 <!-- Latest compiled and minified CSS -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
-
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.2.0/animate.min.css">
   <link rel="shortcut icon" href="https://angularjs.org/favicon.ico" />
 
 
@@ -20,7 +20,7 @@
     
     body {
         background-color: #444;
-        background: url(/img/login2.jpg);
+        background: url(/img/stardust.png);
  background-size: auto; 
     }
     .form-signin input[type="text"] {
@@ -78,10 +78,10 @@
                                         <label class="panel-login">
                                             <div class="login_result"></div>
                                         </label>
-                                        <input class="form-control" placeholder="Username" name="username" type="text">
-                                        <input class="form-control" placeholder="Password" name="password" type="password">
+                                        <input class="form-control" placeholder="Utilisateur" name="username" id="username" type="text">
+                                        <input class="form-control" placeholder="Mot de passe" name="password" id="password" type="password">
                                         <br></br>
-                                        <input class="btn btn-lg btn-success btn-block" type="submit" id="login" value="Log In">
+                                        <input class="btn btn-lg btn-success btn-block" type="submit" id="login" value="Se Connecter">
                                     </fieldset>
                                 </form>
                             </div>
@@ -92,5 +92,42 @@
 <!-- Latest compiled and minified JavaScript -->
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+<script src="/remarkable-bootstrap-growl/bootstrap-notify.min.js"></script>
+<script type="text/javascript">
+function notify(title, message, type) {
+ $.notify({
+    title: title,
+    message: message
+  }, {
+    animate: {
+      enter: 'animated bounceInDown',
+      exit: 'animated bounceOutUp'
+    },
+    template: '<div data-notify="container" class="col-xs-11 col-sm-3 alert alert-{0}" role="alert">' +
+              '<img data-notify="icon" class="img-circle pull-left">' +
+              '<span data-notify="title"><strong>{1}</strong></span><br>' +
+              '<span data-notify="message">{2}</span>' +
+              '</div>',
+    type:type
+  }); 
+}
+
+$(function() {
+    var user = window.location.hash.substring(1);
+    if (user != "") {
+        $('#username').val(user);
+        $('#password').focus();
+    } else {
+        $('#username').focus();
+    }
+
+    var message = "<%- err  %>";
+    if (message != '') {
+        notify('ERREUR', message, 'danger');
+    }
+})
+
+
+</script>
     </body>
 </html>

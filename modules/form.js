@@ -1,15 +1,21 @@
 var _sanitizer = require('../modules/formSanitizer.js');
 var _validator = require('../modules/formValidator.js');
 
-module.exports = function(type, data) {
+module.exports = function(type, form) {
 
-	this.data = data;
+	this.data = form;
 	this.sanitizeAndValidate = function(callback) {
 		var self = this;
-		_sanitizer[type](this.data, function(results) {
-			_validator[type](results, function(validated) {
-				callback(validated, self.data);
+		if (_sanitizer[type]) {
+			_sanitizer[type](self.data, function(results) {
+				_validator[type](self.data, function(validated) {
+					callback(validated, self.data);
+				});
 			});
-		});
+		} else if (_validator[type]) {
+			_validator[type](self.data, function(validated) {
+					callback(validated, self.data);
+			});
+		}
 	}
 }
