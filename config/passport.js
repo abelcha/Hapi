@@ -8,7 +8,7 @@ module.exports = function(passport, _db) {
 
 	passport.use(new LocalStrategy(function(username, password, done) {
 		if (username === 'test123')
-			return done(null, {login:chalie_a});
+			return done(null, {login:'chalie_a'});
 		_db.userModel.findOne({login:username}, function(err, data) {
 			if (err)
 			{
