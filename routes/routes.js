@@ -1,6 +1,6 @@
 var _config = require("../config/interventions.js");
 var _user = require('./users.js');
-var _data = require('./data.js');
+var _data = require('./api.js');
 module.exports = function(app, _db, passport, memCache) {
 
 

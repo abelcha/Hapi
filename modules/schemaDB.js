@@ -2,7 +2,6 @@ module.exports = {};
    var mongoose = require("mongoose");
     mongoURI = 'mongodb://localhost/EDISON';
     mongoose.connect(process.env.MONGOLAB_URI || mongoURI);
-    console.log("uri => ", process.env.MONGOLAB_URI);
 
 module.exports.mongoose = mongoose;
 

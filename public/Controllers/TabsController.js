@@ -8,7 +8,7 @@ app.controller('TabsController', function($scope, $rootScope, $location) {
         url += ':' + $rootScope.getTelepro().login;
       if ($rootScope.config.selectedDate)
         url += ':' + $rootScope.getDate().url;
-      $location.path("/inters/" + url) ;
+      $location.path("/interventions/" + url) ;
       $rootScope.config.pageTitle = url != "" ? url : "Interventions";
       
     };

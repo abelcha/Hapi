@@ -352,4 +352,29 @@ border-right: 10px solid #D4D4D4
   margin-left: 220px;
 }
 
+@media (max-width: 1200px) {
+  .side-menu {
+    display:none;
+  }
+  .side-body {
+  margin-left: 0px !important;
+  }
+  .container-fluid {
+    padding-left: 0px !important;
+  }
+}
+
+@media (max-width: 768px) {
+
+  .side-body > *{
+    font-size: 11px;
+  }
+  td {
+    padding-left: 4px !important;
+    padding-right: 4px !important;
+  }
+
+}
+
+
 

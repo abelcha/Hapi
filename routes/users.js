@@ -4,7 +4,7 @@ var _mail = require("../modules/edison-mail.js")
 
 
 var isLoggedIn = function(req, res, next) {
-    if (req.isAuthenticated()) {
+    if (req.isAuthenticated()); {
         return next();
     }
     res.redirect('/');
@@ -74,6 +74,9 @@ app.get('/signup', isLoggedIn, function(req, res) {
   res.render('Login/signup')
 });
 
+var id = 42;
+console.log();
+
 app.post('/signup', isLoggedIn, function(req, res) {
 
 	var signup = new _form('signup', req.body);
@@ -86,7 +89,7 @@ app.post('/signup', isLoggedIn, function(req, res) {
                   title:"Activation du compte Edison Service", 
                   textFile:"invitation",
                   button:"Activer votre compte",
-                  link:"http://edison.services/activate/"+ d._id,
+                  link: `Hello, ${app.get('url')}activate/${d._id}`,
                   template:"messageAndLink",
                   adress:e.email,
                   service:"Service Informatique",

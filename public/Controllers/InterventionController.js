@@ -2,6 +2,21 @@
 app.controller('InterventionController', function($scope, $rootScope, $filter, $http, $location, ngTableParams) {
 
 
+    function actualiseViewPort(width) {
+      $scope.$apply(function() {
+        $scope.bigScreen =  width > 1200;
+        $scope.smallScreen = width < 768;
+      });
+    }
+
+    $(function() {
+       actualiseViewPort($(this).width());
+    })
+
+    $(window).resize(function(event) {
+      actualiseViewPort($(this).width())
+    });
+
     this.artisan = artisan;
 
       $scope.etatInterIcon = {
@@ -77,7 +92,7 @@ app.controller('InterventionController', function($scope, $rootScope, $filter, $
     // Make query to server callback the results
     $scope.getInterventionList = function(query, callback) {
       console.time("load interventions");
-        $http.get('/data/interventions/find/' + JSON.stringify(query)).success(function(data) {
+        $http.get('/api/interventions/find/' + JSON.stringify(query)).success(function(data) {
             console.timeEnd("load interventions");
             callback(data);
 
@@ -111,7 +126,7 @@ app.controller('InterventionController', function($scope, $rootScope, $filter, $
     });
                // Then get all the inters
          console.time("get interventions data");
-        $http.get('/data/interventions/all').success(function(data) {
+        $http.get('/api/interventions/all').success(function(data) {
            console.timeEnd("get interventions data");
             $rootScope.newData = data.map(initData);
             $rootScope.tableParams.reload();
@@ -178,7 +193,7 @@ var openPreview = function(info) {
     }, 250);
    if ($scope.clickedRow === -1)
       return (0);
-    $http.get('/data/interventions/findOne/' + JSON.stringify({id:info.id})).success(function(data) {
+    $http.get('/api/interventions/findOne/' + JSON.stringify({id:info.id})).success(function(data) {
           $scope.clickedRowData = data;
     });
 

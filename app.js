@@ -33,7 +33,7 @@ var memCache = require('memory-cache');
 
 var passport = require('passport');
 var passportConfig = require('./config/passport')(passport, _db); // pass passport for configuration
-
+app.set('url', app.get('env') === 'development' ? "http://127.0.0.1:8080/" : "http://edison.services/");
 
 // set up our express application
 //app.use(morgan('dev')); // log every request to the console
@@ -45,7 +45,6 @@ app.set('view engine', 'ejs'); // set up ejs for templating
 
 // required for passport
 app.use(compress());  
-//app.use(session({ secret: 'ilovescotchscotchyscotchscotch' })); // session secret
 app.use(session(passportConfig));
 app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
@@ -78,6 +77,9 @@ app.use(function(req, res, next) {
 
 // development error handler
 // will print stacktrace
+
+
+
 if (app.get('env') === 'development') {
     app.use(function(err, req, res, next) {
         res.status(err.status || 500);

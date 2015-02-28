@@ -6,7 +6,6 @@ app.controller('SideBarController', function($scope, $rootScope, $location) {
     $('body').toggleClass('closed-sidebar').toggleClass('open-sidebar');
     $('.fa-bars.fa-2x').toggleClass('fa-rotate-270');
   }
-  
 
   $rootScope.getFilter = function() {
     for (var k in $rootScope.config.interFilters) {

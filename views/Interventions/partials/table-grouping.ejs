@@ -18,14 +18,13 @@
           <tr data-id="{{info.id}}" 
               ng-click="ClickOnRow($event, info)" 
               ng-right-click="RightClickOnRow($event, info)"
-              ng-hide="group.$hideRows" 
-              ng-repeat-start="info in group.data" 
+              ng-repeat-start="info in group.data"
+              ng-hide="group.$hideRows"
               ng-class="isInSelection(info.id) ? 'warning' : info.id === rightClickedRow ? 'info' : ''">
                 <td  data-title="'Num Os'" sortable="'id'" filter="{ 'id': 'text' }">
                     <strong>{{info.id}}</strong>
-                    {{joutPmntSst}}
                 </td>
-                <td data-title="'Télépro'" sortable="'telepro'">
+                <td data-title="'Télépro'" sortable="'telepro'" ng-show="!smallScreen">
                   {{info.telepro}}
                 </td>
                 <td  data-title="'Cat.'" sortable="'cat'" filter="{ 'cat': 'text' }">
@@ -33,15 +32,16 @@
                      {{info.cat}}
                    </button>
                 </td>
-                <td class="date-length" data-title="'Date Ajout'" sortable="'dateAjout'" filter="{ 'dateAjout': 'text' }" >
+                <td class="date-length" data-title="'Date Ajout'" sortable="'dateAjout'" filter="{ 'dateAjout': 'text' }" ng-show="bigScreen">
                       {{info.dateAjout | date:"dd/MM/yy"}}
                       {{info.dateAjout | date:"HH'h'mm"}}
                 </td>
-                <td class="variable-length" data-title="'Client'" sortable="'nom'" filter="{ 'nom': 'text' }">
+                <td class="variable-length" data-title="'Client'" sortable="'nom'" filter="{ 'nom': 'text' }" >
                   {{info.civ}}
                   <strong>{{info.nom |  characters:18 :true}}</strong>  
                 </td>
-                <td  class="variable-length" data-title="'Ville'" sortable="'add.v'" filter="{ 'add.v': 'text' }">
+                <td  class="variable-length" data-title="'Ville'" sortable="'add.v'" filter="{ 'add.v': 'text' }" 
+                ng-show="!smallScreen">
                     {{info.add.v  |  characters:15 :true }}
                 </td>
                 <td   data-title="'CP'" sortable="'add.cp'" filter="{ 'add.cp': 'text' }">
@@ -51,7 +51,8 @@
                 filter="{ 'sst': 'text' }" >
                     <strong>{{info.artisan |  characters:15 :true || ""}}</strong>
                 </td>
-                <td class="date-length"  data-title="'Date Intervention'" sortable="'dateInter'" filter="{ 'dateInter': 'text' }">
+                <td class="date-length"  data-title="'Date Intervention'" sortable="'dateInter'" 
+                    filter="{ 'dateInter': 'text' }" ng-show="bigScreen">
                     <div ng-show="info.dateInter[0] != 1">
                       {{info.dateInter | date:"dd/MM/yy" || ""}}
                       {{info.dateInter | date:"HH'h'mm" || ""}}
@@ -64,13 +65,13 @@
                   <button type="button" class="modal-win btn btn-circle btn-{{etatInterIcon[info.etat].c}}">
                   <i class="modal-win fa" ng-class="info.aVerifier ? 'fa-question' : 'fa-{{etatInterIcon[info.etat].i}}'"></i></button>
                 </td>
-                <td  data-title="'Pmnt Client'" sortable="'pmntCli'" >
+                <td  data-title="'Pmnt Client'" sortable="'pmntCli'" ng-show="bigScreen">
                   <button type="button" 
                   class="modal-win  btn btn-circle btn-{{etatPmntIcon[info.ClientPmntClass].c}}">
                   <i class="modal-win fa fa-{{etatPmntIcon[info.ClientPmntClass].i}}"></i>
                   </button> 
                 </td>
-                <td  data-title="'Pmnt Artisan'" sortable="'pmntSst'" >
+                <td  data-title="'Pmnt Artisan'" sortable="'pmntSst'" ng-show="bigScreen">
                   <button type="button" 
                   class="modal-win btn btn-circle" ng-class="info.pmntSst ? 'btn-success' : (info.pmntCli ? 'btn-warning' : 'btn-default')">
                   <i class="modal-win fa " ng-class="info.pmntSst ? 'fa-check' : (info.pmntCli ? 'fa-question' : '')"></i>
@@ -93,7 +94,7 @@
                           Remarque: {{clickedRowData.remarque}}
                           </p>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-6 hidden-xs">
                                <h2></h2>
                                   {{clickedRowData.add.n}} {{clickedRowData.add.r}}, 
                                   {{clickedRowData.add.v}} <strong>{{clickedRowData.add.cp}}</strong> <br>
