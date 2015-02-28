@@ -56,6 +56,8 @@ app.use(flash()); // use connect-flash for flash messages stored in session
 
 require('./routes/routes.js')(app, _db, passport, memCache); // load our routes and pass in our app and fully configured passport
 
+var name = 'Bobby'
+console.log(`Hello, ${name}!`);
 
 /*  !AUTHENTIFICATION */
 

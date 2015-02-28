@@ -5,6 +5,9 @@
   "scripts": {
     "start": "node app.js"
   },
+ "engines": {
+    "iojs": "1.4.1"
+  },
   "dependencies": {
     "accept": "^1.0.0",
     "accepts": "^1.2.3",
