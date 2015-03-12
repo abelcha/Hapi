@@ -2,6 +2,7 @@ var express = require('express');
 var app = express();
 var http = require('http').Server(app);
 var port = (process.env.PORT || 8080);
+
 var compress = require('compression');
 
 // Configuration of the server 
@@ -27,7 +28,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 var _db = require("./modules/schemaDB.js");
 var memCache = require('memory-cache');
-
+//var RedisStore = require('connect-redis')(session);
 
 
 

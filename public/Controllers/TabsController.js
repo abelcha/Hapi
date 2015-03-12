@@ -3,12 +3,13 @@ app.controller('TabsController', function($scope, $rootScope, $location) {
     $rootScope.updateUrl = function() {
       var url = "";
       if ($rootScope.config.selectedFilter)
-        url += $rootScope.getFilter().cleanTitle;
+        url += '/' + $rootScope.getFilter().cleanTitle;
       if ($rootScope.config.selectedTelepro !== -1)
         url += ':' + $rootScope.getTelepro().login;
       if ($rootScope.config.selectedDate)
         url += ':' + $rootScope.getDate().url;
-      $location.path("/interventions/" + url) ;
+      console.log(url);
+      $location.path("/interventions" + url) ;
       $rootScope.config.pageTitle = url != "" ? url : "Interventions";
       
     };

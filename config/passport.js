@@ -4,6 +4,8 @@ var LocalStrategy = require('passport-local').Strategy;
 module.exports = function(passport, _db) {
 
 
+	
+
 	/*  AUTHENTIFICATION */
 
 	passport.use(new LocalStrategy(function(username, password, done) {
@@ -16,7 +18,7 @@ module.exports = function(passport, _db) {
 			}
 			if (!data)
 			{
-				return done(null, false, {err:"L'utilisateur : '" + username + "' n'éxiste pas"});
+				return done(null, false, {err:`L'utilisateur : ${username} n'éxiste pas`});
 			} 
 			else if (bcrypt.compareSync(password, data.password) === true)
 			{	
@@ -41,6 +43,7 @@ module.exports = function(passport, _db) {
 	return {
 	    secret: '15c5p03q5Bn91B8k9O5C32gX8onx9p',
 	    name: 'EDISON-SESSION',
+	  // 	cookie: { maxAge: (10 * 60 * 1000) },
 	    resave: true,
 	    saveUninitialized: true
 	}

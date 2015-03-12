@@ -47,10 +47,11 @@ exports.translateData = function(data, callback) {
 
 		var cat = {EL:d.electricite, PL:d.plomberie, CH:d.chauffage, CL:d.climatisation, SR:d.serrurerie, VT:d.vitrerie};
 		for (k in cat) {
-			if (cat[k])
-				tmp.categories.push(Object.keys(cat)[k])
+			if (cat[k] == '1') {
+				tmp.categories.push(k)
+			}
 		}
-		console.log(d.date_ajout, new Date(d.date_ajout * 1000));
+		//console.log(tmp.categories);
 		stock.push(tmp);
 	}
 	callback(stock);

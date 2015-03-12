@@ -32,6 +32,7 @@ module.exports.interventionSchema = new mongoose.Schema({
 			nom: 		String,
 			email: 		String,
 			tel1: 		String,
+			tel2: 		String,
 	//		adresse
 			add: {
 				n: 		Number,

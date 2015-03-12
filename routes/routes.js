@@ -1,6 +1,7 @@
 var _config = require("../config/interventions.js");
 var _user = require('./users.js');
 var _data = require('./api.js');
+var _tmp = require('./tmp.js');
 module.exports = function(app, _db, passport, memCache) {
 
 
@@ -29,6 +30,26 @@ app.get('/interventions/:query',_user.isLoggedIn,  function(req, res) {
   _config.parseFilter(req.params.query.split(':'));
   res.render('Interventions', {config:_config});
 });
+
+
+
+
+
+
+
+app.get('/intervention', _user.isLoggedIn,  function(req, res) {
+  res.render('FicheInter', {});
+});
+
+
+
+
+
+
+
+
+
+
 
 app.get('/etats', _user.isLoggedIn, function(req, res) {
   res.render('Interventions/etats', {});
@@ -110,7 +131,7 @@ app.get('/address',_user.isLoggedIn, function(req, res) {
 
 _user.routes(app, _db, passport, memCache);
 _data.routes(app, _db, _user, memCache)
-
+_tmp.routes(app, _db, _user, memCache)
 
 
 };

@@ -222,9 +222,18 @@ var openPreview = function(info) {
 })
 
 .config(['$locationProvider', function($locationProvider){
-    $locationProvider.html5Mode(true).hashPrefix('!')
-}])
 
+  $locationProvider.html5Mode({
+     enabled: true,
+     requireBase: false
+  }).hashPrefix('!')
+
+}])
+.run(function($rootScope) {
+    $('[ng-app]').on('click', 'a', function() {
+        window.location.href = $(this).attr('href');
+  });
+});
 
 
 

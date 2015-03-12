@@ -370,8 +370,7 @@ border-right: 10px solid #D4D4D4
     font-size: 11px;
   }
   td {
-    padding-left: 4px !important;
-    padding-right: 4px !important;
+    padding: 4px !important;
   }
 
 }

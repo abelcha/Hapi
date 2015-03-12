@@ -4,7 +4,7 @@ var _mail = require("../modules/edison-mail.js")
 
 
 var isLoggedIn = function(req, res, next) {
-    if (req.isAuthenticated()); {
+    if (req.isAuthenticated()) {
         return next();
     }
     res.redirect('/');
@@ -73,9 +73,6 @@ app.get('/signup', isLoggedIn, function(req, res) {
   console.log(req.user);
   res.render('Login/signup')
 });
-
-var id = 42;
-console.log();
 
 app.post('/signup', isLoggedIn, function(req, res) {
 

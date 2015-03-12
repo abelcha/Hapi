@@ -48,7 +48,8 @@ exports.translateData = function(data, callback) {
 					prenom: 	d.prenom,
 					nom: 		d.nom,
 					email: 		d.email,
-					telephone: 	d.tel1,
+					tel1: 		d.tel1,
+					tel2: 		d.tel2,
 			//		adresse: {
 					add: {
 						n: 		d.numero,
