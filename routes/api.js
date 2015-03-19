@@ -47,7 +47,13 @@ app.get('/api/artisans/find/:query', _user.isLoggedIn, function(req, res) {
   }); 
 });
 
-
+app.get('/api/artisans/stats', _user.isLoggedIn, function(req, res) {
+    _db.artisanModel
+    .find()
+    .exec(function (err, data){ 
+      res.json(data);
+  }); 
+});
 
 app.get('/api/artisans/find', _user.isLoggedIn, function(req, res) {
     _db.artisanModel
@@ -57,5 +63,34 @@ app.get('/api/artisans/find', _user.isLoggedIn, function(req, res) {
       res.json(data);
   }); 
 });
+
+
+app.get('/crowling/quartier', _user.isLoggedIn, function(req, res) {
+
+var utf8 = require('utf8');
+var request = require("request")
+//http://www.kelquartier.com/gmap_ajax/search-point' --data $'lat=48.8751978&lng=2.3505632000000105&search=61+Rue+d\'Hauteville%2C+Paris%2C+France'
+var url = "http://www.kelquartier.com/gmap_ajax/search-point";
+console.log(req.query);
+request.post({url: url, json: true, form: req.query}, function (error, response, body) {
+  request({url: "http://www.kelquartier.com" +  body.link}, function (error2, response2, body2) {
+    var cheerio = require('cheerio'),
+    $ = cheerio.load(body2);
+    var rtn = {};
+    rtn.tauxChomage = $('#carteNum_15>.td_A').next().html();
+    rtn.ageMoyen = $('#carteNum_16>.td_B').next().html();
+    rtn.revenuMoyen = $('.legendes_points_cles>strong')[0].children[0].data.split(' ')[0];
+    rtn.typeQuatier = utf8.encode($('.ligne_tab_points_cles.border_bas').last().children().next().html().trim());
+    console.log(rtn);
+    res.send(rtn);
+  });
+})
+
+ 
+});
+
+
+
+
 
 };

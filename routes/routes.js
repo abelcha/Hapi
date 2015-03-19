@@ -1,4 +1,4 @@
-var _config = require("../config/interventions.js");
+      var _config = require("../config/interventions.js");
 var _user = require('./users.js');
 var _data = require('./api.js');
 var _tmp = require('./tmp.js');
@@ -37,11 +37,17 @@ app.get('/interventions/:query',_user.isLoggedIn,  function(req, res) {
 
 
 
-app.get('/intervention', _user.isLoggedIn,  function(req, res) {
-  res.render('FicheInter', {});
+app.get('/intervention/:query', _user.isLoggedIn,  function(req, res) {
+
+  _db.interventionModel.findOne({id:req.params.query}, function (err, data){ 
+    res.render('FicheInter', {data:data});
+  }); 
+
 });
 
-
+app.get('/intervention', _user.isLoggedIn,  function(req, res) {
+  res.render('FicheInter', {data:{}});
+});
 
 
 

@@ -32,7 +32,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e8e8e8', end
     width:100% !important;
   }
   </style>
-  <body ng-controller="MainController as mainCtrl">
+  <body ng-controller="MainController as MainCtrl">
 <% include ../Interventions/partials/navbar %> 
    <div class=" container ">
    <div class="span10 well bs-component" style="opacity:0.95">
@@ -42,18 +42,20 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e8e8e8', end
               <div class='form-group' >
                 <div class="col-md-12"><h2>Client</h1></div>
                 <div class='col-sm-2'>
-                      <select name="civilite" id="civ_select" value="civilite" class="span12 form-control" required>
+                      <select name="civilite" class="span12 form-control" required>
                           <option disabled selected value ="" selected>Civilité</option>
-                          <option value="M.">M.</option>
-                          <option value="Mme.">Mme.</option>
-                          <option value="Soc.">Société</option>
+                          <option ng-selected="data.civ == 'M.'"   value="M.">M.</option>
+                          <option ng-selected="data.civ == 'Mme.'" value="Mme.">Mme.</option>
+                          <option ng-selected="data.civ == 'Soc.'" value="Soc.">Société</option>
                       </select>
                 </div>
                 <div class='col-sm-4'>
-                  <input class="form-control" id="nom" placeholder="Nom" name="nom" type="text" required />
+                  <input class="form-control" id="nom" placeholder="Nom" name="nom" type="text" required 
+                         ng-model="data.nom"/>
                 </div>
                 <div class='col-sm-6'>
-                  <input class="form-control" id="prenom" placeholder="Prénom" name="prenom" type="text" />
+                  <input class="form-control" id="prenom" placeholder="Prénom" name="prenom" type="text"
+                          ng-model="data.prenom" />
                 </div>
               </div>
 
@@ -132,7 +134,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e8e8e8', end
                 </div>
               </div>
               </fieldset>
-                   <fieldset ng-controller="MapController"> 
+                   <fieldset> 
           
                   <div class='col-sm-12' id='MapDiv' style="font-size: 18px;width:100%">
 
@@ -155,32 +157,31 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e8e8e8', end
                 <div style="width:100%;height:600px" id="map-canvas"></div>
         </div>
     
-  </fieldset>
- <fieldset>
 
               <div class='form-group'>
 
                 <div class='col-sm-2'>
-                  <input id='numero' name="numero" type="text" class="form-control" placeholder="Numero" required>    
+                  <input id='numero' name="numero" type="text" class="form-control" placeholder="Numero" ng-model="MainCtrl.client.address.n" required>    
                 </div>
 
                 <div class='col-sm-4'>
-                  <input id='rue' name="adresse" type="text" class="form-control" placeholder="Rue" required>    
+                  <input id='rue' name="adresse" type="text" class="form-control" placeholder="Rue" ng-model="MainCtrl.client.address.r" required>    
                 </div>
                 <div class='col-sm-2'>
-                  <input id='cp' name="code_postal" type="text" class="form-control" placeholder="Code Postal"  required>    
+                  <input id='cp' name="code_postal" type="text" class="form-control" placeholder="Code Postal"  ng-model="MainCtrl.client.address.cp" required>    
                 </div>
 
                 <div class='col-sm-4'>
-                  <input id='ville' name="ville" type="text" class="form-control" placeholder="Ville" required>    
+                  <input id='ville' name="ville" type="text" class="form-control" placeholder="Ville" ng-model="MainCtrl.client.address.v" required>    
                 </div>
+                {{MainCtrl.client.address | json}}
                 <hr/>
               </div>
              <div class='col-sm-12 margin-xs'></div>
             <div class='col-sm-12 margin-xs'></div>
             </fieldset>
 
-
+    
 
         <fieldset>
 
@@ -404,16 +405,32 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e8e8e8', end
     </div><!--/.fluid-container-->
     </div>
 <script src="/angular/angular.min.js"></script>
-<script> var app = angular.module('FicheInter', []) </script>
+<script> var app = angular.module('FicheInter', []);  
+  app.run(function($rootScope) {
+     $rootScope.data = <%- JSON.stringify(data); %>;
+  });
+</script>
 <script src="/jquery/dist/jquery.min.js"></script>
 <script src="//maps.googleapis.com/maps/api/js?v=3.exp&libraries=places"></script>
-<script src="/js/GoogleMapAbel.js"></script>
+<script src="/js/artisan.class.js"></script>
+<script src="/js/client.class.js"></script>
+<script src="/js/map.class.js"></script>
 <script src="/string/lib/string.min.js"></script>
-<script src="/js/AjoutInter.js"></script>
+<script src="/js/ficheInter.controller.js"></script>
 <script type="text/javascript">
-  app.controller('MainController', function($scope, $http) {
-    console.log("mainctrdl")
-  });
+
+
+
+      $('#Form').submit(function(e) {
+        e.preventDefault();
+        e.stoppropagation();
+        console.log("yay");
+      });
+
+      (function() {
+      var width = $('#MapDiv').width();
+      $('#map-canvas').css('width', width).css('height', width * 0.55);
+    })();
 
 </script>
  <!--   <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places"></script>
