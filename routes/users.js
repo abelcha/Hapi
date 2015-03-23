@@ -3,12 +3,19 @@ var _form = require("../modules/form.js")
 var _mail = require("../modules/edison-mail.js")
 
 
+
 var isLoggedIn = function(req, res, next) {
-    if (req.isAuthenticated()) {
+    //console.log(req.app.get('env'));
+    if (req.app.get('env') === 'development' )
+      return next();
+    if (req.session.passport.user.service == "118000")
+      return res.redirect("/118")
+    else if (req.isAuthenticated()) {
         return next();
     }
     res.redirect('/');
 }
+
 
 module.exports.routes = function(app, _db, passport, memCache) {
 
@@ -26,6 +33,7 @@ app.post('/', function(req, res, next) {
     }
     req.logIn(user, function(err) {
       if (err) { return next(err); }
+      req.session.user = info;
       return res.redirect("/interventions");
     });
 
@@ -34,7 +42,7 @@ app.post('/', function(req, res, next) {
 
 
 app.get('/', function(req, res) {
-  if (req.isAuthenticated()) {
+if (req.isAuthenticated()) {
     res.redirect('/interventions');
    }
   else
@@ -77,18 +85,17 @@ app.get('/signup', isLoggedIn, function(req, res) {
 app.post('/signup', isLoggedIn, function(req, res) {
 
 	var signup = new _form('signup', req.body);
-
 	signup.sanitizeAndValidate(function(results, data) {
 		if (results.status == 'OK') {
 			new _db.userModel(data).save(function(e, d) {
-				_mail.sendMail({
+        _mail.sendMail({
 			      name:"M. " + S(data.nom).capitalize(), 
                   title:"Activation du compte Edison Service", 
                   textFile:"invitation",
                   button:"Activer votre compte",
-                  link: `Hello, ${app.get('url')}activate/${d._id}`,
+                  link: `${app.get('url')}activate/${d._id}`,
                   template:"messageAndLink",
-                  adress:e.email,
+                  adress:d.email,
                   service:"Service Informatique",
 			      adress:data.email
 				});

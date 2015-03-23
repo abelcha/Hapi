@@ -1,0 +1,126 @@
+/* ========================================================================
+   Component: plugins.less
+   - User this stylesheet to include single css styles and fixes 
+     for plugins
+ ========================================================================== */
+
+@import '../bootstrap/mixins/buttons';
+ 
+/**
+ * Bootstrap Slider
+ */
+
+@slider-handle-bg: @brand-primary;
+@slider-track-border: @brand-primary;
+@slider-selection-bg: @slider-track-border;
+@slider-tooltip-color: #2c3037;
+
+body {
+
+  .slider-handle,
+  .slider-track,
+  .slider-selection {
+    background-image: none;
+    box-shadow: 0 0 0 #000;
+  }
+
+  .slider-handle {
+    background-color: #fff;
+    border: 1px solid @slider-handle-bg;
+    box-shadow: 0 0 3px @slider-handle-bg inset;
+    opacity: 1;
+  }
+  .slider-track {
+    background-color: #fff;
+    border: 1px solid @slider-track-border;
+  }
+  .slider-selection {
+    background-color: @slider-selection-bg;
+  }
+
+  .slider {
+    .tooltip.top .tooltip-arrow {
+      border-top-color: @slider-tooltip-color;
+    }
+    .tooltip.right .tooltip-arrow {
+      border-right-color: @slider-tooltip-color;
+    }
+    .tooltip-inner {
+      background-color: @slider-tooltip-color;
+    }
+    &.slider-vertical {
+      .slider-track {
+        width: 6px;
+      }
+      .slider-handle {
+        margin-left: -8px;
+      }
+    }
+    &.slider-horizontal {
+      .slider-handle {
+        margin-top: -8px;
+      }
+      .slider-track {
+        height: 6px;
+      }
+    }
+  }
+  
+  .slider-lg {
+    width: 380px;
+  }
+
+  // Chosen
+  // ----------------------------------- 
+
+  // MULTIPLE
+
+  @multiple-tag-bg: #f5f6f7;
+
+  .chosen-container-multi .chosen-choices {
+    .form-control;
+  }
+
+  .chosen-container-multi .chosen-choices li.search-field input[type=text] {
+    height: auto;
+    padding: 0;
+  }
+
+  .chosen-container-multi .chosen-choices li.search-choice {
+    margin: 0 5px 3px 0;
+    background-color: @multiple-tag-bg;
+    border: 1px solid darken(@multiple-tag-bg, 5%);
+    background-image: none;
+  }
+
+  .chosen-container .chosen-results li.highlighted {
+    background-color: #a1a2a3;
+    background-image: none;
+  }
+  .chosen-container .chosen-drop {
+    border-color: #ddd;
+  }
+  .chosen-container .chosen-results li.group-result {
+    color: #747576;
+    letter-spacing: 0.02em;
+  }
+  // SINGLE
+  .chosen-container-single .chosen-single,
+  .chosen-container-active.chosen-with-drop .chosen-single {
+    .form-control();
+  }
+
+  .chosen-container-single .chosen-drop {
+    margin-top: -3px;
+  }
+
+  .chosen-container-single .chosen-single div {
+    top: 6px;
+    right: 5px;
+  }
+
+  .chosen-container-multi .chosen-choices li.search-field input[type=text] {
+    color: @input-color-placeholder;
+  }
+
+} // body

@@ -29,7 +29,7 @@ exports.serverConfig = function(app, express){
     app.use(cookieParser());
     app.use(express.static(path.join(__dirname, 'public')));
     app.use(express.static(path.join(__dirname, 'bower_components')));
-
+    app.use(express.static(path.join(__dirname, 'Template')));
 
     app.use('/routes', routes);
     app.use('/users', users);

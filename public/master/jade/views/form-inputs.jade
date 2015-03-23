@@ -1,0 +1,656 @@
+h3 Form Inputs
+  small Classic and new components
+
+// START panel
+.container-fluid(ng-controller="FormInputController as form")
+  .panel.panel-default
+    h4.panel-heading Classic inputs
+    .panel-body
+      form.form-horizontal(method='get', action="/", novalidate="")
+        fieldset
+          .form-group
+            label.col-sm-2.control-label(for='input-id-1') Text
+            .col-sm-10
+              input#input-id-1.form-control(type='text')
+        fieldset
+          .form-group
+            label.col-sm-2.control-label Password
+            .col-sm-10
+              input.form-control(type='password', name='password')
+        fieldset
+          .form-group
+            label.col-sm-2.control-label Rounded Corners
+            .col-sm-10
+              input.form-control.form-control-rounded(type='text')
+        fieldset
+          .form-group
+            label.col-sm-2.control-label With help
+            .col-sm-10
+              input.form-control(type='text')
+              span.help-block.m-b-none A block of help text that breaks onto a new line and may extend beyond one line.
+        fieldset
+          .form-group
+            label.col-sm-2.control-label Placeholder
+            .col-sm-10
+              input.form-control(type='text', placeholder='placeholder')
+        fieldset
+          .form-group
+            label.col-sm-2.control-label Disabled
+            .col-sm-10
+              input.form-control(type='text', placeholder='Disabled input here...', disabled='')
+        fieldset
+          .form-group
+            label.col-sm-2.control-label Static control
+            .col-sm-10
+              p.form-control-static email@demo.com
+        fieldset
+          .form-group
+            label.col-sm-2.control-label Checkboxes and radios
+            .col-sm-10
+              .checkbox
+                label
+                  input(type='checkbox', value='')
+                  | Option one is this and that—be sure to include why it's great
+              .radio
+                label
+                  input#optionsRadios1(type='radio', name='optionsRadios', value='option1', checked='')
+                  | Option one is this and that—be sure to include why it's great
+              .radio
+                label
+                  input#optionsRadios2(type='radio', name='optionsRadios', value='option2')
+                  | Option two can be something else and selecting it will deselect option one
+        fieldset
+          .form-group
+            label.col-sm-2.control-label Inline checkboxes
+            .col-sm-10
+              label.checkbox.checkbox-inline
+                input#inlineCheckbox1(type='checkbox', value='option1')
+                |  a
+              label.checkbox-inline
+                input#inlineCheckbox2(type='checkbox', value='option2')
+                |  b
+              label.checkbox-inline
+                input#inlineCheckbox3(type='checkbox', value='option3')
+                |  c
+
+        fieldset.last-child
+          .form-group
+            label.col-sm-2.control-label Select
+            .col-sm-10
+              select.form-control.m-b(name='account')
+                option Option 1
+                option Option 2
+                option Option 3
+                option Option 4
+              br
+              .row
+                .col-lg-4
+                  select.form-control(multiple='')
+                    option Option 1
+                    option Option 2
+                    option Option 3
+                    option Option 4
+  .panel.panel-default
+    h4.panel-heading Variants
+    .panel-body
+      form.form-horizontal(method='get', action="/", novalidate="")
+        fieldset
+          .form-group
+            label.col-sm-2.control-label Custom Checkboxes &amp; radios
+            .col-sm-10
+              .checkbox.c-checkbox.needsclick
+                label.needsclick
+                  input(type='checkbox', value='').needsclick
+                  span.fa.fa-check
+                  |  Option one
+              .checkbox.c-checkbox
+                label
+                  input(type='checkbox', checked='', value='')
+                  span.fa.fa-check
+                  |  Option two checked
+              .checkbox.c-checkbox
+                label
+                  input(type='checkbox', checked='', disabled='', value='')
+                  span.fa.fa-check
+                  |  Option three checked and disabled
+              .checkbox.c-checkbox
+                label
+                  input(type='checkbox', disabled='', value='')
+                  span.fa.fa-check
+                  |  Option four disabled
+              .radio.c-radio
+                label
+                  input(type='radio', name='a', value='option1')
+                  span.fa.fa-circle
+                  |  Option one
+              .radio.c-radio
+                label
+                  input(type='radio', name='a', value='option2', checked='')
+                  span.fa.fa-circle
+                  |  Option two checked
+              .radio.c-radio
+                label
+                  input(type='radio', value='option2', checked='', disabled='')
+                  span.fa.fa-circle
+                  |  Option three checked and disabled
+              .radio.c-radio
+                label
+                  input(type='radio', name='a', disabled='')
+                  span.fa.fa-circle
+                  |  Option four disabled
+        fieldset
+          .form-group
+            label.col-sm-2.control-label Inline checkboxes
+            .col-sm-10
+              .checkbox-inline.c-checkbox
+                label
+                  input#inlineCheckbox10(type='checkbox', value='option1')
+                  span.fa.fa-check
+                  |  a
+              .checkbox-inline.c-checkbox
+                label
+                  input#inlineCheckbox20(type='checkbox', value='option2')
+                  span.fa.fa-check
+                  |  b
+              .checkbox-inline.c-checkbox
+                label
+                  input#inlineCheckbox30(type='checkbox', value='option3')
+                  span.fa.fa-check
+                  |  c
+          .form-group
+            label.col-sm-2.control-label Circular
+            .col-sm-10
+              .checkbox.c-checkbox.c-checkbox-rounded
+                label
+                  input#roundedcheckbox10(type='checkbox', checked)
+                  span.fa.fa-check
+                  |  Lorem
+              .checkbox.c-checkbox.c-checkbox-rounded
+                label
+                  input#roundedcheckbox20(type='checkbox')
+                  span.fa.fa-check
+                  |  Ipsum
+        fieldset
+          .form-group
+            label.col-sm-2.control-label Inline radios
+            .col-sm-10
+              .radio-inline.c-radio
+                label
+                  input#inlineradio1(type='radio', name="i-radio", value='option1', checked)
+                  span.fa.fa-circle
+                  |  a
+              .radio-inline.c-radio
+                label
+                  input#inlineradio2(type='radio', name="i-radio", value='option2')
+                  span.fa.fa-circle
+                  |  b
+              .radio-inline.c-radio
+                label
+                  input#inlineradio3(type='radio', name="i-radio", value='option3')
+                  span.fa.fa-circle
+                  |  c
+        fieldset
+          .form-group
+            label.col-sm-2.control-label Custom icons
+            .col-sm-10
+              .radio-inline.c-radio
+                label
+                  input#inlineradio10(type='radio', name="i-radio", value='option1', checked)
+                  span.fa.fa-check
+                  |  a
+              .radio-inline.c-radio
+                label
+                  input#inlineradio20(type='radio', name="i-radio", value='option2', checked)
+                  span.fa.fa-tint
+                  |  b
+              .radio-inline.c-radio
+                label
+                  input#inlineradio30(type='radio', name="i-radio", value='option3', checked)
+                  span.fa.fa-user
+                  |  c
+              br
+              .checkbox-inline.c-checkbox
+                label
+                  input#inlinecheckbox10(type='checkbox', value='option1', checked)
+                  span.fa.fa-paperclip
+                  |  a
+              .checkbox-inline.c-checkbox
+                label
+                  input#inlinecheckbox20(type='checkbox', value='option2', checked)
+                  span.fa.fa-star
+                  |  b
+              .checkbox-inline.c-checkbox
+                label
+                  input#inlinecheckbox30(type='checkbox', value='option3', checked)
+                  span.fa.fa-phone
+                  |  c
+        fieldset
+          .form-group
+            label.col-sm-2.control-label Switch Small
+            .col-sm-10
+              label.switch.switch-sm
+                input(type='checkbox', checked="checked")
+                span
+          .form-group
+            label.col-sm-2.control-label Switch
+            .col-sm-10
+              label.switch
+                input(type='checkbox', checked="checked")
+                span
+          .form-group
+            label.col-sm-2.control-label Switch Large
+            .col-sm-10
+              label.switch.switch-lg
+                input(type='checkbox', checked="checked")
+                span
+          .form-group
+            label.col-sm-2.control-label Switch Radio
+            .col-sm-10
+              label.switch
+                input(type='radio', checked="checked", name="radioSwitch")
+                span
+              label.switch
+                input(type='radio', name="radioSwitch")
+                span
+          .form-group
+            label.col-sm-2.control-label Colors
+            .col-sm-2
+              label.switch.switch-info
+                input(type='checkbox', checked="checked")
+                span
+              label.switch.switch-danger
+                input(type='checkbox', checked="checked")
+                span
+              label.switch.switch-success
+                input(type='checkbox', checked="checked")
+                span
+              label.switch.switch-warning
+                input(type='checkbox', checked="checked")
+                span
+              label.switch.switch-inverse
+                input(type='checkbox', checked="checked")
+                span
+              label.switch.switch-turquoise
+                input(type='checkbox', checked="checked")
+                span
+              label.switch.switch-pink
+                input(type='checkbox', checked="checked")
+                span
+              label.switch.switch-purple
+                input(type='checkbox', checked="checked")
+                span
+              label.switch.switch-orange
+                input(type='checkbox', checked="checked")
+                span
+
+        fieldset
+          .form-group.has-success
+            label.col-sm-2.control-label Input with success
+            .col-sm-10
+              input.form-control(type='text')
+        fieldset
+          .form-group.has-warning
+            label.col-sm-2.control-label Input with warning
+            .col-sm-10
+              input.form-control(type='text')
+        fieldset
+          .form-group.has-error
+            label.col-sm-2.control-label Input with error
+            .col-sm-10
+              input.form-control(type='text')
+        fieldset
+          .form-group
+            label.col-sm-2.control-label Control sizing
+            .col-sm-10
+              input.form-control.input-lg.m-b(type='text', placeholder='.input-lg')
+              br
+              input.form-control.m-b(type='text', placeholder='Default input')
+              br
+              input.form-control.input-sm(type='text', placeholder='.input-sm')
+        fieldset
+          .form-group
+            label.col-sm-2.control-label Column sizing
+            .col-sm-10
+              .row
+                .col-md-2
+                  input.form-control(type='text', placeholder='.col-md-2')
+                .col-md-3
+                  input.form-control(type='text', placeholder='.col-md-3')
+                .col-md-4
+                  input.form-control(type='text', placeholder='.col-md-4')
+        fieldset
+          .form-group
+            label.col-sm-2.control-label Input groups
+            .col-sm-10
+              .input-group.m-b
+                span.input-group-addon @
+                input.form-control(type='text', placeholder='Username')
+              br
+              .input-group.m-b
+                input.form-control(type='text')
+                span.input-group-addon .00
+              br
+              .input-group.m-b
+                span.input-group-addon $
+                input.form-control(type='text')
+                span.input-group-addon .00
+              br
+              .input-group.m-b
+                span.input-group-addon
+                  input(type='checkbox')
+                input.form-control(type='text')
+              br
+              .input-group
+                span.input-group-addon
+                  input(type='radio')
+                input.form-control(type='text')
+        fieldset
+          .form-group
+            label.col-sm-2.control-label Button addons
+            .col-sm-10
+              .input-group.m-b
+                span.input-group-btn
+                  button.btn.btn-default(type='button') Go!
+                input.form-control(type='text')
+              br
+              .input-group
+                input.form-control(type='text')
+                span.input-group-btn
+                  button.btn.btn-default(type='button') Go!
+        fieldset
+          .form-group
+            label.col-sm-2.control-label With dropdowns
+            .col-sm-10
+              .input-group.m-b
+                .input-group-btn(dropdown='dropdown')
+                  button.btn.btn-default.dropdown-toggle(type='button')
+                    | Action
+                    span.caret
+                  ul.dropdown-menu
+                    li
+                      a(href='#') Action
+                    li
+                      a(href='#') Another action
+                    li
+                      a(href='#') Something else here
+                    li.divider
+                    li
+                      a(href='#') Separated link
+                input.form-control(type='text')
+              br
+              .input-group
+                input.form-control(type='text')
+                .input-group-btn(dropdown='dropdown')
+                  button.btn.btn-default.dropdown-toggle(type='button')
+                    | Action
+                    span.caret
+                  ul.dropdown-menu.pull-right
+                    li
+                      a(href='#') Action
+                    li
+                      a(href='#') Another action
+                    li
+                      a(href='#') Something else here
+                    li.divider
+                    li
+                      a(href='#') Separated link
+        fieldset.last-child
+          .form-group
+            label.col-sm-2.control-label Segmented
+            .col-sm-10
+              .input-group.m-b
+                .input-group-btn(dropdown='dropdown')
+                  button.btn.btn-default(type='button', tabindex='-1') Action
+                  button.btn.btn-default.dropdown-toggle(type='button')
+                    span.caret
+                  ul.dropdown-menu
+                    li
+                      a(href='#') Action
+                    li
+                      a(href='#') Another action
+                    li
+                      a(href='#') Something else here
+                    li.divider
+                    li
+                      a(href='#') Separated link
+                input.form-control(type='text')
+              br
+              .input-group
+                input.form-control(type='text')
+                .input-group-btn(dropdown='dropdown')
+                  button.btn.btn-default(type='button', tabindex='-1') Action
+                  button.btn.btn-default.dropdown-toggle(type='button')
+                    span.caret
+                  ul.dropdown-menu.pull-right
+                    li
+                      a(href='#') Action
+                    li
+                      a(href='#') Another action
+                    li
+                      a(href='#') Something else here
+                    li.divider
+                    li
+                      a(href='#') Separated link
+
+  .panel.panel-default
+    h4.panel-heading New inputs
+    .panel-body
+      form.form-horizontal(method='get', action="/", novalidate="")
+
+        fieldset
+          .form-group.mb
+            label.col-sm-2.control-label Chosen
+            .col-sm-10
+              select.chosen-select.input-md(chosen='', ng-model='state', ng-options='s for s in form.states')
+
+          .form-group.mb
+            label.col-sm-2.control-label Chosen Groups
+            .col-sm-10
+              select.chosen-select.input-md(chosen="", ng-model="team")
+                option(value='')
+                  optgroup(label='NFC EAST')
+                    option Dallas Cowboys
+                    option New York Giants
+                    option Philadelphia Eagles
+                    option Washington Redskins
+                  optgroup(label='NFC NORTH')
+                    option Chicago Bears
+                    option Detroit Lions
+                    option Green Bay Packers
+                    option Minnesota Vikings
+                  optgroup(label='NFC SOUTH')
+                    option Atlanta Falcons
+                    option Carolina Panthers
+                    option New Orleans Saints
+                    option Tampa Bay Buccaneers
+                  optgroup(label='NFC WEST')
+                    option Arizona Cardinals
+                    option St. Louis Rams
+                    option San Francisco 49ers
+                    option Seattle Seahawks
+                  optgroup(label='AFC EAST')
+                    option Buffalo Bills
+                    option Miami Dolphins
+                    option New England Patriots
+                    option New York Jets
+                  optgroup(label='AFC NORTH')
+                    option Baltimore Ravens
+                    option Cincinnati Bengals
+                    option Cleveland Browns
+                    option Pittsburgh Steelers
+                  optgroup(label='AFC SOUTH')
+                    option Houston Texans
+                    option Indianapolis Colts
+                    option Jacksonville Jaguars
+                    option Tennessee Titans
+                  optgroup(label='AFC WEST')
+                    option Denver Broncos
+                    option Kansas City Chiefs
+                    option Oakland Raiders
+                    option San Diego Chargers
+
+          .form-group
+            label.col-sm-2.control-label Chosen Multiple
+            .col-sm-10
+              select.chosen-select.form-control(chosen="", multiple, ng-model="team2")
+                option(value='')
+                    option Dallas Cowboys
+                    option New York Giants
+                    option Philadelphia Eagles
+                    option Washington Redskins
+                    option Chicago Bears
+                    option Detroit Lions
+                    option Green Bay Packers
+                    option Minnesota Vikings
+                    option Atlanta Falcons
+                    option Carolina Panthers
+                    option New Orleans Saints
+                    option Tampa Bay Buccaneers
+                    option Arizona Cardinals
+                    option St. Louis Rams
+                    option San Francisco 49ers
+                    option Seattle Seahawks
+                    option Buffalo Bills
+                    option Miami Dolphins
+                    option New England Patriots
+                    option New York Jets
+                    option Baltimore Ravens
+                    option Cincinnati Bengals
+                    option Cleveland Browns
+                    option Pittsburgh Steelers
+                    option Houston Texans
+                    option Indianapolis Colts
+                    option Jacksonville Jaguars
+                    option Tennessee Titans
+                    option Denver Broncos
+                    option Kansas City Chiefs
+                    option Oakland Raiders
+                    option San Diego Chargers
+        fieldset
+          .form-group
+            label.col-sm-2.control-label Editor
+            .col-sm-10
+              // The wysiswyg toolbar buttons
+              .btn-toolbar.mb(data-role='editor-toolbar', data-target='#editor')
+                .btn-group(dropdown='dropdown')
+                  a.btn.btn-default.dropdown-toggle(data-toggle='dropdown', tooltip='Font')
+                    em.fa.fa-font
+                    b.caret
+                  ul.dropdown-menu
+                    li(ng-repeat="ff in form.editorFontFamilyList")
+                      a(href='', data-edit='fontName {{ff}}', ng-attr-style="font-family: '{{ff}}';") {{ff}}
+                .btn-group.dropdown
+                  button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', tooltip='Font Size')
+                    em.fa.fa-text-height
+                    b.caret
+                  ul.dropdown-menu
+                    li(ng-repeat="fz in form.editorFontSizeList")
+                      a(href='', data-edit='fontSize {{fz.value}}', ng-attr-style='font-size: {{fz.value}};') {{fz.name}}
+                .btn-group
+                  a.btn.btn-default(data-edit='bold', tooltip='Bold (Ctrl/Cmd+B)')
+                    em.fa.fa-bold
+                  a.btn.btn-default(data-edit='italic', tooltip='Italic (Ctrl/Cmd+I)')
+                    em.fa.fa-italic
+                  a.btn.btn-default(data-edit='strikethrough', tooltip='Strikethrough')
+                    em.fa.fa-strikethrough
+                  a.btn.btn-default(data-edit='underline', tooltip='Underline (Ctrl/Cmd+U)')
+                    em.fa.fa-underline
+                .btn-group
+                  a.btn.btn-default(data-edit='insertunorderedlist', tooltip='Bullet list')
+                    em.fa.fa-list-ul
+                  a.btn.btn-default(data-edit='insertorderedlist', tooltip='Number list')
+                    em.fa.fa-list-ol
+                  a.btn.btn-default(data-edit='outdent', tooltip='Reduce indent (Shift+Tab)')
+                    em.fa.fa-dedent
+                  a.btn.btn-default(data-edit='indent', tooltip='Indent (Tab)')
+                    em.fa.fa-indent
+                .btn-group
+                  a.btn.btn-default(data-edit='justifyleft', tooltip='Align Left (Ctrl/Cmd+L)')
+                    em.fa.fa-align-left
+                  a.btn.btn-default(data-edit='justifycenter', tooltip='Center (Ctrl/Cmd+E)')
+                    em.fa.fa-align-center
+                  a.btn.btn-default(data-edit='justifyright', tooltip='Align Right (Ctrl/Cmd+R)')
+                    em.fa.fa-align-right
+                  a.btn.btn-default(data-edit='justifyfull', tooltip='Justify (Ctrl/Cmd+J)')
+                    em.fa.fa-align-justify
+                .btn-group.dropdown
+                  a.btn.btn-default.dropdown-toggle(data-toggle='dropdown', tooltip='Hyperlink')
+                    em.fa.fa-link
+                  .dropdown-menu
+                    .input-group.m-l-xs.m-r-xs
+                      input.form-control.input-sm(onclick='return false;', placeholder='URL', type='text', data-edit='createLink')
+                      .input-group-btn
+                        button.btn.btn-sm.btn-default(type='button') Add
+                  a.btn.btn-default(data-edit='unlink', tooltip='Remove Hyperlink')
+                    em.fa.fa-cut
+                .btn-group
+                  a#pictureBtn.btn.btn-default(tooltip='Insert picture (or just drag & drop)')
+                    em.fa.fa-picture-o
+                  input(type='file', data-edit='insertImage', style='position: absolute; opacity: 0; width: 41px; height: 34px;')
+                .btn-group
+                  a.btn.btn-default(data-edit='undo', tooltip='Undo (Ctrl/Cmd+Z)')
+                    em.fa.fa-undo
+                  a.btn.btn-default(data-edit='redo', tooltip='Redo (Ctrl/Cmd+Y)')
+                    em.fa.fa-repeat
+
+              // The wysiswyg editor
+              #editor.form-control(wysiwyg="", height="200px", max-height="300px") Type here..
+        fieldset
+          .form-group
+            label.col-sm-2.control-label Datepicker
+            .col-sm-10.col-lg-4
+              p.input-group
+                input.form-control(type='text', datepicker-popup='{{format}}', ng-model='form.dt', is-open='form.opened', min-date='false', max-date="false", datepicker-options='form.dateOptions', date-disabled='form.disabled(form.date, form.mode)', close-text='Close')
+                span.input-group-btn
+                  button.btn.btn-default(type='button', ng-click='form.open($event)')
+                    em.fa.fa-calendar
+          .form-group
+            label.col-sm-2.control-label Timepicker
+            .col-sm-10
+              timepicker(ng-model='form.mytime', ng-change='form.changed()', show-meridian='form.ismeridian')
+              p Time is: {{form.mytime | date:'shortTime' }}        
+
+        fieldset
+          .form-group
+            label.col-sm-2.control-label
+              | Slider
+              br
+              small.text-muted Vertical, Horizontal and Range sliders
+            .col-sm-4
+              input.slider.slider-horizontal(bootstrap-slider="", type='text', value='', data-slider-min='5', data-slider-max='20', data-slider-step='1', data-slider-value='10', data-slider-orientation='horizontal')
+              br
+              br
+              input.slider.slider-vertical(bootstrap-slider="", type='text', value='', data-slider-min='5', data-slider-max='35', data-slider-step='1', data-slider-value='30', data-slider-orientation='vertical')
+              input.slider.slider-vertical(bootstrap-slider="", type='text', value='', data-slider-min='5', data-slider-max='35', data-slider-step='1', data-slider-value='25', data-slider-orientation='vertical')
+              input.slider.slider-vertical(bootstrap-slider="", type='text', value='', data-slider-min='5', data-slider-max='35', data-slider-step='1', data-slider-value='20', data-slider-orientation='vertical')
+              input.slider.slider-vertical(bootstrap-slider="", type='text', value='', data-slider-min='5', data-slider-max='35', data-slider-step='1', data-slider-value='15', data-slider-orientation='vertical')
+              input.slider.slider-vertical(bootstrap-slider="", type='text', value='', data-slider-min='5', data-slider-max='35', data-slider-step='1', data-slider-value='20', data-slider-orientation='vertical')
+              input.slider.slider-vertical(bootstrap-slider="", type='text', value='', data-slider-min='5', data-slider-max='35', data-slider-step='1', data-slider-value='25', data-slider-orientation='vertical')
+              br
+              br
+              input#sl2.slider(bootstrap-slider="", type='text', value='', data-slider-min='10', data-slider-max='1000', data-slider-step='5', data-slider-value='[250,750]')
+        fieldset
+          .form-group
+            label.col-sm-2.control-label Masked input
+            .col-sm-10
+              .row
+                .col-sm-6
+                  input.form-control(type='text', masked="999-99-999-9999-9", placeholder="ISBN") 
+                  span.help-block masked="999-99-999-9999-9"
+                .col-sm-6
+                  input.form-control(type='text', masked="99/99/9999", placeholder="Date") 
+                  span.help-block masked="99/99/9999"
+                .col-sm-6
+                  input.form-control(type='text', masked="(999) 999-9999", placeholder="Phone number") 
+                  span.help-block masked="(999) 999-9999"
+                .col-sm-6
+                  input.form-control(type='text', masked="aaaa-9999-aa99-9999", placeholder="Custom Key") 
+                  span.help-block masked="aaaa-9999-aa99-9999"
+                .col-sm-6
+                  input.form-control(type='text', masked="$ 999.999.999,99", placeholder="Currency Dolar") 
+                  span.help-block masked="$ 999.999.999,99"
+                .col-sm-6
+                  input.form-control(type='text', masked="€ 999.999.999,99", placeholder="Currency Euro") 
+                  span.help-block masked="€ 999.999.999,99"
+
+  // END panel

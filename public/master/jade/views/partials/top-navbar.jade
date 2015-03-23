@@ -1,0 +1,151 @@
+// START Top Navbar
+nav.navbar.topnavbar(role='navigation', ng-controller="HeaderNavController")
+  // START navbar header
+  .navbar-header(ng-class="app.theme.brand")
+    a.navbar-brand(ui-sref='app.dashboard') 
+      img.brand-logo(src="app/img/logo.png", alt="App Logo")
+      img.brand-logo-collapsed(src="app/img/logo-single.png", alt="App Logo")
+
+    // Mobile buttons
+    .mobile-toggles
+      // Button to show/hide the header menu on mobile. Visible on mobile only.
+      a(href='#', toggle-state="hmenu-toggled", no-persist, ng-click="toggleHeaderMenu()").menu-toggle
+        em.fa.fa-cog  
+      // Button to show/hide the sidebar on mobile. Visible on mobile only.
+      a(href='#', toggle-state="aside-toggled", no-persist).sidebar-toggle
+        em.fa.fa-navicon
+
+  // END navbar header
+
+  // START Nav wrapper
+  .nav-wrapper.collapse.navbar-collapse(collapse="headerMenuCollapsed")
+    
+    // START Left navbar
+    ul.nav.navbar-nav
+      li
+        // Button used to collapse the left sidebar. Only visible on tablet and desktops
+        a(href='#', ng-click="app.sidebar.isCollapsed = !app.sidebar.isCollapsed").hidden-xs
+          em.fa(ng-class="app.sidebar.isCollapsed ? 'fa-caret-right':'fa-caret-left'")
+    // END Left navbar
+
+    // START Top navbar search form
+    form.search-form.navbar-form.navbar-left(role='search')
+      .form-group
+        .input-group(ng-controller='SearchFormController')
+          span.input-group-addon: em.icon-search
+          input.form-control(type='text', ng-model='routeSelected', typeahead='state for state in states | filter:$viewValue | limitTo:8', placeholder="{{ 'topbar.search.PLACEHOLDER' | translate }}", typeahead-on-select='onRouteSelect($item, $model, $label)')
+      button.hidden.btn.btn-default(type='submit') Submit
+    // END Top navbar search form
+
+    // START Right Navbar
+    ul.nav.navbar-nav.navbar-right
+      // START Alert menu
+      li.dropdown.dropdown-list
+        a.dropdown-toggle(href='#', dropdown-animate="")
+          .point-pin
+            em.icon-mail.fa-fw
+            .point.point-success.point-lg
+          span.visible-xs-inline.ml View Alerts 
+          //- .label.label-warning 3
+        // START Dropdown menu
+        ul.dropdown-menu.fadeInLeft2.animated(offcanvas-dropdown="")
+          // START list item
+          li(ng-init="offcontent1 = true", ng-click="cancel($event)")
+            a.p(href='#', ng-click="offcontent1 = false")
+              // START media preview
+              .media
+                .pull-left
+                  .point-pin
+                    img.img-responsive.thumb32.img-circle(src="app/img/user/03.jpg", alt="user msg")
+                    .point.point-success.point-lg
+                .media-body.clearfix
+                    p.m0 Francis Butler
+                    p.m0.text-gray.text-sm 5 minutes ago
+            // START offcanves content
+            .offcanvas-content.p(ng-hide="offcontent1", ng-click="cancel($event)")
+              .offcanvas-toggle.pull-right.text-gray
+                em.fa.fa-times(ng-click="offcontent1 = true")
+              .media.mt0.mb.clearfix
+                .pull-left
+                  .point-pin
+                    img.img-responsive.thumb32.img-circle(src="app/img/user/03.jpg", alt="user msg")
+                    .point.point-success.point-lg
+                .media-body.clearfix
+                    p.m0 Clifford Bell
+                    p.m0.text-gray.text-sm 5 minutes ago
+              p: em Donec ornare dui non eros dapibus ullamcorper. Cras nunc velit, bibendum vel imperdiet eget, posuere nec diam. Sed vel elementum ante. 
+          // START list item
+          li(ng-init="offcontent2 = true", ng-click="cancel($event)").bt
+            a.p(href='#', ng-click="offcontent2 = false")
+              // START media preview
+              .media
+                .pull-left
+                  .point-pin
+                    img.img-responsive.thumb32.img-circle(src="app/img/user/04.jpg", alt="user msg")
+                    .point.point-warning.point-lg
+                .media-body.clearfix
+                    p.m0 Arron Sutton
+                    p.m0.text-gray.text-sm 45 minutes ago
+            // START offcanves content
+            .offcanvas-content.p(ng-hide="offcontent2", ng-click="cancel($event)")
+              .offcanvas-toggle.pull-right.text-gray
+                em.fa.fa-times(ng-click="offcontent2 = true")
+              .media.mt0.mb.clearfix
+                .pull-left
+                  .point-pin
+                    img.img-responsive.thumb32.img-circle(src="app/img/user/04.jpg", alt="user msg")
+                    .point.point-warning.point-lg
+                .media-body.clearfix
+                    p.m0 Clifford Bell
+                    p.m0.text-gray.text-sm 45 minutes ago
+              p: em Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. 
+          // START list item
+          li(ng-init="offcontent3 = true", ng-click="cancel($event)").bt
+            a.p(href='#', ng-click="offcontent3 = false")
+              // START media preview
+              .media
+                .pull-left
+                  .point-pin
+                    img.img-responsive.thumb32.img-circle(src="app/img/user/05.jpg", alt="user msg")
+                    .point.point-danger.point-lg
+                .media-body.clearfix
+                    p.m0 Wallace Thompson
+                    p.m0.text-gray.text-sm yesterday
+            // START offcanves content
+            .offcanvas-content.p(ng-hide="offcontent3", ng-click="cancel($event)")
+              .offcanvas-toggle.pull-right.text-gray
+                em.fa.fa-times(ng-click="offcontent3 = true")
+              .media.mt0.mb.clearfix
+                .pull-left
+                  .point-pin
+                    img.img-responsive.thumb32.img-circle(src="app/img/user/05.jpg", alt="user msg")
+                    .point.point-danger.point-lg
+                .media-body.clearfix
+                    p.m0 Clifford Bell
+                    p.m0.text-gray.text-sm yesterday
+              p: em Etiam porttitor consectetur lectus, in adipiscing nisi bibendum eu.  Phasellus sed dui massa, vitae dapibus augue. Proin non lacinia sapien. Nam enim libero, lacinia a tristique a, accumsan sed purus. 
+          // START last list item
+          li.text-center(ng-init="offcontent3 = true").bt
+            a.p(ui-sref='app.mailbox.folder.list'): small View All
+
+      // Fullscreen (only desktops)
+      li.visible-lg
+        a(href='#', toggle-fullscreen)
+          em.fa.fa-expand
+      // START lock screen
+      li
+        a(ui-sref="page.lock", title="Lock screen")
+          em.icon-lock.fa-fw
+          span.visible-xs-inline.ml Lock Screen 
+      // END lock screen
+
+
+
+
+      // END Alert menu
+    // END Right Navbar
+  // END Nav wrapper
+
+
+
+// END Top Navbar

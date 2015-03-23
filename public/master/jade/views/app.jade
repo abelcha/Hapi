@@ -1,0 +1,13 @@
+// top navbar
+header(ng-include="'app/views/partials/top-navbar.html'", ng-class="app.theme.topbar")
+
+// Sidebar
+aside(ng-include="'app/views/partials/sidebar.html'", ng-class="app.theme.sidebar")
+
+// Main
+section
+  // Content
+  .app(ui-view="", autoscroll="false", ng-class="app.viewAnimation")
+  
+// Page footer
+footer(ng-include="'app/views/partials/footer.html'")

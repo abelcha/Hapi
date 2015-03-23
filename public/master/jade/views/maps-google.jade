@@ -1,0 +1,49 @@
+h3 Google Maps
+
+.container-fluid(ng-controller="GoogleMapController as gmap")
+  .panel.panel-default
+    .panel-heading
+      .panel-title Simple Map
+    gm-map.gmap(gm-map-id="'simpleMap'", gm-center='gmap.center', gm-zoom='gmap.zoom')
+    .panel-body
+      .row
+        .col-md-6
+          label Center:
+          .row
+            .col-xs-6
+              input.form-control(type='number', ng-model='gmap.centerLat', ng-change='gmap.updateCenter(centerLat, centerLng)')
+            .col-xs-6
+              input.form-control(type='number', ng-model='gmap.centerLng', ng-change='gmap.updateCenter(centerLat, centerLng)')
+        .col-md-6
+          label Zoom:
+          input.form-control(type='number', ng-model='gmap.zoom')
+
+  .panel.panel-default
+    .panel-heading
+      .panel-title Markers Data
+
+    div(gm-info-window='infoWindow')
+      h4 {{selectedVolcano.name}}
+      | {{selectedVolcano.elevationMeters}}m
+
+    gm-map.gmap(gm-map-id="'infoWindows'", gm-center='gmap.options.center', gm-zoom='gmap.options.zoom', gm-map-options='gmap.options.map')
+      gm-markers(gm-objects='gmap.volcanoes', gm-id='object.id', gm-position='{ lat: object.location.lat, lng: object.location.lng }', gm-marker-options='{ title: object.name, clickable: true }', gm-events='gmap.markerEvents', gm-on-openinfowindow='selectedVolcano = object; infoWindow.open(marker.getMap(), marker);', gm-on-click='gmap.triggerOpenInfoWindow(object)')
+
+    .panel-body
+      p Click a marker or click a button below to learn more about the volcano.
+      button.btn.btn-default.mr(ng-repeat='volcano in gmap.volcanoes', ng-click='gmap.triggerOpenInfoWindow(volcano)')
+        | More about {{volcano.name}}
+
+  .panel.panel-default
+    .panel-heading
+      .panel-title Markers Info
+    .panel-body
+      .row
+        .col-md-9
+          gm-map.gmap(gm-map-id="'mapWithMarkers'", gm-center='gmap.options3.center', gm-zoom='gmap.options3.zoom', gm-map-options='gmap.options3.map')
+            gm-markers(gm-objects='volcanoes', gm-id='object.id', gm-position='{lat: object.location.lat, lng: object.location.lng}', gm-marker-options='gmap.getVolcanoOpts(object)', gm-on-click='gmap.selectVolcano(object, marker)')
+        .col-md-3
+          h5.muted(ng-show='!gmap.volcan') Select a marker!
+          div(ng-show='gmap.volcan')
+            h4 {{ gmap.volcan.name }}, {{ gmap.volcan.elevationMeters }}m
+            img.mb.img-thumbnail.img-rounded.img-responsive(ng-src='{{ gmap.volcan.img }}')

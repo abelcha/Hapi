@@ -1,0 +1,36 @@
+/* ========================================================================
+   Component: form-extras.less
+ ========================================================================== */
+ 
+/**
+ * Custom form element
+ *    - Rounded inputs
+ */
+
+//
+// Form Rounded
+//
+
+.form-control-rounded {
+  border-radius: 100px;
+}
+
+// Support form feedback without labels
+
+.form-control-feedback {
+  top: 10px;
+  .input-sm + & {
+    top: 0;
+  }
+}
+
+
+.form-control-feedback {
+  label + .form-control + & {
+    // top: 34px;
+  }
+}
+
+.input-md {
+  width: 260px;
+}

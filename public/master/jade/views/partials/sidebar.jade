@@ -1,0 +1,42 @@
+// START Sidebar
+.sidebar-wrapper(ng-controller="SidebarController")
+  side-bar
+    .sidebar-nav
+      // START sidebar buttons
+      .sidebar-buttons
+        .btn-sidebar(compile="app/views/partials/summary.html")
+          img.mb.center-block.img-circle.img-responsive.thumb64(ng-src="{{user.picture}}", alt='')
+          .text-center
+            h4.text-bold.m0 {{user.name}}
+            small {{user.job}}
+        .text-center
+          .text-muted.mt-sm.clearfix
+            a(href="#", compile="app/views/partials/contacts.html").text-sm.btn-sidebar.pull-left
+              em.icon-speech-bubble.fa-fw
+            a(href="#", compile="app/views/partials/settings.html").text-sm.btn-sidebar.pull-right
+              em.icon-cog.fa-fw
+      // END sidebar buttons
+      // START sidebar nav
+      ul.nav
+        hr.hidden-collapsed
+        // Iterates over all sidebar items
+        li(ng-class="getSidebarItemClass(item)", ng-repeat='item in menuItems', ng-include="'sidebar-items.html'", ng-click="toggleCollapse($index)", ng-switch="item.type")
+      // END sidebar nav
+    
+
+  // ng-template for sidebar item markup
+  script(type='text/ng-template', id="sidebar-items.html")
+    span.text-muted(ng-switch-when="heading", translate="{{item.translate}}") {{item.text}}
+    hr(ng-switch-when="separator")
+    a(ng-switch-default="", ui-sref="{{item.sref}}", title="{{item.text}}")
+      em.sidebar-item-icon(class="{{item.icon}}" ng-hide="inSubmenu")
+      em.sidebar-item-caret.fa.pull-right(ng-if="item.subnav", ng-class="app.layout.isRTL?'fa-angle-left':'fa-angle-right'")
+      .label.pull-right(ng-if="item.alert", ng-class="item.alert.class || 'label-default'") {{item.alert.text}}
+      span(translate="{{item.translate}}") {{item.text}}
+    ul(ng-switch-default="", class="nav sidebar-subnav", ng-if="item.subnav", collapse="isCollapse($index)", is-disabled="isSidebarSlider()", ng-init="addCollapse($index, item)", ng-click="cancel($event)")
+      li.sidebar-subnav-header
+        a
+          em.sidebar-item-icon.fa(ng-class="(app.layout.isRTL)? 'fa-angle-right' : 'fa-angle-left'")
+          | {{ item.translate | translate }}
+      li(ng-repeat='item in item.subnav', ng-include="'sidebar-items.html'", ng-class="getSidebarItemClass(item)", ng-init="inSubmenu = true", ng-switch="item.type")
+// END Sidebar

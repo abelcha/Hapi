@@ -1,0 +1,28 @@
+.center-block.mt-xl.wd-xl
+  // START panel
+  .panel.panel-inverse
+    .panel-heading.text-center
+      img.center-block.img-rounded(src='app/img/logo-single.png', alt='Image')
+    .panel-body
+      p.text-center.pv.text-bold LOGIN
+      form(role='form').mb-lg
+        .form-group.has-feedback
+          input#exampleInputEmail1.form-control(type='email', placeholder='Your email', autocomplete="off")
+          span.fa.fa-envelope.form-control-feedback.text-muted
+        .form-group.has-feedback
+          input#exampleInputPassword1.form-control(type='password', placeholder='Your password')
+          span.fa.fa-lock.form-control-feedback.text-muted
+        .checkbox.c-checkbox.pull-left.mt0
+          label
+            input(type='checkbox', value='')
+            span.fa.fa-check
+            |  Remember me
+        br
+        button.btn.btn-block.btn-info.mt-lg(type='submit') Login
+      
+      p.text-center.text-muted Or
+      a(ui-sref="page.register").btn.btn-block.btn-default: strong Register an Account
+  .text-center.mt
+    a.text-muted(ui-sref="page.recover") Forgot your password?
+  // END panel
+  .p-lg.text-center(ng-include="'app/pages/page-footer.html'")

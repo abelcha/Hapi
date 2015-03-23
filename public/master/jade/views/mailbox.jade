@@ -1,0 +1,21 @@
+// h3 MailBox
+
+.row(ng-controller="MailboxController")
+  .col-lg-2.col-md-12
+    .clearfix.mb-lg
+      button.btn.btn-sm.btn-default.hidden-lg.pull-right(type="button", ng-click="mailboxMenuCollapsed = !mailboxMenuCollapsed")
+        em.fa.fa-bars.fa-fw.fa-lg
+      a(ui-sref="app.mailbox.compose").btn.btn-info.visible-lg.visible-xs-inline-block.visible-sm-inline-block.visible-md-inline-block
+        em.icon-mail.fa-fw
+        span Compose
+    .mb-boxes(collapse="mailboxMenuCollapsed")
+      .panel.panel-default.m0
+        .list-group
+          a.list-group-item(ui-sref="app.mailbox.folder.list({folder: folder.name})", ui-sref-opts="{notify: true}", ui-sref-active='active', ng-repeat="folder in mailboxFolders")
+            span.label.label-primary.pull-right {{ folder.count }}
+            em.fa.fa-fw.fa-lg(ng-class="folder.icon")
+            span {{ folder.name | titlecase }}
+
+    hr.visible-lg
+  .clearfix.hidden-lg
+  .col-lg-10(ui-view="container", class="ng-fadeInUp")

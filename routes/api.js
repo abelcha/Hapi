@@ -64,6 +64,12 @@ app.get('/api/artisans/find', _user.isLoggedIn, function(req, res) {
   }); 
 });
 
+app.get('/api/interventions/118', function(req, res) {
+  var request = require("request")
+  request.get({url: "http://electricien13003.com/alvin/118data.php", json: true}, function (error, response, body) {
+    res.json(body)
+  });
+});
 
 app.get('/crowling/quartier', _user.isLoggedIn, function(req, res) {
 

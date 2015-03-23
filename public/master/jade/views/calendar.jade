@@ -1,0 +1,40 @@
+h3 Full Calendar App
+
+// START row
+.calendar-app(ng-controller="CalendarController")
+  .row
+    .col-md-9.col-md-push-3
+      .panel.panel-default
+        .panel-body
+          .calendar(ng-model='eventSources', calendar='myCalendar', ui-calendar='uiConfig.calendar')
+      .clearfix
+        .pull-right
+          button.btn.btn-default.btn-sm(ng-click='changeLang()') {{changeTo}}
+        .pull-left
+
+    .col-md-3.col-md-pull-9
+      .panel.panel-default
+        ul.list-group
+          li.list-group-item(ng-repeat='event in calEventsPers.events')
+            a.text-sm.pull-right.close(ng-click='remove($index)')
+              em.fa.fa-times
+            p.m0
+              span.inline-block.wd-sm.text-ellipsis {{event.title}}
+              small.text-muted {{event.start | date:"MMM dd"}} - {{event.end | date:"MMM dd"}}
+      
+      .btn-switch.btn-block.mb(class="btn-switch-info")
+        input(type='checkbox', id='input-btn-switch-info', ng-click="toggleEventSource(0)", checked="isVisible(0)")
+        label.btn.btn-block.btn-info(for='input-btn-switch-info')
+          em.fa.fa-check
+          strong Personal Calendar
+      .btn-switch.btn-block.mb(class="btn-switch-warning")
+        input(type='checkbox', id='input-btn-switch-warning', ng-click="toggleEventSource(1)", checked="isVisible(1)")
+        label.btn.btn-block.btn-warning(for='input-btn-switch-warning')
+          em.fa.fa-check
+          strong Holiday Calendar (Google)
+      .btn-switch.btn-block.mb(class="btn-switch-purple")
+        input(type='checkbox', id='input-btn-switch-purple', ng-click="toggleEventSource(2)", checked="isVisible(2)")
+        label.btn.btn-block.btn-purple(for='input-btn-switch-purple')
+          em.fa.fa-check
+          strong External Events (Json)
+      p.text-muted: small *Click or tap into the calendar to add new events

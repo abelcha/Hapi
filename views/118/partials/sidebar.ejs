@@ -1,0 +1,48 @@
+<div class="side-menu" ng-controller="SideBarController as sbCtrl">
+  <div class="side-menu-container">
+    <ul class="nav navbar-nav">
+     <li class="toggleButton" 
+         style="height: 74px;border: none;" >
+            <h3 style="float:left;margin-left:10%;margin-top:7%">Vues</h3>
+            <button type="button" 
+                    class="btn" 
+                    style="background:transparent;float:right;margin-top: 6px;" 
+                    ng-click="toggleSidebar();">
+            <span style="color: black;" 
+                  class="fa fa-bars fa-2x">
+            </span>
+            </button>
+        </li>
+     <li>
+        <a href="/intervention" class="link">
+          <span class="glyphicon glyphicon-send"></span>
+            Nouvelle Intervention
+        </a>
+    </li>
+    <li class="panel panel-default" 
+        id="dropdown" 
+        ng-repeat="cat in config.interFilters">
+        <a  data-toggle="collapse" 
+            data-target="#{{cat.title}}"
+            href="javascript:void(0)"
+            >
+            <span class="fa fa-{{cat.icon}}"> </span> 
+              &nbsp;&nbsp;{{cat.title}} 
+            <span class="caret"></span>
+        </a>
+          <div  id="{{cat.title}}" 
+                class="panel-collapse collapse">
+                <div class="panel-body">
+                  <ul class="nav navbar-nav">
+                      <li ng-repeat="fltr in cat.list"  
+                          ng-click="changeFilter(fltr.id)" 
+                          ng-class="{'active-filter' : fltr.id == config.selectedFilter}">
+                      <a href="javascript:void(0)" >{{fltr.title}}</a></li>
+                  </ul>
+              </div>
+          </div>
+      </li>
+    </ul>
+</div>
+
+    </div>

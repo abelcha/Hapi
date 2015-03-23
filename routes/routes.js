@@ -31,6 +31,12 @@ app.get('/interventions/:query',_user.isLoggedIn,  function(req, res) {
   res.render('Interventions', {config:_config});
 });
 
+app.get('/118', function(req, res) {
+     if (req.isAuthenticated() && req.session.passport.user.service == "118000")
+      return res.render('118', {});
+    return res.redirect("/");
+});
+
 
 
 
@@ -48,8 +54,6 @@ app.get('/intervention/:query', _user.isLoggedIn,  function(req, res) {
 app.get('/intervention', _user.isLoggedIn,  function(req, res) {
   res.render('FicheInter', {data:{}});
 });
-
-
 
 
 
@@ -124,6 +128,8 @@ app.get('/test',  _user.isLoggedIn, function(req, res){
       res.send(rtn);
 
 });
+
+
 
 
 app.get('/address',_user.isLoggedIn, function(req, res) {  

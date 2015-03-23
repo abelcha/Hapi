@@ -47,7 +47,7 @@ _db.userModel.findOne({login:form.login}, function (err, result) {
 	if (form.ligne && !V.isTelephone(form.ligne))
 		return callback({status:'ERR', flash:"La ligne telephonique est invalide"});
 
-	if (!V.isIn(form.service, ['INTERVENTION', 'COMPTABILITE', 'PARTENARIAT', 'ADMIN']))
+	if (!V.isIn(form.service, ['INTERVENTION', 'COMPTABILITE', 'PARTENARIAT', 'ADMIN', '118000']))
 		return callback({status:'ERR', flash:"Le service '" + form.service + "' n'existe pas"});
 
 	if (!V.isTelephone(form.telephone))

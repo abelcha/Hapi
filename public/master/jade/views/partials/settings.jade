@@ -1,0 +1,71 @@
+.settings(ng-controller="SettingsController")
+  // this clikable element is required to go back to the sidebar menu items
+  .p.sidebar-close.clickable
+    em.fa.mr-lg(ng-class="(app.layout.isRTL)? 'fa-angle-right' : 'fa-angle-left'")
+    span.text-bold Settings
+
+  .settings-inner
+    .settings-content
+      .p
+        p.text-muted.text-thin THEMES
+        .clearfix.mb
+          .pull-left.wd-tiny.mb(ng-repeat="theme in themes")
+            .setting-color
+              label
+                input(type="radio", name="setting-theme", ng-model="app.themeId", ng-value="$index", ng-change="setTheme($index)")
+                span.icon-check
+                ul.list-table
+                  li(ng-class="theme.sidebar")
+                  li(ng-class="theme.brand")
+                  li(ng-class="theme.topbar")
+
+      hr
+      .p
+        p.text-muted.text-thin LAYOUT
+
+        .clearfix
+          p.pull-left Fixed
+          .pull-right
+            label.switch.switch-info
+              input(type='checkbox', ng-model="app.layout.isFixed")
+              span
+        .clearfix
+          p.pull-left Boxed
+          .pull-right
+            label.switch.switch-info
+              input(type='checkbox', ng-model="app.layout.isBoxed")
+              span
+        .clearfix
+          p.pull-left RTL
+          .pull-right
+            label.switch.switch-info
+              input(type='checkbox', ng-model="app.layout.isRTL")
+              span
+      hr
+      .p
+        p.text-muted.text-thin SIDEBAR
+        .clearfix
+          p.pull-left Collapsed
+          .pull-right
+            label.switch.switch-info
+              input(type='checkbox', ng-model="app.sidebar.isCollapsed")
+              span
+        .clearfix
+          p.pull-left Slide
+          .pull-right
+            label.switch.switch-info
+              input(type='checkbox', ng-model="app.sidebar.slide")
+              span
+      hr
+      .p
+        // START Language list
+        .pull-right
+          .btn-group.btn-group-sm(dropdown='', is-open='language.listIsOpen')
+            .dropdown-toggle.clickable
+              | {{language.selected}}
+              span.caret
+            ul.dropdown-menu.dropdown-menu-right.animated.fadeInLeft2(role='menu')
+              li(ng-repeat='(localeId, langName) in language.available')
+                a(ng-click='language.set(localeId, $event)', href='#') {{langName}}
+        // END Language list    
+        p.text-muted.text-thin LANGUAGE

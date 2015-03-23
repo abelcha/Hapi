@@ -1,0 +1,272 @@
+/* ========================================================================
+   Component: sidebar.less
+ ========================================================================== */
+ 
+@submenu-header-hg:               40px;   // Submenu header when hover collapse sidebar
+@scrollbar-wd:                    17px;
+
+@z-index-backdrop:                @z-index-aside - 10;
+@z-index-float-nav:               @z-index-backdrop + 1;
+
+.sidebar-wrapper {
+  height: 100%;
+  overflow-x: hidden;
+  background-color: inherit;  
+  hr {
+    margin: 10px 5px;
+    border-top-color: rgba(0,0,0,.15);
+  }
+
+  .dropdown-backdrop {
+    left: @aside-wd-collapsed;
+    z-index: @z-index-backdrop;
+  }
+}
+
+.sidebar {
+  position: relative;
+  height: 100%;
+  margin-right: -@scrollbar-wd;  // hides the scrollbar
+  padding-bottom: 50px;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
+  background-color: inherit;
+  &:after { content: "";}
+  .nav-heading {
+    padding: 12px 15px;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: .035em;
+    pointer-events: none;
+    cursor: default;
+  }
+
+  .sidebar-buttons {
+    float: left;
+    padding: 15px;
+    padding-top: 25px;
+    width: @aside-wd;
+
+
+
+    .btn-sidebar {
+      // @sz: 40px;
+      // display: inline-block;
+      // height: @sz;
+      // width: @sz;
+      // border-radius: 500px;
+      // line-height: @sz;
+      // text-align: center;
+      cursor: pointer;
+    }
+  }
+  
+  > .sidebar-nav {
+    padding-bottom: 20px;
+    // level 1
+    > .nav {
+      position: relative;
+
+      > li {
+        > a {
+          padding: 12px 15px;
+          letter-spacing: .025em;
+          font-weight: bold;
+
+          &:focus, &:hover {
+            text-decoration: none;
+            outline: none;
+          }
+
+          // Item icon
+          > .sidebar-item-icon {
+            width: 1.7em;
+            display: inline-block;
+            font-style: normal;
+            font-weight: normal;
+            line-height: 1;
+            -webkit-font-smoothing: antialiased;
+          }
+        }
+
+      }
+    }
+  } // sidebar-nav 
+}
+
+
+.sidebar-slide-template {
+  display: none;
+  &.nav-slide {
+    display: block;
+  }
+}
+
+// Sub Levels
+.sidebar-subnav {
+ 
+  > .sidebar-subnav-header {
+    display: none;
+    padding: 12px 15px;
+    cursor: pointer;
+    > a {
+      padding: 0 !important;
+      background-color: transparent !important;
+    }
+  }
+  
+  > li  {
+    > a {
+      display: block;
+      position: relative;
+      padding: 10px 20px;
+      padding-left: 40px;
+      font-weight: normal;
+    }
+  } // li
+
+  // This only happens when sidebar is collapsed and the submenu
+  // visibility is toggled via js
+  &.nav-floating {
+    // position: handled from directive
+    display: block !important;
+    height: auto !important;
+    visibility: visible;
+    left: inherit;
+    margin-left: @aside-wd-collapsed;
+    min-width: 190px;
+    border: 1px solid rgba(0,0,0,0.15);
+    overflow: auto;
+    z-index: @z-index-float-nav;
+
+    > .sidebar-subnav-header {
+      display: block;
+      background-color: transparent !important;
+    }
+    > li > a {
+      margin-left: 0;
+      padding-left: 25px;
+      > em {
+        // hide header icon when collapsed
+        display: none;
+      }
+    }
+  }
+
+  // This only happens when sidebar has slide mode on
+  &.nav-slide {
+    height: auto !important;
+    display: block !important;
+    visibility: visible !important;
+    > li > a {
+      padding-left: 45px;
+    }
+    .sidebar-subnav-header {
+      position: relative;
+      display: block;
+    }
+  }
+}
+
+// Sidebar slide animation
+// ----------------------------------- 
+
+.sidebar {
+
+  margin-left: 0;
+  .transition(margin-left .3s ease);
+
+  &.sidebar-slide {
+    margin-left: -@aside-wd;
+  }
+
+  > .sidebar-nav {
+    .clearfix();
+    width: (@aside-wd * 2) + (@scrollbar-wd);
+    margin-right: 0;
+    > .nav,
+    .nav-slide {
+      float: left;
+      width: @aside-wd;
+    }
+    > .nav {
+      clear: left;
+    }
+    .nav-slide {
+      float: right;
+      margin-right: @scrollbar-wd;
+    }
+  }
+}
+
+
+// Desktop styles
+// ---------------------------------
+
+@media @tablet {
+  
+  .sidebar > .sidebar-nav > .nav {
+    padding-right: 0;
+    .label,
+    .sidebar-item-caret {
+      margin: 2px 0 0 0;
+    }
+    .sidebar-item-caret + .label {
+      margin-right: 5px;
+    }
+
+  }
+  
+  // Collapsed state styles
+  .aside-collapsed {
+
+    .hidden-sidebar-collapsed,
+    .sidebar-buttons,
+    .sidebar-item-caret {
+      display: none;
+    }
+
+    .sidebar {
+      // Applies to first level items
+      > .sidebar-nav > .nav {
+        
+        .nav, 
+        > .nav-heading,
+        > li > a > span {
+          display: none !important;
+        }
+
+        > li {
+          width: @aside-wd-collapsed - 1;
+          > a {
+            padding: 20px 0;
+            text-align: center;
+            
+            > .sidebar-item-icon {
+              font-size: 1.6em; // increase icons size
+              width: auto;
+            }
+            &:focus { // accessibility
+              > .sidebar-item-icon { 
+                color: inherit; 
+              }
+            }
+          }
+        }
+      }
+
+      // labels in menu items
+      .nav {
+        .label {
+          position: absolute;
+          top: 10px; 
+          right: 5px;
+          text-indent: 0;
+        }
+      }
+
+    } // .sidebar
+  } // .aside-collapsed
+} // @media @desktop
+

@@ -1,0 +1,300 @@
+/* ========================================================================
+   Component: layout.less
+ ========================================================================== */
+ 
+//
+// This file controls the presentation of all components
+// Proposed markup 
+//  .app-container
+//    > header
+//      # topnavbar
+//    > aside
+//      # sidebar
+//    > section
+//      > .app
+//    > footer
+//
+// -------------------------------------------------------------
+
+@aside-wd:                                220px;
+@aside-wd-collapsed:                      65px;
+
+@header-hg:                               @navbar-height;
+@footer-hg:                               60px;
+@content-padding:                         15px;
+
+@boxed-max-width:                         1140px;
+
+@z-index-section:                         110;
+@z-index-header:                          @z-index-section + 300;
+@z-index-aside:                           @z-index-section + 200;
+@z-index-footer:                          @z-index-section + 100;
+
+html {
+  /* @replace rtl */ direction: ltr;
+  -ms-touch-action: manipulation; // http://updates.html5rocks.com/2013/12/300ms-tap-delay-gone-away
+  touch-action: manipulation;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+}
+body {
+  overflow-x: hidden;
+}
+
+// Main wrapper
+// -----------------------------
+.app-container {
+  position: relative;
+  width: 100%;
+  min-height: 100%;
+  height: auto;
+  .transition(all .3s cubic-bezier(.23,1,.32,1));
+  overflow-x: hidden;
+  
+  &.ng-leave {
+    display: none;
+  }
+  
+  > header {
+    position: relative;
+    z-index: @z-index-header;
+  }
+
+  // Contains the main sidebar
+  > aside {
+    position: absolute;
+    top: @header-hg;
+    left: 0;
+    bottom: 0;
+    width: @aside-wd;
+    // padding-top: @header-hg;
+    z-index: @z-index-aside;
+  }
+
+  // Contains the main content
+  > section {
+    position: relative;
+    height: 100%;
+    margin-left: 0;
+    overflow: hidden;
+    z-index: @z-index-section;
+  }
+
+  // Page Footer
+  > footer {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: @footer-hg;
+    padding: @content-padding;
+    border-top: 1px solid @gray-light;
+    background-color: @body-bg;
+    z-index: @z-index-footer;
+    > p {
+      margin: 0;
+    }
+  }
+
+  @media @tablet {
+    // move all to place the sidebar
+    > section,
+    > footer {
+      margin-left: @aside-wd;
+    }
+
+  }
+}
+
+
+// App main content (where the view loads)
+// -----------------------------
+.app {
+  padding: @content-padding;
+  padding-bottom: @footer-hg + 20; // ensure a space for the footer
+  width: 100%;
+  
+  > h3 {
+    .clearfix;
+    // color: @brand-info;
+    margin: 0;
+    margin-bottom: 20px;
+    padding: 0;
+    // font-weight: 300;
+    > small {
+      display: block;
+      font-size: 12px;
+      color: @text-muted;
+      line-height: 2;
+    }
+  }
+  > button, > .btn {
+    margin: 10px 10px 0 0;
+  }
+  
+  .container,
+  .container-fluid {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  @media @tablet {
+    > button, > .btn {
+      margin: 0;
+    }
+  }
+  
+  // expand over wrapper padding
+  > .unwrap {
+    margin: -@content-padding; 
+  }
+
+}
+
+// Aside toggled layout
+// -----------------------------
+
+@media @upto-tablet {
+  
+  .no-csstransforms3d {
+    .app-container {
+      > aside {
+        margin-left: -@aside-wd;
+      }
+    }
+
+    .aside-toggled {
+      .app-container {
+        > section,
+        > footer {
+          margin-left: @aside-wd;
+        }
+        > aside {
+          margin-left: 0;
+        }
+      }
+    }
+  }
+
+  .csstransforms3d  {
+
+    .app-container {
+      .backface-visibility(hidden);
+      // > header,
+      > section,
+      > footer {
+        .translate3d(0,0,0);
+        .transition-transform(.3s ease);
+      }
+      > aside {
+        transform-style: preserve-3d;
+        .translate3d(-@aside-wd,0,0);
+        .transition-transform(.3s ease);
+      }
+    }
+
+    .aside-toggled {
+      .app-container {
+        // > header,
+        > section,
+        > footer {
+          .translate3d(@aside-wd,0,0);
+        }
+        > aside {
+          .translate3d(0,0,0);
+        }
+      }
+    }
+  }
+}
+
+// Aside toggled layout
+// On desktop acts like condensed
+// -------------------------------
+
+// Aside status toggled via JS
+.aside-collapsed {
+  .hidden-collapsed {
+    display: none;
+  }
+
+  @media @tablet {
+    .app-container {
+      > aside {
+        width: @aside-wd-collapsed;
+      }
+      > section,
+      > footer {
+        margin-left: @aside-wd-collapsed;
+      }
+    }
+  }
+}
+
+// Fixed layout
+// -----------------------------
+.layout-fixed {
+
+  @media (max-width: @boxed-max-width) {
+    &.aside-toggled {
+      overflow-y: hidden;
+    }
+  }
+
+  .app-container {
+    > aside,
+    > header {
+      position: fixed;
+    }
+
+    @media @desktop {
+      > aside {
+        /* safari fix */
+        height: 1px;
+        min-height: 100%;
+        .backface-visibility(hidden);
+      }
+    }
+
+    > header {
+      width: 100%;
+    }
+    > section {
+      padding-top: @header-hg;
+    }
+  }
+}
+
+// Boxed layout
+// -----------------------------
+.layout-boxed {
+  .app-container {
+    max-width: @boxed-max-width;
+    margin: 0 auto;
+    overflow: hidden;
+    
+
+    > aside {
+      left: inherit;
+    }
+    > header {
+      width: 100%;
+      max-width: @boxed-max-width;
+    }
+  }
+  // style container when display only app views
+  // doens't affect page style (login, lock, etc)
+  &.in-app .app-container {
+    box-shadow: 0 0 13px rgba(0,0,0,.25);
+  }
+
+  .hidden-boxed {
+    display: none;
+  }
+  .fw-boxed {
+    width: 100%;
+  }
+}

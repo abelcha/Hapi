@@ -1,0 +1,22 @@
+
+<style type="text/css">
+    
+#context-menu button:focus {outline:0;}
+</style>
+
+
+
+<div ng-controller="ContextMenuController"id="context-menu-container" ng-show="rightClickedRow !== -1" style="z-index:9999">
+    <ul id="contextMenu" class="dropdown-menu" role="menu" style="  display: block;
+  position: absolute;">
+    <li  ng-repeat="link in contextMenu | orderBy:id" ng-show="link.display"><a ng-click="contextClick(link.id, $event)" 
+   href="javascript:void(0);">{{link.title}}</a></li>
+   <!--  <li class="divider"></li> -->
+</ul>
+<!--     <ul id="context-menu" class="chat-bubble menu " style="left: 605px; top: 147px;">
+        <li class="action primary" ng-repeat="link in contextMenu" ng-show="link.display">
+                <button>{{link.title}}</button>
+        </li>
+
+    </ul> -->
+</div>

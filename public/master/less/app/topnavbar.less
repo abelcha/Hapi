@@ -1,0 +1,171 @@
+/* ========================================================================
+   Component: top-navbar.less
+ ========================================================================== */
+ 
+@nav-header-wd:                 @aside-wd;
+@nav-header-wd-collapsed:       @aside-wd-collapsed;
+
+
+// Navbar Mobile General styles
+// ------------------------------
+
+.topnavbar {
+  position: relative;
+  -webkit-backface-visibility: hidden; /* fixes chrome jump */
+  margin-bottom: 0;
+  border-radius: 0;
+  border: 0;
+  box-shadow: 0 0 0 0 rgba(0,0,0,0);
+  .transition(box-shadow .2s ease);
+
+  // Navbar Header (logo)
+  // ----------------------------------- 
+  > .navbar-header {
+    position: relative;
+
+    @media @tablet {
+      width: @nav-header-wd;
+      background-image: none;
+      z-index: 1; // overlaps wrapper
+    }
+
+    > .navbar-brand {
+      display: block;
+      padding: 5px; 
+      float: none;
+      text-align: center;
+      img {
+        max-height: 100%;
+        width: auto;
+      }
+    }
+    
+    // Different Logo size depends on the navbar state
+    .brand-logo { 
+      display: inline-block; 
+      &-collapsed { 
+        display: none; 
+      }
+    }
+
+    @media @tablet {
+      .aside-collapsed & {
+        width: @nav-header-wd-collapsed;
+        .brand-logo { 
+          display: none; 
+          &-collapsed { 
+            display: inline-block;
+          }
+        }
+      }
+    }
+  }
+  
+  // relocate points for single notifications
+
+  .nav > li > a .point-pin {
+    display: inline-block;
+    > .point {
+      left: auto;
+      right: -5px;
+      bottom: auto;
+      top: -5px;
+    }
+  }
+
+  // Mobile button toggles
+  // ----------------------------------- 
+  .mobile-toggles {
+    .clearfix();
+    position: absolute !important;
+    right: 0;
+    left: 0;
+    top: 0;
+    height: @header-hg;
+    padding: 10px;
+
+    @media @tablet {
+      display: none;
+    }
+  }
+  
+  // Offcanvas sidebar &
+  // slide down menu toggle button
+  .sidebar-toggle,
+  .menu-toggle {
+    font-size: 24px;
+    color: white;
+    z-index: 3001;
+  }
+  .sidebar-toggle {
+    float: left;
+  }
+  .menu-toggle {
+    float: right;
+  }
+
+  // Navbar items shadow style
+  @media @tablet {
+    .nav > li > a {
+      &:hover, &:focus {
+        background-color: fade(@brand-inverse, 5);
+      }
+    }
+  }
+
+
+}
+// Search form
+.search-form {
+  .form-control {
+    border-color: transparent;
+  }
+  .input-group-addon {
+    border-color: transparent;
+    background-color: transparent;
+    padding-left: 0;
+    padding-right: 0;
+  }
+  .ie9 & {
+    .form-control {
+      // border-bottom: 1px solid rgba(0,0,0,.15);
+    }
+  }
+}
+
+// contains elements below header
+.nav-wrapper {
+  padding: 0 15px;
+  box-shadow: 0 1px 1px rgba(0,0,0,.1);
+
+  // when collapse is opened
+  &.in {
+    overflow: visible;
+  }
+
+  // fullwidth dropdowns
+  .navbar-nav .open .dropdown-menu {
+    position: absolute;
+    // background-color: rgb(255, 255, 255);
+    left: 0px;
+    right: 0px;
+    border-top: 1px solid #e1e1e1;
+    border-bottom: 1px solid #e1e1e1;
+  }
+
+  @media @tablet {
+    .clearfix();
+    position: relative;
+
+    // restore opened dropdown 
+    .navbar-nav .open .dropdown-menu {
+      left: auto;
+      right: auto;
+    }
+    .navbar-nav.navbar-right .open .dropdown-menu {
+      left: auto;
+      right: 0;
+    }
+
+  }
+}

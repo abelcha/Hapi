@@ -1,0 +1,27 @@
+doctype html
+
+<!--[if IE 9 ]>    <html class="ie9" lang="en" ng-app="singular"> <![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!-->
+html(lang="en", ng-app="singular") 
+  <!--<![endif]-->
+  
+  head
+    meta(charset='utf-8')
+    meta(name='viewport', content='width=device-width, initial-scale=1, maximum-scale=1')
+
+    meta(name='description', content='{{app.description}}')
+    meta(name='keywords', content='app, responsive, angular, bootstrap, dashboard, admin')
+
+    title(data-ng-bind="pageTitle()") Singular - Bootstrap Admin Theme + AngularJS
+
+    // App CSS
+    link(rel='stylesheet', href="app/css/app.css" ng-if="!app.layout.isRTL")
+    link(rel='stylesheet', href="app/css/apprtl.css" ng-if="app.layout.isRTL")
+  
+  body(ng-class="{ 'layout-fixed' : app.layout.isFixed, 'aside-collapsed' : app.sidebar.isCollapsed, 'layout-boxed' : app.layout.isBoxed, 'aside-slide' : app.sidebar.slide, 'in-app': $state.includes('app')}")
+    
+    .app-container(data-ui-view="", data-autoscroll='false', ng-class="app.viewAnimation")
+
+    // App Scripts
+    script(src='app/js/base.js')
+    script(src='app/js/app.js')

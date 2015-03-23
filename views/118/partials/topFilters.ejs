@@ -1,0 +1,31 @@
+  <div class="topfilter" class="col-md-12"  >
+
+    <h3 style="text-align:center">{{interFilters[selectedFilter].sub[selectedSubFilter].title}}</h3>
+    <div >
+      <div class="row">
+        <div class="col-md-8  col-md-offset-1">
+            <ul class="nav nav-pills" role="tablist">
+            <div ng-repeat="tel in telepro" class="col-md-2" style="text-align: right;" >
+                  <a href="#"><strong>{{tel.name}}</strong> <span class="badge">42</span></a>
+            </div>
+            </ul>
+        </div>
+        </div>
+        <div class="row">
+        <div class="col-md-8  col-md-offset-1">
+            <ul class="nav nav-pills" role="tablist" ng-repeat="is in interShortCuts">
+            <div class="col-md-2" ng-repeat="tel in telepro" style="text-align: right;" >
+                  <a href="#">{{is.title }}<span class="badge">42</span></a>
+            </div>
+            </ul>
+        </div>
+
+       </div>
+   <!--   <ul class="nav nav-pills" role="tablist">
+        <li style="margin-left:184px" class="active" ><a href="#" >All<span class="badge">432</span></a></li>
+        <li><a href="#">Aujourd'hui<span class="badge">12</span></a></li>
+        <li><a href="#">Cette Semaine<span class="badge">49</span></a></li>
+        <li><a href="#">Ce Mois<span class="badge">100</span></a></li>
+      </ul> -->
+    </div>
+</div>

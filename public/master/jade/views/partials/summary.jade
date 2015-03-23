@@ -1,0 +1,55 @@
+.summary
+  // this clikable element is required to go back to the sidebar menu items
+  .p.sidebar-close.clickable
+    em.fa.mr-lg(ng-class="(app.layout.isRTL)? 'fa-angle-right' : 'fa-angle-left'")
+    span.text-bold Summary
+
+  .p(ng-controller="SummaryController")
+    ul.list-table.list-unstyled.pb
+      li.wd-xxs
+        img.img-circle.img-responsive.thumb48(ng-src="{{user.picture}}", alt='')
+      li.text-left
+        h5.text-bold.text-ellipsis.mt0 {{user.name}}
+        progressbar.mb-sm.progress-xs(value='75', type='success') 
+          .sr-only 75%
+        p.text-muted.clearfix.m0
+          span.pull-left Profile complete
+          span.pull-right 75%
+    hr
+
+    ul.list-table.pv
+      li
+        h4.m0.text-bold 10k
+        small.text-muted Followers
+      li
+        h4.m0.text-bold 1500
+        small.text-muted Following
+      li
+        h4.m0.text-bold 2300
+        small.text-muted Messages
+    hr
+
+    .pv
+      h5.text-center.m0.text-bold Summary
+      br
+      ul.list-table
+        li
+          p.m0 Mailbox quota
+          small.text-muted 1 of 5 Gb Used
+        li.text-right
+          sparkline(options="sparkOps1", values="sparkData1")
+      ul.list-table
+        li
+          p.m0 Profile visits
+          small.text-muted 25k this month
+        li.text-right
+          sparkline(options="sparkOps2", values="sparkData2")
+      ul.list-table
+        li
+          p.m0 Monthly Sale
+          small.text-muted $4000 this period
+        li.text-right
+          sparkline(options="sparkOps3", values="sparkData3")
+    br
+    .text-center
+      a(href="#").btn.btn-info.btn-sm Open Full Profile
