@@ -40,10 +40,12 @@ app.post('/', function(req, res, next) {
 
 
 app.get('/', function(req, res) {
-if (req.session.passport.user.service == "118000")
-      return res.redirect("/118")
+
 if (req.isAuthenticated()) {
-    res.redirect('/interventions');
+    if (req.session.passport.user.service == "118000")
+      return res.redirect("/118")
+    else
+      res.redirect('/interventions');
    }
   else
     res.render('Login/login', {err:''});
