@@ -7,7 +7,6 @@ var _mail = require("../modules/edison-mail.js")
 var isLoggedIn = function(req, res, next) {
     if (req.app.get('env') === 'development' )
       return next();
-/*    */
     else if (req.isAuthenticated()) {
         return next();
     }
@@ -32,7 +31,7 @@ app.post('/', function(req, res, next) {
     req.logIn(user, function(err) {
       if (err) { return next(err); }
       req.session.user = info;
-      return res.redirect("/interventions");
+      return res.redirect("/");
     });
 
   })(req, res, next);
