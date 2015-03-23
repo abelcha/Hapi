@@ -5,7 +5,7 @@ var _mail = require("../modules/edison-mail.js")
 
 
 var isLoggedIn = function(req, res, next) {
-    //console.log(req.app.get('env'));
+  console.log("ENV==>", req.app.get('env'));
     if (req.app.get('env') === 'development' )
       return next();
     if (req.session.passport.user.service == "118000")
@@ -65,7 +65,6 @@ var password = new _form('password', req.body);
 });
 
 app.get('/activate/:id', function(req, res) {
-    console.log("yay")
   _db.userModel.findOne({_id:req.params.id}, function(err, data) {
     if (!err && data) {
       res.location('back');

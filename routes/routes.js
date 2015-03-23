@@ -1,4 +1,4 @@
-      var _config = require("../config/interventions.js");
+var _config = require("../config/interventions.js");
 var _user = require('./users.js');
 var _data = require('./api.js');
 var _tmp = require('./tmp.js');

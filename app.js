@@ -34,7 +34,7 @@ var memCache = require('memory-cache');
 
 var passport = require('passport');
 var passportConfig = require('./config/passport')(passport, _db); // pass passport for configuration
-app.set('url', app.get('env') === 'development' ? "http://127.0.0.1:8080/" : "http://edison.services/");
+
 
 // set up our express application
 //app.use(morgan('dev')); // log every request to the console
