@@ -1,4 +1,4 @@
-var _config = require("../config/interventions.js");
+      var _config = require("../config/interventions.js");
 var _user = require('./users.js');
 var _data = require('./api.js');
 var _tmp = require('./tmp.js');
@@ -32,11 +32,12 @@ app.get('/interventions/:query',_user.isLoggedIn,  function(req, res) {
 });
 
 app.get('/118', function(req, res) {
-     if (req.isAuthenticated() && req.session.passport.user.service == "118000")
-      return res.render('118', {});
-    return res.redirect("/");
+    res.render('118/dashboard', {config:_config});
 });
 
+app.get('/118/interventions', function(req, res) {
+    res.render('118/interventions', {config:_config});
+});
 
 
 

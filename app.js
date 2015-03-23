@@ -79,7 +79,7 @@ app.use(function(req, res, next) {
 // development error handler
 // will print stacktrace
 
-
+app.set("env", process.env.NODE_ENV || 'development')
 
 if (app.get('env') === 'development') {
     app.use(function(err, req, res, next) {

@@ -5,11 +5,9 @@ var _mail = require("../modules/edison-mail.js")
 
 
 var isLoggedIn = function(req, res, next) {
-  console.log("ENV==>", req.app.get('env'));
     if (req.app.get('env') === 'development' )
       return next();
-    if (req.session.passport.user.service == "118000")
-      return res.redirect("/118")
+/*    */
     else if (req.isAuthenticated()) {
         return next();
     }
@@ -42,6 +40,8 @@ app.post('/', function(req, res, next) {
 
 
 app.get('/', function(req, res) {
+if (req.session.passport.user.service == "118000")
+      return res.redirect("/118")
 if (req.isAuthenticated()) {
     res.redirect('/interventions');
    }

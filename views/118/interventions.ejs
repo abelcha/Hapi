@@ -93,10 +93,10 @@
             <div class="collapse navbar-collapse navbar-ex1-collapse">
                 <ul class="nav navbar-nav side-nav">
                     <li>
-                        <a href="index.html"><i class="fa fa-fw fa-dashboard"></i> Dashboard</a>
+                        <a href="/118"><i class="fa fa-fw fa-dashboard"></i> Dashboard</a>
                     </li>
                     <li class="active">
-                        <a href="tables.html"><i class="fa fa-fw fa-table"></i> Interventions</a>
+                        <a href="/118/interventions"><i class="fa fa-fw fa-table"></i> Interventions</a>
                     </li>
                 </ul>
             </div>
@@ -150,7 +150,7 @@
                                     {{inter.montant}} €
                                 </td>
                                 <td data-title="'Comission'" sortable="'prix_ht_annonce'">
-                                    {{inter.montant * 0.1  | currency: ""}} €
+                                    {{inter.montant * 0.15  | currency: ""}} €
                                 </td>
                                 <td data-title="'Etat'" sortable="'etat_intervention'">
                                     <span class="label label-{{etats[inter.etat_intervention]}}">{{inter.etat_intervention}}</span>
@@ -209,7 +209,7 @@
           'EN COURS':"warning",
           'PAYÉ': "success",
           'DEVIS': "primary",
-          'INTERVENU':"success"
+          'CONFIRMER':"success"
        }; 
 
       $http({method: 'GET', url: "/api/interventions/118"})
