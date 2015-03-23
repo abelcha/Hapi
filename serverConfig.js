@@ -55,7 +55,7 @@ exports.serverConfig = function(app, express){
             });
         });
     }
-    app.set('url', (app.get('env') === 'development' ? "http://127.0.0.1:8080/" : "http://edison.services/"));
+    app.set('url', (process.env.NODE_ENV ? "http://edison.services/" : "http://127.0.0.1:8080/"));
     // production error handler
     // no stacktraces leaked to user
     app.use(function(err, req, res, next) {
