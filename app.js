@@ -20,6 +20,7 @@ var passportConfig = edison.passport(npm.passport);
 
 
 app.use(npm.cookieParser()); // read cookies (needed for auth)
+//test
 app.use(npm.bodyParser.json());
 app.use(npm.bodyParser.urlencoded({ extended: true }));
 app.use(npm.compression());  
