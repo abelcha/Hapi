@@ -94,6 +94,32 @@ app.get('/incomingCalls/:number',_user.isLoggedIn, function(req, res) {
   })
 });
   
+app.get('/api/actualise118',_user.isLoggedIn, function(req, res) {
+
+ var crawler = require("../edisonFramework/crawler");
+var request = require("request");
+var number = '0033184204446';
+var pass = "3t9V8gbnUx11n1Fu6Ja0w8K861f77h6Dn22E8Ur563N7qXb8rl";
+
+
+  var qtime = Date.now();
+  console.log('ok');
+  crawler.getOvhSessionId(function(err, sessionId) {
+    if (err) return (res.json("err"));
+    else {
+      console.log('ok2');
+      crawler.getOvhIncomingCalls(number, sessionId, function(data) {
+        data.seconds = (Date.now() - qtime) / 1000;
+        console.log('ok3');
+        request.post({url:'http://electricien13003.com/alvin/118actualise.php', form: {data:data, password:pass}}, function(err,httpResponse,body){
+          console.log('ok4');
+          res.json(body);
+        })
+      });
+    }
+  })
+
+});
 
 
 };

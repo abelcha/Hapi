@@ -20,6 +20,7 @@
   <link rel="shortcut icon" href="https://angularjs.org/favicon.ico" />
   <link rel="stylesheet"  href="/ng-table/ng-table.css">
   <link href="/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <link href="/nprogress/nprogress.css" rel="stylesheet">
 
 
 </head>
@@ -117,7 +118,7 @@
                     </div>
                     <div class="col-lg-3">
                       <h1 class="page-header">
-
+                    <a style="float:right;margin-top:14px" class="btn btn-primary" ng-click="refreshData();">Actualiser</a>       
                         <a style="float:right;margin-top:14px" class="btn btn-primary" ng-mousedown="csv.generate()" ng-href="{{ csv.link() }}" download="interventions.csv">Exporter</a>        
                         </h1>     
 
@@ -133,6 +134,12 @@
                             <tr ng-repeat="inter in $data">
                                 <td data-title="'id'" sortable="'id'">
                                     {{inter.id}}
+                                </td>
+                                <td data-title="'Categorie'" sortable="'categorie'">
+                                    {{inter.categorie | beautifier}}
+                                </td>
+                                <td data-title="'Numero'" sortable="'numero_origine'">
+                                    {{inter.numero_origine}}
                                 </td>
                                 <td data-title="'Nom'" sortable="'nom'">
                                     {{inter.civilite}} {{inter.nom}} {{inter.prenom  | beautifier}}
@@ -172,6 +179,7 @@
     <script src="/jquery/dist/jquery.min.js"              ></script>
     <script src="/bootstrap/dist/js/bootstrap.min.js"     ></script>
     <script src="/ng-table/ng-table.js"                   ></script>
+    <script type="text/javascript" src="/nprogress/nprogress.js"></script>
     <script type="text/javascript" src="/ng-table-export/ng-table-export.js"></script>
     <script type="text/javascript">
     var app = angular.module('InterventionApp', ['ngTable', 'ngTableExport'])
@@ -203,6 +211,16 @@
 
             });
       };
+
+        $scope.refreshData = function() {
+            NProgress.start();
+            $http({method: 'GET', url: "/api/actualise118"}).success(function(data) {
+                NProgress.done();
+                alert("Les informations ont été mises à jour");
+                window.reload();
+                console.log(data);
+            });
+        };
        
        $scope.etats = {
           'ANNULE':"danger",
