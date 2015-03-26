@@ -18,7 +18,7 @@ module.exports = function(passport) {
 			}
 			if (!data)
 			{
-				return done(null, false, {err:`L'utilisateur : ${username} n'éxiste pas`});
+				return done(null, false, {err:"L'utilisateur : " + username + "  n'éxiste pas"});
 			} 
 			else if (bcrypt.compareSync(password, data.password) === true)
 			{	

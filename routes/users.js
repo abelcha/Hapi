@@ -89,7 +89,7 @@ app.post('/signup', isLoggedIn, function(req, res) {
                   title:"Activation du compte Edison Service", 
                   textFile:"invitation",
                   button:"Activer votre compte",
-                  link: `${app.get('url')}activate/${d._id}`,
+                  link: app.get('url') + "activate/" + d._id,
                   template:"messageAndLink",
                   adress:d.email,
                   service:"Service Informatique",
