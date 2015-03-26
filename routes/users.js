@@ -1,9 +1,9 @@
 var S = require("string");
 
 var isLoggedIn = function(req, res, next) {
-  //  if (req.app.get('env') === 'development' )
+    if (req.app.get('env') === 'development' )
       return next();
-    /*else*/ if (req.isAuthenticated()) {
+    else if (req.isAuthenticated()) {
         return next();
     }
     res.redirect('/');
