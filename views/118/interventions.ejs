@@ -138,6 +138,9 @@
                                 <td data-title="'Categorie'" sortable="'categorie'">
                                     {{inter.categorie | beautifier}}
                                 </td>
+                                <td data-title="'Campagne'" sortable="'numero_appel'">
+                                    {{inter.numero_appel}}
+                                </td>
                                 <td data-title="'Numero'" sortable="'numero_origine'">
                                     {{inter.numero_origine}}
                                 </td>
@@ -217,7 +220,6 @@
             $http({method: 'GET', url: "/api/actualise118"}).success(function(data) {
                 NProgress.done();
                 alert("Les informations ont été mises à jour");
-                window.reload();
                 console.log(data);
             });
         };
