@@ -1,8 +1,4 @@
 var S = require("string");
-var _form = require("../modules/form.js")
-var _mail = require("../modules/edison-mail.js")
-
-
 
 var isLoggedIn = function(req, res, next) {
     if (req.app.get('env') === 'development' )
@@ -54,7 +50,7 @@ if (req.isAuthenticated()) {
 
 app.post('/activate', function(req, res) {
 
-var password = new _form('password', req.body);
+var password = new edison.form('password', req.body);
   password.sanitizeAndValidate(function(results, data) {
     if (results.status == 'OK') {
       _db.userModel.update({_id:data.id}, {password:data.hash, activated:true}, function(err, doc) {
@@ -84,11 +80,11 @@ app.get('/signup', isLoggedIn, function(req, res) {
 
 app.post('/signup', isLoggedIn, function(req, res) {
 
-	var signup = new _form('signup', req.body);
+	var signup = new edison.form('signup', req.body);
 	signup.sanitizeAndValidate(function(results, data) {
 		if (results.status == 'OK') {
 			new _db.userModel(data).save(function(e, d) {
-        _mail.sendMail({
+        edison.mail.sendMail({
 			      name:"M. " + S(data.nom).capitalize(), 
                   title:"Activation du compte Edison Service", 
                   textFile:"invitation",

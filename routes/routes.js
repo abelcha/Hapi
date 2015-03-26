@@ -1,12 +1,12 @@
-      var _config = require("../config/interventions.js");
 var _user = require('./users.js');
 var _data = require('./api.js');
 var _tmp = require('./tmp.js');
-module.exports = function(app, _db, passport, memCache) {
+
+module.exports = function(app, passport, memCache) {
 
 
 app.get('/clearCache', _user.isLoggedIn, function(req, res) {
-        _db.interventionModel.find()
+        edison.db.interventionModel.find()
         .sort('-id')
         .select('-_id id telepro dateAjout add.v add.cp sst cat nom civ pmntCli pmntSst etat dateInter prixAnn reglSP')
         .exec(function (err, interList){ 
@@ -22,21 +22,21 @@ app.get('/viewJSON/:type/:query', _user.isLoggedIn, function(req, res) {
 
 
 app.get('/interventions', _user.isLoggedIn,  function(req, res) {
- 	res.render('Interventions', {config:_config});
+ 	res.render('Interventions', {config:edison.intersConfig});
 });
 
 app.get('/interventions/:query',_user.isLoggedIn,  function(req, res) {
   
-  _config.parseFilter(req.params.query.split(':'));
-  res.render('Interventions', {config:_config});
+  edison.intersConfig.parseFilter(req.params.query.split(':'));
+  res.render('Interventions', {config:edison.intersConfig});
 });
 
 app.get('/118', function(req, res) {
-    res.render('118/dashboard', {config:_config});
+    res.render('118/dashboard', {config:edison.intersConfig});
 });
 
 app.get('/118/interventions', function(req, res) {
-    res.render('118/interventions', {config:_config});
+    res.render('118/interventions', {config:edison.intersConfig});
 });
 
 
@@ -46,7 +46,7 @@ app.get('/118/interventions', function(req, res) {
 
 app.get('/intervention/:query', _user.isLoggedIn,  function(req, res) {
 
-  _db.interventionModel.findOne({id:req.params.query}, function (err, data){ 
+  edison.db.interventionModel.findOne({id:req.params.query}, function (err, data){ 
     res.render('FicheInter', {data:data});
   }); 
 
@@ -70,8 +70,8 @@ app.get('/etats', _user.isLoggedIn, function(req, res) {
 app.get('/artisan', _user.isLoggedIn, function(req, res) {
   var inter = require('../modules/artisan.js');
   inter.dumpData(function(artisanList){
-    _db.artisanModel.remove({}, function (err) {
-      _db.artisanModel.create(artisanList, function(err) {
+    edison.db.artisanModel.remove({}, function (err) {
+      edison.db.artisanModel.create(artisanList, function(err) {
       //    console.log(artisanList);
           res.render('index', { title: 'Express', artisanList: {} });
       }); 
@@ -84,8 +84,8 @@ app.get('/artisan', _user.isLoggedIn, function(req, res) {
 app.get('/update', _user.isLoggedIn, function(req, res) {
   var inter = require('../modules/intervention.js');
   inter.dumpData(function(interList){
-  	_db.interventionModel.remove({}, function (err) {
-      _db.interventionModel.create(interList, function(err) {
+  	edison.db.interventionModel.remove({}, function (err) {
+      edison.db.interventionModel.create(interList, function(err) {
   			  //console.log(interList);
           res.render('index', { title: 'Express', interList: {} });
       }); 
@@ -96,7 +96,7 @@ app.get('/update', _user.isLoggedIn, function(req, res) {
 
 app.get('/mail', _user.isLoggedIn, function(req, res) {  
   var mail = require("../modules/edison-mail.js")
-  _db.artisanModel
+  edison.db.artisanModel
         .find()
         .select("nomSociete -_id id nomRep dateAjout add email tel1 tel2 archive")
         .exec(function (err, ssts){ 
@@ -115,8 +115,7 @@ app.get('/mail', _user.isLoggedIn, function(req, res) {
 });
 
 app.get('/test',  _user.isLoggedIn, function(req, res){
-   var _mail = require("../modules/edison-mail.js")
-    var rtn =  _mail.renderMail({
+    var rtn =  edison.mail.renderMail({
                   name:"M. Chalier", 
                   title:"Activation du compte Edison Service", 
                   textFile:"invitation",
@@ -130,11 +129,8 @@ app.get('/test',  _user.isLoggedIn, function(req, res){
 
 });
 
-
-
-
 app.get('/address',_user.isLoggedIn, function(req, res) {  
-/*  _db.artisanModel
+/*  edison.db.artisanModel
         .find({archive:false, dateAjout:{$lte: new Date("2014-09-01")}})
         .select("nomSociete -_id id nomRep dateAjout add email tel1 tel2 archive")
         .exec(function (err, ssts){ 
@@ -142,9 +138,9 @@ app.get('/address',_user.isLoggedIn, function(req, res) {
       });*/
 });
 
-_user.routes(app, _db, passport, memCache);
-_data.routes(app, _db, _user, memCache)
-_tmp.routes(app, _db, _user, memCache)
+_user.routes(app, edison.db, passport, memCache);
+_data.routes(app, _user)
+_tmp.routes(app, edison.db, _user, memCache)
 
 
 };
