@@ -2,15 +2,15 @@ var _user = require('./users.js');
 var _data = require('./api.js');
 var _tmp = require('./tmp.js');
 
-module.exports = function(app, passport, memCache) {
-
+module.exports = function() {
+//app, npm.passport, npm.memoryCache
 
 app.get('/clearCache', _user.isLoggedIn, function(req, res) {
         edison.db.interventionModel.find()
         .sort('-id')
         .select('-_id id telepro dateAjout add.v add.cp sst cat nom civ pmntCli pmntSst etat dateInter prixAnn reglSP')
         .exec(function (err, interList){ 
-        memCache.put("all", interList);
+        npm.memoryCache.put("all", interList);
         res.json(interList);
       }); 
 });
@@ -138,9 +138,9 @@ app.get('/address',_user.isLoggedIn, function(req, res) {
       });*/
 });
 
-_user.routes(app, edison.db, passport, memCache);
-_data.routes(app, _user)
-_tmp.routes(app, edison.db, _user, memCache)
+_user.routes();
+_data.routes(_user)
+_tmp.routes(_user)
 
 
 };

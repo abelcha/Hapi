@@ -1,6 +1,6 @@
 var request = require('request');
 
-module.exports.routes = function(app, _db, _user, memCache) {
+module.exports.routes = function() {
 
 
  

@@ -32,7 +32,7 @@ app.use(npm.connectFlash()); // use connect-flash for flash messages stored in s
 // routes ======================================================================
 
 
-require('./routes/routes.js')(app, npm.passport, npm.memoryCache); 
+require('./routes/routes.js')(); 
 
 /*  !AUTHENTIFICATION */
 

@@ -10,7 +10,7 @@ var isLoggedIn = function(req, res, next) {
 }
 
 
-module.exports.routes = function(app, _db, passport, memCache) {
+module.exports.routes = function() {
 
 app.get('/logout', function(req, res){
   req.logout();
@@ -19,7 +19,7 @@ app.get('/logout', function(req, res){
 
 
 app.post('/', function(req, res, next) {
-  passport.authenticate('local', function(err, user, info) {
+  npm.passport.authenticate('local', function(err, user, info) {
    if (err) { return next(err) }
    else if (!user) {
       return res.render('Login/login', info)

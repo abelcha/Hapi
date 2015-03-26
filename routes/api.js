@@ -1,4 +1,4 @@
-module.exports.routes = function(app, _user) {
+module.exports.routes = function(_user) {
 
 
 
