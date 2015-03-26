@@ -32,15 +32,18 @@ app.get('/interventions/:query',_user.isLoggedIn,  function(req, res) {
 });
 
 app.get('/118', function(req, res) {
-    res.render('118/dashboard', {config:edison.intersConfig});
+    res.render('118/dashboard',{});
 });
 
 app.get('/118/interventions', function(req, res) {
-    res.render('118/interventions', {config:edison.intersConfig});
+    res.render('118/interventions', {});
 });
 
-
-
+app.get('/118/listeAppels', function(req, res) {
+  npm.request.get({url:'http://electricien13003.com/alvin/118_appels.json'}, function(e, d, body) {
+    res.render('118/listeAppels', {data:body});
+  })
+});
 
 
 

@@ -116,7 +116,7 @@
                 <div class="row">
                     <div class="col-lg-9">
                         <h1 class="page-header">
-                            Interventions
+                            Liste des appels
                         </h1>
                     </div>
                     <div class="col-lg-3">
@@ -134,39 +134,18 @@
                     -12 col-md-12">
                         
                         <table ng-table="tableParams" class="table table-striped"  export-csv="csv">
-                            <tr ng-repeat="inter in $data">
-                                <td data-title="'id'" sortable="'id'">
-                                    {{inter.id}}
+                            <tr ng-repeat="d in data">
+                                <td data-title="'Date'" sortable="'date'">
+                                    {{d.date}}
                                 </td>
-                                <td data-title="'Categorie'" sortable="'categorie'">
-                                    {{inter.categorie | beautifier}}
+                                <td data-title="'Origine'" sortable="'origin'">
+                                    {{d.origin}}
                                 </td>
-                                <td data-title="'Campagne'" sortable="'numero_appel'">
-                                    {{inter.numero_appel}}
+                                <td data-title="'Durée'" sortable="'duration'">
+                                    {{d.duration}}
                                 </td>
-                                <td data-title="'Numero'" sortable="'numero_origine'">
-                                    {{inter.numero_origine}}
-                                </td>
-                                <td data-title="'Nom'" sortable="'nom'">
-                                    {{inter.civilite}} {{inter.nom}} {{inter.prenom  | beautifier}}
-                                </td>
-                                <td data-title="'Date'" sortable="'t_stamp'">
-                                    {{inter.t_stamp * 1000  | date:"dd/MM/yy"}}
-                                </td>
-                                <td data-title="'CP'" sortable="'code_postal'">
-                                    {{inter.code_postal}}
-                                </td>
-                                <td data-title="'Ville'" sortable="'ville'">
-                                    {{inter.ville  | beautifier}}
-                                </td>
-                                <td data-title="'Montant'" sortable="'montant'">
-                                    {{inter.montant}} €
-                                </td>
-                                <td data-title="'Comission'" sortable="'prix_ht_annonce'">
-                                    {{inter.montant * 0.15  | currency: ""}} €
-                                </td>
-                                <td data-title="'Etat'" sortable="'etat_intervention'">
-                                    <span class="label label-{{etats[inter.etat_intervention]}}">{{inter.etat_intervention}}</span>
+                                <td data-title="'Status'" sortable="'d.status'">
+                                    {{d.status}}
                                 </td>
                             </tr>
                         </table>
@@ -234,15 +213,8 @@
           'DEVIS': "primary",
           'CONFIRMER':"success"
        }; 
-
-      $http({method: 'GET', url: "/api/interventions/118"})
-      .success(function(cdata) {
-        data = cdata;
-          createTable(cdata);
-      })
-      .error(function(data) {
-        console.log("error");
-      });
+       $scope.data = <%-data%>
+       console.log($scope.data);
     });
 
 app.filter('beautifier', function() {
