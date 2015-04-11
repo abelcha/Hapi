@@ -9,12 +9,12 @@ global.npm = dep.loadJson("package.json");
 global.edison = dep.loadDir("edisonFramework");
 global.ed = global.edison;
 global.rootPath = process.cwd();
-
+/*
 edison.redisCli= npm.redis.createClient();
 edison.redisCli.on("error", function (err) {
     console.log("Redis Error " + err);
 });
-
+*/
 
 // view engine setup
 app.set('view engine', 'ejs'); // set up ejs for templating
@@ -40,12 +40,12 @@ app.use(function(req, res, next) {
 global.env_prod = process.env.NODE_ENV;
 
 
-if (!env_prod) {
+//if (!env_prod) {
     app.use(function(err, req, res, next) {
         res.status(err.status || 500);
         res.json(err);
     });
-}
+//}
 
 
 http.listen(port, function(){
