@@ -10,12 +10,15 @@ global.npm = dep.loadJson("package.json");
 global.edison = dep.loadDir("edisonFramework");
 global.ed = global.edison;
 global.rootPath = process.cwd();
-/*
-edison.redisCli= npm.redis.createClient();
-edison.redisCli.on("error", function (err) {
-    console.log("Redis Error " + err);
-});
-*/
+
+if (process.env.REDISTOGO_URL) {
+var rtg  = npm.url.parse(process.env.REDISTOGO_URL);
+edison.redisCli = npm.redis.createClient(rtg.port, rtg.hostname);
+edison.redisCli.auth(rtg.auth.split(":")[1]);
+} else {
+    edison.redisCli = npm.redis.createClient();
+}
+
 
 // view engine setup
 console.log("versisson => ", process.version)

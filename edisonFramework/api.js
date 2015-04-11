@@ -2,17 +2,17 @@ module.exports =  {
 
 	getIntersPublicData:function(options) {
 		return new Promise(function(resolve, reject) {
-	/*	    edison.redisCli.get("Interventions", function(err, reply) {
-		     if (!err && reply && options && options.cache) {
+		    edison.redisCli.get("Interventions", function(err, reply) {
+		      if (!err && reply && options && options.cache) {
 		        resolve(JSON.parse(reply));
-		      } else {*/
+		      } else {
 		        edison.db.interventionModel.find().sort('-id').limit().exec(function (err, interList) {
 		            resolve(interList);
-		            //edison.redisCli.set("Interventions", JSON.stringify(interList))
-		            //edison.redisCli.expire("Interventions", options.expire || 600)
+		            edison.redisCli.set("Interventions", JSON.stringify(interList))
+		            edison.redisCli.expire("Interventions", options.expire || 600)
 		        }); 
-		  //    }
-		//    });
+		      }
+		    });
 		});
 	},
 	getArtisansPublicData:function(options) {
