@@ -39,8 +39,21 @@ app.get('/fetchArtisans', function(req, res) {
   });
 });
 
+app.get('/test', function(req, res) {
 
+  res.json("ok");
 
+});
+
+app.get('/redis', function(req, res) {
+
+edison.redisCli.set("test", 'lol123')
+edison.redisCli.expire("test", 60)
+edison.redisCli.get("test", function(err, reply) {
+  res.json({err:err, reply:reply});
+});
+
+});
 
 app.all('/*', function(req, res) {
 	
