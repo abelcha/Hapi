@@ -14,7 +14,7 @@ console.log(process.env);
 if (process.env.REDISCLOUD_URL) {
 	var url = require('url');
 	var redisURL = url.parse(process.env.REDISCLOUD_URL);
-	edison.redisCli = redis.createClient(redisURL.port, redisURL.hostname, {no_ready_check: true});
+	edison.redisCli = npm.redis.createClient(redisURL.port, redisURL.hostname, {no_ready_check: true});
 	edison.redisCli.auth(redisURL.auth.split(":")[1]);
 } else {
     edison.redisCli = npm.redis.createClient();
