@@ -18,6 +18,7 @@ edison.redisCli.on("error", function (err) {
 */
 
 // view engine setup
+console.log("version => ", process.version)
 app.set('view engine', 'ejs'); // set up ejs for templating
 
 
