@@ -5,6 +5,9 @@
     "iojs": "1.6.2"
   },
   "private": true,
+  "scripts": {
+    "start": "node app.js"
+  },
   "dependencies": {
     "accept": "^1.0.0",
     "accepts": "^1.2.3",
