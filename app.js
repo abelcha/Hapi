@@ -10,7 +10,7 @@ global.npm = dep.loadJson("package.json");
 global.edison = dep.loadDir("edisonFramework");
 global.ed = global.edison;
 global.rootPath = process.cwd();
-
+console.log(process.env);
 if (process.env.REDISCLOUD_URL) {
 	var url = require('url');
 	var redisURL = url.parse(process.env.REDISCLOUD_URL);
