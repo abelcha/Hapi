@@ -2,11 +2,11 @@
   "name": "EDSN",
   "version": "0.0.0",
   "engines": {
-    "iojs": "1.6.2"
+    "iojs": "1.6.x"
   },
   "private": true,
   "scripts": {
-    "start": "iojs app.js"
+    "start": "node app.js"
   },
   "dependencies": {
     "accept": "^1.0.0",
