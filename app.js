@@ -12,12 +12,15 @@ global.ed = global.edison;
 global.rootPath = process.cwd();
 
 if (process.env.REDISTOGO_URL) {
-var rtg  = npm.url.parse(process.env.REDISTOGO_URL);
+var rtg  = npm.url.parse("redis://redistogo:3611df889cb8b2cd78b2587f7ed45006@soapfish.redistogo.com:9065/");
 edison.redisCli = npm.redis.createClient(rtg.port, rtg.hostname);
 edison.redisCli.auth(rtg.auth.split(":")[1]);
 } else {
     edison.redisCli = npm.redis.createClient();
 }
+edison.redisCli.on("error", function (err) {
+    console.log("Redis Error " + err);
+});
 
 
 // view engine setup
