@@ -35,7 +35,7 @@ exports.translateData = function(data, callback) {
 					dateInter:  new Date(d.t_stamp_intervention * 1000),
 					desc: 		d.description,
 					remarque: 	d.remarque,
-					comments: 	[{c: d.remarque_interne, a:null, d:null}],
+					comments: 	(d.remarque_interne ? [{c: d.remarque_interne, a:null, d:null}] : []),
 					produits : 	d.devis,
 					prixAnn: 	d.prix_ht_annonce,
 					prixFin: 	d.prix_ht_final,
@@ -67,7 +67,6 @@ exports.translateData = function(data, callback) {
 			// }
 		};
 		if (d.fact === true) {
-			console.log("facture");
 			tmp.facture = {
 					dateEnvoie:new Date(d.date_edition_facture * 1000),
 					envoyePar:d.facture_edite_par,
@@ -79,6 +78,7 @@ exports.translateData = function(data, callback) {
 					},
 			}
 		}
+		console.log(d);
 		stock.push(tmp);
 	}
 	

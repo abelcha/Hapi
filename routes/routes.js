@@ -40,7 +40,7 @@ app.get('/118/interventions', function(req, res) {
 });
 
 app.get('/118/listeAppels', function(req, res) {
-  npm.request.get({url:'http://electricien13003.com/alvin/118_appels.json'}, function(e, d, body) {
+  npm.request.get({url:'http://electricien13003.com/alvin/118_appels.json', json:true}, function(e, d, body) {
     res.render('118/listeAppels', {data:body});
   })
 });

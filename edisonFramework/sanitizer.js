@@ -1,6 +1,5 @@
 var V = require('validator');
 var $ = require('string');
-var bcrypt = require('bcrypt');
 
 
 function sanitizePhone(telephone) {
@@ -26,8 +25,8 @@ function capitalizeSelected(form, tab) {
 
 
 module.exports.password = function(form, callback) {
-	var salt = bcrypt.genSaltSync(10);
-	form.hash = bcrypt.hashSync(form.password, salt);
+	var salt = npm.bcryptjs.genSaltSync(10);
+	form.hash = npm.bcryptjs.hashSync(form.password, salt);
 	callback();
 };
 

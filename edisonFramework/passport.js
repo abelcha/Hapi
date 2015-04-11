@@ -1,5 +1,4 @@
-var bcrypt = require('bcrypt');
-var LocalStrategy = require('passport-local').Strategy;
+var LocalStrategy = npm.passportLocal.Strategy;
 
 module.exports = function(passport) {
 
@@ -20,7 +19,7 @@ module.exports = function(passport) {
 			{
 				return done(null, false, {err:"L'utilisateur : " + username + "  n'éxiste pas"});
 			} 
-			else if (bcrypt.compareSync(password, data.password) === true)
+			else if (npm.bcryptjs.compareSync(password, data.password) === true)
 			{	
 				return done(null, data);
 			} 

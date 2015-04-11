@@ -1,11 +1,10 @@
 
 module.exports.getOvhSessionId = function(callback) {
-	var request = require("request");
 	var cookie = require("cookie");
 	var loginUrl = 'https://www.ovh.com/managerv3/login.pl';
 	var credentialsOld = {session_nic:'te8028-ovh', session_password:'123456789aze', language:'fr'};
 	var credentials = 	 {session_nic:'bb71961-ovh', session_password:'123456789aze', language:'fr'};
-	request.post({url:loginUrl, form:credentials}, function (err, resp, body) {
+	npm.request.post({url:loginUrl, form:credentials}, function (err, resp, body) {
 		
 		if (err)
 			return callback(err);
@@ -24,9 +23,8 @@ module.exports.getOvhSessionId = function(callback) {
 
 module.exports.getOvhIncomingCalls = function(number, sessionId, callback) {
 
-	var path = require('path');
-	var phantomPath = require('phantomjs').path;
-	var scriptPath = path.join(__dirname, '../public/phantom/ovh-incoming-calls.js');
+	var phantomPath = npm.phantomjs.path;
+	var scriptPath = npm.path.join(__dirname, '../public/phantom/ovh-incoming-calls.js');
 	var args = [scriptPath, sessionId, number];
 	var logs = [];
 
@@ -54,11 +52,10 @@ module.exports.getOvhIncomingCalls = function(number, sessionId, callback) {
 
 module.exports.getInfosQuartier = function(address, callback) {
 
-	var request = require("request")
 	var url = "http://www.kelquartier.com/gmap_ajax/search-point";
-	request.post({url: url, json: true, form: address}, function (error, response, body) {
+	npm.request.post({url: url, json: true, form: address}, function (error, response, body) {
 		if (error) return callback(error);
-	  request({url: "http://www.kelquartier.com" +  body.link}, function (error2, response2, body2) {
+	  npm.request({url: "http://www.kelquartier.com" +  body.link}, function (error2, response2, body2) {
 	    if (error2) return callback(err);
 	    var cheerio = require('cheerio'),
 	    $ = cheerio.load(body2);
