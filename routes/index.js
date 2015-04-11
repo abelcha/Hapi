@@ -23,6 +23,7 @@ app.get('/fetchInterventions', function(req, res) {
   edison.dumpInter.dumpData(function(interList) {
     edison.db.interventionModel.remove({}, function (err) {
       edison.db.interventionModel.create(interList, function(err) {
+          edison.redisCli.del("Interventions");
           res.redirect("/interventions")
       });
     });
@@ -33,6 +34,7 @@ app.get('/fetchArtisans', function(req, res) {
   edison.dumpArtisan.dumpData(function(artisanList){
     edison.db.artisanModel.remove({}, function (err) {
       edison.db.artisanModel.create(artisanList, function(err) {
+        edison.redisCli.del("Artisans");
         res.redirect("/artisans")
       }); 
     });

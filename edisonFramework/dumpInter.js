@@ -78,7 +78,6 @@ exports.translateData = function(data, callback) {
 					},
 			}
 		}
-		console.log(d);
 		stock.push(tmp);
 	}
 	
