@@ -5,7 +5,7 @@
     "iojs": "1.0.x"
   },
   "scripts": {
-    "start": "iojs app.js"
+    "start": "node app.js"
   },
   "private": true,
   "dependencies": {
