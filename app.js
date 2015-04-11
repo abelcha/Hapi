@@ -11,10 +11,11 @@ global.edison = dep.loadDir("edisonFramework");
 global.ed = global.edison;
 global.rootPath = process.cwd();
 
-if (process.env.REDISTOGO_URL) {
-var rtg  = npm.url.parse("redis://redistogo:3611df889cb8b2cd78b2587f7ed45006@soapfish.redistogo.com:9065/");
-edison.redisCli = npm.redis.createClient(rtg.port, rtg.hostname);
-edison.redisCli.auth(rtg.auth.split(":")[1]);
+if (process.env.REDISCLOUD_URL) {
+	var url = require('url');
+	var redisURL = url.parse(process.env.REDISCLOUD_URL);
+	edison.redisCli = redis.createClient(redisURL.port, redisURL.hostname, {no_ready_check: true});
+	edison.redisCli.auth(redisURL.auth.split(":")[1]);
 } else {
     edison.redisCli = npm.redis.createClient();
 }
