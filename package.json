@@ -1,8 +1,8 @@
 {
   "name": "EDSN",
-  "version": "0.2.1",
+  "version": "0.1.2",
   "engines": {
-    "iojs": "1.6.2"
+    "iojs": "1.0.x"
   },
   "private": true,
   "dependencies": {
