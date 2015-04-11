@@ -18,7 +18,7 @@ edison.redisCli.on("error", function (err) {
 */
 
 // view engine setup
-console.log("version => ", process.version)
+console.log("versisson => ", process.version)
 app.set('view engine', 'ejs'); // set up ejs for templating
 
 
@@ -29,6 +29,10 @@ app.use(npm.bodyParser.urlencoded({ extended: true }));
 app.use(npm.compression());
 
 require('./routes')(); 
+
+
+
+
 
 /*  !AUTHENTIFICATION */
 
