@@ -44,6 +44,7 @@ global.env_prod = process.env.NODE_ENV;
 
 //if (!env_prod) {
     app.use(function(err, req, res, next) {
+    	console.log(err);
         res.status(err.status || 500);
         res.json(err);
     });

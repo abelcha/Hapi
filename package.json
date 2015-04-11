@@ -4,6 +4,9 @@
   "engines": {
     "iojs": "1.0.x"
   },
+  "scripts": {
+    "start": "iojs app.js",
+  },
   "private": true,
   "dependencies": {
     "accept": "^1.0.0",
