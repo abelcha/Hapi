@@ -83,7 +83,7 @@ exports.translateData = function(data, callback) {
 			}
 		}
 		stock.push(tmp);
-		console.log(d.prenom, tmp.prenom);
+		console.log(d.id);
 	}
 
 	callback(stock);
