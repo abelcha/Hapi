@@ -41,6 +41,12 @@ app.get('/fetchArtisans', function(req, res) {
   });
 });
 
+app.get('/clearCache', function(req, res) {
+
+  edison.redisCli.del("Artisans");
+  edison.redisCli.del("Intervention");
+
+});
 
 app.all('/*', function(req, res) {
   	res.sendStatus(404);
