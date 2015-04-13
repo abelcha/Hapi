@@ -6,7 +6,7 @@ module.exports = {
 				if (!err && reply && options && options.cache) {
 					resolve(JSON.parse(reply));
 				} else {
-					edison.db.interventionModel.find().select('-_id  -__v').sort('-id').exec(function(err, interList) {
+					edison.db.interventionModel.find().select('-_id  -__v').sort('-id').limit(1000).exec(function(err, interList) {
 						resolve(interList);
 						edison.redisCli.set("Interventions", JSON.stringify(interList))
 						edison.redisCli.expire("Interventions", options.expire ||  600)

@@ -7,7 +7,7 @@ app.get('/interventions', function(req, res) {
   console.time('Get interventions');
   edisonAPI.getIntersPublicData({cache:true}).then(function(result) {
   console.timeEnd('Get interventions');
-    res.json(result);
+      res.json(result);
   })
 });
 
@@ -48,6 +48,10 @@ app.get('/clearCache', function(req, res) {
   res.json("OK");
 
 });
+
+setTimeout(function() {
+  npm.request.get('http://ed-front.herokuapp.com/')
+}, 60000)
 
 app.all('/*', function(req, res) {
   	res.sendStatus(404);
