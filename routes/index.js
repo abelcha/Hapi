@@ -15,7 +15,7 @@ app.get('/artisans', function(req, res) {
   console.time('Get Artisans');
   edisonAPI.getArtisansPublicData({cache:true}).then(function(result) {
   console.timeEnd('Get Artisans');
-    res.json(result);
+      res.json(result);
   })
 });
 
@@ -41,24 +41,8 @@ app.get('/fetchArtisans', function(req, res) {
   });
 });
 
-app.get('/test', function(req, res) {
-
-  res.json("ok");
-
-});
-
-app.get('/redis', function(req, res) {
-
-edison.redisCli.set("test", 'lol123')
-edison.redisCli.expire("test", 60)
-edison.redisCli.get("test", function(err, reply) {
-  res.json({err:err, reply:reply});
-});
-
-});
 
 app.all('/*', function(req, res) {
-	
   	res.sendStatus(404);
 	});
 };

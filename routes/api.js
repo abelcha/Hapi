@@ -4,7 +4,7 @@ module.exports.routes = function(_user) {
 
 app.get('/api/interventions/find/:query', _user.isLoggedIn, function(req, res) {
   var query = JSON.parse(req.params.query);
-    edison.db.interventionModel.find(query.q).sort(query.sort).limit(query.limit).exec(function (err, data){ 
+    edison.db.interventionModel.find(query.q).sort(query.sort).exec(function (err, data){ 
    
     res.json(data);
   }); 
