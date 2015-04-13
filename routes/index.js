@@ -45,6 +45,7 @@ app.get('/clearCache', function(req, res) {
 
   edison.redisCli.del("Artisans");
   edison.redisCli.del("Interventions");
+  res.json("OK");
 
 });
 
