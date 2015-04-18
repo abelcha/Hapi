@@ -1,4 +1,4 @@
-
+'use strict';
 var express = require('express');
 global.app = express();
 var http = require('http').Server(app);
@@ -6,10 +6,15 @@ var port = (process.env.PORT || 3000);
 global.path = require('path');
 
 var dep = require('./loadDependencies');
+global.rootPath = process.cwd();
 global.npm = dep.loadJson("package.json");
 global.edison = dep.loadDir("edisonFramework");
 global.ed = global.edison;
-global.rootPath = process.cwd();
+
+edison.extendProprieties();
+
+npm.mongoose.connect(process.env.MONGOLAB_URI || 'mongodb://localhost/EDISON');
+
 if (process.env.REDISCLOUD_URL) {
 	var url = require('url');
 	var redisURL = url.parse(process.env.REDISCLOUD_URL);
@@ -24,7 +29,7 @@ edison.redisCli.on("error", function (err) {
 
 
 // view engine setup
-console.log("versisson => ", process.version)
+console.log("version => ", process.version)
 app.set('view engine', 'ejs'); // set up ejs for templating
 
 

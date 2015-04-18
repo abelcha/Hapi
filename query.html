@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Bare - Start Bootstrap Template</title>
+    <!-- Bootstrap Core CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <style>
+    body {
+        padding-top: 70px;
+        /* Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
+    }
+    </style>
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">Start Bootstrap</a>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li>
+                        <a href="#">About</a>
+                    </li>
+                    <li>
+                        <a href="#">Services</a>
+                    </li>
+                    <li>
+                        <a href="#">Contact</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+    <!-- Page Content -->
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <form class="form-horizontal">
+                    <fieldset>
+                        <!-- Form Name -->
+                        <legend>Form Name</legend>
+                        <!-- Select Basic -->
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="model">Model</label>
+                            <div class="col-md-4">
+                                <select id="model" name="model" class="form-control">
+                                    <option value="intervention">intervention</option>
+                                    <option value="artisan">artisan</option>
+                                    <option value="user">user</option>
+                                </select>
+                            </div>
+                        </div>
+                        <!-- Text input-->
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="query">Query</label>
+                            <div class="col-md-4">
+                                <input id="query" name="query" type="text" placeholder="Query" class="form-control input-md">
+                            </div>
+                        </div>
+                        <!-- Text input-->
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="select">Select</label>
+                            <div class="col-md-4">
+                                <input id="select" name="select" type="text" placeholder="Select" class="form-control input-md">
+                            </div>
+                        </div>
+                        <!-- Text input-->
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="limit">Limit</label>
+                            <div class="col-md-4">
+                                <input id="limit" name="limit" type="number" placeholder="Limit" class="form-control input-md">
+                            </div>
+                        </div>
+                        <!-- Text input-->
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="sort">Sort</label>
+                            <div class="col-md-4">
+                                <input id="sort" name="sort" type="text" placeholder="Sort" class="form-control input-md">
+                            </div>
+                        </div>
+                        <!-- Appended checkbox -->
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="cache">Cache</label>
+                            <div class="col-md-4">
+                                <div class="input-group">
+                                    <input id="css" class="form-control" type="text" placeholder="Cache">
+                                    <span class="input-group-addon"><input id="cache"  name="cache"type="checkbox" checked="checked"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Text input-->
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="cacheTime">Cache Time</label>
+                            <div class="col-md-4">
+                                <input id="cacheTime" name="cacheTime" type="text" placeholder="Cache Time" class="form-control input-md" value="1000">
+                            </div>
+                        </div>
+                        <!-- Button -->
+                    </fieldset>
+                </form>
+                <div class="form-group">
+                    <div class="col-md-4">
+                        <button id="Send" name="Send" class="btn btn-success" onclick="send()">Send</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.row -->
+    </div>
+    <!-- /.container -->
+    <!-- jQuery Version 1.11.1 -->
+    <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
+    <!-- Bootstrap Core JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+    function send() {
+      var model = $('#model').val();
+        var options = {
+            query: $('#query').val() || undefined,
+            limit: $('#limit').val() == 0 ? undefined : parseInt($('#limit').val()),
+            sort: $('#sort').val()|| undefined,
+            select: $('#select').val()|| undefined,
+            cacheTime: $('#cacheTime').val() == 0 ? undefined : parseInt($('#cacheTime').val()),
+            cache: $('#cache').is(':checked')
+        }
+        console.log("sent")
+        var t = Date.now();
+        $.ajax({
+          url: 'http://127.0.0.1:3000/api/' + model + '/' + JSON.stringify(options),
+          type: 'GET'
+        })
+        .done(function(data, de) {
+          console.log(Date.now() - t)
+          console.log("success", data, de);
+        })
+        .fail(function(data) {
+          console.log("success", data);
+        })
+        .always(function() {
+          console.log("complete");
+        });
+        
+    }
+    </script>
+</body>
+
+</html>
