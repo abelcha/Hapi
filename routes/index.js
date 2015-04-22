@@ -4,13 +4,23 @@ var Intervention = require("../models/intervention");
 
 module.exports = function() {
 
-
   app.get('/map/:method', function(req, res) {
     if (!edison.map[req.params.method]) {
       return res.status(400).send("Unknown Method");
     }
     edison.map[req.params.method](req.query, res)
   });
+
+  app.get('/ping', function(req, res) {
+    res.sendStatus(200);
+  })
+
+  app.get('/:fn', function(req, res) {
+    if (typeof edison.ajax[req.params.fn] === 'function') {
+      return (edison.ajax[req.params.fn](req, res))
+    }
+    res.sendStatus(404);
+  })
 
 
   app.get('/:model/:method', function(req, res) {
@@ -57,16 +67,19 @@ module.exports = function() {
     res.json("ok")
   })
 
-
-
-
+  var testThingsAsync = new Promise(function(resolve, reject) {
+    if (a === b) {
+      resolve(a)
+    } else {
+      reject(b);
+    }
+  })
 
   app.get('/fetchArtisans', function(req, res) {
     edison.dumpArtisan.dumpData(function(artisanList) {
       edison.db.model.artisan.remove({}, function(err) {
         edison.db.model.artisan.create(artisanList, function(err) {
-          console.log(err);
-          res.redirect("/api/artisans")
+          res.json(artisanList)
         });
       });
     });

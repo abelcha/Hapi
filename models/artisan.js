@@ -32,20 +32,25 @@ schema.statics.rank = function(query) {
     };
     var options = {
       distanceMultiplier: 100,
-      limit: parseInt(query.limit) || 20,
       maxDistance: (parseFloat(query.maxDistance) || 30) * 0.01
     }
     self.geoNear(point, options, function(err, docs) {
       if (err)
         return resolve(err);
-      var rtn = docs.map(function(e) {
-        return {
-          distance: e.dis.toFixed(1),
-          address: e.obj.add,
-          id: e.obj.id,
-          nomSociete: e.obj.nomSociete
+      var rtn = [];
+      for (var i = 0; i < docs.length; i++) {
+        if (!query.categorie || docs[i].obj.categories.indexOf(query.categorie) >= 0) {
+          if (i > query.limit)
+            break;
+          rtn.push({
+            distance: docs[i].dis.toFixed(1),
+            categories: docs[i].obj.categories,
+            address: docs[i].obj.add,
+            id: docs[i].obj.id,
+            nomSociete: docs[i].obj.nomSociete
+          })
         }
-      });
+      };
       resolve(rtn);
     });
   })

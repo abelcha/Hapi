@@ -1,6 +1,9 @@
 module.exports = {
 
   getDirectionPath: function(query, callback) {
+    if (!query.origin || !query.destination) {
+      return callback(null, []);
+    }
     npm.googlemaps.directions(query.origin, query.destination, function(err, result) {
       if (!err && result && result.routes && result.routes[0] && result.routes[0].legs && result.routes[0].legs[0]) {
         var steps = result.routes[0].legs[0].steps;
@@ -10,7 +13,7 @@ module.exports = {
         callback(null, rtn)
       } else {
         console.log(result, err)
-        callback(err || result);
+        callback(err ||  result);
       }
     });
   },
@@ -26,42 +29,8 @@ module.exports = {
         'location': query.origin
       }, {
         'location': query.destination,
-        'color': 'red',
-        'label': 'A',
-        'shadow': 'false',
-        'icon': 'http://chart.apis.google.com/chart?chst=d_map_pin_icon&chld=cafe%7C996600'
+        'color': 'blue',
       }]
-
-      var styles = [{
-        "featureType": "road",
-        "elementType": "geometry",
-        "stylers": [{
-          "lightness": 100
-        }, {
-          "visibility": "simplified"
-        }]
-      }, {
-        "featureType": "water",
-        "elementType": "geometry",
-        "stylers": [{
-          "visibility": "on"
-        }, {
-          "color": "#C6E2FF"
-        }]
-      }, {
-        "featureType": "poi",
-        "elementType": "geometry.fill",
-        "stylers": [{
-          "color": "#C5E3BF"
-        }]
-      }, {
-        "featureType": "road",
-        "elementType": "geometry.fill",
-        "stylers": [{
-          "color": "#D1D1B8"
-        }]
-      }];
-
 
       paths = [{
         'color': '0x0000ff',
@@ -69,16 +38,31 @@ module.exports = {
         'points': points
       }]
 
-      var map = npm.googlemaps.staticMap(query.origin, 10, '1000x400', function(err, data) {
-        require('fs').writeFileSync('test_map.png', data, 'binary');
-      }, false, 'roadmap', markers, styles, paths);
-      res.sendFile(rootPath + "/test_map.png");
-      /*    npm.googlemaps.staticMap(query.address, 15, '500x400', function(err, data) {
-            require('fs').writeFileSync('test_map.png', data, 'binary');
-          }, false, 'roadmap', markers, styles, paths);
-          res.sendFile(rootPath + "/test_map.png");
-        }*/
 
+      var coeff = 1 / (query.width / 1000);
+      var height = parseInt(400 * coeff);
+      var width = parseInt(query.width * coeff);
+
+      console.log(query.width, height, width);
+
+      var zoom = query.zoom || 7;
+      if (!query.origin) {
+        markers = [];
+        query.origin = "Montlucon, france";
+        zoom = 5
+      }
+
+      var options = {
+        zoom: zoom,
+        width: width + 'x' + height
+      }
+      var map = npm.googlemaps.staticMap(query.origin, zoom, width + 'x' + height, 4,
+        function(err, data) {
+          res.writeHead(200, {
+            'Content-Type': 'image/png'
+          });
+          res.end(data, 'binary');
+        }, false, 'roadmap', markers, null, paths);
     });
   }
 }
