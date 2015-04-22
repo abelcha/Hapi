@@ -26,4 +26,18 @@ module.exports = function() {
     enumerable: false
   });
 
+  Object.defineProperty(String.prototype, 'isJsonString', {
+    value: function() {
+      try {
+        JSON.parse(str);
+      } catch (e) {
+        return false;
+      }
+      return true;
+    },
+    writable: true,
+    configurable: true,
+    enumerable: false
+  })
+
 }
