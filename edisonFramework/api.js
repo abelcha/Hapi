@@ -2,7 +2,7 @@ module.exports = {
   find: function(model, options, callback) {
     model.find(options.query)
       .select(options.select || "-_id -_v")
-      .sort(options.sort)
+      .sort(options.sort || "-id")
       .limit(options.limit)
       .exec(callback);
   },

@@ -34,10 +34,11 @@ module.exports = function() {
     if (!model[method]) {
       return res.status(400).send("Unknown method")
     }
-    model[method](req.query).then(function(result) {
-      res.json(result);
+    model[method](req, res).then(function(result, alreadyReply) {
+      if (!alreadyReply)
+        res.json(result);
     }).catch(function(err) {
-      res.status.send(err);
+      res.status(400).send(err);
     })
   });
 

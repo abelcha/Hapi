@@ -1,6 +1,5 @@
 module.exports = {
   setSessionData: function(req, res) {
-  	//return res.send(400, "ope")
     try {
       JSON.parse(req.query.tabContainer);
       req.session.tabContainer = req.query.tabContainer;
@@ -10,6 +9,7 @@ module.exports = {
     }
   },
   getSessionData: function(req, res) {
+    return res.send(500, "qe");    
     if (req.session.tabContainer && req.session.tabContainer.length > 2) {
       res.json(JSON.parse(req.session.tabContainer))
     } else {

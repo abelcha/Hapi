@@ -42,8 +42,20 @@ app.use(npm.connectRedisSessions({
   app: "edison"
 }))
 
+app.use('/sessions', function(req, res) {
+
+  req.session.soid(function(err, sessions) {
+    if (err) {
+      res.end("ERROR");
+      return
+    }
+    res.end(JSON.stringify(sessions));
+  })
+});
+
 app.use(function(req, res, next) {
-  if (req.body.username == "chalie_a"/* && req.body.password === "toto42"*/) { //TEMPORARY
+
+  if (req.body.username == "chalie_a" /* && req.body.password === "toto42"*/ ) { //TEMPORARY
     req.session.upgrade(req.body.username, function() {
       req.session.test = 42;
       return res.send(req.sessionID);

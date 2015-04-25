@@ -38,12 +38,16 @@ module.exports = {
         'points': points
       }]
 
+      if (!query.height) {
+        var coeff = 1 / (query.width / 1000);
+        var height = parseInt(400 * coeff);
+        var width = parseInt(query.width * coeff);
+      }
+      else {
+        var height = parseInt(query.height);
+        var width = parseInt(query.width);
+      }
 
-      var coeff = 1 / (query.width / 1000);
-      var height = parseInt(400 * coeff);
-      var width = parseInt(query.width * coeff);
-
-      console.log(query.width, height, width);
 
       var zoom = query.zoom || 7;
       if (!query.origin) {
@@ -52,11 +56,7 @@ module.exports = {
         zoom = 5
       }
 
-      var options = {
-        zoom: zoom,
-        width: width + 'x' + height
-      }
-      var map = npm.googlemaps.staticMap(query.origin, zoom, width + 'x' + height, 4,
+      var map = npm.googlemaps.staticMap(query.origin, zoom, width + 'x' + height, query.precision || 4,
         function(err, data) {
           res.writeHead(200, {
             'Content-Type': 'image/png'

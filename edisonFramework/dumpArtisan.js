@@ -59,7 +59,6 @@ exports.translateData = function(data, callback) {
         tmp.categories.push(k)
       }
     }
-    //console.log(tmp.categories);
     stock.push(tmp);
   }
   callback(stock);
