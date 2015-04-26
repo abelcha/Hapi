@@ -23,25 +23,24 @@ var schema = new npm.mongoose.Schema({
   loc: [Number, Number]
 });
 
-schema.statics.rank = function(req, req) {
+schema.statics.rank = function(req, res) {
   var self = this;
   return new Promise(function(resolve, reject) {
-    /*var point = {
+    var point = {
       type: "Point",
-      coordinates: [parseFloat(query.lat), parseFloat(query.lng)]
-    };*/
-    res.json([req, res])
+      coordinates: [parseFloat(req.query.lat), parseFloat(req.query.lng)]
+    };
     var options = {
       distanceMultiplier: 100,
-      maxDistance: (parseFloat(query.maxDistance) || 30) * 0.01
+      maxDistance: (parseFloat(req.query.maxDistance) || 30) * 0.01
     }
     self.geoNear(point, options, function(err, docs) {
       if (err)
-        return resolve(err);
+        resolve(err);
       var rtn = [];
-      for (var i = 0; i < docs.length; i++) {
-        if (!query.categorie || docs[i].obj.categories.indexOf(query.categorie) >= 0) {
-          if (i > query.limit)
+      for (var i = 0, x = 0; i < docs.length; i++) {
+        if (!req.query.categorie || docs[i].obj.categories.indexOf(req.query.categorie) >= 0) {
+          if (++x > req.query.limit)
             break;
           rtn.push({
             distance: docs[i].dis.toFixed(1),

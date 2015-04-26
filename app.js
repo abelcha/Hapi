@@ -65,14 +65,14 @@ app.use(function(req, res, next) {
   }
 });
 
-app.use(function(req, res, next) {
+/*app.use(function(req, res, next) {
   if (req.session.id == void(0)) {
     res.sendStatus(401);
   } else {
     next();
   }
 });
-
+*/
 require('./routes')();
 
 

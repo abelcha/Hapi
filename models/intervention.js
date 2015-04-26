@@ -38,12 +38,18 @@ var schema = new npm.mongoose.Schema({
     location: [],
   },
   facture: {
-    /*
-       nom,
-       prenom,
-       etc...
-    */
-  },
+/*    type: String,
+    nom: String,
+    prenom: String,
+    tel: String,
+    email: String,
+    address: {
+      n: String,
+      r: String,
+      v: String,
+      cp: String,
+    },
+*/  },
   info: {
     categorie: String,
     artisan: {
@@ -56,6 +62,7 @@ var schema = new npm.mongoose.Schema({
     modeReglement: String,
     prixAnnonce: Number,
     prixFinal: Number,
+    reglementSurPlace: Boolean
   }
 });
 
@@ -114,10 +121,11 @@ var translateModel = function(d) {
   info.categorie = d.categorie;
   info.description = d.description;
   info.remarque = d.remarque;
-
-  info.artisan = {
-    id: d.id_sst_selectionne,
-    nom: d.nom_societe
+  if (d.nom_societe) {
+    info.artisan = {
+      id: d.id_sst_selectionne,
+      nom: d.nom_societe
+    }
   }
 
   info.modeReglement = d.mode_reglement;
@@ -125,6 +133,11 @@ var translateModel = function(d) {
   info.prixFinal = d.prix_ht_final;
 
 
+
+  /* FACTURE */
+  info.reglementSurPlace = !d.facture;
+
+  /* COMMENTS */
   var comments = [];
   if (d.remarque_interne) {
     comments.push({
@@ -133,20 +146,7 @@ var translateModel = function(d) {
       c: d.remarque_interne
     });
   }
-
-  /* FACTURE */
-  if (d.fact === true) {
-    var facture = {
-      address: {
-        n: d.numero_facture,
-        r: d.adresse_facture,
-        v: d.ville_facture,
-        cp: d.code_postal_facture
-      },
-    }
-  }
-
-  return {
+  var rtn = {
     id: d.id,
     telepro: d.ajoute_par,
     comments: comments,
@@ -155,12 +155,28 @@ var translateModel = function(d) {
     info: info,
     client: client
   }
+  if (d.fact === true) {
+    rtn.facture = {
+      type: d.type_facture,
+      email: d.mail_facture,
+      nom: d.nom_facture,
+      prenom: d.prenom_facture,
+      telephone: d.tel_facture,
+      address: {
+        n: d.numero_facture,
+        r: d.adresse_facture,
+        v: d.ville_facture,
+        cp: d.code_postal_facture
+      },
+    }
+  }
+  return rtn;
 }
 
 
 var addInDB = function(data, i, cb) {
   if (i >= data.length - 1)
-    return cb(null);
+    return cb(null)
   if (i % 100 === 0)
     console.log(((i / data.length) * 100).toFixed(2), '%')
   var inter = new model(translateModel(data[i]));
