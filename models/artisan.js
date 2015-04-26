@@ -23,13 +23,14 @@ var schema = new npm.mongoose.Schema({
   loc: [Number, Number]
 });
 
-schema.statics.rank = function(query) {
+schema.statics.rank = function(req, req) {
   var self = this;
   return new Promise(function(resolve, reject) {
-    var point = {
+    /*var point = {
       type: "Point",
       coordinates: [parseFloat(query.lat), parseFloat(query.lng)]
-    };
+    };*/
+    res.json([req, res])
     var options = {
       distanceMultiplier: 100,
       maxDistance: (parseFloat(query.maxDistance) || 30) * 0.01

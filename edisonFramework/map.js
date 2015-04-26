@@ -24,7 +24,6 @@ module.exports = {
       if (err) {
         return res.status(400).send(err);
       }
-      console.log("rr==>", err)
       markers = [{
         'location': query.origin
       }, {
