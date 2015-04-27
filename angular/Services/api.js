@@ -11,7 +11,6 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvid
         return result;
       });
     },
-
     getInterventions: function(cache) {
       return $http({
         method: 'GET',
