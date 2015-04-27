@@ -62,7 +62,8 @@ module.exports = {
         zoom = 5
       }
       console.log("getting static map")
-      var map = npm.googlemaps.staticMap(query.origin, zoom, width + 'x' + height, query.precision || 4,
+      console.log(edison.googleMap);
+      var map = edison.googleMap.staticMap(query.origin, zoom, width + 'x' + height, query.precision || 4,
         function(err, data) {
           console.log("--> have callback")
           res.writeHead(200, {
