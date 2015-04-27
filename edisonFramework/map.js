@@ -5,7 +5,11 @@ module.exports = {
       return callback(null, []);
     }
     npm.googlemaps.directions(query.origin, query.destination, function(err, result) {
+    console.log('->getting directions')
+      
       if (!err && result && result.routes && result.routes[0] && result.routes[0].legs && result.routes[0].legs[0]) {
+    console.log('->getting directions callback')
+        
         var steps = result.routes[0].legs[0].steps;
         var rtn = steps.map(function(e) {
           return (e.start_location.lat + ', ' + e.start_location.lng);
@@ -19,8 +23,10 @@ module.exports = {
   },
 
   staticDirections: function(query, res) {
-
+    console.log('map function')
     var directions = this.getDirectionPath(query, function(err, points) {
+    console.log('have direction')
+      
       if (err) {
         return res.status(400).send(err);
       }
