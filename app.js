@@ -20,6 +20,7 @@ npm.mongoose.connect(process.env.MONGOLAB_URI || 'mongodb://localhost/EDISON');
   edison.redisCli = npm.redis.createClient(redisURL.port, redisURL.hostname, {
     no_ready_check: true
   });
+  //console.log(redisURL)
   edison.redisCli.auth(redisURL.auth.split(":")[1]);
 //} else {
  // edison.redisCli = npm.redis.createClient();
@@ -40,23 +41,27 @@ app.use(npm.bodyParser.urlencoded({
 }));
 app.use(npm.compression());
 app.use(npm.connectRedisSessions({
+  client: edison.redisCli,
   app: "edison"
 }))
 
 
 app.post('/login', function(req, res) {
   if ((req.body.username == "abel" || req.body.username == "boukris_b")  && req.body.password === "toto42" ) { //TEMPORARY
+    console.log("username ok")
     req.session.upgrade(req.body.username, function() {
+    console.log("upgrade session")
       req.session.test = 42;
       return res.redirect(req.body.url || '/');
     });
   } else {
+    console.log("no username")
+
     return res.redirect(req.body.url || '/');
   }
 });
 
 app.use(function(req, res, next) {
-  console.log("==>", req.session);
   if (!req.session || req.session.id == void(0)) {
     console.log("not loged");
     return res.sendFile(__dirname + '/views/login.html');
