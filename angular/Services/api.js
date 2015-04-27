@@ -15,7 +15,7 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvid
       return $http({
         method: 'GET',
         cache: cache,
-        url: '/api/search/intervention/{"limit":100000, "sort":"-id"}'
+        url: '/api/search/intervention/{"limit":1000, "sort":"-id"}'
       }).success(function(result) {
         dataProvider('interventions', result);
         return result;
