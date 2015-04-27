@@ -14,16 +14,16 @@ edison.extendProprieties();
 
 npm.mongoose.connect(process.env.MONGOLAB_URI || 'mongodb://localhost/EDISON');
 
-if (process.env.REDISCLOUD_URL) {
+//if (process.env.REDISCLOUD_URL) {
   var url = require('url');
-  var redisURL = url.parse(process.env.REDISCLOUD_URL);
+  var redisURL = url.parse(process.env.REDISCLOUD_URL || "redis://rediscloud:iKpHepCHNELa6ijd@pub-redis-15500.eu-west-1-1.1.ec2.garantiadata.com:15500");
   edison.redisCli = npm.redis.createClient(redisURL.port, redisURL.hostname, {
     no_ready_check: true
   });
   edison.redisCli.auth(redisURL.auth.split(":")[1]);
-} else {
-  edison.redisCli = npm.redis.createClient();
-}
+//} else {
+ // edison.redisCli = npm.redis.createClient();
+//}
 edison.redisCli.on("error", function(err) {
   console.log("Redis Error " + err);
 });
@@ -56,7 +56,7 @@ app.post('/login', function(req, res) {
 });
 
 app.use(function(req, res, next) {
-  console.log(req.session);
+  console.log("==>", req.session);
   if (req.session.id == void(0)) {
     console.log("not loged");
     return res.sendFile(__dirname + '/views/login.html');
