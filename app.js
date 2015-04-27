@@ -57,7 +57,7 @@ app.post('/login', function(req, res) {
 
 app.use(function(req, res, next) {
   console.log("==>", req.session);
-  if (req.session.id == void(0)) {
+  if (req.session && req.session.id == void(0)) {
     console.log("not loged");
     return res.sendFile(__dirname + '/views/login.html');
   } else {
