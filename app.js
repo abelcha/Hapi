@@ -45,7 +45,7 @@ app.use(npm.connectRedisSessions({
 
 
 app.post('/login', function(req, res) {
-  if (req.body.username == "chalie_a" /* && req.body.password === "toto42"*/ ) { //TEMPORARY
+  if ((req.body.username == "abel" || req.body.username == "boukris_b")  && req.body.password === "toto42" ) { //TEMPORARY
     req.session.upgrade(req.body.username, function() {
       req.session.test = 42;
       return res.redirect(req.body.url || '/');
