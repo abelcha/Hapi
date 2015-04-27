@@ -4,7 +4,8 @@ var Intervention = require("../models/intervention");
 
 module.exports = function() {
 
-  app.get('/map/:method', function(req, res) {
+
+  app.get('/api/map/:method', function(req, res) {
     if (!edison.map[req.params.method]) {
       return res.status(400).send("Unknown Method");
     }
@@ -15,7 +16,7 @@ module.exports = function() {
       res.send("ok");
     })*/
 
-  app.all('/:fn', function(req, res) {
+  app.all('/api/:fn', function(req, res) {
     if (typeof edison.ajax[req.params.fn] === 'function') {
       return (edison.ajax[req.params.fn](req, res))
     } else {
@@ -24,7 +25,7 @@ module.exports = function() {
   })
 
 
-  app.all('/:model/:method', function(req, res) {
+  app.all('/api/:model/:method', function(req, res) {
     var model = edison.db.model[req.params.model];
     var method = req.params.method;
 
@@ -44,7 +45,7 @@ module.exports = function() {
 
 
 
-  app.get('/search/:model/:options', function(req, res) {
+  app.get('/api/search/:model/:options', function(req, res) {
     var t = Date.now()
     try {
       JSON.parse(req.params.options)
@@ -63,7 +64,7 @@ module.exports = function() {
   })
 
 
-  app.get('/fetchArtisans', function(req, res) {
+  app.get('/api/fetchArtisans', function(req, res) {
     edison.dumpArtisan.dumpData(function(artisanList) {
       edison.db.model.artisan.remove({}, function(err) {
         edison.db.model.artisan.create(artisanList, function(err) {
@@ -73,19 +74,21 @@ module.exports = function() {
     });
   });
 
-  app.get('/clearCache', function(req, res) {
+  app.get('/api/clearCache', function(req, res) {
 
     edison.redisCli.del("Artisans");
     edison.redisCli.del("Interventions");
     res.json("OK");
 
   });
+  app.all("*", function(req, res) {
+    if (req.url.indexOf('.') >= 0)
+      res.sendStatus(404);
+    else
+      res.sendFile(rootPath + "/views/index.html")
+  });
 
-  setTimeout(function() {
-    npm.request.get('http://ed-front.herokuapp.com/')
-  }, 60000)
-
-  app.all('/*', function(req, res) {
+  app.all('/api/*', function(req, res) {
     res.sendStatus(404);
   });
 };

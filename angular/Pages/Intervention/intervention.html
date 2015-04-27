@@ -1,0 +1,267 @@
+<div class="container" style=" margin: auto;max-width: 1200px;">
+    <!--  <md-toolbar class="grey" style="border-top-left-radius:5px;border-top-right-radius:5px;">
+  </md-toolbar> -->
+    <div class="row">
+        <div class="col-sm-12 md-whiteframe-z1" style="background:white;height:2000px">
+            <form class="form-horizontal" ng-init="inter = tab.data" style="overflow:hidden;height:100%" novalidate>
+                <!-- Form Name -->
+                <!-- Text input-->
+                <br>
+                <div class="form-group">
+                    <div class="col-sm-2">
+                        <div class="select-style text-field">
+                            <select ng-model="inter.client.civilite" ng-options="civ.short_name as civ.long_name for civ in config.civilites">
+                            </select>
+                            <label ng-class="{'selected' : inter.client.civilite}">Civilité</label>
+                        </div>
+                    </div>
+                    <div class="col-sm-5">
+                        <lx-text-field label="Prénom">
+                            <input capitalize type="text" ng-model="inter.client.prenom">
+                        </lx-text-field>
+                    </div>
+                    <div class="col-sm-5">
+                        <lx-text-field label="Nom">
+                            <input capitalize type="text" ng-model="inter.client.nom">
+                        </lx-text-field>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        <lx-text-field label="Téléphone 1">
+                            <input capitalize type="text" ng-model="inter.client.telephone.tel1">
+                        </lx-text-field>
+                    </div>
+                    <div class="col-sm-3">
+                        <lx-text-field label="Téléphone 2">
+                            <input capitalize type="text" ng-model="inter.client.telephone.tel2">
+                        </lx-text-field>
+                    </div>
+                    <div class="col-sm-3">
+                        <lx-text-field label="Téléphone Origine">
+                            <input capitalize type="text" ng-model="inter.client.telephone.origine">
+                        </lx-text-field>
+                    </div>
+                    <div class="col-sm-3">
+                        <lx-text-field label="Email">
+                            <input capitalize type="text" ng-model="inter.client.email">
+                        </lx-text-field>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-1">
+                        <lx-text-field label="Numero">
+                            <input capitalize type="text" ng-model="inter.client.address.n">
+                        </lx-text-field>
+                    </div>
+                    <div class="col-sm-5">
+                        <lx-text-field label="Addresse">
+                            <input capitalize type="text" ng-model="inter.client.address.r">
+                        </lx-text-field>
+                    </div>
+                    <div class="col-sm-2">
+                        <lx-text-field label="Code Postal">
+                            <input capitalize type="text" ng-model="inter.client.address.cp">
+                        </lx-text-field>
+                    </div>
+                    <div class="col-sm-4">
+                        <lx-text-field label="Ville">
+                            <input capitalize type="text" ng-model="inter.client.address.v">
+                        </lx-text-field>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-4">
+                        <div class="select-style text-field">
+                            <select ng-model="inter.info.categorie" ng-options="cat.short_name as cat.long_name for cat in config.categories">
+                            </select>
+                            <label ng-class="{'selected' : inter.info.categorie}">Categories</label>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="select-style text-field">
+                            <select ng-model="inter.sst" ng-options="sst.id as sst.nomSociete for sst in artisans">
+                            </select>
+                            <label ng-class="{'selected' : inter.info.artisan}">Artisan</label>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <md-checkbox ng-model="inter.aDemarcher" aria-label="Checkbox 1">
+                            A Démarcher
+                        </md-checkbox>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-12" ng-controller="InterventionMapController">
+                        <md-toolbar class="demo-toolbar md-default-theme" ng-click="options.showMap = options.showMap">
+                            <div class="md-toolbar-tools">
+                                <h3 class="ng-binding">Carte</h3>
+                                <span flex=""></span>
+                                <button class="md-button md-default-theme" ng-click="toggleRight()">
+                                    <div flex="" layout="row" layout-align="center center" class="ng-scope">
+                                        {{inter.info.artisan.nomSociete || 'Artisan'}}
+                                    </div>
+                                    <div class="md-ripple-container"></div>
+                                </button>
+                            </div>
+                        </md-toolbar>
+                        <div ng-if="options.showMap" ng-show="options.showMap">
+                            <md-content ng-if="loadMap" id="autocompleteContainer" layout-padding layout="column" <md-input-container flex>
+                                <md-autocomplete md-selected-item-change="changeAddress(selectedAddress)" md-selected-item="selectedAddress" md-search-text="searchText" md-items="item in autocomplete.search(searchText)" md-item-text="item.description">
+                                    <span md-highlight-text="searchText">{{item.description}}</span>
+                                </md-autocomplete>
+                            </md-content>
+                            <md-sidenav style="margin-left: -16px;max-width:330px;width:330px;z-index: 123;" class="md-sidenav-right md-whiteframe-z2" md-component-id="right" style="z-index:400">
+                                <md-toolbar class="white">
+                                    <table class="table table-condensed" style="padding:0;color:black">
+                                        <tbody>
+                                            <tr ng-repeat="sst in nearestArtisans" ng-class="sst.id == inter.sst ? 'success' : ''" ng-click="clickOnArtisanMarker(sst.distance, sst.id)">
+                                                <td variable-length style="text-align:left">{{sst.nomSociete}}</td>
+                                                <td>7.3</td>
+                                                <td>{{sst.distance}} km</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </md-toolbar>
+                            </md-sidenav>
+                            <div ng-if="!loadMap" style="height:400px;width:100%;overflow:hidden">
+                                <img ng-if="!showmap" id="static-map" style="width:100%;top: -9999px;bottom: -9999px;left: -9999px;right: -9999px;margin: auto;" ng-click="showMap()" ng-src="{{staticMapUrl}}" />
+                            </div>
+                            <map ng-if="loadMap" zoom="{{zoom}}" pan-control="false" style="height:500px" center="{{mapCenter.latLng}}">
+                                <directions ng-if="inter.info.artisan" travel-mode="DRIVING" origin="{{inter.info.artisan.add.lt}}, {{inter.info.artisan.add.lg}}" destination="{{inter.client.address.latLng}}">
+                                </directions>
+                                <!--        <marker position="{{inter.add.latLng}}" color="blue"></marker> -->
+                                <marker ng-if="showInterMarker()" position="{{mapCenter.latLng}}" color="grey"></marker>
+                                <!--      <marker position="{{inter.artisan.add|addressXY}}" color="blue"></marker> -->
+                                <marker ng-if="inter.client.address" ng-repeat="sst in artisans" on-click="clickOnArtisanMarker(sst.id)" position="{{sst.add.lt}}, {{sst.add.lg}}" color="{{sst.id == inter.sst ? 'blue' : 'red'}}"></marker>
+                            </map>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-2">
+                        <md-checkbox ng-model="inter.info.reglementSurPlace" aria-label="Checkbox 1">
+                            <div class="hidden-sm hidden-md">
+                                Reglement Sur Place
+                            </div>
+                            <div class="hidden-lg hidden-xs ">
+                                RSP
+                            </div>
+                        </md-checkbox>
+                    </div>
+                    <div class="col-sm-2">
+                        <div class="select-style text-field">
+                            <select ng-model="inter.info.modeReglement" ng-options="mr.short_name as mr.long_name for mr in config.modeDeReglements">
+                            </select>
+                            <label ng-class="{'selected' : inter.info.modeReglement}">
+                                <div class="hidden-sm hidden-md">
+                                    Mode de Reglement
+                                </div>
+                                <div class="hidden-lg hidden-xs ">
+                                    Mode Regl.
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-sm-2">
+                        <lx-text-field label="Prix Annoncé">
+                            <input eurofilter ng-model="inter.info.prixAnnonce">
+                        </lx-text-field>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="text-field date-picker">
+                            <label class="selected">Date d'intervention</label>
+                            <input type="text" pick-a-date="inter.date.intervention" />
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="text-field date-picker">
+                            <label class="selected">Date d'intervention</label>
+                            <input type="text" pick-a-time="inter.date.intervention" />
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group" ng-if="!inter.info.reglementSurPlace" ng-show="!inter.info.reglementSurPlace" style="background-color:rgb(66, 66, 66);padding-bottom: 40px;">
+                    <div class="col-sm-12">
+                        <div class="col-sm-12">
+                            <br>
+                            <h3 style="color:white">Facture</h3>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="select-style black text-field">
+                                <select ng-model="inter.facture.type" ng-options="f.short_name as f.long_name for f in config.typePayeur">
+                                </select>
+                                <label ng-class="{'selected' : inter.facture.type}">Type payeur</label>
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <lx-text-field label="Prénom" theme="dark">
+                                <input capitalize type="text" ng-model="inter.facture.prenom">
+                            </lx-text-field>
+                        </div>
+                        <div class="col-sm-2">
+                            <lx-text-field theme="dark" label="Nom">
+                                <input capitalize type="text" ng-model="inter.facture.nom">
+                            </lx-text-field theme="dark">
+                        </div>
+                        <div class="col-sm-2">
+                            <lx-text-field theme="dark" label="Téléphone">
+                                <input capitalize type="text" ng-model="inter.facture.tel">
+                            </lx-text-field theme="dark">
+                        </div>
+                        <div class="col-sm-2">
+                            <lx-text-field theme="dark" label="Email">
+                                <input capitalize type="text" ng-model="inter.facture.email">
+                            </lx-text-field theme="dark">
+                        </div>
+                        <div class="col-sm-1">
+                            <lx-text-field theme="dark" label="Numero">
+                                <input capitalize type="text" ng-model="inter.facture.address.n">
+                            </lx-text-field theme="dark">
+                        </div>
+                        <div class="col-sm-5">
+                            <lx-text-field theme="dark" label="Addresse">
+                                <input capitalize type="text" ng-model="inter.facture.address.r">
+                            </lx-text-field theme="dark">
+                        </div>
+                        <div class="col-sm-2">
+                            <lx-text-field theme="dark" label="Code Postal">
+                                <input capitalize type="text" ng-model="inter.facture.address.cp">
+                            </lx-text-field theme="dark">
+                        </div>
+                        <div class="col-sm-4">
+                            <lx-text-field theme="dark" label="Ville">
+                                <input capitalize type="text" ng-model="inter.facture.address.v">
+                            </lx-text-field>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-6">
+                        <md-input-container flex>
+                            <label>Description Simplifiée</label>
+                            <textarea ng-model="inter.info.description" columns="1" md-maxlength="150" capitalize></textarea>
+                        </md-input-container>
+                    </div>
+                    <div class="col-sm-6">
+                        <md-input-container flex>
+                            <label>Remarques Supplémentaires</label>
+                            <textarea ng-model="inter.info.remarque" columns="1" md-maxlength="150" capitalize></textarea>
+                        </md-input-container>
+                    </div>
+                </div>
+                <br>
+            </form>
+        </div>
+    </div>
+    <div class="fab" style="  float: right;position: fixed;right: 40px;z-index: 999;top: 87%;">
+        <button ng-click="saveInter(false, false)" class="fab__primary btn--no-conflicts btn--xl btn--blue btn--fab" lx-ripple lx-tooltip="Enregistrer" tooltip-position="top">
+            <i class="mdi" ng-class="inter.id ? 'mdi-camera-iris' : 'mdi-plus'"></i>
+            <i class="mdi mdi-checkbox-marked-circle-outline"></i>
+        </button>
+        <div class="fab__actions fab__actions--left">
+            <button ng-click="saveInter(true, false)" class="btn--no-conflicts btn--l btn--black btn--fab" lx-ripple lx-tooltip="Envoyer" tooltip-position="top"><i class="mdi mdi-send"></i></button>
+            <button ng-click="saveInter(false, true)" class="btn--no-conflicts btn--l btn--black btn--fab" lx-ripple lx-tooltip="Annuler" tooltip-position="top"><i class="mdi mdi-close"></i></button>
+        </div>
+    </div>
+</div>

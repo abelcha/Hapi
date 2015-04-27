@@ -1,7 +1,7 @@
 var express = require('express');
 global.app = express();
 var http = require('http').Server(app);
-var port = (process.env.PORT || 3000);
+var port = (process.env.PORT || 8080);
 global.path = require('path');
 
 var dep = require('./loadDependencies');
@@ -28,8 +28,9 @@ edison.redisCli.on("error", function(err) {
   console.log("Redis Error " + err);
 });
 
-
-
+app.use(express.static(path.join(__dirname, 'bower_components')));
+app.use(express.static(path.join(__dirname, 'assets')));
+app.use(express.static(path.join(__dirname, 'angular')));
 app.set('view engine', 'ejs'); // set up ejs for templating
 app.use(npm.cookieParser()); // read cookies (needed for auth)
 app.use(npm.cors());
@@ -43,38 +44,28 @@ app.use(npm.connectRedisSessions({
 }))
 
 
-app.use('/sessions', function(req, res) {
-  req.session.soid(function(err, sessions) {
-    if (err) {
-      res.end("ERROR");
-      return
-    }
-    res.end(JSON.stringify(sessions));
-  })
-});
-
-app.use(function(req, res, next) {
+app.post('/login', function(req, res) {
   if (req.body.username == "chalie_a" /* && req.body.password === "toto42"*/ ) { //TEMPORARY
     req.session.upgrade(req.body.username, function() {
       req.session.test = 42;
-      return res.send(req.sessionID);
+      return res.redirect(req.body.url || '/');
     });
   } else {
-    next();
+    return res.redirect(req.body.url || '/');
   }
 });
 
 app.use(function(req, res, next) {
   if (req.session.id == void(0)) {
-    res.sendStatus(401);
+    console.log("not loged");
+    return res.sendFile(__dirname + '/views/login.html');
   } else {
+    console.log("loged");
     next();
   }
 });
 
 require('./routes')();
-
-
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

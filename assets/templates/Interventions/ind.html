@@ -1,0 +1,70 @@
+<div>
+
+          <table 
+                style="background:white;" 
+                ng-table="tableParams" 
+                class="table table-bordered table-hover table-hover table-striped" 
+                id="table-list"  
+                show-filter="true">
+            <tbody id="tbody-list">
+              <tr data-id="{{info.id}}" ng-repeat="info in $data" ng-click="ClickOnRow($event, info)"  
+              ng-class="{warning : isInSelection(info.id)}">
+                <td  data-title="'Num Os'" sortable="'id'" filter="{ 'id': 'text' }">
+                    <strong>{{info.id}}</strong>
+                </td>
+                <td data-title="'Télépro'" sortable="'telepro'" filter="{ 'telepro': 'select' }">
+                  {{info.telepro}}
+                </td>
+                <td  data-title="'Cat.'" sortable="'cat'" filter="{ 'cat': 'text' }">
+                   <button class="btn btn-default btn-circle">
+                     {{info.cat}}
+                   </button>
+                </td>
+                <td class="date-length" data-title="'Date Ajout'" sortable="'dateAjout'" filter="{ 'dateAjout': 'text' }" >
+                      {{info.dateAjout | date:"dd/MM/yy"}}
+                      {{info.dateAjout | date:"HH'h'mm"}}
+                </td>
+                <td class="variable-length" data-title="'Client'" sortable="'nom'" filter="{ 'nom': 'text' }">
+                  {{info.civ}}
+                  <strong>{{info.nom}}</strong>  
+                </td>
+                <td  class="variable-length" data-title="'Ville'" sortable="'add.v'" filter="{ 'add.v': 'text' }">
+                    {{info.add.v}}
+                </td>
+                <td   data-title="'CP'" sortable="'add.cp'" filter="{ 'add.cp': 'text' }">
+                  <strong> {{info.add.cp.substring(0,2)}}</strong>{{info.add.cp.substring(2,5)}}
+                </td>
+                <td  class="variable-length" data-title="'Artisan'" sortable="'sst'" 
+                filter="{ 'sst': 'text' }" >
+                    <strong>{{interCtrl.artisan[info.sst].nom || ""}}</strong>
+                </td>
+                <td class="date-length"  data-title="'Date Intervention'" sortable="'dateInter'" filter="{ 'dateInter': 'text' }">
+                    <div ng-show="info.dateInter[0] != 1">
+                      {{info.dateInter | date:"dd/MM/yy" || ""}}
+                      {{info.dateInter | date:"HH'h'mm" || ""}}
+                    </div>
+                </td>
+                 <td  data-title="'Prix'" sortable="'prixAnn'">  
+                  {{(info.prixAnn | number:2) + " €"}}
+                 </td>
+                <td  data-title="'Etat Inter'" sortable="'etat'">  
+                  <button type="button" class="modal-win btn btn-circle btn-{{etatInterIcon[info.etat].c}}">
+                  <i class="modal-win fa" ng-class="info.aVerifier ? 'fa-question' : 'fa-{{etatInterIcon[info.etat].i}}'"></i></button>
+                </td>
+                <td  data-title="'Pmnt Client'" sortable="'pmntCli'" >
+                  <button type="button" 
+                  class="modal-win  btn btn-circle btn-{{etatPmntIcon[info.ClientPmntClass].c}}">
+                  <i class="modal-win fa fa-{{etatPmntIcon[info.ClientPmntClass].i}}"></i>
+                  </button> 
+                </td>
+                <td  data-title="'Pmnt Artisan'" sortable="'pmntSst'" >
+                  <button type="button" 
+                  class="modal-win btn btn-circle" ng-class="info.pmntSst ? 'btn-success' : (info.pmntCli ? 'btn-warning' : 'btn-default')">
+                  <i class="modal-win fa " ng-class="info.pmntSst ? 'fa-check' : (info.pmntCli ? 'fa-question' : '')"></i>
+                  </button> 
+                </td> 
+              </tr>
+            
+            </tbody>
+          </table>
+  </div>
