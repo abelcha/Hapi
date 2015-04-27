@@ -552,12 +552,11 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvid
         return result;
       });
     },
-
     getInterventions: function(cache) {
       return $http({
         method: 'GET',
         cache: cache,
-        url: '/api/search/intervention/{"limit":10, "sort":"-id"}'
+        url: '/api/search/intervention/{"limit":100000, "sort":"-id"}'
       }).success(function(result) {
         dataProvider('interventions', result);
         return result;
