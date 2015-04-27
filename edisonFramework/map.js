@@ -61,9 +61,10 @@ module.exports = {
         query.origin = "Montlucon, france";
         zoom = 5
       }
-
+      console.log("getting static map")
       var map = npm.googlemaps.staticMap(query.origin, zoom, width + 'x' + height, query.precision || 4,
         function(err, data) {
+          console.log("--> have callback")
           res.writeHead(200, {
             'Content-Type': 'image/png'
           });
