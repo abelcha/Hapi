@@ -36,7 +36,7 @@ schema.statics.rank = function(req, res) {
     }
     self.geoNear(point, options, function(err, docs) {
       if (err)
-        resolve(err);
+        return resolve(err);
       var rtn = [];
       for (var i = 0, x = 0; i < docs.length; i++) {
         if (!req.query.categorie || docs[i].obj.categories.indexOf(req.query.categorie) >= 0) {

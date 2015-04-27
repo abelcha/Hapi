@@ -9,11 +9,14 @@ module.exports = {
     }
   },
   getSessionData: function(req, res) {
-    return res.send(500, "qe");    
+    //return res.sendStatus(500);    
     if (req.session.tabContainer && req.session.tabContainer.length > 2) {
       res.json(JSON.parse(req.session.tabContainer))
     } else {
-      res.send(410, "Session has no tabContainer");
+      res.status(410).send("Session has no tabContainer");
     }
+  },
+  ping: function(req, res) {
+    res.send("ok");
   }
 }

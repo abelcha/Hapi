@@ -11,20 +11,20 @@ module.exports = function() {
     edison.map[req.params.method](req.query, res)
   });
 
-  app.get('/ping', function(req, res) {
-    res.sendStatus(200);
-  })
+  /*  app.all('/ping', function(req, res) {
+      res.send("ok");
+    })*/
 
-  app.get('/:fn', function(req, res) {
+  app.all('/:fn', function(req, res) {
     if (typeof edison.ajax[req.params.fn] === 'function') {
       return (edison.ajax[req.params.fn](req, res))
+    } else {
+      res.sendStatus(404);
     }
-    res.sendStatus(404);
   })
 
 
-  app.get('/:model/:method', function(req, res) {
-
+  app.all('/:model/:method', function(req, res) {
     var model = edison.db.model[req.params.model];
     var method = req.params.method;
 
@@ -62,19 +62,6 @@ module.exports = function() {
       })
   })
 
-  app.post('/api/intervention', function(req, res) {
-    var inter = req.body;
-    new Intervention(req.body);
-    res.json("ok")
-  })
-
-  var testThingsAsync = new Promise(function(resolve, reject) {
-    if (a === b) {
-      resolve(a)
-    } else {
-      reject(b);
-    }
-  })
 
   app.get('/fetchArtisans', function(req, res) {
     edison.dumpArtisan.dumpData(function(artisanList) {

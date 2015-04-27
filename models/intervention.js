@@ -7,20 +7,24 @@ var schema = new npm.mongoose.Schema({
     {login, text, date},
     */
   ],
-  date: { //
-    /*
+  date: {
     ajout: Date,
     intervention: Date,
     Confirmation: Date,
     PaiementCli: Date,
     PaiementSST: Date,
-    */
   },
   client: { //
-    civilite: String,
+    civilite: {
+      type: String,
+      required: true
+    },
     prenom: String,
-    nom: String,
-    email: String,
+    nom: {
+      type: String,
+      required: true
+    },
+    email:String,
     telephone: {
       /*
       t1: String,
@@ -28,43 +32,57 @@ var schema = new npm.mongoose.Schema({
       */
     },
     address: {
-      n: String,
-      r: String,
-      v: String,
-      cp: String,
+      n: {type:String, required:true},
+      r: {type:String, required:true},
+      v: {type:String, required:true},
+      cp: {type:String, required:true},
       lt: String,
       lg: String,
     },
     location: [],
   },
   facture: {
-/*    type: String,
-    nom: String,
-    prenom: String,
-    tel: String,
-    email: String,
-    address: {
-      n: String,
-      r: String,
-      v: String,
-      cp: String,
-    },
-*/  },
+    /*    type: String,
+        nom: String,
+        prenom: String,
+        tel: String,
+        email: String,
+        address: {
+          n: String,
+          r: String,
+          v: String,
+          cp: String,
+        },
+    */
+  },
   info: {
-    categorie: String,
+    categorie: {type:String, required:true},
     artisan: {
       id: Number,
-      nom: String
+      nomSociete: String
     },
-    description: String,
+    description: {type:String, required:true},
     remarque: String,
     produits: [],
-    modeReglement: String,
-    prixAnnonce: Number,
+    modeReglement: {type:String, required:true},
+    prixAnnonce: {
+      type: Number,
+      set: toCurrency
+    },
     prixFinal: Number,
-    reglementSurPlace: Boolean
+    reglementSurPlace: Boolean,
+    aDemarcher: Boolean
   }
 });
+
+function toCurrency(nbr) {
+  try {
+    var rtn = parseFloat(nbr.replace(',', '.'));
+    return Math.round(rtn * 100) / 100;
+  } catch (e) {
+    return 0;
+  }
+}
 
 var addProp = function(obj, prop, name) {
   if (prop) {
@@ -102,7 +120,7 @@ var translateModel = function(d) {
     nom: d.nom,
     email: d.email,
     address:  {
-      n: d.numero,
+      n: d.numero || "0",
       r: d.adresse,
       v: d.ville,
       cp: d.code_postal,
@@ -119,12 +137,12 @@ var translateModel = function(d) {
   /* INFO */
   var info = {};
   info.categorie = d.categorie;
-  info.description = d.description;
-  info.remarque = d.remarque;
+  info.description = d.description || "PAS DE DESCRIPTION";
+  info.remarque = d.remarque || "PAS DE REMARQUES";
   if (d.nom_societe) {
     info.artisan = {
       id: d.id_sst_selectionne,
-      nom: d.nom_societe
+      nomSociete: d.nom_societe
     }
   }
 
@@ -135,7 +153,7 @@ var translateModel = function(d) {
 
 
   /* FACTURE */
-  info.reglementSurPlace = !d.facture;
+  info.reglementSurPlace = !d.fact;
 
   /* COMMENTS */
   var comments = [];
@@ -180,6 +198,7 @@ var addInDB = function(data, i, cb) {
   if (i % 100 === 0)
     console.log(((i / data.length) * 100).toFixed(2), '%')
   var inter = new model(translateModel(data[i]));
+  console.log(inter.id, inter.info.description);
   inter.save(function(err) {
     if (err) {
       return cb({
@@ -219,6 +238,37 @@ schema.statics.dump = function(req, res) {
 
 
 
+schema.statics.save = function(req, res) {
+  var data = JSON.parse(req.query.data);
+  return new Promise(function(resolve, reject) {
+    var intervention = new model(data);
+    if (data.id) {
+      model.findOne({
+        id: data.id
+      }).exec(function(err, doc) {
+        if (err)
+          return reject(String(err));
+        for (k in data) {
+          doc[k] = data[k];
+        }
+        doc.save(function(err, result) {
+          if (err)
+            reject(String(err));
+          resolve(result.id);
+        });
+      })
+    } else {
+      var inter = new model(data);
+      inter.save(function(err, doc) {
+        if (err)
+          reject(String(err));
+        else
+          resolve(doc.id);
+      })
+    }
+  });
+}
+
 var model = npm.mongoose.model('intervention', schema);
 
 /* M.|Me|Soc. */
@@ -239,5 +289,21 @@ model.schema.path('info.categorie').validate(function(value) {
   return /CR|MN|MC|PT|PL|SR|CL|CH|VT|EL/i.test(value);
 }, 'Categorie inconnue.');
 
-
+model.schema.pre('save', function(next) {
+  var self = this;
+  if (!self.id) {
+    model.findOne({}, {
+      id: 1
+    }).sort("-id").exec(function(err, latestDoc) {
+      self.id = latestDoc.id + 1;
+      self.date.ajout = Date.now();
+      next();
+    });
+  } else {
+    next();
+  }
+  /*var err = new Error('something went wrong');
+  next(err);
+  */
+});
 module.exports = model;
