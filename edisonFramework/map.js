@@ -29,6 +29,7 @@ module.exports = {
       console.log('have direction')
 
       if (err) {
+        console.log("have err")
         return res.status(400).send(err);
       }
       markers = [{
