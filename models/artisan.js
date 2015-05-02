@@ -48,6 +48,7 @@ schema.statics.rank = function(req, res) {
       maxDistance: (parseFloat(req.query.maxDistance) || 30) * 0.01
     }
     self.geoNear(point, options, function(err, docs) {
+      return resolve([err, docs])
       if (err)
         return resolve(err);
       var rtn = [];
