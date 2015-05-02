@@ -1,4 +1,4 @@
-angular.module('edison', ['ngMaterial', 'lumx', 'ngAnimate', 'btford.socket-io', 'pickadate', 'ngRoute', 'ngResource', 'ngTable', 'ngMap'])
+angular.module('edison', ['ngMaterial', 'lumx', 'ngAnimate', 'ngDialog', 'btford.socket-io', 'pickadate', 'ngRoute', 'ngResource', 'ngTable', 'ngMap'])
   .config(function($mdThemingProvider) {
     $mdThemingProvider.theme('default')
       .primaryPalette('indigo')
@@ -367,6 +367,19 @@ angular.module('edison').directive('capitalize', function() {
 })
 
 
+angular.module('edison').directive('ngEnter', function () {
+    return function (scope, element, attrs) {
+        element.bind("keydown keypress", function (event) {
+            if(event.which === 13) {
+                scope.$apply(function (){
+                    scope.$eval(attrs.ngEnter);
+                });
+
+                event.preventDefault();
+            }
+        });
+    };
+});
 /*angular.module('edison').directive('materialSelect', function() {
   return {
     restrict: 'E',
@@ -379,6 +392,29 @@ angular.module('edison').directive('capitalize', function() {
   }
 });
 */
+angular.module('edison').directive('sglclick', ['$parse', function($parse) {
+    return {
+        restrict: 'A',
+        link: function(scope, element, attr) {
+          var fn = $parse(attr['sglclick']);
+          var delay = 300, clicks = 0, timer = null;
+          element.on('click', function (event) {
+            clicks++;  //count clicks
+            if(clicks === 1) {
+              timer = setTimeout(function() {
+                scope.$apply(function () {
+                    fn(scope, { $event: event });
+                }); 
+                clicks = 0;             //after action performed, reset counter
+              }, delay);
+              } else {
+                clearTimeout(timer);    //prevent single-click action
+                clicks = 0;             //after action performed, reset counter
+              }
+          });
+        }
+    };
+}])
 angular.module("edison").filter('addressPrettify', function() {
   return function(address) {
     return (address.n + " " +
@@ -437,6 +473,50 @@ angular.module("edison").filter('artisanPractice', function(){
 angular.module("edison").filter('categoryFilter', function(){
   return function(sst, categorie){
     return (sst.categories.indexOf(categorie) > 0);
+  }
+});
+angular.module("edison").filter('pricify', function() {
+	return function(price) {
+		if (price > 800)
+			return 900;
+		return (price - (price % 100)) + 200;
+	}
+});
+function pad(number) {
+  return number < 10 ? '0' + number : number
+}
+angular.module("edison").filter('relativeDate', function() {
+
+  var minute = 60 * 1000;
+  var hour = 60 * minute;
+  var day = 24 * hour;
+  var week = 7 * day;
+  var month = 4 * week;
+  var year = 12 * month;
+
+  return function(date) {
+    var now = Date.now();
+    var date = new Date(date);
+    var today = (new Date()).setHours(0, 0, 0, 0);
+
+    var diff = now - date.getTime();
+    if (diff < minute)
+      return ("à l'instant");
+    if (diff < hour)
+      return Math.round(diff / minute) + ' minutes';
+    if (diff < day) {
+      if (date > today) {
+        return 'Auj. ' + pad(date.getHours()) + "H" + pad(date.getMinutes());
+      } else {
+        return 'Hier ' + pad(date.getHours()) + "H" + pad(date.getMinutes());
+      }
+    }
+    if (diff < week)
+      return Math.round(diff / day) + ' jours';
+    if (diff < month)
+      return Math.round(diff / week) + ' semaines'
+    if (diff < year)
+      return Math.round(diff / week) + ' ans'
   }
 });
 
@@ -588,6 +668,11 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvid
           maxDistance:150
         }
       });
+    },
+    getArtisanStats: function(id_sst) {
+      return {
+       IntersNbr:42
+      }
     }
   }
 }]);
@@ -1054,12 +1139,7 @@ angular.module('edison').directive('watchWindowResize', ['$window', '$timeout', 
   }
 ]);
 
-angular.module('edison').controller('DashboardController', function(tabContainer, $location, $scope, $rootScope, interventions, artisans){
-
-	$scope.tab = tabContainer.getCurrentTab();
-	$scope.tab.setTitle('dashBoard')
-});
-angular.module('edison').controller('InterventionController', function(tabContainer, $location, $mdSidenav, $interval, LxNotificationService, edisonAPI, config, $routeParams, $scope, windowDimensions, interventions, artisans) {
+angular.module('edison').controller('InterventionController', function(tabContainer, $location, $mdSidenav, $interval, ngDialog, LxNotificationService, edisonAPI, config, $routeParams, $scope, windowDimensions, interventions, artisans) {
   $scope.windowDimensions = windowDimensions;
   $scope.config = config;
   $scope.tab = tabContainer.getCurrentTab();
@@ -1104,6 +1184,9 @@ angular.module('edison').controller('InterventionController', function(tabContai
   }
   $scope.showMap = false;
 
+  $scope.test = function() {
+    console.log("we did ")
+  }
   $scope.saveInter = function(send, cancel) {
     edisonAPI.saveIntervention({
       send: send,
@@ -1118,18 +1201,26 @@ angular.module('edison').controller('InterventionController', function(tabContai
     });
   }
 
-  $scope.toggleRight = function() {
+  $scope.clickOnArtisanMarker = function(event, sst_id) {
+    console.log("swag");
+    $scope.tab.data.sst = sst_id;
+  }
+
+  $scope.searchArtisans = function() {
     edisonAPI.getNearestArtisans($scope.tab.data.client.address, $scope.tab.data.info.categorie)
       .success(function(result) {
         $scope.nearestArtisans = result;
-        $mdSidenav('right').toggle()
       });
   }
+
+  $scope.searchArtisans();
+
 });
 
 
 
-angular.module('edison').controller('InterventionMapController', function($scope, $window, Address, mapAutocomplete, edisonAPI) {
+
+angular.module('edison').controller('InterventionMapController', function($scope, $window, $mdDialog, Address, mapAutocomplete, edisonAPI) {
   $scope.autocomplete = mapAutocomplete;
   if (!$scope.tab.data.client.address) {
     $scope.mapCenter = Address({
@@ -1164,6 +1255,7 @@ angular.module('edison').controller('InterventionMapController', function($scope
           $scope.tab.data.client.address = addr;
           $scope.searchText = "";
         }
+        $scope.searchArtisans();
       },
       function(err) {
         console.log(err);
@@ -1176,9 +1268,50 @@ angular.module('edison').controller('InterventionMapController', function($scope
     });
   })
 
-  $scope.clickOnArtisanMarker = function(event, sst_id) {
-    $scope.tab.data.sst = sst_id;
-  }
+  function DialogController($scope, $mdDialog) {
+    $scope.indispoTime = 'TODAY';
+    $scope.indispo = [{
+      title: 'Toute la journée',
+      value: 'TODAY'
+    }, {
+      title: '1 Heure',
+      value: '1H'
+    }, {
+      title: '2 Heure',
+      value: '2H'
+    }, {
+      title: '3 Heure',
+      value: '3H'
+    }, {
+      title: '4 Heure',
+      value: '4H'
+    }, {
+      title: "Jusqu'à nouvel ordre",
+      value: 'ALL'
+    }]
+    $scope.hide = function() {
+      $mdDialog.hide();
+    };
+    $scope.cancel = function() {
+      $mdDialog.cancel();
+    };
+    $scope.answer = function(answer) {
+      $mdDialog.hide(answer);
+    };
+  };
+
+  $scope.openDialog = function(ev) {
+    $mdDialog.show({
+        controller: DialogController,
+        templateUrl: '/Pages/Intervention/dialog-box.html',
+        targetEvent: ev,
+      })
+      .then(function(time) {
+        if (time) {
+          console.log("==> ", time);
+        }
+      });
+  };
 
   $scope.showMap = function() {
     $scope.loadMap = true;
@@ -1187,7 +1320,7 @@ angular.module('edison').controller('InterventionMapController', function($scope
   $scope.loadMap = $scope.tab.isNew;
 
   $scope.getStaticMap = function() {
-    var q = "?width=" + $window.outerWidth;
+    var q = "?width=" + $window.outerWidth * 0.8;
     if ($scope.tab.data.client && $scope.tab.data.client.address && $scope.tab.data.client.address.latLng)
       q += ("&origin=" + $scope.tab.data.client.address.latLng);
     if ($scope.tab.data.info.artisan)
@@ -1201,8 +1334,9 @@ angular.module('edison').controller('InterventionMapController', function($scope
 
 });
 
-angular.module('edison').controller('InterventionsController', function(tabContainer, $window, $location, $scope, $filter, config, ngTableParams, interventions) {
+angular.module('edison').controller('InterventionsController', function(tabContainer, $window, edisonAPI, $location, $scope, $filter, config, ngTableParams, interventions) {
 
+  $scope.api = edisonAPI;
 
   $scope.config = config;
   if (!$scope.tableParams) {
@@ -1224,7 +1358,6 @@ angular.module('edison').controller('InterventionsController', function(tabConta
       },
       filterDelay: 150
     }
-    console.log("yay");
     $scope.tableParams = new ngTableParams(tableParameters, tableSettings);
   };
 
@@ -1232,7 +1365,7 @@ angular.module('edison').controller('InterventionsController', function(tabConta
   $scope.tab.setTitle('Interventions');
 
   $scope.getStaticMap = function(inter) {
-    q = "?width=500&height=250&precision=0&zoom=8&origin=" + inter.client.address.lt + ", " + inter.client.address.lg;
+    q = "?width=500&height=250&precision=0&zoom=10&origin=" + inter.client.address.lt + ", " + inter.client.address.lg;
     return "/api/map/staticDirections" + q;
   }
 
@@ -1258,4 +1391,10 @@ angular.module('edison').controller('InterventionsController', function(tabConta
     }
   }
 
+});
+
+angular.module('edison').controller('DashboardController', function(tabContainer, $location, $scope, $rootScope, interventions, artisans){
+
+	$scope.tab = tabContainer.getCurrentTab();
+	$scope.tab.setTitle('dashBoard')
 });

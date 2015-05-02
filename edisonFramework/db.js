@@ -1,7 +1,8 @@
 module.exports = {
   model:{
     artisan: require('../models/artisan'),
-    intervention: require('../models/intervention')
+    intervention: require('../models/intervention'),
+    user: require('../models/user')
   },
   getModel:function(modelStr) {
     for (k in this.model) {

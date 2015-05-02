@@ -1,0 +1,17 @@
+<md-dialog aria-label="Mango (Fruit)">
+    <md-dialog-content class="sticky-container">
+        <md-subheader class="md-sticky-no-effect">Absence Sous-traitant</md-subheader>
+        <div style="padding:15px">
+            <select ng-model="indispoTime" ng-options="ind.value as ind.title for ind in indispo">
+            </select>
+        </div>
+    </md-dialog-content>
+    <div class="md-actions" layout="row">
+        <md-button ng-click="answer()" class="md-primary">
+           Annuler
+        </md-button>
+        <md-button ng-click="answer(indispoTime)" class="md-primary">
+            Valider
+        </md-button>
+    </div>
+</md-dialog>

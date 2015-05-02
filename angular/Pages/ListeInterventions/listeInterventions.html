@@ -1,8 +1,7 @@
 <div>
     <table style="background:white;" ng-table="tableParams" class="table table-bordered table-hover table-hover table-striped" id="table-list" show-filter="true">
         <tbody id="tbody-list">
-            <tr data-id="{{inter.id}}" ng-repeat-start="inter in $data " ng-click="rowClick($event, inter, false)" ng-dblclick="rowClick($event, inter, true)" ng-class="{warning : isInSelection(inter.id)}" 
-            ng-init='cat = config.categoriesKV[inter.info.categorie]; etat = config.status(inter)'>
+            <tr data-id="{{inter.id}}" ng-repeat-start="inter in $data " ng-click="rowClick($event, inter, false)" ng-dblclick="rowClick($event, inter, true)" ng-class="{warning : isInSelection(inter.id)}" ng-init='cat = config.categoriesKV[inter.info.categorie]; etat = config.status(inter)'>
                 <td data-title="'Os'" sortable="'id'" filter="{ 'id': 'text' }">
                     <strong>{{inter.id}}</strong>
                 </td>
@@ -13,19 +12,19 @@
                     <span style="width:80px" class="label {{cat.c}}">{{cat.n}}</span>
                 </td>
                 <td data-title="'Date Ajout'" sortable="'dateAjout'" filter="{ 'date.ajout': 'text' }">
-                    {{inter.date.ajout | date:"dd/MM/yy"}} {{inter.date.ajout | date:"HH'h'mm"}}
+                    {{inter.date.ajout | date:"dd/MM/yy" || ""}} {{inter.date.ajout | date:"HH'h'mm" || ""}}
                 </td>
                 <td variable-length data-title="'Client'" sortable="'nom'" filter="{ 'client.nom': 'text' }">
                     {{inter.client.civilite}}
                     <strong>{{inter.client.nom}}</strong>
                 </td>
                 <td variable-length data-title="'Ville'" sortable="'add.v'" filter="{ 'client.address.v': 'text' }">
-                    {{inter.client.address.v}}
+                    {{inter.client.address.v | uppercase}}
                 </td>
                 <td data-title="'CP'" sortable="'client.address.cp'" filter="{ 'client.address.cp': 'text' }">
-                    <strong> {{inter.client.address.cp.substring(0,2)}}</strong>{{inter.client.address.cp.substring(2,5)}}
+                    <strong> {{inter.client.address.cp}}</strong>
                 </td>
-                <td variable-length  class="variable-length one-liner" data-title="'Artisan'" sortable="'info.artisan.nomSociete'" filter="{ 'info.artisan.nomSociete': 'text' }">
+                <td variable-length class="variable-length one-liner" data-title="'Artisan'" sortable="'info.artisan.nomSociete'" filter="{ 'info.artisan.nomSociete': 'text' }">
                     <strong>{{inter.info.artisan.nomSociete || ""}}</strong>
                 </td>
                 <td data-title="'Date Intervention'" sortable="'date.intervention'" filter="{ 'date.intervention': 'text' }">
@@ -34,7 +33,7 @@
                     </div>
                 </td>
                 <td data-title="'Prix'" sortable="'info.prixAnnonce'" filter="{ 'info.prixAnnonce': 'text' }">
-                    {{(inter.info.prixAnnonce | number:2) || 0 + " €"}}
+                    {{(inter.info.prixAnnonce | number:2) || 0}} €
                 </td>
                 <td data-title="'Status'" sortable="'status'">
                     <span style="width:70px" class="label {{etat.intervention.c}}"> {{etat.intervention.n}}</span>
@@ -42,23 +41,40 @@
             </tr>
             <tr ng-if="expendedRow === inter.id" ng-repeat-end>
                 <td ng-show="expendedRow === inter.id" colspan="42">
-                    <div class="row" style="text-align:center">
-                        <div class="col-md-4">
+                    <div class="row">
+                        <div class="col-sm-4">
                             <h4>Client</h4>
+                            <p>
+                               <span style="width:70px" class="label {{etat.intervention.c}}"> {{etat.intervention.n}}</span>
+                            </p>
                             <p>{{inter.client.civilite}} {{inter.client.prenom}} {{inter.client.nom}}</p>
-                            <h4>Addresse</h4>
                             <p>{{inter.client.address.n}} {{inter.client.address.r}} {{inter.client.address.cp}}, {{inter.client.address.v}}</p>
-                        
-                        </div>
-                        <div class="col-md-4">
-                            <h4>Prix</h4>
-                            <p>{{inter.info.prixAnnonce}} € | {{inter.info.prixFinal || 0}} €</p>
-                            <h4>Remarque</h4>
-                            <p>{{inter.info.remarque}}</p>
-                            <h4>Description</h4>
                             <p>{{inter.info.description}}</p>
+                            <p>{{inter.info.remarque}}</p>
+                            <p>{{inter.info.prixAnnonce}} € | {{inter.info.prixFinal || 0}} €</p>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-sm-4">
+                            <h4>Artisan</h4>
+                            
+                            <p>
+                             {{inter.info.artisan.nomSociete}}
+                            </p>
+                            <p>
+                                Ajouté il a 3 mois
+                            </p>
+                            <p>
+                                Note: 7.6/10
+                            </p>
+                            <p>
+                                Interventions réalisés: 132
+                            </p>
+                            <p>
+                                5 réglement en attentes (913€)
+                            </p>
+                            <p> <span style="width:100px" class="label grey darken-3"> Fiche</span> 
+                            <span style="width:100px" class="label grey darken-3"> Interventions</span></p>
+                        </div>
+                        <div class="col-sm-4">
                             <img style="width=100%" ng-src="{{getStaticMap(inter)}}" class="img-thumbnail" />
                         </div>
                     </div>

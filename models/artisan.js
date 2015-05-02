@@ -1,26 +1,39 @@
 var schema = new npm.mongoose.Schema({
+
+  /*  societe:{
+      nom:String,
+      formeJuridique:String,
+
+    },
+    representant: {
+      nom:String,
+      prenom:String,
+    }
+  */
+
+
   id: Number,
-  civ: String,
-  nomSociete: String,
-  nomRep: String,
-  prenomRep: String,
-  categories: [],
-  formeJuridique: String,
-  email: String,
-  tel1: String,
-  tel2: String,
-  archive: Boolean,
-  dateAjout: Date,
-  ajoutePar: String,
-  add: {
-    n: String,
-    r: String,
-    v: String,
-    cp: String,
-    lt: Number,
-    lg: Number,
-  },
-  loc: [Number, Number]
+    civ: String,
+    nomSociete: String,
+    nomRep: String,
+    prenomRep: String,
+    categories: [],
+    formeJuridique: String,
+    email: String,
+    tel1: String,
+    tel2: String,
+    archive: Boolean,
+    dateAjout: Date,
+    ajoutePar: String,
+    add: {
+      n: String,
+      r: String,
+      v: String,
+      cp: String,
+      lt: Number,
+      lg: Number,
+    },
+    loc: {type:[Number, Number], index: '2d'}
 });
 
 schema.statics.rank = function(req, res) {

@@ -2,14 +2,11 @@ module.exports = {
 
   getDirectionPath: function(query, callback) {
     if (!query.origin || !query.destination) {
-      console.log('->null callback')
       return callback(null, []);
     }
     npm.googlemaps.directions(query.origin, query.destination, function(err, result) {
-      console.log('->getting directions')
 
       if (!err && result && result.routes && result.routes[0] && result.routes[0].legs && result.routes[0].legs[0]) {
-        console.log('->getting directions callback')
 
         var steps = result.routes[0].legs[0].steps;
         var rtn = steps.map(function(e) {
@@ -17,24 +14,22 @@ module.exports = {
         });
         callback(null, rtn)
       } else {
-        console.log("->err callback")
         callback(err ||  result);
       }
     });
   },
 
   staticDirections: function(query, res) {
-    console.log('map function')
     var directions = this.getDirectionPath(query, function(err, points) {
-      console.log('have direction')
 
       if (err) {
-        console.log("have err")
         return res.status(400).send(err);
       }
       markers = [{
+        //'icon': 'http://edsx.herokuapp.com//img/gmap/markers/red.png',
         'location': query.origin
       }, {
+        //'icon': 'http://edsx.herokuapp.com//img/gmap/markers/blue.png',
         'location': query.destination,
         'color': 'blue',
       }]
@@ -55,17 +50,14 @@ module.exports = {
       }
 
 
-      var zoom = query.zoom || 7;
+      var zoom = query.zoom || 9;
       if (!query.origin) {
         markers = [];
         query.origin = "Montlucon, france";
         zoom = 5
       }
-      console.log("getting static map")
-      console.log(edison.googleMap);
       var map = edison.googleMap.staticMap(query.origin, zoom, width + 'x' + height, query.precision || 4,
         function(err, data) {
-          console.log("--> have callback")
           res.writeHead(200, {
             'Content-Type': 'image/png'
           });

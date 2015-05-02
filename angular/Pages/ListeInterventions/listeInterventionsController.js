@@ -1,5 +1,6 @@
-angular.module('edison').controller('InterventionsController', function(tabContainer, $window, $location, $scope, $filter, config, ngTableParams, interventions) {
+angular.module('edison').controller('InterventionsController', function(tabContainer, $window, edisonAPI, $location, $scope, $filter, config, ngTableParams, interventions) {
 
+  $scope.api = edisonAPI;
 
   $scope.config = config;
   if (!$scope.tableParams) {
@@ -21,7 +22,6 @@ angular.module('edison').controller('InterventionsController', function(tabConta
       },
       filterDelay: 150
     }
-    console.log("yay");
     $scope.tableParams = new ngTableParams(tableParameters, tableSettings);
   };
 
@@ -29,7 +29,7 @@ angular.module('edison').controller('InterventionsController', function(tabConta
   $scope.tab.setTitle('Interventions');
 
   $scope.getStaticMap = function(inter) {
-    q = "?width=500&height=250&precision=0&zoom=8&origin=" + inter.client.address.lt + ", " + inter.client.address.lg;
+    q = "?width=500&height=250&precision=0&zoom=10&origin=" + inter.client.address.lt + ", " + inter.client.address.lg;
     return "/api/map/staticDirections" + q;
   }
 

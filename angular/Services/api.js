@@ -47,6 +47,11 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvid
           maxDistance:150
         }
       });
+    },
+    getArtisanStats: function(id_sst) {
+      return {
+       IntersNbr:42
+      }
     }
   }
 }]);

@@ -336,7 +336,6 @@ exports.staticMap = function(center, zoom, size, scale, callback, sensor, maptyp
   args.sensor = sensor || 'false';
 
   var path = '/maps/api/staticmap';
-  console.log('==>makerequest()')
   return makeRequest(path, args, config('secure'), callback, 'binary');
 };
 
@@ -540,7 +539,6 @@ var makeRequest = function(path, args, secure, callback, encoding) {
 
   if (encoding) options.encoding = encoding;
   if (config('proxy')) options.proxy = config('proxy');
-    console.log("==>do request")
   if (typeof callback === 'function') {
     request(options, function (error, res, data) {
       if (error) {

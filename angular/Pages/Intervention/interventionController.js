@@ -1,4 +1,4 @@
-angular.module('edison').controller('InterventionController', function(tabContainer, $location, $mdSidenav, $interval, LxNotificationService, edisonAPI, config, $routeParams, $scope, windowDimensions, interventions, artisans) {
+angular.module('edison').controller('InterventionController', function(tabContainer, $location, $mdSidenav, $interval, ngDialog, LxNotificationService, edisonAPI, config, $routeParams, $scope, windowDimensions, interventions, artisans) {
   $scope.windowDimensions = windowDimensions;
   $scope.config = config;
   $scope.tab = tabContainer.getCurrentTab();
@@ -43,6 +43,9 @@ angular.module('edison').controller('InterventionController', function(tabContai
   }
   $scope.showMap = false;
 
+  $scope.test = function() {
+    console.log("we did ")
+  }
   $scope.saveInter = function(send, cancel) {
     edisonAPI.saveIntervention({
       send: send,
@@ -57,18 +60,26 @@ angular.module('edison').controller('InterventionController', function(tabContai
     });
   }
 
-  $scope.toggleRight = function() {
+  $scope.clickOnArtisanMarker = function(event, sst_id) {
+    console.log("swag");
+    $scope.tab.data.sst = sst_id;
+  }
+
+  $scope.searchArtisans = function() {
     edisonAPI.getNearestArtisans($scope.tab.data.client.address, $scope.tab.data.info.categorie)
       .success(function(result) {
         $scope.nearestArtisans = result;
-        $mdSidenav('right').toggle()
       });
   }
+
+  $scope.searchArtisans();
+
 });
 
 
 
-angular.module('edison').controller('InterventionMapController', function($scope, $window, Address, mapAutocomplete, edisonAPI) {
+
+angular.module('edison').controller('InterventionMapController', function($scope, $window, $mdDialog, Address, mapAutocomplete, edisonAPI) {
   $scope.autocomplete = mapAutocomplete;
   if (!$scope.tab.data.client.address) {
     $scope.mapCenter = Address({
@@ -103,6 +114,7 @@ angular.module('edison').controller('InterventionMapController', function($scope
           $scope.tab.data.client.address = addr;
           $scope.searchText = "";
         }
+        $scope.searchArtisans();
       },
       function(err) {
         console.log(err);
@@ -115,9 +127,50 @@ angular.module('edison').controller('InterventionMapController', function($scope
     });
   })
 
-  $scope.clickOnArtisanMarker = function(event, sst_id) {
-    $scope.tab.data.sst = sst_id;
-  }
+  function DialogController($scope, $mdDialog) {
+    $scope.indispoTime = 'TODAY';
+    $scope.indispo = [{
+      title: 'Toute la journée',
+      value: 'TODAY'
+    }, {
+      title: '1 Heure',
+      value: '1H'
+    }, {
+      title: '2 Heure',
+      value: '2H'
+    }, {
+      title: '3 Heure',
+      value: '3H'
+    }, {
+      title: '4 Heure',
+      value: '4H'
+    }, {
+      title: "Jusqu'à nouvel ordre",
+      value: 'ALL'
+    }]
+    $scope.hide = function() {
+      $mdDialog.hide();
+    };
+    $scope.cancel = function() {
+      $mdDialog.cancel();
+    };
+    $scope.answer = function(answer) {
+      $mdDialog.hide(answer);
+    };
+  };
+
+  $scope.openDialog = function(ev) {
+    $mdDialog.show({
+        controller: DialogController,
+        templateUrl: '/Pages/Intervention/dialog-box.html',
+        targetEvent: ev,
+      })
+      .then(function(time) {
+        if (time) {
+          console.log("==> ", time);
+        }
+      });
+  };
 
   $scope.showMap = function() {
     $scope.loadMap = true;
@@ -126,7 +179,7 @@ angular.module('edison').controller('InterventionMapController', function($scope
   $scope.loadMap = $scope.tab.isNew;
 
   $scope.getStaticMap = function() {
-    var q = "?width=" + $window.outerWidth;
+    var q = "?width=" + $window.outerWidth * 0.8;
     if ($scope.tab.data.client && $scope.tab.data.client.address && $scope.tab.data.client.address.latLng)
       q += ("&origin=" + $scope.tab.data.client.address.latLng);
     if ($scope.tab.data.info.artisan)

@@ -185,6 +185,11 @@ md-checkbox:focus .md-label:not(:empty) {
     left: 24px!important;
     right: initial!important;
 }
+
+input, select, textarea {
+    font-weight: 500!important;
+    font-size: 15px!important;
+}
 /*.lx-select {
     margin-top: 9px!important;
 }*/
