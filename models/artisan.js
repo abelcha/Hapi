@@ -123,143 +123,56 @@ var addInDB = function(data, i, cb) {
 
 */
 
-var countStats = function(id, callback) {
-
-  edison.db.model.intervention.where({'info.artisan.id':id}).count(callback);
-  /*console.log(rr);
-  callback(null, count);*/
-
-  /*edison.db.model.intervention.aggregate([{
-    $match: {
-      'info.artisan.id': id
-    }
-  }, {
-    $project: {
-      _id: 0,
-      total: 1,
-      PmntCLI: {
-        $cond: [{
-          $ifNull: ["$date.paiementCLI", false]
-        }, 1, 0]
-      },
-      PmntSST: {
-        $cond: [{
-          $lt: ['$date.paiementSST', false]
-        }, 1, 0]
-      },
-      id_: "$id",
-      a: "$info.artisan.nomSociete"
-    }
-  }, {
-    $group: {
-      _id: "$artisan.id",
-      total: {
-        $sum:'$total'
-      },
-      cli: {
-        $sum: '$PmntCLI'
-      },
-      sst: {
-        $sum: '$PmntSST'
-      }
-    }
-  }]).exec(callback);*/
-}
-
 schema.statics.stats = function(req, res) {
   var id = parseInt(req.query.id);
+  console.time("ts")
   return new Promise(function(resolve, reject) {
-    console.time('ts')
-    var rtn = {
-      etat: {}
-    };
 
+    var cnt = function(query) {
+      query['info.artisan.id'] = id;
+      var q = edison.db.model.intervention.where(query)
+      return q.count.bind(q);
+    }
+    var sum = function(query) {
+      query['info.artisan.id'] = id;
+      var q = edison.db.model.intervention.aggregate([{
+        $match: query
+      }, {
+        $group: {
+          _id: null,
+          totalAmount: {
+            $sum: "$info.prixAnnonce"
+          },
+          count: {
+            $sum: 1
+          }
+        }
+      }/*, {
+        $project: {
+          _id: 0
+        }
+      }*/])
+      return q.exec.bind(q);
+    }
 
     npm.async.parallel({
-        /*etat: function(callback) {
-          edison.db.model.intervention.aggregate([{
-            $match: {
-              'info.artisan.id': id
-            }
-          }, {
-            "$group": {
-              _id: "$status",
-              count: {
-                $sum: 1
-              }
-            }
-          }, {
-            $project: {
-              count: 1,
-              status: 1
-            }
-          }]).exec(callback);
-        },*/
-        count:countStats.bind(null, id),
-        lol: function(cb) {
-          edison.db.model.intervention.where({'info.artisan.id':id}).count(cb);
-        }
+        total: cnt({}),
+        annule: cnt({
+          status: 'ANN'
+        }),
+        intervenu: cnt({
+          status: 'INT'
+        }),
+        enc: cnt({
+          status: 'ENC'
+        }),
+        sm: sum({})
       },
       function(err, results) {
-        /*        var tmp = {};
-                results.etat.forEach(function(e) {
-                  tmp[e._id] = e.count;
-                });
-
-                results.etat = tmp;*/
         resolve(results);
         console.timeEnd("ts")
       });
 
-
-    /*    npm.async.parallel({
-          etats: function(cb) {
-            edison.db.model.intervention.aggregate([{
-              $match: {
-                'info.artisan.id': id
-              }
-            }, {
-              "$group": {
-                _id: "$status",
-                count: {
-                  $sum: 1
-                }
-              }
-            }, {
-              $project: {
-                count: 1,
-                status: 1
-              }
-            }]).exec(cb);
-                      .exec(function(err, doc) {
-                        if (err || !doc)
-                          reject([err, doc]);
-                        for (k in doc) {
-                          rtn.etat[doc[k]._id] = doc[k].count
-                        }
-                        cb(321)
-                      })
-          },
-          total: function(cb) {
-            edison.db.model.aggregate([{
-              $project: {
-                /*            item: 1,
-                            discount: {
-                              $cond: {
-                                if: {
-                                  $gte: ["$qty", 250]
-                                },
-                                then: 30,
-                                else: 20
-                              }
-                            }
-              }
-            }]).exec(cb)
-          }
-        }, function(err, rer)  {
-          console.log(err, rer)
-            //resolve(rtn);
-        });*/
   })
 };
 
