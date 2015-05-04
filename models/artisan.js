@@ -128,48 +128,61 @@ schema.statics.stats = function(req, res) {
   console.time("ts")
   return new Promise(function(resolve, reject) {
 
-    var cnt = function(query) {
-      query['info.artisan.id'] = id;
-      var q = edison.db.model.intervention.where(query)
-      return q.count.bind(q);
-    }
-    var sum = function(query) {
+    var sumCount = function(query) {
       query['info.artisan.id'] = id;
       var q = edison.db.model.intervention.aggregate([{
         $match: query
-      }, {
+      },
+       {
         $group: {
-          _id: null,
-          totalAmount: {
+          _id: '$date.intervention',
+          montant: {
             $sum: "$info.prixAnnonce"
           },
-          count: {
+          total: {
             $sum: 1
           }
         }
-      }/*, {
+      }, {
         $project: {
-          _id: 0
+          _id: 1,
+          total: 1,
+          moant: {
+            $divide: [{
+                $subtract: [{
+                  $multiply: ['$montant', 100]
+                }, {
+                  $mod: [{
+                    $multiply: ['$montant', 100]
+                  }, 1]
+                }]
+              },
+              100
+            ]
+          }
         }
-      }*/])
+      }])
       return q.exec.bind(q);
     }
 
     npm.async.parallel({
-        total: cnt({}),
-        annule: cnt({
+        total: sumCount({}),
+        annule: sumCount({
           status: 'ANN'
         }),
-        intervenu: cnt({
+        intervenu: sumCount({
           status: 'INT'
         }),
-        enc: cnt({
+        enc: sumCount({
           status: 'ENC'
         }),
-        sm: sum({})
+        paye: sumCount({
+          'date.paiementCLI': {$exists: true}
+        })
       },
       function(err, results) {
         resolve(results);
+        console.log(err);
         console.timeEnd("ts")
       });
 
