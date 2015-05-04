@@ -354,219 +354,6 @@ function gMap(client) {
 
 };
 
-angular.module('edison').directive('capitalize', function() {
-    return {
-        require: 'ngModel',
-        link: function(scope, element, attrs, modelCtrl) {
-            modelCtrl.$parsers.push(function(input) {
-                return input ? input.toUpperCase() : "";
-            });
-            element.css("text-transform","uppercase");
-        }
-    };
-})
-
-
-angular.module('edison').directive('ngEnter', function () {
-    return function (scope, element, attrs) {
-        element.bind("keydown keypress", function (event) {
-            if(event.which === 13) {
-                scope.$apply(function (){
-                    scope.$eval(attrs.ngEnter);
-                });
-
-                event.preventDefault();
-            }
-        });
-    };
-});
-/*angular.module('edison').directive('materialSelect', function() {
-  return {
-    restrict: 'E',
-    replace: true,
-    template: '<div class="select-style text-field">' +
-      '<select ng-model>' +
-      '<option disabled>{{defaultName}}</option>' +
-      '</select>' +
-      '</div>'
-  }
-});
-*/
-angular.module('edison').directive('sglclick', ['$parse', function($parse) {
-    return {
-        restrict: 'A',
-        link: function(scope, element, attr) {
-          var fn = $parse(attr['sglclick']);
-          var delay = 300, clicks = 0, timer = null;
-          element.on('click', function (event) {
-            clicks++;  //count clicks
-            if(clicks === 1) {
-              timer = setTimeout(function() {
-                scope.$apply(function () {
-                    fn(scope, { $event: event });
-                }); 
-                clicks = 0;             //after action performed, reset counter
-              }, delay);
-              } else {
-                clearTimeout(timer);    //prevent single-click action
-                clicks = 0;             //after action performed, reset counter
-              }
-          });
-        }
-    };
-}])
-angular.module("edison").filter('addressPrettify', function() {
-  return function(address) {
-    return (address.n + " " +
-      address.r + " " +
-      address.cp + ", " +
-      address.v + ", " +
-      "France")
-  };
-});
-
-angular.module("edison").filter('addressXY', function() {
-  return function(address) {
-    if (!address ||  !address.lt || !address.lg)
-      return ("0, 0");
-    return (address.lt + ", " + address.lg);
-  };
-});
-
-angular.module("edison").filter('placeToXY', function() {
-  return function(place) {
-    var location = place.geometry.location;
-    console.log(location)
-    return location.lat() + ', ' + location.lng();
-  }
-});
-
-
-angular.module("edison").filter('placeToAddress', function() {
-  return function(place) {
-    var address = function(place) {
-      if (place.address_components) {
-        var a = place.address_components;
-        this.n = a[0] && a[0].short_name;
-        this.r = a[1] && a[1].short_name;
-        this.cp = a[6] && a[6].short_name;
-        this.v = a[2] && a[2].short_name;
-      }
-      this.lt = place.geometry.location.lat();
-      this.lg = place.geometry.location.lng();
-    };
-    address.prototype.isStreetAddress = (this.n && this.r);
-    address.prototype.latLng = this.isStreetAddress ? (this.lt + ', ' + this.lg) : '0, 0'
-    
-    return new address(place);
-  }
-});
-
-
-angular.module("edison").filter('artisanPractice', function(){
-  console.log("swag");
-  return function(sst, categorie){
-    console.log("sst, categorie");
-    return (sst.categories.indexOf(categorie) > 0);
-  }
-});
-angular.module("edison").filter('categoryFilter', function(){
-  return function(sst, categorie){
-    return (sst.categories.indexOf(categorie) > 0);
-  }
-});
-angular.module("edison").filter('pricify', function() {
-	return function(price) {
-		if (price > 800)
-			return 900;
-		return (price - (price % 100)) + 200;
-	}
-});
-function pad(number) {
-  return number < 10 ? '0' + number : number
-}
-angular.module("edison").filter('relativeDate', function() {
-
-  var minute = 60 * 1000;
-  var hour = 60 * minute;
-  var day = 24 * hour;
-  var week = 7 * day;
-  var month = 4 * week;
-  var year = 12 * month;
-
-  return function(date) {
-    var now = Date.now();
-    var date = new Date(date);
-    var today = (new Date()).setHours(0, 0, 0, 0);
-
-    var diff = now - date.getTime();
-    if (diff < minute)
-      return ("à l'instant");
-    if (diff < hour)
-      return Math.round(diff / minute) + ' minutes';
-    if (diff < day) {
-      if (date > today) {
-        return 'Auj. ' + pad(date.getHours()) + "H" + pad(date.getMinutes());
-      } else {
-        return 'Hier ' + pad(date.getHours()) + "H" + pad(date.getMinutes());
-      }
-    }
-    if (diff < week)
-      return Math.round(diff / day) + ' jours';
-    if (diff < month)
-      return Math.round(diff / week) + ' semaines'
-    if (diff < year)
-      return Math.round(diff / week) + ' ans'
-  }
-});
-
-function getValue(path, origin) {
-  if (origin === void 0 || origin === null) origin = self ? self : this;
-  if (typeof path !== 'string') path = '' + path;
-  var c = '',
-    pc, i = 0,
-    n = path.length,
-    name = '';
-  if (n)
-    while (i <= n)((c = path[i++]) == '.' || c == '[' || c == ']' || c == void 0) ? (name ? (origin = origin[name], name = '') : (pc == '.' || pc == '[' || pc == ']' && c == ']' ? i = n + 2 : void 0), pc = c) : name += c;
-  if (i == n + 2) throw "Invalid path: " + path;
-  return origin;
-}
-
-function cleanString(str) {
-  str = str.toString().toLowerCase();
-  str = str.replace(/[éèeê]/g, "e");
-  str = str.replace(/[àâ]/g, "a");
-  return str;
-}
-
-angular.module("edison").filter('tableFilter', function() {
-  return function(data, fltr, c) {
-    console.time("lol");
-    var rtn = [];
-    for (x in fltr) {
-    	fltr[x] = cleanString(fltr[x]);
-    }
-
-    for (k in data) {
-      if (data[k].id) {
-        var psh = true;
-        for (x in fltr) {
-          var str = getValue(x, data[k]);
-          if (str && cleanString(str).indexOf(fltr[x]) < 0) {
-            psh = false;
-            break;
-          }
-        }
-        if (psh)
-          rtn.push(data[k]);
-      }
-    }
-    console.timeEnd("lol")
-    return rtn;
-  }
-});
-
 angular.module('edison').factory('Address', function() {
 
 
@@ -1139,6 +926,224 @@ angular.module('edison').directive('watchWindowResize', ['$window', '$timeout', 
   }
 ]);
 
+angular.module("edison").filter('addressPrettify', function() {
+  return function(address) {
+    return (address.n + " " +
+      address.r + " " +
+      address.cp + ", " +
+      address.v + ", " +
+      "France")
+  };
+});
+
+angular.module("edison").filter('addressXY', function() {
+  return function(address) {
+    if (!address ||  !address.lt || !address.lg)
+      return ("0, 0");
+    return (address.lt + ", " + address.lg);
+  };
+});
+
+angular.module("edison").filter('placeToXY', function() {
+  return function(place) {
+    var location = place.geometry.location;
+    console.log(location)
+    return location.lat() + ', ' + location.lng();
+  }
+});
+
+
+angular.module("edison").filter('placeToAddress', function() {
+  return function(place) {
+    var address = function(place) {
+      if (place.address_components) {
+        var a = place.address_components;
+        this.n = a[0] && a[0].short_name;
+        this.r = a[1] && a[1].short_name;
+        this.cp = a[6] && a[6].short_name;
+        this.v = a[2] && a[2].short_name;
+      }
+      this.lt = place.geometry.location.lat();
+      this.lg = place.geometry.location.lng();
+    };
+    address.prototype.isStreetAddress = (this.n && this.r);
+    address.prototype.latLng = this.isStreetAddress ? (this.lt + ', ' + this.lg) : '0, 0'
+    
+    return new address(place);
+  }
+});
+
+
+angular.module("edison").filter('artisanPractice', function(){
+  console.log("swag");
+  return function(sst, categorie){
+    console.log("sst, categorie");
+    return (sst.categories.indexOf(categorie) > 0);
+  }
+});
+angular.module("edison").filter('categoryFilter', function(){
+  return function(sst, categorie){
+    return (sst.categories.indexOf(categorie) > 0);
+  }
+});
+angular.module("edison").filter('pricify', function() {
+	return function(price) {
+		if (price > 800)
+			return 900;
+		return (price - (price % 100)) + 200;
+	}
+});
+function pad(number) {
+  return number < 10 ? '0' + number : number
+}
+angular.module("edison").filter('relativeDate', function() {
+
+  var minute = 60 * 1000;
+  var hour = 60 * minute;
+  var day = 24 * hour;
+  var week = 7 * day;
+  var month = 4 * week;
+  var year = 12 * month;
+
+  return function(date) {
+    var now = Date.now();
+    var date = new Date(date);
+    var today = (new Date()).setHours(0, 0, 0, 0);
+
+    var diff = now - date.getTime();
+    if (diff < minute)
+      return ("à l'instant");
+    if (diff < hour)
+      return Math.round(diff / minute) + ' minutes';
+    if (diff < day) {
+      if (date > today) {
+        return 'Auj. ' + pad(date.getHours()) + "H" + pad(date.getMinutes());
+      } else {
+        return 'Hier ' + pad(date.getHours()) + "H" + pad(date.getMinutes());
+      }
+    }
+    if (diff < week)
+      return Math.round(diff / day) + ' jours';
+    if (diff < month)
+      return Math.round(diff / week) + ' semaines'
+    if (diff < year)
+      return Math.round(diff / week) + ' ans'
+  }
+});
+
+function getValue(path, origin) {
+  if (origin === void 0 || origin === null) origin = self ? self : this;
+  if (typeof path !== 'string') path = '' + path;
+  var c = '',
+    pc, i = 0,
+    n = path.length,
+    name = '';
+  if (n)
+    while (i <= n)((c = path[i++]) == '.' || c == '[' || c == ']' || c == void 0) ? (name ? (origin = origin[name], name = '') : (pc == '.' || pc == '[' || pc == ']' && c == ']' ? i = n + 2 : void 0), pc = c) : name += c;
+  if (i == n + 2) throw "Invalid path: " + path;
+  return origin;
+}
+
+function cleanString(str) {
+  str = str.toString().toLowerCase();
+  str = str.replace(/[éèeê]/g, "e");
+  str = str.replace(/[àâ]/g, "a");
+  return str;
+}
+
+angular.module("edison").filter('tableFilter', function() {
+  return function(data, fltr, c) {
+    console.time("lol");
+    var rtn = [];
+    for (x in fltr) {
+    	fltr[x] = cleanString(fltr[x]);
+    }
+
+    for (k in data) {
+      if (data[k].id) {
+        var psh = true;
+        for (x in fltr) {
+          var str = getValue(x, data[k]);
+          if (str && cleanString(str).indexOf(fltr[x]) < 0) {
+            psh = false;
+            break;
+          }
+        }
+        if (psh)
+          rtn.push(data[k]);
+      }
+    }
+    console.timeEnd("lol")
+    return rtn;
+  }
+});
+
+angular.module('edison').directive('capitalize', function() {
+    return {
+        require: 'ngModel',
+        link: function(scope, element, attrs, modelCtrl) {
+            modelCtrl.$parsers.push(function(input) {
+                return input ? input.toUpperCase() : "";
+            });
+            element.css("text-transform","uppercase");
+        }
+    };
+})
+
+
+angular.module('edison').directive('ngEnter', function () {
+    return function (scope, element, attrs) {
+        element.bind("keydown keypress", function (event) {
+            if(event.which === 13) {
+                scope.$apply(function (){
+                    scope.$eval(attrs.ngEnter);
+                });
+
+                event.preventDefault();
+            }
+        });
+    };
+});
+/*angular.module('edison').directive('materialSelect', function() {
+  return {
+    restrict: 'E',
+    replace: true,
+    template: '<div class="select-style text-field">' +
+      '<select ng-model>' +
+      '<option disabled>{{defaultName}}</option>' +
+      '</select>' +
+      '</div>'
+  }
+});
+*/
+angular.module('edison').directive('sglclick', ['$parse', function($parse) {
+    return {
+        restrict: 'A',
+        link: function(scope, element, attr) {
+          var fn = $parse(attr['sglclick']);
+          var delay = 300, clicks = 0, timer = null;
+          element.on('click', function (event) {
+            clicks++;  //count clicks
+            if(clicks === 1) {
+              timer = setTimeout(function() {
+                scope.$apply(function () {
+                    fn(scope, { $event: event });
+                }); 
+                clicks = 0;             //after action performed, reset counter
+              }, delay);
+              } else {
+                clearTimeout(timer);    //prevent single-click action
+                clicks = 0;             //after action performed, reset counter
+              }
+          });
+        }
+    };
+}])
+angular.module('edison').controller('DashboardController', function(tabContainer, $location, $scope, $rootScope, interventions, artisans){
+
+	$scope.tab = tabContainer.getCurrentTab();
+	$scope.tab.setTitle('dashBoard')
+});
 angular.module('edison').controller('InterventionController', function(tabContainer, $location, $mdSidenav, $interval, ngDialog, LxNotificationService, edisonAPI, config, $routeParams, $scope, windowDimensions, interventions, artisans) {
   $scope.windowDimensions = windowDimensions;
   $scope.config = config;
@@ -1327,11 +1332,6 @@ angular.module('edison').controller('InterventionMapController', function($scope
       q += ("&destination=" + $scope.tab.data.info.artisan.add.lt + "," + $scope.tab.data.info.artisan.add.lg);
     return "/api/map/staticDirections" + q;
   }
-  $scope.staticMapUrl = $scope.getStaticMap();
-
-
-
-
 });
 
 angular.module('edison').controller('InterventionsController', function(tabContainer, $window, edisonAPI, $location, $scope, $filter, config, ngTableParams, interventions) {
@@ -1391,10 +1391,4 @@ angular.module('edison').controller('InterventionsController', function(tabConta
     }
   }
 
-});
-
-angular.module('edison').controller('DashboardController', function(tabContainer, $location, $scope, $rootScope, interventions, artisans){
-
-	$scope.tab = tabContainer.getCurrentTab();
-	$scope.tab.setTitle('dashBoard')
 });

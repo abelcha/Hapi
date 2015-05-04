@@ -186,9 +186,4 @@ angular.module('edison').controller('InterventionMapController', function($scope
       q += ("&destination=" + $scope.tab.data.info.artisan.add.lt + "," + $scope.tab.data.info.artisan.add.lg);
     return "/api/map/staticDirections" + q;
   }
-  $scope.staticMapUrl = $scope.getStaticMap();
-
-
-
-
 });

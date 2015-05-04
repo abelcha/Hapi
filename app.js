@@ -61,7 +61,7 @@ app.post('/login', function(req, res) {
 });
 
 app.use(function(req, res, next) {
-  if (!req.session || req.session.id == void(0)) {
+  if (!req.session || req.session.id == void(0) && 0) {
     return res.sendFile(__dirname + '/views/login.html');
   } else {
     next();

@@ -10,9 +10,9 @@ var schema = new npm.mongoose.Schema({
   date: {
     ajout: Date,
     intervention: Date,
-    Confirmation: Date,
-    PaiementCli: Date,
-    PaiementSST: Date,
+    confirmation: Date,
+    paiementCLI: Date,
+    paiementSST: Date,
   },
   client: { //
     civilite: {
@@ -195,10 +195,8 @@ var translateModel = function(d) {
 var addInDB = function(data, i, cb) {
   if (i >= data.length - 1)
     return cb(null)
-  if (i % 100 === 0)
-    console.log(((i / data.length) * 100).toFixed(2), '%')
   var inter = new model(translateModel(data[i]));
-  console.log(inter.id, inter.info.description);
+  console.log(((i / data.length) * 100).toFixed(2) +'%', inter.id);
   inter.save(function(err) {
     if (err) {
       return cb({

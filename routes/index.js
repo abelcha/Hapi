@@ -28,7 +28,6 @@ module.exports = function() {
   app.all('/api/:model/:method', function(req, res) {
     var model = edison.db.model[req.params.model];
     var method = req.params.method;
-
     if (!model) {
       return res.status(400).send("Unknown model");
     }
