@@ -24,8 +24,8 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvid
     request: function(options) {
       return $http({
         method: options.method || 'GET',
-        url:'/api/' + options.fn,
-        params:options.data
+        url: '/api/' + options.fn,
+        params: options.data
       });
     },
     saveIntervention: function(data) {
@@ -40,18 +40,32 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvid
         method: 'GET',
         url: "/api/artisan/rank",
         params:  {
-          categorie:categorie,
+          categorie: categorie,
           lat: address.lt,
           lng: address.lg,
-          limit:20,
-          maxDistance:150
+          limit: 50,
+          maxDistance: 50
         }
       });
     },
     getArtisanStats: function(id_sst) {
-      return {
-       IntersNbr:42
-      }
+      return $http({
+        method: 'GET',
+        url: "/api/artisan/stats",
+        params: {
+          id: id_sst
+        }
+      });
+    },
+    absenceArtisan: function(id, date) {
+      return $http({
+        method: 'GET',
+        url: '/api/artisan/absence',
+        params: {
+          id: id,
+          date: date
+        }
+      })
     }
   }
 }]);

@@ -35,22 +35,22 @@ angular.module('edison').controller('InterventionsController', function(tabConta
 
 
   $scope.expendedRow = -1;
-  $scope.rowClick = function($event, info, doubleClick) {
+  $scope.rowClick = function($event, inter, doubleClick) {
     if (doubleClick) {
-      $location.url('/intervention/' + info.id)
+      $location.url('/intervention/' + inter.id)
 
     } else if ($event.metaKey || $event.ctrlKey) {
-      tabContainer.addTab('/intervention/' + info.id, {
-        title: ('#' + info.id),
+      tabContainer.addTab('/intervention/' + inter.id, {
+        title: ('#' + inter.id),
         setFocus: false,
         allowDuplicates: false
       });
     } else {
-      if ($scope.expendedRow === info.id) {
+      if ($scope.expendedRow === inter.id) {
         $scope.expendedRow = -1;
       } else {
 
-        $scope.expendedRow = info.id;
+        $scope.expendedRow = inter.id;
       }
     }
   }

@@ -1,6 +1,6 @@
-var _session = edison.session;
+
+
 var edisonAPI = edison.api;
-var Intervention = require("../models/intervention");
 
 module.exports = function() {
 
@@ -11,10 +11,6 @@ module.exports = function() {
     }
     edison.map[req.params.method](req.query, res)
   });
-
-  /*  app.all('/ping', function(req, res) {
-      res.send("ok");
-    })*/
 
   app.all('/api/:fn', function(req, res) {
     if (typeof edison.ajax[req.params.fn] === 'function') {

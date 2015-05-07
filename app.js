@@ -1,3 +1,5 @@
+'use strict'
+
 var express = require('express');
 global.app = express();
 var http = require('http').Server(app);
@@ -9,7 +11,6 @@ global.rootPath = process.cwd();
 global.npm = dep.loadJson("package.json");
 global.edison = dep.loadDir("edisonFramework");
 global.ed = global.edison;
-edison.extendProprieties();
 
 npm.mongoose.connect(process.env.MONGOLAB_URI || 'mongodb://localhost/EDISON');
 
@@ -33,7 +34,6 @@ app.use(express.static(path.join(__dirname, 'assets')));
 app.use(express.static(path.join(__dirname, 'angular')));
 app.set('view engine', 'ejs'); // set up ejs for templating
 app.use(npm.cookieParser()); // read cookies (needed for auth)
-app.use(npm.cors());
 app.use(npm.bodyParser.json());
 app.use(npm.bodyParser.urlencoded({
   extended: true
@@ -42,8 +42,10 @@ app.use(npm.compression());
 app.use(npm.connectRedisSessions({
   client: edison.redisCli,
   app: "edison",
-  ttl:edison.config.ttl,
-  cookie: { maxAge: edison.config.ttl * 1000 }
+  ttl: edison.config.ttl,
+  cookie: {
+    maxAge: edison.config.ttl * 1000
+  }
 }))
 
 
@@ -61,8 +63,12 @@ app.post('/login', function(req, res) {
 });
 
 app.use(function(req, res, next) {
-  if (!req.session || req.session.id == void(0) && 0) {
-    return res.sendFile(__dirname + '/views/login.html');
+  if (req.session.id == void(0)) {
+    if (req.url.indexOf('/api/') === 0) {
+      return res.sendStatus(401);
+    } else {
+      return res.sendFile(__dirname + '/views/login.html');
+    }
   } else {
     next();
   }

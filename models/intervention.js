@@ -1,6 +1,6 @@
 var schema = new npm.mongoose.Schema({
-  id: Number,
-  status: String,
+  id:  {type:Number, index:true},
+  status:  {type:String, index:true},
   telepro: String,
   comments: [
     /*
@@ -24,7 +24,7 @@ var schema = new npm.mongoose.Schema({
       type: String,
       required: true
     },
-    email:String,
+    email: String,
     telephone: {
       /*
       t1: String,
@@ -32,10 +32,22 @@ var schema = new npm.mongoose.Schema({
       */
     },
     address: {
-      n: {type:String, required:true},
-      r: {type:String, required:true},
-      v: {type:String, required:true},
-      cp: {type:String, required:true},
+      n: {
+        type: String,
+        required: true
+      },
+      r: {
+        type: String,
+        required: true
+      },
+      v: {
+        type: String,
+        required: true
+      },
+      cp: {
+        type: String,
+        required: true
+      },
       lt: String,
       lg: String,
     },
@@ -55,24 +67,31 @@ var schema = new npm.mongoose.Schema({
         },
     */
   },
-  info: {
-    categorie: {type:String, required:true},
-    artisan: {
-      id: Number,
-      nomSociete: String
-    },
-    description: {type:String, required:true},
-    remarque: String,
-    produits: [],
-    modeReglement: {type:String, required:true},
-    prixAnnonce: {
-      type: Number,
-      set: toCurrency
-    },
-    prixFinal: Number,
-    reglementSurPlace: Boolean,
-    aDemarcher: Boolean
-  }
+  categorie: {
+    type: String,
+    required: true
+  },
+  artisan: {
+    id: Number,
+    nomSociete: String
+  },
+  description: {
+    type: String,
+    required: true
+  },
+  remarque: String,
+  produits: [],
+  modeReglement: {
+    type: String,
+    required: true
+  },
+  prixAnnonce: {
+    type: Number,
+    set: toCurrency
+  },
+  prixFinal: Number,
+  reglementSurPlace: Boolean,
+  aDemarcher: Boolean
 });
 
 function toCurrency(nbr) {
@@ -134,26 +153,10 @@ var translateModel = function(d) {
   addProp(client.telephone, d.tel1, 'tel1');
   addProp(client.telephone, d.tel2, 'tel2');
 
-  /* INFO */
-  var info = {};
-  info.categorie = d.categorie;
-  info.description = d.description || "PAS DE DESCRIPTION";
-  info.remarque = d.remarque || "PAS DE REMARQUES";
-  if (d.nom_societe) {
-    info.artisan = {
-      id: d.id_sst_selectionne,
-      nomSociete: d.nom_societe
-    }
-  }
-
-  info.modeReglement = d.mode_reglement;
-  info.prixAnnonce = d.prix_ht_annonce;
-  info.prixFinal = d.prix_ht_final;
 
 
 
-  /* FACTURE */
-  info.reglementSurPlace = !d.fact;
+
 
   /* COMMENTS */
   var comments = [];
@@ -170,9 +173,29 @@ var translateModel = function(d) {
     comments: comments,
     status: d.etat_intervention,
     date: date,
-    info: info,
     client: client
   }
+
+    /* FACTURE */
+  rtn.reglementSurPlace = !d.fact;
+
+  /* INFO */
+  rtn.categorie = d.categorie;
+  rtn.description = d.description || "PAS DE DESCRIPTION";
+  rtn.remarque = d.remarque || "PAS DE REMARQUES";
+  if (d.nom_societe) {
+    console.log(d.nom_societe)
+    rtn.artisan = {
+      id: d.id_sst_selectionne,
+      nomSociete: d.nom_societe
+    }
+  }
+
+  rtn.modeReglement = d.mode_reglement;
+  rtn.prixAnnonce = d.prix_ht_annonce;
+  rtn.prixFinal = d.prix_ht_final;
+
+
   if (d.fact === true) {
     rtn.facture = {
       type: d.type_facture,
@@ -196,7 +219,7 @@ var addInDB = function(data, i, cb) {
   if (i >= data.length - 1)
     return cb(null)
   var inter = new model(translateModel(data[i]));
-  console.log(((i / data.length) * 100).toFixed(2) +'%', inter.id);
+  console.log(((i / data.length) * 100).toFixed(2) + '%', inter.id);
   inter.save(function(err) {
     if (err) {
       return cb({
@@ -276,14 +299,14 @@ model.schema.path('client.civilite').validate(function(value) {
 
 
 /* CARTE BANCAIRE | CHEQUE | CASH */
-model.schema.path('info.modeReglement').validate(function(value) {
+model.schema.path('modeReglement').validate(function(value) {
   return /CB|CH|CA/i.test(value);
 }, 'Mode de reglement inconnu.');
 
 
 
 /*CARRELAGE|MENUISERIE|MACONNERIE|PEINTURE|PLOMBERIE|SERRURERIE|CLIMATISATION|CHAUFFAGE|VITRERIE|ELECTRICITE */
-model.schema.path('info.categorie').validate(function(value) {
+model.schema.path('categorie').validate(function(value) {
   return /CR|MN|MC|PT|PL|SR|CL|CH|VT|EL/i.test(value);
 }, 'Categorie inconnue.');
 

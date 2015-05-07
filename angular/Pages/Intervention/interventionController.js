@@ -13,9 +13,7 @@ angular.module('edison').controller('InterventionController', function(tabContai
       $scope.tab.setTitle('#' + moment().format("HH:mm").toString());
       $scope.tab.setData({
         client: {},
-        info: {
-          reglementSurPlace: true
-        },
+        reglementSurPlace: true,
         date: {
           ajout: Date.now(),
           intervention: Date.now()
@@ -32,9 +30,9 @@ angular.module('edison').controller('InterventionController', function(tabContai
         $scope.tabs.remove($scope.tab);
         return 0;
       }
-      inter.sst = inter.info.artisan ? inter.info.artisan.id : 0;
+      inter.sst = inter.artisan ? inter.artisan.id : 0;
       if (inter.sst > 0) {
-        inter.info.artisan = artisans.data.find(function(e) {
+        inter.artisan = artisans.data.find(function(e) {
           return e.id === inter.sst;
         });
       }
@@ -43,9 +41,6 @@ angular.module('edison').controller('InterventionController', function(tabContai
   }
   $scope.showMap = false;
 
-  $scope.test = function() {
-    console.log("we did ")
-  }
   $scope.saveInter = function(send, cancel) {
     edisonAPI.saveIntervention({
       send: send,
@@ -60,19 +55,18 @@ angular.module('edison').controller('InterventionController', function(tabContai
     });
   }
 
-  $scope.clickOnArtisanMarker = function(event, sst_id) {
-    console.log("swag");
-    $scope.tab.data.sst = sst_id;
+  $scope.clickOnArtisanMarker = function(event, sst) {
+    $scope.tab.data.sst = sst.id;
   }
 
   $scope.searchArtisans = function() {
-    edisonAPI.getNearestArtisans($scope.tab.data.client.address, $scope.tab.data.info.categorie)
+    edisonAPI.getNearestArtisans($scope.tab.data.client.address, $scope.tab.data.categorie)
       .success(function(result) {
         $scope.nearestArtisans = result;
       });
   }
-
-  $scope.searchArtisans();
+  if ($scope.tab.data.artisan)
+    $scope.searchArtisans();
 
 });
 
@@ -88,9 +82,9 @@ angular.module('edison').controller('InterventionMapController', function($scope
     });
     $scope.zoom = 6;
   } else {
-    if ($scope.tab.data.info.artisan) {
+    if ($scope.tab.data.artisan) {
       $scope.zoom = 12;
-      $scope.tab.data.info.artisan.add = Address($scope.tab.data.info.artisan.add, true);
+      $scope.tab.data.artisan.add = Address($scope.tab.data.artisan.add, true);
     }
     if ($scope.tab.data.client.address) {
       $scope.tab.data.client.address = Address($scope.tab.data.client.address, true); //true -> copyContructor
@@ -122,14 +116,20 @@ angular.module('edison').controller('InterventionMapController', function($scope
   }
 
   $scope.$watch('tab.data.sst', function(id_sst) {
-    $scope.tab.data.info.artisan = $scope.artisans.find(function(e) {
+    $scope.tab.data.artisan = $scope.artisans.find(function(e) {
       return e.id === id_sst;
     });
+    console.log(id_sst)
+    if (id_sst && id_sst !== 0) {
+      edisonAPI.getArtisanStats(id_sst).success(function(stats) {
+        $scope.tab.data.artisan.stats = stats
+      })
+    }
   })
 
   function DialogController($scope, $mdDialog) {
-    $scope.indispoTime = 'TODAY';
-    $scope.indispo = [{
+    $scope.absenceTime = 'TODAY';
+    $scope.absence = [{
       title: 'Toute la journée',
       value: 'TODAY'
     }, {
@@ -144,9 +144,6 @@ angular.module('edison').controller('InterventionMapController', function($scope
     }, {
       title: '4 Heure',
       value: '4H'
-    }, {
-      title: "Jusqu'à nouvel ordre",
-      value: 'ALL'
     }]
     $scope.hide = function() {
       $mdDialog.hide();
@@ -155,6 +152,7 @@ angular.module('edison').controller('InterventionMapController', function($scope
       $mdDialog.cancel();
     };
     $scope.answer = function(answer) {
+     
       $mdDialog.hide(answer);
     };
   };
@@ -166,9 +164,7 @@ angular.module('edison').controller('InterventionMapController', function($scope
         targetEvent: ev,
       })
       .then(function(time) {
-        if (time) {
-          console.log("==> ", time);
-        }
+         edisonAPI.absenceArtisan($scope.tab.data.artisan.id, time);
       });
   };
 
@@ -182,8 +178,8 @@ angular.module('edison').controller('InterventionMapController', function($scope
     var q = "?width=" + $window.outerWidth * 0.8;
     if ($scope.tab.data.client && $scope.tab.data.client.address && $scope.tab.data.client.address.latLng)
       q += ("&origin=" + $scope.tab.data.client.address.latLng);
-    if ($scope.tab.data.info.artisan)
-      q += ("&destination=" + $scope.tab.data.info.artisan.add.lt + "," + $scope.tab.data.info.artisan.add.lg);
+    if ($scope.tab.data.artisan)
+      q += ("&destination=" + $scope.tab.data.artisan.add.lt + "," + $scope.tab.data.artisan.add.lg);
     return "/api/map/staticDirections" + q;
   }
 });

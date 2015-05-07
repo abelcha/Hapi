@@ -7,7 +7,7 @@ module.exports = {
       .exec(callback);
   },
   getKey: function(modelName, options) {
-    return (modelName + '-' + options.bsonStringify());
+    return (modelName + '-' + JSON.stringify(options));
   },
   getMethod: function(options) {
     if (options.method) {
@@ -46,7 +46,7 @@ module.exports = {
           if (err)
             return reject(err);
           resolve(docs);
-          self.redisSet(key, docs.stringify());
+          self.redisSet(key, JSON.stringify(docs));
         });
       });
     });

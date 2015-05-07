@@ -1,14 +1,14 @@
 <div>
     <table style="background:white;" ng-table="tableParams" class="table table-bordered table-hover table-hover table-striped" id="table-list" show-filter="true">
         <tbody id="tbody-list">
-            <tr data-id="{{inter.id}}" ng-repeat-start="inter in $data " ng-click="rowClick($event, inter, false)" ng-dblclick="rowClick($event, inter, true)" ng-class="{warning : isInSelection(inter.id)}" ng-init='cat = config.categoriesKV[inter.info.categorie]; etat = config.status(inter)'>
+            <tr data-id="{{inter.id}}" ng-repeat-start="inter in $data " ng-click="rowClick($event, inter, false)" ng-dblclick="rowClick($event, inter, true)" ng-class="{warning : isInSelection(inter.id)}" ng-init='cat = config.categoriesKV[inter.categorie]; etat = config.status(inter)'>
                 <td data-title="'Os'" sortable="'id'" filter="{ 'id': 'text' }">
                     <strong>{{inter.id}}</strong>
                 </td>
                 <td data-title="'Télépro'" sortable="'telepro'" filter="{ 'telepro': 'text' }">
                     {{inter.telepro}}
                 </td>
-                <td data-title="'Cat.'" sortable="'info.categorie'" filter="{ 'info.categorie': 'text' }">
+                <td data-title="'Cat.'" sortable="'categorie'" filter="{ 'categorie': 'text' }">
                     <span style="width:80px" class="label {{cat.c}}">{{cat.n}}</span>
                 </td>
                 <td data-title="'Date Ajout'" sortable="'dateAjout'" filter="{ 'date.ajout': 'text' }">
@@ -24,16 +24,16 @@
                 <td data-title="'CP'" sortable="'client.address.cp'" filter="{ 'client.address.cp': 'text' }">
                     <strong> {{inter.client.address.cp}}</strong>
                 </td>
-                <td variable-length class="variable-length one-liner" data-title="'Artisan'" sortable="'info.artisan.nomSociete'" filter="{ 'info.artisan.nomSociete': 'text' }">
-                    <strong>{{inter.info.artisan.nomSociete || ""}}</strong>
+                <td variable-length class="variable-length one-liner" data-title="'Artisan'" sortable="'artisan.nomSociete'" filter="{ 'artisan.nomSociete': 'text' }">
+                    <strong>{{inter.artisan.nomSociete || ""}}</strong>
                 </td>
                 <td data-title="'Date Intervention'" sortable="'date.intervention'" filter="{ 'date.intervention': 'text' }">
                     <div ng-show="inter.date.intervention[0] != 1">
                         {{inter.date.intervention | date:"dd/MM/yy" || ""}} {{inter.date.intervention | date:"HH'h'mm" || ""}}
                     </div>
                 </td>
-                <td data-title="'Prix'" sortable="'info.prixAnnonce'" filter="{ 'info.prixAnnonce': 'text' }">
-                    {{(inter.info.prixAnnonce | number:2) || 0}} €
+                <td data-title="'Prix'" sortable="'prixAnnonce'" filter="{ 'prixAnnonce': 'text' }">
+                    {{(inter.prixAnnonce | number:2) || 0}} €
                 </td>
                 <td data-title="'Status'" sortable="'status'">
                     <span style="width:70px" class="label {{etat.intervention.c}}"> {{etat.intervention.n}}</span>
@@ -49,15 +49,15 @@
                             </p>
                             <p>{{inter.client.civilite}} {{inter.client.prenom}} {{inter.client.nom}}</p>
                             <p>{{inter.client.address.n}} {{inter.client.address.r}} {{inter.client.address.cp}}, {{inter.client.address.v}}</p>
-                            <p>{{inter.info.description}}</p>
-                            <p>{{inter.info.remarque}}</p>
-                            <p>{{inter.info.prixAnnonce}} € | {{inter.info.prixFinal || 0}} €</p>
+                            <p>{{inter.description}}</p>
+                            <p>{{inter.remarque}}</p>
+                            <p>{{inter.prixAnnonce}} € | {{inter.prixFinal || 0}} €</p>
                         </div>
                         <div class="col-sm-4">
                             <h4>Artisan</h4>
                             
                             <p>
-                             {{inter.info.artisan.nomSociete}}
+                             {{inter.artisan.nomSociete}}
                             </p>
                             <p>
                                 Ajouté il a 3 mois
