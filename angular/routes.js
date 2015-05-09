@@ -80,7 +80,7 @@ angular.module('edison').controller('MainController', function(tabContainer, $sc
 
 starterKit = {
   interventions: function(edisonAPI) {
-    return edisonAPI.getInterventions(true);
+    return edisonAPI.listInterventions(true);
   },
   artisans: function(edisonAPI) {
     return edisonAPI.getArtisans(true);
@@ -92,6 +92,11 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
   $routeProvider
     .when('/', {
       redirectTo: '/dashboard',
+      resolve: starterKit
+    })
+    .when('/artisan/:id', {
+      templateUrl: "Pages/Artisan/artisan.html",
+      controller: "ArtisanController",
       resolve: starterKit
     })
     .when('/interventions', {

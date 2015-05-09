@@ -1,11 +1,11 @@
 module.exports = function(schema) {
 
-  var getStats = function(id) {
+  schema.statics.stats = function(id, req, res) {
     return new Promise(function(resolve, reject) {
       console.time("ts")
       var sumCount = function(query) {
-        query['artisan.id'] = id;
-        var q = edison.db.model.intervention.aggregate([{
+        query['artisan.id'] = parseInt(id);
+        var q = npm.mongoose.model('intervention').aggregate([{
           $match: query
         }, {
           $group: {
@@ -50,7 +50,7 @@ module.exports = function(schema) {
           intervenu: sumCount({
             status: 'INT'
           }),
-          enc: sumCount({
+          enCours: sumCount({
             status: 'ENC'
           }),
           impayeUrgent: sumCount({
@@ -81,18 +81,17 @@ module.exports = function(schema) {
           })
         },
         function(err, results) {
-          //console.log(results)
-          resolve(results);
           if (err)
-            console.log(err);
+            return reject(err);
+          resolve(_.mapValues(results, function(e) {
+            return e.length ? e[0] : {
+              total: 0,
+              montant: 0
+            };
+          }));
           console.timeEnd("ts")
         });
 
     })
-  }
-
-
-  schema.statics.stats = function(req, res) {
-    return getStats(parseInt(req.query.id))
   };
 }

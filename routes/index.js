@@ -1,5 +1,3 @@
-
-
 var edisonAPI = edison.api;
 
 module.exports = function() {
@@ -21,25 +19,6 @@ module.exports = function() {
   })
 
 
-  app.all('/api/:model/:method', function(req, res) {
-    var model = edison.db.model[req.params.model];
-    var method = req.params.method;
-    if (!model) {
-      return res.status(400).send("Unknown model");
-    }
-    if (!model[method]) {
-      return res.status(400).send("Unknown method")
-    }
-    model[method](req, res).then(function(result, alreadyReply) {
-      if (!alreadyReply)
-        res.json(result);
-    }).catch(function(err) {
-      res.status(400).send(err);
-    })
-  });
-
-
-
   app.get('/api/search/:model/:options', function(req, res) {
     var t = Date.now()
     try {
@@ -59,23 +38,57 @@ module.exports = function() {
   })
 
 
-  app.get('/api/fetchArtisans', function(req, res) {
-    edison.dumpArtisan.dumpData(function(artisanList) {
-      edison.db.model.artisan.remove({}, function(err) {
-        edison.db.model.artisan.create(artisanList, function(err) {
-          res.json(artisanList)
-        });
-      });
-    });
+  app.all('/api/:model/:id/:method', function(req, res, next) {
+    var model = edison.db.model[req.params.model];
+    var method = req.params.method;
+
+    if (!model ||  typeof model[method] !== "function" || model[method].length !== 3) {
+      return next();
+    }
+    model[method](req.params.id, req, res).then(function(result, alreadyReply) {
+      if (!alreadyReply)
+        res.json(result);
+    }).catch(function(err) {
+      res.status(400).send(envProduction ? "Bad Request" : err);
+    })
   });
 
-  app.get('/api/clearCache', function(req, res) {
+  app.all('/api/:model/:method', function(req, res, next) {
+    var model = edison.db.model[req.params.model];
+    var method = req.params.method;
+    if (!model ||  typeof model[method] !== "function" || model[method].length !== 2) {
+      return next();
+    }
+    model[method](req, res).then(function(result, alreadyReply) {
+      if (!alreadyReply)
+        res.json(result);
+    }).catch(function(err) {
+      res.status(400).send(envProduction ? "Bad Request" : err);
+    })
+  });
 
-    edison.redisCli.del("Artisans");
-    edison.redisCli.del("Interventions");
-    res.json("OK");
+  app.all('/api/:model/:id', function(req, res, next) {
+
+    var model = edison.db.model[req.params.model];
+    if (!model)
+      return next();
+    id = parseInt(req.params.id);
+    if (isNaN(id))
+      return next();
+    model.findOne({
+      id: id
+    }).then(function(doc) {
+      res.json(doc);
+    }, function(err) {
+      res.status(400).send(envProduction ? "Bad Request" : err);
+    })
 
   });
+
+  app.all('/api/*', function(req, res) {
+    res.status(400).send(envProduction ? "Bad Request" : "Unhandled route error");
+  });
+
   app.all("*", function(req, res) {
     if (req.url.indexOf('.') >= 0)
       res.sendStatus(404);
@@ -83,7 +96,4 @@ module.exports = function() {
       res.sendFile(rootPath + "/views/index.html")
   });
 
-  app.all('/api/*', function(req, res) {
-    res.sendStatus(404);
-  });
 };

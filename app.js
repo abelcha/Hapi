@@ -11,6 +11,8 @@ global.rootPath = process.cwd();
 global.npm = dep.loadJson("package.json");
 global.edison = dep.loadDir("edisonFramework");
 global.ed = global.edison;
+global._ = require('lodash');
+global.envProduction = typeof process.env.REDISCLOUD_URL !== "undefined";
 
 npm.mongoose.connect(process.env.MONGOLAB_URI || 'mongodb://localhost/EDISON');
 
@@ -63,8 +65,8 @@ app.post('/login', function(req, res) {
 });
 
 app.use(function(req, res, next) {
-  if (req.session.id == void(0)) {
-    if (req.url.indexOf('/api/') === 0) {
+  if (req.session.id == void(0) && 42 == 0) {
+    if (req.url.indexOf('/api/') === 0) /*TEMPORARY*/ {
       return res.sendStatus(401);
     } else {
       return res.sendFile(__dirname + '/views/login.html');
@@ -82,8 +84,6 @@ app.use(function(req, res, next) {
   err.status = 404;
   next(err);
 });
-
-global.env_prod = process.env.NODE_ENV;
 
 
 //if (!env_prod) {

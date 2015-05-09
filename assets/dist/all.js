@@ -80,7 +80,7 @@ angular.module('edison').controller('MainController', function(tabContainer, $sc
 
 starterKit = {
   interventions: function(edisonAPI) {
-    return edisonAPI.getInterventions(true);
+    return edisonAPI.listInterventions(true);
   },
   artisans: function(edisonAPI) {
     return edisonAPI.getArtisans(true);
@@ -92,6 +92,11 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
   $routeProvider
     .when('/', {
       redirectTo: '/dashboard',
+      resolve: starterKit
+    })
+    .when('/artisan/:id', {
+      templateUrl: "Pages/Artisan/artisan.html",
+      controller: "ArtisanController",
       resolve: starterKit
     })
     .when('/interventions', {
@@ -415,6 +420,158 @@ angular.module('edison').directive('sglclick', ['$parse', function($parse) {
         }
     };
 }])
+angular.module("edison").filter('addressPrettify', function() {
+  return function(address) {
+    return (address.n + " " +
+      address.r + " " +
+      address.cp + ", " +
+      address.v + ", " +
+      "France")
+  };
+});
+
+angular.module("edison").filter('addressXY', function() {
+  return function(address) {
+    if (!address ||  !address.lt || !address.lg)
+      return ("0, 0");
+    return (address.lt + ", " + address.lg);
+  };
+});
+
+angular.module("edison").filter('placeToXY', function() {
+  return function(place) {
+    var location = place.geometry.location;
+    console.log(location)
+    return location.lat() + ', ' + location.lng();
+  }
+});
+
+
+angular.module("edison").filter('placeToAddress', function() {
+  return function(place) {
+    var address = function(place) {
+      if (place.address_components) {
+        var a = place.address_components;
+        this.n = a[0] && a[0].short_name;
+        this.r = a[1] && a[1].short_name;
+        this.cp = a[6] && a[6].short_name;
+        this.v = a[2] && a[2].short_name;
+      }
+      this.lt = place.geometry.location.lat();
+      this.lg = place.geometry.location.lng();
+    };
+    address.prototype.isStreetAddress = (this.n && this.r);
+    address.prototype.latLng = this.isStreetAddress ? (this.lt + ', ' + this.lg) : '0, 0'
+    
+    return new address(place);
+  }
+});
+
+
+angular.module("edison").filter('artisanPractice', function(){
+  console.log("swag");
+  return function(sst, categorie){
+    console.log("sst, categorie");
+    return (sst.categories.indexOf(categorie) > 0);
+  }
+});
+angular.module("edison").filter('categoryFilter', function(){
+  return function(sst, categorie){
+    return (sst.categories.indexOf(categorie) > 0);
+  }
+});
+angular.module("edison").filter('pricify', function() {
+	return function(price) {
+		if (price > 800)
+			return 900;
+		return (price - (price % 100)) + 200;
+	}
+});
+function pad(number) {
+  return number < 10 ? '0' + number : number
+}
+angular.module("edison").filter('relativeDate', function() {
+
+  var minute = 60 * 1000;
+  var hour = 60 * minute;
+  var day = 24 * hour;
+  var week = 7 * day;
+  var month = 4 * week;
+  var year = 12 * month;
+
+  return function(date) {
+    var now = Date.now();
+    var date = new Date(date);
+    var today = (new Date()).setHours(0, 0, 0, 0);
+
+    var diff = now - date.getTime();
+    if (diff < minute)
+      return ("à l'instant");
+    if (diff < hour)
+      return Math.round(diff / minute) + ' minutes';
+    if (diff < day) {
+      if (date > today) {
+        return 'Auj. ' + pad(date.getHours()) + "H" + pad(date.getMinutes());
+      } else {
+        return 'Hier ' + pad(date.getHours()) + "H" + pad(date.getMinutes());
+      }
+    }
+    if (diff < week)
+      return Math.round(diff / day) + ' jours';
+    if (diff < month)
+      return Math.round(diff / week) + ' semaines'
+    if (diff < year)
+      return Math.round(diff / week) + ' ans'
+  }
+});
+
+function getValue(path, origin) {
+  if (origin === void 0 || origin === null) origin = self ? self : this;
+  if (typeof path !== 'string') path = '' + path;
+  var c = '',
+    pc, i = 0,
+    n = path.length,
+    name = '';
+  if (n)
+    while (i <= n)((c = path[i++]) == '.' || c == '[' || c == ']' || c == void 0) ? (name ? (origin = origin[name], name = '') : (pc == '.' || pc == '[' || pc == ']' && c == ']' ? i = n + 2 : void 0), pc = c) : name += c;
+  if (i == n + 2) throw "Invalid path: " + path;
+  return origin;
+}
+
+function cleanString(str) {
+  str = str.toString().toLowerCase();
+  str = str.replace(/[éèeê]/g, "e");
+  str = str.replace(/[àâ]/g, "a");
+  return str;
+}
+
+angular.module("edison").filter('tableFilter', function() {
+  return function(data, fltr, c) {
+    console.time("lol");
+    var rtn = [];
+    for (x in fltr) {
+    	fltr[x] = cleanString(fltr[x]);
+    }
+
+    for (k in data) {
+      if (data[k].id) {
+        var psh = true;
+        for (x in fltr) {
+          var str = getValue(x, data[k]);
+          if (str && cleanString(str).indexOf(fltr[x]) < 0) {
+            psh = false;
+            break;
+          }
+        }
+        if (psh)
+          rtn.push(data[k]);
+      }
+    }
+    console.timeEnd("lol")
+    return rtn;
+  }
+});
+
 angular.module('edison').factory('Address', function() {
 
 
@@ -470,13 +627,21 @@ angular.module('edison').factory('Address', function() {
 angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvider', function($http, $location, dataProvider) {
 
   return {
+    listInterventions: function() {
+      return $http({
+        method: 'GET',
+        cache: true,
+        url: '/api/intervention/list'
+      }).success(function(result) {
+        return result;
+      })
+    },
     getArtisans: function(cache) {
       return $http({
         method: 'GET',
         cache: cache,
         url: "/api/search/artisan/{}"
       }).success(function(result) {
-        dataProvider('artisans', result);
         return result;
       });
     },
@@ -487,6 +652,15 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvid
         url: '/api/search/intervention/{"limit":1000, "sort":"-id"}'
       }).success(function(result) {
         dataProvider('interventions', result);
+        return result;
+      });
+    },
+    getIntervention: function(id) {
+      return $http({
+        method: 'GET',
+        cache: false,
+        url: '/api/intervention/' + id
+      }).success(function(result) {
         return result;
       });
     },
@@ -520,20 +694,14 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvid
     getArtisanStats: function(id_sst) {
       return $http({
         method: 'GET',
-        url: "/api/artisan/stats",
-        params: {
-          id: id_sst
-        }
+        url: "/api/artisan/" + id_sst + "/stats"
       });
     },
-    absenceArtisan: function(id, date) {
+    absenceArtisan: function(id, options) {
       return $http({
         method: 'GET',
-        url: '/api/artisan/absence',
-        params: {
-          id: id,
-          date: date
-        }
+        url: '/api/artisan/' + id + '/absence',
+        params: options
       })
     }
   }
@@ -1001,156 +1169,35 @@ angular.module('edison').directive('watchWindowResize', ['$window', '$timeout', 
   }
 ]);
 
-angular.module("edison").filter('addressPrettify', function() {
-  return function(address) {
-    return (address.n + " " +
-      address.r + " " +
-      address.cp + ", " +
-      address.v + ", " +
-      "France")
-  };
-});
+angular.module('edison').controller('ArtisanController', function(tabContainer, $location, $mdSidenav, $interval, ngDialog, LxNotificationService, edisonAPI, config, $routeParams, $scope, windowDimensions, interventions, artisans) {
+  $scope.tab = tabContainer.getCurrentTab();
+  var id = parseInt($routeParams.id);
+  if (!$scope.tab.data) {
+    if ($routeParams.id.length > 12) {
+      $scope.tab.isNew = true;
+      $scope.tab.setTitle('@' + moment().format("HH:mm").toString());
+      $scope.tab.setData({
+    	telephone: {},
+    	pourcentage:{},
+    	add:{},
+    	representant:{},
 
-angular.module("edison").filter('addressXY', function() {
-  return function(address) {
-    if (!address ||  !address.lt || !address.lg)
-      return ("0, 0");
-    return (address.lt + ", " + address.lg);
-  };
-});
-
-angular.module("edison").filter('placeToXY', function() {
-  return function(place) {
-    var location = place.geometry.location;
-    console.log(location)
-    return location.lat() + ', ' + location.lng();
-  }
-});
-
-
-angular.module("edison").filter('placeToAddress', function() {
-  return function(place) {
-    var address = function(place) {
-      if (place.address_components) {
-        var a = place.address_components;
-        this.n = a[0] && a[0].short_name;
-        this.r = a[1] && a[1].short_name;
-        this.cp = a[6] && a[6].short_name;
-        this.v = a[2] && a[2].short_name;
+      });
+    } else {
+      var sst = artisans.data.find(function(e) {
+        return e.id === id
+      });
+      $scope.tab.setTitle('@' + sst.nomSociete.substr(0, 10));
+      if (!sst) {
+        alert("Impossible de trouver les informations !");
+        $location.url("/dashboard");
+        $scope.tabs.remove($scope.tab);
+        return 0;
       }
-      this.lt = place.geometry.location.lat();
-      this.lg = place.geometry.location.lng();
-    };
-    address.prototype.isStreetAddress = (this.n && this.r);
-    address.prototype.latLng = this.isStreetAddress ? (this.lt + ', ' + this.lg) : '0, 0'
-    
-    return new address(place);
-  }
-});
-
-
-angular.module("edison").filter('artisanPractice', function(){
-  console.log("swag");
-  return function(sst, categorie){
-    console.log("sst, categorie");
-    return (sst.categories.indexOf(categorie) > 0);
-  }
-});
-angular.module("edison").filter('categoryFilter', function(){
-  return function(sst, categorie){
-    return (sst.categories.indexOf(categorie) > 0);
-  }
-});
-angular.module("edison").filter('pricify', function() {
-	return function(price) {
-		if (price > 800)
-			return 900;
-		return (price - (price % 100)) + 200;
-	}
-});
-function pad(number) {
-  return number < 10 ? '0' + number : number
-}
-angular.module("edison").filter('relativeDate', function() {
-
-  var minute = 60 * 1000;
-  var hour = 60 * minute;
-  var day = 24 * hour;
-  var week = 7 * day;
-  var month = 4 * week;
-  var year = 12 * month;
-
-  return function(date) {
-    var now = Date.now();
-    var date = new Date(date);
-    var today = (new Date()).setHours(0, 0, 0, 0);
-
-    var diff = now - date.getTime();
-    if (diff < minute)
-      return ("à l'instant");
-    if (diff < hour)
-      return Math.round(diff / minute) + ' minutes';
-    if (diff < day) {
-      if (date > today) {
-        return 'Auj. ' + pad(date.getHours()) + "H" + pad(date.getMinutes());
-      } else {
-        return 'Hier ' + pad(date.getHours()) + "H" + pad(date.getMinutes());
-      }
+      $scope.tab.setData(sst);
     }
-    if (diff < week)
-      return Math.round(diff / day) + ' jours';
-    if (diff < month)
-      return Math.round(diff / week) + ' semaines'
-    if (diff < year)
-      return Math.round(diff / week) + ' ans'
   }
-});
 
-function getValue(path, origin) {
-  if (origin === void 0 || origin === null) origin = self ? self : this;
-  if (typeof path !== 'string') path = '' + path;
-  var c = '',
-    pc, i = 0,
-    n = path.length,
-    name = '';
-  if (n)
-    while (i <= n)((c = path[i++]) == '.' || c == '[' || c == ']' || c == void 0) ? (name ? (origin = origin[name], name = '') : (pc == '.' || pc == '[' || pc == ']' && c == ']' ? i = n + 2 : void 0), pc = c) : name += c;
-  if (i == n + 2) throw "Invalid path: " + path;
-  return origin;
-}
-
-function cleanString(str) {
-  str = str.toString().toLowerCase();
-  str = str.replace(/[éèeê]/g, "e");
-  str = str.replace(/[àâ]/g, "a");
-  return str;
-}
-
-angular.module("edison").filter('tableFilter', function() {
-  return function(data, fltr, c) {
-    console.time("lol");
-    var rtn = [];
-    for (x in fltr) {
-    	fltr[x] = cleanString(fltr[x]);
-    }
-
-    for (k in data) {
-      if (data[k].id) {
-        var psh = true;
-        for (x in fltr) {
-          var str = getValue(x, data[k]);
-          if (str && cleanString(str).indexOf(fltr[x]) < 0) {
-            psh = false;
-            break;
-          }
-        }
-        if (psh)
-          rtn.push(data[k]);
-      }
-    }
-    console.timeEnd("lol")
-    return rtn;
-  }
 });
 
 angular.module('edison').controller('DashboardController', function(tabContainer, $location, $scope, $rootScope, interventions, artisans){
@@ -1294,16 +1341,16 @@ angular.module('edison').controller('InterventionMapController', function($scope
       value: 'TODAY'
     }, {
       title: '1 Heure',
-      value: '1H'
+      value: '1'
     }, {
       title: '2 Heure',
-      value: '2H'
+      value: '2'
     }, {
       title: '3 Heure',
-      value: '3H'
+      value: '3'
     }, {
       title: '4 Heure',
-      value: '4H'
+      value: '4'
     }]
     $scope.hide = function() {
       $mdDialog.hide();
@@ -1312,7 +1359,7 @@ angular.module('edison').controller('InterventionMapController', function($scope
       $mdDialog.cancel();
     };
     $scope.answer = function(answer) {
-     
+
       $mdDialog.hide(answer);
     };
   };
@@ -1324,7 +1371,19 @@ angular.module('edison').controller('InterventionMapController', function($scope
         targetEvent: ev,
       })
       .then(function(time) {
-         edisonAPI.absenceArtisan($scope.tab.data.artisan.id, time);
+        var hours = 0;
+        if (time === "TODAY") {
+          hours = 23 - (new Date).getHours() + 1;
+        } else {
+          hours = parseInt(time);
+        }
+        start = new Date;
+        end = new Date;
+        end.setHours(end.getHours() + hours)
+        edisonAPI.absenceArtisan($scope.tab.data.artisan.id, {
+          start: start,
+          end: end
+        });
       });
   };
 
@@ -1344,12 +1403,12 @@ angular.module('edison').controller('InterventionMapController', function($scope
   }
 });
 
-angular.module('edison').controller('InterventionsController', function(tabContainer, $window, edisonAPI, $location, $scope, $filter, config, ngTableParams, interventions) {
+angular.module('edison').controller('InterventionsController', function(tabContainer, $window, edisonAPI, $location, $scope, $q, $rootScope, $filter, config, ngTableParams, interventions) {
 
   $scope.api = edisonAPI;
-
   $scope.config = config;
-  if (!$scope.tableParams) {
+  if (!$rootScope.interTable) {
+    $rootScope.interTable = true;
     var tableParameters = {
       page: 1, // show first page
       total: interventions.data.length,
@@ -1361,9 +1420,9 @@ angular.module('edison').controller('InterventionsController', function(tabConta
       total: interventions.data,
       getData: function($defer, params) {
         var data = interventions.data;
-        data = $filter('tableFilter')(data, params.filter());
+        // data = $filter('tableFilter')(data, params.filter());
         params.total(data.length);
-        data = $filter('orderBy')(data, params.orderBy());
+        //data = $filter('orderBy')(data, params.orderBy());
         $defer.resolve(data.slice((params.page() - 1) * params.count(), params.page() * params.count()));
       },
       filterDelay: 150
@@ -1392,11 +1451,18 @@ angular.module('edison').controller('InterventionsController', function(tabConta
         allowDuplicates: false
       });
     } else {
-      if ($scope.expendedRow === inter.id) {
+      if ($scope.expendedRow === inter.i) {
         $scope.expendedRow = -1;
       } else {
+        $q.all([
+          edisonAPI.getIntervention(inter.i),
+          edisonAPI.getArtisanStats(inter.ai)
+        ]).then(function(result)  {
 
-        $scope.expendedRow = inter.id;
+          $scope.expendedRow = inter.i;
+          $scope.expendedRowData = result[0].data;
+          $scope.expendedRowData.artisanStats = result[1].data
+        })
       }
     }
   }

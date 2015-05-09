@@ -2,7 +2,6 @@ module.exports = function() {
 
   var path = "./models/artisan/";
   var schema = require('./schema');
-  require('./translator')(schema);
 
   var files = require('fs').readdirSync(__dirname + "/methods");
   for (var i in files) {

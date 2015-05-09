@@ -9,7 +9,7 @@ module.exports = {
     }
   },
   getSessionData: function(req, res) {
-    //return res.sendStatus(500);    
+    return res.sendStatus(500);    
     if (req.session.tabContainer && req.session.tabContainer.length > 2) {
       res.json(JSON.parse(req.session.tabContainer))
     } else {

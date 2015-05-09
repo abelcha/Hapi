@@ -134,16 +134,16 @@ angular.module('edison').controller('InterventionMapController', function($scope
       value: 'TODAY'
     }, {
       title: '1 Heure',
-      value: '1H'
+      value: '1'
     }, {
       title: '2 Heure',
-      value: '2H'
+      value: '2'
     }, {
       title: '3 Heure',
-      value: '3H'
+      value: '3'
     }, {
       title: '4 Heure',
-      value: '4H'
+      value: '4'
     }]
     $scope.hide = function() {
       $mdDialog.hide();
@@ -152,7 +152,7 @@ angular.module('edison').controller('InterventionMapController', function($scope
       $mdDialog.cancel();
     };
     $scope.answer = function(answer) {
-     
+
       $mdDialog.hide(answer);
     };
   };
@@ -164,7 +164,19 @@ angular.module('edison').controller('InterventionMapController', function($scope
         targetEvent: ev,
       })
       .then(function(time) {
-         edisonAPI.absenceArtisan($scope.tab.data.artisan.id, time);
+        var hours = 0;
+        if (time === "TODAY") {
+          hours = 23 - (new Date).getHours() + 1;
+        } else {
+          hours = parseInt(time);
+        }
+        start = new Date;
+        end = new Date;
+        end.setHours(end.getHours() + hours)
+        edisonAPI.absenceArtisan($scope.tab.data.artisan.id, {
+          start: start,
+          end: end
+        });
       });
   };
 

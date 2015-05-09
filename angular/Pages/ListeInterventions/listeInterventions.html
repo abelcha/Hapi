@@ -1,81 +1,71 @@
 <div>
     <table style="background:white;" ng-table="tableParams" class="table table-bordered table-hover table-hover table-striped" id="table-list" show-filter="true">
         <tbody id="tbody-list">
-            <tr data-id="{{inter.id}}" ng-repeat-start="inter in $data " ng-click="rowClick($event, inter, false)" ng-dblclick="rowClick($event, inter, true)" ng-class="{warning : isInSelection(inter.id)}" ng-init='cat = config.categoriesKV[inter.categorie]; etat = config.status(inter)'>
-                <td data-title="'Os'" sortable="'id'" filter="{ 'id': 'text' }">
-                    <strong>{{inter.id}}</strong>
+            <tr data-id="{{inter.i}}" ng-repeat-start="inter in $data " ng-click="rowClick($event, inter, false)" ng-dblclick="rowClick($event, inter, true)" ng-class="{warning : isInSelection(inter.i)}">
+                <td data-title="'Os'" sortable="'id'" filter="{ 'i': 'text' }">
+                    <strong>{{inter.i}}</strong>
                 </td>
-                <td data-title="'Télépro'" sortable="'telepro'" filter="{ 'telepro': 'text' }">
-                    {{inter.telepro}}
+                <td data-title="'Télépro'" sortable="'t'" filter="{ 't': 'text' }">
+                    {{inter.t}}
                 </td>
-                <td data-title="'Cat.'" sortable="'categorie'" filter="{ 'categorie': 'text' }">
-                    <span style="width:80px" class="label {{cat.c}}">{{cat.n}}</span>
+                <td data-title="'Cat.'" sortable="'c'" filter="{ 'c': 'text' }">
+                    <span style="width:80px" class="label {{c.c}}">{{c.n}}</span>
                 </td>
-                <td data-title="'Date Ajout'" sortable="'dateAjout'" filter="{ 'date.ajout': 'text' }">
-                    {{inter.date.ajout | date:"dd/MM/yy" || ""}} {{inter.date.ajout | date:"HH'h'mm" || ""}}
+                <td data-title="'Date Ajout'" sortable="'da'" filter="{ 'da': 'text' }">
+                    {{inter.da | date:"dd/MM/yy" || ""}} {{inter.da | date:"HH'h'mm" || ""}}
                 </td>
-                <td variable-length data-title="'Client'" sortable="'nom'" filter="{ 'client.nom': 'text' }">
-                    {{inter.client.civilite}}
-                    <strong>{{inter.client.nom}}</strong>
+                <td variable-length data-title="'Client'" sortable="'n'" filter="{ 'n': 'text' }">
+                    {{inter.n}}
                 </td>
-                <td variable-length data-title="'Ville'" sortable="'add.v'" filter="{ 'client.address.v': 'text' }">
-                    {{inter.client.address.v | uppercase}}
+                <td variable-length data-title="'Ville'" sortable="'ad'" filter="{ 'ad': 'text' }">
+                    {{inter.ad}}
                 </td>
-                <td data-title="'CP'" sortable="'client.address.cp'" filter="{ 'client.address.cp': 'text' }">
-                    <strong> {{inter.client.address.cp}}</strong>
-                </td>
-                <td variable-length class="variable-length one-liner" data-title="'Artisan'" sortable="'artisan.nomSociete'" filter="{ 'artisan.nomSociete': 'text' }">
-                    <strong>{{inter.artisan.nomSociete || ""}}</strong>
+                <td variable-length class="variable-length one-liner" data-title="'Artisan'" sortable="'a'" filter="{ 'a': 'text' }">
+                    <strong>{{inter.a}}</strong>
                 </td>
                 <td data-title="'Date Intervention'" sortable="'date.intervention'" filter="{ 'date.intervention': 'text' }">
                     <div ng-show="inter.date.intervention[0] != 1">
-                        {{inter.date.intervention | date:"dd/MM/yy" || ""}} {{inter.date.intervention | date:"HH'h'mm" || ""}}
+                        {{inter.di | date:"dd/MM/yy" || ""}} {{inter.di | date:"HH'h'mm" || ""}}
                     </div>
                 </td>
-                <td data-title="'Prix'" sortable="'prixAnnonce'" filter="{ 'prixAnnonce': 'text' }">
-                    {{(inter.prixAnnonce | number:2) || 0}} €
+                <td data-title="'Prix'" sortable="'pa'" filter="{ 'pa': 'text' }">
+                    {{(inter.pa | number:2) || 0}} €
                 </td>
-                <td data-title="'Status'" sortable="'status'">
-                    <span style="width:70px" class="label {{etat.intervention.c}}"> {{etat.intervention.n}}</span>
+                <td data-title="'Status'" sortable="'s'">
+                    <span style="width:70px" class="label {{s.c}}"> {{s.n}}</span>
                 </td>
             </tr>
-            <tr ng-if="expendedRow === inter.id" ng-repeat-end>
-                <td ng-show="expendedRow === inter.id" colspan="42">
+            <tr ng-if="expendedRow === inter.i" ng-repeat-end>
+                <td ng-show="expendedRowData.id === expendedRow" colspan="42">
                     <div class="row">
                         <div class="col-sm-4">
                             <h4>Client</h4>
-                            <p>
-                               <span style="width:70px" class="label {{etat.intervention.c}}"> {{etat.intervention.n}}</span>
-                            </p>
-                            <p>{{inter.client.civilite}} {{inter.client.prenom}} {{inter.client.nom}}</p>
-                            <p>{{inter.client.address.n}} {{inter.client.address.r}} {{inter.client.address.cp}}, {{inter.client.address.v}}</p>
-                            <p>{{inter.description}}</p>
-                            <p>{{inter.remarque}}</p>
-                            <p>{{inter.prixAnnonce}} € | {{inter.prixFinal || 0}} €</p>
+                            <p>{{expendedRowData.client.civilite}} {{expendedRowData.client.prenom}} {{expendedRowData.client.nom}}</p>
+                            <p>{{expendedRowData.client.address.n}} {{expendedRowData.client.address.r}} {{expendedRowData.client.address.cp}}, {{expendedRowData.client.address.v}}</p>
+                            <p>{{expendedRowData.description}}</p>
+                            <p>{{expendedRowData.remarque}}</p>
+                            <p>{{expendedRowData.prixAnnonce}} € | {{expendedRowData.prixFinal || 0}} €</p>
+                            <p><span style="width:100px" class="label grey darken-3"> Fiche</span></p>
                         </div>
                         <div class="col-sm-4">
                             <h4>Artisan</h4>
-                            
                             <p>
-                             {{inter.artisan.nomSociete}}
-                            </p>
-                            <p>
-                                Ajouté il a 3 mois
+                                {{expendedRowData.artisan.nomSociete}}
                             </p>
                             <p>
                                 Note: 7.6/10
                             </p>
                             <p>
-                                Interventions réalisés: 132
+                                Interventions réalisés: {{expendedRowData.artisanStats.total.total}}
                             </p>
                             <p>
                                 5 réglement en attentes (913€)
                             </p>
-                            <p> <span style="width:100px" class="label grey darken-3"> Fiche</span> 
-                            <span style="width:100px" class="label grey darken-3"> Interventions</span></p>
+                            <p> <span style="width:100px" class="label grey darken-3"> Fiche</span>
+                                <span style="width:100px" class="label grey darken-3"> Recap'</span></p>
                         </div>
                         <div class="col-sm-4">
-                            <img style="width=100%" ng-src="{{getStaticMap(inter)}}" class="img-thumbnail" />
+                            <img style="width=100%" ng-src="{{getStaticMap(expendedRowData)}}" class="img-thumbnail" />
                         </div>
                     </div>
                 </td>

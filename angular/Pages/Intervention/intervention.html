@@ -96,11 +96,11 @@
                                 <div class="p+">
                                     <span class="fs-subhead tc-black-2 display-block">{{inter.artisan.nomSociete}}</span>
                                     <div class="paragraph fs-body-1" style="height:90px">
-                                        <p ng-if="inter.artisan.stats.total[0]" >
-                                            Interventions: {{inter.artisan.stats.total[0].total || 0}} ({{inter.artisan.stats.total[0].montant || 0}}€) <br>
-                                            Annulés: {{inter.artisan.stats.annule[0].total || 0}} ({{inter.artisan.stats.annule[0].montant || 0}}€)<br>
-                                            En Cours: {{inter.artisan.stats.enCours[0].total || 0}} ({{inter.artisan.stats.enCours[0].montant || 0}}€)<br>
-                                            Réalisés: {{inter.artisan.stats.intervenu[0].total || 0}} ({{inter.artisan.stats.intervenu[0].montant || 0}}€)<br>
+                                        <p ng-if="inter.artisan.stats.total" >
+                                            Interventions: {{inter.artisan.stats.total.total}} ({{inter.artisan.stats.total.montant}}€) <br>
+                                            Annulés: {{inter.artisan.stats.annule.total}} ({{inter.artisan.stats.annule.montant}}€)<br>
+                                            En Cours: {{inter.artisan.stats.enCours.total}} ({{inter.artisan.stats.enCours.montant}}€)<br>
+                                            Réalisés: {{inter.artisan.stats.intervenu.total}} ({{inter.artisan.stats.intervenu[0].montant}}€)<br>
                                         </p>
                                     </div>
                                 </div>
