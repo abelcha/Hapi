@@ -91,9 +91,9 @@ module.exports = function(schema) {
           console.log('cache')
           return resolve(JSON.parse(reply));
         }
-        _this.model('intervention').find().limit(100000).sort('-id').select(s).then(function(docs) {
-          npm.async.map(docs, function(e, cb) {
-            cb(null, {
+        _this.model('intervention').find().sort('-id').select(s).then(function(doc) {
+          var rtn = (doc.map(function(e) {
+            return {
               t: e.telepro,
               i: e.id,
               ai: e.artisan.id,
@@ -105,14 +105,13 @@ module.exports = function(schema) {
               da: e.date.ajout,
               di: e.date.intervention,
               ad: e.client.address.cp + ', ' + e.client.address.v
-            });
-          }, function(err, result)  {
-            resolve(result);
-            console.timeEnd('interList')
-            console.log('nocache')
-            edison.redisCli.set("interventionList", JSON.stringify(result))
-            edison.redisCli.expire("interventionList", 6000)
-          });
+            }
+          }));
+          resolve(rtn);
+          console.timeEnd('interList')
+          console.log('nocache')
+          edison.redisCli.set("interventionList", JSON.stringify(rtn))
+          edison.redisCli.expire("interventionList", 6000)
         })
       });
     });

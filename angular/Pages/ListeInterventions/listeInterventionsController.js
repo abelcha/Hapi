@@ -1,30 +1,25 @@
 angular.module('edison').controller('InterventionsController', function(tabContainer, $window, edisonAPI, $location, $scope, $q, $rootScope, $filter, config, ngTableParams, interventions) {
-
   $scope.api = edisonAPI;
   $scope.config = config;
-  if (!$rootScope.interTable) {
-    $rootScope.interTable = true;
-    var tableParameters = {
-      page: 1, // show first page
-      total: interventions.data.length,
-      filter: {},
-      count: 100 // count per page
-    };
-    var tableSettings = {
-      //groupBy:$rootScope.config.selectedGrouping,
-      total: interventions.data,
-      getData: function($defer, params) {
-        var data = interventions.data;
-        // data = $filter('tableFilter')(data, params.filter());
-        params.total(data.length);
-        //data = $filter('orderBy')(data, params.orderBy());
-        $defer.resolve(data.slice((params.page() - 1) * params.count(), params.page() * params.count()));
-      },
-      filterDelay: 150
-    }
-    $scope.tableParams = new ngTableParams(tableParameters, tableSettings);
+  var tableParameters = {
+    page: 1, // show first page
+    total: interventions.data.length,
+    filter: {},
+    count: 100 // count per page
   };
-
+  var tableSettings = {
+    //groupBy:$rootScope.config.selectedGrouping,
+    total: interventions.data,
+    getData: function($defer, params) {
+      var data = interventions.data;
+      // data = $filter('tableFilter')(data, params.filter());
+      params.total(data.length);
+      //data = $filter('orderBy')(data, params.orderBy());
+      $defer.resolve(data.slice((params.page() - 1) * params.count(), params.page() * params.count()));
+    },
+    filterDelay: 150
+  }
+  $scope.tableParams = new ngTableParams(tableParameters, tableSettings);
   $scope.tab = tabContainer.getCurrentTab();
   $scope.tab.setTitle('Interventions');
 
