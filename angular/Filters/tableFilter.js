@@ -23,15 +23,15 @@ angular.module("edison").filter('tableFilter', function() {
     console.time("lol");
     var rtn = [];
     for (x in fltr) {
-    	fltr[x] = cleanString(fltr[x]);
+      fltr[x] = cleanString(fltr[x]);
     }
 
     for (k in data) {
       if (data[k].id) {
         var psh = true;
         for (x in fltr) {
-          var str = getValue(x, data[k]);
-          if (str && cleanString(str).indexOf(fltr[x]) < 0) {
+          var str = data[k][x];
+          if (str.length === 0 || cleanString(str).indexOf(fltr[x]) < 0) {
             psh = false;
             break;
           }

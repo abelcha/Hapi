@@ -23,7 +23,7 @@ module.exports = function(schema) {
         fourniture: d.pourcentage_fourniture
       },
       zoneChalandise: d.zone_chalandise.slice(0, -2),
-      add: {
+      address: {
         n: d.numero,
         r: d.adresse,
         v: d.ville,

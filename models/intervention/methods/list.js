@@ -1,38 +1,48 @@
 'use strict'
 
 module.exports = function(schema) {
-
-  var categoriesKV = [{
-    short_name: 'EL',
-    long_name: 'Electricité'
-  }, {
-    short_name: 'PL',
-    long_name: 'Plomberie'
-  }, {
-    short_name: 'CH',
-    long_name: 'Chauffage'
-  }, {
-    short_name: 'CL',
-    long_name: 'Climatisation'
-  }, {
-    short_name: 'SR',
-    long_name: 'Serrurerie'
-  }, {
-    short_name: 'VT',
-    long_name: 'Vitrerie'
-  }, {
-    short_name: 'CR',
-    long_name: 'Carrelage'
-  }, {
-    short_name: 'MN',
-    long_name: 'Menuiserie'
-  }, {
-    short_name: 'MC',
-    long_name: 'Maconnerie'
-  }, {
-    short_name: 'PT',
-    long_name: 'Peinture'
-  }];
+  var categoriesKV = {
+    EL: {
+      n: 'Electricité',
+      c: 'yellow  darken-2 black-text'
+    },
+    PL: {
+      n: 'Plomberie',
+      c: 'blue'
+    },
+    CH: {
+      n: 'Chauffage',
+      c: 'red'
+    },
+    CL: {
+      n: 'Climatisation',
+      c: ' teal darken-3'
+    },
+    SR: {
+      n: 'Serrurerie',
+      c: 'brown'
+    },
+    VT: {
+      n: 'Vitrerie',
+      c: ' green darken-3'
+    },
+    CR: {
+      n: 'Carrelage',
+      c: ''
+    },
+    MN: {
+      n: 'Menuiserie',
+      c: ''
+    },
+    MC: {
+      n: 'Maconnerie',
+      c: ''
+    },
+    PT: {
+      n: 'Peinture',
+      c: ''
+    }
+  }
 
   var compressDate = function(date) {
     return Math.round(new Date(date).getTime() / 1000);
@@ -81,21 +91,21 @@ module.exports = function(schema) {
   })
   schema.statics.list = function(req, res) {
     var _this = this;
-    console.time('interList')
+    // console.time('interList')
     return new Promise(function(resolve, reject) {
       edison.redisCli.get('interventionList', function(err, reply) {
         if (err)
           return reject(err);
         if (reply && !req.query.cache) {
-          console.timeEnd('interList')
-          console.log('cache')
+          //console.timeEnd('interList')
+          //console.log('cache')
           return resolve(JSON.parse(reply));
         }
-        _this.model('intervention').find().sort('-id').select(s).then(function(doc) {
-          var rtn = (doc.map(function(e) {
-            return {
+        _this.model('intervention').find().sort('-id').select(s).then(function(docs) {
+          npm.async.map(docs, function(e, cb) {
+            cb(null, {
               t: e.telepro,
-              i: e.id,
+              id: e.id,
               ai: e.artisan.id,
               s: etatsKV[e.status],
               c: categoriesKV[e.categorie],
@@ -105,13 +115,14 @@ module.exports = function(schema) {
               da: e.date.ajout,
               di: e.date.intervention,
               ad: e.client.address.cp + ', ' + e.client.address.v
-            }
-          }));
-          resolve(rtn);
-          console.timeEnd('interList')
-          console.log('nocache')
-          edison.redisCli.set("interventionList", JSON.stringify(rtn))
-          edison.redisCli.expire("interventionList", 6000)
+            });
+          }, function(err, result)  {
+            resolve(result);
+            //console.timeEnd('interList')
+            //console.log('nocache')
+            edison.redisCli.set("interventionList", JSON.stringify(result))
+            edison.redisCli.expire("interventionList", 6000)
+          });
         })
       });
     });

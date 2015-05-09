@@ -10,7 +10,7 @@ module.exports = new npm.mongoose.Schema({
     nom: String,
     prenom: String,
   },
-  add: {
+  address: {
     n: String,
     r: String,
     v: String,

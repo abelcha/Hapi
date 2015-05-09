@@ -1,79 +1,61 @@
-angular.module('edison').controller('InterventionController', function(tabContainer, $location, $mdSidenav, $interval, ngDialog, LxNotificationService, edisonAPI, config, $routeParams, $scope, windowDimensions, interventions, artisans) {
-  $scope.windowDimensions = windowDimensions;
-  $scope.config = config;
-  $scope.tab = tabContainer.getCurrentTab();
-  $scope.artisans = artisans.data.sort(function(a, b) {
-    return a.nomSociete > b.id;
-  });
-  var id = parseInt($routeParams.id);
+angular.module('edison').controller('InterventionController',
+  function($scope, $location, $routeParams, ngDialog, LxNotificationService, tabContainer, edisonAPI, config, intervention) {
 
-  if (!$scope.tab.data) {
-    if ($routeParams.id.length > 12) {
-      $scope.tab.isNew = true;
-      $scope.tab.setTitle('#' + moment().format("HH:mm").toString());
-      $scope.tab.setData({
-        client: {},
-        reglementSurPlace: true,
-        date: {
-          ajout: Date.now(),
-          intervention: Date.now()
+    $scope.config = config;
+    $scope.tab = tabContainer.getCurrentTab();
+    var id = parseInt($routeParams.id);
+
+    if (!$scope.tab.data) {
+      if ($routeParams.id.length > 12) {
+        $scope.tab.isNew = true;
+        $scope.tab.setTitle('#' + moment().format("HH:mm").toString());
+      } else {
+        $scope.tab.setTitle('#' + $routeParams.id);
+        if (!intervention) {
+          alert("Impossible de trouver les informations !");
+          $location.url("/dashboard");
+          $scope.tabs.remove($scope.tab);
+          return 0;
         }
-      });
-    } else {
-      $scope.tab.setTitle('#' + $routeParams.id);
-      var inter = interventions.data.find(function(e) {
-        return e.id === id
-      });
-      if (!inter) {
-        alert("Impossible de trouver les informations !");
-        $location.url("/dashboard");
-        $scope.tabs.remove($scope.tab);
-        return 0;
       }
-      inter.sst = inter.artisan ? inter.artisan.id : 0;
-      if (inter.sst > 0) {
-        inter.artisan = artisans.data.find(function(e) {
-          return e.id === inter.sst;
-        });
-      }
-      $scope.tab.setData(inter);
+      $scope.tab.setData(intervention.data);
+      $scope.tab.data.sst = intervention.data.artisan ? intervention.data.artisan.id : 0;
     }
-  }
-  $scope.showMap = false;
+    $scope.showMap = false;
 
-  $scope.saveInter = function(send, cancel) {
-    edisonAPI.saveIntervention({
-      send: send,
-      cancel: cancel,
-      data: $scope.tab.data
-    }).then(function(data) {
-      LxNotificationService.success("L'intervention " + data.data + " à été enregistré");
-      $location.url("/interventions");
-      $scope.tabs.remove($scope.tab);
-    }).catch(function(response) {
-      LxNotificationService.error(response.data);
-    });
-  }
-
-  $scope.clickOnArtisanMarker = function(event, sst) {
-    $scope.tab.data.sst = sst.id;
-  }
-
-  $scope.searchArtisans = function() {
-    edisonAPI.getNearestArtisans($scope.tab.data.client.address, $scope.tab.data.categorie)
-      .success(function(result) {
-        $scope.nearestArtisans = result;
+    $scope.saveInter = function(send, cancel) {
+      edisonAPI.saveIntervention({
+        send: send,
+        cancel: cancel,
+        data: $scope.tab.data
+      }).then(function(data) {
+        LxNotificationService.success("L'intervention " + data.data + " à été enregistré");
+        $location.url("/interventions");
+        $scope.tabs.remove($scope.tab);
+      }).catch(function(response) {
+        LxNotificationService.error(response.data);
       });
-  }
-  if ($scope.tab.data.artisan)
-    $scope.searchArtisans();
+    }
 
-});
+    $scope.clickOnArtisanMarker = function(event, sst) {
+      $scope.tab.data.sst = sst.id;
+    }
+
+    $scope.searchArtisans = function() {
+      edisonAPI.getNearestArtisans($scope.tab.data.client.address, $scope.tab.data.categorie)
+        .success(function(result) {
+          $scope.nearestArtisans = result;
+        });
+    }
+    if ($scope.tab.data.artisan)
+      $scope.searchArtisans();
+
+  });
 
 
 
 
-angular.module('edison').controller('InterventionMapController', function($scope, $window, $mdDialog, Address, mapAutocomplete, edisonAPI) {
+angular.module('edison').controller('InterventionMapController', function($scope, $q, $window, $mdDialog, Address, mapAutocomplete, edisonAPI) {
   $scope.autocomplete = mapAutocomplete;
   if (!$scope.tab.data.client.address) {
     $scope.mapCenter = Address({
@@ -84,7 +66,7 @@ angular.module('edison').controller('InterventionMapController', function($scope
   } else {
     if ($scope.tab.data.artisan) {
       $scope.zoom = 12;
-      $scope.tab.data.artisan.add = Address($scope.tab.data.artisan.add, true);
+      $scope.tab.data.artisan.address = Address($scope.tab.data.artisan.address, true);
     }
     if ($scope.tab.data.client.address) {
       $scope.tab.data.client.address = Address($scope.tab.data.client.address, true); //true -> copyContructor
@@ -116,15 +98,13 @@ angular.module('edison').controller('InterventionMapController', function($scope
   }
 
   $scope.$watch('tab.data.sst', function(id_sst) {
-    $scope.tab.data.artisan = $scope.artisans.find(function(e) {
-      return e.id === id_sst;
+    $q.all([
+      edisonAPI.getArtisan(id_sst, {cache:true}),
+      edisonAPI.getArtisanStats(id_sst, {cache:true})
+    ]).then(function(result)  {
+      $scope.tab.data.artisan = result[0].data;
+      $scope.tab.data.artisan.stats = result[1].data;
     });
-    console.log(id_sst)
-    if (id_sst && id_sst !== 0) {
-      edisonAPI.getArtisanStats(id_sst).success(function(stats) {
-        $scope.tab.data.artisan.stats = stats
-      })
-    }
   })
 
   function DialogController($scope, $mdDialog) {
@@ -191,7 +171,7 @@ angular.module('edison').controller('InterventionMapController', function($scope
     if ($scope.tab.data.client && $scope.tab.data.client.address && $scope.tab.data.client.address.latLng)
       q += ("&origin=" + $scope.tab.data.client.address.latLng);
     if ($scope.tab.data.artisan)
-      q += ("&destination=" + $scope.tab.data.artisan.add.lt + "," + $scope.tab.data.artisan.add.lg);
+      q += ("&destination=" + $scope.tab.data.artisan.address.lt + "," + $scope.tab.data.artisan.address.lg);
     return "/api/map/staticDirections" + q;
   }
 });

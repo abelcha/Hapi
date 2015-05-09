@@ -77,32 +77,47 @@ angular.module('edison').controller('MainController', function(tabContainer, $sc
   }
 });
 
+var getInterList = function(edisonAPI) {
+  return edisonAPI.listInterventions(true);
+}
 
-starterKit = {
-  interventions: function(edisonAPI) {
-    return edisonAPI.listInterventions(true);
-  },
-  artisans: function(edisonAPI) {
-    return edisonAPI.getArtisans(true);
+var getIntervention = function($route, $q, edisonAPI) {
+  var id = $route.current.params.id;
+
+  if (id.length > 10) {
+    return $q(function(resolve, reject) {
+      resolve({
+        client: {},
+        reglementSurPlace: true,
+        date: {
+          ajout: Date.now(),
+          intervention: Date.now()
+        }
+      })
+    });
+  } else {
+    return edisonAPI.getIntervention(id, {
+      cache: true,
+      extend: true
+    });
   }
-};
-
+}
 
 angular.module('edison').config(function($routeProvider, $locationProvider) {
   $routeProvider
     .when('/', {
       redirectTo: '/dashboard',
-      resolve: starterKit
     })
     .when('/artisan/:id', {
       templateUrl: "Pages/Artisan/artisan.html",
       controller: "ArtisanController",
-      resolve: starterKit
     })
     .when('/interventions', {
       templateUrl: "Pages/ListeInterventions/listeInterventions.html",
       controller: "InterventionsController",
-      resolve: starterKit
+      resolve: {
+        interventions: getInterList
+      }
     })
     .when('/intervention', {
       redirectTo: function() {
@@ -112,16 +127,16 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
     .when('/intervention/:id', {
       templateUrl: "Pages/Intervention/intervention.html",
       controller: "InterventionController",
-      resolve: starterKit
+      resolve: {
+        intervention: getIntervention
+      }
     })
     .when('/dashboard', {
       controller: 'DashboardController',
       templateUrl: "Pages/Dashboard/dashboard.html",
-      resolve: starterKit
     })
     .otherwise({
       templateUrl: 'templates/Error404.html',
-      resolve: starterKit
     });
   // use the HTML5 History API
   $locationProvider.html5Mode(true);

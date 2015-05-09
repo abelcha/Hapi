@@ -29,11 +29,23 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvid
         return result;
       });
     },
-    getIntervention: function(id) {
+    getArtisan: function(id, options) {
+      console.log(options && options.cache);
       return $http({
         method: 'GET',
-        cache: false,
-        url: '/api/intervention/' + id
+        cache: options && options.cache,
+        url: '/api/artisan/' + id,
+        params: options || {}
+      }).success(function(result) {
+        return result;
+      });
+    },
+    getIntervention: function(id, options) {
+      return $http({
+        method: 'GET',
+        cache: options && options.cache,
+        url: '/api/intervention/' + id,
+        params: options || {}
       }).success(function(result) {
         return result;
       });
@@ -56,6 +68,7 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvid
       return $http({
         method: 'GET',
         url: "/api/artisan/rank",
+        cache:true,
         params:  {
           categorie: categorie,
           lat: address.lt,

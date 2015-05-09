@@ -12,7 +12,7 @@ angular.module('edison').controller('InterventionsController', function(tabConta
     total: interventions.data,
     getData: function($defer, params) {
       var data = interventions.data;
-      // data = $filter('tableFilter')(data, params.filter());
+      data = $filter('tableFilter')(data, params.filter());
       params.total(data.length);
       //data = $filter('orderBy')(data, params.orderBy());
       $defer.resolve(data.slice((params.page() - 1) * params.count(), params.page() * params.count()));
@@ -41,15 +41,15 @@ angular.module('edison').controller('InterventionsController', function(tabConta
         allowDuplicates: false
       });
     } else {
-      if ($scope.expendedRow === inter.i) {
+      if ($scope.expendedRow === inter.id) {
         $scope.expendedRow = -1;
       } else {
         $q.all([
-          edisonAPI.getIntervention(inter.i),
+          edisonAPI.getIntervention(inter.id),
           edisonAPI.getArtisanStats(inter.ai)
         ]).then(function(result)  {
 
-          $scope.expendedRow = inter.i;
+          $scope.expendedRow = inter.id;
           $scope.expendedRowData = result[0].data;
           $scope.expendedRowData.artisanStats = result[1].data
         })

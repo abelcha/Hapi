@@ -77,32 +77,47 @@ angular.module('edison').controller('MainController', function(tabContainer, $sc
   }
 });
 
+var getInterList = function(edisonAPI) {
+  return edisonAPI.listInterventions(true);
+}
 
-starterKit = {
-  interventions: function(edisonAPI) {
-    return edisonAPI.listInterventions(true);
-  },
-  artisans: function(edisonAPI) {
-    return edisonAPI.getArtisans(true);
+var getIntervention = function($route, $q, edisonAPI) {
+  var id = $route.current.params.id;
+
+  if (id.length > 10) {
+    return $q(function(resolve, reject) {
+      resolve({
+        client: {},
+        reglementSurPlace: true,
+        date: {
+          ajout: Date.now(),
+          intervention: Date.now()
+        }
+      })
+    });
+  } else {
+    return edisonAPI.getIntervention(id, {
+      cache: true,
+      extend: true
+    });
   }
-};
-
+}
 
 angular.module('edison').config(function($routeProvider, $locationProvider) {
   $routeProvider
     .when('/', {
       redirectTo: '/dashboard',
-      resolve: starterKit
     })
     .when('/artisan/:id', {
       templateUrl: "Pages/Artisan/artisan.html",
       controller: "ArtisanController",
-      resolve: starterKit
     })
     .when('/interventions', {
       templateUrl: "Pages/ListeInterventions/listeInterventions.html",
       controller: "InterventionsController",
-      resolve: starterKit
+      resolve: {
+        interventions: getInterList
+      }
     })
     .when('/intervention', {
       redirectTo: function() {
@@ -112,20 +127,252 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
     .when('/intervention/:id', {
       templateUrl: "Pages/Intervention/intervention.html",
       controller: "InterventionController",
-      resolve: starterKit
+      resolve: {
+        intervention: getIntervention
+      }
     })
     .when('/dashboard', {
       controller: 'DashboardController',
       templateUrl: "Pages/Dashboard/dashboard.html",
-      resolve: starterKit
     })
     .otherwise({
       templateUrl: 'templates/Error404.html',
-      resolve: starterKit
     });
   // use the HTML5 History API
   $locationProvider.html5Mode(true);
 });
+
+if (!Array.prototype.findIndex) {
+  Array.prototype.findIndex = function(predicate) {
+    if (this == null) {
+      throw new TypeError('Array.prototype.findIndex appelé sur null ou undefined');
+    }
+    if (typeof predicate !== 'function') {
+      throw new TypeError('predicate doit être une fonction');
+    }
+    var list = Object(this);
+    var length = list.length >>> 0;
+    var thisArg = arguments[1];
+    var value;
+
+    for (var i = 0; i < length; i++) {
+      value = list[i];
+      if (predicate.call(thisArg, value, i, list)) {
+        return i;
+      }
+    }
+    return -1;
+  };
+}
+
+if (!Array.prototype.find) {
+  Array.prototype.find = function(predicate) {
+    if (this == null) {
+      throw new TypeError('Array.prototype.find a été appelé sur null ou undefined');
+    }
+    if (typeof predicate !== 'function') {
+      throw new TypeError('predicate doit être une fonction');
+    }
+    var list = Object(this);
+    var length = list.length >>> 0;
+    var thisArg = arguments[1];
+    var value;
+
+    for (var i = 0; i < length; i++) {
+      value = list[i];
+      if (predicate.call(thisArg, value, i, list)) {
+        return value;
+      }
+    }
+    return undefined;
+  };
+}
+function gMap(client) {
+
+  var self = this;
+
+  ZOOM_OVERVIEW = 6;
+  ZOOM_BASIC = 10;
+  ZOOM_MAX = 17;
+
+  ICON_GREY = "/img/map/grey.png";
+  ICON_RED = "/img/map/red.png";
+  ICON_BLUE = "/img/map/blue.png";
+  ICON_GREEN = "/img/map/green.png";
+
+  INFOWINDOW_PRELOADER = '<div id="InfoWindow"><img style="margin-left:23px;width:40px" src="/img/map/preloader.gif"></div>';
+
+  INPUT_CLIENT = document.getElementById('pac-input');
+  INPUT_FACTURATION = document.getElementById('facture_geocoder');
+
+  this.directionsDisplay = new google.maps.DirectionsRenderer();
+  this.directionsService = new google.maps.DirectionsService();
+  this.circles = [];
+
+
+  this.getMap = function() {
+    return (self.map);
+  }
+
+  this.createMarker = function(options, visibility) {
+    options.map = self.map;
+    options.anchorPoint = new google.maps.Point(0, -29);
+    var marker = new google.maps.Marker(options);
+    marker.setVisible(visibility);
+    if (options.onclick) {
+      google.maps.event.addListener(marker, 'click', options.onclick);
+    } 
+    return (marker)
+  }
+
+
+  this.showArtisanRoute = function(newArtisan, client) {
+    if (client.address) {
+      var request = {
+          origin: client.serializeAddress(newArtisan.add),
+          destination: client.serializeAddress(client.address),
+          travelMode: google.maps.TravelMode.DRIVING
+      };
+      self.directionsService.route(request, function(response, status) {
+      if (status == google.maps.DirectionsStatus.OK) {
+          self.directionsDisplay.setMap(self.getMap());
+          self.directionsDisplay.setOptions({ preserveViewport: true, suppressMarkers: true });
+          self.directionsDisplay.setDirections(response);
+      }
+      });
+    }
+  }
+
+
+  this.drawCircle = function(add, radius, id) {
+  
+    self.circles[id] = new google.maps.Circle({
+      center:new google.maps.LatLng(add.lt,add.lg),
+      radius:radius,
+      strokeColor:"#2680F3",
+      strokeOpacity:0.9,
+      strokeWeight:3,
+      fillColor:"#2680F3",
+      fillOpacity:0.01
+    });
+    self.circles[id].setMap(self.getMap());
+  }
+
+  this.setClientPlace = function(newPlace) {
+            
+        // If the place has a geometry, then present it on a map.
+
+/*--------------------------- Center Map -----------------------------*/   
+
+      if (newPlace.geometry.viewport) {
+        self.map.fitBounds(newPlace.geometry.viewport);
+      } else {
+        self.map.setCenter(newPlace.geometry.location);
+        self.map.setZoom(ZOOM_BASIC);
+      }
+
+/*----------------------------- Marker -----------------------------*/   
+
+      if (client.marker) {
+        client.marker.setMap(null);
+      }
+
+      client.marker = self.createMarker({
+        title: 'Client',
+        animation: google.maps.Animation.DROP,
+        position: newPlace.geometry.location,
+        icon: ICON_GREY,
+        onclick:function() {
+          self.map.setCenter(client.marker.position)
+          self.map.setZoom(self.map.getZoom() == ZOOM_MAX ? ZOOM_BASIC : ZOOM_MAX); 
+        }
+      }, false);
+
+
+/*--------------------------- InfoWindow ----------------------------*/        
+
+      client.infoWindow = new google.maps.InfoWindow({
+        content: INFOWINDOW_PRELOADER,
+        pixelOffset: new google.maps.Size(0, 25)
+      });
+
+      client.infoWindow.open(self.map, client.marker);
+        google.maps.event.addListener(client.infoWindow,'closeclick',function() {
+        client.marker.setVisible(true);
+      });
+/*      window.setTimeout(function() { 
+        client.infoWindow.close();
+        client.marker.setVisible(true);
+      }, 15000);*/
+
+/*-------------------------- Adress Input -----------------------------*/      
+    if (newPlace.address_components) {
+       client.setAddress(newPlace); 
+    } 
+      self.map.setZoom(ZOOM_BASIC);
+       
+  }
+
+
+
+/*-----------------------------------------------------------------------------*/
+/*-----------------------------------------------------------------------------*/
+/*------------------------------- CONSTRUCTOR  --------------------------------*/
+/*-----------------------------------------------------------------------------*/
+/*-----------------------------------------------------------------------------*/
+
+
+    // Create the map
+    self.map = new google.maps.Map(document.getElementById('map-canvas'), {
+      center: new google.maps.LatLng(46.52863469527167,2.43896484375),
+      zoom: ZOOM_OVERVIEW,
+
+    });
+
+
+    // Add input for adress autocomplete
+      
+    self.map.controls[google.maps.ControlPosition.TOP_LEFT].push(INPUT_CLIENT);
+    self.autocomplete = new google.maps.places.Autocomplete(INPUT_CLIENT);
+    self.autocomplete.setComponentRestrictions();
+    self.autocomplete.bindTo('bounds', self.map);
+      
+    //When user enters new address
+    self.placeChanged = function() {
+
+      place = self.autocomplete.getPlace();
+      //if the user hit enter without selecting proposition
+      if(typeof place.address_components == 'undefined') {
+        // find list of predictions
+          new google.maps.places.AutocompleteService().getPlacePredictions({
+            input: place.name,
+            offset: place.length
+          }, function(list, status) {
+              // geocode the first proposition    
+              new google.maps.Geocoder().geocode({
+                address: list[0].description
+              }, function(results, status) {
+                  // if everything is OK actualise client address
+                  if (status == google.maps.GeocoderStatus.OK)
+                     self.setClientPlace(results[0]);
+              });
+          });
+
+      } 
+      else {
+        // the user have selected a proposition
+        self.setClientPlace(place);
+        client.getInfoQuartier(place);
+      }
+    };
+
+  // si une autre personne regle la facture on autocomplete ses coordonnées
+  var payeurAutocomplete = new google.maps.places.Autocomplete((INPUT_FACTURATION), {types:['geocode']});
+  google.maps.event.addListener(payeurAutocomplete, 'place_changed', function() {
+      console.log("payer adress have changed");
+  });
+
+};
 
 angular.module('edison').directive('capitalize', function() {
     return {
@@ -318,15 +565,15 @@ angular.module("edison").filter('tableFilter', function() {
     console.time("lol");
     var rtn = [];
     for (x in fltr) {
-    	fltr[x] = cleanString(fltr[x]);
+      fltr[x] = cleanString(fltr[x]);
     }
 
     for (k in data) {
       if (data[k].id) {
         var psh = true;
         for (x in fltr) {
-          var str = getValue(x, data[k]);
-          if (str && cleanString(str).indexOf(fltr[x]) < 0) {
+          var str = data[k][x];
+          if (str.length === 0 || cleanString(str).indexOf(fltr[x]) < 0) {
             psh = false;
             break;
           }
@@ -423,11 +670,23 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvid
         return result;
       });
     },
-    getIntervention: function(id) {
+    getArtisan: function(id, options) {
+      console.log(options && options.cache);
       return $http({
         method: 'GET',
-        cache: false,
-        url: '/api/intervention/' + id
+        cache: options && options.cache,
+        url: '/api/artisan/' + id,
+        params: options || {}
+      }).success(function(result) {
+        return result;
+      });
+    },
+    getIntervention: function(id, options) {
+      return $http({
+        method: 'GET',
+        cache: options && options.cache,
+        url: '/api/intervention/' + id,
+        params: options || {}
       }).success(function(result) {
         return result;
       });
@@ -450,6 +709,7 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvid
       return $http({
         method: 'GET',
         url: "/api/artisan/rank",
+        cache:true,
         params:  {
           categorie: categorie,
           lat: address.lt,
@@ -937,238 +1197,6 @@ angular.module('edison').directive('watchWindowResize', ['$window', '$timeout', 
   }
 ]);
 
-if (!Array.prototype.findIndex) {
-  Array.prototype.findIndex = function(predicate) {
-    if (this == null) {
-      throw new TypeError('Array.prototype.findIndex appelé sur null ou undefined');
-    }
-    if (typeof predicate !== 'function') {
-      throw new TypeError('predicate doit être une fonction');
-    }
-    var list = Object(this);
-    var length = list.length >>> 0;
-    var thisArg = arguments[1];
-    var value;
-
-    for (var i = 0; i < length; i++) {
-      value = list[i];
-      if (predicate.call(thisArg, value, i, list)) {
-        return i;
-      }
-    }
-    return -1;
-  };
-}
-
-if (!Array.prototype.find) {
-  Array.prototype.find = function(predicate) {
-    if (this == null) {
-      throw new TypeError('Array.prototype.find a été appelé sur null ou undefined');
-    }
-    if (typeof predicate !== 'function') {
-      throw new TypeError('predicate doit être une fonction');
-    }
-    var list = Object(this);
-    var length = list.length >>> 0;
-    var thisArg = arguments[1];
-    var value;
-
-    for (var i = 0; i < length; i++) {
-      value = list[i];
-      if (predicate.call(thisArg, value, i, list)) {
-        return value;
-      }
-    }
-    return undefined;
-  };
-}
-function gMap(client) {
-
-  var self = this;
-
-  ZOOM_OVERVIEW = 6;
-  ZOOM_BASIC = 10;
-  ZOOM_MAX = 17;
-
-  ICON_GREY = "/img/map/grey.png";
-  ICON_RED = "/img/map/red.png";
-  ICON_BLUE = "/img/map/blue.png";
-  ICON_GREEN = "/img/map/green.png";
-
-  INFOWINDOW_PRELOADER = '<div id="InfoWindow"><img style="margin-left:23px;width:40px" src="/img/map/preloader.gif"></div>';
-
-  INPUT_CLIENT = document.getElementById('pac-input');
-  INPUT_FACTURATION = document.getElementById('facture_geocoder');
-
-  this.directionsDisplay = new google.maps.DirectionsRenderer();
-  this.directionsService = new google.maps.DirectionsService();
-  this.circles = [];
-
-
-  this.getMap = function() {
-    return (self.map);
-  }
-
-  this.createMarker = function(options, visibility) {
-    options.map = self.map;
-    options.anchorPoint = new google.maps.Point(0, -29);
-    var marker = new google.maps.Marker(options);
-    marker.setVisible(visibility);
-    if (options.onclick) {
-      google.maps.event.addListener(marker, 'click', options.onclick);
-    } 
-    return (marker)
-  }
-
-
-  this.showArtisanRoute = function(newArtisan, client) {
-    if (client.address) {
-      var request = {
-          origin: client.serializeAddress(newArtisan.add),
-          destination: client.serializeAddress(client.address),
-          travelMode: google.maps.TravelMode.DRIVING
-      };
-      self.directionsService.route(request, function(response, status) {
-      if (status == google.maps.DirectionsStatus.OK) {
-          self.directionsDisplay.setMap(self.getMap());
-          self.directionsDisplay.setOptions({ preserveViewport: true, suppressMarkers: true });
-          self.directionsDisplay.setDirections(response);
-      }
-      });
-    }
-  }
-
-
-  this.drawCircle = function(add, radius, id) {
-  
-    self.circles[id] = new google.maps.Circle({
-      center:new google.maps.LatLng(add.lt,add.lg),
-      radius:radius,
-      strokeColor:"#2680F3",
-      strokeOpacity:0.9,
-      strokeWeight:3,
-      fillColor:"#2680F3",
-      fillOpacity:0.01
-    });
-    self.circles[id].setMap(self.getMap());
-  }
-
-  this.setClientPlace = function(newPlace) {
-            
-        // If the place has a geometry, then present it on a map.
-
-/*--------------------------- Center Map -----------------------------*/   
-
-      if (newPlace.geometry.viewport) {
-        self.map.fitBounds(newPlace.geometry.viewport);
-      } else {
-        self.map.setCenter(newPlace.geometry.location);
-        self.map.setZoom(ZOOM_BASIC);
-      }
-
-/*----------------------------- Marker -----------------------------*/   
-
-      if (client.marker) {
-        client.marker.setMap(null);
-      }
-
-      client.marker = self.createMarker({
-        title: 'Client',
-        animation: google.maps.Animation.DROP,
-        position: newPlace.geometry.location,
-        icon: ICON_GREY,
-        onclick:function() {
-          self.map.setCenter(client.marker.position)
-          self.map.setZoom(self.map.getZoom() == ZOOM_MAX ? ZOOM_BASIC : ZOOM_MAX); 
-        }
-      }, false);
-
-
-/*--------------------------- InfoWindow ----------------------------*/        
-
-      client.infoWindow = new google.maps.InfoWindow({
-        content: INFOWINDOW_PRELOADER,
-        pixelOffset: new google.maps.Size(0, 25)
-      });
-
-      client.infoWindow.open(self.map, client.marker);
-        google.maps.event.addListener(client.infoWindow,'closeclick',function() {
-        client.marker.setVisible(true);
-      });
-/*      window.setTimeout(function() { 
-        client.infoWindow.close();
-        client.marker.setVisible(true);
-      }, 15000);*/
-
-/*-------------------------- Adress Input -----------------------------*/      
-    if (newPlace.address_components) {
-       client.setAddress(newPlace); 
-    } 
-      self.map.setZoom(ZOOM_BASIC);
-       
-  }
-
-
-
-/*-----------------------------------------------------------------------------*/
-/*-----------------------------------------------------------------------------*/
-/*------------------------------- CONSTRUCTOR  --------------------------------*/
-/*-----------------------------------------------------------------------------*/
-/*-----------------------------------------------------------------------------*/
-
-
-    // Create the map
-    self.map = new google.maps.Map(document.getElementById('map-canvas'), {
-      center: new google.maps.LatLng(46.52863469527167,2.43896484375),
-      zoom: ZOOM_OVERVIEW,
-
-    });
-
-
-    // Add input for adress autocomplete
-      
-    self.map.controls[google.maps.ControlPosition.TOP_LEFT].push(INPUT_CLIENT);
-    self.autocomplete = new google.maps.places.Autocomplete(INPUT_CLIENT);
-    self.autocomplete.setComponentRestrictions();
-    self.autocomplete.bindTo('bounds', self.map);
-      
-    //When user enters new address
-    self.placeChanged = function() {
-
-      place = self.autocomplete.getPlace();
-      //if the user hit enter without selecting proposition
-      if(typeof place.address_components == 'undefined') {
-        // find list of predictions
-          new google.maps.places.AutocompleteService().getPlacePredictions({
-            input: place.name,
-            offset: place.length
-          }, function(list, status) {
-              // geocode the first proposition    
-              new google.maps.Geocoder().geocode({
-                address: list[0].description
-              }, function(results, status) {
-                  // if everything is OK actualise client address
-                  if (status == google.maps.GeocoderStatus.OK)
-                     self.setClientPlace(results[0]);
-              });
-          });
-
-      } 
-      else {
-        // the user have selected a proposition
-        self.setClientPlace(place);
-        client.getInfoQuartier(place);
-      }
-    };
-
-  // si une autre personne regle la facture on autocomplete ses coordonnées
-  var payeurAutocomplete = new google.maps.places.Autocomplete((INPUT_FACTURATION), {types:['geocode']});
-  google.maps.event.addListener(payeurAutocomplete, 'place_changed', function() {
-      console.log("payer adress have changed");
-  });
-
-};
-
 angular.module('edison').controller('ArtisanController', function(tabContainer, $location, $mdSidenav, $interval, ngDialog, LxNotificationService, edisonAPI, config, $routeParams, $scope, windowDimensions, interventions, artisans) {
   $scope.tab = tabContainer.getCurrentTab();
   var id = parseInt($routeParams.id);
@@ -1205,82 +1233,64 @@ angular.module('edison').controller('DashboardController', function(tabContainer
 	$scope.tab = tabContainer.getCurrentTab();
 	$scope.tab.setTitle('dashBoard')
 });
-angular.module('edison').controller('InterventionController', function(tabContainer, $location, $mdSidenav, $interval, ngDialog, LxNotificationService, edisonAPI, config, $routeParams, $scope, windowDimensions, interventions, artisans) {
-  $scope.windowDimensions = windowDimensions;
-  $scope.config = config;
-  $scope.tab = tabContainer.getCurrentTab();
-  $scope.artisans = artisans.data.sort(function(a, b) {
-    return a.nomSociete > b.id;
-  });
-  var id = parseInt($routeParams.id);
+angular.module('edison').controller('InterventionController',
+  function($scope, $location, $routeParams, ngDialog, LxNotificationService, tabContainer, edisonAPI, config, intervention) {
 
-  if (!$scope.tab.data) {
-    if ($routeParams.id.length > 12) {
-      $scope.tab.isNew = true;
-      $scope.tab.setTitle('#' + moment().format("HH:mm").toString());
-      $scope.tab.setData({
-        client: {},
-        reglementSurPlace: true,
-        date: {
-          ajout: Date.now(),
-          intervention: Date.now()
+    $scope.config = config;
+    $scope.tab = tabContainer.getCurrentTab();
+    var id = parseInt($routeParams.id);
+
+    if (!$scope.tab.data) {
+      if ($routeParams.id.length > 12) {
+        $scope.tab.isNew = true;
+        $scope.tab.setTitle('#' + moment().format("HH:mm").toString());
+      } else {
+        $scope.tab.setTitle('#' + $routeParams.id);
+        if (!intervention) {
+          alert("Impossible de trouver les informations !");
+          $location.url("/dashboard");
+          $scope.tabs.remove($scope.tab);
+          return 0;
         }
-      });
-    } else {
-      $scope.tab.setTitle('#' + $routeParams.id);
-      var inter = interventions.data.find(function(e) {
-        return e.id === id
-      });
-      if (!inter) {
-        alert("Impossible de trouver les informations !");
-        $location.url("/dashboard");
-        $scope.tabs.remove($scope.tab);
-        return 0;
       }
-      inter.sst = inter.artisan ? inter.artisan.id : 0;
-      if (inter.sst > 0) {
-        inter.artisan = artisans.data.find(function(e) {
-          return e.id === inter.sst;
-        });
-      }
-      $scope.tab.setData(inter);
+      $scope.tab.setData(intervention.data);
+      $scope.tab.data.sst = intervention.data.artisan ? intervention.data.artisan.id : 0;
     }
-  }
-  $scope.showMap = false;
+    $scope.showMap = false;
 
-  $scope.saveInter = function(send, cancel) {
-    edisonAPI.saveIntervention({
-      send: send,
-      cancel: cancel,
-      data: $scope.tab.data
-    }).then(function(data) {
-      LxNotificationService.success("L'intervention " + data.data + " à été enregistré");
-      $location.url("/interventions");
-      $scope.tabs.remove($scope.tab);
-    }).catch(function(response) {
-      LxNotificationService.error(response.data);
-    });
-  }
-
-  $scope.clickOnArtisanMarker = function(event, sst) {
-    $scope.tab.data.sst = sst.id;
-  }
-
-  $scope.searchArtisans = function() {
-    edisonAPI.getNearestArtisans($scope.tab.data.client.address, $scope.tab.data.categorie)
-      .success(function(result) {
-        $scope.nearestArtisans = result;
+    $scope.saveInter = function(send, cancel) {
+      edisonAPI.saveIntervention({
+        send: send,
+        cancel: cancel,
+        data: $scope.tab.data
+      }).then(function(data) {
+        LxNotificationService.success("L'intervention " + data.data + " à été enregistré");
+        $location.url("/interventions");
+        $scope.tabs.remove($scope.tab);
+      }).catch(function(response) {
+        LxNotificationService.error(response.data);
       });
-  }
-  if ($scope.tab.data.artisan)
-    $scope.searchArtisans();
+    }
 
-});
+    $scope.clickOnArtisanMarker = function(event, sst) {
+      $scope.tab.data.sst = sst.id;
+    }
+
+    $scope.searchArtisans = function() {
+      edisonAPI.getNearestArtisans($scope.tab.data.client.address, $scope.tab.data.categorie)
+        .success(function(result) {
+          $scope.nearestArtisans = result;
+        });
+    }
+    if ($scope.tab.data.artisan)
+      $scope.searchArtisans();
+
+  });
 
 
 
 
-angular.module('edison').controller('InterventionMapController', function($scope, $window, $mdDialog, Address, mapAutocomplete, edisonAPI) {
+angular.module('edison').controller('InterventionMapController', function($scope, $q, $window, $mdDialog, Address, mapAutocomplete, edisonAPI) {
   $scope.autocomplete = mapAutocomplete;
   if (!$scope.tab.data.client.address) {
     $scope.mapCenter = Address({
@@ -1291,7 +1301,7 @@ angular.module('edison').controller('InterventionMapController', function($scope
   } else {
     if ($scope.tab.data.artisan) {
       $scope.zoom = 12;
-      $scope.tab.data.artisan.add = Address($scope.tab.data.artisan.add, true);
+      $scope.tab.data.artisan.address = Address($scope.tab.data.artisan.address, true);
     }
     if ($scope.tab.data.client.address) {
       $scope.tab.data.client.address = Address($scope.tab.data.client.address, true); //true -> copyContructor
@@ -1323,15 +1333,13 @@ angular.module('edison').controller('InterventionMapController', function($scope
   }
 
   $scope.$watch('tab.data.sst', function(id_sst) {
-    $scope.tab.data.artisan = $scope.artisans.find(function(e) {
-      return e.id === id_sst;
+    $q.all([
+      edisonAPI.getArtisan(id_sst, {cache:true}),
+      edisonAPI.getArtisanStats(id_sst, {cache:true})
+    ]).then(function(result)  {
+      $scope.tab.data.artisan = result[0].data;
+      $scope.tab.data.artisan.stats = result[1].data;
     });
-    console.log(id_sst)
-    if (id_sst && id_sst !== 0) {
-      edisonAPI.getArtisanStats(id_sst).success(function(stats) {
-        $scope.tab.data.artisan.stats = stats
-      })
-    }
   })
 
   function DialogController($scope, $mdDialog) {
@@ -1398,7 +1406,7 @@ angular.module('edison').controller('InterventionMapController', function($scope
     if ($scope.tab.data.client && $scope.tab.data.client.address && $scope.tab.data.client.address.latLng)
       q += ("&origin=" + $scope.tab.data.client.address.latLng);
     if ($scope.tab.data.artisan)
-      q += ("&destination=" + $scope.tab.data.artisan.add.lt + "," + $scope.tab.data.artisan.add.lg);
+      q += ("&destination=" + $scope.tab.data.artisan.address.lt + "," + $scope.tab.data.artisan.address.lg);
     return "/api/map/staticDirections" + q;
   }
 });
@@ -1417,7 +1425,7 @@ angular.module('edison').controller('InterventionsController', function(tabConta
     total: interventions.data,
     getData: function($defer, params) {
       var data = interventions.data;
-      // data = $filter('tableFilter')(data, params.filter());
+      data = $filter('tableFilter')(data, params.filter());
       params.total(data.length);
       //data = $filter('orderBy')(data, params.orderBy());
       $defer.resolve(data.slice((params.page() - 1) * params.count(), params.page() * params.count()));
@@ -1446,15 +1454,15 @@ angular.module('edison').controller('InterventionsController', function(tabConta
         allowDuplicates: false
       });
     } else {
-      if ($scope.expendedRow === inter.i) {
+      if ($scope.expendedRow === inter.id) {
         $scope.expendedRow = -1;
       } else {
         $q.all([
-          edisonAPI.getIntervention(inter.i),
+          edisonAPI.getIntervention(inter.id),
           edisonAPI.getArtisanStats(inter.ai)
         ]).then(function(result)  {
 
-          $scope.expendedRow = inter.i;
+          $scope.expendedRow = inter.id;
           $scope.expendedRowData = result[0].data;
           $scope.expendedRowData.artisanStats = result[1].data
         })

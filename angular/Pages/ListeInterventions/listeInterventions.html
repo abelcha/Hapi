@@ -1,65 +1,65 @@
 <div>
     <table style="background:white;" ng-table="tableParams" class="table table-bordered table-hover table-hover table-striped" id="table-list" show-filter="true">
         <tbody id="tbody-list">
-            <tr data-id="{{inter.i}}" ng-repeat-start="inter in $data " ng-click="rowClick($event, inter, false)" ng-dblclick="rowClick($event, inter, true)" ng-class="{warning : isInSelection(inter.i)}">
-                <td data-title="'Os'" sortable="'id'" filter="{ 'i': 'text' }">
-                    <strong>{{inter.i}}</strong>
+            <tr data-id="{{inter.id}}" ng-repeat-start="inter in $data " ng-click="rowClick($event, inter, false)" ng-dblclick="rowClick($event, inter, true)" ng-class="{warning : isInSelection(inter.i)}">
+                <td data-title="'Os'" sortable="'id'" filter="{ 'id': 'text' }">
+                    <strong>{{inter.id}}</strong>
                 </td>
                 <td data-title="'Télépro'" sortable="'t'" filter="{ 't': 'text' }">
-                    {{inter.t}}
+                    {{::inter.t}}
                 </td>
                 <td data-title="'Cat.'" sortable="'c'" filter="{ 'c': 'text' }">
-                    <span style="width:80px" class="label {{c.c}}">{{c.n}}</span>
+                    <span style="width:80px" class="label {{::inter.c.c}}">{{::inter.c.n}}</span>
                 </td>
                 <td data-title="'Date Ajout'" sortable="'da'" filter="{ 'da': 'text' }">
-                    {{inter.da | date:"dd/MM/yy" || ""}} {{inter.da | date:"HH'h'mm" || ""}}
+                    {{::inter.da | date:"dd/MM/yy" || ""}} {{::inter.da | date:"HH'h'mm" || ""}}
                 </td>
                 <td variable-length data-title="'Client'" sortable="'n'" filter="{ 'n': 'text' }">
-                    {{inter.n}}
+                    {{::inter.n}}
                 </td>
                 <td variable-length data-title="'Ville'" sortable="'ad'" filter="{ 'ad': 'text' }">
-                    {{inter.ad}}
+                    {{::inter.ad}}
                 </td>
                 <td variable-length class="variable-length one-liner" data-title="'Artisan'" sortable="'a'" filter="{ 'a': 'text' }">
-                    <strong>{{inter.a}}</strong>
+                    <strong>{{::inter.a}}</strong>
                 </td>
-                <td data-title="'Date Intervention'" sortable="'date.intervention'" filter="{ 'date.intervention': 'text' }">
-                    <div ng-show="inter.date.intervention[0] != 1">
-                        {{inter.di | date:"dd/MM/yy" || ""}} {{inter.di | date:"HH'h'mm" || ""}}
+                <td data-title="'Date Intervention'" sortable="'di'" filter="{ 'di': 'text' }">
+                    <div ng-show="inter.di[0] != 1">
+                        {{::inter.di | date:"dd/MM/yy" || ""}} {{::inter.di | date:"HH'h'mm" || ""}}
                     </div>
                 </td>
                 <td data-title="'Prix'" sortable="'pa'" filter="{ 'pa': 'text' }">
-                    {{(inter.pa | number:2) || 0}} €
+                    {{::(inter.pa | number:2) || 0}} €
                 </td>
                 <td data-title="'Status'" sortable="'s'">
-                    <span style="width:70px" class="label {{s.c}}"> {{s.n}}</span>
+                    <span style="width:70px" class="label {{::inter.s.c}}"> {{::inter.s.n}}</span>
                 </td>
             </tr>
-            <tr ng-if="expendedRow === inter.i" ng-repeat-end>
+            <tr ng-if="expendedRow === inter.id" ng-repeat-end>
                 <td ng-show="expendedRowData.id === expendedRow" colspan="42">
                     <div class="row">
-                        <div class="col-sm-4">
+                        <div class="col-sm-4 info-ext">
                             <h4>Client</h4>
-                            <p>{{expendedRowData.client.civilite}} {{expendedRowData.client.prenom}} {{expendedRowData.client.nom}}</p>
-                            <p>{{expendedRowData.client.address.n}} {{expendedRowData.client.address.r}} {{expendedRowData.client.address.cp}}, {{expendedRowData.client.address.v}}</p>
-                            <p>{{expendedRowData.description}}</p>
-                            <p>{{expendedRowData.remarque}}</p>
-                            <p>{{expendedRowData.prixAnnonce}} € | {{expendedRowData.prixFinal || 0}} €</p>
+                            <p><strong>Nom:</strong> {{::expendedRowData.client.civilite}} {{::expendedRowData.client.prenom}} {{::expendedRowData.client.nom}}</p>
+                            <p><strong>Addresse:</strong> {{::expendedRowData.client.address.n}} {{::expendedRowData.client.address.r}} {{::expendedRowData.client.address.cp}}, {{::expendedRowData.client.address.v}}</p>
+                            <p><strong>Description:</strong> {{::expendedRowData.description}}</p>
+                            <p><strong>Remarque:</strong> {{::expendedRowData.remarque}}</p>
+                            <p><strong>Prix:</strong> {{::expendedRowData.prixAnnonce}} € | {{::expendedRowData.prixFinal || 0}} €</p>
                             <p><span style="width:100px" class="label grey darken-3"> Fiche</span></p>
                         </div>
-                        <div class="col-sm-4">
+                        <div class="col-sm-4 info-ext">
                             <h4>Artisan</h4>
                             <p>
-                                {{expendedRowData.artisan.nomSociete}}
+                                {{::expendedRowData.artisan.nomSociete}}
                             </p>
                             <p>
-                                Note: 7.6/10
+                                <strong>Note:</strong> 7.6/10
                             </p>
                             <p>
-                                Interventions réalisés: {{expendedRowData.artisanStats.total.total}}
+                                Interventions réalisés: {{::expendedRowData.artisanStats.total.total}}
                             </p>
                             <p>
-                                5 réglement en attentes (913€)
+                                Reglement en attente: {{::expendedRowData.artisanStats.impaye.total}} ({{expendedRowData.artisanStats.impaye.montant}} €)
                             </p>
                             <p> <span style="width:100px" class="label grey darken-3"> Fiche</span>
                                 <span style="width:100px" class="label grey darken-3"> Recap'</span></p>

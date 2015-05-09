@@ -53,9 +53,24 @@ module.exports = function() {
     })
   });
 
+  app.all('/api/:model/:id', function(req, res, next) {
+    var model = edison.db.model[req.params.model];
+    var method = req.params.method;
+    id = parseInt(req.params.id);
+    if (isNaN(id) || !model)
+      return next();
+    model.view(id, req, res).then(function(result, alreadyReply) {
+      if (!alreadyReply)
+        res.json(result);
+    }).catch(function(err) {
+      res.status(400).send(envProduction ? "Bad Request" : err);
+    })
+  });
+
   app.all('/api/:model/:method', function(req, res, next) {
     var model = edison.db.model[req.params.model];
     var method = req.params.method;
+
     if (!model ||  typeof model[method] !== "function" || model[method].length !== 2) {
       return next();
     }
@@ -67,23 +82,6 @@ module.exports = function() {
     })
   });
 
-  app.all('/api/:model/:id', function(req, res, next) {
-
-    var model = edison.db.model[req.params.model];
-    if (!model)
-      return next();
-    id = parseInt(req.params.id);
-    if (isNaN(id))
-      return next();
-    model.findOne({
-      id: id
-    }).then(function(doc) {
-      res.json(doc);
-    }, function(err) {
-      res.status(400).send(envProduction ? "Bad Request" : err);
-    })
-
-  });
 
   app.all('/api/*', function(req, res) {
     res.status(400).send(envProduction ? "Bad Request" : "Unhandled route error");

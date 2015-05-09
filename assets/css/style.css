@@ -199,6 +199,10 @@ span[md-highlight-text] {
     bottom: 0!important;
     left: 0!important;
 }
+
+.info-ext>p {
+    white-space: normal;
+}
 /*.lx-select {
     margin-top: 9px!important;
 }*/
