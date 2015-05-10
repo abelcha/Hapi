@@ -16,6 +16,9 @@ global.envProduction = typeof process.env.REDISCLOUD_URL !== "undefined";
 
 npm.mongoose.connect(process.env.MONGOLAB_URI || 'mongodb://localhost/EDISON');
 
+global.io = require('socket.io')(http);
+var redisIO = require('socket.io-redis');
+
 
 if (process.env.REDISCLOUD_URL) {
   var url = require('url');
@@ -24,7 +27,26 @@ if (process.env.REDISCLOUD_URL) {
     no_ready_check: true
   });
   edison.redisCli.auth(redisURL.auth.split(":")[1]);
+
+  var pub = redis.createClient(redisURL.port, redisURL.hostname, {
+    return_buffers: true
+  });
+  var sub = redis.createClient(redisURL.port, redisURL.hostname, {
+    return_buffers: true
+  });
+  pub.auth(redisURL.auth.split(":")[1]);
+  sub.auth(redisURL.auth.split(":")[1]);
+
+  io.adapter(redisIO({
+    pubClient: pub,
+    subClient: sub,
+    host: redisURL.hostname,
+    port: redisURL.port
+  }));
+
 } else {
+  io.adapter();
+
   edison.redisCli = npm.redis.createClient();
 }
 edison.redisCli.on("error", function(err) {
@@ -33,12 +55,13 @@ edison.redisCli.on("error", function(err) {
 
 
 
-global.io = require('socket.io')(http);
-var redisIO = require('socket.io-redis');
-console.log(process.env.REDISTOGO_URL);
-io.adapter(redisIO(process.env.REDISTOGO_URL));
 
-io.on('connection', function(socket) {});
+
+io.on('connection', function(socket) {
+
+  console.log("socket.io connected")
+
+});
 
 
 
