@@ -35,7 +35,8 @@ edison.redisCli.on("error", function(err) {
 
 global.io = require('socket.io')(http);
 var redisIO = require('socket.io-redis');
-io.adapter(redisIO(process.env.REDISTOGO_URL || undefined));
+console.log("==>",process.env.REDISTOGO_URL)
+io.adapter(redisIO(process.env.REDISTOGO_URL));
 
 io.on('connection', function(socket) {});
 
