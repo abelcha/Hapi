@@ -28,10 +28,10 @@ if (process.env.REDISCLOUD_URL) {
   });
   edison.redisCli.auth(redisURL.auth.split(":")[1]);
 
-  var pub = redis.createClient(redisURL.port, redisURL.hostname, {
+  var pub = npm.redis.createClient(redisURL.port, redisURL.hostname, {
     return_buffers: true
   });
-  var sub = redis.createClient(redisURL.port, redisURL.hostname, {
+  var sub = npm.redis.createClient(redisURL.port, redisURL.hostname, {
     return_buffers: true
   });
   pub.auth(redisURL.auth.split(":")[1]);
