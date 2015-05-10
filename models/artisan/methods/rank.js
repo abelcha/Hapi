@@ -70,7 +70,6 @@ module.exports = function(schema) {
          maxDistance: (parseFloat(req.query.maxDistance) || 50) / 0.001
       }
       edison.db.model.artisan.geoNear(point, options, function(err, docs) {
-        console.log(docs.length)
         if (err)
           return resolve(err);
         docs = JSON.parse(JSON.stringify(docs));
