@@ -93,10 +93,11 @@ module.exports = new npm.mongoose.Schema({
   },
   prixAnnonce: {
     type: Number,
-    set: function toCurrency(nbr) {
+    /*set: function toCurrency(nbr) {
+      console.log("swag", nbr)
       var rtn = parseFloat(nbr.replace(',', '.')) || 0;
-      return Math.round(rtn * 100) / 100;
-    }
+      return 42;
+    }*/
   },
   prixFinal: Number,
   reglementSurPlace: Boolean,

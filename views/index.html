@@ -29,6 +29,7 @@
     <link href="/css/material-color.css" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="/lumx/dist/lumx.css">
     <link rel="stylesheet" href="/mdi/css/materialdesignicons.css">
+    <script src="/jquery/dist/jquery.min.js"></script>
     <script src="/angular/angular.min.js"></script>
     <script src="/angular-route/angular-route.min.js"></script>
     <script src="/angular-resource/angular-resource.min.js"></script>
@@ -152,7 +153,7 @@
             <md-tabs md-selected="tabs.selectedTab" md-border-bottom>
                 <a ng-repeat="tab in tabs._tabs" href="{{tab.url}}" ng-class="{'deleted' : tab.deleted}">
                     <md-tab>
-                        <md-tab-label>{{tab.title}} <i ng-click="tabIconClick($event, tab)" class="fa fa-remove" style="cursor:crosshair"></i></md-tab-label>
+                        <md-tab-label>{{tab.title || "•••"}} <i ng-click="tabIconClick($event, tab)" class="fa fa-remove" style="cursor:crosshair"></i></md-tab-label>
                     </md-tab>
                 </a>
             </md-tabs>
@@ -170,7 +171,6 @@
             <div class="double-bounce2"></div>
         </div>
     </div>
-    <script src="/jquery/dist/jquery.min.js"></script>
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
     <script src="/pickadate/lib/compressed/picker.js"></script>
     <script src="/pickadate/lib/compressed/picker.date.js"></script>

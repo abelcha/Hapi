@@ -6,7 +6,6 @@
   "function" == typeof define && define.amd ? define(["picker", "jquery"], a) : "object" == typeof exports ? module.exports = a(require("./picker.js"), require("jquery")) : a(Picker, jQuery)
 }(function(a, b) {
   function c(a, b) {
-  	console.log("tyaya")
     var c = this,
       d = a.$node[0].value,
       e = a.$node.data("value"),

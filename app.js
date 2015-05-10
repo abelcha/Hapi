@@ -6,6 +6,11 @@ var http = require('http').Server(app);
 var port = (process.env.PORT || 8080);
 global.path = require('path');
 
+global.io = require('socket.io')(http);
+io.on('connection', function(socket) {
+});
+
+
 var dep = require('./loadDependencies');
 global.rootPath = process.cwd();
 global.npm = dep.loadJson("package.json");
@@ -59,7 +64,7 @@ app.post('/login', function(req, res) {
         req.session.user = user;
         return res.redirect(req.body.url || '/');
       });
-    }).catch(function(err) {
+    }, function(err) {
       return res.redirect(req.body.url || '/');
     })
 });

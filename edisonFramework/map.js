@@ -18,6 +18,15 @@ module.exports = {
       }
     });
   },
+  direction: function(query, res) {
+
+    npm.googlemaps.directions(query.origin, query.destination, function(err, result) {
+      res.json({
+        distance: result.routes[0].legs[0].distance.text,
+        duration: result.routes[0].legs[0].duration.text
+      });
+    });
+  },
 
   staticDirections: function(query, res) {
     var directions = this.getDirectionPath(query, function(err, points) {

@@ -79,6 +79,7 @@ md-autocomplete {
     pointer-events: all;
 }
 
+
 md-autocomplete > ul {
     pointer-events: all;
 }

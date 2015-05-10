@@ -1,11 +1,20 @@
 angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvider', function($http, $location, dataProvider) {
 
   return {
-    listInterventions: function() {
+    listInterventions: function(options) {
       return $http({
         method: 'GET',
-        cache: true,
+        cache: options && options.cache,
         url: '/api/intervention/list'
+      }).success(function(result) {
+        return result;
+      })
+    },
+    listArtisans: function(options) {
+      return $http({
+        method: 'GET',
+        cache: options && options.cache,
+        url: '/api/artisan/list'
       }).success(function(result) {
         return result;
       })
@@ -30,12 +39,11 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvid
       });
     },
     getArtisan: function(id, options) {
-      console.log(options && options.cache);
       return $http({
         method: 'GET',
         cache: options && options.cache,
         url: '/api/artisan/' + id,
-        params: options || {}
+        params: options ||  {}
       }).success(function(result) {
         return result;
       });
@@ -45,7 +53,17 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvid
         method: 'GET',
         cache: options && options.cache,
         url: '/api/intervention/' + id,
-        params: options || {}
+        params: options ||  {}
+      }).success(function(result) {
+        return result;
+      });
+    },
+    getDistance: function(options) {
+      return $http({
+        method: 'GET',
+        cache: true,
+        url: '/api/map/direction',
+        params: options
       }).success(function(result) {
         return result;
       });
@@ -68,7 +86,7 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvid
       return $http({
         method: 'GET',
         url: "/api/artisan/rank",
-        cache:true,
+        cache: true,
         params:  {
           categorie: categorie,
           lat: address.lt,

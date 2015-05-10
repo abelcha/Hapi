@@ -6,7 +6,7 @@ angular.module('edison', ['ngMaterial', 'lumx', 'ngAnimate', 'ngDialog', 'btford
   });
 
 
-angular.module('edison').controller('MainController', function(tabContainer, $scope, $rootScope, $location, edisonAPI) {
+angular.module('edison').controller('MainController', function(tabContainer, $scope, socket, dataProvider, $rootScope, $location, edisonAPI) {
 
 
   $rootScope.loadingData = true;
@@ -78,7 +78,14 @@ angular.module('edison').controller('MainController', function(tabContainer, $sc
 });
 
 var getInterList = function(edisonAPI) {
-  return edisonAPI.listInterventions(true);
+  return edisonAPI.listInterventions({
+    cache: true
+  });
+}
+var getArtisanList = function(edisonAPI) {
+  return edisonAPI.listArtisans({
+    cache: true
+  });
 }
 
 var getIntervention = function($route, $q, edisonAPI) {
@@ -87,11 +94,13 @@ var getIntervention = function($route, $q, edisonAPI) {
   if (id.length > 10) {
     return $q(function(resolve, reject) {
       resolve({
-        client: {},
-        reglementSurPlace: true,
-        date: {
-          ajout: Date.now(),
-          intervention: Date.now()
+        data: {
+          client: {},
+          reglementSurPlace: true,
+          date: {
+            ajout: Date.now(),
+            intervention: Date.now()
+          }
         }
       })
     });
@@ -111,12 +120,17 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
     .when('/artisan/:id', {
       templateUrl: "Pages/Artisan/artisan.html",
       controller: "ArtisanController",
+      resolve: {
+        interventions: getInterList,
+        artisans: getArtisanList
+      }
     })
     .when('/interventions', {
       templateUrl: "Pages/ListeInterventions/listeInterventions.html",
       controller: "InterventionsController",
       resolve: {
-        interventions: getInterList
+        interventions: getInterList,
+        artisans: getArtisanList
       }
     })
     .when('/intervention', {
@@ -128,12 +142,20 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
       templateUrl: "Pages/Intervention/intervention.html",
       controller: "InterventionController",
       resolve: {
-        intervention: getIntervention
+        interventions: getInterList,
+        intervention: getIntervention,
+        artisans: getArtisanList
+
       }
     })
     .when('/dashboard', {
       controller: 'DashboardController',
       templateUrl: "Pages/Dashboard/dashboard.html",
+      resolve: {
+        interventions: getInterList,
+        artisans: getArtisanList
+
+      }
     })
     .otherwise({
       templateUrl: 'templates/Error404.html',
@@ -573,7 +595,7 @@ angular.module("edison").filter('tableFilter', function() {
         var psh = true;
         for (x in fltr) {
           var str = data[k][x];
-          if (str.length === 0 || cleanString(str).indexOf(fltr[x]) < 0) {
+          if (!str || str.length === 0 || cleanString(str).indexOf(fltr[x]) < 0) {
             psh = false;
             break;
           }
@@ -642,11 +664,20 @@ angular.module('edison').factory('Address', function() {
 angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvider', function($http, $location, dataProvider) {
 
   return {
-    listInterventions: function() {
+    listInterventions: function(options) {
       return $http({
         method: 'GET',
-        cache: true,
+        cache: options && options.cache,
         url: '/api/intervention/list'
+      }).success(function(result) {
+        return result;
+      })
+    },
+    listArtisans: function(options) {
+      return $http({
+        method: 'GET',
+        cache: options && options.cache,
+        url: '/api/artisan/list'
       }).success(function(result) {
         return result;
       })
@@ -671,12 +702,11 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvid
       });
     },
     getArtisan: function(id, options) {
-      console.log(options && options.cache);
       return $http({
         method: 'GET',
         cache: options && options.cache,
         url: '/api/artisan/' + id,
-        params: options || {}
+        params: options ||  {}
       }).success(function(result) {
         return result;
       });
@@ -686,7 +716,17 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvid
         method: 'GET',
         cache: options && options.cache,
         url: '/api/intervention/' + id,
-        params: options || {}
+        params: options ||  {}
+      }).success(function(result) {
+        return result;
+      });
+    },
+    getDistance: function(options) {
+      return $http({
+        method: 'GET',
+        cache: true,
+        url: '/api/map/direction',
+        params: options
       }).success(function(result) {
         return result;
       });
@@ -709,7 +749,7 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvid
       return $http({
         method: 'GET',
         url: "/api/artisan/rank",
-        cache:true,
+        cache: true,
         params:  {
           categorie: categorie,
           lat: address.lt,
@@ -891,17 +931,40 @@ angular.module('edison').factory('config', [function() {
 
 }]);
 
-angular.module('edison').factory('dataProvider', [function() {
-	var self = this;
-	if (!this.data) {
-		return (function(data) {
-			self.data = data;
-		})
-	} else {
-		return (this.data);
-	}
+angular.module('edison').factory('dataProvider', ['$timeout', 'socket', '$rootScope', function($timeout, socket, $rootScope) {
+
+
+
+  var dataProvider = function() {
+    var _this = this;
+    socket.on('interventionListChange', function(data) {
+      _this.updateInterventionList(data);
+    });
+  }
+  dataProvider.prototype.setInterventionList = function(data) {
+    this.interventionList = data;
+  };
+
+  dataProvider.prototype.updateInterventionList = function(data) {
+    var _this = this;
+    if (this.interventionList) {
+      var index = this.interventionList.findIndex(function(e) {
+        return e.id === data.id
+      })
+      _this.interventionList[index] = data;
+      console.log("interchange")
+      $rootScope.$broadcast('InterventionListChange');
+    }
+  }
+
+  dataProvider.prototype.getInterventionList = function() {
+    return this.interventionList;
+  }
+
+  return new dataProvider;
 
 }]);
+
 angular.module('edison').factory('mapAutocomplete', ['$q', 'Address',
   function($q, Address) {
 
@@ -942,6 +1005,9 @@ angular.module('edison').factory('mapAutocomplete', ['$q', 'Address',
   }
 ]);
 
+angular.module('edison').factory('socket', function (socketFactory) {
+  return socketFactory();
+});
 angular.module('edison').factory('tabContainer', ['$location', '$window', '$q', 'edisonAPI', function($location, $window, $q, edisonAPI) {
 
   var Tab = function(args) {
@@ -1233,64 +1299,8 @@ angular.module('edison').controller('DashboardController', function(tabContainer
 	$scope.tab = tabContainer.getCurrentTab();
 	$scope.tab.setTitle('dashBoard')
 });
-angular.module('edison').controller('InterventionController',
-  function($scope, $location, $routeParams, ngDialog, LxNotificationService, tabContainer, edisonAPI, config, intervention) {
 
-    $scope.config = config;
-    $scope.tab = tabContainer.getCurrentTab();
-    var id = parseInt($routeParams.id);
-
-    if (!$scope.tab.data) {
-      if ($routeParams.id.length > 12) {
-        $scope.tab.isNew = true;
-        $scope.tab.setTitle('#' + moment().format("HH:mm").toString());
-      } else {
-        $scope.tab.setTitle('#' + $routeParams.id);
-        if (!intervention) {
-          alert("Impossible de trouver les informations !");
-          $location.url("/dashboard");
-          $scope.tabs.remove($scope.tab);
-          return 0;
-        }
-      }
-      $scope.tab.setData(intervention.data);
-      $scope.tab.data.sst = intervention.data.artisan ? intervention.data.artisan.id : 0;
-    }
-    $scope.showMap = false;
-
-    $scope.saveInter = function(send, cancel) {
-      edisonAPI.saveIntervention({
-        send: send,
-        cancel: cancel,
-        data: $scope.tab.data
-      }).then(function(data) {
-        LxNotificationService.success("L'intervention " + data.data + " à été enregistré");
-        $location.url("/interventions");
-        $scope.tabs.remove($scope.tab);
-      }).catch(function(response) {
-        LxNotificationService.error(response.data);
-      });
-    }
-
-    $scope.clickOnArtisanMarker = function(event, sst) {
-      $scope.tab.data.sst = sst.id;
-    }
-
-    $scope.searchArtisans = function() {
-      edisonAPI.getNearestArtisans($scope.tab.data.client.address, $scope.tab.data.categorie)
-        .success(function(result) {
-          $scope.nearestArtisans = result;
-        });
-    }
-    if ($scope.tab.data.artisan)
-      $scope.searchArtisans();
-
-  });
-
-
-
-
-angular.module('edison').controller('InterventionMapController', function($scope, $q, $window, $mdDialog, Address, mapAutocomplete, edisonAPI) {
+angular.module('edison').controller('InterventionMapController', function($scope, $q, $interval, $window, $mdDialog, Address, mapAutocomplete, edisonAPI) {
   $scope.autocomplete = mapAutocomplete;
   if (!$scope.tab.data.client.address) {
     $scope.mapCenter = Address({
@@ -1323,7 +1333,7 @@ angular.module('edison').controller('InterventionMapController', function($scope
         $scope.mapCenter = addr;
         if (addr.streetAddress) {
           $scope.tab.data.client.address = addr;
-          $scope.searchText = "";
+          $scope.searchText = "lol";
         }
         $scope.searchArtisans();
       },
@@ -1334,11 +1344,24 @@ angular.module('edison').controller('InterventionMapController', function($scope
 
   $scope.$watch('tab.data.sst', function(id_sst) {
     $q.all([
-      edisonAPI.getArtisan(id_sst, {cache:true}),
-      edisonAPI.getArtisanStats(id_sst, {cache:true})
+      edisonAPI.getArtisan(id_sst, {
+        cache: true
+      }),
+      edisonAPI.getArtisanStats(id_sst, {
+        cache: true
+      }),
     ]).then(function(result)  {
       $scope.tab.data.artisan = result[0].data;
       $scope.tab.data.artisan.stats = result[1].data;
+      if (result[0].data.address) {
+        edisonAPI.getDistance({
+            origin: result[0].data.address.lt + ", " + result[0].data.address.lg,
+            destination: $scope.tab.data.client.address.lt + ", " + $scope.tab.data.client.address.lg
+          })
+          .then(function(result) {
+            $scope.tab.data.artisan.stats.direction = result.data;
+          })
+      }
     });
   })
 
@@ -1405,29 +1428,93 @@ angular.module('edison').controller('InterventionMapController', function($scope
     var q = "?width=" + $window.outerWidth * 0.8;
     if ($scope.tab.data.client && $scope.tab.data.client.address && $scope.tab.data.client.address.latLng)
       q += ("&origin=" + $scope.tab.data.client.address.latLng);
-    if ($scope.tab.data.artisan)
+    if ($scope.tab.data.artisan && $scope.tab.data.artisan.id)
       q += ("&destination=" + $scope.tab.data.artisan.address.lt + "," + $scope.tab.data.artisan.address.lg);
     return "/api/map/staticDirections" + q;
   }
 });
 
-angular.module('edison').controller('InterventionsController', function(tabContainer, $window, edisonAPI, $location, $scope, $q, $rootScope, $filter, config, ngTableParams, interventions) {
+angular.module('edison').controller('InterventionController',
+  function($scope, $location, $routeParams, ngDialog, LxNotificationService, tabContainer, edisonAPI, config, intervention, artisans) {
+    $scope.artisans = artisans.data;
+    $scope.config = config;
+    $scope.tab = tabContainer.getCurrentTab();
+    var id = parseInt($routeParams.id);
+
+    if (!$scope.tab.data) {
+      if ($routeParams.id.length > 12) {
+        $scope.tab.isNew = true;
+        $scope.tab.setTitle('#' + moment().format("HH:mm").toString());
+      } else {
+        $scope.tab.setTitle('#' + $routeParams.id);
+        if (!intervention) {
+          alert("Impossible de trouver les informations !");
+          $location.url("/dashboard");
+          $scope.tabs.remove($scope.tab);
+          return 0;
+        }
+      }
+      $scope.tab.setData(intervention.data);
+      $scope.tab.data.sst = intervention.data.artisan ? intervention.data.artisan.id : 0;
+    }
+    $scope.showMap = false;
+
+    $scope.saveInter = function(send, cancel) {
+      edisonAPI.saveIntervention({
+        send: send,
+        cancel: cancel,
+        data: $scope.tab.data
+      }).then(function(data) {
+        LxNotificationService.success("L'intervention " + data.data + " à été enregistré");
+        $location.url("/interventions");
+        $scope.tabs.remove($scope.tab);
+      }).catch(function(response) {
+        LxNotificationService.error(response.data);
+      });
+    }
+
+    $scope.clickOnArtisanMarker = function(event, sst) {
+      $scope.tab.data.sst = sst.id;
+    }
+
+    $scope.searchArtisans = function() {
+      edisonAPI.getNearestArtisans($scope.tab.data.client.address, $scope.tab.data.categorie)
+        .success(function(result) {
+          $scope.nearestArtisans = result;
+        });
+    }
+    if ($scope.tab.data.client.address)
+      $scope.searchArtisans();
+
+  });
+
+
+
+
+angular.module('edison').controller('InterventionsController', function(tabContainer, $window, edisonAPI, dataProvider, $location, $scope, $q, $rootScope, $filter, config, ngTableParams, interventions) {
   $scope.api = edisonAPI;
   $scope.config = config;
+  $scope.dataProvider = dataProvider;
+
+  if (!$scope.dataProvider.getInterventionList()) {
+    $scope.dataProvider.setInterventionList(interventions.data);
+  }
+
   var tableParameters = {
     page: 1, // show first page
-    total: interventions.data.length,
+    total: $scope.dataProvider.interventionList.length,
     filter: {},
     count: 100 // count per page
   };
   var tableSettings = {
     //groupBy:$rootScope.config.selectedGrouping,
-    total: interventions.data,
+    total: $scope.dataProvider.interventionList,
     getData: function($defer, params) {
-      var data = interventions.data;
+      console.log("getdata");
+      var data = $scope.dataProvider.interventionList;
       data = $filter('tableFilter')(data, params.filter());
       params.total(data.length);
-      //data = $filter('orderBy')(data, params.orderBy());
+      data = $filter('orderBy')(data, params.orderBy());
       $defer.resolve(data.slice((params.page() - 1) * params.count(), params.page() * params.count()));
     },
     filterDelay: 150
@@ -1435,6 +1522,10 @@ angular.module('edison').controller('InterventionsController', function(tabConta
   $scope.tableParams = new ngTableParams(tableParameters, tableSettings);
   $scope.tab = tabContainer.getCurrentTab();
   $scope.tab.setTitle('Interventions');
+
+  $rootScope.$on('InterventionListChange', function() {
+    $scope.tableParams.reload();
+  })
 
   $scope.getStaticMap = function(inter) {
     q = "?width=500&height=250&precision=0&zoom=10&origin=" + inter.client.address.lt + ", " + inter.client.address.lg;

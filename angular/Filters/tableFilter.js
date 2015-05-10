@@ -31,7 +31,7 @@ angular.module("edison").filter('tableFilter', function() {
         var psh = true;
         for (x in fltr) {
           var str = data[k][x];
-          if (str.length === 0 || cleanString(str).indexOf(fltr[x]) < 0) {
+          if (!str || str.length === 0 || cleanString(str).indexOf(fltr[x]) < 0) {
             psh = false;
             break;
           }

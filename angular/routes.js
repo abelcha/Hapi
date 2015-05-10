@@ -6,7 +6,7 @@ angular.module('edison', ['ngMaterial', 'lumx', 'ngAnimate', 'ngDialog', 'btford
   });
 
 
-angular.module('edison').controller('MainController', function(tabContainer, $scope, $rootScope, $location, edisonAPI) {
+angular.module('edison').controller('MainController', function(tabContainer, $scope, socket, dataProvider, $rootScope, $location, edisonAPI) {
 
 
   $rootScope.loadingData = true;
@@ -78,7 +78,14 @@ angular.module('edison').controller('MainController', function(tabContainer, $sc
 });
 
 var getInterList = function(edisonAPI) {
-  return edisonAPI.listInterventions(true);
+  return edisonAPI.listInterventions({
+    cache: true
+  });
+}
+var getArtisanList = function(edisonAPI) {
+  return edisonAPI.listArtisans({
+    cache: true
+  });
 }
 
 var getIntervention = function($route, $q, edisonAPI) {
@@ -87,11 +94,13 @@ var getIntervention = function($route, $q, edisonAPI) {
   if (id.length > 10) {
     return $q(function(resolve, reject) {
       resolve({
-        client: {},
-        reglementSurPlace: true,
-        date: {
-          ajout: Date.now(),
-          intervention: Date.now()
+        data: {
+          client: {},
+          reglementSurPlace: true,
+          date: {
+            ajout: Date.now(),
+            intervention: Date.now()
+          }
         }
       })
     });
@@ -111,12 +120,17 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
     .when('/artisan/:id', {
       templateUrl: "Pages/Artisan/artisan.html",
       controller: "ArtisanController",
+      resolve: {
+        interventions: getInterList,
+        artisans: getArtisanList
+      }
     })
     .when('/interventions', {
       templateUrl: "Pages/ListeInterventions/listeInterventions.html",
       controller: "InterventionsController",
       resolve: {
-        interventions: getInterList
+        interventions: getInterList,
+        artisans: getArtisanList
       }
     })
     .when('/intervention', {
@@ -128,12 +142,20 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
       templateUrl: "Pages/Intervention/intervention.html",
       controller: "InterventionController",
       resolve: {
-        intervention: getIntervention
+        interventions: getInterList,
+        intervention: getIntervention,
+        artisans: getArtisanList
+
       }
     })
     .when('/dashboard', {
       controller: 'DashboardController',
       templateUrl: "Pages/Dashboard/dashboard.html",
+      resolve: {
+        interventions: getInterList,
+        artisans: getArtisanList
+
+      }
     })
     .otherwise({
       templateUrl: 'templates/Error404.html',

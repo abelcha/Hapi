@@ -49,7 +49,6 @@
           }
           element.blur();
         };
-
         element.pickadate(options);
         function updateValue(newValue) {
           if (newValue) {

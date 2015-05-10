@@ -26,6 +26,7 @@
     "gulp-minify-css": "^1.1.0",
     "gulp-rename": "^1.2.2",
     "gulp-uglifyjs": "^0.6.1",
+    "jackrabbit": "^3.0.8",
     "lodash": "^3.8.0",
     "mongoose": "^4.0.2",
     "morgan": "^1.5.2",

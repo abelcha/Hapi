@@ -20,9 +20,7 @@ module.exports = function(model) {
   model.schema.pre('save', function(next) {
     var self = this;
     if (!self.id) {
-      model.findOne({}, {
-        id: 1
-      }).sort("-id").exec(function(err, latestDoc) {
+      model.findOne({}).sort("-id").exec(function(err, latestDoc) {
         self.id = latestDoc.id + 1;
         self.date.ajout = Date.now();
         next();

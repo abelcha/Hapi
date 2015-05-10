@@ -32,7 +32,8 @@ module.exports = function(schema) {
       this.rtn = [];
       this.x = -1;
     }
-    if (i === docs.length - 1) {
+
+    if (!docs.length || i === docs.length - 1) {
       return cb(this.rtn)
     }
     if (!req.query.categorie || docs[i].obj.categories.indexOf(req.query.categorie) >= 0) {
@@ -43,6 +44,10 @@ module.exports = function(schema) {
       this.rtn.push({
         distance: docs[i].dis.toFixed(1),
         categories: docs[i].obj.categories,
+        address: {
+          lt: docs[i].obj.address.lt,
+          lg: docs[i].obj.address.lg,
+        },
         noob: (noobs.indexOf(docs[i].obj.id) == -1),
         // address: docs[i].obj.add,
         id: docs[i].obj.id,
@@ -61,10 +66,11 @@ module.exports = function(schema) {
         coordinates: [parseFloat(req.query.lat), parseFloat(req.query.lng)]
       };
       var options = {
-        distanceMultiplier: 0.0001,
-        // maxDistance: (parseFloat(req.query.maxDistance) || 50)
+        distanceMultiplier: 0.001,
+         maxDistance: (parseFloat(req.query.maxDistance) || 50) / 0.001
       }
       edison.db.model.artisan.geoNear(point, options, function(err, docs) {
+        console.log(docs.length)
         if (err)
           return resolve(err);
         docs = JSON.parse(JSON.stringify(docs));

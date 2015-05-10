@@ -1,20 +1,27 @@
-angular.module('edison').controller('InterventionsController', function(tabContainer, $window, edisonAPI, $location, $scope, $q, $rootScope, $filter, config, ngTableParams, interventions) {
+angular.module('edison').controller('InterventionsController', function(tabContainer, $window, edisonAPI, dataProvider, $location, $scope, $q, $rootScope, $filter, config, ngTableParams, interventions) {
   $scope.api = edisonAPI;
   $scope.config = config;
+  $scope.dataProvider = dataProvider;
+
+  if (!$scope.dataProvider.getInterventionList()) {
+    $scope.dataProvider.setInterventionList(interventions.data);
+  }
+
   var tableParameters = {
     page: 1, // show first page
-    total: interventions.data.length,
+    total: $scope.dataProvider.interventionList.length,
     filter: {},
     count: 100 // count per page
   };
   var tableSettings = {
     //groupBy:$rootScope.config.selectedGrouping,
-    total: interventions.data,
+    total: $scope.dataProvider.interventionList,
     getData: function($defer, params) {
-      var data = interventions.data;
+      console.log("getdata");
+      var data = $scope.dataProvider.interventionList;
       data = $filter('tableFilter')(data, params.filter());
       params.total(data.length);
-      //data = $filter('orderBy')(data, params.orderBy());
+      data = $filter('orderBy')(data, params.orderBy());
       $defer.resolve(data.slice((params.page() - 1) * params.count(), params.page() * params.count()));
     },
     filterDelay: 150
@@ -22,6 +29,10 @@ angular.module('edison').controller('InterventionsController', function(tabConta
   $scope.tableParams = new ngTableParams(tableParameters, tableSettings);
   $scope.tab = tabContainer.getCurrentTab();
   $scope.tab.setTitle('Interventions');
+
+  $rootScope.$on('InterventionListChange', function() {
+    $scope.tableParams.reload();
+  })
 
   $scope.getStaticMap = function(inter) {
     q = "?width=500&height=250&precision=0&zoom=10&origin=" + inter.client.address.lt + ", " + inter.client.address.lg;
