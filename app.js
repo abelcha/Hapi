@@ -15,7 +15,6 @@ global._ = require('lodash');
 global.envProduction = typeof process.env.REDISCLOUD_URL !== "undefined";
 
 npm.mongoose.connect(process.env.MONGOLAB_URI || 'mongodb://localhost/EDISON');
-
 global.io = require('socket.io')(http);
 var redisIO = require('socket.io-redis');
 
@@ -28,27 +27,34 @@ if (process.env.REDISCLOUD_URL) {
   });
   edison.redisCli.auth(redisURL.auth.split(":")[1]);
 
-  var pub = npm.redis.createClient(redisURL.port, redisURL.hostname, {
-    return_buffers: true
-  });
-  var sub = npm.redis.createClient(redisURL.port, redisURL.hostname, {
-    return_buffers: true
-  });
-  pub.auth(redisURL.auth.split(":")[1]);
-  sub.auth(redisURL.auth.split(":")[1]);
 
-  io.adapter(redisIO({
-    pubClient: pub,
-    subClient: sub,
-    host: redisURL.hostname,
-    port: redisURL.port
-  }));
+
 
 } else {
-  io.adapter();
+  // io.adapter();
 
   edison.redisCli = npm.redis.createClient();
 }
+var url = require('url');
+var redisURL = url.parse(process.env.REDISTOGO_URL || "redis://redistogo:2bbb8c0981c0f243d90d122886d6958a@soapfish.redistogo.com:9605/");
+
+var pub = npm.redis.createClient(redisURL.port, redisURL.hostname, {
+  return_buffers: true
+});
+var sub = npm.redis.createClient(redisURL.port, redisURL.hostname, {
+  return_buffers: true
+});
+pub.auth(redisURL.auth.split(":")[1]);
+sub.auth(redisURL.auth.split(":")[1]);
+
+
+io.adapter(redisIO({
+  pubClient: pub,
+  subClient: sub,
+  host: redisURL.hostname,
+  port: redisURL.port
+}));
+
 edison.redisCli.on("error", function(err) {
   console.log("Redis Error " + err);
 });
