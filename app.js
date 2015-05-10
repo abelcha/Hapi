@@ -6,11 +6,6 @@ var http = require('http').Server(app);
 var port = (process.env.PORT || 8080);
 global.path = require('path');
 
-global.io = require('socket.io')(http);
-io.on('connection', function(socket) {
-});
-
-
 var dep = require('./loadDependencies');
 global.rootPath = process.cwd();
 global.npm = dep.loadJson("package.json");
@@ -35,6 +30,16 @@ if (process.env.REDISCLOUD_URL) {
 edison.redisCli.on("error", function(err) {
   console.log("Redis Error " + err);
 });
+
+
+
+global.io = require('socket.io')(http);
+var redisIO = require('socket.io-redis');
+io.adapter(redisIO(process.env.REDISTOGO_URL || undefined));
+
+io.on('connection', function(socket) {});
+
+
 
 app.use(express.static(path.join(__dirname, 'bower_components')));
 app.use(express.static(path.join(__dirname, 'assets')));
