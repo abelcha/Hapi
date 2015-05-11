@@ -58,7 +58,6 @@ module.exports = function(schema) {
   }
 
   schema.statics.rank = function(req, res) {
-    console.time("rank")
     var self = this;
     return new Promise(function(resolve, reject) {
       var point = {
@@ -66,6 +65,7 @@ module.exports = function(schema) {
         coordinates: [parseFloat(req.query.lat), parseFloat(req.query.lng)]
       };
       var options = {
+        spherical:true,
         distanceMultiplier: 0.001,
          maxDistance: (parseFloat(req.query.maxDistance) || 50) / 0.001
       }
@@ -75,7 +75,6 @@ module.exports = function(schema) {
         docs = JSON.parse(JSON.stringify(docs));
         getNoobs().then(function(noobs) {
           mapRank(docs, 0, noobs, req, function(rtn) {
-            console.timeEnd("rank")
             resolve(rtn);
           })
         });

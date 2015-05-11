@@ -1,4 +1,4 @@
-angular.module('edison', ['ngMaterial', 'lumx', 'ngAnimate', 'ngDialog', 'btford.socket-io', 'pickadate', 'ngRoute', 'ngResource', 'ngTable', 'ngMap'])
+angular.module('edison', ['ngMaterial', 'lumx', 'ngAnimate', 'ngDialog','n3-pie-chart', 'btford.socket-io', 'pickadate', 'ngRoute', 'ngResource', 'ngTable', 'ngMap'])
   .config(function($mdThemingProvider) {
     $mdThemingProvider.theme('default')
       .primaryPalette('indigo')
@@ -64,14 +64,6 @@ angular.module('edison').controller('MainController', function(tabContainer, $sc
 
   });
 
-  $rootScope.test = function() {
-console.log("swag");
-  }
-
-  $rootScope.tabClick = function($event, url) {
-    console.log($event, url);
-
-  }
 
   $scope.linkClick = function($event, tab) {
     $event.preventDefault();
@@ -99,6 +91,28 @@ var getArtisanList = function(edisonAPI) {
     cache: true
   });
 }
+
+var getArtisan = function($route, $q, edisonAPI) {
+  var id = $route.current.params.id;
+
+  if (id.length > 10) {
+    return $q(function(resolve, reject) {
+      resolve({
+        data: {
+          telephone:  {},
+          pourcentage: {},
+          add: {},
+          representant: {},
+        }
+      })
+    });
+  } else {
+    return edisonAPI.getArtisan(id, {
+      cache: true,
+      extend: true
+    });
+  }
+};
 
 var getIntervention = function($route, $q, edisonAPI) {
   var id = $route.current.params.id;
@@ -137,6 +151,7 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
       templateUrl: "Pages/Artisan/artisan.html",
       controller: "ArtisanController",
       resolve: {
+        artisan:getArtisan,
         interventions: getInterList,
         artisans: getArtisanList
       }
@@ -160,6 +175,19 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
     .when('/intervention', {
       redirectTo: function() {
         return '/intervention/' + Date.now();
+      }
+    })
+    .when('/artisan', {
+      redirectTo: function() {
+        return '/artisan/' + Date.now();
+      }
+    })
+    .when('/artisan/:artisanID/recap', {
+      templateUrl: "Pages/ListeInterventions/listeInterventions.html",
+      controller: "InterventionsController",
+      resolve: {
+        interventions: getInterList,
+        artisans: getArtisanList
       }
     })
     .when('/intervention/:id', {

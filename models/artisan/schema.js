@@ -25,8 +25,8 @@ module.exports = new npm.mongoose.Schema({
   },
   zoneChalandise: Number,
   loc: {
-    type: [Number, Number],
-    index: '2d'
+    type: [Number],
+    index: '2dsphere'
   },
   absence: {
     start:Date,

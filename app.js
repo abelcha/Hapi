@@ -73,7 +73,7 @@ app.post('/login', function(req, res) {
 });
 
 app.use(function(req, res, next) {
-  if (req.session && req.session.id == void(0) && (42 == 0 || envProduction)) {
+  if (req.session && req.session.id == void(0) /*&& (42 == 0 || envProduction)*/) {
     if (req.url.indexOf('/api/') === 0) /*TEMPORARY*/ {
       return res.sendStatus(401);
     } else {

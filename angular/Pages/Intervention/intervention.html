@@ -53,7 +53,7 @@
                 <div class="form-group">
                     <div class="col-sm-4">
                         <div class="select-style text-field">
-                            <select ng-model="inter.categorie" ng-options="cat.short_name as cat.long_name for cat in config.categories">
+                            <select ng-change="searchArtisans()" ng-model="inter.categorie" ng-options="cat.short_name as cat.long_name for cat in config.categories">
                             </select>
                             <label ng-class="{'selected' : inter.categorie}">Categories</label>
                         </div>
@@ -108,7 +108,8 @@
                                 <div class="card__actions">
                                     <button class="btn--no-conflicts btn--m btn--black btn--flat" lx-ripple>Appeler</button>
                                     <button class="btn--no-conflicts btn--m btn--blue btn--flat" lx-ripple>SMS</button>
-                                    <button class="btn--no-conflicts btn--m btn--orange btn--flat" lx-ripple>Recap'</button>
+                                    <a href="/artisan/{{inter.artisan.id}}/recap"><button class="btn--no-conflicts btn--m btn--orange btn--flat" lx-ripple>Recap'</button></a>
+                                    <a href="/artisan/{{inter.artisan.id}}"><button class="btn--no-conflicts btn--m btn--purple btn--flat" lx-ripple>Fiche</button></a>
                                     <button style="float:right" ng-click="openDialog({absence:true})" class="btn--no-conflicts btn--m btn--red btn--flat" lx-ripple>Absence</button>
                                 </div>
                             </div>

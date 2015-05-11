@@ -10,14 +10,22 @@ angular.module('edison').factory('dataProvider', ['socket', '$rootScope', 'confi
     this.interventionList = data;
   };
 
-  dataProvider.prototype.refreshInterventionListFilter = function(fltr) {
+  dataProvider.prototype.refreshInterventionListFilter = function(params) {
     var _this = this;
-    if (this.interventionList && fltr && fltr !== 'all' && config.filters[fltr]) {
-      this.interventionListFiltered = _.filter(this.interventionList, function(e) {
-        return e.fltr[config.filters[fltr].short];
-      })
-    } else {
-      this.interventionListFiltered = this.interventionList;
+
+    this.interventionListFiltered = this.interventionList;
+
+    if (this.interventionList && params) {
+      if (params.fltr && params.fltr !== 'all' && config.filters[params.fltr]) {
+        this.interventionListFiltered = _.filter(this.interventionList, function(e) {
+          return e.fltr[config.filters[params.fltr].short];
+        })
+      } else if (params.artisanID) {
+        var artisanID = parseInt(params.artisanID);
+        this.interventionListFiltered = _.filter(this.interventionList, function(e) {
+          return e.ai === artisanID;
+        })
+      }
     }
   }
 

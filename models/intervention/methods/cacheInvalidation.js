@@ -54,6 +54,7 @@ module.exports = function(schema) {
 
   var translate = function(e, cb) {
     getFltr(e).then(function(fltr) {
+      console.log(e.id);
       cb(null, {
         fltr: fltr,
         t: e.telepro,
@@ -99,11 +100,12 @@ module.exports = function(schema) {
 
   schema.statics.cacheReload = function() {
     return new Promise(function(resolve, reject) {
-      console.log("==>yay");
+      console.time("interlist");
       npm.mongoose.model('intervention').find().sort('-id').select(selectedFields).then(function(docs) {
         console.log(docs.length)
         npm.async.map(docs, translate, function(err, result)  {
           resolve(result);
+          console.timeEnd("interlist");
           edison.redisCli.set("interventionList", JSON.stringify(result))
           edison.redisCli.expire("interventionList", 6000)
         });

@@ -5,7 +5,8 @@ module.exports = new npm.mongoose.Schema({
   },
   status: {
     type: String,
-    index: true
+    index: true,
+    default:'APR'
   },
   telepro: String,
   comments: [

@@ -2,7 +2,6 @@ module.exports = function(schema) {
 
   schema.statics.stats = function(id, req, res) {
     return new Promise(function(resolve, reject) {
-      console.time("ts")
       var sumCount = function(query) {
         query['artisan.id'] = parseInt(id);
         var q = npm.mongoose.model('intervention').aggregate([{
@@ -89,7 +88,6 @@ module.exports = function(schema) {
               montant: 0
             };
           }));
-          console.timeEnd("ts")
         });
 
     })

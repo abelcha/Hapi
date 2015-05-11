@@ -77,6 +77,7 @@ module.exports = function(schema) {
   var addInDB = function(data, i, cb) {
     if (i >= data.length - 1)
       return cb(null)
+    console.log(data[i].id)
     if (i % 100 === 0)
       console.log(((i / data.length) * 100).toFixed(2), '%')
     var artisan = edison.db.model.artisan(translateModel(data[i]));
