@@ -1,4 +1,4 @@
-angular.module('edison').factory('tabContainer', ['$location', '$window', '$q', 'edisonAPI', function($location, $window, $q, edisonAPI) {
+angular.module('edison').factory('tabContainer', ['$location', '$window', '$q', 'edisonAPI','_', function($location, $window, $q, edisonAPI, _) {
 
   var Tab = function(args) {
 
@@ -72,7 +72,7 @@ angular.module('edison').factory('tabContainer', ['$location', '$window', '$q', 
   }
 
   TabContainer.prototype.isOpen = function(url) {
-    var index = this._tabs.findIndex(function(e) {
+    var index = _.findIndex(this._tabs, function(e) {
       return ((!e.deleted && e.url === url));
     });
     return (index >= 0);
@@ -80,7 +80,7 @@ angular.module('edison').factory('tabContainer', ['$location', '$window', '$q', 
 
   TabContainer.prototype.getTab = function(url) {
 
-    return this._tabs.find(function(e) {
+    return _.find(this._tabs, function(e) {
       return ((!e.deleted && e.url === url));
     });
   };

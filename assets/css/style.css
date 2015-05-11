@@ -56,6 +56,11 @@
     padding: 64px 0px 0px!important;
 }
 
+.listeInterventions {
+    padding: 4px;
+    padding-bottom: 21px;
+}
+
 .shadow-box {
     background: white;
     box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .26);
@@ -78,7 +83,6 @@ md-content#autocompleteContainer {
 md-autocomplete {
     pointer-events: all;
 }
-
 
 md-autocomplete > ul {
     pointer-events: all;

@@ -6,19 +6,15 @@ angular.module('edison', ['ngMaterial', 'lumx', 'ngAnimate', 'ngDialog', 'btford
   });
 
 
-angular.module('edison').controller('MainController', function(tabContainer, $scope, socket, dataProvider, $rootScope, $location, edisonAPI) {
+angular.module('edison').controller('MainController', function(tabContainer, $scope, socket, config, dataProvider, $rootScope, $location, edisonAPI) {
 
-
+  $scope.config = config;
   $rootScope.loadingData = true;
   $rootScope.$on('$routeChangeSuccess', function(e, curr, prev) {
     $rootScope.loadingData = false;
   });
 
   $scope.sideBarlinks = [{
-    url: '/interventions',
-    title: 'Liste Interventions',
-    icon: 'tasks'
-  }, {
     url: '/dashboard',
     title: 'Dashboard',
     icon: 'dashboard'
@@ -68,6 +64,22 @@ angular.module('edison').controller('MainController', function(tabContainer, $sc
 
   });
 
+  $rootScope.test = function() {
+console.log("swag");
+  }
+
+  $rootScope.tabClick = function($event, url) {
+    console.log($event, url);
+
+  }
+
+  $scope.linkClick = function($event, tab) {
+    $event.preventDefault();
+    $event.stopPropagation();
+    console.log(tab);
+
+  }
+
   $scope.tabIconClick = function($event, tab) {
     $event.preventDefault();
     $event.stopPropagation();
@@ -115,6 +127,10 @@ var getIntervention = function($route, $q, edisonAPI) {
 angular.module('edison').config(function($routeProvider, $locationProvider) {
   $routeProvider
     .when('/', {
+      resolve: {
+        interventions: getInterList,
+        artisans: getArtisanList
+      },
       redirectTo: '/dashboard',
     })
     .when('/artisan/:id', {
@@ -126,6 +142,14 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
       }
     })
     .when('/interventions', {
+      templateUrl: "Pages/ListeInterventions/listeInterventions.html",
+      controller: "InterventionsController",
+      resolve: {
+        interventions: getInterList,
+        artisans: getArtisanList
+      }
+    })
+    .when('/interventions/:fltr', {
       templateUrl: "Pages/ListeInterventions/listeInterventions.html",
       controller: "InterventionsController",
       resolve: {

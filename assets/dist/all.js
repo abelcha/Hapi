@@ -6,19 +6,15 @@ angular.module('edison', ['ngMaterial', 'lumx', 'ngAnimate', 'ngDialog', 'btford
   });
 
 
-angular.module('edison').controller('MainController', function(tabContainer, $scope, socket, dataProvider, $rootScope, $location, edisonAPI) {
+angular.module('edison').controller('MainController', function(tabContainer, $scope, socket, config, dataProvider, $rootScope, $location, edisonAPI) {
 
-
+  $scope.config = config;
   $rootScope.loadingData = true;
   $rootScope.$on('$routeChangeSuccess', function(e, curr, prev) {
     $rootScope.loadingData = false;
   });
 
   $scope.sideBarlinks = [{
-    url: '/interventions',
-    title: 'Liste Interventions',
-    icon: 'tasks'
-  }, {
     url: '/dashboard',
     title: 'Dashboard',
     icon: 'dashboard'
@@ -68,6 +64,22 @@ angular.module('edison').controller('MainController', function(tabContainer, $sc
 
   });
 
+  $rootScope.test = function() {
+console.log("swag");
+  }
+
+  $rootScope.tabClick = function($event, url) {
+    console.log($event, url);
+
+  }
+
+  $scope.linkClick = function($event, tab) {
+    $event.preventDefault();
+    $event.stopPropagation();
+    console.log(tab);
+
+  }
+
   $scope.tabIconClick = function($event, tab) {
     $event.preventDefault();
     $event.stopPropagation();
@@ -115,6 +127,10 @@ var getIntervention = function($route, $q, edisonAPI) {
 angular.module('edison').config(function($routeProvider, $locationProvider) {
   $routeProvider
     .when('/', {
+      resolve: {
+        interventions: getInterList,
+        artisans: getArtisanList
+      },
       redirectTo: '/dashboard',
     })
     .when('/artisan/:id', {
@@ -126,6 +142,14 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
       }
     })
     .when('/interventions', {
+      templateUrl: "Pages/ListeInterventions/listeInterventions.html",
+      controller: "InterventionsController",
+      resolve: {
+        interventions: getInterList,
+        artisans: getArtisanList
+      }
+    })
+    .when('/interventions/:fltr', {
       templateUrl: "Pages/ListeInterventions/listeInterventions.html",
       controller: "InterventionsController",
       resolve: {
@@ -164,299 +188,6 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
   $locationProvider.html5Mode(true);
 });
 
-if (!Array.prototype.findIndex) {
-  Array.prototype.findIndex = function(predicate) {
-    if (this == null) {
-      throw new TypeError('Array.prototype.findIndex appelé sur null ou undefined');
-    }
-    if (typeof predicate !== 'function') {
-      throw new TypeError('predicate doit être une fonction');
-    }
-    var list = Object(this);
-    var length = list.length >>> 0;
-    var thisArg = arguments[1];
-    var value;
-
-    for (var i = 0; i < length; i++) {
-      value = list[i];
-      if (predicate.call(thisArg, value, i, list)) {
-        return i;
-      }
-    }
-    return -1;
-  };
-}
-
-if (!Array.prototype.find) {
-  Array.prototype.find = function(predicate) {
-    if (this == null) {
-      throw new TypeError('Array.prototype.find a été appelé sur null ou undefined');
-    }
-    if (typeof predicate !== 'function') {
-      throw new TypeError('predicate doit être une fonction');
-    }
-    var list = Object(this);
-    var length = list.length >>> 0;
-    var thisArg = arguments[1];
-    var value;
-
-    for (var i = 0; i < length; i++) {
-      value = list[i];
-      if (predicate.call(thisArg, value, i, list)) {
-        return value;
-      }
-    }
-    return undefined;
-  };
-}
-function gMap(client) {
-
-  var self = this;
-
-  ZOOM_OVERVIEW = 6;
-  ZOOM_BASIC = 10;
-  ZOOM_MAX = 17;
-
-  ICON_GREY = "/img/map/grey.png";
-  ICON_RED = "/img/map/red.png";
-  ICON_BLUE = "/img/map/blue.png";
-  ICON_GREEN = "/img/map/green.png";
-
-  INFOWINDOW_PRELOADER = '<div id="InfoWindow"><img style="margin-left:23px;width:40px" src="/img/map/preloader.gif"></div>';
-
-  INPUT_CLIENT = document.getElementById('pac-input');
-  INPUT_FACTURATION = document.getElementById('facture_geocoder');
-
-  this.directionsDisplay = new google.maps.DirectionsRenderer();
-  this.directionsService = new google.maps.DirectionsService();
-  this.circles = [];
-
-
-  this.getMap = function() {
-    return (self.map);
-  }
-
-  this.createMarker = function(options, visibility) {
-    options.map = self.map;
-    options.anchorPoint = new google.maps.Point(0, -29);
-    var marker = new google.maps.Marker(options);
-    marker.setVisible(visibility);
-    if (options.onclick) {
-      google.maps.event.addListener(marker, 'click', options.onclick);
-    } 
-    return (marker)
-  }
-
-
-  this.showArtisanRoute = function(newArtisan, client) {
-    if (client.address) {
-      var request = {
-          origin: client.serializeAddress(newArtisan.add),
-          destination: client.serializeAddress(client.address),
-          travelMode: google.maps.TravelMode.DRIVING
-      };
-      self.directionsService.route(request, function(response, status) {
-      if (status == google.maps.DirectionsStatus.OK) {
-          self.directionsDisplay.setMap(self.getMap());
-          self.directionsDisplay.setOptions({ preserveViewport: true, suppressMarkers: true });
-          self.directionsDisplay.setDirections(response);
-      }
-      });
-    }
-  }
-
-
-  this.drawCircle = function(add, radius, id) {
-  
-    self.circles[id] = new google.maps.Circle({
-      center:new google.maps.LatLng(add.lt,add.lg),
-      radius:radius,
-      strokeColor:"#2680F3",
-      strokeOpacity:0.9,
-      strokeWeight:3,
-      fillColor:"#2680F3",
-      fillOpacity:0.01
-    });
-    self.circles[id].setMap(self.getMap());
-  }
-
-  this.setClientPlace = function(newPlace) {
-            
-        // If the place has a geometry, then present it on a map.
-
-/*--------------------------- Center Map -----------------------------*/   
-
-      if (newPlace.geometry.viewport) {
-        self.map.fitBounds(newPlace.geometry.viewport);
-      } else {
-        self.map.setCenter(newPlace.geometry.location);
-        self.map.setZoom(ZOOM_BASIC);
-      }
-
-/*----------------------------- Marker -----------------------------*/   
-
-      if (client.marker) {
-        client.marker.setMap(null);
-      }
-
-      client.marker = self.createMarker({
-        title: 'Client',
-        animation: google.maps.Animation.DROP,
-        position: newPlace.geometry.location,
-        icon: ICON_GREY,
-        onclick:function() {
-          self.map.setCenter(client.marker.position)
-          self.map.setZoom(self.map.getZoom() == ZOOM_MAX ? ZOOM_BASIC : ZOOM_MAX); 
-        }
-      }, false);
-
-
-/*--------------------------- InfoWindow ----------------------------*/        
-
-      client.infoWindow = new google.maps.InfoWindow({
-        content: INFOWINDOW_PRELOADER,
-        pixelOffset: new google.maps.Size(0, 25)
-      });
-
-      client.infoWindow.open(self.map, client.marker);
-        google.maps.event.addListener(client.infoWindow,'closeclick',function() {
-        client.marker.setVisible(true);
-      });
-/*      window.setTimeout(function() { 
-        client.infoWindow.close();
-        client.marker.setVisible(true);
-      }, 15000);*/
-
-/*-------------------------- Adress Input -----------------------------*/      
-    if (newPlace.address_components) {
-       client.setAddress(newPlace); 
-    } 
-      self.map.setZoom(ZOOM_BASIC);
-       
-  }
-
-
-
-/*-----------------------------------------------------------------------------*/
-/*-----------------------------------------------------------------------------*/
-/*------------------------------- CONSTRUCTOR  --------------------------------*/
-/*-----------------------------------------------------------------------------*/
-/*-----------------------------------------------------------------------------*/
-
-
-    // Create the map
-    self.map = new google.maps.Map(document.getElementById('map-canvas'), {
-      center: new google.maps.LatLng(46.52863469527167,2.43896484375),
-      zoom: ZOOM_OVERVIEW,
-
-    });
-
-
-    // Add input for adress autocomplete
-      
-    self.map.controls[google.maps.ControlPosition.TOP_LEFT].push(INPUT_CLIENT);
-    self.autocomplete = new google.maps.places.Autocomplete(INPUT_CLIENT);
-    self.autocomplete.setComponentRestrictions();
-    self.autocomplete.bindTo('bounds', self.map);
-      
-    //When user enters new address
-    self.placeChanged = function() {
-
-      place = self.autocomplete.getPlace();
-      //if the user hit enter without selecting proposition
-      if(typeof place.address_components == 'undefined') {
-        // find list of predictions
-          new google.maps.places.AutocompleteService().getPlacePredictions({
-            input: place.name,
-            offset: place.length
-          }, function(list, status) {
-              // geocode the first proposition    
-              new google.maps.Geocoder().geocode({
-                address: list[0].description
-              }, function(results, status) {
-                  // if everything is OK actualise client address
-                  if (status == google.maps.GeocoderStatus.OK)
-                     self.setClientPlace(results[0]);
-              });
-          });
-
-      } 
-      else {
-        // the user have selected a proposition
-        self.setClientPlace(place);
-        client.getInfoQuartier(place);
-      }
-    };
-
-  // si une autre personne regle la facture on autocomplete ses coordonnées
-  var payeurAutocomplete = new google.maps.places.Autocomplete((INPUT_FACTURATION), {types:['geocode']});
-  google.maps.event.addListener(payeurAutocomplete, 'place_changed', function() {
-      console.log("payer adress have changed");
-  });
-
-};
-
-angular.module('edison').directive('capitalize', function() {
-    return {
-        require: 'ngModel',
-        link: function(scope, element, attrs, modelCtrl) {
-            modelCtrl.$parsers.push(function(input) {
-                return input ? input.toUpperCase() : "";
-            });
-            element.css("text-transform","uppercase");
-        }
-    };
-})
-
-
-angular.module('edison').directive('ngEnter', function () {
-    return function (scope, element, attrs) {
-        element.bind("keydown keypress", function (event) {
-            if(event.which === 13) {
-                scope.$apply(function (){
-                    scope.$eval(attrs.ngEnter);
-                });
-
-                event.preventDefault();
-            }
-        });
-    };
-});
-/*angular.module('edison').directive('materialSelect', function() {
-  return {
-    restrict: 'E',
-    replace: true,
-    template: '<div class="select-style text-field">' +
-      '<select ng-model>' +
-      '<option disabled>{{defaultName}}</option>' +
-      '</select>' +
-      '</div>'
-  }
-});
-*/
-angular.module('edison').directive('sglclick', ['$parse', function($parse) {
-    return {
-        restrict: 'A',
-        link: function(scope, element, attr) {
-          var fn = $parse(attr['sglclick']);
-          var delay = 300, clicks = 0, timer = null;
-          element.on('click', function (event) {
-            clicks++;  //count clicks
-            if(clicks === 1) {
-              timer = setTimeout(function() {
-                scope.$apply(function () {
-                    fn(scope, { $event: event });
-                }); 
-                clicks = 0;             //after action performed, reset counter
-              }, delay);
-              } else {
-                clearTimeout(timer);    //prevent single-click action
-                clicks = 0;             //after action performed, reset counter
-              }
-          });
-        }
-    };
-}])
 angular.module("edison").filter('addressPrettify', function() {
   return function(address) {
     return (address.n + " " +
@@ -584,7 +315,6 @@ function cleanString(str) {
 
 angular.module("edison").filter('tableFilter', function() {
   return function(data, fltr, c) {
-    console.time("lol");
     var rtn = [];
     for (x in fltr) {
       fltr[x] = cleanString(fltr[x]);
@@ -609,6 +339,67 @@ angular.module("edison").filter('tableFilter', function() {
   }
 });
 
+angular.module('edison').directive('capitalize', function() {
+    return {
+        require: 'ngModel',
+        link: function(scope, element, attrs, modelCtrl) {
+            modelCtrl.$parsers.push(function(input) {
+                return input ? input.toUpperCase() : "";
+            });
+            element.css("text-transform","uppercase");
+        }
+    };
+})
+
+
+angular.module('edison').directive('ngEnter', function () {
+    return function (scope, element, attrs) {
+        element.bind("keydown keypress", function (event) {
+            if(event.which === 13) {
+                scope.$apply(function (){
+                    scope.$eval(attrs.ngEnter);
+                });
+
+                event.preventDefault();
+            }
+        });
+    };
+});
+/*angular.module('edison').directive('materialSelect', function() {
+  return {
+    restrict: 'E',
+    replace: true,
+    template: '<div class="select-style text-field">' +
+      '<select ng-model>' +
+      '<option disabled>{{defaultName}}</option>' +
+      '</select>' +
+      '</div>'
+  }
+});
+*/
+angular.module('edison').directive('sglclick', ['$parse', function($parse) {
+    return {
+        restrict: 'A',
+        link: function(scope, element, attr) {
+          var fn = $parse(attr['sglclick']);
+          var delay = 300, clicks = 0, timer = null;
+          element.on('click', function (event) {
+            clicks++;  //count clicks
+            if(clicks === 1) {
+              timer = setTimeout(function() {
+                scope.$apply(function () {
+                    fn(scope, { $event: event });
+                }); 
+                clicks = 0;             //after action performed, reset counter
+              }, delay);
+              } else {
+                clearTimeout(timer);    //prevent single-click action
+                clicks = 0;             //after action performed, reset counter
+              }
+          });
+        }
+    };
+}])
 angular.module('edison').factory('Address', function() {
 
 
@@ -779,6 +570,29 @@ angular.module('edison').factory('config', [function() {
 
   var config = {};
 
+  config.filters = {
+    all: {
+      short:'all',
+      long:'Toutes les Inters',
+      url:''
+    },
+    enCours: {
+      short: 'enc',
+      long:'En Cours',
+      url:'/enCours'
+    },
+    aVerifier: {
+      short: 'avr',
+      long:'A Vérifier',
+      url:'/aVerifier'
+    },
+    aRelancer: {
+      short: 'arl',
+      long:'A Relancer',
+      url:'/aRelancer'
+    }
+  }
+
   config.civilites = [{
     short_name: 'M.',
     long_name: 'Monsieur'
@@ -931,9 +745,7 @@ angular.module('edison').factory('config', [function() {
 
 }]);
 
-angular.module('edison').factory('dataProvider', ['$timeout', 'socket', '$rootScope', function($timeout, socket, $rootScope) {
-
-
+angular.module('edison').factory('dataProvider', ['socket', '$rootScope', 'config', '_', function(socket, $rootScope, config, _) {
 
   var dataProvider = function() {
     var _this = this;
@@ -945,14 +757,24 @@ angular.module('edison').factory('dataProvider', ['$timeout', 'socket', '$rootSc
     this.interventionList = data;
   };
 
+  dataProvider.prototype.refreshInterventionListFilter = function(fltr) {
+    var _this = this;
+    if (this.interventionList && fltr && fltr !== 'all' && config.filters[fltr]) {
+      this.interventionListFiltered = _.filter(this.interventionList, function(e) {
+        return e.fltr[config.filters[fltr].short];
+      })
+    } else {
+      this.interventionListFiltered = this.interventionList;
+    }
+  }
+
   dataProvider.prototype.updateInterventionList = function(data) {
     var _this = this;
     if (this.interventionList) {
-      var index = this.interventionList.findIndex(function(e) {
+      var index = _.findIndex(this.interventionList, function(e) {
         return e.id === data.id
-      })
+      });
       _this.interventionList[index] = data;
-      console.log("interchange")
       $rootScope.$broadcast('InterventionListChange');
     }
   }
@@ -964,6 +786,12 @@ angular.module('edison').factory('dataProvider', ['$timeout', 'socket', '$rootSc
   return new dataProvider;
 
 }]);
+
+angular.module('edison').factory('_', ['$window',
+  function($window) {
+    return $window._;
+  }
+])
 
 angular.module('edison').factory('mapAutocomplete', ['$q', 'Address',
   function($q, Address) {
@@ -1008,7 +836,7 @@ angular.module('edison').factory('mapAutocomplete', ['$q', 'Address',
 angular.module('edison').factory('socket', function (socketFactory) {
   return socketFactory();
 });
-angular.module('edison').factory('tabContainer', ['$location', '$window', '$q', 'edisonAPI', function($location, $window, $q, edisonAPI) {
+angular.module('edison').factory('tabContainer', ['$location', '$window', '$q', 'edisonAPI','_', function($location, $window, $q, edisonAPI, _) {
 
   var Tab = function(args) {
 
@@ -1082,7 +910,7 @@ angular.module('edison').factory('tabContainer', ['$location', '$window', '$q', 
   }
 
   TabContainer.prototype.isOpen = function(url) {
-    var index = this._tabs.findIndex(function(e) {
+    var index = _.findIndex(this._tabs, function(e) {
       return ((!e.deleted && e.url === url));
     });
     return (index >= 0);
@@ -1090,7 +918,7 @@ angular.module('edison').factory('tabContainer', ['$location', '$window', '$q', 
 
   TabContainer.prototype.getTab = function(url) {
 
-    return this._tabs.find(function(e) {
+    return _.find(this._tabs, function(e) {
       return ((!e.deleted && e.url === url));
     });
   };
@@ -1491,7 +1319,9 @@ angular.module('edison').controller('InterventionController',
 
 
 
-angular.module('edison').controller('InterventionsController', function(tabContainer, $window, edisonAPI, dataProvider, $location, $scope, $q, $rootScope, $filter, config, ngTableParams, interventions) {
+angular.module('edison').controller('InterventionsController', function(tabContainer, $window, edisonAPI, dataProvider, $routeParams, $location, $scope, $q, $rootScope, $filter, config, ngTableParams, interventions) {
+  $scope.tab = tabContainer.getCurrentTab();
+  $scope.tab.setTitle($routeParams.fltr ? config.filters[$routeParams.fltr].long : 'Interventions');
   $scope.api = edisonAPI;
   $scope.config = config;
   $scope.dataProvider = dataProvider;
@@ -1500,18 +1330,19 @@ angular.module('edison').controller('InterventionsController', function(tabConta
     $scope.dataProvider.setInterventionList(interventions.data);
   }
 
+  $scope.dataProvider.refreshInterventionListFilter($routeParams.fltr);
+
   var tableParameters = {
     page: 1, // show first page
-    total: $scope.dataProvider.interventionList.length,
+    total: $scope.dataProvider.interventionListFiltered.length,
     filter: {},
     count: 100 // count per page
   };
   var tableSettings = {
     //groupBy:$rootScope.config.selectedGrouping,
-    total: $scope.dataProvider.interventionList,
+    total: $scope.dataProvider.interventionListFiltered,
     getData: function($defer, params) {
-      console.log("getdata");
-      var data = $scope.dataProvider.interventionList;
+      var data = $scope.dataProvider.interventionListFiltered;
       data = $filter('tableFilter')(data, params.filter());
       params.total(data.length);
       data = $filter('orderBy')(data, params.orderBy());
@@ -1520,10 +1351,9 @@ angular.module('edison').controller('InterventionsController', function(tabConta
     filterDelay: 150
   }
   $scope.tableParams = new ngTableParams(tableParameters, tableSettings);
-  $scope.tab = tabContainer.getCurrentTab();
-  $scope.tab.setTitle('Interventions');
 
   $rootScope.$on('InterventionListChange', function() {
+    $scope.dataProvider.refreshInterventionListFilter($routeParams.fltr);
     $scope.tableParams.reload();
   })
 
@@ -1531,7 +1361,6 @@ angular.module('edison').controller('InterventionsController', function(tabConta
     q = "?width=500&height=250&precision=0&zoom=10&origin=" + inter.client.address.lt + ", " + inter.client.address.lg;
     return "/api/map/staticDirections" + q;
   }
-
 
   $scope.expendedRow = -1;
   $scope.rowClick = function($event, inter, doubleClick) {

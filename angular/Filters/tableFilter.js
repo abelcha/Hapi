@@ -20,7 +20,6 @@ function cleanString(str) {
 
 angular.module("edison").filter('tableFilter', function() {
   return function(data, fltr, c) {
-    console.time("lol");
     var rtn = [];
     for (x in fltr) {
       fltr[x] = cleanString(fltr[x]);

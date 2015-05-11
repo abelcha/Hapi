@@ -17,9 +17,7 @@ module.exports = function(schema) {
     var _this = this;
     return new Promise(function(resolve, reject) {
       edison.redisCli.get('artisanList', function(err, reply) {
-        if (err)
-          return reject(err);
-        if (reply && !req.query.cache) {
+        if (!err && reply && !req.query.cache) {
           return resolve(JSON.parse(reply));
         }
         _this.model('artisan').find().sort('-id').select(s).then(function(docs) {

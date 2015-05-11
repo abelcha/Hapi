@@ -27,49 +27,17 @@ if (process.env.REDISCLOUD_URL) {
   });
   edison.redisCli.auth(redisURL.auth.split(":")[1]);
 
-
-
-
 } else {
-  // io.adapter();
-
   edison.redisCli = npm.redis.createClient();
 }
-var url = require('url');
-var redisURL = url.parse(process.env.REDISTOGO_URL || "redis://redistogo:2bbb8c0981c0f243d90d122886d6958a@soapfish.redistogo.com:9605/");
-
-var pub = npm.redis.createClient(redisURL.port, redisURL.hostname, {
-  return_buffers: true
-});
-var sub = npm.redis.createClient(redisURL.port, redisURL.hostname, {
-  return_buffers: true
-});
-pub.auth(redisURL.auth.split(":")[1]);
-sub.auth(redisURL.auth.split(":")[1]);
-
-
-io.adapter(redisIO({
-  pubClient: pub,
-  subClient: sub,
-  host: redisURL.hostname,
-  port: redisURL.port
-}));
 
 edison.redisCli.on("error", function(err) {
   console.log("Redis Error " + err);
 });
 
-
-
-
-
 io.on('connection', function(socket) {
 
-  console.log("socket.io connected")
-
 });
-
-
 
 app.use(express.static(path.join(__dirname, 'bower_components')));
 app.use(express.static(path.join(__dirname, 'assets')));
@@ -105,7 +73,7 @@ app.post('/login', function(req, res) {
 });
 
 app.use(function(req, res, next) {
-  if (req.session.id == void(0) && (42 == 0 || envProduction)) {
+  if (req.session && req.session.id == void(0) && (42 == 0 || envProduction)) {
     if (req.url.indexOf('/api/') === 0) /*TEMPORARY*/ {
       return res.sendStatus(401);
     } else {
@@ -128,7 +96,6 @@ app.use(function(req, res, next) {
 
 //if (!env_prod) {
 app.use(function(err, req, res, next) {
-  console.log(err);
   res.status(err.status || 500);
   res.json(err);
 });

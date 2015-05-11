@@ -1,6 +1,4 @@
-angular.module('edison').factory('dataProvider', ['$timeout', 'socket', '$rootScope', function($timeout, socket, $rootScope) {
-
-
+angular.module('edison').factory('dataProvider', ['socket', '$rootScope', 'config', '_', function(socket, $rootScope, config, _) {
 
   var dataProvider = function() {
     var _this = this;
@@ -12,14 +10,24 @@ angular.module('edison').factory('dataProvider', ['$timeout', 'socket', '$rootSc
     this.interventionList = data;
   };
 
+  dataProvider.prototype.refreshInterventionListFilter = function(fltr) {
+    var _this = this;
+    if (this.interventionList && fltr && fltr !== 'all' && config.filters[fltr]) {
+      this.interventionListFiltered = _.filter(this.interventionList, function(e) {
+        return e.fltr[config.filters[fltr].short];
+      })
+    } else {
+      this.interventionListFiltered = this.interventionList;
+    }
+  }
+
   dataProvider.prototype.updateInterventionList = function(data) {
     var _this = this;
     if (this.interventionList) {
-      var index = this.interventionList.findIndex(function(e) {
+      var index = _.findIndex(this.interventionList, function(e) {
         return e.id === data.id
-      })
+      });
       _this.interventionList[index] = data;
-      console.log("interchange")
       $rootScope.$broadcast('InterventionListChange');
     }
   }

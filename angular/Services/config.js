@@ -2,6 +2,29 @@ angular.module('edison').factory('config', [function() {
 
   var config = {};
 
+  config.filters = {
+    all: {
+      short:'all',
+      long:'Toutes les Inters',
+      url:''
+    },
+    enCours: {
+      short: 'enc',
+      long:'En Cours',
+      url:'/enCours'
+    },
+    aVerifier: {
+      short: 'avr',
+      long:'A Vérifier',
+      url:'/aVerifier'
+    },
+    aRelancer: {
+      short: 'arl',
+      long:'A Relancer',
+      url:'/aRelancer'
+    }
+  }
+
   config.civilites = [{
     short_name: 'M.',
     long_name: 'Monsieur'

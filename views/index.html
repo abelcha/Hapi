@@ -141,6 +141,14 @@
                             <span class="mm-text">{{link.title}}</span>
                         </a>
                     </li>
+                    <li class="mm-dropdown">
+                        <a href="#"><i class="menu-icon fa fa-th"></i><span class="mm-text">Interventions</span><span class="label label-warning">17234</span></a>
+                        <ul>
+                            <li ng-repeat="link in config.filters">
+                                <a tabindex="-1" href="/interventions{{link.url}}"><i class="menu-icon fa fa-th-list"></i><span class="mm-text">{{link.long}}</span><span class="label label-warning">103</span></a>
+                            </li>
+                        </ul>
+                    </li>
                 </ul>
                 <!-- / .navigation -->
                 <div class="menu-content">
@@ -173,6 +181,7 @@
     </div>
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
     <script src="/pickadate/lib/compressed/picker.js"></script>
+    <script src="/lodash/lodash.min.js"></script>
     <script src="/pickadate/lib/compressed/picker.date.js"></script>
     <script src="/pickadate/lib/compressed/picker.time.js"></script>
     <script src="/pickadate/lib/compressed/translations/fr_FR.js"></script>

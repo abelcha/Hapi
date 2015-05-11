@@ -70,7 +70,6 @@ module.exports = function() {
   app.all('/api/:model/:method', function(req, res, next) {
     var model = edison.db.model[req.params.model];
     var method = req.params.method;
-
     if (!model ||  typeof model[method] !== "function" || model[method].length !== 2) {
       return next();
     }

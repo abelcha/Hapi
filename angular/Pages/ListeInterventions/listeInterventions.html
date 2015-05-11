@@ -1,4 +1,4 @@
-<div>
+<div class="shadow-box listeInterventions">
     <table style="background:white;" ng-table="tableParams" class="table table-bordered table-hover table-hover table-striped" id="table-list" show-filter="true">
         <tbody id="tbody-list">
             <tr data-id="{{inter.id}}" ng-repeat-start="inter in $data " ng-click="rowClick($event, inter, false)" ng-dblclick="rowClick($event, inter, true)" ng-class="{warning : isInSelection(inter.i)}">
@@ -9,7 +9,7 @@
                     {{::inter.t}}
                 </td>
                 <td data-title="'Cat.'" sortable="'c'" filter="{ 'c': 'text' }">
-                    <span style="width:80px" class="label {{::inter.c.c}}">{{::inter.c.n}}</span>
+                    <span style="width:80px" class="label {{::inter.cx}}">{{::inter.c}}</span>
                 </td>
                 <td data-title="'Date Ajout'" sortable="'da'" filter="{ 'da': 'text' }">
                     {{::inter.da | date:"dd/MM/yy" || ""}} {{::inter.da | date:"HH'h'mm" || ""}}
@@ -31,8 +31,8 @@
                 <td data-title="'Prix'" sortable="'pa'" filter="{ 'pa': 'text' }">
                     {{::(inter.pa | number:2) || 0}} €
                 </td>
-                <td data-title="'Status'" sortable="'s'">
-                    <span style="width:70px" class="label {{::inter.s.c}}"> {{::inter.s.n}}</span>
+                <td data-title="'Status'" sortable="'s'" filter="{ 's': 'text' }">
+                    <span style="width:70px" class="label {{::inter.sx}}"> {{::inter.s}}</span>
                 </td>
             </tr>
             <tr ng-if="expendedRow === inter.id" ng-repeat-end>
