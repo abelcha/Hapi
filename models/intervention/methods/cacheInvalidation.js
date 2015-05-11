@@ -102,7 +102,6 @@ module.exports = function(schema) {
     return new Promise(function(resolve, reject) {
       console.time("interlist");
       npm.mongoose.model('intervention').find().sort('-id').select(selectedFields).then(function(docs) {
-        console.log(docs.length)
         npm.async.map(docs, translate, function(err, result)  {
           resolve(result);
           console.timeEnd("interlist");
