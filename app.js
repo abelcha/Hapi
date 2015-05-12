@@ -71,11 +71,14 @@ app.get('/jobs', function(req, res) {
 });
 
 app.get('/test2', function(req, res) {
+  console.time('now')
     for (var i = 0; i < 150000; i++) {
     if (i % 10000 === 0)
      console.log(i / 5000);
     for (var j = 0; j < i; j++) {};
   };
+  console.timeEnd('now')
+
 res.send("ok")
 })
 
