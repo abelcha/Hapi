@@ -27,6 +27,7 @@
     "gulp-rename": "^1.2.2",
     "gulp-uglifyjs": "^0.6.1",
     "jackrabbit": "^3.0.8",
+    "jade": "^1.9.2",
     "kue": "^0.9.3",
     "lodash": "^3.8.0",
     "mongoose": "^4.0.2",
