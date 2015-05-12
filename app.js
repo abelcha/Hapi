@@ -31,6 +31,47 @@ if (process.env.REDISCLOUD_URL) {
   edison.redisCli = npm.redis.createClient();
 }
 
+global.jobs = npm.kue.createQueue({
+  prefix: 'q',
+  redis: process.env.REDISCLOUD_URL ? {
+    port: redisURL.port,
+    host: redisURL.hostname,
+    auth: redisURL.auth.split(":")[1],
+  } : undefined,
+  disableSearch: true
+})
+
+app.get('/jobs', function(req, res) {
+  var job = jobs.create('crawl', {
+    url: 'http://example.com',
+    token: 'foo'
+  });
+  job.on('complete', function(re) {
+    console.log("===>", re)
+    // avoid sending data after the response has been closed
+    if (res.finished) {
+      console.log("Job complete");
+    } else {
+      return res.send("Job complete");
+    }
+  }).on('failed', function() {
+    if (res.finished) {
+      console.log("Job failed");
+    } else {
+      return res.send("Job failed");
+    }
+  }).on('progress', function(progress) {
+    console.log('job #' + job.id + ' ' + progress + '% complete');
+  });
+  job.save();
+  // timeout after 5s
+/*  setTimeout(function() {
+    return res.send("OK (timed out)");
+  }, 5000);*/
+});
+
+
+
 edison.redisCli.on("error", function(err) {
   console.log("Redis Error " + err);
 });
@@ -39,6 +80,7 @@ io.on('connection', function(socket) {
 
 });
 
+app.use(npm.kue.app);
 app.use(express.static(path.join(__dirname, 'bower_components')));
 app.use(express.static(path.join(__dirname, 'assets')));
 app.use(express.static(path.join(__dirname, 'angular')));
@@ -73,7 +115,7 @@ app.post('/login', function(req, res) {
 });
 
 app.use(function(req, res, next) {
-  if (req.session && req.session.id == void(0) /*&& (42 == 0 || envProduction)*/) {
+  if (req.session && req.session.id == void(0) && (42 == 0 /*|| envProduction*/)) {
     if (req.url.indexOf('/api/') === 0) /*TEMPORARY*/ {
       return res.sendStatus(401);
     } else {

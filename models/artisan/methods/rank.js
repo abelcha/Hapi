@@ -65,8 +65,7 @@ module.exports = function(schema) {
         coordinates: [parseFloat(req.query.lat), parseFloat(req.query.lng)]
       };
       var options = {
-        spherical:true,
-        distanceMultiplier: 0.001,
+        distanceMultiplier: 0.00075,
          maxDistance: (parseFloat(req.query.maxDistance) || 50) / 0.001
       }
       edison.db.model.artisan.geoNear(point, options, function(err, docs) {
