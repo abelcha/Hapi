@@ -70,6 +70,14 @@ app.get('/jobs', function(req, res) {
   }, 5000);*/
 });
 
+app.get('/test2', function(req, res) {
+    for (var i = 0; i < 150000; i++) {
+    if (i % 10000 === 0)
+     console.log(i / 5000);
+    for (var j = 0; j < i; j++) {};
+  };
+res.send("ok")
+})
 
 
 edison.redisCli.on("error", function(err) {
