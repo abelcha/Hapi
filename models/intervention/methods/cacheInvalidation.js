@@ -1,4 +1,5 @@
 'use strict';
+var async = require("async");
 
 module.exports = function(schema) {
 
@@ -53,8 +54,9 @@ module.exports = function(schema) {
 
 
   var translate = function(e, cb) {
-    getFltr(e).then(function(fltr) {
+    if (e.id % 100 === 0)
       console.log(e.id);
+    getFltr(e).then(function(fltr) {
       cb(null, {
         fltr: fltr,
         t: e.telepro,
@@ -76,19 +78,19 @@ module.exports = function(schema) {
 
   schema.statics.cacheActualise = function(id) {
 
-    edison.redisCli.get("interventionList", function(err, reply) {
+    redis.get("interventionList", function(err, reply) {
       if (!err && reply) {
         var data = JSON.parse(reply);
         var index = _.findIndex(data, function(e, i) {
           return e.id === id;
         })
 
-        npm.mongoose.model('intervention').findOne({
+        db.model('intervention').findOne({
           id: id
         }).then(function(doc) {
           translate(doc, function(err, result) {
             data[index] = result;
-            edison.redisCli.set("interventionList", JSON.stringify(data));
+            redis.set("interventionList", JSON.stringify(data));
             io.sockets.emit('interventionListChange', data[index]);
 
           });
@@ -101,13 +103,16 @@ module.exports = function(schema) {
   schema.statics.cacheReload = function() {
     return new Promise(function(resolve, reject) {
       console.time("interlist");
-      npm.mongoose.model('intervention').find().sort('-id').select(selectedFields).then(function(docs) {
-        npm.async.map(docs, translate, function(err, result)  {
-          resolve(result);
+      db.model('intervention').find().sort('-id').select(selectedFields).then(function(docs) {
+        async.map(docs, translate, function(err, result)  {
+          redis.set("interventionList", JSON.stringify(result), function() {
+            resolve(result);
+            redis.expire("interventionList", 6000)
+          })
           console.timeEnd("interlist");
-          edison.redisCli.set("interventionList", JSON.stringify(result))
-          edison.redisCli.expire("interventionList", 6000)
         });
+      }, function(err) {
+        console.log(err);
       });
     });
   }

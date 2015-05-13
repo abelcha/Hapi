@@ -1,3 +1,5 @@
+var request = require('request');
+
 module.exports = function(schema) {
 
   var translateModel = function(d) {
@@ -80,7 +82,7 @@ module.exports = function(schema) {
     console.log(data[i].id)
     if (i % 100 === 0)
       console.log(((i / data.length) * 100).toFixed(2), '%')
-    var artisan = edison.db.model.artisan(translateModel(data[i]));
+    var artisan = db.model('artisan')(translateModel(data[i]));
     artisan.save(function(err) {
       if (err) {
         return cb({
@@ -102,7 +104,7 @@ module.exports = function(schema) {
     return new Promise(function(resolve, reject) {
       var inters = [];
       _this.remove({}, function() {
-        npm.request(ed.config.alvinURL + "/dumpArtisan.php?key=" + ed.config.alvinKEY, function(err, rest, body) {
+        request(ed.config.alvinURL + "/dumpArtisan.php?key=" + ed.config.alvinKEY, function(err, rest, body) {
           var data = JSON.parse(body);
           addInDB(data, 0, function(err) {
             if (err)

@@ -109,7 +109,7 @@ module.exports = function(schema) {
   var addInDB = function(data, i, cb) {
     if (i >= data.length - 1)
       return cb(null)
-    var inter = npm.mongoose.model('intervention')(translateModel(data[i]));
+    var inter = db.model('intervention')(translateModel(data[i]));
     console.log(((i / data.length) * 100).toFixed(2) + '%', inter.id);
     inter.save(function(err) {
       if (err) {

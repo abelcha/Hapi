@@ -1,6 +1,6 @@
 {
   "name": "EDSN",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "engines": {
     "iojs": "2.0.*"
   },
@@ -27,12 +27,12 @@
     "gulp-rename": "^1.2.2",
     "gulp-uglifyjs": "^0.6.1",
     "jackrabbit": "^3.0.8",
-    "jade": "^1.9.2",
     "kue": "^0.9.3",
     "lodash": "^3.8.0",
     "mongoose": "^4.0.2",
     "morgan": "^1.5.2",
     "postmark": "^1.0.0",
+    "pretty-error": "^1.1.2",
     "redis": "^0.12.1",
     "request": "^2.53.0",
     "serve-favicon": "^2.2.0",

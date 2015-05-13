@@ -5,6 +5,9 @@ global.app = express();
 var http = require('http').Server(app);
 var port = (process.env.PORT || 8080);
 global.path = require('path');
+require('pretty-error').start();
+
+
 
 var dep = require('./loadDependencies');
 global.rootPath = process.cwd();
@@ -12,34 +15,23 @@ global.npm = dep.loadJson("package.json");
 global.edison = dep.loadDir("edisonFramework");
 global.ed = global.edison;
 global._ = require('lodash');
-global.envProduction = typeof process.env.REDISCLOUD_URL !== "undefined";
+global.envProd = process.env.NODE_ENV === "production";
+global.envDev = process.env.NODE_ENV === "developement";
 
-npm.mongoose.connect(process.env.MONGOLAB_URI || 'mongodb://localhost/EDISON');
+global.redis = edison.redis();
+global.db = edison.db();
+
+if (envProd ||  envDev)
+  global.jobs = edison.worker.initJobQueue();
+
 global.io = require('socket.io')(http);
 var redisIO = require('socket.io-redis');
 
 
-if (process.env.REDISCLOUD_URL) {
-  var url = require('url');
-  var redisURL = url.parse(process.env.REDISCLOUD_URL);
-  edison.redisCli = npm.redis.createClient(redisURL.port, redisURL.hostname, {
-    no_ready_check: true
-  });
-  edison.redisCli.auth(redisURL.auth.split(":")[1]);
+io.on('connection', function(socket) {
 
-} else {
-  edison.redisCli = npm.redis.createClient();
-}
+});
 
-global.jobs = npm.kue.createQueue({
-  prefix: 'q',
-  redis: process.env.REDISCLOUD_URL ? {
-    port: redisURL.port,
-    host: redisURL.hostname,
-    auth: redisURL.auth.split(":")[1],
-  } : undefined,
-  disableSearch: true
-})
 
 app.get('/jobs', function(req, res) {
   var job = jobs.create('crawl', {
@@ -47,51 +39,19 @@ app.get('/jobs', function(req, res) {
     token: 'foo'
   });
   job.on('complete', function(re) {
-    console.log("===>", re)
-    // avoid sending data after the response has been closed
-    if (res.finished) {
-      console.log("Job complete");
-    } else {
-      return res.send("Job complete");
-    }
+    console.log("Job complete");
   }).on('failed', function() {
-    if (res.finished) {
-      console.log("Job failed");
-    } else {
-      return res.send("Job failed");
-    }
+    console.log("Job failed");
   }).on('progress', function(progress) {
     console.log('job #' + job.id + ' ' + progress + '% complete');
   });
   job.save();
   // timeout after 5s
-/*  setTimeout(function() {
-    return res.send("OK (timed out)");
-  }, 5000);*/
+  /*  setTimeout(function() {
+      return res.send("OK (timed out)");
+    }, 5000);*/
 });
 
-app.get('/test2', function(req, res) {
-  console.time('now')
-    for (var i = 0; i < 150000; i++) {
-    if (i % 10000 === 0)
-     console.log(i / 5000);
-    for (var j = 0; j < i; j++) {};
-  };
-  console.timeEnd('now')
-
-res.send("ok")
-})
-
-
-edison.redisCli.on("error", function(err) {
-  console.log("Redis Error " + err);
-});
-
-io.on('connection', function(socket) {
-
-});
-
-app.use(npm.kue.app);
 app.use(express.static(path.join(__dirname, 'bower_components')));
 app.use(express.static(path.join(__dirname, 'assets')));
 app.use(express.static(path.join(__dirname, 'angular')));
@@ -103,7 +63,7 @@ app.use(npm.bodyParser.urlencoded({
 }));
 app.use(npm.compression());
 app.use(npm.connectRedisSessions({
-  client: edison.redisCli,
+  client: redis,
   app: "edison",
   ttl: edison.config.ttl,
   cookie: {
@@ -126,7 +86,7 @@ app.post('/login', function(req, res) {
 });
 
 app.use(function(req, res, next) {
-  if (req.session && req.session.id == void(0) && (42 == 0 /*|| envProduction*/)) {
+  if (req.session && req.session.id == void(0) && (0 == 12 || envProd)) {
     if (req.url.indexOf('/api/') === 0) /*TEMPORARY*/ {
       return res.sendStatus(401);
     } else {
@@ -154,6 +114,9 @@ app.use(function(err, req, res, next) {
 });
 //}
 
+process.on('uncaughtException', function(error) {
+  console.log(error.stack);
+});
 
 http.listen(port, function() {
   console.log('listening on *:' + port);

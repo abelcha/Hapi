@@ -1,5 +1,7 @@
 'use strict'
 
+var async = require('async');
+
 module.exports = function(schema) {
 
   var selectedFields = [
@@ -16,12 +18,12 @@ module.exports = function(schema) {
   schema.statics.list = function(req, res) {
     var _this = this;
     return new Promise(function(resolve, reject) {
-      edison.redisCli.get('artisanList', function(err, reply) {
+      redis.get('artisanList', function(err, reply) {
         if (!err && reply && !req.query.cache) {
           return resolve(JSON.parse(reply));
         }
         _this.model('artisan').find().sort('-id').select(s).then(function(docs) {
-          npm.async.map(docs, function(e, cb) {
+          async.map(docs, function(e, cb) {
             cb(null, {
               id: e.id,
               n: e.nomSociete,
@@ -35,8 +37,8 @@ module.exports = function(schema) {
             resolve(result);
             //console.timeEnd('interList')
             //console.log('nocache')
-            edison.redisCli.set("artisanList", JSON.stringify(result))
-            edison.redisCli.expire("artisanList", 6000)
+            redis.set("artisanList", JSON.stringify(result))
+            redis.expire("artisanList", 6000)
           });
         })
       });

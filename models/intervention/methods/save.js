@@ -1,6 +1,6 @@
 module.exports = function(schema) {
 
-  function mongooseError(reject) {
+  function dbError(reject) {
     return function(err) {
       var str = String(err).split('Path').join('Le champs');
       str = str.split('is required').join('est requis');
@@ -11,28 +11,28 @@ module.exports = function(schema) {
 
   var updateInter = function(data) {
     return new Promise(function(resolve, reject) {
-      npm.mongoose.model('intervention').findOne({
+      db.model('intervention').findOne({
         id: data.id
       }).then(function(doc) {
         for (k in data) {
           doc[k] = data[k];
         }
         doc.save().then(function(result) {
-          npm.mongoose.model('intervention').cacheActualise(doc.id);
+          db.model('intervention').cacheActualise(doc.id);
           resolve(result.id);
 
-        }, mongooseError(reject));
-      }, mongooseError(reject))
+        }, dbError(reject));
+      }, dbError(reject))
     })
   }
 
   var createInter = function(data) {
     return new Promise(function(resolve, reject) {
-      var inter = npm.mongoose.model('intervention')(data);
+      var inter = db.model('intervention')(data);
       inter.save().then(function(doc) {
         resolve(doc.id);
-        npm.mongoose.model('intervention').cacheActualise(doc.id);
-      }, mongooseError(reject))
+        db.model('intervention').cacheActualise(doc.id);
+      }, dbError(reject))
     })
   }
 

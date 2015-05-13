@@ -4,7 +4,7 @@ module.exports = function(schema) {
     return new Promise(function(resolve, reject) {
       var sumCount = function(query) {
         query['artisan.id'] = parseInt(id);
-        var q = npm.mongoose.model('intervention').aggregate([{
+        var q = db.model('intervention').aggregate([{
           $match: query
         }, {
           $group: {

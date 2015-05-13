@@ -1,30 +1,51 @@
 // === BEGIN: KUE SETUP ===
-var kue = require('kue'),
-  url = require('url'),
-  redis = require('redis');
+
+var kue = require('kue');
+var url = require('url');
+
+global.envProd = process.env.NODE_ENV === "production";
+global.envDev = process.env.NODE_ENV === "developement";
+var dep = require('./loadDependencies');
+global.edison = dep.loadDir("edisonFramework");
+global.rootPath = process.cwd();
+global.redis = edison.redis();
+global.db = edison.db();
 
 var redisUrl = url.parse(process.env.REDISCLOUD_URL);
 
+redis.keys("kue*", function(err, re) {
+  re.forEach(function(k) {
+    redis.del(re, function() {});
+  })
+})
+
 var jobs = kue.createQueue({
-  prefix: 'q',
-  redis: {
+  prefix: 'kue',
+  redis: envProd ? {
     port: redisUrl.port,
     host: redisUrl.hostname,
     auth: redisUrl.auth.split(":")[1],
-    options: {
-      // look for more redis options in [node_redis](https://github.com/mranney/node_redis)
-    }
-  },
+  } : undefined,
   disableSearch: true
 });
-// === END: KUE SETUP ===
 
-// see https://github.com/learnBoost/kue/ for how to do more than one job at a time
-jobs.process('crawl', function(job, done) {
-  for (var i = 0; i < 100000; i++) {
-    if (i % 10000 === 0)
-     console.log(i / 5000);
-    for (var j = 0; j < i; j++) {};
-  };
-  return done();
+
+jobs.process('db', function(job, done) {
+  console.log("gotjob")
+  var terminated = false
+    //  console.log(job.data.model, job.data.method, db.model(job.data.model)[job.data.method])
+  db.model(job.data.model)[job.data.method]().then(function()  {
+    terminated = true;
+    console.log("ok")
+    done();
+  }, function(err) {
+    terminated = true;
+    console.log("error:", err);
+    return done(err ||  "error");
+  })
+  setTimeout(function() {
+    console.log(terminated);
+    if (!terminated)
+      return done("timed out");
+  }, 60000);
 });

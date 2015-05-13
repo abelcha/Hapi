@@ -18,28 +18,8 @@ module.exports = function() {
     }
   })
 
-
-  app.get('/api/search/:model/:options', function(req, res) {
-    var t = Date.now()
-    try {
-      JSON.parse(req.params.options)
-    } catch (e) {
-      return res.status(400).send("Invalid JSON");
-    }
-    edisonAPI.getData(req.params.model, JSON.parse(req.params.options))
-      .then(function(result) {
-        res.json(result);
-      })
-      .catch(function(err) {
-        // Bad Request
-        console.log(err.toString())
-        res.status(400).send(err.toString());
-      })
-  })
-
-
   app.all('/api/:model/:id/:method', function(req, res, next) {
-    var model = edison.db.model[req.params.model];
+    var model = db.model(req.params.model);
     var method = req.params.method;
 
     if (!model ||  typeof model[method] !== "function" || model[method].length !== 3) {
@@ -54,7 +34,7 @@ module.exports = function() {
   });
 
   app.all('/api/:model/:id', function(req, res, next) {
-    var model = edison.db.model[req.params.model];
+    var model = db.model(req.params.model);
     var method = req.params.method;
     id = parseInt(req.params.id);
     if (isNaN(id) || !model)
@@ -68,7 +48,7 @@ module.exports = function() {
   });
 
   app.all('/api/:model/:method', function(req, res, next) {
-    var model = edison.db.model[req.params.model];
+    var model = db.model(req.params.model);
     var method = req.params.method;
     if (!model ||  typeof model[method] !== "function" || model[method].length !== 2) {
       return next();
@@ -83,12 +63,12 @@ module.exports = function() {
 
 
   app.all('/api/*', function(req, res) {
-    res.status(400).send(envProduction ? "Bad Request" : "Unhandled route error");
+    res.status(400).send(envProduction ? "400 - Bad Request" : "Unhandled route error");
   });
 
   app.all("*", function(req, res) {
     if (req.url.indexOf('.') >= 0)
-      res.sendStatus(404);
+      res.status(404).send('Unknown method');
     else
       res.sendFile(rootPath + "/views/index.html")
   });

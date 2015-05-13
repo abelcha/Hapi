@@ -2,7 +2,7 @@ module.exports = function(schema) {
 
   var getNoobs = function() {
     return new Promise(function(resolve, reject) {
-      edison.db.model.intervention.aggregate([{
+      db.model('intervention').aggregate([{
         $match: {
           'artisan.id': {
             $exists: true
@@ -68,7 +68,7 @@ module.exports = function(schema) {
         distanceMultiplier: 0.00075,
          maxDistance: (parseFloat(req.query.maxDistance) || 50) / 0.001
       }
-      edison.db.model.artisan.geoNear(point, options, function(err, docs) {
+      db.model('artisan').geoNear(point, options, function(err, docs) {
         if (err)
           return resolve(err);
         docs = JSON.parse(JSON.stringify(docs));

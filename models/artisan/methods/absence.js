@@ -2,7 +2,7 @@ module.exports = function(schema) {
 
   schema.statics.absence = function(id, req, res) {
     return new Promise(function(resolve, reject) {
-      npm.mongoose.model('artisan').findOne({
+      db.model('artisan').findOne({
         id: parseInt(id)
       }).then(function(doc) {
         doc.absence = {
