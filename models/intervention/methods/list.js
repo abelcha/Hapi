@@ -30,6 +30,7 @@ module.exports = function(schema) {
     }
 
     var getList = function(resolve, reject) {
+
       if (!reloadCache)  {
         console.log("cached")
         redis.get('interventionList', function(err, reply) {

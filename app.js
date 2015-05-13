@@ -17,9 +17,11 @@ global.ed = global.edison;
 global._ = require('lodash');
 global.envProd = process.env.NODE_ENV === "production";
 global.envDev = process.env.NODE_ENV === "developement";
+global.requestp = require("request-promise")
 
 global.redis = edison.redis();
 global.db = edison.db();
+global.sms = new edison.mobyt(edison.config.mobytID, edison.config.mobytPASS);
 
 if (envProd ||  envDev)
   global.jobs = edison.worker.initJobQueue();

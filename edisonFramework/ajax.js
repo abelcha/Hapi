@@ -18,5 +18,17 @@ module.exports = {
   },
   ping: function(req, res) {
     res.send("ok");
-  }
+  },
+/*  sendSMS: function(params) {
+    sms.send({
+      to: params.to,
+      text: params.text,
+      track: params.track,
+      type: params.type
+    }).then(function(result) {
+      res.json(result)
+    }, function(err) {
+      res.status(500).json(err);
+    });
+  }*/
 }

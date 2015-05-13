@@ -2,6 +2,9 @@
 
 var kue = require('kue');
 var url = require('url');
+var agenda = require('agenda')
+
+global.requestp = require("request-promise")
 
 global.envProd = process.env.NODE_ENV === "production";
 global.envDev = process.env.NODE_ENV === "developement";
@@ -10,6 +13,9 @@ global.edison = dep.loadDir("edisonFramework");
 global.rootPath = process.cwd();
 global.redis = edison.redis();
 global.db = edison.db();
+global.sms = new edison.mobyt(edison.config.mobytID, edison.config.mobytPASS);
+
+
 
 var redisUrl = url.parse(process.env.REDISCLOUD_URL);
 
@@ -28,6 +34,23 @@ var jobs = kue.createQueue({
   } : undefined,
   disableSearch: true
 });
+
+var agenda = new agenda({
+  db: {
+    address: 'localhost:27017/EDISON' || edison.config.localDB
+  }
+});
+
+agenda.define('refresh sms status', function(job, done) {
+  console.log("refresh sms status");
+  db.model('sms').refreshStatus().then(done, done);
+});
+
+agenda.every('5 minutes', 'refresh sms status');
+agenda.start();
+
+
+
 
 
 jobs.process('db', function(job, done) {

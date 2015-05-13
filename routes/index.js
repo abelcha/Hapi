@@ -3,6 +3,21 @@ var edisonAPI = edison.api;
 module.exports = function() {
 
 
+  var onSuccess = function(res) {
+    return function(result) {
+      if (res.headersSent === false)
+        return res.json(result);
+    }
+  }
+
+  var onFailure = function(res) {
+    return function(err) {
+      if (res.headersSent === false)
+        res.status(400).send(envProd || envDev ? "Bad Request" : err);
+    }
+  }
+
+
   app.get('/api/map/:method', function(req, res) {
     if (!edison.map[req.params.method]) {
       return res.status(400).send("Unknown Method");
@@ -25,12 +40,7 @@ module.exports = function() {
     if (!model ||  typeof model[method] !== "function" || model[method].length !== 3) {
       return next();
     }
-    model[method](req.params.id, req, res).then(function(result, alreadyReply) {
-      if (!alreadyReply)
-        res.json(result);
-    }).catch(function(err) {
-      res.status(400).send(envProduction ? "Bad Request" : err);
-    })
+    model[method](req.params.id, req, res).then(onSuccess(res), onFailure(res));
   });
 
   app.all('/api/:model/:id', function(req, res, next) {
@@ -39,26 +49,17 @@ module.exports = function() {
     id = parseInt(req.params.id);
     if (isNaN(id) || !model)
       return next();
-    model.view(id, req, res).then(function(result, alreadyReply) {
-      if (!alreadyReply)
-        res.json(result);
-    }).catch(function(err) {
-      res.status(400).send(envProduction ? "Bad Request" : err);
-    })
+    model.view(id, req, res).then(onSuccess(res), onFailure(res));
   });
 
   app.all('/api/:model/:method', function(req, res, next) {
+    console.time(req.params.model + "." + req.params.method);
     var model = db.model(req.params.model);
     var method = req.params.method;
     if (!model ||  typeof model[method] !== "function" || model[method].length !== 2) {
       return next();
     }
-    model[method](req, res).then(function(result, alreadyReply) {
-      if (!alreadyReply)
-        res.json(result);
-    }).catch(function(err) {
-      res.status(400).send(envProduction ? "Bad Request" : err);
-    })
+    model[method](req, res).then(onSuccess(res), onFailure(res))
   });
 
 

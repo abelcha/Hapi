@@ -102,14 +102,12 @@ module.exports = function(schema) {
 
   schema.statics.cacheReload = function() {
     return new Promise(function(resolve, reject) {
-      console.time("interlist");
       db.model('intervention').find().sort('-id').select(selectedFields).then(function(docs) {
         async.map(docs, translate, function(err, result)  {
           resolve(result);
           redis.set("interventionList", JSON.stringify(result), function() {
             redis.expire("interventionList", 6000)
           })
-          console.timeEnd("interlist");
         });
       }, function(err) {
         console.log(err);
