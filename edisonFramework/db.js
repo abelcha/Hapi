@@ -13,12 +13,15 @@ module.exports = function() {
   getDirectories(rootPath + '/models/').forEach(function(model) {
     var folder = rootPath + '/models/' + model;
     var schema = require(folder + '/schema')(mongoose);
+
+    require(folder + '/validator')(schema);
+    
     fs.readdirSync(folder + '/methods').forEach(function(method) {
       if (method.endsWith('.js')) {
         require(folder + '/methods/' + method)(schema)
       }
     });
-    mongoose.model(model, schema);
+    var model = mongoose.model(model, schema);
   })
 
   return mongoose;

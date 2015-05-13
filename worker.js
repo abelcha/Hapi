@@ -34,10 +34,10 @@ jobs.process('db', function(job, done) {
   console.log("gotjob")
   var terminated = false
     //  console.log(job.data.model, job.data.method, db.model(job.data.model)[job.data.method])
-  db.model(job.data.model)[job.data.method]().then(function()  {
+  db.model(job.data.model)[job.data.method]().then(function(result)  {
     terminated = true;
     console.log("ok")
-    done();
+    done(null, result);
   }, function(err) {
     terminated = true;
     console.log("error:", err);

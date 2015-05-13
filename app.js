@@ -73,7 +73,7 @@ app.use(npm.connectRedisSessions({
 
 
 app.post('/login', function(req, res) {
-  edison.db.model.user.validateCredentials(req, res)
+  db.model('user').validateCredentials(req, res)
     .then(function(user) {
       req.session.upgrade(user.login, function() {
         req.session.test = 52;

@@ -1,23 +1,23 @@
-module.exports = function(model) {
+module.exports = function(schema) {
   /* M.|Me|Soc. */
-  model.schema.path('client.civilite').validate(function(value) {
+  schema.path('client.civilite').validate(function(value) {
     return /M\.|Mme|Soc\./i.test(value);
   }, 'Civilité inconnu.');
 
 
   /* CARTE BANCAIRE | CHEQUE | CASH */
-  model.schema.path('modeReglement').validate(function(value) {
+  schema.path('modeReglement').validate(function(value) {
     return /CB|CH|CA/i.test(value);
   }, 'Mode de reglement inconnu.');
 
 
 
   /*CARRELAGE|MENUISERIE|MACONNERIE|PEINTURE|PLOMBERIE|SERRURERIE|CLIMATISATION|CHAUFFAGE|VITRERIE|ELECTRICITE */
-  model.schema.path('categorie').validate(function(value) {
+  schema.path('categorie').validate(function(value) {
     return /CR|MN|MC|PT|PL|SR|CL|CH|VT|EL/i.test(value);
   }, 'Categorie inconnue.');
 
-  model.schema.pre('save', function(next) {
+  schema.pre('save', function(next) {
     var self = this;
     if (!self.id) {
       model.findOne({}).sort("-id").exec(function(err, latestDoc) {
