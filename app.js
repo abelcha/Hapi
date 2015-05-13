@@ -23,11 +23,13 @@ global.redis = edison.redis();
 global.db = edison.db();
 global.sms = new edison.mobyt(edison.config.mobytID, edison.config.mobytPASS);
 
-if (envProd ||  envDev)
+if (envProd ||  envDev) 
   global.jobs = edison.worker.initJobQueue();
 
 global.io = require('socket.io')(http);
 var redisIO = require('socket.io-redis');
+
+db.model('intervention').refreshStatus().then();
 
 
 io.on('connection', function(socket) {
