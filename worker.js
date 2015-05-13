@@ -2,7 +2,9 @@
 
 var kue = require('kue');
 var url = require('url');
-var agenda = require('agenda')
+var CronJob = require('cron').CronJob;
+var humanToCron = require('human-to-cron');
+
 
 global.requestp = require("request-promise")
 
@@ -35,22 +37,10 @@ var jobs = kue.createQueue({
   disableSearch: true
 });
 
-var agenda = new agenda({
-  db: {
-    address: 'localhost:27017/EDISON' || edison.config.localDB
-  }
-});
 
-agenda.define('refresh sms status', function(job, done) {
-  console.log("refresh sms status");
-  db.model('sms').refreshStatus().then(done, done);
-});
-
-agenda.every('5 minutes', 'refresh sms status');
-agenda.start();
-
-
-
+new CronJob("* * * * *", function(){
+  db.model('sms').refreshStatus().then();
+}, null, true, "America/Los_Angeles");
 
 
 jobs.process('db', function(job, done) {

@@ -34,26 +34,6 @@ io.on('connection', function(socket) {
 
 });
 
-
-app.get('/jobs', function(req, res) {
-  var job = jobs.create('crawl', {
-    url: 'http://example.com',
-    token: 'foo'
-  });
-  job.on('complete', function(re) {
-    console.log("Job complete");
-  }).on('failed', function() {
-    console.log("Job failed");
-  }).on('progress', function(progress) {
-    console.log('job #' + job.id + ' ' + progress + '% complete');
-  });
-  job.save();
-  // timeout after 5s
-  /*  setTimeout(function() {
-      return res.send("OK (timed out)");
-    }, 5000);*/
-});
-
 app.use(express.static(path.join(__dirname, 'bower_components')));
 app.use(express.static(path.join(__dirname, 'assets')));
 app.use(express.static(path.join(__dirname, 'angular')));
@@ -100,6 +80,7 @@ app.use(function(req, res, next) {
 });
 
 require('./routes')();
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

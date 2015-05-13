@@ -13,7 +13,7 @@ module.exports = function() {
   var onFailure = function(res) {
     return function(err) {
       if (res.headersSent === false)
-        res.status(400).send(envProd || envDev ? "Bad Request" : err);
+        res.status(400).send(envProd ? "Bad Request" : err);
     }
   }
 
@@ -53,7 +53,6 @@ module.exports = function() {
   });
 
   app.all('/api/:model/:method', function(req, res, next) {
-    console.time(req.params.model + "." + req.params.method);
     var model = db.model(req.params.model);
     var method = req.params.method;
     if (!model ||  typeof model[method] !== "function" || model[method].length !== 2) {

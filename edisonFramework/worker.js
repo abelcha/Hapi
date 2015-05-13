@@ -18,16 +18,12 @@ module.exports = {
   },
   createJob: function(options) {
     return new Promise(function(resolve, reject) {
-
-      jobs.active(function(err, ids) {
-        console.log("==>", err, ids);
-      });
       var job = jobs.create(options.name, options);
       job.on('complete', resolve).on('failed', reject)
         .on('progress', function(progress) {
           console.log('job ' + options.name + ' ' + progress + '% complete');
         });
-      job.removeOnComplete(true).save()
+      job.removeOnComplete(true).ttl(10000).save()
         //return db.model('intervention').cacheReload()
     })
   }
