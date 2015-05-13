@@ -13,7 +13,7 @@ module.exports = {
     return kue.createQueue({
       prefix: 'kue',
       redis: redisOptions ||  undefined,
-      disableSearch: true
+      disableSearch: false
     })
   },
   createJob: function(options) {
