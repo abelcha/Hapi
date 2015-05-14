@@ -23,9 +23,11 @@ var redisUrl = url.parse(process.env.REDISCLOUD_URL);
 
 redis.keys("kue*", function(err, re) {
   re.forEach(function(k) {
-    redis.del(re, function() {});
-  })
-})
+    redis.del(re, function() {
+
+    });
+  });
+});
 
 var jobs = kue.createQueue({
   prefix: 'kue',
@@ -41,6 +43,8 @@ var jobs = kue.createQueue({
 new CronJob("* * * * *", function(){
   db.model('sms').refreshStatus().then();
 }, null, true, "America/Los_Angeles");
+
+
 
 
 jobs.process('db', function(job, done) {

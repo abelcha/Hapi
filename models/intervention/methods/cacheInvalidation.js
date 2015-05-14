@@ -104,9 +104,8 @@ module.exports = function(schema) {
     return new Promise(function(resolve, reject) {
       db.model('intervention').find().sort('-id').select(selectedFields).then(function(docs) {
         async.map(docs, translate, function(err, result)  {
-          resolve(result);
           redis.set("interventionList", JSON.stringify(result), function() {
-            redis.expire("interventionList", 6000)
+            resolve(result);
           })
         });
       }, function(err) {

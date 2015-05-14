@@ -63,7 +63,7 @@ module.exports = function() {
 
 
   app.all('/api/*', function(req, res) {
-    res.status(400).send(envProduction ? "400 - Bad Request" : "Unhandled route error");
+    res.status(400).send(envProd ? "400 - Bad Request" : "Unhandled route error");
   });
 
   app.all("*", function(req, res) {

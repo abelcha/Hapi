@@ -4,7 +4,7 @@ module.exports = {
     if (!query.origin || !query.destination) {
       return callback(null, []);
     }
-    npm.googlemaps.directions(query.origin, query.destination, function(err, result) {
+    edison.googleMap.directions(query.origin, query.destination, function(err, result) {
 
       if (!err && result && result.routes && result.routes[0] && result.routes[0].legs && result.routes[0].legs[0]) {
 
@@ -19,8 +19,7 @@ module.exports = {
     });
   },
   direction: function(query, res) {
-
-    npm.googlemaps.directions(query.origin, query.destination, function(err, result) {
+    edison.googleMap.directions(query.origin, query.destination, function(err, result) {
       res.json({
         distance: result.routes[0].legs[0].distance.text,
         duration: result.routes[0].legs[0].duration.text

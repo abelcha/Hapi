@@ -1,4 +1,4 @@
-angular.module('edison', ['ngMaterial', 'lumx', 'ngAnimate', 'ngDialog','n3-pie-chart', 'btford.socket-io', 'pickadate', 'ngRoute', 'ngResource', 'ngTable', 'ngMap'])
+angular.module('edison', ['ngMaterial', 'lumx', 'ngAnimate', 'ngDialog', 'n3-pie-chart', 'btford.socket-io', 'ngFileUpload', 'pickadate', 'ngRoute', 'ngResource', 'ngTable', 'ngMap'])
   .config(function($mdThemingProvider) {
     $mdThemingProvider.theme('default')
       .primaryPalette('indigo')
@@ -151,7 +151,7 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
       templateUrl: "Pages/Artisan/artisan.html",
       controller: "ArtisanController",
       resolve: {
-        artisan:getArtisan,
+        artisan: getArtisan,
         interventions: getInterList,
         artisans: getArtisanList
       }

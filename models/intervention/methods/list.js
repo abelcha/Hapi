@@ -6,7 +6,7 @@ module.exports = function(schema) {
 
   schema.statics.list = function(req, res) {
 
-    var reloadCache = req.query.cache;
+    var reloadCache = (req && req.query && req.query.cache);
 
     var getWorkerCache = function(resolve, reject) {
       return edison.worker.createJob({
@@ -32,8 +32,10 @@ module.exports = function(schema) {
     var getList = function(resolve, reject) {
 
       if (!reloadCache)  {
-        console.log("cached")
         redis.get('interventionList', function(err, reply) {
+          if (!res && !res) { // we just want to refresh the cache 
+            return resolve();
+          }
           if (!err && reply) {
             return resolve(JSON.parse(reply));
           } else {
