@@ -23,6 +23,7 @@ global.db = edison.db();
 global.sms = new edison.mobyt(edison.config.mobytID, edison.config.mobytPASS);
 global.document = new edison.dropbox();
 
+
 if (envProd ||  envDev)
   global.jobs = edison.worker.initJobQueue();
 
@@ -115,4 +116,4 @@ db.model('intervention').list();
 
 http.listen(port, function() {
   console.log('listening on *:' + port);
-})
+});

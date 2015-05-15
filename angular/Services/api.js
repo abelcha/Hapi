@@ -1,4 +1,4 @@
-angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvider', function($http, $location, dataProvider) {
+angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvider', 'Upload', function($http, $location, dataProvider, Upload) {
 
   return {
     listInterventions: function(options) {
@@ -95,6 +95,19 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvid
           maxDistance: 50
         }
       });
+    },
+    getFilesList: function(id) {
+        return $http({
+        method: 'GET',
+        url: "/api/intervention/" + id + "/getFiles"
+      });
+    },
+    uploadFile: function(file, options) {
+      return Upload.upload({
+        url: '/api/document/upload',
+        fields: options,
+        file: file
+      })
     },
     getArtisanStats: function(id_sst) {
       return $http({

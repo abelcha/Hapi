@@ -216,67 +216,6 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
   $locationProvider.html5Mode(true);
 });
 
-angular.module('edison').directive('capitalize', function() {
-    return {
-        require: 'ngModel',
-        link: function(scope, element, attrs, modelCtrl) {
-            modelCtrl.$parsers.push(function(input) {
-                return input ? input.toUpperCase() : "";
-            });
-            element.css("text-transform","uppercase");
-        }
-    };
-})
-
-
-angular.module('edison').directive('ngEnter', function () {
-    return function (scope, element, attrs) {
-        element.bind("keydown keypress", function (event) {
-            if(event.which === 13) {
-                scope.$apply(function (){
-                    scope.$eval(attrs.ngEnter);
-                });
-
-                event.preventDefault();
-            }
-        });
-    };
-});
-/*angular.module('edison').directive('materialSelect', function() {
-  return {
-    restrict: 'E',
-    replace: true,
-    template: '<div class="select-style text-field">' +
-      '<select ng-model>' +
-      '<option disabled>{{defaultName}}</option>' +
-      '</select>' +
-      '</div>'
-  }
-});
-*/
-angular.module('edison').directive('sglclick', ['$parse', function($parse) {
-    return {
-        restrict: 'A',
-        link: function(scope, element, attr) {
-          var fn = $parse(attr['sglclick']);
-          var delay = 300, clicks = 0, timer = null;
-          element.on('click', function (event) {
-            clicks++;  //count clicks
-            if(clicks === 1) {
-              timer = setTimeout(function() {
-                scope.$apply(function () {
-                    fn(scope, { $event: event });
-                }); 
-                clicks = 0;             //after action performed, reset counter
-              }, delay);
-              } else {
-                clearTimeout(timer);    //prevent single-click action
-                clicks = 0;             //after action performed, reset counter
-              }
-          });
-        }
-    };
-}])
 angular.module("edison").filter('addressPrettify', function() {
   return function(address) {
     return (address.n + " " +
@@ -428,6 +367,67 @@ angular.module("edison").filter('tableFilter', function() {
   }
 });
 
+angular.module('edison').directive('capitalize', function() {
+    return {
+        require: 'ngModel',
+        link: function(scope, element, attrs, modelCtrl) {
+            modelCtrl.$parsers.push(function(input) {
+                return input ? input.toUpperCase() : "";
+            });
+            element.css("text-transform","uppercase");
+        }
+    };
+})
+
+
+angular.module('edison').directive('ngEnter', function () {
+    return function (scope, element, attrs) {
+        element.bind("keydown keypress", function (event) {
+            if(event.which === 13) {
+                scope.$apply(function (){
+                    scope.$eval(attrs.ngEnter);
+                });
+
+                event.preventDefault();
+            }
+        });
+    };
+});
+/*angular.module('edison').directive('materialSelect', function() {
+  return {
+    restrict: 'E',
+    replace: true,
+    template: '<div class="select-style text-field">' +
+      '<select ng-model>' +
+      '<option disabled>{{defaultName}}</option>' +
+      '</select>' +
+      '</div>'
+  }
+});
+*/
+angular.module('edison').directive('sglclick', ['$parse', function($parse) {
+    return {
+        restrict: 'A',
+        link: function(scope, element, attr) {
+          var fn = $parse(attr['sglclick']);
+          var delay = 300, clicks = 0, timer = null;
+          element.on('click', function (event) {
+            clicks++;  //count clicks
+            if(clicks === 1) {
+              timer = setTimeout(function() {
+                scope.$apply(function () {
+                    fn(scope, { $event: event });
+                }); 
+                clicks = 0;             //after action performed, reset counter
+              }, delay);
+              } else {
+                clearTimeout(timer);    //prevent single-click action
+                clicks = 0;             //after action performed, reset counter
+              }
+          });
+        }
+    };
+}])
 angular.module('edison').factory('Address', function() {
 
 
@@ -480,7 +480,7 @@ angular.module('edison').factory('Address', function() {
   })
 });
 
-angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvider', function($http, $location, dataProvider) {
+angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvider', 'Upload', function($http, $location, dataProvider, Upload) {
 
   return {
     listInterventions: function(options) {
@@ -577,6 +577,19 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvid
           maxDistance: 50
         }
       });
+    },
+    getFilesList: function(id) {
+        return $http({
+        method: 'GET',
+        url: "/api/intervention/" + id + "/getFiles"
+      });
+    },
+    uploadFile: function(file, options) {
+      return Upload.upload({
+        url: '/api/document/upload',
+        fields: options,
+        file: file
+      })
     },
     getArtisanStats: function(id_sst) {
       return $http({
@@ -1315,26 +1328,23 @@ angular.module('edison').controller('InterventionController',
     $scope.showMap = false;
 
     $scope.onFileUpload = function(file) {
-      var log, log2;
       if (file) {
-        Upload.upload({
-          url: '/api/intervention/' + $scope.tab.data.id + '/uploadFile',
-          fields: {
-            'toto': 'test'
-          },
-          file: file
-        }).progress(function(evt) {
-          var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
-          log = 'progress: ' + progressPercentage + '% ' + evt.config.file.name + '\n' + log;
-          console.log(log);
-        }).success(function(data, status, headers, config) {
-          
-          log2 = 'file ' + config.file.name + 'uploaded. Response: ' + JSON.stringify(data) + '\n' + log2;
-          console.log(log2);
-          //$scope.$apply();
-        });
+        edisonAPI.uploadFile(file, {
+          link: $scope.tab.data.id,
+          type: 'Intervention'
+        }).success(function() {
+          $scope.loadFilesList();
+        })
       }
     }
+
+    $scope.loadFilesList = function() {
+      edisonAPI.getFilesList($scope.tab.data.id).then(function(result) {
+        $scope.files = result.data;
+      }, console.log)
+    }
+    $scope.loadFilesList();
+
 
     $scope.saveInter = function(send, cancel) {
       edisonAPI.saveIntervention({
@@ -1362,6 +1372,7 @@ angular.module('edison').controller('InterventionController',
     }
     if ($scope.tab.data.client.address)
       $scope.searchArtisans();
+
 
   });
 

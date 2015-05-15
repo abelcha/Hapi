@@ -5,6 +5,7 @@ module.exports = function(db) {
       type: Date,
       default: Date.now()
     },
+    link: Number,
     id: {
       type: String,
       required: true,

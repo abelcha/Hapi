@@ -24,26 +24,23 @@ angular.module('edison').controller('InterventionController',
     $scope.showMap = false;
 
     $scope.onFileUpload = function(file) {
-      var log, log2;
       if (file) {
-        Upload.upload({
-          url: '/api/intervention/' + $scope.tab.data.id + '/uploadFile',
-          fields: {
-            'toto': 'test'
-          },
-          file: file
-        }).progress(function(evt) {
-          var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
-          log = 'progress: ' + progressPercentage + '% ' + evt.config.file.name + '\n' + log;
-          console.log(log);
-        }).success(function(data, status, headers, config) {
-          
-          log2 = 'file ' + config.file.name + 'uploaded. Response: ' + JSON.stringify(data) + '\n' + log2;
-          console.log(log2);
-          //$scope.$apply();
-        });
+        edisonAPI.uploadFile(file, {
+          link: $scope.tab.data.id,
+          type: 'Intervention'
+        }).success(function() {
+          $scope.loadFilesList();
+        })
       }
     }
+
+    $scope.loadFilesList = function() {
+      edisonAPI.getFilesList($scope.tab.data.id).then(function(result) {
+        $scope.files = result.data;
+      }, console.log)
+    }
+    $scope.loadFilesList();
+
 
     $scope.saveInter = function(send, cancel) {
       edisonAPI.saveIntervention({
@@ -71,5 +68,6 @@ angular.module('edison').controller('InterventionController',
     }
     if ($scope.tab.data.client.address)
       $scope.searchArtisans();
+
 
   });

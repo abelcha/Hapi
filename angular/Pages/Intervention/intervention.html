@@ -267,11 +267,19 @@
                         </md-input-container>
                     </div>
                 </div>
-                <div class="form-group">
-                    <div class="col-sm-6">
-                        <div flex-item>
-                            <lx-file-input label="Upload" change="onFileUpload(e)"></lx-file-input>
-                        </div>
+                <div class="col-sm-6 md-whiteframe-z1 well">
+                    <div flex-item>
+                        <lx-file-input label="Upload" change="onFileUpload(e)"></lx-file-input>
+                    </div>
+                    <div style="max-height: 200px;" lx-scrollbar>
+                        <ul class="list mt++" style="padding-bottom:20px" >
+                            <li class="list-row" ng-repeat="file in files">
+                                <div class="list-row__content">
+                                   <a target="_blank" href="/api/document/{{file.id}}"> <span class="display-block">{{file.name || "Fichier" + $index}}</span></a>
+                                    <span class="display-block fs-body-1 tc-black-2">{{file.date | date:"dd/MM/yy"}} - {{file.login}}</span>
+                                </div>
+                            </li>
+                        </ul>
                     </div>
                 </div>
                 <br>

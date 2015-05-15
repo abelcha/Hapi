@@ -43,15 +43,6 @@ module.exports = function() {
     model[method](req.params.id, req, res).then(onSuccess(res), onFailure(res));
   });
 
-  app.all('/api/:model/:id', function(req, res, next) {
-    var model = db.model(req.params.model);
-    var method = req.params.method;
-    id = parseInt(req.params.id);
-    if (isNaN(id) || !model)
-      return next();
-    model.view(id, req, res).then(onSuccess(res), onFailure(res));
-  });
-
   app.all('/api/:model/:method', function(req, res, next) {
     var model = db.model(req.params.model);
     var method = req.params.method;
@@ -60,6 +51,18 @@ module.exports = function() {
     }
     model[method](req, res).then(onSuccess(res), onFailure(res))
   });
+
+  app.all('/api/:model/:id', function(req, res, next) {
+    var model = db.model(req.params.model);
+    var method = req.params.method;
+    var id = req.params.id;
+    if (!model || !id)
+      return next();
+    console.log(id);
+    id = id.match(/^[0-9]+$/i) ? parseInt(id) : id;
+    model.view(id, req, res).then(onSuccess(res), onFailure(res));
+  });
+
 
 
   app.all('/api/*', function(req, res) {
