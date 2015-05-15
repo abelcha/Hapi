@@ -276,7 +276,7 @@
                             <li class="list-row" ng-repeat="file in files">
                                 <div class="list-row__content">
                                    <a target="_blank" href="/api/document/{{file.id}}"> <span class="display-block">{{file.name || "Fichier" + $index}}</span></a>
-                                    <span class="display-block fs-body-1 tc-black-2">{{file.date | date:"dd/MM/yy"}} - {{file.login}}</span>
+                                    <span class="display-block fs-body-1 tc-black-2">{{file.date | date:"dd/MM/yy"}} - {{file.type}} - {{file.login}}</span>
                                 </div>
                             </li>
                         </ul>

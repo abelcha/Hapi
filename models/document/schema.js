@@ -6,6 +6,7 @@ module.exports = function(db) {
       default: Date.now()
     },
     name: String,
+    model:String,
     type: String,
     id: String,
     link: Number,

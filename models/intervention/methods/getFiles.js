@@ -5,7 +5,7 @@ module.exports = function(schema) {
 
       db.model('document')
         .find({
-          type: 'Intervention',
+          model: 'intervention',
           link: id,
           deleted:false
         })

@@ -9,6 +9,7 @@ module.exports = function(schema) {
         return reject("File is too big");
       document.upload({
         name: req.files.file.originalname,
+        model:req.body.model,
         type: req.body.type,
         link: req.body.link,
         data: req.files.file.buffer,

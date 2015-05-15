@@ -10,7 +10,7 @@ var Dropbox = function() {
 
 
 Dropbox.prototype.getFilename = function(p) {
-  return '/V2/' + p.type + '/' + p.link + '/' + p.id + '.' + p.extension;
+  return '/V2/' + p.model + '/' + p.link + '/' + p.id + '.' + p.extension;
 };
 
 Dropbox.prototype.download = function(file_id) {
@@ -36,7 +36,8 @@ Dropbox.prototype.download = function(file_id) {
 Dropbox.prototype.upload = function(params) {
   var _this = this;
   return new Promise(function(resolve, reject) {
-    if (!params.type || !params.data || !params.link || !params.extension)
+    console.log(params);
+    if (!params.model || !params.data || !params.link || !params.extension)
       reject("Invalid params");
     params.id = uuid.v4();
     params.filename = _this.getFilename(params);

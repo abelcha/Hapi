@@ -27,7 +27,9 @@ angular.module('edison').controller('InterventionController',
       if (file) {
         edisonAPI.uploadFile(file, {
           link: $scope.tab.data.id,
-          type: 'Intervention'
+          model: 'intervention',
+          type: 'fiche'
+
         }).success(function() {
           $scope.loadFilesList();
         })
