@@ -23,7 +23,7 @@ module.exports = {
         .on('progress', function(progress) {
           console.log('job ' + options.name + ' ' + progress + '% complete');
         });
-      job.removeOnComplete(true).ttl(10000).save()
+      job.removeOnComplete(true).ttl(100000).save()
         //return db.model('intervention').cacheReload()
     })
   }

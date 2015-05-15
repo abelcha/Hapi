@@ -7,6 +7,7 @@ module.exports = function(schema) {
       }
       if (req.files.file.size > 5000000)
         return reject("File is too big");
+      
       document.upload({
         name: req.files.file.originalname,
         model:req.body.model,

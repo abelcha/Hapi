@@ -4,7 +4,7 @@ module.exports = function(schema) {
     return function(err) {
       var str = String(err).split('Path').join('Le champs');
       str = str.split('is required').join('est requis');
-       str = str.split('.,').join("\r\n\r\n");
+      str = str.split('.,').join("\r\n\r\n");
       reject(str);
     }
   }
@@ -32,6 +32,11 @@ module.exports = function(schema) {
       inter.save().then(function(doc) {
         resolve(doc.id);
         db.model('intervention').cacheActualise(doc.id);
+        db.model('document').changeLink({
+            oldID: data.tmpID,
+            newID: doc.id
+          })
+          .then(console.log, console.log);
       }, dbError(reject))
     })
   }

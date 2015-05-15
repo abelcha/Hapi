@@ -58,7 +58,6 @@ module.exports = function() {
     var id = req.params.id;
     if (!model || !id)
       return next();
-    console.log(id);
     id = id.match(/^[0-9]+$/i) ? parseInt(id) : id;
     model.view(id, req, res).then(onSuccess(res), onFailure(res));
   });

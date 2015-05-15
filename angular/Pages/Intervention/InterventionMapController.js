@@ -1,4 +1,3 @@
-
 angular.module('edison').controller('InterventionMapController', function($scope, $q, $interval, $window, $mdDialog, Address, mapAutocomplete, edisonAPI) {
   $scope.autocomplete = mapAutocomplete;
   if (!$scope.tab.data.client.address) {
@@ -42,26 +41,28 @@ angular.module('edison').controller('InterventionMapController', function($scope
   }
 
   $scope.$watch('tab.data.sst', function(id_sst) {
-    $q.all([
-      edisonAPI.getArtisan(id_sst, {
-        cache: true
-      }),
-      edisonAPI.getArtisanStats(id_sst, {
-        cache: true
-      }),
-    ]).then(function(result)  {
-      $scope.tab.data.artisan = result[0].data;
-      $scope.tab.data.artisan.stats = result[1].data;
-      if (result[0].data.address) {
-        edisonAPI.getDistance({
-            origin: result[0].data.address.lt + ", " + result[0].data.address.lg,
-            destination: $scope.tab.data.client.address.lt + ", " + $scope.tab.data.client.address.lg
-          })
-          .then(function(result) {
-            $scope.tab.data.artisan.stats.direction = result.data;
-          })
-      }
-    });
+    if (id_sst) {
+      $q.all([
+        edisonAPI.getArtisan(id_sst, {
+          cache: true
+        }),
+        edisonAPI.getArtisanStats(id_sst, {
+          cache: true
+        }),
+      ]).then(function(result)  {
+        $scope.tab.data.artisan = result[0].data;
+        $scope.tab.data.artisan.stats = result[1].data;
+        if (result[0].data.address) {
+          edisonAPI.getDistance({
+              origin: result[0].data.address.lt + ", " + result[0].data.address.lg,
+              destination: $scope.tab.data.client.address.lt + ", " + $scope.tab.data.client.address.lg
+            })
+            .then(function(result) {
+              $scope.tab.data.artisan.stats.direction = result.data;
+            })
+        }
+      });
+    }
   })
 
   function DialogController($scope, $mdDialog) {

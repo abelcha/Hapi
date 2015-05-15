@@ -268,11 +268,9 @@
                     </div>
                 </div>
                 <div class="col-sm-6 md-whiteframe-z1 well">
-                    <div flex-item>
-                        <lx-file-input label="Upload" change="onFileUpload(e)"></lx-file-input>
-                    </div>
-                    <div style="max-height: 200px;" lx-scrollbar>
+                    <div style="max-height: 240px;" lx-scrollbar>
                         <ul class="list mt++" style="padding-bottom:20px" >
+                            <lx-file-input label="Upload" change="onFileUpload(e)"></lx-file-input>
                             <li class="list-row" ng-repeat="file in files">
                                 <div class="list-row__content">
                                    <a target="_blank" href="/api/document/{{file.id}}"> <span class="display-block">{{file.name || "Fichier" + $index}}</span></a>

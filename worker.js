@@ -16,16 +16,14 @@ global.rootPath = process.cwd();
 global.redis = edison.redis();
 global.db = edison.db();
 global.sms = new edison.mobyt(edison.config.mobytID, edison.config.mobytPASS);
-
+global.isWorker = true;
 
 
 var redisUrl = url.parse(process.env.REDISCLOUD_URL);
 
 redis.keys("kue*", function(err, re) {
   re.forEach(function(k) {
-    redis.del(re, function() {
-
-    });
+    redis.del(k);
   });
 });
 
@@ -40,15 +38,14 @@ var jobs = kue.createQueue({
 });
 
 
-new CronJob("* * * * *", function(){
+/*new CronJob("* * * * *", function() {
   db.model('sms').refreshStatus().then();
 }, null, true, "America/Los_Angeles");
-
+*/
 
 
 
 jobs.process('db', function(job, done) {
-  console.log("gotjob")
   var terminated = false
     //  console.log(job.data.model, job.data.method, db.model(job.data.model)[job.data.method])
   db.model(job.data.model)[job.data.method]().then(function(result)  {

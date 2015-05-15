@@ -103,12 +103,13 @@ module.exports = function(schema) {
 
     return new Promise(function(resolve, reject) {
       var inters = [];
-      _this.remove({}, function() {
+      db.model('artisan').remove({}, function() {
         request(ed.config.alvinURL + "/dumpArtisan.php?key=" + ed.config.alvinKEY, function(err, rest, body) {
           var data = JSON.parse(body);
           addInDB(data, 0, function(err) {
             if (err)
               return reject(err);
+            redis.expire("artisanList", 0)
             return resolve({
               status: 'OK',
               time: (Date.now() - t) / 1000

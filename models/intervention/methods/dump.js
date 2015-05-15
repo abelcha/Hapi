@@ -1,3 +1,4 @@
+var request = require("request");
 module.exports = function(schema) {
 
   var addProp = function(obj, prop, name) {
@@ -128,15 +129,23 @@ module.exports = function(schema) {
     var exit = false;
     var t = Date.now();
 
+    if ((envDev || envProd) && !isWorker) {
+      return edison.worker.createJob({
+        name: 'db',
+        model: 'intervention',
+        method: 'dump'
+      })
+    } 
     return new Promise(function(resolve, reject) {
       var inters = [];
-      self.remove({}, function() {
-        npm.request(edison.config.alvinURL + "/dumpIntervention.php?key=" + ed.config.alvinKEY, function(err, rest, body) {
-         // console.log("===>", err, rest, body);
+      db.model('intervention').remove({}, function() {
+        request(edison.config.alvinURL + "/dumpIntervention.php?key=" + edison.config.alvinKEY, function(err, rest, body) {
+          // console.log("===>", err, rest, body);
           var data = JSON.parse(body);
           addInDB(data, 0, function(err) {
             if (err)
               return reject(err);
+            db.model('intervention').cacheReload();
             return resolve({
               status: 'OK',
               time: (Date.now() - t) / 1000

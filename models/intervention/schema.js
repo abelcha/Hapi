@@ -96,6 +96,7 @@ module.exports = function(db) {
     },
     prixAnnonce: {
       type: Number,
+      default:0
       /*set: function toCurrency(nbr) {
         console.log("swag", nbr)
         var rtn = parseFloat(nbr.replace(',', '.')) || 0;

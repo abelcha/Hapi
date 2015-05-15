@@ -22,7 +22,7 @@ global.redis = edison.redis();
 global.db = edison.db();
 global.sms = new edison.mobyt(edison.config.mobytID, edison.config.mobytPASS);
 global.document = new edison.dropbox();
-
+global.isWorker = false;
 
 if (envProd ||  envDev)
   global.jobs = edison.worker.initJobQueue();
@@ -78,7 +78,7 @@ app.post('/login', function(req, res) {
 });
 
 app.use(function(req, res, next) {
-  if (req.session && req.session.id == void(0) && (0 == 12 || envProd)) {
+  if (req.session && req.session.id == void(0) && req.body.x && !envProd) {
     if (req.url.indexOf('/api/') === 0) /*TEMPORARY*/ {
       return res.sendStatus(401);
     } else {

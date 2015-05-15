@@ -30,7 +30,6 @@ module.exports = function(schema) {
     }
 
     var getList = function(resolve, reject) {
-
       if (!reloadCache)  {
         redis.get('interventionList', function(err, reply) {
           if (!res && !res) { // we just want to refresh the cache 

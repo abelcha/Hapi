@@ -27,53 +27,51 @@ module.exports = function(schema) {
 
     var now = Date.now();
     var dateInter = (new Date(inter.date.intervention)).getTime();
-    return new Promise(function(resolve, reject) {
-      var fltr = {};
+    var fltr = {};
 
-      if (inter.status === 'ENC') {
-        fltr.enc = 1;
-        if (now > dateInter + (2 * hour)) {
-          fltr.avr = 1;
-          if (now > dateInter + week) {
-            fltr.Uavr = 1;
-          }
+    if (inter.status === 'ENC') {
+      fltr.enc = 1;
+      if (now > dateInter + (2 * hour)) {
+        fltr.avr = 1;
+        if (now > dateInter + week) {
+          fltr.Uavr = 1;
         }
       }
-      if (inter.status === 'INT' && !inter.date.paiementCLI && now > dateInter + week) {
-        fltr.arl = 1;
-        if (now > dateInter + month) {
-          fltr.Uarl = 1;
-        }
+    }
+    if (inter.status === 'INT' && !inter.date.paiementCLI && now > dateInter + week) {
+      fltr.arl = 1;
+      if (now > dateInter + month) {
+        fltr.Uarl = 1;
       }
-      if (inter.status === 'APR') {
-        fltr.apr = 1;
-      }
-      resolve(fltr);
-    });
+    }
+    if (inter.status === 'APR') {
+      fltr.apr = 1;
+    }
+    return fltr;
   }
 
 
-  var translate = function(e, cb) {
-    if (e.id % 100 === 0)
-      console.log(e.id);
-    getFltr(e).then(function(fltr) {
-      cb(null, {
-        fltr: fltr,
-        t: e.telepro,
-        id: e.id,
-        ai: e.artisan.id,
-        s: edison.config.etatsKV[e.status].n,
-        sx: edison.config.etatsKV[e.status].c,
-        c: edison.config.categoriesKV[e.categorie].n,
-        cx: edison.config.categoriesKV[e.categorie].c,
-        n: e.client.civilite + ' ' + e.client.nom,
-        a: e.artisan.nomSociete ||  "",
-        pa: e.prixAnnonce,
-        da: e.date.ajout,
-        di: e.date.intervention,
-        ad: e.client.address.cp + ', ' + e.client.address.v
-      });
-    })
+  var translate = function(e) {
+    // if (e.id % 100 === 0)
+    console.log(e.id);
+    //  getFltr(e).then(function(fltr) {
+    return {
+      fltr: getFltr(e),
+      t: e.telepro,
+      id: e.id,
+      ai: e.artisan.id,
+      s: edison.config.etatsKV[e.status].n,
+      sx: edison.config.etatsKV[e.status].c,
+      c: edison.config.categoriesKV[e.categorie].n,
+      cx: edison.config.categoriesKV[e.categorie].c,
+      n: e.client.civilite + ' ' + e.client.nom,
+      a: e.artisan.nomSociete ||  "",
+      pa: e.prixAnnonce,
+      da: e.date.ajout,
+      di: e.date.intervention,
+      ad: e.client.address.cp + ', ' + e.client.address.v
+    };
+    //})
   }
 
   schema.statics.cacheActualise = function(id) {
@@ -89,12 +87,15 @@ module.exports = function(schema) {
           id: id
         }).then(function(doc) {
           translate(doc, function(err, result) {
-            data[index] = result;
+            if (index !== -1)
+              data[index] = result;
+            else
+              data.unshift(result);
             redis.set("interventionList", JSON.stringify(data));
-            io.sockets.emit('interventionListChange', data[index]);
+            io.sockets.emit('interventionListChange', result);
 
           });
-        })
+        }, console.log)
       }
     });
 
@@ -103,13 +104,11 @@ module.exports = function(schema) {
   schema.statics.cacheReload = function() {
     return new Promise(function(resolve, reject) {
       db.model('intervention').find().sort('-id').select(selectedFields).then(function(docs) {
-        async.map(docs, translate, function(err, result)  {
-          redis.set("interventionList", JSON.stringify(result), function() {
-            resolve(result);
-          })
-        });
+        var result = docs.map(translate)
+        redis.set("interventionList", JSON.stringify(result), function() {
+          resolve(result);
+        })
       }, function(err) {
-        console.log(err);
       });
     });
   }

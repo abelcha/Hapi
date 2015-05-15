@@ -36,7 +36,6 @@ Dropbox.prototype.download = function(file_id) {
 Dropbox.prototype.upload = function(params) {
   var _this = this;
   return new Promise(function(resolve, reject) {
-    console.log(params);
     if (!params.model || !params.data || !params.link || !params.extension)
       reject("Invalid params");
     params.id = uuid.v4();
