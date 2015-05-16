@@ -9,7 +9,7 @@ angular.module('edison').controller('InterventionMapController', function($scope
   } else {
     if ($scope.tab.data.artisan) {
       $scope.zoom = 12;
-      $scope.tab.data.artisan.address = Address($scope.tab.data.artisan.address, true);
+      //$scope.tab.data.artisan.address = Address($scope.tab.data.artisan.address, true);
     }
     if ($scope.tab.data.client.address) {
       $scope.tab.data.client.address = Address($scope.tab.data.client.address, true); //true -> copyContructor

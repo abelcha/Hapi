@@ -31,8 +31,6 @@ global.io = require('socket.io')(http);
 var redisIO = require('socket.io-redis');
 
 
-
-
 io.on('connection', function(socket) {
 
 });
@@ -78,7 +76,7 @@ app.post('/login', function(req, res) {
 });
 
 app.use(function(req, res, next) {
-  if (req.session && req.session.id == void(0) && req.body.x && !envProd) {
+  if (req.session && req.session.id && (!req.query.x || envProd)) {
     if (req.url.indexOf('/api/') === 0) /*TEMPORARY*/ {
       return res.sendStatus(401);
     } else {
