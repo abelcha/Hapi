@@ -10,7 +10,11 @@ module.exports = function(schema) {
         }, {
           multi: true
         })
-        .then(resolve, reject);
+        .then(function(e) {
+          var x = "/V2/" + options.model + '/';
+          document.move(x + options.oldID, x + options.newID)
+            .then(resolve, reject);
+        }, reject);
     })
   }
 }

@@ -34,7 +34,8 @@ module.exports = function(schema) {
         db.model('intervention').cacheActualise(doc.id);
         db.model('document').changeLink({
             oldID: data.tmpID,
-            newID: doc.id
+            newID: doc.id,
+            model:'intervention'
           })
           .then(console.log, console.log);
       }, dbError(reject))

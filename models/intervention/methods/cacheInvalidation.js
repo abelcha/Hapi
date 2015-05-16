@@ -52,9 +52,7 @@ module.exports = function(schema) {
 
 
   var translate = function(e) {
-    // if (e.id % 100 === 0)
     console.log(e.id);
-    //  getFltr(e).then(function(fltr) {
     return {
       fltr: getFltr(e),
       t: e.telepro,
@@ -71,7 +69,6 @@ module.exports = function(schema) {
       di: e.date.intervention,
       ad: e.client.address.cp + ', ' + e.client.address.v
     };
-    //})
   }
 
   schema.statics.cacheActualise = function(id) {
@@ -82,19 +79,17 @@ module.exports = function(schema) {
         var index = _.findIndex(data, function(e, i) {
           return e.id === id;
         })
-
         db.model('intervention').findOne({
           id: id
         }).then(function(doc) {
-          translate(doc, function(err, result) {
-            if (index !== -1)
-              data[index] = result;
-            else
-              data.unshift(result);
-            redis.set("interventionList", JSON.stringify(data));
-            io.sockets.emit('interventionListChange', result);
-
-          });
+          var result = translate(doc)
+          if (index !== -1) {
+            data[index] = result;
+          } else {
+            data.unshift(result);
+          }
+          redis.set("interventionList", JSON.stringify(data));
+          io.sockets.emit('interventionListChange', result);
         }, console.log)
       }
     });
@@ -108,8 +103,7 @@ module.exports = function(schema) {
         redis.set("interventionList", JSON.stringify(result), function() {
           resolve(result);
         })
-      }, function(err) {
-      });
+      }, function(err) {});
     });
   }
 }

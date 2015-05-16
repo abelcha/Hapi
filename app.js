@@ -35,7 +35,6 @@ io.on('connection', function(socket) {
 
 });
 
-
 app.use(npm.multer({
   inMemory: true,
   onFileUploadStart: function(file, req, res) {
@@ -62,6 +61,14 @@ app.use(npm.connectRedisSessions({
 }))
 
 
+app.get('/logout', function(req, res) {
+  if (req.session && req.session.id)  {
+    req.session.destroy();
+  }
+  res.redirect('/')
+
+});
+
 app.post('/login', function(req, res) {
   db.model('user').validateCredentials(req, res)
     .then(function(user) {
@@ -75,8 +82,9 @@ app.post('/login', function(req, res) {
     })
 });
 
+
 app.use(function(req, res, next) {
-  if (req.session && req.session.id && (!req.query.x || envProd)) {
+  if (req.session && !req.session.id /*&& (!req.query.x || envProd)*/ ) {
     if (req.url.indexOf('/api/') === 0) /*TEMPORARY*/ {
       return res.sendStatus(401);
     } else {

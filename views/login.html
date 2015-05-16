@@ -7,7 +7,6 @@
     </title>
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.2.0/animate.min.css">
     <link rel="shortcut icon" href="https://angularjs.org/favicon.ico" />
     <style type="text/css">
     /**
@@ -57,6 +56,20 @@
         margin: auto;
     }
     
+    #key {
+        -webkit-transition-duration: 0.85s;
+        -moz-transition-duration: 0.85s;
+        -o-transition-duration: 0.85s;
+        transition-duration: 0.85s;
+    }
+    
+    .rotated {
+        -webkit-transform: rotate(90deg);
+        -moz-transform: rotate(90deg);
+        -o-transform: rotate(90deg);
+        transform: rotate(90deg);
+    }
+    
     .panel {
         margin-bottom: 20px;
         background-color: rgba(255, 255, 255, 0.75);
@@ -75,7 +88,7 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <div class="row-fluid user-row">
-                            <img src="http://s11.postimg.org/7kzgji28v/logo_sm_2_mr_1.png" class="img-responsive" alt="Conxole Admin" />
+                            <img src="http://s11.postimg.org/7kzgji28v/logo_sm_2_mr_1.png" class="img-responsive" id="key" alt="Conxole Admin" />
                         </div>
                     </div>
                     <div class="panel-body">
@@ -84,8 +97,7 @@
                                 <label class="panel-login">
                                     <div class="login_result"></div>
                                 </label>
-                                <input style="display:none"class="form-control" id="url" type="text">
-                                
+                                <input style="display:none" class="form-control" id="url" type="text">
                                 <input class="form-control" placeholder="Utilisateur" name="username" id="username" type="text">
                                 <input class="form-control" placeholder="Mot de passe" name="password" id="password" type="password">
                                 <br></br>
@@ -100,31 +112,16 @@
     <!-- Latest compiled and minified JavaScript -->
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
-
     <script type="text/javascript">
     $(function() {
         $('#url').val('/' + window.location.pathname);
     })
-/*    $('form').submit(function(e) {
-        e.preventDefault();
-        //e.stopPropagation();
-        $.ajax({
-            crossDomain: true,
-            method: 'POST',
-            url: "/login",
-            success: function(data) {
-                location.reload()
-            },
-            error:function() {
-                console.log("error")
-            },
-            data: {
-                username: $('#username').val(),
-                password: $('#password').val(),
-                login: true
-            }
-        })
-    })*/
+    $('#password').on('focus', function() {
+        $("#key").addClass('rotated')
+    })
+    $('#password').on('blur', function() {
+        $("#key").removeClass('rotated')
+    })
     </script>
 </body>
 

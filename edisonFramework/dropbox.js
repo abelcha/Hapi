@@ -1,5 +1,5 @@
 var uuid = require('uuid');
-
+var mime = require('mime')
 
 var Dropbox = function() {
   var DropboxAPI = require("dropbox")
@@ -7,8 +7,6 @@ var Dropbox = function() {
     token: edison.config.dropboxKEY
   });
 }
-
-
 Dropbox.prototype.getFilename = function(p) {
   return '/V2/' + p.model + '/' + p.link + '/' + p.id + '.' + p.extension;
 };
@@ -21,8 +19,9 @@ Dropbox.prototype.download = function(file_id) {
     }).then(function(doc) {
       if (!doc)
         return reject("Document not found");
+      var isBinary = doc.extension == 'pdf' || mime.lookup(doc.extension).startsWith('image');
       _this.client.readFile(doc.filename, {
-        buffer: true
+        buffer: isBinary
       }, function(error, data) {
         if (error)
           return reject(error);
@@ -30,6 +29,21 @@ Dropbox.prototype.download = function(file_id) {
         return resolve(doc);
       });
     }, reject)
+  })
+}
+
+Dropbox.prototype.move = function(from, to) {
+  var _this = this;
+  return new Promise(function(resolve, reject) {
+    console.log("move", from, to);
+    _this.client.move(from, to, function(err, stats) {
+      console.log(err, stats)
+
+      if (err)
+        reject(err);
+      resolve(stats);
+    })
+  
   })
 }
 
