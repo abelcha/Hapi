@@ -2,7 +2,7 @@
     <!--  <md-toolbar class="grey" style="border-top-left-radius:5px;border-top-right-radius:5px;">
   </md-toolbar> -->
     <div class="row">
-        <div class="col-sm-12 md-whiteframe-z1" style="background:white;height:2000px">
+        <div class="col-sm-12 md-whiteframe-z1" style="background:white;height:100%">
             <form class="form-horizontal" ng-init="inter = tab.data" style="overflow:hidden;height:100%" novalidate>
                 <!-- Form Name -->
                 <!-- Text input-->
@@ -71,65 +71,72 @@
                         </md-checkbox>
                     </div>
                 </div>
-                <div class="form-group">
-                    <div class="col-sm-8" ng-controller="InterventionMapController">
+                <div class="form-group" ng-if="inter.status != 'RGL' && inter.status != 'PAY' && inter.status != 'ATT'">
+                    <div ng-controller="InterventionMapController">
                         <div ng-if="options.showMap" ng-show="options.showMap" class="md-whiteframe-z2">
                             <div class="card">
-                                <div class="card__img card__img--top">
-                                    <md-content ng-if="loadMap" id="autocompleteContainer" layout-padding layout="column" <md-input-container flex>
-                                        <md-autocomplete md-selected-item-change="changeAddress(selectedAddress)" md-selected-item="selectedAddress" md-search-text="searchText" md-items="item in autocomplete.search(searchText)" md-item-text="item.description">
-                                            <span md-highlight-text="searchText"> {{item.description}}</span>
-                                        </md-autocomplete>
-                                    </md-content>
-                                    <div ng-if="!loadMap" style="height:315px;width:100%;overflow:hidden">
-                                        <img ng-if="!showmap" id="static-map" style="width:100%;top: -9999px;bottom: -9999px;left: -9999px;right: -9999px;margin: auto;" ng-click="showMap()" ng-src="{{getStaticMap()}}" />
+                                <div class="col-sm-8 md-whiteframe-z2">
+                                    <div class="card__img card__img--top">
+                                        <md-content ng-if="loadMap" id="autocompleteContainer" layout-padding layout="column" <md-input-container flex>
+                                            <md-autocomplete md-selected-item-change="changeAddress(selectedAddress)" md-selected-item="selectedAddress" md-search-text="searchText" md-items="item in autocomplete.search(searchText)" md-item-text="item.description">
+                                                <span md-highlight-text="searchText"> {{item.description}}</span>
+                                            </md-autocomplete>
+                                        </md-content>
+                                        <div ng-if="!loadMap" style="height:315px;width:100%;overflow:hidden">
+                                            <img ng-if="!showmap" id="static-map" style="width:100%;top: -9999px;bottom: -9999px;left: -9999px;right: -9999px;margin: auto;" ng-click="showMap()" ng-src="{{getStaticMap()}}" />
+                                        </div>
+                                        <map ng-if="loadMap" zoom="{{zoom}}" pan-control="false" style="height:350px" center="{{mapCenter.latLng}}">
+                                            <directions ng-if="inter.artisan" travel-mode="DRIVING" origin="{{inter.artisan.address.lt}}, {{inter.artisan.address.lg}}" destination="{{inter.client.address.latLng}}">
+                                            </directions>
+                                            <!--        <marker position="{{inter.add.latLng}}" color="blue"></marker> -->
+                                            <marker ng-if="showInterMarker()" position="{{mapCenter.latLng}}" color="grey"></marker>
+                                            <!--      <marker position="{{inter.artisan.add|addressXY}}" color="blue"></marker> -->
+                                            <marker ng-if="inter.client.address" ng-repeat="sst in nearestArtisans" on-click="clickOnArtisanMarker(sst.id)" position="{{sst.address.lt}}, {{sst.address.lg}}" color="{{sst.id == inter.sst ? 'blue' : 'red'}}"></marker>
+                                        </map>
                                     </div>
-                                    <map ng-if="loadMap" zoom="{{zoom}}" pan-control="false" style="height:350px" center="{{mapCenter.latLng}}">
-                                        <directions ng-if="inter.artisan" travel-mode="DRIVING" origin="{{inter.artisan.address.lt}}, {{inter.artisan.address.lg}}" destination="{{inter.client.address.latLng}}">
-                                        </directions>
-                                        <!--        <marker position="{{inter.add.latLng}}" color="blue"></marker> -->
-                                        <marker ng-if="showInterMarker()" position="{{mapCenter.latLng}}" color="grey"></marker>
-                                        <!--      <marker position="{{inter.artisan.add|addressXY}}" color="blue"></marker> -->
-                                        <marker ng-if="inter.client.address" ng-repeat="sst in nearestArtisans" on-click="clickOnArtisanMarker(sst.id)" position="{{sst.address.lt}}, {{sst.address.lg}}" color="{{sst.id == inter.sst ? 'blue' : 'red'}}"></marker>
-                                    </map>
-                                </div>
-                                <div class="p+">
-                                    <span class="fs-subhead tc-black-2 display-block">{{inter.artisan.nomSociete}}</span>
-                                    <div class="paragraph fs-body-1" style="height:90px">
-                                        <p ng-if="inter.artisan.id && inter.artisan.stats.total">
-                                            Distance: {{inter.artisan.stats.direction.distance}} ({{inter.artisan.stats.direction.duration}})
-                                            <br> Interventions: {{inter.artisan.stats.total.total}} ({{inter.artisan.stats.total.montant}}€)
-                                            <br> Annulés: {{inter.artisan.stats.annule.total}} ({{inter.artisan.stats.annule.montant}}€)
-                                            <br> En Cours: {{inter.artisan.stats.enCours.total}} ({{inter.artisan.stats.enCours.montant}}€)
-                                            <br> Réalisés: {{inter.artisan.stats.intervenu.total}} ({{inter.artisan.stats.intervenu.montant}}€)
-                                            <br>
-                                        </p>
+                                    <div class="p+">
+                                        <span class="fs-subhead tc-black-2 display-block">{{inter.artisan.nomSociete}}</span>
+                                        <div class="paragraph fs-body-1" style="height:90px;">
+                                            <p style="width:49%;float:left" ng-if="inter.artisan.id && inter.artisan.stats.total">
+                                                Distance: {{inter.artisan.stats.direction.distance}} ({{inter.artisan.stats.direction.duration}})
+                                                <br> Interventions: {{inter.artisan.stats.total.total}} ({{inter.artisan.stats.total.montant}}€)
+                                                <br> Annulés: {{inter.artisan.stats.annule.total}} ({{inter.artisan.stats.annule.montant}}€)
+                                                <br> En Cours: {{inter.artisan.stats.enCours.total}} ({{inter.artisan.stats.enCours.montant}}€)
+                                                <br> Réalisés: {{inter.artisan.stats.intervenu.total}} ({{inter.artisan.stats.intervenu.montant}}€)
+                                                <br>
+                                            </p>
+                                            <p style="width:49%;float:right">
+                                                <span ng-show="inter.artisan.disponible == false">
+                                                    Indisponible jusqu'au {{inter.artisan.absence.end  | date:"dd/MM à HH:mm"}} ({{inter.artisan.absence.login}})
+                                                </span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="card__actions" style="float: left;width: 100%;">
+                                        <button class="btn--no-conflicts btn--m btn--black btn--flat" lx-ripple>Appeler</button>
+                                        <button class="btn--no-conflicts btn--m btn--blue btn--flat" lx-ripple>SMS</button>
+                                        <a href="/artisan/{{inter.artisan.id}}/recap">
+                                            <button class="btn--no-conflicts btn--m btn--orange btn--flat" lx-ripple>Recap'</button>
+                                        </a>
+                                        <a href="/artisan/{{inter.artisan.id}}">
+                                            <button class="btn--no-conflicts btn--m btn--purple btn--flat" lx-ripple>Fiche</button>
+                                        </a>
+                                        <button style="float:right" ng-click="sstAbsence(inter.artisan.id)" class="btn--no-conflicts btn--m btn--red btn--flat" lx-ripple>Absence</button>
                                     </div>
                                 </div>
-                                <div class="card__actions">
-                                    <button class="btn--no-conflicts btn--m btn--black btn--flat" lx-ripple>Appeler</button>
-                                    <button class="btn--no-conflicts btn--m btn--blue btn--flat" lx-ripple>SMS</button>
-                                    <a href="/artisan/{{inter.artisan.id}}/recap">
-                                        <button class="btn--no-conflicts btn--m btn--orange btn--flat" lx-ripple>Recap'</button>
-                                    </a>
-                                    <a href="/artisan/{{inter.artisan.id}}">
-                                        <button class="btn--no-conflicts btn--m btn--purple btn--flat" lx-ripple>Fiche</button>
-                                    </a>
-                                    <button style="float:right" ng-click="openDialog({absence:true})" class="btn--no-conflicts btn--m btn--red btn--flat" lx-ripple>Absence</button>
+                                <div class="col-md-4" style="height: 505px;overflow: scroll;">
+                                    <table class="table table-condensed" style="padding:0;color:black">
+                                        <tbody>
+                                            <tr ng-repeat="sst in nearestArtisans" ng-class="sst.id == inter.sst ? 'success' : ''" ng-click="clickOnArtisanMarker(sst.distance, sst)">
+                                                <td variable-length ng-class="{'red-text' : !sst.disponible}" style="text-align:left">{{sst.nomSociete}} <small class="text-blue">{{sst.noob ? 'new' : ''}}</small></td>
+                                                <td>7.3</td>
+                                                <td>{{sst.distance}} km</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-md-4" style="height: 505px;overflow: scroll;">
-                        <table class="table table-condensed" style="padding:0;color:black">
-                            <tbody>
-                                <tr ng-repeat="sst in nearestArtisans" ng-class="sst.id == inter.sst ? 'success' : ''" ng-click="clickOnArtisanMarker(sst.distance, sst)">
-                                    <td variable-length style="text-align:left">{{sst.nomSociete}} <small class="text-blue">{{sst.noob ? 'new' : ''}}</small></td>
-                                    <td>7.3</td>
-                                    <td>{{sst.distance}} km</td>
-                                </tr>
-                            </tbody>
-                        </table>
                     </div>
                 </div>
                 <br>
@@ -198,6 +205,22 @@
                         </div>
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col-sm-4">
+                        <div class="select-style text-field">
+                            <select ng-change="searchArtisans()" ng-model="inter.fournisseur" ng-options="frn.short_name as frn.short_name group by frn.type for frn in config.fournisseur ">
+                            </select>
+                            <label ng-class="{'selected' : inter.categorie}">Fournisseur</label>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <lx-text-field label="Cout Fourniture">
+                            <input eurofilter ng-model="inter.coutFourniture">
+                        </lx-text-field>
+                    </div>
+                </div>
+                <br>
+                <br>
                 <div class="form-group" ng-if="!inter.reglementSurPlace" ng-show="!inter.reglementSurPlace" style="background-color:rgb(66, 66, 66);padding-bottom: 40px;">
                     <div class="col-sm-12">
                         <div class="col-sm-12">
@@ -267,31 +290,47 @@
                         </md-input-container>
                     </div>
                 </div>
-                <div class="col-sm-6 md-whiteframe-z1 well">
+                <div class="col-sm-5 md-whiteframe-z1 well ">
                     <div style="max-height: 240px;" lx-scrollbar>
-                        <ul class="list mt++" style="padding-bottom:20px" >
-                            <lx-file-input label="Upload" change="onFileUpload(e)"></lx-file-input>
+                        <ul class="list mt++" style="padding-bottom:20px">
                             <li class="list-row" ng-repeat="file in files">
                                 <div class="list-row__content">
-                                   <a target="_blank" href="/api/document/{{file.id}}"> <span class="display-block">{{file.name || "Fichier" + $index}}</span></a>
+                                    <a target="_blank" href="/api/document/{{file.id}}"> <span class="display-block">{{file.name || "Fichier" + $index}}</span></a>
                                     <span class="display-block fs-body-1 tc-black-2">{{file.date | date:"dd/MM/yy"}} - {{file.type}} - {{file.login}}</span>
                                 </div>
                             </li>
                         </ul>
                     </div>
+                    <lx-file-input label="Upload" value="fileUploadText" change="onFileUpload(e)"></lx-file-input>
+                </div>
+                <div class="col-sm-6 col-sm-offset-1 md-whiteframe-z1 well">
+                    <div style="max-height: 240px;" lx-scrollbar>
+                        <ul class="list mt++" style="padding-bottom:20px">
+                            <li class="list-row" ng-repeat="com in inter.comments">
+                                <div class="list-row__content">
+                                    <span class="display-block">{{com.text}}</span>
+                                    <span class="display-block fs-body-1 tc-black-2">{{com.date | date:"dd/MM/yy"}} - {{com.login}}</span>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <lx-text-field label="Commentaire">
+                        <input type="text" ng-model="commentText" ng-enter="addComment()">
+                    </lx-text-field>
                 </div>
                 <br>
             </form>
         </div>
     </div>
     <div class="fab" style="  float: right;position: fixed;right: 70px;z-index: 999;top: 87%;">
-        <button ng-click="saveInter(false, false)" class="fab__primary btn--no-conflicts btn--xl btn--blue btn--fab" lx-ripple lx-tooltip="Enregistrer" tooltip-position="top">
+        <button ng-click="saveInter({})" class="fab__primary btn--no-conflicts btn--xl btn--blue btn--fab" lx-ripple lx-tooltip="Enregistrer" tooltip-position="top">
             <i class="mdi" ng-class="inter.id ? 'mdi-camera-iris' : 'mdi-plus'"></i>
             <i class="mdi mdi-checkbox-marked-circle-outline"></i>
         </button>
         <div class="fab__actions fab__actions--left">
-            <button ng-click="saveInter(true, false)" class="btn--no-conflicts btn--l btn--black btn--fab" lx-ripple lx-tooltip="Envoyer" tooltip-position="top"><i class="mdi mdi-send"></i></button>
-            <button ng-click="saveInter(false, true)" class="btn--no-conflicts btn--l btn--black btn--fab" lx-ripple lx-tooltip="Annuler" tooltip-position="top"><i class="mdi mdi-close"></i></button>
+            <button  ng-click="saveInter({annulation:true})" class="btn--no-conflicts btn--l btn--black btn--fab" lx-ripple lx-tooltip="Annuler" tooltip-position="top"><i class="mdi mdi-close"></i></button>
+            <button  ng-click="saveInter({envoi:true})" class="btn--no-conflicts btn--l btn--black btn--fab" lx-ripple lx-tooltip="Envoyer" tooltip-position="top"><i class="mdi mdi-send"></i></button>
+            <button ng-show="inter.status === 'ATT'" ng-click="saveInter({verification:true})" class="btn--no-conflicts btn--l btn--black btn--fab" lx-ripple lx-tooltip="Verifier" tooltip-position="top"><i class="mdi mdi-check-all"></i></button>
         </div>
     </div>
 </div>

@@ -1,10 +1,10 @@
 angular.module('edison').controller('InterventionController',
-  function($scope, $location, $routeParams, ngDialog, LxNotificationService, Upload, tabContainer, edisonAPI, config, intervention, artisans) {
+  function($scope, $location, $routeParams, ngDialog, LxNotificationService, Upload, tabContainer, edisonAPI, config, intervention, artisans, user) {
     $scope.artisans = artisans.data;
     $scope.config = config;
     $scope.tab = tabContainer.getCurrentTab();
     var id = parseInt($routeParams.id);
-
+    console.log(user);
     if (!$scope.tab.data) {
       $scope.tab.setData(intervention.data);
       $scope.tab.data.sst = intervention.data.artisan ? intervention.data.artisan.id : 0;
@@ -25,6 +25,16 @@ angular.module('edison').controller('InterventionController',
     }
     $scope.showMap = false;
 
+    $scope.addComment = function() {
+      console.log($scope.commentText)
+      $scope.tab.data.comments.push({
+        login: user.data.login,
+        text: $scope.commentText,
+        date: new Date()
+      })
+      $scope.commentText = "";
+    }
+
     $scope.onFileUpload = function(file) {
       if (file) {
         edisonAPI.uploadFile(file, {
@@ -32,6 +42,7 @@ angular.module('edison').controller('InterventionController',
           model: 'intervention',
           type: 'fiche'
         }).success(function() {
+          $scope.fileUploadText = "";
           $scope.loadFilesList();
         })
       }
@@ -45,15 +56,14 @@ angular.module('edison').controller('InterventionController',
     $scope.loadFilesList();
 
 
-    $scope.saveInter = function(send, cancel) {
+    $scope.saveInter = function(options) {
       edisonAPI.saveIntervention({
-        send: send,
-        cancel: cancel,
+        options: options,
         data: $scope.tab.data
       }).then(function(data) {
         LxNotificationService.success("L'intervention " + data.data + " à été enregistré");
-        //$location.url("/interventions");
-       // $scope.tabs.remove($scope.tab);
+        $location.url("/interventions");
+        $scope.tabs.remove($scope.tab);
       }).catch(function(response) {
         LxNotificationService.error(response.data);
       });
@@ -64,6 +74,7 @@ angular.module('edison').controller('InterventionController',
     }
 
     $scope.searchArtisans = function() {
+      console.log("search");
       edisonAPI.getNearestArtisans($scope.tab.data.client.address, $scope.tab.data.categorie)
         .success(function(result) {
           $scope.nearestArtisans = result;

@@ -1,4 +1,9 @@
 module.exports = {
+  whoAmI: function(req, res) {
+    res.json({
+      login: req.session.login
+    });
+  },
   setSessionData: function(req, res) {
     try {
       JSON.parse(req.query.tabContainer);
@@ -9,7 +14,7 @@ module.exports = {
     }
   },
   getSessionData: function(req, res) {
-    //return res.sendStatus(500);    
+    return res.sendStatus(500);
     if (req.session.tabContainer && req.session.tabContainer.length > 2) {
       res.json(JSON.parse(req.session.tabContainer))
     } else {
@@ -19,16 +24,16 @@ module.exports = {
   ping: function(req, res) {
     res.send("ok");
   },
-/*  sendSMS: function(params) {
-    sms.send({
-      to: params.to,
-      text: params.text,
-      track: params.track,
-      type: params.type
-    }).then(function(result) {
-      res.json(result)
-    }, function(err) {
-      res.status(500).json(err);
-    });
-  }*/
+  /*  sendSMS: function(params) {
+      sms.send({
+        to: params.to,
+        text: params.text,
+        track: params.track,
+        type: params.type
+      }).then(function(result) {
+        res.json(result)
+      }, function(err) {
+        res.status(500).json(err);
+      });
+    }*/
 }

@@ -3,26 +3,41 @@ angular.module('edison').factory('config', [function() {
   var config = {};
 
   config.filters = {
-    all: {
-      short:'all',
-      long:'Toutes les Inters',
-      url:''
+    all:  {
+      short: 'all',
+      long: 'Toutes les Inters',
+      url: ''
     },
-    enCours: {
-      short: 'enc',
-      long:'En Cours',
-      url:'/enCours'
+    envoye: {
+      short: 'env',
+      long: 'Envoyé',
+      url: '/envoye'
     },
     aVerifier: {
       short: 'avr',
-      long:'A Vérifier',
-      url:'/aVerifier'
+      long: 'A Vérifier',
+      url: '/aVerifier'
     },
-    aRelancer: {
-      short: 'arl',
-      long:'A Relancer',
-      url:'/aRelancer'
-    }
+    clientaRelancer: {
+      short: 'carl',
+      long: 'Client A Relancer',
+      url: '/clientaRelancer'
+    },
+    clientaRelancerUrgent: {
+      short: 'Ucarl',
+      long: 'Client A Relancer Urgent',
+      url: '/clientaRelancerUrgent'
+    },
+    sstaRelancer: {
+      short: 'sarl',
+      long: 'SST A Relancer',
+      url: '/sstaRelancer'
+    },
+    sstaRelancerUrgent: {
+      short: 'Usarl',
+      long: 'SST A Relancer Urgent',
+      url: '/sstaRelancerUrgent'
+    },
   }
 
   config.civilites = [{
@@ -81,6 +96,35 @@ angular.module('edison').factory('config', [function() {
     }
   }
 
+  config.fournisseur = [{
+    short_name: 'EDISON SERVICES',
+    type: 'Fourniture Edison'
+  }, {
+    short_name: 'CEDEO',
+    type: 'Fourniture Artisan'
+  }, {
+    short_name: 'BROSSETTE',
+    type: 'Fourniture Artisan'
+  }, {
+    short_name: 'REXEL',
+    type: 'Fourniture Artisan'
+  }, {
+    short_name: 'COAXEL',
+    type: 'Fourniture Artisan'
+  }, {
+    short_name: 'YESSS ELECTRIQUE',
+    type: 'Fourniture Artisan'
+  }, {
+    short_name: 'CGED',
+    type: 'Fourniture Artisan'
+  }, {
+    short_name: 'COSTA',
+    type: 'Fourniture Artisan'
+  }, {
+    short_name: 'FORUM DU BATIMENT',
+    type: 'Fourniture Artisan'
+  }]
+
   config.categories = [{
     short_name: 'EL',
     long_name: 'Electricité'
@@ -123,29 +167,6 @@ angular.module('edison').factory('config', [function() {
     short_name: 'CA',
     long_name: 'Espèces'
   }];
-
-  config.etatsKV = {
-    ENC: {
-      n: 'En Cours',
-      c: 'orange'
-    },
-    INT: {
-      n: 'Confirmé',
-      c: 'green accent-4'
-    },
-    APR: {
-      n: 'A Progr.',
-      c: 'blue'
-    },
-    ANN: {
-      n: 'Annuler',
-      c: 'red'
-    },
-    DEV: {
-      n: 'Devis',
-      c: 'light-blue'
-    },
-  };
 
   config.typePayeur = [{
     short_name: 'SOC',

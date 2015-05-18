@@ -121,6 +121,9 @@ var getIntervention = function($route, $q, edisonAPI) {
     return $q(function(resolve, reject) {
       resolve({
         data: {
+          prixAnnonce:0,
+          prixFinal:0,
+          coutFourniture:0,
           client: {},
           reglementSurPlace: true,
           date: {
@@ -138,10 +141,16 @@ var getIntervention = function($route, $q, edisonAPI) {
   }
 }
 
+
+var whoAmI = function(edisonAPI) {
+  return edisonAPI.getUser();
+}
+
 angular.module('edison').config(function($routeProvider, $locationProvider) {
   $routeProvider
     .when('/', {
       resolve: {
+        user: whoAmI,
         interventions: getInterList,
         artisans: getArtisanList
       },
@@ -151,6 +160,7 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
       templateUrl: "Pages/Artisan/artisan.html",
       controller: "ArtisanController",
       resolve: {
+        user: whoAmI,
         artisan: getArtisan,
         interventions: getInterList,
         artisans: getArtisanList
@@ -160,6 +170,7 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
       templateUrl: "Pages/ListeInterventions/listeInterventions.html",
       controller: "InterventionsController",
       resolve: {
+        user: whoAmI,
         interventions: getInterList,
         artisans: getArtisanList
       }
@@ -168,6 +179,7 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
       templateUrl: "Pages/ListeInterventions/listeInterventions.html",
       controller: "InterventionsController",
       resolve: {
+        user: whoAmI,
         interventions: getInterList,
         artisans: getArtisanList
       }
@@ -186,6 +198,7 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
       templateUrl: "Pages/ListeInterventions/listeInterventions.html",
       controller: "InterventionsController",
       resolve: {
+        user: whoAmI,
         interventions: getInterList,
         artisans: getArtisanList
       }
@@ -194,6 +207,7 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
       templateUrl: "Pages/Intervention/intervention.html",
       controller: "InterventionController",
       resolve: {
+        user: whoAmI,
         interventions: getInterList,
         intervention: getIntervention,
         artisans: getArtisanList
@@ -204,6 +218,7 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
       controller: 'DashboardController',
       templateUrl: "Pages/Dashboard/dashboard.html",
       resolve: {
+        user: whoAmI,
         interventions: getInterList,
         artisans: getArtisanList
 

@@ -49,17 +49,33 @@ module.exports = {
     }
   },
   etatsKV: {
-    ENC: {
-      n: 'En Cours',
+    ENV: {
+      n: 'Envoyé',
       c: 'orange'
     },
-    INT: {
-      n: 'Confirmé',
+    RGL: {
+      n: 'Reglé',
+      c: 'green'
+    },
+    PAY: {
+      n: 'Payé',
       c: 'green accent-4'
+    },
+    ATTC: {
+      n: 'RC En Attente',
+      c: 'purple'
+    },
+    ATTS: {
+      n: 'RS En Attente',
+      c: 'pink darken-4'
     },
     APR: {
       n: 'A Progr.',
       c: 'blue'
+    },
+    AVR: {
+      n: 'A Vérifier',
+      c: 'brown darken-3'
     },
     ANN: {
       n: 'Annuler',

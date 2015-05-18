@@ -121,6 +121,9 @@ var getIntervention = function($route, $q, edisonAPI) {
     return $q(function(resolve, reject) {
       resolve({
         data: {
+          prixAnnonce:0,
+          prixFinal:0,
+          coutFourniture:0,
           client: {},
           reglementSurPlace: true,
           date: {
@@ -138,10 +141,16 @@ var getIntervention = function($route, $q, edisonAPI) {
   }
 }
 
+
+var whoAmI = function(edisonAPI) {
+  return edisonAPI.getUser();
+}
+
 angular.module('edison').config(function($routeProvider, $locationProvider) {
   $routeProvider
     .when('/', {
       resolve: {
+        user: whoAmI,
         interventions: getInterList,
         artisans: getArtisanList
       },
@@ -151,6 +160,7 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
       templateUrl: "Pages/Artisan/artisan.html",
       controller: "ArtisanController",
       resolve: {
+        user: whoAmI,
         artisan: getArtisan,
         interventions: getInterList,
         artisans: getArtisanList
@@ -160,6 +170,7 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
       templateUrl: "Pages/ListeInterventions/listeInterventions.html",
       controller: "InterventionsController",
       resolve: {
+        user: whoAmI,
         interventions: getInterList,
         artisans: getArtisanList
       }
@@ -168,6 +179,7 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
       templateUrl: "Pages/ListeInterventions/listeInterventions.html",
       controller: "InterventionsController",
       resolve: {
+        user: whoAmI,
         interventions: getInterList,
         artisans: getArtisanList
       }
@@ -186,6 +198,7 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
       templateUrl: "Pages/ListeInterventions/listeInterventions.html",
       controller: "InterventionsController",
       resolve: {
+        user: whoAmI,
         interventions: getInterList,
         artisans: getArtisanList
       }
@@ -194,6 +207,7 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
       templateUrl: "Pages/Intervention/intervention.html",
       controller: "InterventionController",
       resolve: {
+        user: whoAmI,
         interventions: getInterList,
         intervention: getIntervention,
         artisans: getArtisanList
@@ -204,6 +218,7 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
       controller: 'DashboardController',
       templateUrl: "Pages/Dashboard/dashboard.html",
       resolve: {
+        user: whoAmI,
         interventions: getInterList,
         artisans: getArtisanList
 
@@ -216,6 +231,67 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
   $locationProvider.html5Mode(true);
 });
 
+angular.module('edison').directive('capitalize', function() {
+    return {
+        require: 'ngModel',
+        link: function(scope, element, attrs, modelCtrl) {
+            modelCtrl.$parsers.push(function(input) {
+                return input ? input.toUpperCase() : "";
+            });
+            element.css("text-transform","uppercase");
+        }
+    };
+})
+
+
+angular.module('edison').directive('ngEnter', function () {
+    return function (scope, element, attrs) {
+        element.bind("keydown keypress", function (event) {
+            if(event.which === 13) {
+                scope.$apply(function (){
+                    scope.$eval(attrs.ngEnter);
+                });
+
+                event.preventDefault();
+            }
+        });
+    };
+});
+/*angular.module('edison').directive('materialSelect', function() {
+  return {
+    restrict: 'E',
+    replace: true,
+    template: '<div class="select-style text-field">' +
+      '<select ng-model>' +
+      '<option disabled>{{defaultName}}</option>' +
+      '</select>' +
+      '</div>'
+  }
+});
+*/
+angular.module('edison').directive('sglclick', ['$parse', function($parse) {
+    return {
+        restrict: 'A',
+        link: function(scope, element, attr) {
+          var fn = $parse(attr['sglclick']);
+          var delay = 300, clicks = 0, timer = null;
+          element.on('click', function (event) {
+            clicks++;  //count clicks
+            if(clicks === 1) {
+              timer = setTimeout(function() {
+                scope.$apply(function () {
+                    fn(scope, { $event: event });
+                }); 
+                clicks = 0;             //after action performed, reset counter
+              }, delay);
+              } else {
+                clearTimeout(timer);    //prevent single-click action
+                clicks = 0;             //after action performed, reset counter
+              }
+          });
+        }
+    };
+}])
 angular.module("edison").filter('addressPrettify', function() {
   return function(address) {
     return (address.n + " " +
@@ -367,67 +443,6 @@ angular.module("edison").filter('tableFilter', function() {
   }
 });
 
-angular.module('edison').directive('capitalize', function() {
-    return {
-        require: 'ngModel',
-        link: function(scope, element, attrs, modelCtrl) {
-            modelCtrl.$parsers.push(function(input) {
-                return input ? input.toUpperCase() : "";
-            });
-            element.css("text-transform","uppercase");
-        }
-    };
-})
-
-
-angular.module('edison').directive('ngEnter', function () {
-    return function (scope, element, attrs) {
-        element.bind("keydown keypress", function (event) {
-            if(event.which === 13) {
-                scope.$apply(function (){
-                    scope.$eval(attrs.ngEnter);
-                });
-
-                event.preventDefault();
-            }
-        });
-    };
-});
-/*angular.module('edison').directive('materialSelect', function() {
-  return {
-    restrict: 'E',
-    replace: true,
-    template: '<div class="select-style text-field">' +
-      '<select ng-model>' +
-      '<option disabled>{{defaultName}}</option>' +
-      '</select>' +
-      '</div>'
-  }
-});
-*/
-angular.module('edison').directive('sglclick', ['$parse', function($parse) {
-    return {
-        restrict: 'A',
-        link: function(scope, element, attr) {
-          var fn = $parse(attr['sglclick']);
-          var delay = 300, clicks = 0, timer = null;
-          element.on('click', function (event) {
-            clicks++;  //count clicks
-            if(clicks === 1) {
-              timer = setTimeout(function() {
-                scope.$apply(function () {
-                    fn(scope, { $event: event });
-                }); 
-                clicks = 0;             //after action performed, reset counter
-              }, delay);
-              } else {
-                clearTimeout(timer);    //prevent single-click action
-                clicks = 0;             //after action performed, reset counter
-              }
-          });
-        }
-    };
-}])
 angular.module('edison').factory('Address', function() {
 
 
@@ -557,18 +572,18 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvid
         params: options.data
       });
     },
-    saveIntervention: function(data) {
+    saveIntervention: function(params) {
       return $http({
         method: 'GET',
         url: "/api/intervention/save",
-        params: data
+        params: params
       });
     },
     getNearestArtisans: function(address, categorie) {
       return $http({
         method: 'GET',
         url: "/api/artisan/rank",
-        cache: true,
+        cache: false,
         params:  {
           categorie: categorie,
           lat: address.lt,
@@ -579,7 +594,7 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvid
       });
     },
     getFilesList: function(id) {
-        return $http({
+      return $http({
         method: 'GET',
         url: "/api/intervention/" + id + "/getFiles"
       });
@@ -603,7 +618,13 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvid
         url: '/api/artisan/' + id + '/absence',
         params: options
       })
-    }
+    },
+    getUser: function(id_sst) {
+      return $http({
+        method: 'GET',
+        url: "/api/whoAmI"
+      });
+    },
   }
 }]);
 
@@ -612,26 +633,41 @@ angular.module('edison').factory('config', [function() {
   var config = {};
 
   config.filters = {
-    all: {
-      short:'all',
-      long:'Toutes les Inters',
-      url:''
+    all:  {
+      short: 'all',
+      long: 'Toutes les Inters',
+      url: ''
     },
-    enCours: {
-      short: 'enc',
-      long:'En Cours',
-      url:'/enCours'
+    envoye: {
+      short: 'env',
+      long: 'Envoyé',
+      url: '/envoye'
     },
     aVerifier: {
       short: 'avr',
-      long:'A Vérifier',
-      url:'/aVerifier'
+      long: 'A Vérifier',
+      url: '/aVerifier'
     },
-    aRelancer: {
-      short: 'arl',
-      long:'A Relancer',
-      url:'/aRelancer'
-    }
+    clientaRelancer: {
+      short: 'carl',
+      long: 'Client A Relancer',
+      url: '/clientaRelancer'
+    },
+    clientaRelancerUrgent: {
+      short: 'Ucarl',
+      long: 'Client A Relancer Urgent',
+      url: '/clientaRelancerUrgent'
+    },
+    sstaRelancer: {
+      short: 'sarl',
+      long: 'SST A Relancer',
+      url: '/sstaRelancer'
+    },
+    sstaRelancerUrgent: {
+      short: 'Usarl',
+      long: 'SST A Relancer Urgent',
+      url: '/sstaRelancerUrgent'
+    },
   }
 
   config.civilites = [{
@@ -690,6 +726,35 @@ angular.module('edison').factory('config', [function() {
     }
   }
 
+  config.fournisseur = [{
+    short_name: 'EDISON SERVICES',
+    type: 'Fourniture Edison'
+  }, {
+    short_name: 'CEDEO',
+    type: 'Fourniture Artisan'
+  }, {
+    short_name: 'BROSSETTE',
+    type: 'Fourniture Artisan'
+  }, {
+    short_name: 'REXEL',
+    type: 'Fourniture Artisan'
+  }, {
+    short_name: 'COAXEL',
+    type: 'Fourniture Artisan'
+  }, {
+    short_name: 'YESSS ELECTRIQUE',
+    type: 'Fourniture Artisan'
+  }, {
+    short_name: 'CGED',
+    type: 'Fourniture Artisan'
+  }, {
+    short_name: 'COSTA',
+    type: 'Fourniture Artisan'
+  }, {
+    short_name: 'FORUM DU BATIMENT',
+    type: 'Fourniture Artisan'
+  }]
+
   config.categories = [{
     short_name: 'EL',
     long_name: 'Electricité'
@@ -732,29 +797,6 @@ angular.module('edison').factory('config', [function() {
     short_name: 'CA',
     long_name: 'Espèces'
   }];
-
-  config.etatsKV = {
-    ENC: {
-      n: 'En Cours',
-      c: 'orange'
-    },
-    INT: {
-      n: 'Confirmé',
-      c: 'green accent-4'
-    },
-    APR: {
-      n: 'A Progr.',
-      c: 'blue'
-    },
-    ANN: {
-      n: 'Annuler',
-      c: 'red'
-    },
-    DEV: {
-      n: 'Devis',
-      c: 'light-blue'
-    },
-  };
 
   config.typePayeur = [{
     short_name: 'SOC',
@@ -833,6 +875,62 @@ angular.module('edison').factory('dataProvider', ['socket', '$rootScope', 'confi
   }
 
   return new dataProvider;
+
+}]);
+
+angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', function($mdDialog, edisonAPI) {
+
+
+  return {
+    absence: {
+      open: function(id, cb) {
+        $mdDialog.show({
+          controller: function DialogController($scope, $mdDialog) {
+            $scope.absenceTime = 'TODAY';
+            $scope.absence = [{
+              title: 'Toute la journée',
+              value: 'TODAY'
+            }, {
+              title: '1 Heure',
+              value: '1'
+            }, {
+              title: '2 Heure',
+              value: '2'
+            }, {
+              title: '3 Heure',
+              value: '3'
+            }, {
+              title: '4 Heure',
+              value: '4'
+            }]
+            $scope.hide = function() {
+              $mdDialog.hide();
+            };
+            $scope.cancel = function() {
+              $mdDialog.cancel();
+            };
+            $scope.answer = function(answer) {
+              $mdDialog.hide(answer);
+              var hours = 0;
+              if (answer === "TODAY") {
+                hours = 23 - (new Date).getHours() + 1;
+              } else {
+                hours = parseInt(answer);
+              }
+              start = new Date;
+              end = new Date;
+              end.setHours(end.getHours() + hours)
+              edisonAPI.absenceArtisan(id, {
+                start: start,
+                end: end
+              }).success(cb)
+            };
+          },
+          templateUrl: '/Pages/Intervention/dialogs/absence.html',
+        });
+      }
+    }
+  }
 
 }]);
 
@@ -1167,7 +1265,7 @@ angular.module('edison').controller('DashboardController', function(tabContainer
 	$scope.tab = tabContainer.getCurrentTab();
 	$scope.tab.setTitle('dashBoard')
 });
-angular.module('edison').controller('InterventionMapController', function($scope, $q, $interval, $window, $mdDialog, Address, mapAutocomplete, edisonAPI) {
+angular.module('edison').controller('InterventionMapController', function($scope, $q, $interval, $window, Address, dialog, mapAutocomplete, edisonAPI) {
   $scope.autocomplete = mapAutocomplete;
   if (!$scope.tab.data.client.address) {
     $scope.mapCenter = Address({
@@ -1234,58 +1332,13 @@ angular.module('edison').controller('InterventionMapController', function($scope
     }
   })
 
-  function DialogController($scope, $mdDialog) {
-    $scope.absenceTime = 'TODAY';
-    $scope.absence = [{
-      title: 'Toute la journée',
-      value: 'TODAY'
-    }, {
-      title: '1 Heure',
-      value: '1'
-    }, {
-      title: '2 Heure',
-      value: '2'
-    }, {
-      title: '3 Heure',
-      value: '3'
-    }, {
-      title: '4 Heure',
-      value: '4'
-    }]
-    $scope.hide = function() {
-      $mdDialog.hide();
-    };
-    $scope.cancel = function() {
-      $mdDialog.cancel();
-    };
-    $scope.answer = function(answer) {
+  $scope.dialog = dialog;
 
-      $mdDialog.hide(answer);
-    };
-  };
-
-  $scope.openDialog = function(ev) {
-    $mdDialog.show({
-        controller: DialogController,
-        templateUrl: '/Pages/Intervention/dialog-box.html',
-        targetEvent: ev,
-      })
-      .then(function(time) {
-        var hours = 0;
-        if (time === "TODAY") {
-          hours = 23 - (new Date).getHours() + 1;
-        } else {
-          hours = parseInt(time);
-        }
-        start = new Date;
-        end = new Date;
-        end.setHours(end.getHours() + hours)
-        edisonAPI.absenceArtisan($scope.tab.data.artisan.id, {
-          start: start,
-          end: end
-        });
-      });
-  };
+  $scope.sstAbsence = function(id) {
+    dialog.absence.open(id, function() {
+       $scope.searchArtisans();
+    })
+  }
 
   $scope.showMap = function() {
     $scope.loadMap = true;
@@ -1304,12 +1357,12 @@ angular.module('edison').controller('InterventionMapController', function($scope
 });
 
 angular.module('edison').controller('InterventionController',
-  function($scope, $location, $routeParams, ngDialog, LxNotificationService, Upload, tabContainer, edisonAPI, config, intervention, artisans) {
+  function($scope, $location, $routeParams, ngDialog, LxNotificationService, Upload, tabContainer, edisonAPI, config, intervention, artisans, user) {
     $scope.artisans = artisans.data;
     $scope.config = config;
     $scope.tab = tabContainer.getCurrentTab();
     var id = parseInt($routeParams.id);
-
+    console.log(user);
     if (!$scope.tab.data) {
       $scope.tab.setData(intervention.data);
       $scope.tab.data.sst = intervention.data.artisan ? intervention.data.artisan.id : 0;
@@ -1330,6 +1383,16 @@ angular.module('edison').controller('InterventionController',
     }
     $scope.showMap = false;
 
+    $scope.addComment = function() {
+      console.log($scope.commentText)
+      $scope.tab.data.comments.push({
+        login: user.data.login,
+        text: $scope.commentText,
+        date: new Date()
+      })
+      $scope.commentText = "";
+    }
+
     $scope.onFileUpload = function(file) {
       if (file) {
         edisonAPI.uploadFile(file, {
@@ -1337,6 +1400,7 @@ angular.module('edison').controller('InterventionController',
           model: 'intervention',
           type: 'fiche'
         }).success(function() {
+          $scope.fileUploadText = "";
           $scope.loadFilesList();
         })
       }
@@ -1350,15 +1414,14 @@ angular.module('edison').controller('InterventionController',
     $scope.loadFilesList();
 
 
-    $scope.saveInter = function(send, cancel) {
+    $scope.saveInter = function(options) {
       edisonAPI.saveIntervention({
-        send: send,
-        cancel: cancel,
+        options: options,
         data: $scope.tab.data
       }).then(function(data) {
         LxNotificationService.success("L'intervention " + data.data + " à été enregistré");
-        //$location.url("/interventions");
-       // $scope.tabs.remove($scope.tab);
+        $location.url("/interventions");
+        $scope.tabs.remove($scope.tab);
       }).catch(function(response) {
         LxNotificationService.error(response.data);
       });
@@ -1369,6 +1432,7 @@ angular.module('edison').controller('InterventionController',
     }
 
     $scope.searchArtisans = function() {
+      console.log("search");
       edisonAPI.getNearestArtisans($scope.tab.data.client.address, $scope.tab.data.categorie)
         .success(function(result) {
           $scope.nearestArtisans = result;

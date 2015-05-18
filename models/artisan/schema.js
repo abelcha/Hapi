@@ -32,7 +32,8 @@ module.exports = function(db) {
     },
     absence: {
       start: Date,
-      end: Date
+      end: Date,
+      login: String
     },
     categories: [],
     email: String,

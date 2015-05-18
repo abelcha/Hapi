@@ -5,17 +5,25 @@ module.exports = function(schema) {
       db.model('artisan').findOne({
         id: parseInt(id)
       }).then(function(doc) {
-        doc.absence = {
+        doc.absence ={
           start: new Date(req.query.start),
-          end: new Date(req.query.end)
+          end: new Date(req.query.end),
+          login: req.session.login
         }
         doc.save()
           .then(function(re) {
             resolve(re)
-          })
-          //.catch(reject);
-      }).catch(reject);
+          }, reject)
+      }, reject);
     })
   }
-
+  schema.virtual('disponible').get(function() {
+    if (!this.absence || !this.absence.start)
+      return true;
+    var d = new Date();
+    return !(d.compareTo(new Date(this.absence.start)) === 1 && d.compareTo(new Date(this.absence.end)) === -1);
+  });
+  schema.set('toJSON', {
+    virtuals: true
+  });
 }

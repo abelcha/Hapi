@@ -208,6 +208,11 @@ span[md-highlight-text] {
 .info-ext>p {
     white-space: normal;
 }
+
+.input-transparent:{
+    opacity: 0.1;
+}
+
 /*.lx-select {
     margin-top: 9px!important;
 }*/

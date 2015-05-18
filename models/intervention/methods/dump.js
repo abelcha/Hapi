@@ -27,8 +27,7 @@ module.exports = function(schema) {
       addProp(date, toDate(d.date_paiement_sst), 'paiementSST');
 
     if (d.date_edition_facture)
-      addProp(date, toDate(d.date_edition_facture), 'confirmation')
-
+      addProp(date, toDate(d.date_edition_facture), 'verification')
 
     /* CLIENT */
     var client = {
@@ -55,12 +54,15 @@ module.exports = function(schema) {
     var comments = [];
     if (d.remarque_interne) {
       comments.push({
-        a: '',
-        d: 0,
-        c: d.remarque_interne
+        login: 'Inconnu',
+        date: toDate(d.t_stamp),
+        text: d.remarque_interne
       });
     }
     var rtn = {
+      aDemarcher: d.A_DEMARCHE,
+      fournisseur: d.fournisseur,
+      coutFourniture: parseInt(d.cout_fourniture),
       id: d.id,
       telepro: d.ajoute_par,
       comments: comments,
@@ -69,6 +71,27 @@ module.exports = function(schema) {
       client: client
     }
 
+    if (d.devis && d.id > 13740) {
+      var devis = JSON.parse(d.devis.split("<br>").join(''));
+      console.log(devis.devisTab);
+      rtn.produits = devis.devisTab;
+    }
+
+    if (rtn.status === 'ENC') {
+
+      rtn.status = 'ENV';
+
+    }
+
+    if (rtn.status === 'INT') {
+      if (date.paiementCLI)
+        rtn.status = 'RGL';
+      else if (date.paiementSST)
+        rtn.status = 'PAY';
+      else {
+        rtn.status = 'ATT'
+      }
+    }
     /* FACTURE */
     rtn.reglementSurPlace = !d.fact;
 
@@ -135,7 +158,7 @@ module.exports = function(schema) {
         model: 'intervention',
         method: 'dump'
       })
-    } 
+    }
     return new Promise(function(resolve, reject) {
       var inters = [];
       db.model('intervention').remove({}, function() {

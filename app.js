@@ -24,6 +24,7 @@ global.sms = new edison.mobyt(edison.config.mobytID, edison.config.mobytPASS);
 global.document = new edison.dropbox();
 global.isWorker = false;
 
+require("date-utils");
 if (envProd ||  envDev)
   global.jobs = edison.worker.initJobQueue();
 
@@ -74,7 +75,7 @@ app.post('/login', function(req, res) {
     .then(function(user) {
       req.session.upgrade(user.login, function() {
         req.session.test = 52;
-        req.session.user = user;
+        req.session.login = user.login
         return res.redirect(req.body.url || '/');
       });
     }, function(err) {
@@ -84,7 +85,7 @@ app.post('/login', function(req, res) {
 
 
 app.use(function(req, res, next) {
-  if (req.session && !req.session.id /*&& (!req.query.x || envProd)*/ ) {
+  if (req.session && !req.session.id && (!req.query.x || envProd) ) {
     if (req.url.indexOf('/api/') === 0) /*TEMPORARY*/ {
       return res.sendStatus(401);
     } else {

@@ -75,18 +75,18 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvid
         params: options.data
       });
     },
-    saveIntervention: function(data) {
+    saveIntervention: function(params) {
       return $http({
         method: 'GET',
         url: "/api/intervention/save",
-        params: data
+        params: params
       });
     },
     getNearestArtisans: function(address, categorie) {
       return $http({
         method: 'GET',
         url: "/api/artisan/rank",
-        cache: true,
+        cache: false,
         params:  {
           categorie: categorie,
           lat: address.lt,
@@ -97,7 +97,7 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvid
       });
     },
     getFilesList: function(id) {
-        return $http({
+      return $http({
         method: 'GET',
         url: "/api/intervention/" + id + "/getFiles"
       });
@@ -121,6 +121,12 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvid
         url: '/api/artisan/' + id + '/absence',
         params: options
       })
-    }
+    },
+    getUser: function(id_sst) {
+      return $http({
+        method: 'GET',
+        url: "/api/whoAmI"
+      });
+    },
   }
 }]);

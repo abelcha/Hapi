@@ -1,6 +1,6 @@
 'use strict';
 var async = require("async");
-
+var _ = require("lodash")
 module.exports = function(schema) {
 
   var selectedFields = [
@@ -14,23 +14,22 @@ module.exports = function(schema) {
     'categorie',
     'prixAnnonce',
     'artisan',
+    'reglementSurPlace',
     'date.intervention',
     'date.ajout'
   ].join(' ');
 
-
-  var getFltr = function(inter) {
+  var getFltr = function(inter, dateInter) {
     var hour = 60 * 60 * 1000;
     var day = hour * 24;
     var week = day * 7;
     var month = week * 4;
 
     var now = Date.now();
-    var dateInter = (new Date(inter.date.intervention)).getTime();
     var fltr = {};
 
-    if (inter.status === 'ENC') {
-      fltr.enc = 1;
+    if (inter.status === 'AVR') {
+      fltr.avr = 1;
       if (now > dateInter + (2 * hour)) {
         fltr.avr = 1;
         if (now > dateInter + week) {
@@ -38,10 +37,18 @@ module.exports = function(schema) {
         }
       }
     }
-    if (inter.status === 'INT' && !inter.date.paiementCLI && now > dateInter + week) {
-      fltr.arl = 1;
+    if (inter.status.startsWith('ATT') && !inter.date.paiementCLI && now > dateInter + week) {
+      if (inter.reglementSurPlace) {
+        fltr.sarl = 1;
+      } else {
+        fltr.carl = 1;
+      }
       if (now > dateInter + month) {
-        fltr.Uarl = 1;
+        if (inter.reglementSurPlace) {
+          fltr.Usarl = 1;
+        } else {
+          fltr.Ucarl = 1
+        }
       }
     }
     if (inter.status === 'APR') {
@@ -52,9 +59,17 @@ module.exports = function(schema) {
 
 
   var translate = function(e) {
-    console.log(e.id);
+    //console.log(e.id);
+    //console.log(e.status)
+    var dateInter = (new Date(e.date.intervention)).getTime();
+    if (e.status === "ENV" && Date.now() > dateInter) {
+      e.status = 'AVR';
+    }
+    if (e.status === 'ATT')
+      e.status += (e.reglementSurPlace ? 'S' : 'C');
+
     return {
-      fltr: getFltr(e),
+      fltr: getFltr(e, dateInter),
       t: e.telepro,
       id: e.id,
       ai: e.artisan.id,
