@@ -22,7 +22,7 @@ module.exports = function(schema) {
         if (!err && reply && !req.query.cache) {
           return resolve(JSON.parse(reply));
         }
-        _this.model('artisan').find().sort('-id').select(s).then(function(docs) {
+        _this.model('artisan').find({'categories':'PL', archive:false}).sort('-id').select(s).then(function(docs) {
           async.map(docs, function(e, cb) {
             cb(null, {
               id: e.id,

@@ -209,10 +209,9 @@ span[md-highlight-text] {
     white-space: normal;
 }
 
-.input-transparent:{
-    opacity: 0.1;
+tr.products>td {
+    white-space: normal;
 }
-
 /*.lx-select {
     margin-top: 9px!important;
 }*/

@@ -10,7 +10,7 @@
                 <h3>Fiche d'intervention</h3>
                 <br>
                 <div class="form-group">
-                    <div class="col-sm-2">
+                                        <div class="col-sm-2">
                         <div class="select-style text-field">
                             <select ng-model="inter.client.civilite" ng-options="civ.short_name as civ.long_name for civ in config.civilites">
                             </select>
@@ -85,12 +85,12 @@
                                         <div ng-if="!loadMap" style="height:315px;width:100%;overflow:hidden">
                                             <img ng-if="!showmap" id="static-map" style="width:100%;top: -9999px;bottom: -9999px;left: -9999px;right: -9999px;margin: auto;" ng-click="showMap()" ng-src="{{getStaticMap()}}" />
                                         </div>
-                                        <map ng-if="loadMap" zoom="{{zoom}}" pan-control="false" style="height:350px" center="{{mapCenter.latLng}}">
+                                        <map ng-if="loadMap" zoom="{{zoom}}" pan-control="false" style="width:3000px;height:1550px" center="{{mapCenter.latLng}}">
                                             <directions ng-if="inter.artisan" travel-mode="DRIVING" origin="{{inter.artisan.address.lt}}, {{inter.artisan.address.lg}}" destination="{{inter.client.address.latLng}}">
                                             </directions>
-                                            <!--        <marker position="{{inter.add.latLng}}" color="blue"></marker> -->
-                                            <marker ng-if="showInterMarker()" position="{{mapCenter.latLng}}" color="grey"></marker>
-                                            <!--      <marker position="{{inter.artisan.add|addressXY}}" color="blue"></marker> -->
+                                            <!-- <marker ng-if="showInterMarker()" position="{{mapCenter.latLng}}" color="grey"></marker> -->
+                                            <marker ng-repeat="b in ben" position="{{b.lat}}, {{b.lng}}" color='red'></marker>
+                                            <marker ng-repeat="x in www" position="{{x.add.lt}}, {{x.add.lg}}" color='blue'></marker>
                                             <marker ng-if="inter.client.address" ng-repeat="sst in nearestArtisans" on-click="clickOnArtisanMarker(sst.id)" position="{{sst.address.lt}}, {{sst.address.lg}}" color="{{sst.id == inter.sst ? 'blue' : 'red'}}"></marker>
                                         </map>
                                     </div>
@@ -124,7 +124,7 @@
                                         <button style="float:right" ng-click="sstAbsence(inter.artisan.id)" class="btn--no-conflicts btn--m btn--red btn--flat" lx-ripple>Absence</button>
                                     </div>
                                 </div>
-                                <div class="col-md-4" style="height: 505px;overflow: scroll;">
+                                <div class="col-md-4" style="height: 495px;overflow: scroll;">
                                     <table class="table table-condensed" style="padding:0;color:black">
                                         <tbody>
                                             <tr ng-repeat="sst in nearestArtisans" ng-class="sst.id == inter.sst ? 'success' : ''" ng-click="clickOnArtisanMarker(sst.distance, sst)">
@@ -290,47 +290,97 @@
                         </md-input-container>
                     </div>
                 </div>
-                <div class="col-sm-5 md-whiteframe-z1 well ">
-                    <div style="max-height: 240px;" lx-scrollbar>
-                        <ul class="list mt++" style="padding-bottom:20px">
-                            <li class="list-row" ng-repeat="file in files">
-                                <div class="list-row__content">
-                                    <a target="_blank" href="/api/document/{{file.id}}"> <span class="display-block">{{file.name || "Fichier" + $index}}</span></a>
-                                    <span class="display-block fs-body-1 tc-black-2">{{file.date | date:"dd/MM/yy"}} - {{file.type}} - {{file.login}}</span>
-                                </div>
-                            </li>
-                        </ul>
+                    <br>
+                    <div class="col-sm-12">
+                    <h3>Produits</h3>
+                        <div class="data-table-container">
+                            <table class="data-table data-table--has-primary data-table--has-secondary">
+                                <thead>
+                                    <tr>
+                                        <th>Référence</th>
+                                        <th>Désignation</th>
+                                        <th>Quantité</th>
+                                        <th>PU</th>
+                                        <th>Montant</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="products data-table__clickable-row" ng-repeat="p in inter.produits">
+                                        <td>
+                                            <span>{{p.ref}}</span>
+                                        </td>
+                                        <td>
+                                          <textarea class="form-control" ng-model="p.desc"></textarea>
+                                        </td>
+                                        <td>
+                                            <span>{{p.pu}}</span>
+                                        </td>
+                                        <td>
+                                            <span>{{p.pu}}</span>
+                                        </td>
+                                        <td>
+                                            <lx-dropdown position="right" from-top>
+                                                <button class="btn btn--l btn--black btn--icon" lx-ripple lx-dropdown-toggle>
+                                                    <i class="mdi mdi-dots-vertical"></i>
+                                                </button>
+                                                <lx-dropdown-menu>
+                                                    <ul>
+                                                        <li><a class="dropdown-link">Action</a></li>
+                                                        <li><a class="dropdown-link">Another action</a></li>
+                                                        <li><a class="dropdown-link">Something else here</a></li>
+                                                        <li class="dropdown-divider"></li>
+                                                        <li><a class="dropdown-link dropdown-link--is-header">Header</a></li>
+                                                        <li><a class="dropdown-link">Separated link</a></li>
+                                                    </ul>
+                                                </lx-dropdown-menu>
+                                            </lx-dropdown>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <br>
+                        <div class="col-sm-5 md-whiteframe-z1 well ">
+                            <div style="max-height: 240px;" lx-scrollbar>
+                                <ul class="list mt++" style="padding-bottom:20px">
+                                    <li class="list-row" ng-repeat="file in files">
+                                        <div class="list-row__content">
+                                            <a target="_blank" href="/api/document/{{file.id}}"> <span class="display-block">{{file.name || "Fichier" + $index}}</span></a>
+                                            <span class="display-block fs-body-1 tc-black-2">{{file.date | date:"dd/MM/yy"}} - {{file.type}} - {{file.login}}</span>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                            <lx-file-input label="Upload" value="fileUploadText" change="onFileUpload(e)"></lx-file-input>
+                        </div>
+                        <div class="col-sm-6 col-sm-offset-1 md-whiteframe-z1 well">
+                            <div style="max-height: 240px;" lx-scrollbar>
+                                <ul class="list mt++" style="padding-bottom:20px">
+                                    <li class="list-row" ng-repeat="com in inter.comments">
+                                        <div class="list-row__content">
+                                            <span class="display-block">{{com.text}}</span>
+                                            <span class="display-block fs-body-1 tc-black-2">{{com.date | date:"dd/MM/yy"}} - {{com.login}}</span>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                            <lx-text-field label="Commentaire">
+                                <input type="text" ng-model="commentText" ng-enter="addComment()">
+                            </lx-text-field>
+                        </div>
                     </div>
-                    <lx-file-input label="Upload" value="fileUploadText" change="onFileUpload(e)"></lx-file-input>
-                </div>
-                <div class="col-sm-6 col-sm-offset-1 md-whiteframe-z1 well">
-                    <div style="max-height: 240px;" lx-scrollbar>
-                        <ul class="list mt++" style="padding-bottom:20px">
-                            <li class="list-row" ng-repeat="com in inter.comments">
-                                <div class="list-row__content">
-                                    <span class="display-block">{{com.text}}</span>
-                                    <span class="display-block fs-body-1 tc-black-2">{{com.date | date:"dd/MM/yy"}} - {{com.login}}</span>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                    <lx-text-field label="Commentaire">
-                        <input type="text" ng-model="commentText" ng-enter="addComment()">
-                    </lx-text-field>
-                </div>
-                <br>
             </form>
+            </div>
+        </div>
+        <div class="fab" style="  float: right;position: fixed;right: 70px;z-index: 999;top: 87%;">
+            <button ng-click="saveInter({})" class="fab__primary btn--no-conflicts btn--xl btn--blue btn--fab" lx-ripple lx-tooltip="Enregistrer" tooltip-position="top">
+                <i class="mdi" ng-class="inter.id ? 'mdi-camera-iris' : 'mdi-plus'"></i>
+                <i class="mdi mdi-checkbox-marked-circle-outline"></i>
+            </button>
+            <div class="fab__actions fab__actions--left">
+                <button ng-click="saveInter({annulation:true})" class="btn--no-conflicts btn--l btn--black btn--fab" lx-ripple lx-tooltip="Annuler" tooltip-position="top"><i class="mdi mdi-close"></i></button>
+                <button ng-click="saveInter({envoi:true})" class="btn--no-conflicts btn--l btn--black btn--fab" lx-ripple lx-tooltip="Envoyer" tooltip-position="top"><i class="mdi mdi-send"></i></button>
+                <button ng-show="inter.status === 'ATT'" ng-click="saveInter({verification:true})" class="btn--no-conflicts btn--l btn--black btn--fab" lx-ripple lx-tooltip="Verifier" tooltip-position="top"><i class="mdi mdi-check-all"></i></button>
+            </div>
         </div>
     </div>
-    <div class="fab" style="  float: right;position: fixed;right: 70px;z-index: 999;top: 87%;">
-        <button ng-click="saveInter({})" class="fab__primary btn--no-conflicts btn--xl btn--blue btn--fab" lx-ripple lx-tooltip="Enregistrer" tooltip-position="top">
-            <i class="mdi" ng-class="inter.id ? 'mdi-camera-iris' : 'mdi-plus'"></i>
-            <i class="mdi mdi-checkbox-marked-circle-outline"></i>
-        </button>
-        <div class="fab__actions fab__actions--left">
-            <button  ng-click="saveInter({annulation:true})" class="btn--no-conflicts btn--l btn--black btn--fab" lx-ripple lx-tooltip="Annuler" tooltip-position="top"><i class="mdi mdi-close"></i></button>
-            <button  ng-click="saveInter({envoi:true})" class="btn--no-conflicts btn--l btn--black btn--fab" lx-ripple lx-tooltip="Envoyer" tooltip-position="top"><i class="mdi mdi-send"></i></button>
-            <button ng-show="inter.status === 'ATT'" ng-click="saveInter({verification:true})" class="btn--no-conflicts btn--l btn--black btn--fab" lx-ripple lx-tooltip="Verifier" tooltip-position="top"><i class="mdi mdi-check-all"></i></button>
-        </div>
-    </div>
-</div>

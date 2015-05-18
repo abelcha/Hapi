@@ -73,7 +73,7 @@ module.exports = function(schema) {
 
     if (d.devis && d.id > 13740) {
       var devis = JSON.parse(d.devis.split("<br>").join(''));
-      console.log(devis.devisTab);
+     // console.log(devis.devisTab);
       rtn.produits = devis.devisTab;
     }
 
