@@ -30,6 +30,7 @@
     "gulp-rename": "^1.2.2",
     "gulp-uglifyjs": "^0.6.1",
     "html-entities": "^1.1.2",
+    "html-pdf": "^1.2.0",
     "human-to-cron": "^0.1.7",
     "kue": "^0.9.3",
     "later": "^1.1.6",
