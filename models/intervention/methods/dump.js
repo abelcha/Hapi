@@ -1,6 +1,7 @@
 var request = require("request");
 var sanitizeHtml = require('sanitize-html');
 var Entities = require('html-entities').XmlEntities;
+var _ = require('lodash');
 var entities = new Entities();
 
 module.exports = function(schema) {
