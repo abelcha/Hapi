@@ -2848,10 +2848,10 @@ angular.module('lumx.tooltip', [])
                 class: 'tooltip__background'
             });
 
-            tooltipLabel = angular.element('<span/>',
+            tooltipLabel = angular.element('<div/>',
             {
                 class: 'tooltip__label',
-                text: tooltipContent
+                html: tooltipContent
             });
 
             tooltipTrigger

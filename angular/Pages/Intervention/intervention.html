@@ -2,383 +2,505 @@
     <!--  <md-toolbar class="grey" style="border-top-left-radius:5px;border-top-right-radius:5px;">
   </md-toolbar> -->
     <div class="row">
-        <div class="col-sm-12 md-whiteframe-z1" style="background:white;height:100%">
-            <form class="form-horizontal" ng-init="inter = tab.data" style="overflow:hidden;height:100%" novalidate>
+        <div class="col-sm-12 " style="height:100%">
+            <div class="form-horizontal" ng-init="inter = tab.data" style="overflow:hidden;height:100%" novalidate>
                 <!-- Form Name -->
                 <!-- Text input-->
                 <br>
                 <h3>Fiche d'intervention</h3>
                 <br>
-                <div class="form-group">
-                    <div class="col-sm-2">
-                        <div class="select-style text-field">
-                            <select ng-model="inter.client.civilite" ng-options="civ.short_name as civ.long_name for civ in config.civilites">
-                            </select>
-                            <label ng-class="{'selected' : inter.client.civilite}">Civilité</label>
-                        </div>
-                    </div>
-                    <div class="col-sm-5">
-                        <lx-text-field label="Prénom">
-                            <input capitalize type="text" ng-model="inter.client.prenom">
-                        </lx-text-field>
-                    </div>
-                    <div class="col-sm-5">
-                        <lx-text-field label="Nom">
-                            <input capitalize type="text" ng-model="inter.client.nom">
-                        </lx-text-field>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-sm-3">
-                        <lx-text-field label="Téléphone 1">
-                            <input capitalize type="text" ng-model="inter.client.telephone.tel1">
-                        </lx-text-field>
-                    </div>
-                    <div class="col-sm-3">
-                        <lx-text-field label="Téléphone 2">
-                            <input capitalize type="text" ng-model="inter.client.telephone.tel2">
-                        </lx-text-field>
-                    </div>
-                    <div class="col-sm-3">
-                        <lx-text-field label="Téléphone Origine">
-                            <input capitalize type="text" ng-model="inter.client.telephone.origine">
-                        </lx-text-field>
-                    </div>
-                    <div class="col-sm-3">
-                        <lx-text-field label="Email">
-                            <input capitalize type="text" ng-model="inter.client.email">
-                        </lx-text-field>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-sm-4">
-                        <div class="select-style text-field">
-                            <select ng-change="searchArtisans()" ng-model="inter.categorie" ng-options="cat.short_name as cat.long_name for cat in config.categories">
-                            </select>
-                            <label ng-class="{'selected' : inter.categorie}">Categories</label>
-                        </div>
-                    </div>
-                    <div class="col-sm-4">
-                        <div class="select-style text-field">
-                            <select ng-model="inter.sst" ng-options="sst.id as sst.n for sst in artisans">
-                            </select>
-                            <label ng-class="{'selected' : inter.artisan}">Artisan</label>
-                        </div>
-                    </div>
-                    <div class="col-sm-4">
-                        <md-checkbox ng-model="inter.aDemarcher" aria-label="Checkbox 1">
-                            A Démarcher
-                        </md-checkbox>
-                    </div>
-                </div>
-                <div class="form-group" ng-if="inter.status != 'RGL' && inter.status != 'PAY' && inter.status != 'ATT'">
-                    <div ng-controller="InterventionMapController">
-                        <div ng-if="options.showMap" ng-show="options.showMap" class="md-whiteframe-z2">
-                            <div class="card">
-                                <div class="col-sm-8 md-whiteframe-z2">
-                                    <div class="card__img card__img--top">
-                                        <md-content ng-if="loadMap" id="autocompleteContainer" layout-padding layout="column" <md-input-container flex>
-                                            <md-autocomplete md-selected-item-change="changeAddress(selectedAddress)" md-selected-item="selectedAddress" md-search-text="searchText" md-items="item in autocomplete.search(searchText)" md-item-text="item.description">
-                                                <span md-highlight-text="searchText"> {{item.description}}</span>
-                                            </md-autocomplete>
-                                        </md-content>
-                                        <div ng-if="!loadMap" style="height:315px;width:100%;overflow:hidden">
-                                            <img ng-if="!showmap" id="static-map" style="width:100%;top: -9999px;bottom: -9999px;left: -9999px;right: -9999px;margin: auto;" ng-click="showMap()" ng-src="{{getStaticMap()}}" />
+                <br>
+                <div flex-item>
+                    <div class="card">
+                        <div class="p+">
+                            <strong class="fs-headline display-block">Client</strong>
+                            <span class="fs-subhead tc-black-2 display-block">Lorem Ipsum</span>
+                            <div class="paragraph pad-paragraph fs-body-1 mt+">
+                                <div class="form-group">
+                                    <div class="col-sm-2">
+                                        <div class="select-style text-field">
+                                            <select ng-model="inter.client.civilite" ng-options="civ.short_name as civ.long_name for civ in config.civilites">
+                                            </select>
+                                            <label ng-class="{'selected' : inter.client.civilite}">Civilité</label>
                                         </div>
-                                        <map ng-if="loadMap" zoom="{{zoom}}" pan-control="false" style="height:350px" center="{{mapCenter.latLng}}">
-                                            <directions ng-if="inter.artisan" travel-mode="DRIVING" origin="{{inter.artisan.address.lt}}, {{inter.artisan.address.lg}}" destination="{{inter.client.address.latLng}}">
-                                            </directions>
-                                            <marker ng-if="showInterMarker()" position="{{mapCenter.latLng}}" color="grey"></marker>
-                                            <marker ng-if="inter.client.address" ng-repeat="sst in nearestArtisans" on-click="clickOnArtisanMarker(sst.id)" position="{{sst.address.lt}}, {{sst.address.lg}}" color="{{sst.id == inter.sst ? 'blue' : 'red'}}"></marker>
-                                        </map>
                                     </div>
-                                    <div class="p+">
-                                        <span class="fs-subhead tc-black-2 display-block">{{inter.artisan.nomSociete}}</span>
-                                        <div class="paragraph fs-body-1" style="height:90px;">
-                                            <p style="width:49%;float:left" ng-if="inter.artisan.id && inter.artisan.stats.total">
-                                                Distance: {{inter.artisan.stats.direction.distance}} ({{inter.artisan.stats.direction.duration}})
-                                                <br> Interventions: {{inter.artisan.stats.total.total}} ({{inter.artisan.stats.total.montant}}€)
-                                                <br> Annulés: {{inter.artisan.stats.annule.total}} ({{inter.artisan.stats.annule.montant}}€)
-                                                <br> En Cours: {{inter.artisan.stats.enCours.total}} ({{inter.artisan.stats.enCours.montant}}€)
-                                                <br> Réalisés: {{inter.artisan.stats.intervenu.total}} ({{inter.artisan.stats.intervenu.montant}}€)
-                                                <br>
-                                            </p>
-                                            <p style="width:49%;float:right">
-                                                <span ng-show="inter.artisan.disponible == false">
+                                    <div class="col-sm-5">
+                                        <lx-text-field label="Prénom">
+                                            <input capitalize type="text" ng-model="inter.client.prenom">
+                                        </lx-text-field>
+                                    </div>
+                                    <div class="col-sm-5">
+                                        <lx-text-field label="Nom">
+                                            <input capitalize type="text" ng-model="inter.client.nom">
+                                        </lx-text-field>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-sm-3">
+                                        <lx-text-field label="Téléphone 1">
+                                            <input capitalize type="text" ng-model="inter.client.telephone.tel1">
+                                        </lx-text-field>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <lx-text-field label="Téléphone 2">
+                                            <input capitalize type="text" ng-model="inter.client.telephone.tel2">
+                                        </lx-text-field>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <lx-text-field label="Téléphone Origine">
+                                            <input capitalize type="text" ng-model="inter.client.telephone.origine">
+                                        </lx-text-field>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <lx-text-field label="Email">
+                                            <input capitalize type="text" ng-model="inter.client.email">
+                                        </lx-text-field>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <br>
+                <div class="row" style="margin:0">
+                    <div flex-item style="width:65%;float:left" ng-controller="InterventionMapController">
+                        <div class="card">
+                            <div class="p+">
+                                <strong class="fs-headline display-block">Carte</strong>
+                                <span class="fs-subhead tc-black-2 display-block">Lorem Ipsum</span>
+                                <div class="fs-body-1 mt+">
+                                    <md-content ng-if="loadMap" class="autocomplete" style="margin-left: 14%;width: 70%;" layout-padding layout="column" md-input-container flex>
+                                        <md-autocomplete class="address-autocomplete" md-selected-item-change="changeAddress(selectedAddress)" md-selected-item="selectedAddress" md-search-text="searchText" md-items="item in autocomplete.search(searchText)" md-item-text="item.description">
+                                            <span md-highlight-text="searchText"> {{item.description}}</span>
+                                        </md-autocomplete>
+                                    </md-content>
+                                    <div ng-if="!loadMap" style="height:315px;width:100%;overflow:hidden">
+                                        <img ng-if="!showmap" id="static-map" style="width:100%;top: -9999px;bottom: -9999px;left: -9999px;right: -9999px;margin: auto;" ng-click="showMap()" ng-src="{{getStaticMap()}}" />
+                                    </div>
+                                    <map ng-if="loadMap" zoom="{{zoom}}" pan-control="false" style="height:350px" center="{{mapCenter.latLng}}">
+                                        <directions ng-if="inter.artisan" travel-mode="DRIVING" origin="{{inter.artisan.address.lt}}, {{inter.artisan.address.lg}}" destination="{{inter.client.address.latLng}}">
+                                        </directions>
+                                        <marker ng-if="showInterMarker()" position="{{mapCenter.latLng}}" color="grey"></marker>
+                                        <marker ng-if="inter.client.address" ng-repeat="sst in nearestArtisans" on-click="clickOnArtisanMarker(sst.id)" position="{{sst.address.lt}}, {{sst.address.lg}}" color="{{sst.id == inter.sst ? 'blue' : 'red'}}"></marker>
+                                    </map>
+                                </div>
+                                <div class="p+">
+                                    <span class="fs-subhead tc-black-2 display-block">{{inter.artisan.nomSociete}}</span>
+                                    <div class="paragraph fs-body-1" style="height:90px;">
+                                        <p style="width:49%;float:left" ng-if="inter.artisan.id && inter.artisan.stats.total">
+                                            Distance: {{inter.artisan.stats.direction.distance}} ({{inter.artisan.stats.direction.duration}})
+                                            <br> Interventions: {{inter.artisan.stats.total.total}} ({{inter.artisan.stats.total.montant}}€)
+                                            <br> Annulés: {{inter.artisan.stats.annule.total}} ({{inter.artisan.stats.annule.montant}}€)
+                                            <br> Envoyé: {{inter.artisan.stats.envoye.total}} ({{inter.artisan.stats.envoye.montant}}€)
+                                            <br> Payés: {{inter.artisan.stats.paye.total}} ({{inter.artisan.stats.paye.montant}}€)
+                                            <br>
+                                        </p>
+                                        <p style="width:49%;float:right">
+                                            <span ng-if="inter.artisan.disponible == false">
                                                     Indisponible jusqu'au {{inter.artisan.absence.end  | date:"dd/MM à HH:mm"}} ({{inter.artisan.absence.login}})
                                                 </span>
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div class="card__actions" style="float: left;width: 100%;">
-                                        <button class="btn--no-conflicts btn--m btn--black btn--flat" lx-ripple>Appeler</button>
-                                        <button class="btn--no-conflicts btn--m btn--blue btn--flat" lx-ripple>SMS</button>
-                                        <a href="/artisan/{{inter.artisan.id}}/recap">
-                                            <button class="btn--no-conflicts btn--m btn--orange btn--flat" lx-ripple>Recap'</button>
-                                        </a>
-                                        <a href="/artisan/{{inter.artisan.id}}">
-                                            <button class="btn--no-conflicts btn--m btn--purple btn--flat" lx-ripple>Fiche</button>
-                                        </a>
-                                        <button style="float:right" ng-click="sstAbsence(inter.artisan.id)" class="btn--no-conflicts btn--m btn--red btn--flat" lx-ripple>Absence</button>
+                                        </p>
                                     </div>
                                 </div>
-                                <div class="col-md-4" style="height: 495px;overflow: scroll;">
-                                    <table class="table table-condensed" style="padding:0;color:black">
-                                        <tbody>
-                                            <tr ng-repeat="sst in nearestArtisans" ng-class="sst.id == inter.sst ? 'success' : ''" ng-click="clickOnArtisanMarker(sst.distance, sst)">
-                                                <td variable-length ng-class="{'red-text' : !sst.disponible}" style="text-align:left">{{sst.nomSociete}} <small class="text-blue">{{sst.noob ? 'new' : ''}}</small></td>
-                                                <td>7.3</td>
-                                                <td>{{sst.distance}} km</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
+                            </div>
+                            <div class="card__actions" style="border-bottom: 2px solid rgba(0, 0, 0, .12);">
+                                <button class="btn--no-conflicts btn--m btn--black btn--flat" lx-ripple>Appeler</button>
+                                <button class="btn--no-conflicts btn--m btn--blue btn--flat" lx-ripple>SMS</button>
+                                <a href="/artisan/{{inter.artisan.id}}/recap">
+                                    <button class="btn--no-conflicts btn--m btn--orange btn--flat" lx-ripple>Recap'</button>
+                                </a>
+                                <a href="/artisan/{{inter.artisan.id}}">
+                                    <button class="btn--no-conflicts btn--m btn--purple btn--flat" lx-ripple>Fiche</button>
+                                </a>
+                                <button style="float:right" ng-click="sstAbsence(inter.artisan.id)" class="btn--no-conflicts btn--m btn--red btn--flat" lx-ripple>Absence</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div flex-item style="width:34%;float:right;">
+                        <div class="card">
+                            <div class="p+">
+                                <strong class="fs-headline display-block">Artisans</strong>
+                                <span class="fs-subhead tc-black-2 display-block">Lorem Ipsum</span>
+                                <div class="paragraph fs-body-1 mt+" style="max-height: 435px;overflow:scroll">
+                                    <p>
+                                        <table class="table table-condensed" style="padding:0;color:black">
+                                            <tbody>
+                                                <tr ng-repeat="sst in nearestArtisans" ng-class="sst.id == inter.sst ? 'success' : ''" ng-click="clickOnArtisanMarker(sst.distance, sst)">
+                                                    <td variable-length ng-class="{'red-text' : !sst.disponible}" style="text-align:left">{{sst.nomSociete}} <small class="text-blue">{{sst.noob ? 'new' : ''}}</small></td>
+                                                    <td>7.3</td>
+                                                    <td>{{sst.distance}} km</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </p>
                                 </div>
+                            </div>
+                            <div class="card__actions" style="text-align:center">
+                                <md-checkbox ng-model="inter.aDemarcher" aria-label="Checkbox 1">
+                                    A Démarcher
+                                </md-checkbox>
+                                <br>
                             </div>
                         </div>
                     </div>
                 </div>
-                <br>
-                <div class="form-group">
-                    <div class="col-sm-1">
-                        <lx-text-field label="Numero">
-                            <input capitalize type="text" ng-model="inter.client.address.n">
-                        </lx-text-field>
-                    </div>
-                    <div class="col-sm-5">
-                        <lx-text-field label="Addresse">
-                            <input capitalize type="text" ng-model="inter.client.address.r">
-                        </lx-text-field>
-                    </div>
-                    <div class="col-sm-2">
-                        <lx-text-field label="Code Postal">
-                            <input capitalize type="text" ng-model="inter.client.address.cp">
-                        </lx-text-field>
-                    </div>
-                    <div class="col-sm-4">
-                        <lx-text-field label="Ville">
-                            <input capitalize type="text" ng-model="inter.client.address.v">
-                        </lx-text-field>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-sm-2">
-                        <md-checkbox ng-model="inter.reglementSurPlace" aria-label="Checkbox 1">
-                            <div class="hidden-sm hidden-md">
-                                Reglement Sur Place
-                            </div>
-                            <div class="hidden-lg hidden-xs ">
-                                RSP
-                            </div>
-                        </md-checkbox>
-                    </div>
-                    <div class="col-sm-2">
-                        <div class="select-style text-field">
-                            <select ng-model="inter.modeReglement" ng-options="mr.short_name as mr.long_name for mr in config.modeDeReglements">
-                            </select>
-                            <label ng-class="{'selected' : inter.modeReglement}">
-                                <div class="hidden-sm hidden-md">
-                                    Mode de Reglement
+            </div>
+            <br>
+            <br>
+            <div ng-if="42 === 0" flex-item>
+                <div class="card">
+                    <div class="p+">
+                        <strong class="fs-headline display-block">Lorem Ipsum</strong>
+                        <span class="fs-subhead tc-black-2 display-block">Lorem Ipsum</span>
+                        <div class="paragraph fs-body-1 mt+">
+                            <div class="form-group">
+                                <div class="col-sm-4">
+                                    <div class="select-style text-field">
+                                        <select ng-change="searchArtisans()" ng-model="inter.categorie" ng-options="cat.short_name as cat.long_name for cat in config.categories">
+                                        </select>
+                                        <label ng-class="{'selected' : inter.categorie}">Categories</label>
+                                    </div>
                                 </div>
-                                <div class="hidden-lg hidden-xs ">
-                                    Mode Regl.
+                                <div class="col-sm-4">
+                                    <div class="select-style text-field">
+                                        <select ng-model="inter.sst" ng-options="sst.id as sst.n for sst in artisans">
+                                        </select>
+                                        <label ng-class="{'selected' : inter.artisan}">Artisan</label>
+                                    </div>
                                 </div>
-                            </label>
-                        </div>
-                    </div>
-                    <div class="col-sm-2">
-                        <lx-text-field label="Prix Annoncé">
-                            <input eurofilter ng-model="inter.prixAnnonce">
-                        </lx-text-field>
-                    </div>
-                    <div class="col-sm-3">
-                        <div class="text-field date-picker">
-                            <label class="selected">Date d'intervention</label>
-                            <input type="text" pick-a-date="inter.date.intervention" />
-                        </div>
-                    </div>
-                    <div class="col-sm-3">
-                        <div class="text-field date-picker">
-                            <label class="selected">Date d'intervention</label>
-                            <input type="text" pick-a-time="inter.date.intervention" />
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-4">
-                        <div class="select-style text-field">
-                            <select ng-change="searchArtisans()" ng-model="inter.fournisseur" ng-options="frn.short_name as frn.short_name group by frn.type for frn in config.fournisseur ">
-                            </select>
-                            <label ng-class="{'selected' : inter.categorie}">Fournisseur</label>
-                        </div>
-                    </div>
-                    <div class="col-sm-3">
-                        <lx-text-field label="Cout Fourniture">
-                            <input eurofilter ng-model="inter.coutFourniture">
-                        </lx-text-field>
-                    </div>
-                </div>
-                <br>
-                <br>
-                <div class="form-group" ng-if="!inter.reglementSurPlace" ng-show="!inter.reglementSurPlace" style="background-color:rgb(66, 66, 66);padding-bottom: 40px;">
-                    <div class="col-sm-12">
-                        <div class="col-sm-12">
+                            </div>
                             <br>
-                            <h3 style="color:white">Facture</h3>
-                        </div>
-                        <div class="col-sm-4">
-                            <div class="select-style black text-field">
-                                <select ng-model="inter.facture.type" ng-options="f.short_name as f.long_name for f in config.typePayeur">
-                                </select>
-                                <label ng-class="{'selected' : inter.facture.type}">Type payeur</label>
+                            <div class="form-group">
+                                <div class="col-sm-1">
+                                    <lx-text-field label="Numero">
+                                        <input capitalize type="text" ng-model="inter.client.address.n">
+                                    </lx-text-field>
+                                </div>
+                                <div class="col-sm-5">
+                                    <lx-text-field label="Addresse">
+                                        <input capitalize type="text" ng-model="inter.client.address.r">
+                                    </lx-text-field>
+                                </div>
+                                <div class="col-sm-2">
+                                    <lx-text-field label="Code Postal">
+                                        <input capitalize type="text" ng-model="inter.client.address.cp">
+                                    </lx-text-field>
+                                </div>
+                                <div class="col-sm-4">
+                                    <lx-text-field label="Ville">
+                                        <input capitalize type="text" ng-model="inter.client.address.v">
+                                    </lx-text-field>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-sm-2">
-                            <lx-text-field label="Prénom" theme="dark">
-                                <input capitalize type="text" ng-model="inter.facture.prenom">
-                            </lx-text-field>
-                        </div>
-                        <div class="col-sm-2">
-                            <lx-text-field theme="dark" label="Nom">
-                                <input capitalize type="text" ng-model="inter.facture.nom">
-                            </lx-text-field theme="dark">
-                        </div>
-                        <div class="col-sm-2">
-                            <lx-text-field theme="dark" label="Téléphone">
-                                <input capitalize type="text" ng-model="inter.facture.tel">
-                            </lx-text-field theme="dark">
-                        </div>
-                        <div class="col-sm-2">
-                            <lx-text-field theme="dark" label="Email">
-                                <input capitalize type="text" ng-model="inter.facture.email">
-                            </lx-text-field theme="dark">
-                        </div>
-                        <div class="col-sm-1">
-                            <lx-text-field theme="dark" label="Numero">
-                                <input capitalize type="text" ng-model="inter.facture.address.n">
-                            </lx-text-field theme="dark">
-                        </div>
-                        <div class="col-sm-5">
-                            <lx-text-field theme="dark" label="Addresse">
-                                <input capitalize type="text" ng-model="inter.facture.address.r">
-                            </lx-text-field theme="dark">
-                        </div>
-                        <div class="col-sm-2">
-                            <lx-text-field theme="dark" label="Code Postal">
-                                <input capitalize type="text" ng-model="inter.facture.address.cp">
-                            </lx-text-field theme="dark">
-                        </div>
-                        <div class="col-sm-4">
-                            <lx-text-field theme="dark" label="Ville">
-                                <input capitalize type="text" ng-model="inter.facture.address.v">
-                            </lx-text-field>
                         </div>
                     </div>
                 </div>
-                <div class="form-group">
-                    <div class="col-sm-6">
-                        <md-input-container flex>
-                            <label>Description Simplifiée</label>
-                            <textarea ng-model="inter.description" columns="1" md-maxlength="150" capitalize></textarea>
-                        </md-input-container>
+            </div>
+            <br>
+            <div flex-item>
+                <div class="card">
+                    <div class="p+">
+                        <strong class="fs-headline display-block">Intervention</strong>
+                        <span class="fs-subhead tc-black-2 display-block">Lorem Ipsum</span>
+                        <div class="pad-paragraph paragraph fs-body-1 mt+">
+                            <div class="form-group">
+                                <div class="col-sm-2">
+                                    <md-checkbox ng-model="inter.reglementSurPlace" aria-label="Checkbox 1">
+                                        <div class="hidden-sm hidden-md">
+                                            Reglement Sur Place
+                                        </div>
+                                        <div class="hidden-lg hidden-xs ">
+                                            RSP
+                                        </div>
+                                    </md-checkbox>
+                                </div>
+                                <div class="col-sm-2">
+                                    <div class="select-style text-field">
+                                        <select ng-model="inter.modeReglement" ng-options="mr.short_name as mr.long_name for mr in config.modeDeReglements">
+                                        </select>
+                                        <label ng-class="{'selected' : inter.modeReglement}">
+                                            <div class="hidden-sm hidden-md">
+                                                Mode de Reglement
+                                            </div>
+                                            <div class="hidden-lg hidden-xs ">
+                                                Mode Regl.
+                                            </div>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-sm-2">
+                                    <lx-text-field label="Prix Annoncé">
+                                        <input eurofilter ng-model="inter.prixAnnonce">
+                                    </lx-text-field>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="text-field date-picker">
+                                        <label class="selected">Date d'intervention</label>
+                                        <input type="text" pick-a-date="inter.date.intervention" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="text-field date-picker">
+                                        <label class="selected">Date d'intervention</label>
+                                        <input type="text" pick-a-time="inter.date.intervention" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="col-sm-6">
-                        <md-input-container flex>
-                            <label>Remarques Supplémentaires</label>
-                            <textarea ng-model="inter.remarque" columns="1" md-maxlength="150" capitalize></textarea>
-                        </md-input-container>
+                </div>
+            </div>
+            <br>
+            <br>
+            <div flex-item>
+                <div class="card">
+                    <div class="p+">
+                        <strong class="fs-headline display-block">Description</strong>
+                        <span class="fs-subhead tc-black-2 display-block">Lorem Ipsum</span>
+                        <div class="pad-paragraph paragraph fs-body-1 mt+">
+                            <div class="form-group">
+                                <div class="col-sm-5">
+                                    <md-input-container flex>
+                                        <label>Description Simplifiée</label>
+                                        <textarea ng-model="inter.description" columns="1" md-maxlength="150" capitalize></textarea>
+                                    </md-input-container>
+                                </div>
+                                <div class="col-sm-6 col-sm-offset-1">
+                                    <md-input-container flex>
+                                        <label>Remarques Supplémentaires</label>
+                                        <textarea ng-model="inter.remarque" columns="1" md-maxlength="150" capitalize></textarea>
+                                    </md-input-container>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div flex-item ng-show="!inter.reglementSurPlace">
+                <div class="card">
+                    <div class="p+">
+                        <strong class="fs-headline display-block">Facture</strong>
+                        <span class="fs-subhead tc-black-2 display-block">Lorem Ipsum</span>
+                        <div class="paragraph fs-body-1 mt+">
+                            <div class="form-group" ng-if="!inter.reglementSurPlace">
+                                <div class="col-sm-4">
+                                    <div class="select-style text-field">
+                                        <select ng-model="inter.facture.type" ng-options="f.short_name as f.long_name for f in config.typePayeur">
+                                        </select>
+                                        <label ng-class="{'selected' : inter.facture.type}">Type payeur</label>
+                                    </div>
+                                </div>
+                                <div class="col-sm-2">
+                                    <lx-text-field label="Prénom">
+                                        <input capitalize type="text" ng-model="inter.facture.prenom">
+                                    </lx-text-field>
+                                </div>
+                                <div class="col-sm-2">
+                                    <lx-text-field label="Nom">
+                                        <input capitalize type="text" ng-model="inter.facture.nom">
+                                    </lx-text-field>
+                                </div>
+                                <div class="col-sm-2">
+                                    <lx-text-field label="Téléphone">
+                                        <input capitalize type="text" ng-model="inter.facture.tel">
+                                    </lx-text-field>
+                                </div>
+                                <div class="col-sm-2">
+                                    <lx-text-field label="Email">
+                                        <input capitalize type="text" ng-model="inter.facture.email">
+                                    </lx-text-field>
+                                </div>
+                                <div class="col-sm-1">
+                                    <lx-text-field label="Numero">
+                                        <input capitalize type="text" ng-model="inter.facture.address.n">
+                                    </lx-text-field>
+                                </div>
+                                <div class="col-sm-5">
+                                    <lx-text-field label="Addresse">
+                                        <input capitalize type="text" ng-model="inter.facture.address.r">
+                                    </lx-text-field>
+                                </div>
+                                <div class="col-sm-2">
+                                    <lx-text-field label="Code Postal">
+                                        <input capitalize type="text" ng-model="inter.facture.address.cp">
+                                    </lx-text-field>
+                                </div>
+                                <div class="col-sm-4">
+                                    <lx-text-field label="Ville">
+                                        <input capitalize type="text" ng-model="inter.facture.address.v">
+                                    </lx-text-field>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div flex-item>
+                <div class="card">
+                    <div class="p+">
+                        <strong class="fs-headline display-block">Fourniture</strong>
+                        <span class="fs-subhead tc-black-2 display-block">Lorem Ipsum</span>
+                        <div class="pad-paragraph paragraph fs-body-1 mt+">
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <div class="select-style text-field">
+                                        <select ng-model="inter.fournisseur" ng-options="frn.short_name as frn.short_name group by frn.type for frn in config.fournisseur ">
+                                        </select>
+                                        <label ng-class="{'selected' : inter.fournisseur}">Fournisseur</label>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <lx-text-field label="Cout Fourniture">
+                                        <input eurofilter ng-model="inter.coutFourniture">
+                                    </lx-text-field>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div flex-item>
+                <div class="card">
+                    <div class="p+">
+                        <strong class="fs-headline display-block">Produits</strong>
+                        <md-content class="autocomplete" style="width: 40%;margin-top: -22px;margin-left: 54%;float: left;" layout-padding layout="column" md-input-container flex>
+                            <md-autocomplete md-autoselect md-selected-item-change="addProduct(selectedProduct)" md-selected-item="selectedProduct" md-search-text="searchProd" md-items="item in produits.search(searchProd)" md-item-text="item.title" placeholder="Entrer un produit">
+                                <span md-highlight-text="searchProd"> {{item.title}}</span>
+                            </md-autocomplete>
+                        </md-content>
+                        <span class="fs-subhead tc-black-2 display-block">Pour generation de factures/devis</span>
+                        <div class="paragraph fs-body-1 mt+">
+                            <div class="data-table-container">
+                                <table class="data-table data-table--has-primary data-table--has-secondary">
+                                    <thead>
+                                        <tr>
+                                            <th style="font-weight:bold">Référence</th>
+                                            <th style="font-weight:bold">Désignation</th>
+                                            <th style="font-weight:bold">Q</th>
+                                            <th style="font-weight:bold">PU</th>
+                                            <th style="font-weight:bold">Montant</th>
+                                            <th style="font-weight:bold">Modif</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="products data-table__clickable-row" ng-repeat="p in inter.produits">
+                                            <td>
+                                                <span>{{p.ref}}</span>
+                                            </td>
+                                            <td lx-ripple ng-click="produits.edit($index)" lx-tooltip="{{p.desc|crlf}}">
+                                                <span>{{p.title}}</span>
+                                            </td>
+                                            <td>
+                                                <span> 
+                                                     <a e-type="number" e-step="1" editable-text="p.quantite">{{p.quantite}}</a>
+                                                    </span>
+                                            </td>
+                                            <td>
+                                                <span>
+                                                 <a e-type="number" editable-text="p.pu" e-step="0.01">{{p.pu}} €</a>
+                                                    </span>
+                                            </td>
+                                            <td>
+                                                <span>{{p.pu * p.quantite}} €</span>
+                                            </td>
+                                            <td>
+                                                <lx-dropdown position="right" from-top>
+                                                    <button class="btn--no-conflicts btn--l btn--black btn--icon" lx-ripple lx-dropdown-toggle>
+                                                        <i class="mdi mdi-dots-vertical"></i>
+                                                    </button>
+                                                    <lx-dropdown-menu>
+                                                        <ul>
+                                                            <li><a ng-click="produits.moveDown($index)" class="dropdown-link">Descendre</a></li>
+                                                            <li><a ng-click="produits.moveTop($index)" class="dropdown-link">Monter</a></li>
+                                                            <li><a ng-click="produits.remove($index)" class="dropdown-link">Supprimer</a></li>
+                                                        </ul>
+                                                    </lx-dropdown-menu>
+                                                </lx-dropdown>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card__actions">
+                    <span style="float:left">
+                        <button ng-click="previsualiseFacture()" class="btn--no-conflicts btn--m btn--black btn--flat" lx-ripple>Prévisualiser</button>
+                        <button class="btn--no-conflicts btn--m btn--orange btn--flat" lx-ripple>Envoyer Devis</button>
+                        </span>
+                        <div class="select-style text-field" style="float:right;width:110px">
+                            <select ng-model="inter.tva" ng-options="tva.long_name as tva.long_name for tva in config.tva">
+                            </select>
+                            <label ng-class="{'selected' : inter.tva}">TVA</label>
+                        </div>
                     </div>
                 </div>
                 <br>
-  <!--               <div class="col-sm-12">
-                    <h3>Produits</h3>
-                    <div class="data-table-container">
-                        <table class="data-table data-table--has-primary data-table--has-secondary">
-                            <thead>
-                                <tr>
-                                    <th>Référence</th>
-                                    <th>Désignation</th>
-                                    <th>Quantité</th>
-                                    <th>PU</th>
-                                    <th>Montant</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr class="products data-table__clickable-row" ng-repeat="p in inter.produits">
-                                    <td>
-                                        <span>{{p.ref}}</span>
-                                    </td>
-                                    <td>
-                                        <textarea class="form-control" ng-model="p.desc"></textarea>
-                                    </td>
-                                    <td>
-                                        <span>{{p.pu}}</span>
-                                    </td>
-                                    <td>
-                                        <span>{{p.pu}}</span>
-                                    </td>
-                                    <td>
-                                        <lx-dropdown position="right" from-top>
-                                            <button class="btn btn--l btn--black btn--icon" lx-ripple lx-dropdown-toggle>
-                                                <i class="mdi mdi-dots-vertical"></i>
-                                            </button>
-                                            <lx-dropdown-menu>
-                                                <ul>
-                                                    <li><a class="dropdown-link">Action</a></li>
-                                                    <li><a class="dropdown-link">Another action</a></li>
-                                                    <li><a class="dropdown-link">Something else here</a></li>
-                                                    <li class="dropdown-divider"></li>
-                                                    <li><a class="dropdown-link dropdown-link--is-header">Header</a></li>
-                                                    <li><a class="dropdown-link">Separated link</a></li>
-                                                </ul>
-                                            </lx-dropdown-menu>
-                                        </lx-dropdown>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div> -->
-                    <br>
-                    <div class="col-sm-5 md-whiteframe-z1 well ">
-                        <div style="max-height: 240px;" lx-scrollbar>
-                            <ul class="list mt++" style="padding-bottom:20px">
-                                <li class="list-row" ng-repeat="file in files">
-                                    <div class="list-row__content">
-                                        <a target="_blank" href="/api/document/{{file.id}}"> <span class="display-block">{{file.name || "Fichier" + $index}}</span></a>
-                                        <span class="display-block fs-body-1 tc-black-2">{{file.date | date:"dd/MM/yy"}} - {{file.type}} - {{file.login}}</span>
-                                    </div>
-                                </li>
-                            </ul>
+                <div flex-item style="width:48%;float:left;">
+                    <div class="card">
+                        <div class="p+">
+                            <strong class="fs-headline display-block">Fichiers</strong>
+                            <span class="fs-subhead tc-black-2 display-block">Lorem Ipsum</span>
+                            <div class="paragraph fs-body-1 mt+" style="height: 216px;;overflow:scroll">
+                                <div>
+                                    <ul class="list mt++" style="padding-bottom:20px;margin-left: 0px">
+                                        <li class="list-row" ng-repeat="file in files | reverse">
+                                            <div class="list-row__content">
+                                                <a target="_blank" href="/api/document/{{file.id}}"> <span class="display-block">{{file.name || "Fichier" + $index}}</span></a>
+                                                <span class="display-block fs-body-1 tc-black-2">{{file.date | date:"dd/MM/yy"}} - {{file.type}} - {{file.login}}</span>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
                         </div>
-                        <lx-file-input label="Upload" value="fileUploadText" change="onFileUpload(e)"></lx-file-input>
-                    </div>
-                    <div class="col-sm-6 col-sm-offset-1 md-whiteframe-z1 well">
-                        <div style="max-height: 240px;" lx-scrollbar>
-                            <ul class="list mt++" style="padding-bottom:20px">
-                                <li class="list-row" ng-repeat="com in inter.comments">
-                                    <div class="list-row__content">
-                                        <span class="display-block">{{com.text}}</span>
-                                        <span class="display-block fs-body-1 tc-black-2">{{com.date | date:"dd/MM/yy"}} - {{com.login}}</span>
-                                    </div>
-                                </li>
-                            </ul>
+                        <div class="card__actions">
+                            <button ng-click="clickUpload()" class="btn--no-conflicts btn--m btn--blue  btn--raised" lx-ripple>Upload</button>
+                            <lx-file-input style="display:none" id="fileInput" label="Upload" value="fileUploadText" change="onFileUpload(e)"></lx-file-input>
                         </div>
-                        <lx-text-field label="Commentaire">
-                            <input type="text" ng-model="commentText" ng-enter="addComment()">
-                        </lx-text-field>
                     </div>
                 </div>
-            </form>
+                <div flex-item style="width:48%;float:right">
+                    <div class="card">
+                        <div class="p+" s>
+                            <strong class="fs-headline display-block">Commentaires</strong>
+                            <span class="fs-subhead tc-black-2 display-block">Lorem Ipsum</span>
+                            <div class="paragraph fs-body-1 mt+" style="height:230px;overflow:scroll">
+                                <ul class="list mt++" style="padding-bottom:20px;margin-left: 0px;">
+                                    <li class="list-row" ng-repeat="com in inter.comments | reverse">
+                                        <div class="list-row__content">
+                                            <span class="display-block">{{com.text}}</span>
+                                            <span class="display-block fs-body-1 tc-black-2">{{com.date | date:"dd/MM/yy"}} - {{com.login}}</span>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="card__actions">
+                            <input style="border: 0;" type="text" ng-model="commentText" ng-enter="addComment()">
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-    <div class="fab" style="  float: right;position: fixed;right: 70px;z-index: 999;top: 87%;">
-        <button ng-click="saveInter({})" class="fab__primary btn--no-conflicts btn--xl btn--blue btn--fab" lx-ripple lx-tooltip="Enregistrer" tooltip-position="top">
-            <i class="mdi" ng-class="inter.id ? 'mdi-camera-iris' : 'mdi-plus'"></i>
-            <i class="mdi mdi-checkbox-marked-circle-outline"></i>
-        </button>
-        <div class="fab__actions fab__actions--left">
-            <button ng-click="saveInter({annulation:true})" class="btn--no-conflicts btn--l btn--black btn--fab" lx-ripple lx-tooltip="Annuler" tooltip-position="top"><i class="mdi mdi-close"></i></button>
-            <button ng-click="saveInter({envoi:true})" class="btn--no-conflicts btn--l btn--black btn--fab" lx-ripple lx-tooltip="Envoyer" tooltip-position="top"><i class="mdi mdi-send"></i></button>
-            <button ng-show="inter.status === 'ATT'" ng-click="saveInter({verification:true})" class="btn--no-conflicts btn--l btn--black btn--fab" lx-ripple lx-tooltip="Verifier" tooltip-position="top"><i class="mdi mdi-check-all"></i></button>
-        </div>
+</div>
+<br>
+<br>
+<br>
+<div class="fab" style="  float: right;position: fixed;right: 70px;z-index: 999;top: 87%;">
+    <button ng-click="saveInter({})" class="fab__primary btn--no-conflicts btn--xl btn--blue btn--fab" lx-ripple lx-tooltip="Enregistrer" tooltip-position="top">
+        <i class="mdi" ng-class="inter.id ? 'mdi-camera-iris' : 'mdi-plus'"></i>
+        <i class="mdi mdi-checkbox-marked-circle-outline"></i>
+    </button>
+    <div class="fab__actions fab__actions--left">
+        <button ng-click="saveInter({annulation:true})" class="btn--no-conflicts btn--l btn--black btn--fab" lx-ripple lx-tooltip="Annuler" tooltip-position="top"><i class="mdi mdi-close"></i></button>
+        <button ng-click="saveInter({envoi:true})" class="btn--no-conflicts btn--l btn--black btn--fab" lx-ripple lx-tooltip="Envoyer" tooltip-position="top"><i class="mdi mdi-send"></i></button>
+        <button ng-show="inter.status === 'ATT'" ng-click="saveInter({verification:true})" class="btn--no-conflicts btn--l btn--black btn--fab" lx-ripple lx-tooltip="Verifier" tooltip-position="top"><i class="mdi mdi-check-all"></i></button>
     </div>
+</div>
 </div>

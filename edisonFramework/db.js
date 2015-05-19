@@ -10,8 +10,8 @@ module.exports = function() {
       return fs.statSync(path.join(srcpath, file)).isDirectory();
     });
   }
-  getDirectories(rootPath + '/models/').forEach(function(model) {
-    var folder = rootPath + '/models/' + model;
+  getDirectories(process.cwd() + '/models/').forEach(function(model) {
+    var folder = process.cwd() + '/models/' + model;
     var schema = require(folder + '/schema')(mongoose);
 
     require(folder + '/validator')(schema);

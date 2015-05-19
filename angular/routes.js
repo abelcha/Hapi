@@ -1,4 +1,4 @@
-angular.module('edison', ['ngMaterial', 'lumx', 'ngAnimate', 'ngDialog', 'n3-pie-chart', 'btford.socket-io', 'ngFileUpload', 'pickadate', 'ngRoute', 'ngResource', 'ngTable', 'ngMap'])
+angular.module('edison', ['ngMaterial', 'lumx', 'ngAnimate', 'xeditable', 'ngDialog', 'n3-pie-chart', 'btford.socket-io', 'ngFileUpload', 'pickadate', 'ngRoute', 'ngResource', 'ngTable', 'ngMap'])
   .config(function($mdThemingProvider) {
     $mdThemingProvider.theme('default')
       .primaryPalette('indigo')
@@ -124,6 +124,9 @@ var getIntervention = function($route, $q, edisonAPI) {
           prixAnnonce:0,
           prixFinal:0,
           coutFourniture:0,
+          comments:[],
+          produits:[],
+          tva:20,
           client: {},
           reglementSurPlace: true,
           date: {
@@ -229,4 +232,8 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
     });
   // use the HTML5 History API
   $locationProvider.html5Mode(true);
+});
+
+angular.module('edison').run(function(editableOptions) {
+  editableOptions.theme = 'bs3'; // bootstrap3 theme. Can be also 'bs2', 'default'
 });

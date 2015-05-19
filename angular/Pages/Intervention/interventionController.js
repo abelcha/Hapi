@@ -1,8 +1,9 @@
 angular.module('edison').controller('InterventionController',
-    function($scope, $location, $routeParams, ngDialog, LxNotificationService, Upload, tabContainer, edisonAPI, config, intervention, artisans, user) {
+    function($window, $scope, $location, $routeParams, ngDialog, dialog, LxNotificationService, Upload, tabContainer, edisonAPI, produits, config, intervention, artisans, user) {
         $scope.artisans = artisans.data;
         $scope.config = config;
         $scope.tab = tabContainer.getCurrentTab();
+
         var id = parseInt($routeParams.id);
         console.log(user);
         if (!$scope.tab.data) {
@@ -24,6 +25,21 @@ angular.module('edison').controller('InterventionController',
             }
         }
         $scope.showMap = false;
+        $scope.produits = produits.init($scope.tab.data.produits ||  []);
+
+
+        $scope.addProduct = function(prod) {
+            produits.add(prod);
+            $scope.searchProd = "";
+        }
+
+        $scope.clickUpload = function() {
+            angular.element('.input-file__input').trigger('click');
+        }
+        $scope.previsualiseFacture = function() {
+            var url = '/api/intervention/42/facture?html=true&data=';
+            $window.open(url + JSON.stringify($scope.tab.data), "_blank");
+        }
 
         $scope.addComment = function() {
             console.log($scope.commentText)
@@ -48,17 +64,6 @@ angular.module('edison').controller('InterventionController',
             }
         }
 
-        $scope.products = {
-            remove: function(index) {
-
-            },
-            moveTop: function(index) {
-
-            },
-            moveDown: function(index) {
-
-            }
-        }
 
         $scope.loadFilesList = function() {
             edisonAPI.getFilesList($scope.tab.data.id || $scope.tab.data.tmpID).then(function(result) {
@@ -74,8 +79,8 @@ angular.module('edison').controller('InterventionController',
                 data: $scope.tab.data
             }).then(function(data) {
                 LxNotificationService.success("L'intervention " + data.data + " à été enregistré");
-                $location.url("/interventions");
-                $scope.tabs.remove($scope.tab);
+                /*$location.url("/interventions");
+                $scope.tabs.remove($scope.tab);*/
             }).catch(function(response) {
                 LxNotificationService.error(response.data);
             });

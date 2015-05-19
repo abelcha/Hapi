@@ -1,4 +1,4 @@
-angular.module('edison', ['ngMaterial', 'lumx', 'ngAnimate', 'ngDialog', 'n3-pie-chart', 'btford.socket-io', 'ngFileUpload', 'pickadate', 'ngRoute', 'ngResource', 'ngTable', 'ngMap'])
+angular.module('edison', ['ngMaterial', 'lumx', 'ngAnimate', 'xeditable', 'ngDialog', 'n3-pie-chart', 'btford.socket-io', 'ngFileUpload', 'pickadate', 'ngRoute', 'ngResource', 'ngTable', 'ngMap'])
   .config(function($mdThemingProvider) {
     $mdThemingProvider.theme('default')
       .primaryPalette('indigo')
@@ -124,6 +124,9 @@ var getIntervention = function($route, $q, edisonAPI) {
           prixAnnonce:0,
           prixFinal:0,
           coutFourniture:0,
+          comments:[],
+          produits:[],
+          tva:20,
           client: {},
           reglementSurPlace: true,
           date: {
@@ -229,6 +232,10 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
     });
   // use the HTML5 History API
   $locationProvider.html5Mode(true);
+});
+
+angular.module('edison').run(function(editableOptions) {
+  editableOptions.theme = 'bs3'; // bootstrap3 theme. Can be also 'bs2', 'default'
 });
 
 angular.module('edison').directive('capitalize', function() {
@@ -363,6 +370,12 @@ angular.module("edison").filter('categoryFilter', function(){
     return (sst.categories.indexOf(categorie) > 0);
   }
 });
+angular.module('edison').filter('crlf', function() {
+    return function(text) {
+        return text.split(/\n/g).join('<br>');
+    };
+});
+
 angular.module("edison").filter('pricify', function() {
 	return function(price) {
 		if (price > 800)
@@ -408,6 +421,13 @@ angular.module("edison").filter('relativeDate', function() {
   }
 });
 
+angular.module('edison').filter('reverse', function() {
+  return function(items) {
+  	if (!items)
+  		return [];
+    return items.slice().reverse();
+  };
+});
 function getValue(path, origin) {
   if (origin === void 0 || origin === null) origin = self ? self : this;
   if (typeof path !== 'string') path = '' + path;
@@ -641,201 +661,206 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvid
 
 angular.module('edison').factory('config', [function() {
 
-  var config = {};
+    var config = {};
 
-  config.filters = {
-    all:  {
-      short: 'all',
-      long: 'Toutes les Inters',
-      url: ''
-    },
-    envoye: {
-      short: 'env',
-      long: 'Envoyé',
-      url: '/envoye'
-    },
-    aVerifier: {
-      short: 'avr',
-      long: 'A Vérifier',
-      url: '/aVerifier'
-    },
-    clientaRelancer: {
-      short: 'carl',
-      long: 'Client A Relancer',
-      url: '/clientaRelancer'
-    },
-    clientaRelancerUrgent: {
-      short: 'Ucarl',
-      long: 'Client A Relancer Urgent',
-      url: '/clientaRelancerUrgent'
-    },
-    sstaRelancer: {
-      short: 'sarl',
-      long: 'SST A Relancer',
-      url: '/sstaRelancer'
-    },
-    sstaRelancerUrgent: {
-      short: 'Usarl',
-      long: 'SST A Relancer Urgent',
-      url: '/sstaRelancerUrgent'
-    },
-  }
-
-  config.civilites = [{
-    short_name: 'M.',
-    long_name: 'Monsieur'
-  }, {
-    short_name: 'Mme.',
-    long_name: 'Madame'
-  }, {
-    short_name: 'Soc.',
-    long_name: 'Société'
-  }];
-
-  config.civilitesTab = ['M.', 'Mme.', 'Soc.'];
-
-  config.categoriesKV = {
-    EL: {
-      n: 'Electricité',
-      c: 'yellow  darken-2 black-text'
-    },
-    PL: {
-      n: 'Plomberie',
-      c: 'blue'
-    },
-    CH: {
-      n: 'Chauffage',
-      c: 'red'
-    },
-    CL: {
-      n: 'Climatisation',
-      c: ' teal darken-3'
-    },
-    SR: {
-      n: 'Serrurerie',
-      c: 'brown'
-    },
-    VT: {
-      n: 'Vitrerie',
-      c: ' green darken-3'
-    },
-    CR: {
-      n: 'Carrelage',
-      c: ''
-    },
-    MN: {
-      n: 'Menuiserie',
-      c: ''
-    },
-    MC: {
-      n: 'Maconnerie',
-      c: ''
-    },
-    PT: {
-      n: 'Peinture',
-      c: ''
+    config.filters = {
+        all:  {
+            short: 'all',
+            long: 'Toutes les Inters',
+            url: ''
+        },
+        envoye: {
+            short: 'env',
+            long: 'Envoyé',
+            url: '/envoye'
+        },
+        aVerifier: {
+            short: 'avr',
+            long: 'A Vérifier',
+            url: '/aVerifier'
+        },
+        clientaRelancer: {
+            short: 'carl',
+            long: 'Client A Relancer',
+            url: '/clientaRelancer'
+        },
+        clientaRelancerUrgent: {
+            short: 'Ucarl',
+            long: 'Client A Relancer Urgent',
+            url: '/clientaRelancerUrgent'
+        },
+        sstaRelancer: {
+            short: 'sarl',
+            long: 'SST A Relancer',
+            url: '/sstaRelancer'
+        },
+        sstaRelancerUrgent: {
+            short: 'Usarl',
+            long: 'SST A Relancer Urgent',
+            url: '/sstaRelancerUrgent'
+        },
     }
-  }
 
-  config.fournisseur = [{
-    short_name: 'EDISON SERVICES',
-    type: 'Fourniture Edison'
-  }, {
-    short_name: 'CEDEO',
-    type: 'Fourniture Artisan'
-  }, {
-    short_name: 'BROSSETTE',
-    type: 'Fourniture Artisan'
-  }, {
-    short_name: 'REXEL',
-    type: 'Fourniture Artisan'
-  }, {
-    short_name: 'COAXEL',
-    type: 'Fourniture Artisan'
-  }, {
-    short_name: 'YESSS ELECTRIQUE',
-    type: 'Fourniture Artisan'
-  }, {
-    short_name: 'CGED',
-    type: 'Fourniture Artisan'
-  }, {
-    short_name: 'COSTA',
-    type: 'Fourniture Artisan'
-  }, {
-    short_name: 'FORUM DU BATIMENT',
-    type: 'Fourniture Artisan'
-  }]
+    config.civilites = [{
+        short_name: 'M.',
+        long_name: 'Monsieur'
+    }, {
+        short_name: 'Mme.',
+        long_name: 'Madame'
+    }, {
+        short_name: 'Soc.',
+        long_name: 'Société'
+    }];
 
-  config.categories = [{
-    short_name: 'EL',
-    long_name: 'Electricité'
-  }, {
-    short_name: 'PL',
-    long_name: 'Plomberie'
-  }, {
-    short_name: 'CH',
-    long_name: 'Chauffage'
-  }, {
-    short_name: 'CL',
-    long_name: 'Climatisation'
-  }, {
-    short_name: 'SR',
-    long_name: 'Serrurerie'
-  }, {
-    short_name: 'VT',
-    long_name: 'Vitrerie'
-  }, {
-    short_name: 'CR',
-    long_name: 'Carrelage'
-  }, {
-    short_name: 'MN',
-    long_name: 'Menuiserie'
-  }, {
-    short_name: 'MC',
-    long_name: 'Maconnerie'
-  }, {
-    short_name: 'PT',
-    long_name: 'Peinture'
-  }];
+    config.civilitesTab = ['M.', 'Mme.', 'Soc.'];
 
-  config.modeDeReglements = [{
-    short_name: 'CB',
-    long_name: 'Carte Bancaire'
-  }, {
-    short_name: 'CH',
-    long_name: 'Chèque'
-  }, {
-    short_name: 'CA',
-    long_name: 'Espèces'
-  }];
-
-  config.typePayeur = [{
-    short_name: 'SOC',
-    long_name: 'Société'
-  }, {
-    short_name: 'PRO',
-    long_name: 'Propriétaire'
-  }, {
-    short_name: 'LOC',
-    long_name: 'Locataire'
-  }, {
-    short_name: 'IMO',
-    long_name: 'Agence Immobilière'
-  }, {
-    short_name: 'CUR',
-    long_name: 'Curatelle'
-  }, {
-    short_name: 'AUT',
-    long_name: 'Autre'
-  }];
-
-  config.status = function(inter) {
-    return {
-      intervention: config.etatsKV[inter.status]
+    config.categoriesKV = {
+        EL: {
+            n: 'Electricité',
+            c: 'yellow  darken-2 black-text'
+        },
+        PL: {
+            n: 'Plomberie',
+            c: 'blue'
+        },
+        CH: {
+            n: 'Chauffage',
+            c: 'red'
+        },
+        CL: {
+            n: 'Climatisation',
+            c: ' teal darken-3'
+        },
+        SR: {
+            n: 'Serrurerie',
+            c: 'brown'
+        },
+        VT: {
+            n: 'Vitrerie',
+            c: ' green darken-3'
+        },
+        CR: {
+            n: 'Carrelage',
+            c: ''
+        },
+        MN: {
+            n: 'Menuiserie',
+            c: ''
+        },
+        MC: {
+            n: 'Maconnerie',
+            c: ''
+        },
+        PT: {
+            n: 'Peinture',
+            c: ''
+        }
     }
-  }
 
-  return config;
+    config.fournisseur = [{
+        short_name: 'EDISON SERVICES',
+        type: 'Fourniture Edison'
+    }, {
+        short_name: 'CEDEO',
+        type: 'Fourniture Artisan'
+    }, {
+        short_name: 'BROSSETTE',
+        type: 'Fourniture Artisan'
+    }, {
+        short_name: 'REXEL',
+        type: 'Fourniture Artisan'
+    }, {
+        short_name: 'COAXEL',
+        type: 'Fourniture Artisan'
+    }, {
+        short_name: 'YESSS ELECTRIQUE',
+        type: 'Fourniture Artisan'
+    }, {
+        short_name: 'CGED',
+        type: 'Fourniture Artisan'
+    }, {
+        short_name: 'COSTA',
+        type: 'Fourniture Artisan'
+    }, {
+        short_name: 'FORUM DU BATIMENT',
+        type: 'Fourniture Artisan'
+    }]
+
+    config.categories = [{
+        short_name: 'EL',
+        long_name: 'Electricité'
+    }, {
+        short_name: 'PL',
+        long_name: 'Plomberie'
+    }, {
+        short_name: 'CH',
+        long_name: 'Chauffage'
+    }, {
+        short_name: 'CL',
+        long_name: 'Climatisation'
+    }, {
+        short_name: 'SR',
+        long_name: 'Serrurerie'
+    }, {
+        short_name: 'VT',
+        long_name: 'Vitrerie'
+    }, {
+        short_name: 'CR',
+        long_name: 'Carrelage'
+    }, {
+        short_name: 'MN',
+        long_name: 'Menuiserie'
+    }, {
+        short_name: 'MC',
+        long_name: 'Maconnerie'
+    }, {
+        short_name: 'PT',
+        long_name: 'Peinture'
+    }];
+
+    config.modeDeReglements = [{
+        short_name: 'CB',
+        long_name: 'Carte Bancaire'
+    }, {
+        short_name: 'CH',
+        long_name: 'Chèque'
+    }, {
+        short_name: 'CA',
+        long_name: 'Espèces'
+    }];
+
+    config.tva = [{
+        long_name: 10,
+    }, {
+        long_name: 20
+    }];
+    config.typePayeur = [{
+        short_name: 'SOC',
+        long_name: 'Société'
+    }, {
+        short_name: 'PRO',
+        long_name: 'Propriétaire'
+    }, {
+        short_name: 'LOC',
+        long_name: 'Locataire'
+    }, {
+        short_name: 'IMO',
+        long_name: 'Agence Immobilière'
+    }, {
+        short_name: 'CUR',
+        long_name: 'Curatelle'
+    }, {
+        short_name: 'AUT',
+        long_name: 'Autre'
+    }];
+
+    config.status = function(inter) {
+        return {
+            intervention: config.etatsKV[inter.status]
+        }
+    }
+
+    return config;
 
 }]);
 
@@ -892,56 +917,71 @@ angular.module('edison').factory('dataProvider', ['socket', '$rootScope', 'confi
 angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', function($mdDialog, edisonAPI) {
 
 
-  return {
-    absence: {
-      open: function(id, cb) {
-        $mdDialog.show({
-          controller: function DialogController($scope, $mdDialog) {
-            $scope.absenceTime = 'TODAY';
-            $scope.absence = [{
-              title: 'Toute la journée',
-              value: 'TODAY'
-            }, {
-              title: '1 Heure',
-              value: '1'
-            }, {
-              title: '2 Heure',
-              value: '2'
-            }, {
-              title: '3 Heure',
-              value: '3'
-            }, {
-              title: '4 Heure',
-              value: '4'
-            }]
-            $scope.hide = function() {
-              $mdDialog.hide();
-            };
-            $scope.cancel = function() {
-              $mdDialog.cancel();
-            };
-            $scope.answer = function(answer) {
-              $mdDialog.hide(answer);
-              var hours = 0;
-              if (answer === "TODAY") {
-                hours = 23 - (new Date).getHours() + 1;
-              } else {
-                hours = parseInt(answer);
-              }
-              start = new Date;
-              end = new Date;
-              end.setHours(end.getHours() + hours)
-              edisonAPI.absenceArtisan(id, {
-                start: start,
-                end: end
-              }).success(cb)
-            };
-          },
-          templateUrl: '/Pages/Intervention/dialogs/absence.html',
-        });
-      }
+    return {
+        editProduct: {
+            open: function(produit, cb) {
+                $mdDialog.show({
+                    controller: function DialogController($scope, $mdDialog) {
+                        $scope.produit = _.clone(produit);
+                        $scope.mdDialog = $mdDialog;
+                        $scope.answer = function(p) {
+                            $mdDialog.hide(p);
+                            return cb(p);
+                        }
+                    },
+                    templateUrl: '/Pages/Intervention/dialogs/edit.html',
+                });
+            }
+        },
+        absence: {
+            open: function(id, cb) {
+                $mdDialog.show({
+                    controller: function DialogController($scope, $mdDialog) {
+                        $scope.absenceTime = 'TODAY';
+                        $scope.absence = [{
+                            title: 'Toute la journée',
+                            value: 'TODAY'
+                        }, {
+                            title: '1 Heure',
+                            value: '1'
+                        }, {
+                            title: '2 Heure',
+                            value: '2'
+                        }, {
+                            title: '3 Heure',
+                            value: '3'
+                        }, {
+                            title: '4 Heure',
+                            value: '4'
+                        }]
+                        $scope.hide = function() {
+                            $mdDialog.hide();
+                        };
+                        $scope.cancel = function() {
+                            $mdDialog.cancel();
+                        };
+                        $scope.answer = function(answer) {
+                            $mdDialog.hide(answer);
+                            var hours = 0;
+                            if (answer === "TODAY") {
+                                hours = 23 - (new Date).getHours() + 1;
+                            } else {
+                                hours = parseInt(answer);
+                            }
+                            start = new Date;
+                            end = new Date;
+                            end.setHours(end.getHours() + hours)
+                            edisonAPI.absenceArtisan(id, {
+                                start: start,
+                                end: end
+                            }).success(cb)
+                        };
+                    },
+                    templateUrl: '/Pages/Intervention/dialogs/absence.html',
+                });
+            }
+        }
     }
-  }
 
 }]);
 
@@ -952,44 +992,178 @@ angular.module('edison').factory('_', ['$window',
 ])
 
 angular.module('edison').factory('mapAutocomplete', ['$q', 'Address',
-  function($q, Address) {
+    function($q, Address) {
 
-    var autocomplete = function() {
-      this.service = new google.maps.places.AutocompleteService();
-      this.geocoder = new google.maps.Geocoder();
-    }
-
-    autocomplete.prototype.search = function(input) {
-      var deferred = $q.defer();
-      this.service.getPlacePredictions({
-        input: input,
-        componentRestrictions: {
-          country: 'fr'
+        var autocomplete = function() {
+            this.service = new google.maps.places.AutocompleteService();
+            this.geocoder = new google.maps.Geocoder();
         }
-      }, function(predictions, status) {
-        deferred.resolve(predictions || []);
-      });
-      return deferred.promise;
+
+        autocomplete.prototype.search = function(input) {
+            var deferred = $q.defer();
+            this.service.getPlacePredictions({
+                input: input,
+                componentRestrictions: {
+                    country: 'fr'
+                }
+            }, function(predictions, status) {
+                predictions.forEach(function(e) {
+                    if (e.description == input)
+                        predictions = null;
+                })
+                deferred.resolve(predictions || []);
+            });
+            return deferred.promise;
+        }
+
+        autocomplete.prototype.getPlaceAddress = function(place) {
+            var self = this;
+            return $q(function(resolve, reject) {
+                self.geocoder.geocode({
+                    'address': place.description
+                }, function(result, status) {
+                    if (status !== google.maps.places.PlacesServiceStatus.OK)
+                        return reject(status);
+                    return resolve(Address(result[0]));
+                });
+
+            });
+        };
+
+        return new autocomplete;
+
+    }
+]);
+
+angular.module('edison').factory('produits', ['dialog', function(dialog) {
+    var ps = [{
+        quantite: 1,
+        ref: "EDI001",
+        title: "Main d'œuvre",
+        desc: "Main d'œuvre",
+        pu: 65
+    }, {
+        quantite: 1,
+        ref: "EDI002",
+        title: "Déplacement",
+        desc: "Déplacement",
+        pu: 65
+    }, {
+        quantite: 1,
+        ref: "EDI005",
+        title: "Forfait Intervention",
+        desc: "Forfait INSTALLATION / MAIN D\'OUVRAGEEssais et mise en service inclus",
+        pu: 130
+    }, {
+        quantite: 1,
+        ref: "FRN001",
+        title: "Fourniture",
+        desc: "",
+        pu: 0
+    }, {
+        quantite: 1,
+        ref: "BAL001",
+        title: "ballon mural vertical",
+        desc: "Chauffe-eau électrique mural vertical\nRésistance blindée anti-calcaire\nPuissance : 1800 W\nType de courant : monophasé\nV = 200L\n\nRACCORDEMENT ÉLECTRIQUE MONO 220V (HEURE CREUSE / PLEINE)\n\nMARQUE ATLANTIC CERTIFIE\n\nGarantie constructeur : Jusqu'à 5 ans\nGarante pièce d'origine : Jusqu'à 2 ans\n\nAssistance et dépannage constructeur inclus jusqu'à 2 ans\n\nESSAIS ET MISE EN SERVICE INCLUS",
+        pu: 432.1
+
+    }, {
+        quantite: 1,
+        ref: "BAL002",
+        title: "groupe de securité",
+        desc: "Groupe de sécurité anti-calcaire 3/4.Robinet à sphère.\nClapet démontable\nRaccordement eau froide et chauffe eau : 20/27.Echappement 26/34.7 bars.\nEntonnoir siphon",
+        pu: 69.97
+    }, {
+        quantite: 1,
+        ref: "BAL003",
+        title: "Raccordement hydraulique",
+        desc: "Raccordement hydraulique\nFlexibles inox de 50 cm F20/27 ø 16 mm",
+        pu: 16.33
+    }, {
+        quantite: 1,
+        ref: "BAL004",
+        title: "Trépied Ballon",
+        desc: "Trépied pour chauffe-eau électrique.\nAccessoire obligatoire pour l'installation d'un chauffe-eau électrique de 100, 150, ou 200 litres sur un mur non porteur",
+        pu: 93.21
+    }, {
+        quantite: 1,
+        ref: 'VIT001',
+        title: "Remplacement Vitrage",
+        desc: "Remplacement d'un vitrage suite a un bris de glace \nporte fenêtre\ndouble vitrage\nvitrage clair\n2000 x 1000\nchâssis pvc / alu / bois\n\ncommande spéciale sur mesure\nadaptation et fixation sur place\n\nremplacement a l'identique",
+        pu: 297.13
+    }, {
+        quantite: 1,
+        ref: "VIT002",
+        title: "Pack Vitrerie",
+        desc: "depose/livraison + mise a la decharge + taxe energie",
+        pu: 75
+    }, {
+        quantite: 1,
+        ref: "SANI001",
+        title: "Pack Sanibroyeur",
+        desc: "PACK COMPLET SANIBROYEUR PRO\nRefoulement horizontal < 100m\nRefoulement vertical > 5m\nRégime moteur > 2800 tr/min\nNorme européenne \nEN 12050-3\nRaccordement hydraulique\nRaccordement électrique\nGarantie constructeur",
+        pu: 672.21
+    }, {
+        quantite: 1,
+        ref: "CAM001",
+        title: "Camion D'assainisement",
+        desc: "DÉGORGEMENT CANALISATION TRÈS HAUTE PRESSION PAR CAMION D’ASSAINISSEMENT : \nCurage et nettoyage complet de la canalisation jusqu\'à 10M",
+        pu: 696.25
+    }, {
+        quantite: 1,
+        ref: "AUT001",
+        title: "Autre",
+        desc: "",
+        pu: 0
+    }];
+    return {
+        init: function(produits) {
+            this.produits = produits;
+            return this;
+        },
+        remove: function(index) {
+            this.produits.splice(index, 1);
+        },
+        moveTop: function(index) {
+            if (index !== 0) {
+                var tmp = this.produits[index - 1];
+                this.produits[index - 1] = this.produits[index];
+                this.produits[index] = tmp;
+            }
+
+        },
+        moveDown: function(index) {
+            if (index !== this.produits.length - 1) {
+                var tmp = this.produits[index + 1];
+                this.produits[index + 1] = this.produits[index];
+                this.produits[index] = tmp;
+            }
+        },
+        edit: function(index) {
+            var _this = this;
+            dialog.editProduct.open(this.produits[index], function(res) {
+                _this.produits[index] = res;
+            })
+        },
+        add: function(prod) {
+            this.produits.push(prod);
+        },
+        search: function(text) {
+            var rtn = []
+            for (var i = 0; i < ps.length; ++i) {
+                if (text == ps[i].title)
+                    return [];
+                var needle = _.deburr(text).toLowerCase()
+                var haystack = _.deburr(ps[i].title).toLowerCase();
+                if (haystack.indexOf(needle) >= 0) {
+                    rtn.push(_.clone(ps[i]))
+                }
+            }
+            return rtn
+        }
     }
 
-    autocomplete.prototype.getPlaceAddress = function(place) {
-      var self = this;
-      return $q(function(resolve, reject) {
-        self.geocoder.geocode({
-          'address': place.description
-        }, function(result, status) {
-          if (status !== google.maps.places.PlacesServiceStatus.OK)
-            return reject(status);
-          return resolve(Address(result[0]));
-        });
-
-      });
-    };
-
-    return new autocomplete;
-
-  }
-]);
+}]);
 
 angular.module('edison').factory('socket', function (socketFactory) {
   return socketFactory();
@@ -1277,101 +1451,102 @@ angular.module('edison').controller('DashboardController', function(tabContainer
 	$scope.tab.setTitle('dashBoard')
 });
 angular.module('edison').controller('InterventionMapController', function($scope, $q, $interval, $window, Address, dialog, mapAutocomplete, edisonAPI) {
-  $scope.autocomplete = mapAutocomplete;
-  if (!$scope.tab.data.client.address) {
-    $scope.mapCenter = Address({
-      lat: 46.3333,
-      lng: 2.6
-    });
-    $scope.zoom = 6;
-  } else {
-    if ($scope.tab.data.artisan) {
-      $scope.zoom = 12;
-      //$scope.tab.data.artisan.address = Address($scope.tab.data.artisan.address, true);
-    }
-    if ($scope.tab.data.client.address) {
-      $scope.tab.data.client.address = Address($scope.tab.data.client.address, true); //true -> copyContructor
-      $scope.mapCenter = $scope.tab.data.client.address;
-    }
-  }
-
-
-  $scope.showInterMarker = function() {
-    if (!$scope.mapCenter ||  !$scope.mapCenter.latLng || !$scope.tab.data.client || !$scope.tab.data.client.address ||  !$scope.tab.data.client.address.latLng) {
-      return (false)
-    }
-    return ($scope.tab.data.client.address.latLng == $scope.mapCenter.latLng);
-  }
-
-  $scope.changeAddress = function(place) {
-    mapAutocomplete.getPlaceAddress(place).then(function(addr)  {
-        $scope.zoom = 12;
-        $scope.mapCenter = addr;
-        if (addr.streetAddress) {
-          $scope.tab.data.client.address = addr;
-          $scope.searchText = "lol";
+    $scope.autocomplete = mapAutocomplete;
+    if (!$scope.tab.data.client.address) {
+        $scope.mapCenter = Address({
+            lat: 46.3333,
+            lng: 2.6
+        });
+        $scope.zoom = 6;
+    } else {
+        if ($scope.tab.data.artisan) {
+            $scope.zoom = 12;
+            //$scope.tab.data.artisan.address = Address($scope.tab.data.artisan.address, true);
         }
-        $scope.searchArtisans();
-      },
-      function(err) {
-        console.log(err);
-      })
-  }
-
-  $scope.$watch('tab.data.sst', function(id_sst) {
-    if (id_sst) {
-      $q.all([
-        edisonAPI.getArtisan(id_sst, {
-          cache: true
-        }),
-        edisonAPI.getArtisanStats(id_sst, {
-          cache: true
-        }),
-      ]).then(function(result)  {
-        $scope.tab.data.artisan = result[0].data;
-        $scope.tab.data.artisan.stats = result[1].data;
-        if (result[0].data.address) {
-          edisonAPI.getDistance({
-              origin: result[0].data.address.lt + ", " + result[0].data.address.lg,
-              destination: $scope.tab.data.client.address.lt + ", " + $scope.tab.data.client.address.lg
-            })
-            .then(function(result) {
-              $scope.tab.data.artisan.stats.direction = result.data;
-            })
+        if ($scope.tab.data.client.address) {
+            $scope.tab.data.client.address = Address($scope.tab.data.client.address, true); //true -> copyContructor
+            $scope.mapCenter = $scope.tab.data.client.address;
         }
-      });
     }
-  })
 
-  $scope.dialog = dialog;
 
-  $scope.sstAbsence = function(id) {
-    dialog.absence.open(id, function() {
-       $scope.searchArtisans();
+    $scope.showInterMarker = function() {
+        if (!$scope.mapCenter ||  !$scope.mapCenter.latLng || !$scope.tab.data.client || !$scope.tab.data.client.address ||  !$scope.tab.data.client.address.latLng) {
+            return (false)
+        }
+        return ($scope.tab.data.client.address.latLng == $scope.mapCenter.latLng);
+    }
+
+
+    $scope.changeAddress = function(place, searchText) {
+        mapAutocomplete.getPlaceAddress(place).then(function(addr)  {
+                $scope.zoom = 12;
+                $scope.mapCenter = addr;
+                if (addr.streetAddress) {
+                    $scope.tab.data.client.address = addr;
+                }
+                $scope.searchArtisans();
+            },
+            function(err) {
+                console.log(err);
+            })
+    }
+
+    $scope.$watch('tab.data.sst', function(id_sst) {
+        if (id_sst) {
+            $q.all([
+                edisonAPI.getArtisan(id_sst, {
+                    cache: true
+                }),
+                edisonAPI.getArtisanStats(id_sst, {
+                    cache: true
+                }),
+            ]).then(function(result)  {
+                $scope.tab.data.artisan = result[0].data;
+                $scope.tab.data.artisan.stats = result[1].data;
+                if (result[0].data.address) {
+                    edisonAPI.getDistance({
+                            origin: result[0].data.address.lt + ", " + result[0].data.address.lg,
+                            destination: $scope.tab.data.client.address.lt + ", " + $scope.tab.data.client.address.lg
+                        })
+                        .then(function(result) {
+                            $scope.tab.data.artisan.stats.direction = result.data;
+                        })
+                }
+            });
+        }
     })
-  }
 
-  $scope.showMap = function() {
-    $scope.loadMap = true;
-  }
+    $scope.dialog = dialog;
 
-  $scope.loadMap = $scope.tab.isNew;
+    $scope.sstAbsence = function(id) {
+        dialog.absence.open(id, function() {
+            $scope.searchArtisans();
+        })
+    }
 
-  $scope.getStaticMap = function() {
-    var q = "?width=" + $window.outerWidth * 0.8;
-    if ($scope.tab.data.client && $scope.tab.data.client.address && $scope.tab.data.client.address.latLng)
-      q += ("&origin=" + $scope.tab.data.client.address.latLng);
-    if ($scope.tab.data.artisan && $scope.tab.data.artisan.id)
-      q += ("&destination=" + $scope.tab.data.artisan.address.lt + "," + $scope.tab.data.artisan.address.lg);
-    return "/api/map/staticDirections" + q;
-  }
+    $scope.showMap = function() {
+        $scope.loadMap = true;
+    }
+
+    $scope.loadMap = $scope.tab.isNew;
+
+    $scope.getStaticMap = function() {
+        var q = "?width=" + $window.outerWidth * 0.8;
+        if ($scope.tab.data.client && $scope.tab.data.client.address && $scope.tab.data.client.address.latLng)
+            q += ("&origin=" + $scope.tab.data.client.address.latLng);
+        if ($scope.tab.data.artisan && $scope.tab.data.artisan.id)
+            q += ("&destination=" + $scope.tab.data.artisan.address.lt + "," + $scope.tab.data.artisan.address.lg);
+        return "/api/map/staticDirections" + q;
+    }
 });
 
 angular.module('edison').controller('InterventionController',
-    function($scope, $location, $routeParams, ngDialog, LxNotificationService, Upload, tabContainer, edisonAPI, config, intervention, artisans, user) {
+    function($window, $scope, $location, $routeParams, ngDialog, dialog, LxNotificationService, Upload, tabContainer, edisonAPI, produits, config, intervention, artisans, user) {
         $scope.artisans = artisans.data;
         $scope.config = config;
         $scope.tab = tabContainer.getCurrentTab();
+
         var id = parseInt($routeParams.id);
         console.log(user);
         if (!$scope.tab.data) {
@@ -1393,6 +1568,21 @@ angular.module('edison').controller('InterventionController',
             }
         }
         $scope.showMap = false;
+        $scope.produits = produits.init($scope.tab.data.produits ||  []);
+
+
+        $scope.addProduct = function(prod) {
+            produits.add(prod);
+            $scope.searchProd = "";
+        }
+
+        $scope.clickUpload = function() {
+            angular.element('.input-file__input').trigger('click');
+        }
+        $scope.previsualiseFacture = function() {
+            var url = '/api/intervention/42/facture?html=true&data=';
+            $window.open(url + JSON.stringify($scope.tab.data), "_blank");
+        }
 
         $scope.addComment = function() {
             console.log($scope.commentText)
@@ -1417,17 +1607,6 @@ angular.module('edison').controller('InterventionController',
             }
         }
 
-        $scope.products = {
-            remove: function(index) {
-
-            },
-            moveTop: function(index) {
-
-            },
-            moveDown: function(index) {
-
-            }
-        }
 
         $scope.loadFilesList = function() {
             edisonAPI.getFilesList($scope.tab.data.id || $scope.tab.data.tmpID).then(function(result) {
@@ -1443,8 +1622,8 @@ angular.module('edison').controller('InterventionController',
                 data: $scope.tab.data
             }).then(function(data) {
                 LxNotificationService.success("L'intervention " + data.data + " à été enregistré");
-                $location.url("/interventions");
-                $scope.tabs.remove($scope.tab);
+                /*$location.url("/interventions");
+                $scope.tabs.remove($scope.tab);*/
             }).catch(function(response) {
                 LxNotificationService.error(response.data);
             });

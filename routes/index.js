@@ -6,7 +6,7 @@ module.exports = function() {
   var onSuccess = function(res) {
     return function(result) {
       if (res.headersSent === false)
-        return res.json(result);
+        return res.status(200).send(result);
     }
   }
 

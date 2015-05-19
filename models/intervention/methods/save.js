@@ -14,8 +14,8 @@ module.exports = function(schema) {
             db.model('intervention').findOne({
                 id: data.id
             }).then(function(doc) {
-              if (!doc)
-                reject("Intervention Inconnu");
+                if (!doc)
+                    reject("Intervention Inconnu");
                 for (k in data) {
                     doc[k] = data[k];
                 }
@@ -55,14 +55,12 @@ module.exports = function(schema) {
             data.date.verification = new Date();
             data.status = 'ATT';
         }
-         if (options.annulation == true) {
-          data.status = 'ANN';
+        if (options.annulation == true) {
+            data.status = 'ANN';
         }
         return new Promise(function(resolve, reject) {
             var saveData = data.id ? updateInter(data, options) : createInter(data, options);
-
             saveData.then(function(doc) {
-                resolve(doc.id);
                 db.model('intervention').cacheActualise(doc.id);
                 if (options.envoi) {
                     db.model('sms').send({
@@ -72,7 +70,8 @@ module.exports = function(schema) {
                         type: 'OS'
                     }).then(console.log, console.log)
                 }
-            })
+                return resolve(String(doc.id));
+            }, reject)
         })
     }
 }

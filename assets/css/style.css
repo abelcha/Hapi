@@ -70,10 +70,9 @@
     display: none;
 }
 
-md-content#autocompleteContainer {
+md-content.autocomplete {
     position: absolute;
-    margin-left: 14%;
-    width: 70%;
+
     background: transparent;
     z-index: 99;
     height: 100%;
@@ -211,6 +210,26 @@ span[md-highlight-text] {
 
 tr.products>td {
     white-space: normal;
+}
+div.pad-paragraph{
+      padding-left: 33px;
+      padding-right: 33px;
+}
+ul>presentation {
+    margin-left:0px!important;
+}
+.editable-click, a.editable-click {
+    border-bottom: 0!important;
+}
+
+.card__actions>text-field::before{
+    display:none!important;
+}
+.card {
+      overflow: visible!importan;
+}
+.md-dialog-container {
+    z-index:9999!important;
 }
 /*.lx-select {
     margin-top: 9px!important;

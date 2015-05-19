@@ -18,6 +18,7 @@
     <link href="/css/loaders.css" rel="stylesheet" type="text/css">
     <link href="/css/style.css" rel="stylesheet" type="text/css">
     <link href="/ng-table/dist/ng-table.css" rel="stylesheet" type="text/css">
+    <link href="/angular-xeditable/dist/css/xeditable.css" rel="stylesheet" type="text/css">
     <link href="/angular-material/angular-material.css" rel="stylesheet" type="text/css">
     <link href="/angular-loading-bar/build/loading-bar.min.css" rel="stylesheet" type="text/css">
     <link href="/css/material-color.css" rel="stylesheet" type="text/css">
@@ -47,7 +48,7 @@
     <script src="/dist/all.js"></script>
 </head>
 
-<body ng-app="edison" ng-controller="MainController" class="ng-cloak main-menu-fixed main-navbar-fixed theme-default main-menu-animated">
+<body ng-app="edison" ng-controller="MainController" class="ng-cloak main-menu-fixed main-navbar-fixed theme-adminflare main-menu-animated">
     <script>
     var init = [];
     </script>
@@ -158,16 +159,17 @@
             </div>
             <!-- / #main-menu-inner -->
         </div>
-        <div id="content-wrapper">
-            <md-tabs md-selected="tabs.selectedTab" md-border-bottom>
-                <a ng-repeat="tab in tabs._tabs" href="{{tab.url}}" ng-class="{'deleted' : tab.deleted}">
-                    <md-tab>
-                        <md-tab-label>{{tab.title || "•••"}} <i ng-click="tabIconClick($event, tab)" class="fa fa-remove" style="cursor:crosshair"></i></md-tab-label>
-                    </md-tab>
-                </a>
-            </md-tabs>
-            <br>
-            <div class="page-header" ng-view></div>
+        <div class="page-header" style="background: #f4f4f4 url(/img/themes/adminflare/body-bg2.png);">
+            <div id="content-wrapper">
+                <md-tabs md-selected="tabs.selectedTab" md-border-bottom>
+                    <a ng-repeat="tab in tabs._tabs" href="{{tab.url}}" ng-class="{'deleted' : tab.deleted}">
+                        <md-tab>
+                            <md-tab-label>{{tab.title || "•••"}} <i ng-click="tabIconClick($event, tab)" class="fa fa-remove" style="cursor:crosshair"></i></md-tab-label>
+                        </md-tab>
+                    </a>
+                </md-tabs>
+                <div ng-view></div>
+            </div>
             <!-- content here -->
         </div>
         <!-- / #content-wrapper -->
@@ -180,12 +182,13 @@
             <div class="double-bounce2"></div>
         </div>
     </div>
-    <script src="/ng-file-upload/ng-file-upload.min.js"></script> 
+    <script src="/ng-file-upload/ng-file-upload.min.js"></script>
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
     <script src="/pickadate/lib/compressed/picker.js"></script>
     <script src="/lodash/lodash.min.js"></script>
     <script src="/d3/d3.min.js"></script>
     <script src="/d3/pie-chart.js"></script>
+    <script src="/angular-xeditable/dist/js/xeditable.js"></script>
     <script src="/pickadate/lib/compressed/picker.date.js"></script>
     <script src="/pickadate/lib/compressed/picker.time.js"></script>
     <script src="/pickadate/lib/compressed/translations/fr_FR.js"></script>

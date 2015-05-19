@@ -75,6 +75,7 @@ module.exports = function(db) {
                   v: String,
                   cp: String,
                 },
+                tva:Number
             */
         },
         categorie: {
@@ -93,6 +94,7 @@ module.exports = function(db) {
         produits: [{
             pu: Number,
             quantite: Number,
+            title:String,
             ref: String,
             desc: String
         }],
@@ -103,16 +105,12 @@ module.exports = function(db) {
         prixAnnonce: {
             type: Number,
             default: 0
-                /*set: function toCurrency(nbr) {
-                  console.log("swag", nbr)
-                  var rtn = parseFloat(nbr.replace(',', '.')) || 0;
-                  return 42;
-                }*/
         },
         prixFinal: Number,
         reglementSurPlace: Boolean,
         aDemarcher: Boolean,
         fournisseur: String,
-        coutFourniture: Number
+        coutFourniture: Number,
+        tva:Number
     });
 }
