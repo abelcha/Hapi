@@ -428,15 +428,19 @@
                         </div>
                     </div>
                     <div class="card__actions">
-                    <span style="float:left">
+                    <span style="float:left;width:50%">
                         <button ng-click="previsualiseFacture()" class="btn--no-conflicts btn--m btn--black btn--flat" lx-ripple>Prévisualiser</button>
                         <button class="btn--no-conflicts btn--m btn--orange btn--flat" lx-ripple>Envoyer Devis</button>
+                                                </span>
+    
+                        <span style="float:right;width:20%">
+                             <button class="btn--no-conflicts btn--m btn--black btn--flat" lx-ripple> TOTAL : {{produits.total()}} € </button>
                         </span>
-                        <div class="select-style text-field" style="float:right;width:110px">
+                   <!--      <div class="select-style text-field" style="float:right;width:110px">
                             <select ng-model="inter.tva" ng-options="tva.long_name as tva.long_name for tva in config.tva">
                             </select>
                             <label ng-class="{'selected' : inter.tva}">TVA</label>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
                 <br>

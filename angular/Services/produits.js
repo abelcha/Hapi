@@ -123,6 +123,15 @@ angular.module('edison').factory('produits', ['dialog', function(dialog) {
                 }
             }
             return rtn
+        },
+        total: function() {
+            var total = 0;
+            if (this.produits) {
+                this.produits.forEach(function(e) {
+                    total += (e.pu * e.quantite);
+                })
+            }
+            return total
         }
     }
 

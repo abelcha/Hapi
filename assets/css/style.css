@@ -231,6 +231,6 @@ ul>presentation {
 .md-dialog-container {
     z-index:9999!important;
 }
-/*.lx-select {
-    margin-top: 9px!important;
-}*/
+.lx-select {
+     margin-top: 8px!important;
+}

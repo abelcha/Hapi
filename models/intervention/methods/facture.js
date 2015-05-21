@@ -24,69 +24,46 @@ module.exports = function(schema) {
 
     }
 
-    var generatePDF = function(doc, title, html, res) {
-
-        return new Promise(function(resolve, reject) {
-            if (!doc.produits || !doc.produits.length)  {
-                console.log("hehehe")
-                doc.produits = [{
-                    ref: 'BLS042',
-                    desc: doc.description,
-                    pu: doc.prixAnnonce,
-                    quantite: 1
-                }]
-            }
-            var file = fs.readFileSync(process.cwd() + '/pdf/facture.html', 'utf8');
-            var template = ejs.render(file, {
+    var getFacture = function(doc, html, date) {
+        return edison.pdf({
+            html: html,
+            template: 'facture',
+            args: {
                 data: doc,
                 logo: edison.logo,
-                title: title,
+                title: 'Facture',
                 info: getInfo(doc),
-                date: moment(doc.date.ajout ||  new Date).format('LL')
-            });
-            if (html === "true") {
-                return resolve(template);
-            }
-            res.contentType("application/pdf");
-            pdf.create(template).toStream(function(err, stream) {
-                if (res)
-                    stream.pipe(res);
-                else {
-                	//stream to a file
-                	// the return the filename
-                }
-                resolve(stream);
-            });
+                date: moment(date || doc.date.ajout ||  new Date).format('LL')
+            },
+            buffer: true
         })
     }
 
-    var getPdf = function(id, params, res) {
-        var _this = this;
+    schema.statics.facturePreview = function(req, res) {
         return new Promise(function(resolve, reject) {
-            if (params.data) 
-                return generatePDF(params.data, params.title, params.html, res).then(resolve, reject);
-            db.model('intervention').findOne({
-                id: id
-            }).then(function(doc)  {
+            var doc = JSON.parse(req.query.data);
+            getFacture(doc, req.query.html, req.query.date)
+                .then(function(result) {
+                    if (!req.query.html)
+                        res.contentType("application/pdf");
+                    resolve(result);
+                }, reject)
 
-                return generatePDF(doc, params.title, params.html, res).then(resolve, reject);
-            });
-        });
+        })
     }
 
     schema.statics.facture = function(id, req, res) {
-        var data = req.query.data && JSON.parse(req.query.data);
-        return getPdf(id, {
-            title: "Facture",
-            html: req.query.html,
-            data: data
-        }, res);
+        return new Promise(function(resolve, reject) {
+            db.model('intervention').findOne({
+                id: id
+            }).then(function(doc)  {
+                getFacture(doc, req.query.html, req.query.date)
+                    .then(function(result) {
+                        if (!req.query.html)
+                            res.contentType("application/pdf");
+                        resolve(result);
+                    }, reject)
+            }, reject)
+        })
     }
-    schema.statics.devis = function(id, req, res) {
-        return getPdf(id, {
-            title: "Devis",
-            html: req.query.html,
-        }, res);
-    }
-
 }

@@ -198,7 +198,6 @@ angular.module('edison').factory('config', [function() {
             intervention: config.etatsKV[inter.status]
         }
     }
-
     return config;
 
 }]);

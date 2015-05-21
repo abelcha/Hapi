@@ -21,6 +21,7 @@ global.requestp = require("request-promise")
 global.redis = edison.redis();
 global.db = edison.db();
 global.sms = new edison.mobyt(edison.config.mobytID, edison.config.mobytPASS);
+global.mail = new edison.mail;
 global.document = new edison.dropbox();
 global.isWorker = false;
 

@@ -859,7 +859,6 @@ angular.module('edison').factory('config', [function() {
             intervention: config.etatsKV[inter.status]
         }
     }
-
     return config;
 
 }]);
@@ -1160,6 +1159,15 @@ angular.module('edison').factory('produits', ['dialog', function(dialog) {
                 }
             }
             return rtn
+        },
+        total: function() {
+            var total = 0;
+            if (this.produits) {
+                this.produits.forEach(function(e) {
+                    total += (e.pu * e.quantite);
+                })
+            }
+            return total
         }
     }
 
@@ -1580,7 +1588,7 @@ angular.module('edison').controller('InterventionController',
             angular.element('.input-file__input').trigger('click');
         }
         $scope.previsualiseFacture = function() {
-            var url = '/api/intervention/42/facture?html=true&data=';
+            var url = '/api/intervention/facturePreview?html=true&data=';
             $window.open(url + JSON.stringify($scope.tab.data), "_blank");
         }
 

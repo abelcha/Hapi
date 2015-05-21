@@ -37,7 +37,7 @@ angular.module('edison').controller('InterventionController',
             angular.element('.input-file__input').trigger('click');
         }
         $scope.previsualiseFacture = function() {
-            var url = '/api/intervention/42/facture?html=true&data=';
+            var url = '/api/intervention/facturePreview?html=true&data=';
             $window.open(url + JSON.stringify($scope.tab.data), "_blank");
         }
 

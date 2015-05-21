@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="fr">
+
+<head>
+    <meta charset="utf-8">
+    <style type="text/css">
+    body {
+        background: rgb(204, 204, 204);
+    }
+    
+    page[size="A4"] {
+        padding: 15px;
+        background: white;
+        width: 21cm;
+        height: 29.7cm;
+        display: block;
+        margin: 0 auto;
+        margin-bottom: 0.5cm;
+    }
+    
+    @media print {
+        body,
+        page[size="A4"] {
+            margin: 0;
+            box-shadow: 0;
+        }
+    }
+    
+    body {
+        font-family: arial;
+    }
+    
+    table {
+        vertical-align: top;
+        border-collapse: collapse;
+    }
+    
+    tr {
+        vertical-align: top;
+    }
+    
+    th {
+        border-right: 1px solid white;
+        border-left: 1px solid white;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        padding-left: 5px;
+    }
+    
+    .head-left {
+        float: left;
+        padding-top: 60px;
+        padding-left: 110px;
+    }
+    
+    .head-right {
+        padding-right: 160px;
+        padding-bottom: 20px;
+        float: right;
+    }
+    
+    .title {
+        font-size: 40px;
+        font-weight: 200;
+        color: black;
+        height: 22px;
+        margin-top: 10px;
+    }
+    
+    p {
+        margin: 0;
+        font-size: 13px;
+    }
+    
+    @media print {
+        footer {
+            margin-top: -330px!important;
+        }
+    }
+    
+    footer {
+        margin: 0 auto;
+        display: block;
+        width: 21cm;
+        margin-top: -381px;
+    }
+    
+    small {
+        font-size: 9px;
+    }
+    
+    font {
+        font-size: 13px;
+    }
+    
+    .entete {
+        float: right;
+        margin-top: 73px;
+        margin-left: 55px;
+        margin-right: 64px;
+    }
+    
+    .centered {
+        width: 527px;
+        margin-left: 193px;
+    }
+    </style>
+</head>
+
+<body>
+    <!--     <div id="over" style="position: absolute;top:0;left:0;width: 100%;height:100%;z-index:2;opacity:0.4;filter: alpha(opacity = 50)"></div> -->
+    <page size="A4">
+        <div class="head-left">
+            <img style="width: 290px;" src="data:image/png;base64,<%= logo.base64 %>">
+        </div>
+        <div class="head-right">
+            <div style="width: 95px;text-align:center">
+                <small>N°OS <%= data.numOS %></small>
+                <img style="width: 95px;height:40px" src="http://www.google.fr/url?source=imglanding&ct=img&q=http://www.azalea.com/images/Code-128-barcode.png&sa=X&ei=ZKdcVYCeLcvW7AatoYGIBQ&ved=0CAkQ8wc4JA&usg=AFQjCNHaPJWf6FOvmoQmQjot9hONpOJzfw">
+            </div>
+        </div>
+        <div class="entete">
+            <p>
+                Paris, le
+                <%=date %>
+            </p>
+            <p><i>Ordre de service n° <%= data.id %></i></p>
+        </div>
+        <br>
+        <div class="content" style="  margin-top: 200px;">
+            <div style="text-align:center">
+                <strong style="padding-left: 32px;font-size: 14px;">ORDRE DE SERVICE D'INTERVENTION</strong>
+                <div style="text-align: left;margin-top: 10px;margin-left: 482px;">
+                    <font><strong><%=data.client.civilite + " " + data.client.nom %></strong></font>
+                    <br>
+                    <font>
+                        <%=data.client.address.n + " " + data.client.address.r %>
+                    </font>
+                    <br>
+                    <font>
+                        <%=data.client.address.cp + " " + data.client.address.v %>
+                    </font>
+                    <br>
+                    <font>Tél :
+                        <%=data.client.telephone ? data.client.telephone.tel1.match(/.{1,2}/g).join( '.') : ''%>
+                    </font>
+                    <br>
+                </div>
+            </div>
+            <br>
+            <div class="centered">
+                <div style="font-size:12px">
+                    Monsieur,
+                    <br> Suite à notre conversation téléphonique,
+                    <br> Nous vous prions de bien vouloir intervenir auprès de notre client, dont les coordonnées et la description de l’intervention figurent ci-dessous
+                    <br>
+                </div>
+            </div>
+        </div>
+    </page>
+</body>
+
+</html>

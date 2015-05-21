@@ -41,6 +41,22 @@ module.exports = function(schema) {
         })
     }
 
+    var envoiInter = function(doc, data) {
+        console.log(doc.id, doc.artisan);
+        db.model('sms').send({
+            to: '0633138868',
+            text: "Sms d'envoi OS destiné à " + data.artisan.nomSociete + ' (' + data.artisan.telephone.tel1 + ')',
+            link: doc.id,
+            type: 'OS'
+        }).then(console.log, console.log)
+
+        db.model('intervention').getOS({
+            id: doc.id,
+            buffer:true
+        }).then(function(buffer) {
+            mail.sendOS(buffer, data).then(console.log, console.log)
+        })
+    }
 
 
     schema.statics.save = function(req, res) {
@@ -63,14 +79,9 @@ module.exports = function(schema) {
             saveData.then(function(doc) {
                 db.model('intervention').cacheActualise(doc.id);
                 if (options.envoi) {
-                    db.model('sms').send({
-                        to: '0633138868',
-                        text: "Sms d'envoi OS destiné à " + data.artisan.nomSociete + ' (' + data.artisan.telephone.tel1 + ')',
-                        link: data.id,
-                        type: 'OS'
-                    }).then(console.log, console.log)
+                    envoiInter(doc, data)
                 }
-                return resolve(String(doc.id));
+                resolve(String(doc.id));
             }, reject)
         })
     }
