@@ -39,7 +39,7 @@ module.exports = function(schema) {
     if (!docs.length || i === docs.length - 1) {
       return cb(this.rtn)
     }
-    if (!req.query.categorie || docs[i].obj.categories.indexOf(req.query.categorie) >= 0) {
+    if (!docs[i].obj.archive && (!req.query.categorie || docs[i].obj.categories.indexOf(req.query.categorie) >= 0)) {
       if (++this.x > req.query.limit) {
         return cb(this.rtn)
       }
@@ -72,7 +72,7 @@ module.exports = function(schema) {
         coordinates: [parseFloat(req.query.lat), parseFloat(req.query.lng)]
       };
       var options = {
-        distanceMultiplier: 0.00075,
+        distanceMultiplier: 0.001,
         maxDistance: (parseFloat(req.query.maxDistance) || 50) / 0.001
       }
       db.model('artisan').geoNear(point, options, function(err, docs) {

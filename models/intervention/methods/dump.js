@@ -70,7 +70,9 @@ module.exports = function(schema) {
             fournisseur: d.fournisseur,
             coutFourniture: parseInt(d.cout_fourniture),
             id: d.id,
-            telepro: d.ajoute_par,
+            login: {
+                ajout:d.ajoute_par
+            },
             comments: comments,
             status: d.etat_intervention,
             date: date,
@@ -147,7 +149,7 @@ module.exports = function(schema) {
                 prenom: d.prenom_facture,
                 telephone: d.tel_facture,
                 address: {
-                    n: d.numero_facture,
+                    n: d.numero_facture || "0",
                     r: d.adresse_facture,
                     v: d.ville_facture,
                     cp: d.code_postal_facture

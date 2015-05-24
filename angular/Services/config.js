@@ -56,43 +56,43 @@ angular.module('edison').factory('config', [function() {
     config.categoriesKV = {
         EL: {
             n: 'Electricité',
-            c: 'yellow  darken-2 black-text'
+            c: 'yellow  accent-4 black-text'
         },
         PL: {
             n: 'Plomberie',
-            c: 'blue'
+            c: 'blue white-text'
         },
         CH: {
             n: 'Chauffage',
-            c: 'red'
+            c: 'red white-text'
         },
         CL: {
             n: 'Climatisation',
-            c: ' teal darken-3'
+            c: 'teal white-text'
         },
         SR: {
             n: 'Serrurerie',
-            c: 'brown'
+            c: 'brown white-text'
         },
         VT: {
             n: 'Vitrerie',
-            c: ' green darken-3'
+            c: 'green white-text'
         },
         CR: {
             n: 'Carrelage',
-            c: ''
+            c: 'deep-purple white-text'
         },
         MN: {
             n: 'Menuiserie',
-            c: ''
+            c: 'orange white-text'
         },
         MC: {
             n: 'Maconnerie',
-            c: ''
+            c: 'blue-grey white-text'
         },
         PT: {
             n: 'Peinture',
-            c: ''
+            c: 'deep-orange white-text'
         }
     }
 

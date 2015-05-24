@@ -2,7 +2,7 @@
   "name": "EDSN",
   "version": "0.3.0",
   "engines": {
-    "iojs": "2.0.*"
+    "iojs": "2.1.*"
   },
   "scripts": {
     "start": "node app.js"
@@ -18,6 +18,8 @@
     "cookie": "^0.1.2",
     "cookie-parser": "~1.3.3",
     "cron": "^1.0.9",
+    "cron-emitter": "^0.2.2",
+    "cron-parser": "^0.6.2",
     "date-utils": "^1.2.16",
     "debug": "^2.1.3",
     "dropbox": "^0.10.3",

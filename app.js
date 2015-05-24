@@ -6,8 +6,9 @@ var http = require('http').Server(app);
 var port = (process.env.PORT || 8080);
 global.path = require('path');
 require('pretty-error').start();
+require("date-utils");
 
-var Dropbox = require("dropbox");
+
 
 var dep = require('./loadDependencies');
 global.rootPath = process.cwd();
@@ -24,14 +25,14 @@ global.sms = new edison.mobyt(edison.config.mobytID, edison.config.mobytPASS);
 global.mail = new edison.mail;
 global.document = new edison.dropbox();
 global.isWorker = false;
-
-require("date-utils");
 if (envProd ||  envDev)
   global.jobs = edison.worker.initJobQueue();
 
 global.io = require('socket.io')(http);
 var redisIO = require('socket.io-redis');
 
+
+new edison.timer();
 
 io.on('connection', function(socket) {
 

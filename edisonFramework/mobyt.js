@@ -1,3 +1,6 @@
+var MD5 = require('MD5')
+var _ = require("lodash");
+
 var Mobyt = function(user, pass) {
 
   this.user = user;
@@ -6,7 +9,7 @@ var Mobyt = function(user, pass) {
 }
 
 Mobyt.prototype.getTicket = function(params) {
-  return npm.MD5(_.reduce(params, function(total, p) {
+  return MD5(_.reduce(params, function(total, p) {
     return total += p;
   }))
 }
@@ -24,7 +27,7 @@ Mobyt.prototype.getStatus = function(params) {
         type: "notify",
         schema: 1
       }
-      f.ticket = _this.getTicket([f.user, f.id, f.type, f.schema, npm.MD5(f.pass)]);
+      f.ticket = _this.getTicket([f.user, f.id, f.type, f.schema, MD5(f.pass)]);
       requestp.post({
         url: 'http://multilevel.mobyt.fr/sms/batch-status.php',
         form: f
@@ -67,13 +70,13 @@ Mobyt.prototype.send = function(params) {
       domaine: "http://multilevel.mobyt.fr",
       return_id: "1",
     };
-    f.ticket = _this.getTicket([f.user, f.rcpt, f.sender, f.data, f.qty, npm.MD5(f.pass)])
+    f.ticket = _this.getTicket([f.user, f.rcpt, f.sender, f.data, f.qty, MD5(f.pass)])
     requestp.post({
         url: 'http://multilevel.mobyt.fr/sms/send.php',
         form: f
       })
       .then(function(response) {
-        if (_.startsWith(response, 'OK')) {
+        if (response.startsWith('OK')) {
           params.id = response.substr(3);
           resolve(params);
         } else {

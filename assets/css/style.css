@@ -72,7 +72,6 @@
 
 md-content.autocomplete {
     position: absolute;
-
     background: transparent;
     z-index: 99;
     height: 100%;
@@ -211,26 +210,46 @@ span[md-highlight-text] {
 tr.products>td {
     white-space: normal;
 }
-div.pad-paragraph{
-      padding-left: 33px;
-      padding-right: 33px;
+
+div.pad-paragraph {
+    padding-left: 33px;
+    padding-right: 33px;
 }
+
 ul>presentation {
-    margin-left:0px!important;
+    margin-left: 0px!important;
 }
-.editable-click, a.editable-click {
+
+.editable-click,
+a.editable-click {
     border-bottom: 0!important;
 }
 
-.card__actions>text-field::before{
-    display:none!important;
+.card__actions>text-field::before {
+    display: none!important;
 }
+
 .card {
-      overflow: visible!importan;
+    overflow: visible!importan;
 }
+
 .md-dialog-container {
-    z-index:9999!important;
+    z-index: 9999!important;
 }
+
 .lx-select {
-     margin-top: 8px!important;
+    margin-top: 8px!important;
+}
+
+.select-style-neutral > select {
+    cursor: pointer;
+    padding: 5px 0px;
+    width: 100%;
+    border: none;
+    box-shadow: none;
+    background-color: transparent;
+    background-image: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
 }

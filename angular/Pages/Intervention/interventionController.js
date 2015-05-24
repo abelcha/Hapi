@@ -5,7 +5,6 @@ angular.module('edison').controller('InterventionController',
         $scope.tab = tabContainer.getCurrentTab();
 
         var id = parseInt($routeParams.id);
-        console.log(user);
         if (!$scope.tab.data) {
             $scope.tab.setData(intervention.data);
             $scope.tab.data.sst = intervention.data.artisan ? intervention.data.artisan.id : 0;
@@ -42,13 +41,16 @@ angular.module('edison').controller('InterventionController',
         }
 
         $scope.addComment = function() {
-            console.log($scope.commentText)
             $scope.tab.data.comments.push({
                 login: user.data.login,
                 text: $scope.commentText,
                 date: new Date()
             })
             $scope.commentText = "";
+        }
+
+        $scope.changeCategorie = function(key) {
+            $scope.tab.data.categorie = key;
         }
 
         $scope.onFileUpload = function(file) {
@@ -73,18 +75,56 @@ angular.module('edison').controller('InterventionController',
         $scope.loadFilesList();
 
 
-        $scope.saveInter = function(options) {
-            edisonAPI.saveIntervention({
-                options: options,
-                data: $scope.tab.data
-            }).then(function(data) {
-                LxNotificationService.success("L'intervention " + data.data + " à été enregistré");
-                /*$location.url("/interventions");
-                $scope.tabs.remove($scope.tab);*/
-            }).catch(function(response) {
-                LxNotificationService.error(response.data);
-            });
+        var action = {
+            envoi: function(result) {
+                dialog.addFiles.open($scope.tab.data, $scope.files, function(text, file) {
+                    edisonAPI.envoiInter(result.data.id, {
+                        sms: text,
+                        file: file
+                    }).then(function(res) {
+                        console.log(res)
+                        LxNotificationService.success(res.data);
+                    }).catch(function(error) {
+                        console.log(error)
+                        LxNotificationService.error(error.data);
+                    });
+                })
+            },
+            annulation: function(result) {
+                edisonAPI.annulationInter(result.data.id).then(function(res) {
+                    console.log(res);
+                    LxNotificationService.success("L'intervention " + result.data.id + " à été annulé");
+                });
+            }
         }
+
+        $scope.saveInter = function(options) {
+                edisonAPI.saveIntervention({
+                    data: $scope.tab.data
+                }).then(function(result) {
+                    LxNotificationService.success("Les données de l'intervention " + result.data.id + " ont à été enregistré");
+                    if (options && options.envoi == true) {
+                        action.envoi(result);
+                    } else if (options && options.annulation) {
+                        action.annulation(result);
+                    }
+                    /*$location.url("/interventions");
+                    $scope.tabs.remove($scope.tab);*/
+                }).catch(function(error) {
+                    LxNotificationService.error(error.data);
+                });
+            }
+            /*
+                    $scope.saveInter = function(options) {
+                        if (options && options.envoi == true) {
+                            dialog.addFiles.open($scope.tab.data, $scope.files, function(files, text) {
+                                console.log(files, text);
+                            })
+                        } else {
+                            saveInter(options)
+                        }
+
+                    }*/
 
         $scope.clickOnArtisanMarker = function(event, sst) {
             $scope.tab.data.sst = sst.id;

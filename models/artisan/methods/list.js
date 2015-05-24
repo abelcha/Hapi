@@ -23,13 +23,12 @@ module.exports = function(schema) {
                     return resolve(JSON.parse(reply));
                 }
                 _this.model('artisan').find({
-                    'categories': 'PL',
                     archive: false
-                }).sort('-id').select(s).then(function(docs) {
+                }).sort('-nomSociete').select(s).then(function(docs) {
                     async.map(docs, function(e, cb) {
                         cb(null, {
                             id: e.id,
-                            n: e.nomSociete,
+                            nomSociete: e.nomSociete,
                             c: e.categories,
                             add: {
                                 lt: e.address.lt,
@@ -40,8 +39,8 @@ module.exports = function(schema) {
                         resolve(result);
                         //console.timeEnd('interList')
                         //console.log('nocache')
-                        redis.set("artisanList", JSON.stringify(result))
-                        redis.expire("artisanList", 6000)
+                       /* redis.set("artisanList", JSON.stringify(result))
+                        redis.expire("artisanList", 6000)*/
                     });
                 })
             });

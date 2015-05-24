@@ -10,6 +10,14 @@ module.exports = function(db) {
             index: true,
             default: 'APR'
         },
+        login: {
+            ajout:String,
+            envoi: String,
+            intervention: String,
+            verification: String,
+            paiementCLI: String,
+            paiementSST: String,
+        },
         telepro: String,
         comments: [
             /*
@@ -18,7 +26,10 @@ module.exports = function(db) {
         ],
         date: {
             envoi: Date,
-            ajout: Date,
+            ajout: {
+                type: Date,
+                default: Date.now()
+            },
             intervention: Date,
             verification: Date,
             paiementCLI: Date,
@@ -94,7 +105,7 @@ module.exports = function(db) {
         produits: [{
             pu: Number,
             quantite: Number,
-            title:String,
+            title: String,
             ref: String,
             desc: String
         }],
@@ -111,6 +122,6 @@ module.exports = function(db) {
         aDemarcher: Boolean,
         fournisseur: String,
         coutFourniture: Number,
-        tva:Number
+        tva: Number
     });
 }

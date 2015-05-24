@@ -41,6 +41,7 @@ angular.module('edison').controller('InterventionMapController', function($scope
     }
 
     $scope.$watch('tab.data.sst', function(id_sst) {
+        console.log("==>", id_sst)
         if (id_sst) {
             $q.all([
                 edisonAPI.getArtisan(id_sst, {
@@ -68,9 +69,10 @@ angular.module('edison').controller('InterventionMapController', function($scope
     $scope.dialog = dialog;
 
     $scope.sstAbsence = function(id) {
-        dialog.absence.open(id, function() {
-            $scope.searchArtisans();
-        })
+        if (id)
+            dialog.absence.open(id, function() {
+                $scope.searchArtisans();
+            })
     }
 
     $scope.showMap = function() {

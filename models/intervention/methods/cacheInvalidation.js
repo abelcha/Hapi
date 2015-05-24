@@ -6,7 +6,7 @@ module.exports = function(schema) {
   var selectedFields = [
     '-_id',
     'id',
-    'telepro',
+    'login',
     'status',
     'client.civilite',
     'client.nom',
@@ -67,10 +67,9 @@ module.exports = function(schema) {
     }
     if (e.status === 'ATT')
       e.status += (e.reglementSurPlace ? 'S' : 'C');
-
     return {
       fltr: getFltr(e, dateInter),
-      t: e.telepro,
+      t: e.login.ajout,
       id: e.id,
       ai: e.artisan.id,
       s: edison.config.etatsKV[e.status].n,

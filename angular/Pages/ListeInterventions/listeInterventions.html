@@ -1,7 +1,8 @@
 <div>
-    <div ng-if="recap" class="shadow-box listeInterventions">
-        <h1 style="margin-left:50%">RECAP'</h1>
-        <pie-chart ng-if="recap" data="data" options="options" height="150" width="150" style="padding-left:40px"></pie-chart>
+    <div ng-if="recap" class="shadow-box" ng-controller="statsController">
+     <canvas id="pie" class="chart chart-pie" data="data"
+  labels="labels"></canvas>
+        {{data}}
     </div>
     <br>
     <div class="shadow-box listeInterventions">

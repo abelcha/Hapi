@@ -1,7 +1,36 @@
-angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', function($mdDialog, edisonAPI) {
+angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', 'config', function($mdDialog, edisonAPI, config) {
 
 
     return {
+        addFiles: {
+            open: function(data, files, cb) {
+                $mdDialog.show({
+                    controller: function DialogController($scope, $mdDialog, config) {
+
+                        var getSMS = function() {
+                            console.log("fdp")
+                            var sms = data.id ? "OS " + data.id + ". " : "";
+                            sms += "Intervention chez " + data.client.civilite + " " +
+                                data.client.prenom + " " + data.client.nom + " au " + 
+                                data.client.address.n + " " + data.client.address.r + " " +
+                                data.client.address.cp + ", " + data.client.address.v + " le " +
+                                moment(data.date.intervention).format("LLLL") + ". ";
+                             sms += data.prixAnnonce ?  data.prixAnnonce + "€ HT. " : "Pas de prix annoncé. ";
+                             sms += "Merci de prendre rdv avec le client au " + data.client.telephone.tel1;
+                             sms += data.client.telephone.tel2 ? "ou au " + data.client.telephone.tel2 : ""
+                            return sms + ".\nEdison Services."
+                        }
+                        $scope.xfiles = files
+                        $scope.smsText = getSMS();
+                        $scope.answer = function(p, t) {
+                            $mdDialog.hide();
+                            return cb($scope.smsText, $scope.addedFile);
+                        }
+                    },
+                    templateUrl: '/Pages/Intervention/dialogs/files.html',
+                });
+            }
+        },
         editProduct: {
             open: function(produit, cb) {
                 $mdDialog.show({

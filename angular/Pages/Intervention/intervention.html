@@ -64,17 +64,31 @@
                 <br>
                 <br>
                 <div class="row" style="margin:0">
+                    <div flex-item>
+                        <div class="card">
+                            <div class="p+">
+                                <strong class="fs-headline display-block">Categorie</strong>
+                                <br>
+                                <button ng-click="changeCategorie(key);searchArtisans()" style="width: 10%;" ng-repeat="(key, value) in config.categoriesKV" class="btn--no-conflicts btn--m {{value.c}} btn--flat" lx-ripple>{{value.n}}</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <div class="row" style="margin:0">
                     <div flex-item style="width:65%;float:left" ng-controller="InterventionMapController">
                         <div class="card">
                             <div class="p+">
-                                <strong class="fs-headline display-block">Carte</strong>
-                                <span class="fs-subhead tc-black-2 display-block">Lorem Ipsum</span>
-                                <div class="fs-body-1 mt+">
-                                    <md-content ng-if="loadMap" class="autocomplete" style="margin-left: 14%;width: 70%;" layout-padding layout="column" md-input-container flex>
+                                <strong class="fs-headline display-block">
+         <button style="font-weight:900;float:left" class="btn--no-conflicts btn--m {{config.categoriesKV[inter.categorie].c}} btn--flat" lx-ripple> {{inter.categorie ? config.categoriesKV[inter.categorie].n : "Categorie"}}</button></strong>
+                               <!--  <span class="fs-subhead tc-black-2 display-block">Carte</span> -->
+                                <div class="fs-body-1 mt+" style="padding-top:10px">
+                                    <md-content ng-if="loadMap" class="autocomplete" style="margin-left: 20%;width: 70%;  margin-top: -36px;" layout-padding layout="column" md-input-container flex>
                                         <md-autocomplete class="address-autocomplete" md-selected-item-change="changeAddress(selectedAddress)" md-selected-item="selectedAddress" md-search-text="searchText" md-items="item in autocomplete.search(searchText)" md-item-text="item.description">
                                             <span md-highlight-text="searchText"> {{item.description}}</span>
                                         </md-autocomplete>
                                     </md-content>
+                                    <br>
                                     <div ng-if="!loadMap" style="height:315px;width:100%;overflow:hidden">
                                         <img ng-if="!showmap" id="static-map" style="width:100%;top: -9999px;bottom: -9999px;left: -9999px;right: -9999px;margin: auto;" ng-click="showMap()" ng-src="{{getStaticMap()}}" />
                                     </div>
@@ -82,7 +96,7 @@
                                         <directions ng-if="inter.artisan" travel-mode="DRIVING" origin="{{inter.artisan.address.lt}}, {{inter.artisan.address.lg}}" destination="{{inter.client.address.latLng}}">
                                         </directions>
                                         <marker ng-if="showInterMarker()" position="{{mapCenter.latLng}}" color="grey"></marker>
-                                        <marker ng-if="inter.client.address" ng-repeat="sst in nearestArtisans" on-click="clickOnArtisanMarker(sst.id)" position="{{sst.address.lt}}, {{sst.address.lg}}" color="{{sst.id == inter.sst ? 'blue' : 'red'}}"></marker>
+                                        <marker ng-if="inter.client.address" ng-repeat="sst in nearestArtisans" on-click="clickOnArtisanMarker(sst)" position="{{sst.address.lt}}, {{sst.address.lg}}" color="{{sst.id == inter.sst ? 'blue' : 'red'}}"></marker>
                                     </map>
                                 </div>
                                 <div class="p+">
@@ -121,8 +135,11 @@
                         <div class="card">
                             <div class="p+">
                                 <strong class="fs-headline display-block">Artisans</strong>
-                                <span class="fs-subhead tc-black-2 display-block">Lorem Ipsum</span>
-                                <div class="paragraph fs-body-1 mt+" style="max-height: 435px;overflow:scroll">
+                                <span class="fs-subhead tc-black-2 display-block select-style-neutral">
+                                   <select ng-show="inter.sst" ng-model="inter.sst" ng-options="sst.id as sst.nomSociete for sst in artisans">
+                                        </select>
+                                        <div ng-show="!inter.sst">Artisans</div></span>
+                                <div class="paragraph fs-body-1 mt+" style="height: 395px;overflow:scroll">
                                     <p>
                                         <table class="table table-condensed" style="padding:0;color:black">
                                             <tbody>
@@ -202,8 +219,8 @@
                 <div class="card">
                     <div class="p+">
                         <strong class="fs-headline display-block">Intervention</strong>
-                        <span class="fs-subhead tc-black-2 display-block">Lorem Ipsum</span>
-                        <div class="pad-paragraph paragraph fs-body-1 mt+">
+                        <span class="fs-subhead tc-black-2 display-block">Intervention</span>
+                        <div class="paragraph fs-body-1 mt+">
                             <div class="form-group">
                                 <div class="col-sm-2">
                                     <md-checkbox ng-model="inter.reglementSurPlace" aria-label="Checkbox 1">
@@ -248,17 +265,8 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-            </div>
-            <br>
-            <br>
-            <div flex-item>
-                <div class="card">
-                    <div class="p+">
-                        <strong class="fs-headline display-block">Description</strong>
-                        <span class="fs-subhead tc-black-2 display-block">Lorem Ipsum</span>
-                        <div class="pad-paragraph paragraph fs-body-1 mt+">
+                        <span class="fs-subhead tc-black-2 display-block">Details</span>
+                        <div class="paragraph fs-body-1 mt+">
                             <div class="form-group">
                                 <div class="col-sm-5">
                                     <md-input-container flex>
@@ -271,6 +279,23 @@
                                         <label>Remarques Supplémentaires</label>
                                         <textarea ng-model="inter.remarque" columns="1" md-maxlength="150" capitalize></textarea>
                                     </md-input-container>
+                                </div>
+                            </div>
+                        </div>
+                        <span class="fs-subhead tc-black-2 display-block">Fourniture</span>
+                        <div class="pad-paragraph paragraph fs-body-1 mt+">
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <div class="select-style text-field">
+                                        <select ng-model="inter.fournisseur" ng-options="frn.short_name as frn.short_name group by frn.type for frn in config.fournisseur ">
+                                        </select>
+                                        <label ng-class="{'selected' : inter.fournisseur}">Fournisseur</label>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <lx-text-field label="Cout Fourniture">
+                                        <input eurofilter ng-model="inter.coutFourniture">
+                                    </lx-text-field>
                                 </div>
                             </div>
                         </div>
@@ -338,30 +363,6 @@
                 </div>
             </div>
             <br>
-            <div flex-item>
-                <div class="card">
-                    <div class="p+">
-                        <strong class="fs-headline display-block">Fourniture</strong>
-                        <span class="fs-subhead tc-black-2 display-block">Lorem Ipsum</span>
-                        <div class="pad-paragraph paragraph fs-body-1 mt+">
-                            <div class="row">
-                                <div class="col-sm-4">
-                                    <div class="select-style text-field">
-                                        <select ng-model="inter.fournisseur" ng-options="frn.short_name as frn.short_name group by frn.type for frn in config.fournisseur ">
-                                        </select>
-                                        <label ng-class="{'selected' : inter.fournisseur}">Fournisseur</label>
-                                    </div>
-                                </div>
-                                <div class="col-sm-3">
-                                    <lx-text-field label="Cout Fourniture">
-                                        <input eurofilter ng-model="inter.coutFourniture">
-                                    </lx-text-field>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
             <br>
             <div flex-item>
                 <div class="card">
@@ -428,15 +429,17 @@
                         </div>
                     </div>
                     <div class="card__actions">
-                    <span style="float:left;width:50%">
+                        <span style="float:left;width:50%">
                         <button ng-click="previsualiseFacture()" class="btn--no-conflicts btn--m btn--black btn--flat" lx-ripple>Prévisualiser</button>
                         <button class="btn--no-conflicts btn--m btn--orange btn--flat" lx-ripple>Envoyer Devis</button>
                                                 </span>
-    
-                        <span style="float:right;width:20%">
-                             <button class="btn--no-conflicts btn--m btn--black btn--flat" lx-ripple> TOTAL : {{produits.total()}} € </button>
+                        <span>
+                        TVA: <select ng-model="inter.tva" ng-options="tva.long_name as tva.long_name for tva in config.tva">
+                            </select></span>
+                        <span style="float:right;width:25%">
+                             <button class="btn--no-conflicts btn--m btn--black btn--flat" lx-ripple> TOTAL HT : {{produits.total() | currency:''}} €  -  TTC : {{produits.total() * (inter.tva / 100 + 1) | currency:''}} €</button>
                         </span>
-                   <!--      <div class="select-style text-field" style="float:right;width:110px">
+                        <!--      <div class="select-style text-field" style="float:right;width:110px">
                             <select ng-model="inter.tva" ng-options="tva.long_name as tva.long_name for tva in config.tva">
                             </select>
                             <label ng-class="{'selected' : inter.tva}">TVA</label>
