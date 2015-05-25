@@ -505,9 +505,9 @@
         <i class="mdi mdi-checkbox-marked-circle-outline"></i>
     </button>
     <div class="fab__actions fab__actions--left">
+        <button ng-show="inter.status === 'ENV'" ng-click="saveInter({verification:true})" class="btn--no-conflicts btn--l btn--black btn--fab" lx-ripple lx-tooltip="Verifier" tooltip-position="top"><i class="mdi mdi-check-all"></i></button>
         <button ng-click="saveInter({annulation:true})" class="btn--no-conflicts btn--l btn--black btn--fab" lx-ripple lx-tooltip="Annuler" tooltip-position="top"><i class="mdi mdi-close"></i></button>
-        <button ng-click="saveInter({envoi:true})" class="btn--no-conflicts btn--l btn--black btn--fab" lx-ripple lx-tooltip="Envoyer" tooltip-position="top"><i class="mdi mdi-send"></i></button>
-        <button ng-show="inter.status === 'ATT'" ng-click="saveInter({verification:true})" class="btn--no-conflicts btn--l btn--black btn--fab" lx-ripple lx-tooltip="Verifier" tooltip-position="top"><i class="mdi mdi-check-all"></i></button>
+        <button ng-show="inter.status === 'ANN' || inter.status === 'APR' "  ng-click="saveInter({envoi:true})" class="btn--no-conflicts btn--l btn--black btn--fab" lx-ripple lx-tooltip="Envoyer" tooltip-position="top"><i class="mdi mdi-send"></i></button>
     </div>
 </div>
 </div>

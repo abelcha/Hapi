@@ -51,7 +51,7 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvid
         getIntervention: function(id, options) {
             return $http({
                 method: 'GET',
-                cache: options && options.cache,
+                cache: false,
                 url: '/api/intervention/' + id,
                 params: options ||  {}
             }).success(function(result) {
@@ -114,6 +114,13 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvid
                 method: 'GET',
                 params: options,
                 url: "/api/intervention/" + id + "/envoi"
+            });
+        },
+        verificationInter: function(id, options) {
+            return $http({
+                method: 'GET',
+                params: options,
+                url: "/api/intervention/" + id + "/verification"
             });
         },
         annulationInter: function(id) {

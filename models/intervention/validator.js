@@ -34,7 +34,6 @@ module.exports = function(schema) {
     });
 
     schema.post('save', function(doc) {
-        console.log("saved", doc)
         if (!isWorker)
             db.model('intervention').cacheActualise(doc.id);
     })

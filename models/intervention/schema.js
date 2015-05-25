@@ -13,6 +13,7 @@ module.exports = function(db) {
         login: {
             ajout:String,
             envoi: String,
+            envoiFacture:String,
             intervention: String,
             verification: String,
             paiementCLI: String,
@@ -30,6 +31,7 @@ module.exports = function(db) {
                 type: Date,
                 default: Date.now()
             },
+            envoiFacture:Date,
             intervention: Date,
             verification: Date,
             paiementCLI: Date,

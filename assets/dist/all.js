@@ -593,7 +593,7 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvid
         getIntervention: function(id, options) {
             return $http({
                 method: 'GET',
-                cache: options && options.cache,
+                cache: false,
                 url: '/api/intervention/' + id,
                 params: options ||  {}
             }).success(function(result) {
@@ -656,6 +656,13 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvid
                 method: 'GET',
                 params: options,
                 url: "/api/intervention/" + id + "/envoi"
+            });
+        },
+        verificationInter: function(id, options) {
+            return $http({
+                method: 'GET',
+                params: options,
+                url: "/api/intervention/" + id + "/verification"
             });
         },
         annulationInter: function(id) {
@@ -1820,19 +1827,31 @@ angular.module('edison').controller('InterventionController',
                         sms: text,
                         file: file
                     }).then(function(res) {
-                        console.log(res)
                         LxNotificationService.success(res.data);
+
                     }).catch(function(error) {
                         console.log(error)
                         LxNotificationService.error(error.data);
                     });
+                    $location.url("/interventions");
+                    $scope.tabs.remove($scope.tab);
                 })
             },
             annulation: function(result) {
                 edisonAPI.annulationInter(result.data.id).then(function(res) {
-                    console.log(res);
                     LxNotificationService.success("L'intervention " + result.data.id + " à été annulé");
+                    $scope.tab.data.status = "ANN"; 
                 });
+            },
+            verification: function(result) {
+                edisonAPI.verificationInter(result.data.id).then(function(res) {
+                    LxNotificationService.success("L'intervention " + result.data.id + " à été vérifié");
+
+                    $location.url("/interventions");
+                    $scope.tabs.remove($scope.tab);
+                }).catch(function(error) {
+                    LxNotificationService.error(error.data);
+                })
             }
         }
 
@@ -1845,9 +1864,13 @@ angular.module('edison').controller('InterventionController',
                         action.envoi(result);
                     } else if (options && options.annulation) {
                         action.annulation(result);
+                    } else if (options && options.verification) {
+                        action.verification(result);
+                    } else {
+                        console.log("here")
+                        $location.url("/interventions");
                     }
-                    $location.url("/interventions");
-                    $scope.tabs.remove($scope.tab);
+                    $scope.tab.setData(intervention.data);
                 }).catch(function(error) {
                     LxNotificationService.error(error.data);
                 });

@@ -14,7 +14,7 @@ module.exports = function() {
     return function(err) {
       if (res.headersSent === false) {
         console.log("error detected in route ==>", err)
-        res.status(400).send(envProd ? "Bad Request" : err);
+        res.status(400).send(typeof err === 'string' ? err : err.toString());
       }
     }
   }

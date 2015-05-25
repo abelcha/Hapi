@@ -5,6 +5,8 @@ module.exports = function(schema) {
             db.model('intervention').findOne({
                 id: id
             }).then(function(inter) {
+                if (!inter.reglementSurPlace && !inter.date.envoiFacture)
+                    reject("Veuillez envoyer la facture avant de vérifier")
                 inter.date.verification = new Date;
                 inter.login.verification = req.session.verification;
                 inter.status = "ATT";
