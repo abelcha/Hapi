@@ -31,7 +31,7 @@
                     <div class="card">
                         <div class="p+">
                             <strong class="fs-headline display-block">Informations Client</strong>
-                            <span class="fs-subhead tc-black-2 display-block">Informations Client/span>
+                            <span class="fs-subhead tc-black-2 display-block">Informations Client</span>
                             <div class="paragraph pad-paragraph fs-body-1 mt+">
                                 <div class="form-group">
                                     <div class="col-sm-2">
@@ -44,13 +44,13 @@
                                 </div>
                                 <div class="form-group">
                                     <div class="col-sm-5">
-                                        <lx-text-field label="{{inter.client.civilite === 'Soc.' ? 'Nom Representant' : 'Prénom'}}">
-                                            <input capitalize type="text" ng-model="inter.client.prenom">
+                                        <lx-text-field label="Nom">
+                                            <input capitalize type="text" ng-model="inter.client.nom">
                                         </lx-text-field>
                                     </div>
                                     <div class="col-sm-5">
-                                        <lx-text-field label="Nom">
-                                            <input capitalize type="text" ng-model="inter.client.nom">
+                                        <lx-text-field label="{{inter.client.civilite === 'Soc.' ? 'Nom Representant' : 'Prénom'}}">
+                                            <input capitalize type="text" ng-model="inter.client.prenom">
                                         </lx-text-field>
                                     </div>
                                 </div>
