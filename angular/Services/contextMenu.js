@@ -1,4 +1,4 @@
-angular.module('edison').factory('contextMenu', ['$location', 'edisonAPI', '$window', 'dialog', function($location, edisonAPI, $window, dialog) {
+angular.module('edison').factory('contextMenu', ['$location', 'edisonAPI', 'LxNotificationService', '$window', 'dialog', function($location, edisonAPI, LxNotificationService, $window, dialog) {
 
     var content = {};
 
@@ -13,9 +13,8 @@ angular.module('edison').factory('contextMenu', ['$location', 'edisonAPI', '$win
         title: "Appeler l'artisan",
         click: function(inter) {
             if (inter.artisan) {
-
-                console.log("callto:" + inter.artisan.telephone.tel1)
-                $window.open("callto:" + inter.artisan.telephone.tel1, '', 'scrollbars=1,height=100,width=100');
+                win = $window.open("callto:" + inter.artisan.telephone.tel1, "_self", "");
+                win.close();
             }
         },
         hide: function(inter) {
@@ -23,19 +22,45 @@ angular.module('edison').factory('contextMenu', ['$location', 'edisonAPI', '$win
         }
     }, {
         hidden: false,
-        title: "sms SST",
+        title: "SMS artisan",
         click: function(inter) {
             dialog.getText({
                 title: "Texte du SMS",
-                text:"\nEdison Service"
+                text: "\nEdison Service"
             }, function(text) {
                 edisonAPI.sendSMS(text, "0633138868").success(function(e) {
-                	console.log(e);
+                    console.log(e);
                 }).error(function(err) {
-                	console.log(err)
+                    console.log(err)
                 })
             })
         }
+    }, {
+        hidden: false,
+        title: "Envoyer",
+        click: function(inter) {
+            dialog.addFiles.open(inter, [], function(text, file) {
+                edisonAPI.envoiInter(inter.id, {
+                    sms: text,
+                    file: file
+                }).then(function(res) {
+                    console.log(res)
+                    LxNotificationService.success(res.data);
+                }).catch(function(error) {
+                    console.log(error)
+                    LxNotificationService.error(error.data);
+                });
+            })
+        }
+    }, {
+        hidden: false,
+        title: "Annuler",
+        click: function(inter) {
+            edisonAPI.annulationInter(inter.id).then(function(res) {
+                LxNotificationService.success("L'intervention " + inter.id + " à été annulé");
+            });
+        },
+
     }]
 
     var ContextMenu = function(page) {

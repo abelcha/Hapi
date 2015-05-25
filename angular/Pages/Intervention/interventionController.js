@@ -108,8 +108,8 @@ angular.module('edison').controller('InterventionController',
                     } else if (options && options.annulation) {
                         action.annulation(result);
                     }
-                    /*$location.url("/interventions");
-                    $scope.tabs.remove($scope.tab);*/
+                    $location.url("/interventions");
+                    $scope.tabs.remove($scope.tab);
                 }).catch(function(error) {
                     LxNotificationService.error(error.data);
                 });

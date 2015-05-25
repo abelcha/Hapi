@@ -1,6 +1,7 @@
 module.exports = function(schema) {
 
     schema.statics.annulation = function(id, req, res) {
+        console.log("lololo")
         return new Promise(function(resolve, reject) {
             db.model('intervention').findOne({
                 id: id

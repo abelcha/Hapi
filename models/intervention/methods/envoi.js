@@ -34,13 +34,14 @@ module.exports = function(schema) {
                 if (!inter.artisan.id)
                     return reject("Aucun artisan selectionné");
 
-                getSuppFile(req.query.file).then(function(suppFile) {
+                getSuppFile(req.query.file).then(function(result) {
+                    var suppFile = result ? result.data : null;
                     db.model('intervention').getOSFile(inter).then(function(osFileBuffer) {
-                        mail.sendOS(inter, osFileBuffer, suppFile.data).then(function(mail) {
+                        mail.sendOS(inter, osFileBuffer, suppFile).then(function(mail) {
                             sendSMS(req.query.sms, id, '0633138868').then(function(data) {
                                 inter.status = "ENV";
                                 inter.date.envoi = new Date();
-                                inter.save(function() {
+                                inter.save(function()  {
                                     resolve("L'intervention " + inter.id + " à été envoyé");
                                 }, reject);
                             }, reject)

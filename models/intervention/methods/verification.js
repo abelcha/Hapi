@@ -1,6 +1,6 @@
 module.exports = function(schema) {
 
-    schema.statics.annulation = function(id, req, res) {
+    schema.statics.verification = function(id, req, res) {
         return new Promise(function(resolve, reject) {
             db.model('intervention').findOne({
                 id: id
