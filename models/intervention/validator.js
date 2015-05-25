@@ -12,9 +12,9 @@ module.exports = function(schema) {
 
 
 
-    /*CARRELAGE|MENUISERIE|MACONNERIE|PEINTURE|PLOMBERIE|SERRURERIE|CLIMATISATION|CHAUFFAGE|VITRERIE|ELECTRICITE */
+    /*CARRELAGE|MENUISERIE|MACONNERIE|PEINTURE|PLOMBERIE|SERRURERIE|CLIMATISATION|CHAUFFAGE|VITRERIE|ELECTRICITE|ASSAINISSEMENT*/
     schema.path('categorie').validate(function(value) {
-        return /CR|MN|MC|PT|PL|SR|CL|CH|VT|EL/i.test(value);
+        return /CR|MN|MC|PT|PL|SR|CL|CH|VT|EL|AS/i.test(value);
     }, 'Categorie inconnue.');
 
     schema.pre('save', function(next) {

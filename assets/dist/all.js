@@ -776,42 +776,42 @@ angular.module('edison').factory('config', [function() {
 
     config.categoriesKV = {
         EL: {
+            o: 2,
             n: 'Electricité',
             c: 'yellow  accent-4 black-text'
         },
         PL: {
+            o: 0,
             n: 'Plomberie',
             c: 'blue white-text'
         },
         CH: {
+            o: 1,
             n: 'Chauffage',
             c: 'red white-text'
         },
         CL: {
+            o: 6,
             n: 'Climatisation',
             c: 'teal white-text'
         },
         SR: {
+            o: 3,
             n: 'Serrurerie',
             c: 'brown white-text'
         },
         VT: {
+            o: 4,
             n: 'Vitrerie',
             c: 'green white-text'
         },
-        CR: {
-            n: 'Carrelage',
-            c: 'deep-purple white-text'
-        },
-        MN: {
-            n: 'Menuiserie',
+        AS: {
+            o: 5,
+            n: 'Assainissement',
             c: 'orange white-text'
         },
-        MC: {
-            n: 'Maconnerie',
-            c: 'blue-grey white-text'
-        },
         PT: {
+            o: 7,
             n: 'Peinture',
             c: 'deep-orange white-text'
         }
@@ -913,6 +913,49 @@ angular.module('edison').factory('config', [function() {
         short_name: 'AUT',
         long_name: 'Autre'
     }];
+
+    config.etatsKV = {
+        ENV: {
+            n: 'Envoyé',
+            c: 'orange'
+        },
+        RGL: {
+            n: 'Reglé',
+            c: 'green'
+        },
+        PAY: {
+            n: 'Payé',
+            c: 'green accent-4'
+        },
+        ATT: {
+            n: 'Reglement En Attente',
+            c: 'purple'
+        },
+        ATTC: {
+            n: 'RC En Attente',
+            c: 'purple'
+        },
+        ATTS: {
+            n: 'RS En Attente',
+            c: 'pink darken-4'
+        },
+        APR: {
+            n: 'A Progr.',
+            c: 'blue'
+        },
+        AVR: {
+            n: 'A Vérifier',
+            c: 'brown darken-3'
+        },
+        ANN: {
+            n: 'Annuler',
+            c: 'red'
+        },
+        DEV: {
+            n: 'Devis',
+            c: 'light-blue'
+        },
+    }
 
     config.status = function(inter) {
         return {
@@ -1782,6 +1825,9 @@ angular.module('edison').controller('InterventionController',
                     return 0;
                 }
             }
+        }
+        $scope.tab.data.login = {
+            ajout:user.data.login
         }
         $scope.showMap = false;
         $scope.produits = produits.init($scope.tab.data.produits ||  []);

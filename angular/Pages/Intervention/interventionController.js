@@ -23,6 +23,9 @@ angular.module('edison').controller('InterventionController',
                 }
             }
         }
+        $scope.tab.data.login = {
+            ajout:user.data.login
+        }
         $scope.showMap = false;
         $scope.produits = produits.init($scope.tab.data.produits ||  []);
 
