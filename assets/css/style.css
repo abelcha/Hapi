@@ -241,6 +241,14 @@ a.editable-click {
     margin-top: 8px!important;
 }
 
+md-tab md-tab-label {
+    color:white!important;
+}
+md-tabs.md-default-theme md-tabs-ink-bar {
+    color:white!important;
+    background:white!important;
+}
+
 .select-style-neutral > select {
     cursor: pointer;
     padding: 5px 0px;

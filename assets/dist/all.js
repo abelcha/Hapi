@@ -2,7 +2,7 @@ angular.module('edison', ['ngMaterial', 'lumx', 'ngAnimate', 'xeditable', 'ngDia
   .config(function($mdThemingProvider) {
     $mdThemingProvider.theme('default')
       .primaryPalette('indigo')
-      .accentPalette('red');
+      .accentPalette('blue-grey');
   });
 
 
