@@ -1,4 +1,4 @@
-angular.module('edison', ['ngMaterial', 'lumx', 'ngAnimate', 'xeditable', 'ngDialog', 'btford.socket-io', 'ngFileUpload', 'chart.js', 'pickadate', 'ngRoute', 'ngResource', 'ngTable', 'ngMap'])
+angular.module('edison', ['ngMaterial', 'lumx', 'ngAnimate', 'xeditable', 'ngDialog', 'btford.socket-io', 'ngFileUpload', 'pickadate', 'ngRoute', 'ngResource', 'ngTable', 'ngMap'])
   .config(function($mdThemingProvider) {
     $mdThemingProvider.theme('default')
       .primaryPalette('indigo')
@@ -1591,6 +1591,11 @@ angular.module('edison').directive('watchWindowResize', ['$window', '$timeout', 
   }
 ]);
 
+angular.module('edison').controller('DashboardController', function(tabContainer, $location, $scope, $rootScope, interventions, artisans){
+
+	$scope.tab = tabContainer.getCurrentTab();
+	$scope.tab.setTitle('dashBoard')
+});
 angular.module('edison').controller('ArtisanController', function(tabContainer, $location, $mdSidenav, $interval, ngDialog, LxNotificationService, edisonAPI, config, $routeParams, $scope, windowDimensions, artisan) {
   $scope.config = config;
   $scope.tab = tabContainer.getCurrentTab();
@@ -1613,11 +1618,6 @@ angular.module('edison').controller('ArtisanController', function(tabContainer, 
   }
 });
 
-angular.module('edison').controller('DashboardController', function(tabContainer, $location, $scope, $rootScope, interventions, artisans){
-
-	$scope.tab = tabContainer.getCurrentTab();
-	$scope.tab.setTitle('dashBoard')
-});
 angular.module('edison').controller('InterventionMapController', function($scope, $q, $interval, $window, Address, dialog, mapAutocomplete, edisonAPI) {
     $scope.autocomplete = mapAutocomplete;
     if (!$scope.tab.data.client.address) {
