@@ -125,7 +125,6 @@ angular.module('edison').controller('InterventionController',
                         console.log("here")
                         $location.url("/interventions");
                     }
-                    $scope.tab.setData(intervention.data);
                 }).catch(function(error) {
                     LxNotificationService.error(error.data);
                 });
