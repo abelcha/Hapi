@@ -14,10 +14,11 @@ angular.module('edison').factory('mapAutocomplete', ['$q', 'Address',
                     country: 'fr'
                 }
             }, function(predictions, status) {
-                predictions.forEach(function(e) {
-                    if (e.description == input)
-                        predictions = null;
-                })
+                if (predictions)
+                    predictions.forEach(function(e) {
+                        if (e.description == input)
+                            predictions = null;
+                    })
                 deferred.resolve(predictions || []);
             });
             return deferred.promise;

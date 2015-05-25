@@ -491,53 +491,69 @@ angular.module("edison").filter('tableFilter', function() {
 angular.module('edison').factory('Address', function() {
 
 
-  var Address = function(place, copyContructor) {
-    if (place.lat && place.lng) {
-      this.lt = place.lat;
-      this.lg = place.lng;
-    } else if (copyContructor) {
-      this.getAddressProprieties(place);
-      this.streetAddress = true;
-    } else if (this.isStreetAddress(place)) {
-      this.getPlaceProprieties(place);
+    var Address = function(place, copyContructor) {
+        if (place.lat && place.lng) {
+            this.lt = place.lat;
+            this.lg = place.lng;
+        } else if (copyContructor) {
+            this.getAddressProprieties(place);
+            this.streetAddress = true;
+        } else if (this.isStreetAddress(place)) {
+            this.getPlaceProprieties(place);
+        } else if (this.isLocalityAddress(place)){
+           this.getPlaceLocalityProprieties(place);
+        }
+        if (place.geometry) {
+            this.lt = place.geometry.location.lat();
+            this.lg = place.geometry.location.lng();
+        }
+        this.latLng = this.lt + ', ' + this.lg;
+    };
+
+    Address.prototype.getPlaceLocalityProprieties = function(place) {
+      console.log(place);
+        var a = place.address_components;
+/*        this.n = a[0] && a[0].short_name;
+        this.r = a[1] && a[1].short_name;*/
+        this.cp = a[1] && a[1].short_name;
+        this.v = a[0] && a[0].short_name;
     }
-    if (place.geometry) {
-      this.lt = place.geometry.location.lat();
-      this.lg = place.geometry.location.lng();
+
+    Address.prototype.getPlaceProprieties = function(place) {
+        var a = place.address_components;
+        this.n = a[0] && a[0].short_name;
+        this.r = a[1] && a[1].short_name;
+        this.cp = a[6] && a[6].short_name;
+        this.v = a[2] && a[2].short_name;
     }
-    this.latLng = this.lt + ', ' + this.lg;
-  };
 
-  Address.prototype.getPlaceProprieties = function(place) {
-    var a = place.address_components;
-    this.n = a[0] && a[0].short_name;
-    this.r = a[1] && a[1].short_name;
-    this.cp = a[6] && a[6].short_name;
-    this.v = a[2] && a[2].short_name;
-  }
+    Address.prototype.getAddressProprieties = function(address) {
+        this.n = address.n,
+            this.r = address.r,
+            this.cp = address.cp,
+            this.v = address.v,
+            this.lt = address.lt,
+            this.lg = address.lg
+    }
 
-  Address.prototype.getAddressProprieties = function(address) {
-    this.n = address.n,
-      this.r = address.r,
-      this.cp = address.cp,
-      this.v = address.v,
-      this.lt = address.lt,
-      this.lg = address.lg
-  }
+    Address.prototype.isLocalityAddress = function(place) {
+        this.localityAddress = (place.types.indexOf("locality") >= 0);
+        return this.localityAddress;
+    }
 
-  Address.prototype.isStreetAddress = function(place) {
-    var noStreet = ["locality", "country", "postal_code", "route", "sublocality"];
-    this.streetAddress = (noStreet.indexOf(place.types[0]) < 0);
-    return (this.streetAddress);
-  }
+    Address.prototype.isStreetAddress = function(place) {
+        var noStreet = ["locality", "country", "postal_code", "route", "sublocality"];
+        this.streetAddress = (noStreet.indexOf(place.types[0]) < 0);
+        return (this.streetAddress);
+    }
 
-  Address.prototype.toString = function()  {
-    return (this.n + " " + this.r + " " + this.cp + ", " + this.v + ", France")
-  }
+    Address.prototype.toString = function()  {
+        return (this.n + " " + this.r + " " + this.cp + ", " + this.v + ", France")
+    }
 
-  return (function(place, copyContructor) {
-    return new Address(place, copyContructor);
-  })
+    return (function(place, copyContructor) {
+        return new Address(place, copyContructor);
+    })
 });
 
 angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvider', 'Upload', function($http, $location, dataProvider, Upload) {
@@ -1198,10 +1214,11 @@ angular.module('edison').factory('mapAutocomplete', ['$q', 'Address',
                     country: 'fr'
                 }
             }, function(predictions, status) {
-                predictions.forEach(function(e) {
-                    if (e.description == input)
-                        predictions = null;
-                })
+                if (predictions)
+                    predictions.forEach(function(e) {
+                        if (e.description == input)
+                            predictions = null;
+                    })
                 deferred.resolve(predictions || []);
             });
             return deferred.promise;
@@ -1682,9 +1699,7 @@ angular.module('edison').controller('InterventionMapController', function($scope
         mapAutocomplete.getPlaceAddress(place).then(function(addr)  {
                 $scope.zoom = 12;
                 $scope.mapCenter = addr;
-                if (addr.streetAddress) {
-                    $scope.tab.data.client.address = addr;
-                }
+                $scope.tab.data.client.address = addr;
                 $scope.searchArtisans();
             },
             function(err) {

@@ -20,7 +20,7 @@ module.exports = {
     return new Promise(function(resolve, reject) {
       var job = jobs.create(options.name, options);
       job.on('complete', resolve).on('failed', reject)
-      job.removeOnComplete(true).ttl(100000).save()
+      job.removeOnComplete(true).ttl(600000).save()
     })
   }
 }

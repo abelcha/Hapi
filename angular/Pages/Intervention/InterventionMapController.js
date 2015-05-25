@@ -30,9 +30,7 @@ angular.module('edison').controller('InterventionMapController', function($scope
         mapAutocomplete.getPlaceAddress(place).then(function(addr)  {
                 $scope.zoom = 12;
                 $scope.mapCenter = addr;
-                if (addr.streetAddress) {
-                    $scope.tab.data.client.address = addr;
-                }
+                $scope.tab.data.client.address = addr;
                 $scope.searchArtisans();
             },
             function(err) {
