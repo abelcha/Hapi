@@ -1,4 +1,4 @@
-angular.module('edison').controller('InterventionsController', function(tabContainer, $window, edisonAPI, dataProvider, $routeParams, $location, $scope, $q, $rootScope, $filter, config, ngTableParams, interventions) {
+angular.module('edison').controller('InterventionsController', function(tabContainer, $window, contextMenu, edisonAPI, dataProvider, $routeParams, $location, $scope, $q, $rootScope, $filter, config, ngTableParams, interventions) {
     $scope.tab = tabContainer.getCurrentTab();
 
     $scope.recap = $routeParams.artisanID;
@@ -42,16 +42,33 @@ angular.module('edison').controller('InterventionsController', function(tabConta
         $scope.tableParams.reload();
     })
 
+    $scope.contextMenu = contextMenu('interventionList')
+
+
     $scope.getStaticMap = function(inter) {
         q = "?width=500&height=250&precision=0&zoom=10&origin=" + inter.client.address.lt + ", " + inter.client.address.lg;
         return "/api/map/staticDirections" + q;
     }
+    $scope.rowRightClick = function($event, inter) {
+        $scope.contextMenu.setPosition($event.pageX, $event.pageY)
+        $scope.contextMenu.setData(inter);
+        $scope.contextMenu.open();
+        edisonAPI.getIntervention(inter.id, {
+                extend: true
+            })
+            .then(function(resp) {
+                $scope.contextMenu.setData(resp.data);
+            })
+    }
 
     $scope.rowClick = function($event, inter, doubleClick) {
-        if (doubleClick) {
-            $location.url('/intervention/' + inter.id)
+        if ($scope.contextMenu.active)
+            return $scope.contextMenu.close();
+        /*        if (doubleClick) {
+                  return   
 
-        } else if ($event.metaKey || $event.ctrlKey) {
+                } */
+        if ($event.metaKey || $event.ctrlKey) {
             tabContainer.addTab('/intervention/' + inter.id, {
                 title: ('#' + inter.id),
                 setFocus: false,

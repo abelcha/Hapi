@@ -289,6 +289,20 @@ angular.module('edison').directive('newlines', function() {
 })
 
 
+angular.module('edison').directive('ngRightClick', function($parse) {
+    return function(scope, element, attrs) {
+        var fn = $parse(attrs.ngRightClick);
+        element.bind('contextmenu', function(event) {
+            scope.$apply(function() {
+                event.preventDefault();
+                fn(scope, {
+                    $event: event
+                });
+            });
+        });
+    };
+});
+
 angular.module('edison').directive('sglclick', ['$parse', function($parse) {
     return {
         restrict: 'A',
@@ -663,6 +677,16 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvid
                 params: options
             })
         },
+        sendSMS: function(text, telephone) {
+            return $http({
+                method: 'GET',
+                url: '/api/sms/send',
+                params: {
+                    to: telephone,
+                    text: text
+                }
+            })
+        },
         getUser: function(id_sst) {
             return $http({
                 method: 'GET',
@@ -876,6 +900,88 @@ angular.module('edison').factory('config', [function() {
 
 }]);
 
+angular.module('edison').factory('contextMenu', ['$location', 'edisonAPI', '$window', 'dialog', function($location, edisonAPI, $window, dialog) {
+
+    var content = {};
+
+    content.interventionList = [{
+        hidden: false,
+        title: 'Ouvrir Fiche',
+        click: function(inter) {
+            $location.url('/intervention/' + inter.id)
+        }
+    }, {
+        hidden: false,
+        title: "Appeler l'artisan",
+        click: function(inter) {
+            if (inter.artisan) {
+
+                console.log("callto:" + inter.artisan.telephone.tel1)
+                $window.open("callto:" + inter.artisan.telephone.tel1, '', 'scrollbars=1,height=100,width=100');
+            }
+        },
+        hide: function(inter) {
+            return !inter.ai
+        }
+    }, {
+        hidden: false,
+        title: "sms SST",
+        click: function(inter) {
+            dialog.getText({
+                title: "Texte du SMS",
+                text:"\nEdison Service"
+            }, function(text) {
+                edisonAPI.sendSMS(text, "0633138868").success(function(e) {
+                	console.log(e);
+                }).error(function(err) {
+                	console.log(err)
+                })
+            })
+        }
+    }]
+
+    var ContextMenu = function(page) {
+        this.content = content[page];
+    }
+
+    ContextMenu.prototype.setData = function(data) {
+        this.data = data;
+    }
+
+    ContextMenu.prototype.setPosition = function(x, y) {
+        this.style.left = (x - 60) + "px";
+        this.style.top = y + "px";
+    }
+
+    ContextMenu.prototype.active = false;
+
+    ContextMenu.prototype.open = function() {
+        var _this = this;
+        this.content.forEach(function(e) {
+            e.hidden = e.hide && e.hide(_this.data);
+        })
+        this.style.display = "block";
+        this.active = true;
+    }
+
+    ContextMenu.prototype.close = function() {
+        this.style.display = "none";
+        this.active = false;
+
+    }
+
+    ContextMenu.prototype.style = {
+        left: 0,
+        top: 0,
+        display: "none"
+    }
+
+    return function(page) {
+        return new ContextMenu(page);
+    }
+
+}]);
+
 angular.module('edison').factory('dataProvider', ['socket', '$rootScope', 'config', '_', function(socket, $rootScope, config, _) {
 
   var dataProvider = function() {
@@ -930,6 +1036,18 @@ angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', 'config', 
 
 
     return {
+        getText : function(options, cb) {
+            $mdDialog.show({
+                controller: function DialogController($scope, $mdDialog, config) {
+                    $scope.options = options;
+                    $scope.answer = function() {
+                        $mdDialog.hide();
+                        return cb($scope.options.text);
+                    }
+                },
+                templateUrl: '/DialogTemplates/text.html',
+            });
+        },
         addFiles: {
             open: function(data, files, cb) {
                 $mdDialog.show({
@@ -939,13 +1057,13 @@ angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', 'config', 
                             console.log("fdp")
                             var sms = data.id ? "OS " + data.id + ". " : "";
                             sms += "Intervention chez " + data.client.civilite + " " +
-                                data.client.prenom + " " + data.client.nom + " au " + 
+                                data.client.prenom + " " + data.client.nom + " au " +
                                 data.client.address.n + " " + data.client.address.r + " " +
                                 data.client.address.cp + ", " + data.client.address.v + " le " +
                                 moment(data.date.intervention).format("LLLL") + ". ";
-                             sms += data.prixAnnonce ?  data.prixAnnonce + "€ HT. " : "Pas de prix annoncé. ";
-                             sms += "Merci de prendre rdv avec le client au " + data.client.telephone.tel1;
-                             sms += data.client.telephone.tel2 ? "ou au " + data.client.telephone.tel2 : ""
+                            sms += data.prixAnnonce ? data.prixAnnonce + "€ HT. " : "Pas de prix annoncé. ";
+                            sms += "Merci de prendre rdv avec le client au " + data.client.telephone.tel1;
+                            sms += data.client.telephone.tel2 ? "ou au " + data.client.telephone.tel2 : ""
                             return sms + ".\nEdison Services."
                         }
                         $scope.xfiles = files
@@ -955,7 +1073,7 @@ angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', 'config', 
                             return cb($scope.smsText, $scope.addedFile);
                         }
                     },
-                    templateUrl: '/Pages/Intervention/dialogs/files.html',
+                    templateUrl: '/DialogTemplates/files.html',
                 });
             }
         },
@@ -970,7 +1088,7 @@ angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', 'config', 
                             return cb(p);
                         }
                     },
-                    templateUrl: '/Pages/Intervention/dialogs/edit.html',
+                    templateUrl: '/DialogTemplates/edit.html',
                 });
             }
         },
@@ -1018,7 +1136,7 @@ angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', 'config', 
                             }).success(cb)
                         };
                     },
-                    templateUrl: '/Pages/Intervention/dialogs/absence.html',
+                    templateUrl: '/DialogTemplates/absence.html',
                 });
             }
         }
@@ -1745,7 +1863,7 @@ angular.module('edison').controller('statsController', function($scope) {
   $scope.data = [300, 500, 100];
 });
 
-angular.module('edison').controller('InterventionsController', function(tabContainer, $window, edisonAPI, dataProvider, $routeParams, $location, $scope, $q, $rootScope, $filter, config, ngTableParams, interventions) {
+angular.module('edison').controller('InterventionsController', function(tabContainer, $window, contextMenu, edisonAPI, dataProvider, $routeParams, $location, $scope, $q, $rootScope, $filter, config, ngTableParams, interventions) {
     $scope.tab = tabContainer.getCurrentTab();
 
     $scope.recap = $routeParams.artisanID;
@@ -1789,16 +1907,33 @@ angular.module('edison').controller('InterventionsController', function(tabConta
         $scope.tableParams.reload();
     })
 
+    $scope.contextMenu = contextMenu('interventionList')
+
+
     $scope.getStaticMap = function(inter) {
         q = "?width=500&height=250&precision=0&zoom=10&origin=" + inter.client.address.lt + ", " + inter.client.address.lg;
         return "/api/map/staticDirections" + q;
     }
+    $scope.rowRightClick = function($event, inter) {
+        $scope.contextMenu.setPosition($event.pageX, $event.pageY)
+        $scope.contextMenu.setData(inter);
+        $scope.contextMenu.open();
+        edisonAPI.getIntervention(inter.id, {
+                extend: true
+            })
+            .then(function(resp) {
+                $scope.contextMenu.setData(resp.data);
+            })
+    }
 
     $scope.rowClick = function($event, inter, doubleClick) {
-        if (doubleClick) {
-            $location.url('/intervention/' + inter.id)
+        if ($scope.contextMenu.active)
+            return $scope.contextMenu.close();
+        /*        if (doubleClick) {
+                  return   
 
-        } else if ($event.metaKey || $event.ctrlKey) {
+                } */
+        if ($event.metaKey || $event.ctrlKey) {
             tabContainer.addTab('/intervention/' + inter.id, {
                 title: ('#' + inter.id),
                 setFocus: false,

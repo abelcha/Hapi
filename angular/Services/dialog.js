@@ -2,6 +2,18 @@ angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', 'config', 
 
 
     return {
+        getText : function(options, cb) {
+            $mdDialog.show({
+                controller: function DialogController($scope, $mdDialog, config) {
+                    $scope.options = options;
+                    $scope.answer = function() {
+                        $mdDialog.hide();
+                        return cb($scope.options.text);
+                    }
+                },
+                templateUrl: '/DialogTemplates/text.html',
+            });
+        },
         addFiles: {
             open: function(data, files, cb) {
                 $mdDialog.show({
@@ -11,13 +23,13 @@ angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', 'config', 
                             console.log("fdp")
                             var sms = data.id ? "OS " + data.id + ". " : "";
                             sms += "Intervention chez " + data.client.civilite + " " +
-                                data.client.prenom + " " + data.client.nom + " au " + 
+                                data.client.prenom + " " + data.client.nom + " au " +
                                 data.client.address.n + " " + data.client.address.r + " " +
                                 data.client.address.cp + ", " + data.client.address.v + " le " +
                                 moment(data.date.intervention).format("LLLL") + ". ";
-                             sms += data.prixAnnonce ?  data.prixAnnonce + "€ HT. " : "Pas de prix annoncé. ";
-                             sms += "Merci de prendre rdv avec le client au " + data.client.telephone.tel1;
-                             sms += data.client.telephone.tel2 ? "ou au " + data.client.telephone.tel2 : ""
+                            sms += data.prixAnnonce ? data.prixAnnonce + "€ HT. " : "Pas de prix annoncé. ";
+                            sms += "Merci de prendre rdv avec le client au " + data.client.telephone.tel1;
+                            sms += data.client.telephone.tel2 ? "ou au " + data.client.telephone.tel2 : ""
                             return sms + ".\nEdison Services."
                         }
                         $scope.xfiles = files
@@ -27,7 +39,7 @@ angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', 'config', 
                             return cb($scope.smsText, $scope.addedFile);
                         }
                     },
-                    templateUrl: '/Pages/Intervention/dialogs/files.html',
+                    templateUrl: '/DialogTemplates/files.html',
                 });
             }
         },
@@ -42,7 +54,7 @@ angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', 'config', 
                             return cb(p);
                         }
                     },
-                    templateUrl: '/Pages/Intervention/dialogs/edit.html',
+                    templateUrl: '/DialogTemplates/edit.html',
                 });
             }
         },
@@ -90,7 +102,7 @@ angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', 'config', 
                             }).success(cb)
                         };
                     },
-                    templateUrl: '/Pages/Intervention/dialogs/absence.html',
+                    templateUrl: '/DialogTemplates/absence.html',
                 });
             }
         }

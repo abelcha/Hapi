@@ -135,6 +135,16 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvid
                 params: options
             })
         },
+        sendSMS: function(text, telephone) {
+            return $http({
+                method: 'GET',
+                url: '/api/sms/send',
+                params: {
+                    to: telephone,
+                    text: text
+                }
+            })
+        },
         getUser: function(id_sst) {
             return $http({
                 method: 'GET',
