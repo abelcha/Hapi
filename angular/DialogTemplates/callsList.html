@@ -1,0 +1,50 @@
+<md-dialog aria-label="Mango (Fruit)" style="  width: 78%;height: 500px;">
+    <md-dialog-content class="sticky-container" style="height: 100%;">
+        <md-subheader class="md-sticky-no-effect">Liste des Appels</md-subheader>
+        <div style="padding:15px">
+            <div style="max-height: 370px;overflow:scroll" >
+                <div class="data-table-container">
+                    <table class="data-table data-table--has-primary data-table--has-secondary">
+                        <thead>
+                            <tr>
+                                <th>Status</th>
+                                <th>Login</th>
+                                <th>Date</th>
+                                <th>Durée</th>
+                                <th>Description</th>
+                            </tr>
+                            <tr>
+                                <td colspan="5" class="divider divider--dark"></td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="data-table__clickable-row" ng-repeat="call in sst.calls">
+                                <td>
+                                    <i ng-show="call.response == true" class="icon icon--l icon--grey icon--circled mdi mdi-phone green"></i>
+                                    <i ng-show="call.response == false" class="icon icon--l icon--grey icon--circled mdi mdi-phone-hangup red"></i>
+                                </td>
+                                <td>
+                                    <span>{{call.login}}</span>
+                                </td>
+                                <td>
+                                    <span>{{call.date| date:"dd/MM à HH:mm" }}</span>
+                                </td>
+                                <td>
+                                    <span>{{call.duration}} Sec.</span>
+                                </td>
+                                <td>
+                                    <span>{{call.description}}</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </md-dialog-content>
+    <div class="md-actions" layout="row">
+        <md-button ng-click="answer();" class="md-primary">
+            OK
+        </md-button>
+    </div>
+</md-dialog>

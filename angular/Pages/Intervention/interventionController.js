@@ -1,9 +1,9 @@
 angular.module('edison').controller('InterventionController',
-    function($window, $scope, $location, $routeParams, ngDialog, dialog, LxNotificationService, Upload, tabContainer, edisonAPI, produits, config, intervention, artisans, user) {
+    function($window, $scope, $location, $routeParams, ngDialog, dialog, LxNotificationService, Upload, tabContainer, edisonAPI, mapAutocomplete, produits, config, intervention, artisans, user) {
         $scope.artisans = artisans.data;
         $scope.config = config;
+        $scope.autocomplete = mapAutocomplete;
         $scope.tab = tabContainer.getCurrentTab();
-
         var id = parseInt($routeParams.id);
         if (!$scope.tab.data) {
             $scope.tab.setData(intervention.data);
@@ -24,11 +24,40 @@ angular.module('edison').controller('InterventionController',
             }
         }
         $scope.tab.data.login = {
-            ajout:user.data.login
+            ajout: user.data.login
         }
         $scope.showMap = false;
         $scope.produits = produits.init($scope.tab.data.produits ||  []);
 
+
+        $scope.callsList = function(sst) {
+            dialog.callsList(sst);
+        }
+
+        $scope.changeAddressFacture = function(place) {
+             mapAutocomplete.getPlaceAddress(place).then(function(addr)  {
+               $scope.tab.data.facture.address = addr;
+             });
+        }
+
+        $scope.call = function(sst) {
+            var now = Date.now();
+            var x = $window.open('callto:' + sst.telephone.tel1, '_self', false)
+            dialog.choiceText({
+                title: 'Nouvel Appel',
+            }, function(response, text) {
+                edisonAPI.call({
+                    date: now,
+                    to: sst.telephone.tel1,
+                    link: sst.id,
+                    origin: $scope.tab.data.id || $scope.tab.data.tmpID,
+                    description: text,
+                    response: response
+                }).success(function(resp) {
+                    sst.calls.unshift(resp)
+                })
+            })
+        }
 
         $scope.addProduct = function(prod) {
             produits.add(prod);
@@ -98,7 +127,7 @@ angular.module('edison').controller('InterventionController',
             annulation: function(result) {
                 edisonAPI.annulationInter(result.data.id).then(function(res) {
                     LxNotificationService.success("L'intervention " + result.data.id + " à été annulé");
-                    $scope.tab.data.status = "ANN"; 
+                    $scope.tab.data.status = "ANN";
                 });
             },
             verification: function(result) {
@@ -125,8 +154,8 @@ angular.module('edison').controller('InterventionController',
                     } else if (options && options.verification) {
                         action.verification(result);
                     } else {
-                        console.log("here")
                         $location.url("/interventions");
+                        tabContainer.remove($scope.tab)
                     }
                 }).catch(function(error) {
                     LxNotificationService.error(error.data);

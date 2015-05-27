@@ -2,7 +2,30 @@ angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', 'config', 
 
 
     return {
-        getText : function(options, cb) {
+        callsList: function(sst) {
+            $mdDialog.show({
+                controller: function DialogController($scope, $mdDialog, config) {
+                    $scope.sst = sst;
+                    $scope.answer = function() {
+                        $mdDialog.hide();
+                    }
+                },
+                templateUrl: '/DialogTemplates/callsList.html',
+            });
+        },
+        choiceText: function(options, cb) {
+            $mdDialog.show({
+                controller: function DialogController($scope, $mdDialog, config) {
+                    $scope.options = options;
+                    $scope.answer = function(resp, text) {
+                        $mdDialog.hide();
+                        return cb(resp, text);
+                    }
+                },
+                templateUrl: '/DialogTemplates/choiceText.html',
+            });
+        },
+        getText: function(options, cb) {
             $mdDialog.show({
                 controller: function DialogController($scope, $mdDialog, config) {
                     $scope.options = options;
@@ -20,7 +43,6 @@ angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', 'config', 
                     controller: function DialogController($scope, $mdDialog, config) {
 
                         var getSMS = function() {
-                            console.log("fdp")
                             var sms = data.id ? "OS " + data.id + ". " : "";
                             sms += "Intervention chez " + data.client.civilite + " " +
                                 data.client.prenom + " " + data.client.nom + " au " +

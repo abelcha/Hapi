@@ -2,19 +2,19 @@ var gulp = require('gulp');
 
 // Include Our Plugins
 var concat = require('gulp-concat');
-var uglify = require('gulp-uglifyjs');
 var rename = require('gulp-rename');
+var sourcemaps = require('gulp-sourcemaps');
+var babel = require('gulp-babel');
 var minifyCSS = require('gulp-minify-css');
 
 // Concatenate & Minify JS
 gulp.task('scripts', function() {
 	return gulp.src(['angular/*.js', 'angular/*/*.js', 'angular/*/*/*.js'])
-		.pipe(concat('all.js'))
-		.pipe(gulp.dest('assets/dist'))
-		.pipe(uglify('all.min.js', {
-			mangle: false
-		}))
-		.pipe(gulp.dest('assets/dist'));
+        .pipe(sourcemaps.init())
+        //.pipe(babel())
+        .pipe(concat('all.js'))
+        .pipe(sourcemaps.write('./assets/'))
+        .pipe(gulp.dest('assets/dist'));
 });
 
  

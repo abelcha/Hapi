@@ -1,0 +1,19 @@
+<md-dialog aria-label="Mango (Fruit)" style="  width: 48%;height: 35%;">
+    <md-dialog-content class="sticky-container" style="height: 100%;">
+        <md-subheader class="md-sticky-no-effect">Editer ligne</md-subheader>
+        <div style="padding:15px">
+            <md-input-container flex>
+                <label>Description de l'appel</label>
+                <textarea ng-model="text" columns="4"></textarea>
+            </md-input-container>
+        </div>
+    </md-dialog-content>
+    <div class="md-actions" layout="row">
+        <md-button ng-click="answer(false, text);" class="md-primary">
+            Pas de réponse
+        </md-button>
+        <md-button ng-click="answer(true, text);" class="md-primary">
+            Réponse
+        </md-button>
+    </div>
+</md-dialog>

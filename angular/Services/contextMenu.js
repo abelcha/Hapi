@@ -14,7 +14,7 @@ angular.module('edison').factory('contextMenu', ['$location', 'edisonAPI', 'LxNo
         click: function(inter) {
             if (inter.artisan) {
                 win = $window.open("callto:" + inter.artisan.telephone.tel1, "_self", "");
-                win.close();
+                //  win.close();
             }
         },
         hide: function(inter) {
@@ -34,6 +34,9 @@ angular.module('edison').factory('contextMenu', ['$location', 'edisonAPI', 'LxNo
                     console.log(err)
                 })
             })
+        },
+        hide: function(inter) {
+            return !inter.ai
         }
     }, {
         hidden: false,
@@ -72,8 +75,8 @@ angular.module('edison').factory('contextMenu', ['$location', 'edisonAPI', 'LxNo
     }
 
     ContextMenu.prototype.setPosition = function(x, y) {
-        this.style.left = (x - 60) + "px";
-        this.style.top = y + "px";
+        this.style.left = (x - 60);
+        this.style.top = y;
     }
 
     ContextMenu.prototype.active = false;

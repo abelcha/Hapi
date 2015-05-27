@@ -48,9 +48,11 @@ angular.module('edison').controller('InterventionMapController', function($scope
                 edisonAPI.getArtisanStats(id_sst, {
                     cache: true
                 }),
+                edisonAPI.getCalls($scope.tab.data.id || $scope.tab.data.tmpID, id_sst)
             ]).then(function(result)  {
                 $scope.tab.data.artisan = result[0].data;
                 $scope.tab.data.artisan.stats = result[1].data;
+                $scope.tab.data.artisan.calls = result[2].data;
                 if (result[0].data.address) {
                     edisonAPI.getDistance({
                             origin: result[0].data.address.lt + ", " + result[0].data.address.lg,

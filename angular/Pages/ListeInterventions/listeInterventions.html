@@ -7,7 +7,7 @@
     <div class="shadow-box listeInterventions">
         <table style="background:white;" ng-table="tableParams" class="table table-bordered table-hover table-hover table-striped" id="table-list" show-filter="true">
             <tbody id="tbody-list">
-                <tr data-id="{{inter.id}}" ng-repeat-start="inter in $data" ng-right-click="rowRightClick($event, inter)" ng-click="rowClick($event, inter, false)" ng-dblclick="rowClick($event, inter, true)" ng-class="{warning : isInSelection(inter.i)}">
+                <tr data-id="{{inter.id}}" ng-repeat-start="inter in $data" ng-right-click="rowRightClick($event, inter)" ng-click="rowClick($event, inter, false)" ng-dblclick="rowClick($event, inter, true)" ng-class="{success : contextMenu.active && contextMenu.data.id === inter.id}">
                     <td data-title="'Os'" sortable="'id'" filter="{ 'id': 'text' }">
                         <strong>{{inter.id}}</strong>
                     </td>

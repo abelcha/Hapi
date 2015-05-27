@@ -152,6 +152,23 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvid
                 }
             })
         },
+        getCalls: function(id, sst) {
+            return $http({
+                method: 'GET',
+                url: '/api/calls/get',
+                params: {
+                    link: sst,
+                    origin: id
+                }
+            })
+        },
+        call: function(params) {
+            return $http({
+                method: 'GET',
+                url: '/api/calls/add',
+                params: params
+            })
+        },
         getUser: function(id_sst) {
             return $http({
                 method: 'GET',

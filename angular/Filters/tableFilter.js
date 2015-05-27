@@ -25,7 +25,7 @@ angular.module("edison").filter('tableFilter', function() {
       fltr[x] = cleanString(fltr[x]);
     }
 
-    for (k in data) {
+    for (var k in data) {
       if (data[k].id) {
         var psh = true;
         for (x in fltr) {
@@ -39,7 +39,6 @@ angular.module("edison").filter('tableFilter', function() {
           rtn.push(data[k]);
       }
     }
-    console.timeEnd("lol")
     return rtn;
   }
 });
