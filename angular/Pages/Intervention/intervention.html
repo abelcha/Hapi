@@ -161,10 +161,9 @@
                             </div>
                             <div class="card__actions" style="border-bottom: 2px solid rgba(0, 0, 0, .12);">
                                 <button ng-click="call(inter.artisan)" class="btn--no-conflicts btn--m btn--black btn--flat" lx-ripple>Appeler</button>
-                                <button class="btn--no-conflicts btn--m btn--blue btn--flat" lx-ripple>SMS</button>
-                                <a href="/artisan/{{inter.artisan.id}}/recap">
-                                    <button class="btn--no-conflicts btn--m btn--orange btn--flat" lx-ripple>Recap'</button>
-                                </a>
+                                <button class="btn--no-conflicts btn--m btn--blue btn--flat" lx-ripple ng-click="sms('inter.artisan')">SMS</button>
+                                    <button class="btn--no-conflicts btn--m btn--orange btn--flat" 
+                                    ng-click="recap(inter.artisan)" lx-ripple>Recap'</button>
                                 <a href="/artisan/{{inter.artisan.id}}">
                                     <button class="btn--no-conflicts btn--m btn--purple btn--flat" lx-ripple>Fiche</button>
                                 </a>
@@ -180,7 +179,7 @@
                                    <select ng-show="inter.sst" ng-model="inter.sst" ng-options="sst.id as sst.nomSociete for sst in artisans">
                                         </select>
                                         <div ng-show="!inter.sst">Artisans</div></span>
-                                <div class="paragraph fs-body-1 mt+" style="height: 410px;overflow:scroll">
+                                <div class="paragraph fs-body-1 mt+" style="height: 379px;overflow:scroll">
                                     <p>
                                         <table class="table table-condensed" style="padding:0;color:black">
                                             <tbody>

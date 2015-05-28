@@ -719,6 +719,12 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvid
                 }
             })
         },
+        lastInters: function(id) {
+            return $http({
+                method: 'GET',
+                url: '/api/artisan/' + id + '/lastInters',
+            })
+        },
         call: function(params) {
             return $http({
                 method: 'GET',
@@ -1158,6 +1164,17 @@ angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', 'config', 
 
 
     return {
+        recap:function(inters) {
+            $mdDialog.show({
+                controller: function DialogController($scope, $mdDialog, config) {
+                    $scope.inters = inters;
+                    $scope.answer = function() {
+                        $mdDialog.hide();
+                    }
+                },
+                templateUrl: '/DialogTemplates/recapList.html',
+            });
+        },
         callsList: function(sst) {
             $mdDialog.show({
                 controller: function DialogController($scope, $mdDialog, config) {
@@ -1893,11 +1910,26 @@ angular.module('edison').controller('InterventionController',
         }
 
         $scope.changeAddressFacture = function(place) {
-             mapAutocomplete.getPlaceAddress(place).then(function(addr)  {
-               $scope.tab.data.facture.address = addr;
-             });
+            mapAutocomplete.getPlaceAddress(place).then(function(addr)  {
+                $scope.tab.data.facture.address = addr;
+            });
         }
-
+        $scope.sms = function(sst) {
+            dialog.getText({
+                title: "Texte du SMS",
+                text: "\nEdison Service"
+            }, function(text) {
+                edisonAPI.sendSMS(text, "0633138868").success(function(e) {
+                    console.log(e);
+                }).error(function(err) {
+                    console.log(err)
+                })
+            })
+        }
+        $scope.recap = function(sst) {
+            edisonAPI.lastInters(sst.id)
+                .success(dialog.recap);
+        }
         $scope.call = function(sst) {
             var now = Date.now();
             var x = $window.open('callto:' + sst.telephone.tel1, '_self', false)

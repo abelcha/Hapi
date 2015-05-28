@@ -162,6 +162,12 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvid
                 }
             })
         },
+        lastInters: function(id) {
+            return $http({
+                method: 'GET',
+                url: '/api/artisan/' + id + '/lastInters',
+            })
+        },
         call: function(params) {
             return $http({
                 method: 'GET',

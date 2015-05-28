@@ -35,11 +35,26 @@ angular.module('edison').controller('InterventionController',
         }
 
         $scope.changeAddressFacture = function(place) {
-             mapAutocomplete.getPlaceAddress(place).then(function(addr)  {
-               $scope.tab.data.facture.address = addr;
-             });
+            mapAutocomplete.getPlaceAddress(place).then(function(addr)  {
+                $scope.tab.data.facture.address = addr;
+            });
         }
-
+        $scope.sms = function(sst) {
+            dialog.getText({
+                title: "Texte du SMS",
+                text: "\nEdison Service"
+            }, function(text) {
+                edisonAPI.sendSMS(text, "0633138868").success(function(e) {
+                    console.log(e);
+                }).error(function(err) {
+                    console.log(err)
+                })
+            })
+        }
+        $scope.recap = function(sst) {
+            edisonAPI.lastInters(sst.id)
+                .success(dialog.recap);
+        }
         $scope.call = function(sst) {
             var now = Date.now();
             var x = $window.open('callto:' + sst.telephone.tel1, '_self', false)

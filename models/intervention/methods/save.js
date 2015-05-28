@@ -27,19 +27,19 @@ module.exports = function(schema) {
     }
 
     var createInter = function(data) {
-        data.login = {
-            ajout: req.session.login
-        }
         return new Promise(function(resolve, reject) {
             var inter = db.model('intervention')(data);
             inter.save().then(function(doc) {
                 resolve(doc);
                 db.model('document').changeLink({
-                        oldID: data.tmpID,
-                        newID: doc.id,
-                        model: 'intervention'
-                    })
-                    .then(console.log, console.log);
+                    oldID: data.tmpID,
+                    newID: doc.id,
+                    model: 'intervention'
+                });
+                db.model('calls').changeLink({
+                    oldID: data.tmpID,
+                    newID: doc.id,
+                })
             }, dbError(reject))
         })
     }
@@ -48,7 +48,9 @@ module.exports = function(schema) {
 
     schema.statics.save = function(req, res) {
         var data = JSON.parse(req.query.data);
-
+        data.login = {
+            ajout: req.session.login
+        }
         return new Promise(function(resolve, reject) {
             var saveData = data.id ? updateInter(data) : createInter(data);
             saveData.then(function(doc) {

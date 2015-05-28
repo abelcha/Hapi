@@ -35,6 +35,6 @@ module.exports = function(schema) {
 
     schema.post('save', function(doc) {
         if (!isWorker)
-            db.model('intervention').cacheActualise(doc.id);
+            db.model('intervention').cacheActualise(doc);
     })
 }

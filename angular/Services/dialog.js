@@ -2,6 +2,17 @@ angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', 'config', 
 
 
     return {
+        recap:function(inters) {
+            $mdDialog.show({
+                controller: function DialogController($scope, $mdDialog, config) {
+                    $scope.inters = inters;
+                    $scope.answer = function() {
+                        $mdDialog.hide();
+                    }
+                },
+                templateUrl: '/DialogTemplates/recapList.html',
+            });
+        },
         callsList: function(sst) {
             $mdDialog.show({
                 controller: function DialogController($scope, $mdDialog, config) {
