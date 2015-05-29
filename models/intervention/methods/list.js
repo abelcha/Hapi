@@ -2,8 +2,6 @@
 
 module.exports = function(schema) {
 
-
-
   schema.statics.list = function(req, res) {
 
     var reloadCache = (req && req.query && req.query.cache);
@@ -17,7 +15,6 @@ module.exports = function(schema) {
     }
 
     var getWebCache = function(resolve, reject) {
-      console.log("webcache")
       return db.model('intervention').cacheReload().then(resolve, reject);
     }
 

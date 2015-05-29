@@ -124,7 +124,8 @@ angular.module('edison').controller('InterventionController',
 
         var action = {
             envoi: function(result) {
-                dialog.addFiles.open($scope.tab.data, $scope.files, function(text, file) {
+                dialog.getFileAndText($scope.tab.data, $scope.files, function(text, file) {
+                    console.log(text, file);
                     edisonAPI.intervention.envoi(result.data.id, {
                         sms: text,
                         file: file

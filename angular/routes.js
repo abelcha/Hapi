@@ -87,7 +87,7 @@ var getInterList = function(edisonAPI) {
     });
 }
 var getArtisanList = function(edisonAPI) {
-    return edisonAPI.intervention.list({
+    return edisonAPI.artisan.list({
         cache: true
     });
 }

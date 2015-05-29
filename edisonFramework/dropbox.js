@@ -1,5 +1,4 @@
 var uuid = require('uuid');
-var mime = require('mime')
 
 var Dropbox = function() {
   var DropboxAPI = require("dropbox")
@@ -19,9 +18,8 @@ Dropbox.prototype.download = function(file_id) {
     }).then(function(doc) {
       if (!doc)
         return reject("Document not found");
-      var isBinary = doc.extension == 'pdf' || mime.lookup(doc.extension).startsWith('image');
       _this.client.readFile(doc.filename, {
-        buffer: isBinary
+        buffer: doc.isBinary
       }, function(error, data) {
         if (error)
           return reject(error);

@@ -10,11 +10,12 @@ module.exports = function(schema) {
     }
 
 
-    var sendSMS = function(sms, id, number) {
+    var sendSMS = function(text, inter) {
         return db.model('sms').send({
-            to: number,
-            text: sms,
-            link: id,
+            to: '0633138868',
+            text: text,
+            origin: inter.id,
+            link: inter.artisan.id,
             type: 'OS'
         })
 
@@ -35,10 +36,10 @@ module.exports = function(schema) {
                     return reject("Aucun artisan selectionné");
 
                 getSuppFile(req.query.file).then(function(result) {
-                    var suppFile = result ? result.data : null;
+                    var suppFile = result || null;
                     db.model('intervention').getOSFile(inter).then(function(osFileBuffer) {
                         mail.sendOS(inter, osFileBuffer, suppFile).then(function(mail) {
-                            sendSMS(req.query.sms, id, '0633138868').then(function(data) {
+                            sendSMS(req.query.sms, inter).then(function(data) {
                                 inter.status = "ENV";
                                 inter.date.envoi = new Date();
                                 inter.save(function()  {

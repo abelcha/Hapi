@@ -87,7 +87,7 @@ var getInterList = function(edisonAPI) {
     });
 }
 var getArtisanList = function(edisonAPI) {
-    return edisonAPI.intervention.list({
+    return edisonAPI.artisan.list({
         cache: true
     });
 }
@@ -699,7 +699,7 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvid
             get: function(origin, link) {
                 return $http({
                     method: 'GET',
-                    url: '/api/calls/get',
+                    url: '/api/sms/get',
                     params: {
                         link: link,
                         origin: origin
@@ -1168,7 +1168,7 @@ angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', 'config', 
 
 
     return {
-        recap:function(inters) {
+        recap: function(inters) {
             $mdDialog.show({
                 controller: function DialogController($scope, $mdDialog, config) {
                     $scope.inters = inters;
@@ -1214,33 +1214,33 @@ angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', 'config', 
                 templateUrl: '/DialogTemplates/text.html',
             });
         },
-        addFiles: {
-            open: function(data, files, cb) {
-                $mdDialog.show({
-                    controller: function DialogController($scope, $mdDialog, config) {
+        getFileAndText: function(data, files, cb) {
+            $mdDialog.show({
+                controller: function DialogController($scope, $mdDialog, config) {
 
-                        var getSMS = function() {
-                            var sms = data.id ? "OS " + data.id + ". " : "";
-                            sms += "Intervention chez " + data.client.civilite + " " +
-                                data.client.prenom + " " + data.client.nom + " au " +
-                                data.client.address.n + " " + data.client.address.r + " " +
-                                data.client.address.cp + ", " + data.client.address.v + " le " +
-                                moment(data.date.intervention).format("LLLL") + ". ";
-                            sms += data.prixAnnonce ? data.prixAnnonce + "€ HT. " : "Pas de prix annoncé. ";
-                            sms += "Merci de prendre rdv avec le client au " + data.client.telephone.tel1;
-                            sms += data.client.telephone.tel2 ? "ou au " + data.client.telephone.tel2 : ""
-                            return sms + ".\nEdison Services."
-                        }
-                        $scope.xfiles = files
-                        $scope.smsText = getSMS();
-                        $scope.answer = function(p, t) {
-                            $mdDialog.hide();
+                    var getSMS = function() {
+                        var sms = data.id ? "OS " + data.id + ". " : "";
+                        sms += "Intervention chez " + data.client.civilite + " " +
+                            data.client.prenom + " " + data.client.nom + " au " +
+                            data.client.address.n + " " + data.client.address.r + " " +
+                            data.client.address.cp + ", " + data.client.address.v + " le " +
+                            moment(data.date.intervention).format("LLLL") + ". ";
+                        sms += data.prixAnnonce ? data.prixAnnonce + "€ HT. " : "Pas de prix annoncé. ";
+                        sms += "Merci de prendre rdv avec le client au " + data.client.telephone.tel1;
+                        sms += data.client.telephone.tel2 ? "ou au " + data.client.telephone.tel2 : ""
+                        return sms + ".\nEdison Services."
+                    }
+                    $scope.xfiles = files
+                    $scope.smsText = getSMS();
+                    $scope.answer = function(cancel) {
+                        $mdDialog.hide();
+                        if (cancel == false) {
                             return cb($scope.smsText, $scope.addedFile);
                         }
-                    },
-                    templateUrl: '/DialogTemplates/files.html',
-                });
-            }
+                    }
+                },
+                templateUrl: '/DialogTemplates/fileAndText.html',
+            });
         },
         editProduct: {
             open: function(produit, cb) {
@@ -2004,7 +2004,8 @@ angular.module('edison').controller('InterventionController',
 
         var action = {
             envoi: function(result) {
-                dialog.addFiles.open($scope.tab.data, $scope.files, function(text, file) {
+                dialog.getFileAndText($scope.tab.data, $scope.files, function(text, file) {
+                    console.log(text, file);
                     edisonAPI.intervention.envoi(result.data.id, {
                         sms: text,
                         file: file
