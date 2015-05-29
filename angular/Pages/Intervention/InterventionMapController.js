@@ -42,13 +42,14 @@ angular.module('edison').controller('InterventionMapController', function($scope
         console.log("==>", id_sst)
         if (id_sst) {
             $q.all([
-                edisonAPI.getArtisan(id_sst, {
+                edisonAPI.artisan.get(id_sst, {
                     cache: true
                 }),
                 edisonAPI.getArtisanStats(id_sst, {
                     cache: true
                 }),
-                edisonAPI.getCalls($scope.tab.data.id || $scope.tab.data.tmpID, id_sst)
+                edisonAPI.getCalls($scope.tab.data.id || $scope.tab.data.tmpID, id_sst),
+                edisonAPI.getSms($scope.tab.data.id || $scope.tab.data.tmpID, id_sst)
             ]).then(function(result)  {
                 $scope.tab.data.artisan = result[0].data;
                 $scope.tab.data.artisan.stats = result[1].data;

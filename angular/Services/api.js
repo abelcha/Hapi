@@ -1,62 +1,104 @@
 angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvider', 'Upload', function($http, $location, dataProvider, Upload) {
 
     return {
-        listInterventions: function(options) {
+        intervention:  {
+            list: function(options) {
+                return $http({
+                    method: 'GET',
+                    cache: options && options.cache,
+                    url: '/api/intervention/list'
+                }).success(function(result) {
+                    return result;
+                })
+            },
+            get: function(id, options) {
+                return $http({
+                    method: 'GET',
+                    cache: false,
+                    url: '/api/intervention/' + id,
+                    params: options ||  {}
+                }).success(function(result) {
+                    return result;
+                });
+            },
+            save: function(params) {
+                return $http({
+                    method: 'GET',
+                    url: "/api/intervention/save",
+                    params: params
+                });
+            },
+            getFiles: function(id) {
+                return $http({
+                    method: 'GET',
+                    url: "/api/intervention/" + id + "/getFiles"
+                });
+            },
+            verification: function(id, options) {
+                return $http({
+                    method: 'GET',
+                    params: options,
+                    url: "/api/intervention/" + id + "/verification"
+                });
+            },
+            annulation: function(id) {
+                return $http({
+                    method: 'GET',
+                    url: "/api/intervention/" + id + "/annulation"
+                });
+            },
+            envoi: function(id, options) {
             return $http({
                 method: 'GET',
-                cache: options && options.cache,
-                url: '/api/intervention/list'
-            }).success(function(result) {
-                return result;
-            })
-        },
-        listArtisans: function(options) {
-            return $http({
-                method: 'GET',
-                cache: options && options.cache,
-                url: '/api/artisan/list'
-            }).success(function(result) {
-                return result;
-            })
-        },
-        getArtisans: function(cache) {
-            return $http({
-                method: 'GET',
-                cache: cache,
-                url: "/api/search/artisan/{}"
-            }).success(function(result) {
-                return result;
+                params: options,
+                url: "/api/intervention/" + id + "/envoi"
             });
         },
-        getInterventions: function(cache) {
-            return $http({
-                method: 'GET',
-                cache: cache,
-                url: '/api/search/intervention/{"limit":1000, "sort":"-id"}'
-            }).success(function(result) {
-                dataProvider('interventions', result);
-                return result;
-            });
+
         },
-        getArtisan: function(id, options) {
-            return $http({
-                method: 'GET',
-                cache: options && options.cache,
-                url: '/api/artisan/' + id,
-                params: options ||  {}
-            }).success(function(result) {
-                return result;
-            });
+        artisan: {
+            list: function(options) {
+                return $http({
+                    method: 'GET',
+                    cache: options && options.cache,
+                    url: '/api/artisan/list'
+                }).success(function(result) {
+                    return result;
+                })
+            },
+            get: function(id, options) {
+                return $http({
+                    method: 'GET',
+                    cache: options && options.cache,
+                    url: '/api/artisan/' + id,
+                    params: options ||  {}
+                }).success(function(result) {
+                    return result;
+                });
+            },
+            getNearest: function(address, categorie) {
+                return $http({
+                    method: 'GET',
+                    url: "/api/artisan/rank",
+                    cache: false,
+                    params:  {
+                        categorie: categorie,
+                        lat: address.lt,
+                        lng: address.lg,
+                        limit: 50,
+                        maxDistance: 50
+                    }
+                });
+            },
         },
-        getIntervention: function(id, options) {
-            return $http({
-                method: 'GET',
-                cache: false,
-                url: '/api/intervention/' + id,
-                params: options ||  {}
-            }).success(function(result) {
-                return result;
-            });
+        file: {
+            upload: function(file, options) {
+                return Upload.upload({
+                    url: '/api/document/upload',
+                    fields: options,
+                    file: file
+                })
+            },
         },
         getDistance: function(options) {
             return $http({
@@ -75,60 +117,7 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvid
                 params: options.data
             });
         },
-        saveIntervention: function(params) {
-            return $http({
-                method: 'GET',
-                url: "/api/intervention/save",
-                params: params
-            });
-        },
-        getNearestArtisans: function(address, categorie) {
-            return $http({
-                method: 'GET',
-                url: "/api/artisan/rank",
-                cache: false,
-                params:  {
-                    categorie: categorie,
-                    lat: address.lt,
-                    lng: address.lg,
-                    limit: 50,
-                    maxDistance: 50
-                }
-            });
-        },
-        getFilesList: function(id) {
-            return $http({
-                method: 'GET',
-                url: "/api/intervention/" + id + "/getFiles"
-            });
-        },
-        uploadFile: function(file, options) {
-            return Upload.upload({
-                url: '/api/document/upload',
-                fields: options,
-                file: file
-            })
-        },
-        envoiInter: function(id, options) {
-            return $http({
-                method: 'GET',
-                params: options,
-                url: "/api/intervention/" + id + "/envoi"
-            });
-        },
-        verificationInter: function(id, options) {
-            return $http({
-                method: 'GET',
-                params: options,
-                url: "/api/intervention/" + id + "/verification"
-            });
-        },
-        annulationInter: function(id) {
-            return $http({
-                method: 'GET',
-                url: "/api/intervention/" + id + "/annulation"
-            });
-        },
+        
         getArtisanStats: function(id_sst) {
             return $http({
                 method: 'GET',

@@ -151,10 +151,17 @@
                                             <br>
                                             <span ng-if="inter.artisan.calls.length > 0" ng-click="callsList(inter.artisan)">
                                                Dernier Appel le {{inter.artisan.calls[0].date | date:"dd/MM à HH:mm" }}  ({{inter.artisan.calls[0].login}})
-                                                </span>
+                                        </span>
                                             <span ng-if="inter.artisan.calls.length == 0">
                                             Aucuns Appels
-                                                </span>
+                                            </span>
+                                            <br>
+                                            <span ng-if="inter.artisan.sms.length > 0" ng-click="callsList(inter.artisan)">
+                                               Dernier SMS le {{inter.artisan.sms[0].date | date:"dd/MM à HH:mm" }}  ({{inter.artisan.sms[0].login}})
+                                        </span>
+                                            <span ng-if="inter.artisan.sms.length == 0">
+                                            Aucuns Appels
+                                            </span>
                                         </p>
                                     </div>
                                 </div>
@@ -162,8 +169,7 @@
                             <div class="card__actions" style="border-bottom: 2px solid rgba(0, 0, 0, .12);">
                                 <button ng-click="call(inter.artisan)" class="btn--no-conflicts btn--m btn--black btn--flat" lx-ripple>Appeler</button>
                                 <button class="btn--no-conflicts btn--m btn--blue btn--flat" lx-ripple ng-click="sms('inter.artisan')">SMS</button>
-                                    <button class="btn--no-conflicts btn--m btn--orange btn--flat" 
-                                    ng-click="recap(inter.artisan)" lx-ripple>Recap'</button>
+                                <button class="btn--no-conflicts btn--m btn--orange btn--flat" ng-click="recap(inter.artisan)" lx-ripple>Recap'</button>
                                 <a href="/artisan/{{inter.artisan.id}}">
                                     <button class="btn--no-conflicts btn--m btn--purple btn--flat" lx-ripple>Fiche</button>
                                 </a>
@@ -296,8 +302,7 @@
                     <div class="p+">
                         <strong class="fs-headline display-block">Facture</strong>
                         <md-content class="autocomplete" style="width: 40%;margin-top: -22px;margin-left: 54%;float: left;" layout-padding layout="column" md-input-container flex>
-                            <md-autocomplete class="address-autocomplete" placeholder="Addresse de Facturation"
-                            md-selected-item-change="changeAddressFacture(selectedAddress)" md-selected-item="selectedAddress" md-search-text="searchText" md-items="item in autocomplete.search(searchText)" md-item-text="item.description">
+                            <md-autocomplete class="address-autocomplete" placeholder="Addresse de Facturation" md-selected-item-change="changeAddressFacture(selectedAddress)" md-selected-item="selectedAddress" md-search-text="searchText" md-items="item in autocomplete.search(searchText)" md-item-text="item.description">
                                 <span md-highlight-text="searchText"> {{item.description}}</span>
                             </md-autocomplete>
                         </md-content>
@@ -432,11 +437,6 @@
                         <span style="float:right;width:25%">
                              <button class="btn--no-conflicts btn--m btn--black btn--flat" lx-ripple> TOTAL HT : {{produits.total() | currency:''}} €  -  TTC : {{produits.total() * (inter.tva / 100 + 1) | currency:''}} €</button>
                         </span>
-                        <!--      <div class="select-style text-field" style="float:right;width:110px">
-                            <select ng-model="inter.tva" ng-options="tva.long_name as tva.long_name for tva in config.tva">
-                            </select>
-                            <label ng-class="{'selected' : inter.tva}">TVA</label>
-                        </div> -->
                     </div>
                 </div>
                 <br>
@@ -492,7 +492,7 @@
 <br>
 <br>
 <br>
-<div class="fab" style="  float: right;position: fixed;right: 70px;z-index: 999;top: 87%;">
+<div class="fab" style="float: right;position: fixed;right: 70px;z-index: 999;top: 87%;">
     <button ng-click="saveInter({})" class="fab__primary btn--no-conflicts btn--xl btn--blue btn--fab" lx-ripple lx-tooltip="Enregistrer" tooltip-position="top">
         <i class="mdi" ng-class="inter.id ? 'mdi-camera-iris' : 'mdi-plus'"></i>
         <i class="mdi mdi-checkbox-marked-circle-outline"></i>

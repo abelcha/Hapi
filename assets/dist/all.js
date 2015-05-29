@@ -1305,6 +1305,7 @@ angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', 'config', 
 
 }]);
 
+
 angular.module('edison').factory('_', ['$window',
   function($window) {
     return $window._;
@@ -1998,38 +1999,7 @@ angular.module('edison').controller('InterventionController',
 
 
         var action = {
-            envoi: function(result) {
-                dialog.addFiles.open($scope.tab.data, $scope.files, function(text, file) {
-                    edisonAPI.envoiInter(result.data.id, {
-                        sms: text,
-                        file: file
-                    }).then(function(res) {
-                        LxNotificationService.success(res.data);
-
-                    }).catch(function(error) {
-                        console.log(error)
-                        LxNotificationService.error(error.data);
-                    });
-                    $location.url("/interventions");
-                    $scope.tabs.remove($scope.tab);
-                })
-            },
-            annulation: function(result) {
-                edisonAPI.annulationInter(result.data.id).then(function(res) {
-                    LxNotificationService.success("L'intervention " + result.data.id + " à été annulé");
-                    $scope.tab.data.status = "ANN";
-                });
-            },
-            verification: function(result) {
-                edisonAPI.verificationInter(result.data.id).then(function(res) {
-                    LxNotificationService.success("L'intervention " + result.data.id + " à été vérifié");
-
-                    $location.url("/interventions");
-                    $scope.tabs.remove($scope.tab);
-                }).catch(function(error) {
-                    LxNotificationService.error(error.data);
-                })
-            }
+            
         }
 
         $scope.saveInter = function(options) {
@@ -2051,24 +2021,12 @@ angular.module('edison').controller('InterventionController',
                     LxNotificationService.error(error.data);
                 });
             }
-            /*
-                    $scope.saveInter = function(options) {
-                        if (options && options.envoi == true) {
-                            dialog.addFiles.open($scope.tab.data, $scope.files, function(files, text) {
-                                console.log(files, text);
-                            })
-                        } else {
-                            saveInter(options)
-                        }
-
-                    }*/
 
         $scope.clickOnArtisanMarker = function(event, sst) {
             $scope.tab.data.sst = sst.id;
         }
 
         $scope.searchArtisans = function() {
-            console.log("search");
             edisonAPI.getNearestArtisans($scope.tab.data.client.address, $scope.tab.data.categorie)
                 .success(function(result) {
                     $scope.nearestArtisans = result;

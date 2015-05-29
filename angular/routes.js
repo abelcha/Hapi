@@ -82,12 +82,12 @@ angular.module('edison').controller('MainController', function(tabContainer, $sc
 });
 
 var getInterList = function(edisonAPI) {
-    return edisonAPI.listInterventions({
+    return edisonAPI.intervention.list({
         cache: true
     });
 }
 var getArtisanList = function(edisonAPI) {
-    return edisonAPI.listArtisans({
+    return edisonAPI.intervention.list({
         cache: true
     });
 }
@@ -107,7 +107,7 @@ var getArtisan = function($route, $q, edisonAPI) {
             })
         });
     } else {
-        return edisonAPI.getArtisan(id, {
+        return edisonAPI.artisan.get(id, {
             cache: true,
             extend: true
         });
@@ -137,7 +137,7 @@ var getIntervention = function($route, $q, edisonAPI) {
             })
         });
     } else {
-        return edisonAPI.getIntervention(id, {
+        return edisonAPI.intervention.get(id, {
             cache: true,
             extend: true
         });
