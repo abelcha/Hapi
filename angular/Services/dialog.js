@@ -129,7 +129,7 @@ angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', 'config', 
                             start = new Date;
                             end = new Date;
                             end.setHours(end.getHours() + hours)
-                            edisonAPI.absenceArtisan(id, {
+                            edisonAPI.artisan.setAbsence(id, {
                                 start: start,
                                 end: end
                             }).success(cb)

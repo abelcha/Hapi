@@ -44,7 +44,7 @@ angular.module('edison').controller('InterventionController',
                 title: "Texte du SMS",
                 text: "\nEdison Service"
             }, function(text) {
-                edisonAPI.sendSMS(text, "0633138868").success(function(e) {
+                edisonAPI.sms.send(text, "0633138868").success(function(e) {
                     console.log(e);
                 }).error(function(err) {
                     console.log(err)
@@ -52,7 +52,7 @@ angular.module('edison').controller('InterventionController',
             })
         }
         $scope.recap = function(sst) {
-            edisonAPI.lastInters(sst.id)
+            edisonAPI.artisan.lastInters(sst.id)
                 .success(dialog.recap);
         }
         $scope.call = function(sst) {
@@ -61,7 +61,7 @@ angular.module('edison').controller('InterventionController',
             dialog.choiceText({
                 title: 'Nouvel Appel',
             }, function(response, text) {
-                edisonAPI.call({
+                edisonAPI.call.save({
                     date: now,
                     to: sst.telephone.tel1,
                     link: sst.id,
@@ -123,8 +123,40 @@ angular.module('edison').controller('InterventionController',
 
 
         var action = {
+            envoi: function(result) {
+                dialog.addFiles.open($scope.tab.data, $scope.files, function(text, file) {
+                    edisonAPI.intervention.envoi(result.data.id, {
+                        sms: text,
+                        file: file
+                    }).then(function(res) {
+                        LxNotificationService.success(res.data);
 
+                    }).catch(function(error) {
+                        console.log(error)
+                        LxNotificationService.error(error.data);
+                    });
+                    $location.url("/interventions");
+                    $scope.tabs.remove($scope.tab);
+                })
+            },
+            annulation: function(result) {
+                edisonAPI.intervention.annulation(result.data.id).then(function(res) {
+                    LxNotificationService.success("L'intervention " + result.data.id + " à été annulé");
+                    $scope.tab.data.status = "ANN";
+                });
+            },
+            verification: function(result) {
+                edisonAPI.intervention.verification(result.data.id).then(function(res) {
+                    LxNotificationService.success("L'intervention " + result.data.id + " à été vérifié");
+
+                    $location.url("/interventions");
+                    $scope.tabs.remove($scope.tab);
+                }).catch(function(error) {
+                    LxNotificationService.error(error.data);
+                })
+            }
         }
+
 
         $scope.saveInter = function(options) {
             edisonAPI.intervention.save({

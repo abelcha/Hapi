@@ -39,17 +39,16 @@ angular.module('edison').controller('InterventionMapController', function($scope
     }
 
     $scope.$watch('tab.data.sst', function(id_sst) {
-        console.log("==>", id_sst)
         if (id_sst) {
             $q.all([
                 edisonAPI.artisan.get(id_sst, {
                     cache: true
                 }),
-                edisonAPI.getArtisanStats(id_sst, {
+                edisonAPI.artisan.getStats(id_sst, {
                     cache: true
                 }),
-                edisonAPI.getCalls($scope.tab.data.id || $scope.tab.data.tmpID, id_sst),
-                edisonAPI.getSms($scope.tab.data.id || $scope.tab.data.tmpID, id_sst)
+                edisonAPI.call.get($scope.tab.data.id || $scope.tab.data.tmpID, id_sst),
+               // edisonAPI.sms.get($scope.tab.data.id || $scope.tab.data.tmpID, id_sst)
             ]).then(function(result)  {
                 $scope.tab.data.artisan = result[0].data;
                 $scope.tab.data.artisan.stats = result[1].data;

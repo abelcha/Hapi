@@ -48,12 +48,12 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvid
                 });
             },
             envoi: function(id, options) {
-            return $http({
-                method: 'GET',
-                params: options,
-                url: "/api/intervention/" + id + "/envoi"
-            });
-        },
+                return $http({
+                    method: 'GET',
+                    params: options,
+                    url: "/api/intervention/" + id + "/envoi"
+                });
+            },
 
         },
         artisan: {
@@ -64,6 +64,12 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvid
                     url: '/api/artisan/list'
                 }).success(function(result) {
                     return result;
+                })
+            },
+            lastInters: function(id) {
+                return $http({
+                    method: 'GET',
+                    url: '/api/artisan/' + id + '/lastInters',
                 })
             },
             get: function(id, options) {
@@ -90,6 +96,19 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvid
                     }
                 });
             },
+            getStats: function(id_sst) {
+                return $http({
+                    method: 'GET',
+                    url: "/api/artisan/" + id_sst + "/stats"
+                });
+            },
+            setAbsence: function(id, options) {
+                return $http({
+                    method: 'GET',
+                    url: '/api/artisan/' + id + '/absence',
+                    params: options
+                })
+            },
         },
         file: {
             upload: function(file, options) {
@@ -99,6 +118,48 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvid
                     file: file
                 })
             },
+        },
+        call: {
+            get: function(origin, link) {
+                return $http({
+                    method: 'GET',
+                    url: '/api/calls/get',
+                    params: {
+                        link: link,
+                        origin: origin
+                    }
+                })
+            },
+            save: function(params) {
+                return $http({
+                    method: 'GET',
+                    url: '/api/calls/add',
+                    params: params
+                })
+            },
+        },
+        sms: {
+            get: function(origin, link) {
+                return $http({
+                    method: 'GET',
+                    url: '/api/calls/get',
+                    params: {
+                        link: link,
+                        origin: origin
+                    }
+                })
+            },
+            send: function(text, telephone) {
+                return $http({
+                    method: 'GET',
+                    url: '/api/sms/send',
+                    params: {
+                        to: telephone,
+                        text: text
+                    }
+                })
+            },
+
         },
         getDistance: function(options) {
             return $http({
@@ -117,53 +178,7 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvid
                 params: options.data
             });
         },
-        
-        getArtisanStats: function(id_sst) {
-            return $http({
-                method: 'GET',
-                url: "/api/artisan/" + id_sst + "/stats"
-            });
-        },
-        absenceArtisan: function(id, options) {
-            return $http({
-                method: 'GET',
-                url: '/api/artisan/' + id + '/absence',
-                params: options
-            })
-        },
-        sendSMS: function(text, telephone) {
-            return $http({
-                method: 'GET',
-                url: '/api/sms/send',
-                params: {
-                    to: telephone,
-                    text: text
-                }
-            })
-        },
-        getCalls: function(id, sst) {
-            return $http({
-                method: 'GET',
-                url: '/api/calls/get',
-                params: {
-                    link: sst,
-                    origin: id
-                }
-            })
-        },
-        lastInters: function(id) {
-            return $http({
-                method: 'GET',
-                url: '/api/artisan/' + id + '/lastInters',
-            })
-        },
-        call: function(params) {
-            return $http({
-                method: 'GET',
-                url: '/api/calls/add',
-                params: params
-            })
-        },
+
         getUser: function(id_sst) {
             return $http({
                 method: 'GET',

@@ -54,7 +54,7 @@ angular.module('edison').controller('InterventionsController', function(tabConta
         $scope.contextMenu.setPosition($event.pageX, $event.pageY)
         $scope.contextMenu.setData(inter);
         $scope.contextMenu.open();
-        edisonAPI.getIntervention(inter.id, {
+        edisonAPI.intervention.get(inter.id, {
                 extend: true
             })
             .then(function(resp) {
@@ -80,8 +80,8 @@ angular.module('edison').controller('InterventionsController', function(tabConta
                 $rootScope.expendedRow = -1;
             } else {
                 $q.all([
-                    edisonAPI.getIntervention(inter.id),
-                    edisonAPI.getArtisanStats(inter.ai)
+                    edisonAPI.intervention.get(inter.id),
+                    edisonAPI.artisan.GetStats(inter.ai)
                 ]).then(function(result)  {
 
                     $rootScope.expendedRow = inter.id;

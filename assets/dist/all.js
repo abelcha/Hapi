@@ -82,12 +82,12 @@ angular.module('edison').controller('MainController', function(tabContainer, $sc
 });
 
 var getInterList = function(edisonAPI) {
-    return edisonAPI.listInterventions({
+    return edisonAPI.intervention.list({
         cache: true
     });
 }
 var getArtisanList = function(edisonAPI) {
-    return edisonAPI.listArtisans({
+    return edisonAPI.intervention.list({
         cache: true
     });
 }
@@ -107,7 +107,7 @@ var getArtisan = function($route, $q, edisonAPI) {
             })
         });
     } else {
-        return edisonAPI.getArtisan(id, {
+        return edisonAPI.artisan.get(id, {
             cache: true,
             extend: true
         });
@@ -137,7 +137,7 @@ var getIntervention = function($route, $q, edisonAPI) {
             })
         });
     } else {
-        return edisonAPI.getIntervention(id, {
+        return edisonAPI.intervention.get(id, {
             cache: true,
             extend: true
         });
@@ -558,62 +558,165 @@ angular.module('edison').factory('Address', function() {
 angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvider', 'Upload', function($http, $location, dataProvider, Upload) {
 
     return {
-        listInterventions: function(options) {
-            return $http({
-                method: 'GET',
-                cache: options && options.cache,
-                url: '/api/intervention/list'
-            }).success(function(result) {
-                return result;
-            })
+        intervention:  {
+            list: function(options) {
+                return $http({
+                    method: 'GET',
+                    cache: options && options.cache,
+                    url: '/api/intervention/list'
+                }).success(function(result) {
+                    return result;
+                })
+            },
+            get: function(id, options) {
+                return $http({
+                    method: 'GET',
+                    cache: false,
+                    url: '/api/intervention/' + id,
+                    params: options ||  {}
+                }).success(function(result) {
+                    return result;
+                });
+            },
+            save: function(params) {
+                return $http({
+                    method: 'GET',
+                    url: "/api/intervention/save",
+                    params: params
+                });
+            },
+            getFiles: function(id) {
+                return $http({
+                    method: 'GET',
+                    url: "/api/intervention/" + id + "/getFiles"
+                });
+            },
+            verification: function(id, options) {
+                return $http({
+                    method: 'GET',
+                    params: options,
+                    url: "/api/intervention/" + id + "/verification"
+                });
+            },
+            annulation: function(id) {
+                return $http({
+                    method: 'GET',
+                    url: "/api/intervention/" + id + "/annulation"
+                });
+            },
+            envoi: function(id, options) {
+                return $http({
+                    method: 'GET',
+                    params: options,
+                    url: "/api/intervention/" + id + "/envoi"
+                });
+            },
+
         },
-        listArtisans: function(options) {
-            return $http({
-                method: 'GET',
-                cache: options && options.cache,
-                url: '/api/artisan/list'
-            }).success(function(result) {
-                return result;
-            })
+        artisan: {
+            list: function(options) {
+                return $http({
+                    method: 'GET',
+                    cache: options && options.cache,
+                    url: '/api/artisan/list'
+                }).success(function(result) {
+                    return result;
+                })
+            },
+            lastInters: function(id) {
+                return $http({
+                    method: 'GET',
+                    url: '/api/artisan/' + id + '/lastInters',
+                })
+            },
+            get: function(id, options) {
+                return $http({
+                    method: 'GET',
+                    cache: options && options.cache,
+                    url: '/api/artisan/' + id,
+                    params: options ||  {}
+                }).success(function(result) {
+                    return result;
+                });
+            },
+            getNearest: function(address, categorie) {
+                return $http({
+                    method: 'GET',
+                    url: "/api/artisan/rank",
+                    cache: false,
+                    params:  {
+                        categorie: categorie,
+                        lat: address.lt,
+                        lng: address.lg,
+                        limit: 50,
+                        maxDistance: 50
+                    }
+                });
+            },
+            getStats: function(id_sst) {
+                return $http({
+                    method: 'GET',
+                    url: "/api/artisan/" + id_sst + "/stats"
+                });
+            },
+            setAbsence: function(id, options) {
+                return $http({
+                    method: 'GET',
+                    url: '/api/artisan/' + id + '/absence',
+                    params: options
+                })
+            },
         },
-        getArtisans: function(cache) {
-            return $http({
-                method: 'GET',
-                cache: cache,
-                url: "/api/search/artisan/{}"
-            }).success(function(result) {
-                return result;
-            });
+        file: {
+            upload: function(file, options) {
+                return Upload.upload({
+                    url: '/api/document/upload',
+                    fields: options,
+                    file: file
+                })
+            },
         },
-        getInterventions: function(cache) {
-            return $http({
-                method: 'GET',
-                cache: cache,
-                url: '/api/search/intervention/{"limit":1000, "sort":"-id"}'
-            }).success(function(result) {
-                dataProvider('interventions', result);
-                return result;
-            });
+        call: {
+            get: function(origin, link) {
+                return $http({
+                    method: 'GET',
+                    url: '/api/calls/get',
+                    params: {
+                        link: link,
+                        origin: origin
+                    }
+                })
+            },
+            save: function(params) {
+                return $http({
+                    method: 'GET',
+                    url: '/api/calls/add',
+                    params: params
+                })
+            },
         },
-        getArtisan: function(id, options) {
-            return $http({
-                method: 'GET',
-                cache: options && options.cache,
-                url: '/api/artisan/' + id,
-                params: options ||  {}
-            }).success(function(result) {
-                return result;
-            });
-        },
-        getIntervention: function(id, options) {
-            return $http({
-                method: 'GET',
-                cache: false,
-                url: '/api/intervention/' + id,
-                params: options ||  {}
-            }).success(function(result) {
-                return result;
-            });
+        sms: {
+            get: function(origin, link) {
+                return $http({
+                    method: 'GET',
+                    url: '/api/calls/get',
+                    params: {
+                        link: link,
+                        origin: origin
+                    }
+                })
+            },
+            send: function(text, telephone) {
+                return $http({
+                    method: 'GET',
+                    url: '/api/sms/send',
+                    params: {
+                        to: telephone,
+                        text: text
+                    }
+                })
+            },
+
         },
         getDistance: function(options) {
             return $http({
@@ -632,106 +735,7 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvid
                 params: options.data
             });
         },
-        saveIntervention: function(params) {
-            return $http({
-                method: 'GET',
-                url: "/api/intervention/save",
-                params: params
-            });
-        },
-        getNearestArtisans: function(address, categorie) {
-            return $http({
-                method: 'GET',
-                url: "/api/artisan/rank",
-                cache: false,
-                params:  {
-                    categorie: categorie,
-                    lat: address.lt,
-                    lng: address.lg,
-                    limit: 50,
-                    maxDistance: 50
-                }
-            });
-        },
-        getFilesList: function(id) {
-            return $http({
-                method: 'GET',
-                url: "/api/intervention/" + id + "/getFiles"
-            });
-        },
-        uploadFile: function(file, options) {
-            return Upload.upload({
-                url: '/api/document/upload',
-                fields: options,
-                file: file
-            })
-        },
-        envoiInter: function(id, options) {
-            return $http({
-                method: 'GET',
-                params: options,
-                url: "/api/intervention/" + id + "/envoi"
-            });
-        },
-        verificationInter: function(id, options) {
-            return $http({
-                method: 'GET',
-                params: options,
-                url: "/api/intervention/" + id + "/verification"
-            });
-        },
-        annulationInter: function(id) {
-            return $http({
-                method: 'GET',
-                url: "/api/intervention/" + id + "/annulation"
-            });
-        },
-        getArtisanStats: function(id_sst) {
-            return $http({
-                method: 'GET',
-                url: "/api/artisan/" + id_sst + "/stats"
-            });
-        },
-        absenceArtisan: function(id, options) {
-            return $http({
-                method: 'GET',
-                url: '/api/artisan/' + id + '/absence',
-                params: options
-            })
-        },
-        sendSMS: function(text, telephone) {
-            return $http({
-                method: 'GET',
-                url: '/api/sms/send',
-                params: {
-                    to: telephone,
-                    text: text
-                }
-            })
-        },
-        getCalls: function(id, sst) {
-            return $http({
-                method: 'GET',
-                url: '/api/calls/get',
-                params: {
-                    link: sst,
-                    origin: id
-                }
-            })
-        },
-        lastInters: function(id) {
-            return $http({
-                method: 'GET',
-                url: '/api/artisan/' + id + '/lastInters',
-            })
-        },
-        call: function(params) {
-            return $http({
-                method: 'GET',
-                url: '/api/calls/add',
-                params: params
-            })
-        },
+
         getUser: function(id_sst) {
             return $http({
                 method: 'GET',
@@ -1291,7 +1295,7 @@ angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', 'config', 
                             start = new Date;
                             end = new Date;
                             end.setHours(end.getHours() + hours)
-                            edisonAPI.absenceArtisan(id, {
+                            edisonAPI.artisan.setAbsence(id, {
                                 start: start,
                                 end: end
                             }).success(cb)
@@ -1822,16 +1826,16 @@ angular.module('edison').controller('InterventionMapController', function($scope
     }
 
     $scope.$watch('tab.data.sst', function(id_sst) {
-        console.log("==>", id_sst)
         if (id_sst) {
             $q.all([
-                edisonAPI.getArtisan(id_sst, {
+                edisonAPI.artisan.get(id_sst, {
                     cache: true
                 }),
-                edisonAPI.getArtisanStats(id_sst, {
+                edisonAPI.artisan.getStats(id_sst, {
                     cache: true
                 }),
-                edisonAPI.getCalls($scope.tab.data.id || $scope.tab.data.tmpID, id_sst)
+                edisonAPI.call.get($scope.tab.data.id || $scope.tab.data.tmpID, id_sst),
+               // edisonAPI.sms.get($scope.tab.data.id || $scope.tab.data.tmpID, id_sst)
             ]).then(function(result)  {
                 $scope.tab.data.artisan = result[0].data;
                 $scope.tab.data.artisan.stats = result[1].data;
@@ -1920,7 +1924,7 @@ angular.module('edison').controller('InterventionController',
                 title: "Texte du SMS",
                 text: "\nEdison Service"
             }, function(text) {
-                edisonAPI.sendSMS(text, "0633138868").success(function(e) {
+                edisonAPI.sms.send(text, "0633138868").success(function(e) {
                     console.log(e);
                 }).error(function(err) {
                     console.log(err)
@@ -1928,7 +1932,7 @@ angular.module('edison').controller('InterventionController',
             })
         }
         $scope.recap = function(sst) {
-            edisonAPI.lastInters(sst.id)
+            edisonAPI.artisan.lastInters(sst.id)
                 .success(dialog.recap);
         }
         $scope.call = function(sst) {
@@ -1937,7 +1941,7 @@ angular.module('edison').controller('InterventionController',
             dialog.choiceText({
                 title: 'Nouvel Appel',
             }, function(response, text) {
-                edisonAPI.call({
+                edisonAPI.call.save({
                     date: now,
                     to: sst.telephone.tel1,
                     link: sst.id,
@@ -1978,7 +1982,7 @@ angular.module('edison').controller('InterventionController',
 
         $scope.onFileUpload = function(file) {
             if (file) {
-                edisonAPI.uploadFile(file, {
+                edisonAPI.file.upload(file, {
                     link: $scope.tab.data.id || $scope.tab.data.tmpID,
                     model: 'intervention',
                     type: 'fiche'
@@ -1991,7 +1995,7 @@ angular.module('edison').controller('InterventionController',
 
 
         $scope.loadFilesList = function() {
-            edisonAPI.getFilesList($scope.tab.data.id || $scope.tab.data.tmpID).then(function(result) {
+            edisonAPI.intervention.getFiles($scope.tab.data.id || $scope.tab.data.tmpID).then(function(result) {
                 $scope.files = result.data;
             }, console.log)
         }
@@ -1999,35 +2003,67 @@ angular.module('edison').controller('InterventionController',
 
 
         var action = {
-            
-        }
+            envoi: function(result) {
+                dialog.addFiles.open($scope.tab.data, $scope.files, function(text, file) {
+                    edisonAPI.intervention.envoi(result.data.id, {
+                        sms: text,
+                        file: file
+                    }).then(function(res) {
+                        LxNotificationService.success(res.data);
 
-        $scope.saveInter = function(options) {
-                edisonAPI.saveIntervention({
-                    data: $scope.tab.data
-                }).then(function(result) {
-                    LxNotificationService.success("Les données de l'intervention " + result.data.id + " ont à été enregistré");
-                    if (options && options.envoi == true) {
-                        action.envoi(result);
-                    } else if (options && options.annulation) {
-                        action.annulation(result);
-                    } else if (options && options.verification) {
-                        action.verification(result);
-                    } else {
-                        $location.url("/interventions");
-                        tabContainer.remove($scope.tab)
-                    }
+                    }).catch(function(error) {
+                        console.log(error)
+                        LxNotificationService.error(error.data);
+                    });
+                    $location.url("/interventions");
+                    $scope.tabs.remove($scope.tab);
+                })
+            },
+            annulation: function(result) {
+                edisonAPI.intervention.annulation(result.data.id).then(function(res) {
+                    LxNotificationService.success("L'intervention " + result.data.id + " à été annulé");
+                    $scope.tab.data.status = "ANN";
+                });
+            },
+            verification: function(result) {
+                edisonAPI.intervention.verification(result.data.id).then(function(res) {
+                    LxNotificationService.success("L'intervention " + result.data.id + " à été vérifié");
+
+                    $location.url("/interventions");
+                    $scope.tabs.remove($scope.tab);
                 }).catch(function(error) {
                     LxNotificationService.error(error.data);
-                });
+                })
             }
+        }
+
+
+        $scope.saveInter = function(options) {
+            edisonAPI.intervention.save({
+                data: $scope.tab.data
+            }).then(function(result) {
+                LxNotificationService.success("Les données de l'intervention " + result.data.id + " ont à été enregistré");
+                if (options && options.envoi == true) {
+                    action.envoi(result);
+                } else if (options && options.annulation) {
+                    action.annulation(result);
+                } else if (options && options.verification) {
+                    action.verification(result);
+                } else {
+                    $location.url("/interventions");
+                    tabContainer.remove($scope.tab)
+                }
+            }).catch(function(error) {
+                LxNotificationService.error(error.data);
+            });
+        }
 
         $scope.clickOnArtisanMarker = function(event, sst) {
             $scope.tab.data.sst = sst.id;
         }
 
         $scope.searchArtisans = function() {
-            edisonAPI.getNearestArtisans($scope.tab.data.client.address, $scope.tab.data.categorie)
+            edisonAPI.artisan.getNearest($scope.tab.data.client.address, $scope.tab.data.categorie)
                 .success(function(result) {
                     $scope.nearestArtisans = result;
                 });
@@ -2101,7 +2137,7 @@ angular.module('edison').controller('InterventionsController', function(tabConta
         $scope.contextMenu.setPosition($event.pageX, $event.pageY)
         $scope.contextMenu.setData(inter);
         $scope.contextMenu.open();
-        edisonAPI.getIntervention(inter.id, {
+        edisonAPI.intervention.get(inter.id, {
                 extend: true
             })
             .then(function(resp) {
@@ -2127,8 +2163,8 @@ angular.module('edison').controller('InterventionsController', function(tabConta
                 $rootScope.expendedRow = -1;
             } else {
                 $q.all([
-                    edisonAPI.getIntervention(inter.id),
-                    edisonAPI.getArtisanStats(inter.ai)
+                    edisonAPI.intervention.get(inter.id),
+                    edisonAPI.artisan.GetStats(inter.ai)
                 ]).then(function(result)  {
 
                     $rootScope.expendedRow = inter.id;
