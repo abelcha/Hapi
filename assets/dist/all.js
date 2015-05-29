@@ -2164,7 +2164,7 @@ angular.module('edison').controller('InterventionsController', function(tabConta
             } else {
                 $q.all([
                     edisonAPI.intervention.get(inter.id),
-                    edisonAPI.artisan.GetStats(inter.ai)
+                    edisonAPI.artisan.getStats(inter.ai)
                 ]).then(function(result)  {
 
                     $rootScope.expendedRow = inter.id;
