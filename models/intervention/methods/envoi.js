@@ -10,10 +10,11 @@ module.exports = function(schema) {
     }
 
 
-    var sendSMS = function(text, inter) {
+    var sendSMS = function(text, inter, login) {
         return db.model('sms').send({
             to: '0633138868',
             text: text,
+            login:login,
             origin: inter.id,
             link: inter.artisan.id,
             type: 'OS'
@@ -39,7 +40,7 @@ module.exports = function(schema) {
                     var suppFile = result || null;
                     db.model('intervention').getOSFile(inter).then(function(osFileBuffer) {
                         mail.sendOS(inter, osFileBuffer, suppFile).then(function(mail) {
-                            sendSMS(req.query.sms, inter).then(function(data) {
+                            sendSMS(req.query.sms, inter, req.session.login).then(function(data) {
                                 inter.status = "ENV";
                                 inter.date.envoi = new Date();
                                 inter.save(function()  {

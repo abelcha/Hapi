@@ -29,7 +29,7 @@ module.exports = function(db) {
             envoi: Date,
             ajout: {
                 type: Date,
-                default: Date.now()
+                default: Date.now
             },
             envoiFacture:Date,
             intervention: Date,

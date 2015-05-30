@@ -24,6 +24,17 @@ angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', 'config', 
                 templateUrl: '/DialogTemplates/callsList.html',
             });
         },
+        smsList: function(sst) {
+            $mdDialog.show({
+                controller: function DialogController($scope, $mdDialog, config) {
+                    $scope.sst = sst;
+                    $scope.answer = function() {
+                        $mdDialog.hide();
+                    }
+                },
+                templateUrl: '/DialogTemplates/smsList.html',
+            });
+        },
         choiceText: function(options, cb) {
             $mdDialog.show({
                 controller: function DialogController($scope, $mdDialog, config) {
@@ -53,14 +64,14 @@ angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', 'config', 
                 controller: function DialogController($scope, $mdDialog, config) {
 
                     var getSMS = function() {
-                        var sms = data.id ? "OS " + data.id + ". " : "";
+                        var sms = data.id ? "OS " + data.id + ". \n" : "";
                         sms += "Intervention chez " + data.client.civilite + " " +
                             data.client.prenom + " " + data.client.nom + " au " +
                             data.client.address.n + " " + data.client.address.r + " " +
                             data.client.address.cp + ", " + data.client.address.v + " le " +
-                            moment(data.date.intervention).format("LLLL") + ". ";
+                            moment(data.date.intervention).format("LLLL") + ". \n";
                         sms += data.prixAnnonce ? data.prixAnnonce + "€ HT. " : "Pas de prix annoncé. ";
-                        sms += "Merci de prendre rdv avec le client au " + data.client.telephone.tel1;
+                        sms += "\nMerci de prendre rdv avec le client au " + data.client.telephone.tel1;
                         sms += data.client.telephone.tel2 ? "ou au " + data.client.telephone.tel2 : ""
                         return sms + ".\nEdison Services."
                     }

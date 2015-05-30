@@ -6,7 +6,7 @@ var http = require('http').Server(app);
 var port = (process.env.PORT || 8080);
 global.path = require('path');
 require('pretty-error').start();
-require("date-utils");
+require("date-util");
 
 
 

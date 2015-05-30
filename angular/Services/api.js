@@ -149,14 +149,12 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvid
                     }
                 })
             },
-            send: function(text, telephone) {
+            send: function(params) {
+                console.log(params)
                 return $http({
                     method: 'GET',
                     url: '/api/sms/send',
-                    params: {
-                        to: telephone,
-                        text: text
-                    }
+                    params: params
                 })
             },
 

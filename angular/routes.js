@@ -209,6 +209,7 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
         .when('/intervention/:id', {
             templateUrl: "Pages/Intervention/intervention.html",
             controller: "InterventionController",
+            controllerAs: "vm",
             resolve: {
                 user: whoAmI,
                 interventions: getInterList,

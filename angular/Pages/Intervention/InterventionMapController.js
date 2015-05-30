@@ -1,92 +1,75 @@
-angular.module('edison').controller('InterventionMapController', function($scope, $q, $interval, $window, Address, dialog, mapAutocomplete, edisonAPI) {
-    $scope.autocomplete = mapAutocomplete;
-    if (!$scope.tab.data.client.address) {
-        $scope.mapCenter = Address({
+var Map = function() {
+    this.show = false;
+}
+
+Map.prototype.setCenter = function(address) {
+    this.center = address;
+}
+
+Map.prototype.setZoom = function(value) {
+    this.zoom = value
+}
+Map.prototype.show = function() {
+    this.show = true;
+}
+
+
+var InterMapCtrl = function($scope, $window, Address, dialog, mapAutocomplete) {
+    var _this = this;
+    var parent = $scope.$parent.vm;
+    _this.data = $scope.$parent.vm.data
+
+    _this.map = new Map;
+    _this.map.setZoom(_this.data.client.address ? 12 : 6)
+
+    if (parent.isNew)
+        _this.map.show();
+    _this.autocomplete = mapAutocomplete;
+    
+    if (_this.data.client.address) {
+        _this.data.client.address = Address(_this.data.client.address, true); //true -> copyContructor
+        _this.map.setCenter(_this.data.client.address);
+    } else {
+        _this.map.setCenter({
             lat: 46.3333,
             lng: 2.6
         });
-        $scope.zoom = 6;
-    } else {
-        if ($scope.tab.data.artisan) {
-            $scope.zoom = 12;
-            //$scope.tab.data.artisan.address = Address($scope.tab.data.artisan.address, true);
-        }
-        if ($scope.tab.data.client.address) {
-            $scope.tab.data.client.address = Address($scope.tab.data.client.address, true); //true -> copyContructor
-            $scope.mapCenter = $scope.tab.data.client.address;
-        }
     }
 
-
-    $scope.showInterMarker = function() {
-        if (!$scope.mapCenter ||  !$scope.mapCenter.latLng || !$scope.tab.data.client || !$scope.tab.data.client.address ||  !$scope.tab.data.client.address.latLng) {
-            return (false)
-        }
-        return ($scope.tab.data.client.address.latLng == $scope.mapCenter.latLng);
+    _this.showInterMarker = function() {
+        return _this.data.client.address && _this.data.client.address.latLng;
     }
 
-
-    $scope.changeAddress = function(place, searchText) {
+    _this.changeAddress = function(place, searchText) {
         mapAutocomplete.getPlaceAddress(place).then(function(addr)  {
-                $scope.zoom = 12;
-                $scope.mapCenter = addr;
-                $scope.tab.data.client.address = addr;
-                $scope.searchArtisans();
+                _this.map.zoom = 12;
+                _this.map.center = addr;
+                _this.data.client.address = addr;
+                parent.searchArtisans();
             },
             function(err) {
                 console.log(err);
             })
     }
 
-    $scope.$watch('tab.data.sst', function(id_sst) {
-        if (id_sst) {
-            $q.all([
-                edisonAPI.artisan.get(id_sst, {
-                    cache: true
-                }),
-                edisonAPI.artisan.getStats(id_sst, {
-                    cache: true
-                }),
-                edisonAPI.call.get($scope.tab.data.id || $scope.tab.data.tmpID, id_sst),
-               // edisonAPI.sms.get($scope.tab.data.id || $scope.tab.data.tmpID, id_sst)
-            ]).then(function(result)  {
-                $scope.tab.data.artisan = result[0].data;
-                $scope.tab.data.artisan.stats = result[1].data;
-                $scope.tab.data.artisan.calls = result[2].data;
-                if (result[0].data.address) {
-                    edisonAPI.getDistance({
-                            origin: result[0].data.address.lt + ", " + result[0].data.address.lg,
-                            destination: $scope.tab.data.client.address.lt + ", " + $scope.tab.data.client.address.lg
-                        })
-                        .then(function(result) {
-                            $scope.tab.data.artisan.stats.direction = result.data;
-                        })
-                }
-            });
-        }
-    })
-
-    $scope.dialog = dialog;
+   
 
     $scope.sstAbsence = function(id) {
         if (id)
             dialog.absence.open(id, function() {
-                $scope.searchArtisans();
+                parent.searchArtisans();
             })
     }
 
-    $scope.showMap = function() {
-        $scope.loadMap = true;
-    }
-
-    $scope.loadMap = $scope.tab.isNew;
 
     $scope.getStaticMap = function() {
         var q = "?width=" + $window.outerWidth * 0.8;
-        if ($scope.tab.data.client && $scope.tab.data.client.address && $scope.tab.data.client.address.latLng)
-            q += ("&origin=" + $scope.tab.data.client.address.latLng);
-        if ($scope.tab.data.artisan && $scope.tab.data.artisan.id)
-            q += ("&destination=" + $scope.tab.data.artisan.address.lt + "," + $scope.tab.data.artisan.address.lg);
+        if (_this.data.client && _this.data.client.address && _this.data.client.address.latLng)
+            q += ("&origin=" + _this.data.client.address.latLng);
+        if (_this.data.artisan && _this.data.artisan.id)
+            q += ("&destination=" + _this.data.artisan.address.lt + "," + _this.data.artisan.address.lg);
         return "/api/map/staticDirections" + q;
     }
-});
+}
+
+angular.module('edison').controller('InterventionMapController', InterMapCtrl);

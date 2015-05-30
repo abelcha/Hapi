@@ -3,7 +3,7 @@ module.exports = function(db) {
     return new db.Schema({
         date: {
             type: Date,
-            default: Date.now()
+            default: Date.now
         },
         login: String,
         duration: Number,
