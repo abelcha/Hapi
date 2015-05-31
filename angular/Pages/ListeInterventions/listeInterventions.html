@@ -6,9 +6,9 @@
     <div class=" shadow-box" style="height:200px">
         <div class="col-sm-2" ng-repeat="telepro in interventionsStats | limitTo:6">
             <div style="width:90%">
-                {{telepro.login}}
-                <br> Ajouté {{telepro.ALL|TotalMontant}}
-                <br> Envoyés {{telepro.ENV|TotalMontant}}
+                {{telepro.login.slice(0, 1).toUpperCase()}}{{telepro.login.slice(1, -2)}}
+                <br> Ajouté {{telepro|TotalMontant}}
+                <br> Envoyés {{telepro.status.ENV|TotalMontant}}
             </div>
         </div>
     </div>

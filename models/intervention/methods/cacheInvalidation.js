@@ -1,5 +1,6 @@
 'use strict';
 var async = require("async");
+var ms = require('milliseconds');
 var _ = require("lodash")
 module.exports = function(schema) {
 
@@ -20,30 +21,25 @@ module.exports = function(schema) {
     ].join(' ');
 
     var getFltr = function(inter, dateInter) {
-        var hour = 60 * 60 * 1000;
-        var day = hour * 24;
-        var week = day * 7;
-        var month = week * 4;
-
         var now = Date.now();
         var fltr = {};
 
         if (inter.status === 'AVR') {
             fltr.avr = 1;
-            if (now > dateInter + (2 * hour)) {
+            if (now > dateInter + ms.hours(1)) {
                 fltr.avr = 1;
-                if (now > dateInter + week) {
+                if (now > dateInter + ms.weeks(1)) {
                     fltr.Uavr = 1;
                 }
             }
         }
-        if (inter.status.startsWith('ATT') && !inter.date.paiementCLI && now > dateInter + week) {
+        if (inter.status.startsWith('ATT') && !inter.date.paiementCLI && now > dateInter + ms.weeks(1)) {
             if (inter.reglementSurPlace) {
                 fltr.sarl = 1;
             } else {
                 fltr.carl = 1;
             }
-            if (now > dateInter + month) {
+            if (now > dateInter + ms.months(1)) {
                 if (inter.reglementSurPlace) {
                     fltr.Usarl = 1;
                 } else {

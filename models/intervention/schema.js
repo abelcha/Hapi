@@ -1,6 +1,7 @@
 module.exports = function(db) {
 
     return new db.Schema({
+        _id: Number,
         id: {
             type: Number,
             index: true
@@ -11,9 +12,9 @@ module.exports = function(db) {
             default: 'APR'
         },
         login: {
-            ajout:String,
+            ajout: String,
             envoi: String,
-            envoiFacture:String,
+            envoiFacture: String,
             intervention: String,
             verification: String,
             paiementCLI: String,
@@ -31,7 +32,7 @@ module.exports = function(db) {
                 type: Date,
                 default: Date.now
             },
-            envoiFacture:Date,
+            envoiFacture: Date,
             intervention: Date,
             verification: Date,
             paiementCLI: Date,

@@ -3,7 +3,7 @@
         <md-subheader class="md-sticky-no-effect">Envoyer l'intervention</md-subheader>
         <div style="padding:15px">
             <div class="select-style text-field">
-                <select ng-model="addedFile" ng-options="f.id as f.name for f in xfiles">
+                <select ng-model="addedFile" ng-options="f._id as f.name for f in xfiles">
                 </select>
                 <label ng-class="{'selected' : addedFile}">Fichier Supp.</label>
             </div>

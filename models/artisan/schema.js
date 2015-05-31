@@ -1,10 +1,11 @@
 module.exports = function(db) {
 
   return new db.Schema({
+    _id:Number,
     id: {
       type: Number,
       index: true
-      
+
     },
     nomSociete: String,
     formeJuridique: String,

@@ -34,6 +34,7 @@
     "later": "^1.1.6",
     "locks": "^0.1.0",
     "lodash": "^3.8.0",
+    "milliseconds": "^1.0.3",
     "mime": "^1.3.4",
     "moment": "^2.10.3",
     "mongoose": "^4.0.2",

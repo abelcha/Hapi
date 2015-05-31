@@ -9,6 +9,7 @@ module.exports = function(db) {
         prenom: String,
         pseudo: String,
         login: String,
+        _id: String,
         service: String,
         ligne: String,
         root: Boolean,

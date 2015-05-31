@@ -7,14 +7,14 @@ var Dropbox = function() {
   });
 }
 Dropbox.prototype.getFilename = function(p) {
-  return '/V2/' + p.model + '/' + p.link + '/' + p.id + '.' + p.extension;
+  return '/V2/' + p.model + '/' + p.link + '/' + p._id + '.' + p.extension;
 };
 
 Dropbox.prototype.download = function(file_id) {
   var _this = this;
   return new Promise(function(resolve, reject) {
     db.model('document').findOne({
-      id: file_id
+      _id: file_id
     }).then(function(doc) {
       if (!doc)
         return reject("Document not found");
@@ -50,7 +50,7 @@ Dropbox.prototype.upload = function(params) {
   return new Promise(function(resolve, reject) {
     if (!params.model || !params.data || !params.link || !params.extension)
       reject("Invalid params");
-    params.id = uuid.v4();
+    params._id = uuid.v4();
     params.filename = _this.getFilename(params);
     _this.client.writeFile(params.filename, params.data, function(error, stat) {
       if (error)

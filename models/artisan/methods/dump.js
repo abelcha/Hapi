@@ -5,6 +5,7 @@ module.exports = function(schema) {
   var translateModel = function(d) {
 
     var rtn = {
+      _id: d.id,
       id: d.id,
       nomSociete: d.nom_societe,
       categories: [],

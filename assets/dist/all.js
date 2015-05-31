@@ -1790,11 +1790,6 @@ angular.module('edison').directive('watchWindowResize', ['$window', '$timeout', 
   }
 ]);
 
-angular.module('edison').controller('DashboardController', function(tabContainer, $location, $scope, $rootScope, interventions, artisans){
-
-	$scope.tab = tabContainer.getCurrentTab();
-	$scope.tab.setTitle('dashBoard')
-});
 angular.module('edison').controller('ArtisanController', function(tabContainer, $location, $mdSidenav, $interval, ngDialog, LxNotificationService, edisonAPI, config, $routeParams, $scope, windowDimensions, artisan) {
   $scope.config = config;
   $scope.tab = tabContainer.getCurrentTab();
@@ -1817,6 +1812,11 @@ angular.module('edison').controller('ArtisanController', function(tabContainer, 
   }
 });
 
+angular.module('edison').controller('DashboardController', function(tabContainer, $location, $scope, $rootScope, interventions, artisans){
+
+	$scope.tab = tabContainer.getCurrentTab();
+	$scope.tab.setTitle('dashBoard')
+});
 /*
 var InterMapCtrl = function($scope, $q, $window, Address, dialog, edisonAPI, mapAutocomplete) {
     var _this = this;

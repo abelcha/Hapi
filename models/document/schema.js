@@ -8,7 +8,7 @@ module.exports = function(db) {
     name: String,
     model:String,
     type: String,
-    id: String,
+    _id: String,
     link: Number,
     extension: String,
     deleted: {

@@ -72,6 +72,7 @@ module.exports = function(schema) {
             fournisseur: d.fournisseur,
             coutFourniture: parseInt(d.cout_fourniture),
             id: d.id,
+            _id: d.id,
             login: {
                 ajout: user
             },

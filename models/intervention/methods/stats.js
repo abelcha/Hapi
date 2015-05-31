@@ -1,73 +1,115 @@
-module.exports = function(schema) {
+var ms = require('milliseconds');
 
-    schema.statics.stats = function(req, res) {
-        return new Promise(function(resolve, reject) {
-            var today = new Date().strtotime('last day')
-            today.setHours(0);
-            db.model('intervention').aggregate([{
-                $match: {
-                    'date.ajout': {
-                        $gt: today
-                    }
-                }
-            }, {
-                $group: {
-                    _id: {
-                        tele: '$login.ajout',
-                        st: '$status'
-                            // week: '$date.intervention'
-                    },
+module.exports = function(schema) {
+    var async = require('async')
+    var statusDistinctFactory = function(customMatch, customGroup) {
+        var group = customGroup || {};
+        group.telepro = '$login.ajout';
+        var match = customMatch || {};
+        return function(cb) {
+            db.model('intervention')
+                .aggregate()
+                .match(match)
+                .group({
+                    _id: group,
                     mnt: {
                         $sum: "$prixAnnonce"
                     },
                     total: {
                         $sum: 1
                     }
+                })
+                .project({
+                    _id: 1,
+                    name: '$_id.st',
+                    login: '$_id.telepro',
+                    total: 1,
+                    montant: db.utils.round("$mnt")
+                }).exec(cb);
+        }
+    }
+
+    var cleanStatus = function(intersStatus) {
+        intersStatus = _.indexBy(intersStatus, 'name')
+        intersStatus = _.mapValues(intersStatus, function(e) {
+            delete e._id
+            delete e.login
+            delete e.name
+            return e;
+        })
+        return intersStatus;
+    }
+
+    schema.statics.stats = function(req, res) {
+        return new Promise(function(resolve, reject) {
+            var today = new Date().strtotime('last friday')
+            today.setHours(0);
+            var p1 = statusDistinctFactory({
+                'date.ajout': {
+                    $gt: today
+                }
+            });
+
+            var p2 = statusDistinctFactory({
+                'date.ajout': {
+                    $gt: today
                 }
             }, {
-                $project: {
-                    _id: 1,
-                    total: 1,
-                    montant: {
-                        $divide: [{
-                                $subtract: [{
-                                    $multiply: ['$mnt', 100]
-                                }, {
-                                    $mod: [{
-                                        $multiply: ['$mnt', 100]
-                                    }, 1]
-                                }]
-                            },
-                            100
-                        ]
-                    }
+                st: '$status'
+            });
+
+            var p3 = statusDistinctFactory({
+                'status': 'APR',
+                'date.ajout': {
+                    $gt: new Date(0)
+                },
+            });
+            var p4 = statusDistinctFactory({
+                status: 'ENV',
+                'date.intervention': {
+                    $lt: new Date(Date.now() + ms.hours(1))
                 }
-            }]).exec(function(err, docs) {
-                var rtn = {};
-                var rtnArr = [];
-                docs.forEach(function(doc) {
-                    if (!rtn[doc._id.tele]) {
+            });
+            //p1.then(console.log)
 
-                        rtn[doc._id.tele] = {
-                            login: doc._id.tele
-                        };
-                        rtn[doc._id.tele]['ALL'] = {
-                            total: 0,
-                            montant: 0
-                        }
+            async.parallel({
+                todayTotal: p1,
+                todayStatus: p2,
+                allApr: p3,
+                allAvr: p4
+            }, function(err, result) {
+                if (err)
+                    console.log(err);
+                result.allApr = _.groupBy(result.allApr, 'login')
+                result.allAvr = _.groupBy(result.allAvr, 'login')
+                    // console.log(result.allApr)
+                result.todayTotal = _.sortByOrder(result.todayTotal, 'total', false);
+                result.todayStatus = _.groupBy(result.todayStatus, 'login')
+                var rtn = result.todayTotal.map(function(telepro) {
+                    
+                    telepro.status = cleanStatus(result.todayStatus[telepro.login]);
+                    telepro.apr = _.get(result, 'allApr.' + telepro.login + '[0]', {});
+                    if (telepro.apr !== {}) {
+                        delete telepro.apr._id;
+                        delete telepro.apr.login;
                     }
-                    rtn[doc._id.tele][doc._id.st] = {
-                        total: doc.total,
-                        montant: doc.montant
+                    telepro.avr = _.get(result, 'allAvr.' + telepro.login + '[0]', {});
+                    if (telepro.avr !== {}) {
+                        delete telepro.avr._id;
+                        delete telepro.avr.login;
                     }
-                    rtn[doc._id.tele]['ALL'].montant += doc.montant;
-                    rtn[doc._id.tele]['ALL'].total += doc.total;
-                    rtn[doc._id.tele]['ALL'].montant = Math.round(rtn[doc._id.tele]['ALL'].montant * 100) / 100;
-
-                })
-                var rtnArr = _.sortByOrder(rtn, 'ALL.total').reverse()
-                resolve(rtnArr);
+                    delete telepro._id;
+                    return telepro
+                });
+                resolve(rtn)
             })
+
+            /* console.log("newt")
+             Promise.all(p1, p2).then(function(result) {
+                 console.log("-->", result)
+             }, console.log)*/
+
+
         });
     }
 }
