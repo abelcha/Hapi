@@ -93,6 +93,7 @@ module.exports = function(schema) {
                         delete telepro.apr._id;
                         delete telepro.apr.login;
                     }
+                    
                     telepro.avr = _.get(result, 'allAvr.' + telepro.login + '[0]', {});
                     if (telepro.avr !== {}) {
                         delete telepro.avr._id;
