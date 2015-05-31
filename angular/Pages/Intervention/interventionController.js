@@ -1,4 +1,21 @@
-var InterventionCtrl = function($window, $scope, $location, $q, $routeParams, dialog, LxNotificationService, tabContainer, edisonAPI, mapAutocomplete, produits, config, intervention, artisans, user) {
+var Map = function() {
+    this.display = false;
+}
+
+Map.prototype.setCenter = function(address) {
+    this.center = address;
+}
+
+Map.prototype.setZoom = function(value) {
+    this.zoom = value
+}
+Map.prototype.show = function() {
+    console.log("here")
+    this.display = true;
+}
+
+
+var InterventionCtrl = function($window, $scope, $location, $routeParams, dialog, LxNotificationService, tabContainer, edisonAPI, Address, $q, mapAutocomplete, produits, config, intervention, artisans, user) {
     var _this = this;
     _this.artisans = artisans.data;
     _this.config = config;
@@ -25,9 +42,10 @@ var InterventionCtrl = function($window, $scope, $location, $q, $routeParams, di
     }
 
     _this.data = tab.data;
-    _this.data.login = {
-        ajout: user.data.login
-    }
+    if (!_this.data.id)
+        _this.data.login = {
+            ajout: user.data.login
+        }
     $scope.showMap = false;
     $scope.produits = produits.init(_this.data.produits ||  []);
 
@@ -112,6 +130,8 @@ var InterventionCtrl = function($window, $scope, $location, $q, $routeParams, di
 
     $scope.changeCategorie = function(key) {
         _this.data.categorie = key;
+        if (_this.data.client.address)
+            _this.searchArtisans();
     }
 
     $scope.onFileUpload = function(file) {
@@ -139,7 +159,6 @@ var InterventionCtrl = function($window, $scope, $location, $q, $routeParams, di
     var action = {
         envoi: function(result) {
             dialog.getFileAndText(_this.data, $scope.files, function(text, file) {
-                console.log(text, file);
                 edisonAPI.intervention.envoi(result.data.id, {
                     sms: text,
                     file: file
@@ -206,6 +225,42 @@ var InterventionCtrl = function($window, $scope, $location, $q, $routeParams, di
     if (_this.data.client.address)
         _this.searchArtisans();
 
+
+    /*MAP CONTROLLER*/
+    _this.map = new Map;
+    _this.map.setZoom(_this.data.client.address ? 12 : 6)
+    if (_this.isNew) {
+        _this.map.show();
+    }
+    _this.autocomplete = mapAutocomplete;
+
+    if (_this.data.client.address) {
+        _this.data.client.address = Address(_this.data.client.address, true); //true -> copyContructor
+        _this.map.setCenter(_this.data.client.address);
+    } else {
+        _this.map.setCenter(Address({
+            lat: 46.3333,
+            lng: 2.6
+        }));
+    }
+
+    _this.showInterMarker = function() {
+        return _this.data.client.address && _this.data.client.address.latLng;
+    }
+
+    _this.changeAddress = function(place, searchText) {
+        mapAutocomplete.getPlaceAddress(place).then(function(addr)  {
+                _this.map.zoom = 12;
+                _this.map.center = addr;
+                _this.data.client.address = addr;
+                _this.searchArtisans();
+            },
+            function(err) {
+                console.log(err);
+            })
+    }
+
+
     $scope.$watch(function() {
         return _this.data.sst;
     }, function(id_sst) {
@@ -236,6 +291,26 @@ var InterventionCtrl = function($window, $scope, $location, $q, $routeParams, di
             });
         }
     })
+
+
+    $scope.sstAbsence = function(id) {
+        if (id)
+            dialog.absence.open(id, function() {
+                _this.searchArtisans();
+            })
+    }
+
+
+    $scope.getStaticMap = function() {
+        var q = "?width=" + $window.outerWidth * 0.8;
+        if (_this.data.client && _this.data.client.address && _this.data.client.address.latLng)
+            q += ("&origin=" + _this.data.client.address.latLng);
+        if (_this.data.artisan && _this.data.artisan.id)
+            q += ("&destination=" + _this.data.artisan.address.lt + "," + _this.data.artisan.address.lg);
+        return "/api/map/staticDirections" + q;
+    }
+
+
 
 
 }

@@ -69,7 +69,7 @@ module.exports = function(schema) {
             e.status += (e.reglementSurPlace ? 'S' : 'C');
         return {
             fltr: getFltr(e, dateInter),
-            t: e.login.envoi || e.login.ajout,
+            t: e.login.ajout,
             id: e.id,
             ai: e.artisan.id,
             s: edison.config.etatsKV[e.status].n,

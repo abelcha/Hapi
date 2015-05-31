@@ -26,7 +26,7 @@ global.mail = new edison.mail;
 global.document = new edison.dropbox();
 global.isWorker = false;
 if (envProd ||  envDev)
-  global.jobs = edison.worker.initJobQueue();
+    global.jobs = edison.worker.initJobQueue();
 
 global.io = require('socket.io')(http);
 var redisIO = require('socket.io-redis');
@@ -39,10 +39,10 @@ io.on('connection', function(socket) {
 });
 
 app.use(npm.multer({
-  inMemory: true,
-  onFileUploadStart: function(file, req, res) {
-    return true;
-  }
+    inMemory: true,
+    onFileUploadStart: function(file, req, res) {
+        return true;
+    }
 }));
 app.use(express.static(path.join(__dirname, 'bower_components')));
 app.use(express.static(path.join(__dirname, 'assets')));
@@ -51,51 +51,54 @@ app.set('view engine', 'ejs'); // set up ejs for templating
 app.use(npm.cookieParser()); // read cookies (needed for auth)
 app.use(npm.bodyParser.json());
 app.use(npm.bodyParser.urlencoded({
-  extended: true
+    extended: true
 }));
 app.use(npm.compression());
 app.use(npm.connectRedisSessions({
-  client: redis,
-  app: "edison",
-  ttl: edison.config.ttl,
-  cookie: {
-    maxAge: edison.config.ttl * 1000
-  }
+    client: redis,
+    app: "edison",
+    ttl: edison.config.ttl,
+    cookie: {
+        maxAge: edison.config.ttl * 1000
+    }
 }))
 
 
 app.get('/logout', function(req, res) {
-  if (req.session && req.session.id)  {
-    req.session.destroy();
-  }
-  res.redirect('/')
+    if (req.session && req.session.id)  {
+        req.session.destroy();
+    }
+    res.redirect('/')
 
 });
 
 app.post('/login', function(req, res) {
-  db.model('user').validateCredentials(req, res)
-    .then(function(user) {
-      req.session.upgrade(user.login, function() {
-        req.session.test = 52;
-        req.session.login = user.login
-        return res.redirect(req.body.url || '/');
-      });
-    }, function(err) {
-      return res.redirect(req.body.url || '/');
-    })
+    db.model('user').validateCredentials(req, res)
+        .then(function(user) {
+            req.session.upgrade(user.login, function() {
+                req.session.login = user.login
+                req.session.nom = user.nom;
+                req.session.prenom = user.prenom;
+                req.session.portable = user.portable;
+                req.session.email = user.email;
+                return res.redirect(req.body.url || '/');
+            });
+        }, function(err) {
+            return res.redirect(req.body.url || '/');
+        })
 });
 
 
 app.use(function(req, res, next) {
-  if (req.session && !req.session.id && (!req.query.x || envProd) ) {
-    if (req.url.indexOf('/api/') === 0) /*TEMPORARY*/ {
-      return res.sendStatus(401);
+    if (req.session && !req.session.id && (!req.query.x || envProd)) {
+        if (req.url.indexOf('/api/') === 0) /*TEMPORARY*/ {
+            return res.sendStatus(401);
+        } else {
+            return res.sendFile(__dirname + '/views/login.html');
+        }
     } else {
-      return res.sendFile(__dirname + '/views/login.html');
+        next();
     }
-  } else {
-    next();
-  }
 });
 
 require('./routes')();
@@ -103,26 +106,26 @@ require('./routes')();
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-  var err = new Error('Not Found');
-  err.status = 404;
-  next(err);
+    var err = new Error('Not Found');
+    err.status = 404;
+    next(err);
 });
 
 
 //if (!env_prod) {
 app.use(function(err, req, res, next) {
-  console.log(err);
-  res.status(err.status || 500);
-  res.json(String(err));
+    console.log(err);
+    res.status(err.status || 500);
+    res.json(String(err));
 });
 //}
 
 process.on('uncaughtException', function(error) {
-  console.log(error.stack);
+    console.log(error.stack);
 });
 
 db.model('intervention').list();
 
 http.listen(port, function() {
-  console.log('listening on *:' + port);
+    console.log('listening on *:' + port);
 });

@@ -1,39 +1,25 @@
-var Map = function() {
-    this.show = false;
-}
-
-Map.prototype.setCenter = function(address) {
-    this.center = address;
-}
-
-Map.prototype.setZoom = function(value) {
-    this.zoom = value
-}
-Map.prototype.show = function() {
-    this.show = true;
-}
-
-
-var InterMapCtrl = function($scope, $window, Address, dialog, mapAutocomplete) {
+/*
+var InterMapCtrl = function($scope, $q, $window, Address, dialog, edisonAPI, mapAutocomplete) {
     var _this = this;
     var parent = $scope.$parent.vm;
-    _this.data = $scope.$parent.vm.data
-
+    _this.data = parent.data
+    _this.nearestArtisans = parent.nearestArtisans;
     _this.map = new Map;
     _this.map.setZoom(_this.data.client.address ? 12 : 6)
 
-    if (parent.isNew)
+    if (parent.isNew) {
         _this.map.show();
+    }
     _this.autocomplete = mapAutocomplete;
-    
+
     if (_this.data.client.address) {
         _this.data.client.address = Address(_this.data.client.address, true); //true -> copyContructor
         _this.map.setCenter(_this.data.client.address);
     } else {
-        _this.map.setCenter({
+        _this.map.setCenter(Address({
             lat: 46.3333,
             lng: 2.6
-        });
+        }));
     }
 
     _this.showInterMarker = function() {
@@ -52,7 +38,38 @@ var InterMapCtrl = function($scope, $window, Address, dialog, mapAutocomplete) {
             })
     }
 
-   
+
+    $scope.$watch(function() {
+        return _this.data.sst;
+    }, function(id_sst) {
+        if (id_sst) {
+            $q.all([
+                edisonAPI.artisan.get(id_sst, {
+                    cache: true
+                }),
+                edisonAPI.artisan.getStats(id_sst, {
+                    cache: true
+                }),
+                edisonAPI.call.get(_this.data.id || _this.data.tmpID, id_sst),
+                edisonAPI.sms.get(_this.data.id || _this.data.tmpID, id_sst)
+            ]).then(function(result)  {
+                _this.data.artisan = result[0].data;
+                _this.data.artisan.stats = result[1].data;
+                _this.data.artisan.calls = result[2].data;
+                _this.data.artisan.sms = result[3].data;
+                if (result[0].data.address) {
+                    edisonAPI.getDistance({
+                            origin: result[0].data.address.lt + ", " + result[0].data.address.lg,
+                            destination: _this.data.client.address.lt + ", " + _this.data.client.address.lg
+                        })
+                        .then(function(result) {
+                            _this.data.artisan.stats.direction = result.data;
+                        })
+                }
+            });
+        }
+    })
+
 
     $scope.sstAbsence = function(id) {
         if (id)
@@ -73,3 +90,4 @@ var InterMapCtrl = function($scope, $window, Address, dialog, mapAutocomplete) {
 }
 
 angular.module('edison').controller('InterventionMapController', InterMapCtrl);
+*/

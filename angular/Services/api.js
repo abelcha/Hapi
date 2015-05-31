@@ -2,13 +2,18 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvid
 
     return {
         intervention:  {
+            getStats: function() {
+                return $http({
+                    method: 'GET',
+                    cache: false,
+                    url: '/api/intervention/stats'
+                })
+            },
             list: function(options) {
                 return $http({
                     method: 'GET',
                     cache: options && options.cache,
                     url: '/api/intervention/list'
-                }).success(function(result) {
-                    return result;
                 })
             },
             get: function(id, options) {

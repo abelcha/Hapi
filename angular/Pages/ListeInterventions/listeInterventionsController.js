@@ -1,6 +1,7 @@
-angular.module('edison').controller('InterventionsController', function(tabContainer, $window, contextMenu, edisonAPI, dataProvider, $routeParams, $location, $scope, $q, $rootScope, $filter, config, ngTableParams, interventions) {
+angular.module('edison').controller('InterventionsController', function(tabContainer, $window, contextMenu, edisonAPI, dataProvider, $routeParams, $location, $scope, $q, $rootScope, $filter, config, ngTableParams, interventions, user, interventionsStats) {
+    $scope.user = user.data;
+    $scope.interventionsStats = interventionsStats.data;
     $scope.tab = tabContainer.getCurrentTab();
-        console.log(tabContainer)
 
     $scope.recap = $routeParams.artisanID;
     if ($scope.recap) {

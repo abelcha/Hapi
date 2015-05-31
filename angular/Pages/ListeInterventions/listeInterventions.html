@@ -3,6 +3,15 @@
         <canvas id="pie" class="chart chart-pie" data="data" labels="labels"></canvas>
         {{data}}
     </div>
+    <div class=" shadow-box" style="height:200px">
+        <div class="col-sm-2" ng-repeat="telepro in interventionsStats | limitTo:6">
+            <div style="width:90%">
+                {{telepro.login}}
+                <br> Ajouté {{telepro.ALL|TotalMontant}}
+                <br> Envoyés {{telepro.ENV|TotalMontant}}
+            </div>
+        </div>
+    </div>
     <br>
     <div class="shadow-box listeInterventions">
         <table style="background:white;" ng-table="tableParams" class="table table-bordered table-hover table-hover table-striped" id="table-list" show-filter="true">
@@ -88,9 +97,8 @@
         <!-- ngIf: isDropped -->
         <div class="dropdown-menu__content ng-scope">
             <ul class="ng-scope">
-                <li ng-repeat="content in contextMenu.content" ng-hide="content.hidden"
-                ng-click="contextMenu.close();content.click(contextMenu.data)">
-                    <a  class="dropdown-link" tabindex="0">{{content.title}}</a>
+                <li ng-repeat="content in contextMenu.content" ng-hide="content.hidden" ng-click="contextMenu.close();content.click(contextMenu.data)">
+                    <a class="dropdown-link" tabindex="0">{{content.title}}</a>
                 </li>
                 <!-- <li><a ng-click="" class="dropdown-link" tabindex="0">Ouvrir Fiche</a></li>
                 <li><a ng-click="" class="dropdown-link" tabindex="0">Envoyer</a></li>

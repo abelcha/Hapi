@@ -46,6 +46,15 @@ angular.module('edison').controller('MainController', function(tabContainer, $sc
     }
 
     $scope.$on("$locationChangeStart", function(event, next, current) {
+        if (!event) {
+            edisonAPI.request({
+                fn: 'setSessionData',
+                data: {
+                    tabContainer: $scope.tabs
+                }
+            })
+
+        }
         if ($location.path() === "/") {
             return 0;
         }
@@ -55,12 +64,6 @@ angular.module('edison').controller('MainController', function(tabContainer, $sc
         if ($location.path() !== "/intervention") {
             $scope.tabs.addTab($location.path());
         }
-        edisonAPI.request({
-            fn: 'setSessionData',
-            data: {
-                tabContainer: $scope.tabs
-            }
-        })
 
     });
 
@@ -114,6 +117,10 @@ var getArtisan = function($route, $q, edisonAPI) {
     }
 };
 
+getInterventionStats = function(edisonAPI) {
+    return edisonAPI.intervention.getStats();
+}
+
 var getIntervention = function($route, $q, edisonAPI) {
     var id = $route.current.params.id;
 
@@ -146,7 +153,7 @@ var getIntervention = function($route, $q, edisonAPI) {
 
 
 var whoAmI = function(edisonAPI) {
-    return edisonAPI.getUser();
+    return edisonAPI.getUser()
 }
 
 angular.module('edison').config(function($routeProvider, $locationProvider) {
@@ -175,6 +182,7 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
             resolve: {
                 user: whoAmI,
                 interventions: getInterList,
+                interventionsStats: getInterventionStats,
                 artisans: getArtisanList
             }
         })
@@ -183,6 +191,7 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
             controller: "InterventionsController",
             resolve: {
                 user: whoAmI,
+                interventionsStats: getInterventionStats,
                 interventions: getInterList,
                 artisans: getArtisanList
             }

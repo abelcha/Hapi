@@ -56,10 +56,12 @@ module.exports = function(schema) {
         addProp(client.telephone, d.tel2, 'tel2');
 
         /* COMMENTS */
+        var user = getUser(d.ajoute_par)
+        user = user ? user.login : d.ajoute_par;
         var comments = [];
         if (d.remarque_interne) {
             comments.push({
-                login: 'Inconnu',
+                login: user,
                 date: toDate(d.t_stamp),
                 text: d.remarque_interne
             });
@@ -71,7 +73,7 @@ module.exports = function(schema) {
             coutFourniture: parseInt(d.cout_fourniture),
             id: d.id,
             login: {
-                ajout:d.ajoute_par
+                ajout: user
             },
             comments: comments,
             status: d.etat_intervention,
@@ -165,7 +167,8 @@ module.exports = function(schema) {
         if (i >= data.length - 1)
             return cb(null)
         var inter = db.model('intervention')(translateModel(data[i]));
-        console.log(((i / data.length) * 100).toFixed(2) + '%', inter.id);
+        if (i % 100 == 0)
+            console.log(((i / data.length) * 100).toFixed(2) + '%', inter.id);
         inter.save(function(err) {
             if (err) {
                 return cb({
@@ -177,12 +180,16 @@ module.exports = function(schema) {
             }
         });
     }
+    var getUser = function(oldLogin) {
+        return _.find(edison.config.users, function(e) {
+            return e.oldLogin === oldLogin;
+        })
+    }
 
     schema.statics.dump = function(req, res) {
         var self = this;
         var exit = false;
         var t = Date.now();
-
         if ((envDev || envProd) && !isWorker) {
             return edison.worker.createJob({
                 name: 'db',
