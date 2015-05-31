@@ -20,6 +20,7 @@ module.exports = function(schema) {
         'date.ajout'
     ].join(' ');
 
+
     var getFltr = function(inter, dateInter) {
         var now = Date.now();
         var fltr = {};
