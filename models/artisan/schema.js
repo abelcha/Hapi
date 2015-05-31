@@ -4,6 +4,7 @@ module.exports = function(db) {
     id: {
       type: Number,
       index: true
+      
     },
     nomSociete: String,
     formeJuridique: String,
