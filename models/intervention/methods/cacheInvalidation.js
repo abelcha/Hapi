@@ -35,7 +35,7 @@ module.exports = function(schema) {
                 }
             }
         }
-        if (inter.status.startsWith('ATT') && !inter.date.paiementCLI && now > dateInter + ms.weeks(1)) {
+        if (inter.status.startsWith('ATT') && !inter.date.paiementCLI && now > dateInter + ms.weeks(2)) {
             if (inter.reglementSurPlace) {
                 fltr.sarl = 1;
             } else {

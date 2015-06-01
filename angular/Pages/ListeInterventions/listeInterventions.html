@@ -3,20 +3,6 @@
         <canvas id="pie" class="chart chart-pie" data="data" labels="labels"></canvas>
         {{data}}
     </div>
-    <div class="row " style="height:200px" ng-if="!recap">
-        <div class="col-sm-2"ng-repeat="telepro in interventionsStats | limitTo:6">
-            <div class="card" >
-                <div style="width:95%;margin-right:0" class="p+">
-                    {{telepro.login.slice(0, 1).toUpperCase()}}{{telepro.login.slice(1, -2)}}
-                    <br> Ajouté:&nbsp; <a href="/interventions?d=t#{{telepro.login}}">{{telepro|TotalMontant}}</a>
-                    <br> Envoyés: <a href="/interventions/envoye?d=t#{{telepro.login}}">{{telepro.status.ENV|TotalMontant}}</a>
-                    <br> A Prog:&nbsp; <a href="/interventions/aProgrammer#{{telepro.login}}">{{telepro.apr|TotalMontant}}</a>
-                    <br> A Vérif: <a href="/interventions/aVerifier#{{telepro.login}}">{{telepro.avr|TotalMontant}}</a>
-                </div>
-            </div>
-        </div>
-    </div>
-    <br>
     <div class="shadow-box listeInterventions">
         <table style="background:white;" ng-table="tableParams" class="table table-bordered table-hover table-hover table-striped" id="table-list" show-filter="true">
             <tbody id="tbody-list">
@@ -54,7 +40,7 @@
                         <span style="width:90px" class="label {{::inter.sx}}"> {{::inter.s}}</span>
                     </td>
                 </tr>
-                <tr ng-if="expendedRow === inter.id" ng-repeat-end>
+                <tr ng-if="expendedRow === inter.id" ng-repeat-end style="background-color:white!important">
                     <td ng-show="expendedRowData.id === expendedRow" colspan="42">
                         <div class="row">
                             <div class="col-sm-4 info-ext">

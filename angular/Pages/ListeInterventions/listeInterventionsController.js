@@ -1,5 +1,4 @@
-angular.module('edison').controller('InterventionsController', function(tabContainer, $window, contextMenu, edisonAPI, dataProvider, $routeParams, $location, $scope, $q, $rootScope, $filter, config, ngTableParams, interventions, user, interventionsStats) {
-    $scope.user = user.data;
+angular.module('edison').controller('InterventionsController', function(tabContainer, $window, contextMenu, edisonAPI, dataProvider, $routeParams, $location, $scope, $q, $rootScope, $filter, config, ngTableParams, interventions, interventionsStats) {
     $scope.interventionsStats = interventionsStats.data;
     $scope.tab = tabContainer.getCurrentTab();
 
@@ -42,7 +41,7 @@ angular.module('edison').controller('InterventionsController', function(tabConta
     $scope.tableParams = new ngTableParams(tableParameters, tableSettings);
 
     $rootScope.$on('InterventionListChange', function() {
-        $scope.dataProvider.refreshInterventionListFilter($location.hash());
+        $scope.dataProvider.refreshInterventionListFilter($routeParams, $location.hash());
         $scope.tableParams.reload();
     })
 

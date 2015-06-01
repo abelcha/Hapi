@@ -40,6 +40,15 @@ module.exports = function(schema) {
         return intersStatus;
     }
 
+    var cleanUp = function(name, telepro, result) {
+        telepro[name] = _.get(result, name + '.' + telepro.login + '[0]', {});
+        if (telepro[name] !== {}) {
+            delete telepro[name]._id;
+            delete telepro[name].login;
+        }
+
+    }
+
     schema.statics.stats = function(req, res) {
         return new Promise(function(resolve, reject) {
             var p1 = statusDistinctFactory({
@@ -68,35 +77,66 @@ module.exports = function(schema) {
                     $lt: new Date(Date.now() + ms.hours(1))
                 }
             });
+            var p5 = statusDistinctFactory({
+                status: 'ATT',
+                reglementSurPlace: true,
+                'date.intervention': {
+                    $lt: new Date(Date.now() - ms.weeks(2)),
+                }
+            });
+            var p6 = statusDistinctFactory({
+                status: 'ATT',
+                reglementSurPlace: true,
+                'date.intervention': {
+                    $lt: new Date(Date.now() - ms.months(1))
+                }
+            });
+            var p7 = statusDistinctFactory({
+                status: 'ATT',
+                reglementSurPlace: false,
+                'date.intervention': {
+                    $lt: new Date(Date.now() - ms.weeks(2)),
+                }
+            });
+            var p8 = statusDistinctFactory({
+                status: 'ATT',
+                reglementSurPlace: false,
+                'date.intervention': {
+                    $lt: new Date(Date.now() - ms.months(1))
+                }
+            });
             //p1.then(console.log)
 
             async.parallel({
                 todayTotal: p1,
                 todayStatus: p2,
-                allApr: p3,
-                allAvr: p4
+                apr: p3,
+                avr: p4,
+                sarl: p5,
+                usarl: p6,
+                carl: p7,
+                ucarl: p8,
             }, function(err, result) {
                 if (err)
                     console.log(err);
-                result.allApr = _.groupBy(result.allApr, 'login')
-                result.allAvr = _.groupBy(result.allAvr, 'login')
-                    // console.log(result.allApr)
+                result.apr = _.groupBy(result.apr, 'login')
+                result.avr = _.groupBy(result.avr, 'login')
+                result.sarl = _.groupBy(result.sarl, 'login')
+                result.usarl = _.groupBy(result.usarl, 'login')
+                result.carl = _.groupBy(result.carl, 'login')
+                result.ucarl = _.groupBy(result.ucarl, 'login')
                 result.todayTotal = _.sortByOrder(result.todayTotal, 'total', false);
                 result.todayStatus = _.groupBy(result.todayStatus, 'login')
                 var rtn = result.todayTotal.map(function(telepro) {
-                    
+
                     telepro.status = cleanStatus(result.todayStatus[telepro.login]);
-                    telepro.apr = _.get(result, 'allApr.' + telepro.login + '[0]', {});
-                    if (telepro.apr !== {}) {
-                        delete telepro.apr._id;
-                        delete telepro.apr.login;
-                    }
-                    
-                    telepro.avr = _.get(result, 'allAvr.' + telepro.login + '[0]', {});
-                    if (telepro.avr !== {}) {
-                        delete telepro.avr._id;
-                        delete telepro.avr.login;
-                    }
+                    cleanUp('apr', telepro, result);
+                    cleanUp('avr', telepro, result);
+                    cleanUp('sarl', telepro, result);
+                    cleanUp('usarl', telepro, result);
+                    cleanUp('carl', telepro, result);
+                    cleanUp('ucarl', telepro, result);
+
                     delete telepro._id;
                     return telepro
                 });

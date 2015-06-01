@@ -12,7 +12,6 @@ angular.module('edison').factory('dataProvider', ['socket', '$rootScope', 'confi
 
     dataProvider.prototype.refreshInterventionListFilter = function(params, hash) {
         var _this = this;
-        console.log(params)
         console.time("interFilter")
         this.interventionListFiltered = this.interventionList;
         if (this.interventionList && params) {

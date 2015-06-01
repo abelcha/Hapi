@@ -131,7 +131,7 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvid
                     url: '/api/calls/get',
                     params: {
                         link: link,
-                        origin: origin
+                       // origin: origin
                     }
                 })
             },

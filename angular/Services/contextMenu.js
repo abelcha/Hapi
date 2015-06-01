@@ -13,8 +13,22 @@ angular.module('edison').factory('contextMenu', ['$location', 'edisonAPI', 'LxNo
         title: "Appeler l'artisan",
         click: function(inter) {
             if (inter.artisan) {
-                win = $window.open("callto:" + inter.artisan.telephone.tel1, "_self", "");
-                //  win.close();
+                var now = Date.now();
+                var x = $window.open('callto:' + inter.artisan.telephone.tel1, '_self', false)
+                dialog.choiceText({
+                    title: 'Nouvel Appel',
+                }, function(response, text) {
+                    edisonAPI.call.save({
+                        date: now,
+                        to: inter.artisan.telephone.tel1,
+                        link: inter.artisan.id,
+                        origin: inter.id || inter.tmpID,
+                        description: text,
+                        response: response
+                    }).success(function(resp) {
+                        inter.artisan.calls.unshift(resp)
+                    })
+                })
             }
         },
         hide: function(inter) {
@@ -43,8 +57,8 @@ angular.module('edison').factory('contextMenu', ['$location', 'edisonAPI', 'LxNo
         hidden: false,
         title: "Envoyer",
         click: function(inter) {
-            dialog.addFiles.open(inter, [], function(text, file) {
-                edisonAPI.envoiInter(inter.id, {
+            dialog.getFileAndText(inter, [], function(text, file) {
+                edisonAPI.intervention.envoi(inter.id, {
                     sms: text,
                     file: file
                 }).then(function(res) {
@@ -55,15 +69,31 @@ angular.module('edison').factory('contextMenu', ['$location', 'edisonAPI', 'LxNo
                     LxNotificationService.error(error.data);
                 });
             })
+        },
+        hide: function(inter) {
+            return inter.s !== "A Programmer" && inter.s !== 'Annulé'
+        }
+    }, {
+        hidden: false,
+        title: "Vérifier",
+        click: function(inter) {
+            edisonAPI.intervention.verification(inter.id).then(function(res) {
+                LxNotificationService.success("L'intervention " + inter.id + " à été vérifié");
+            }).catch(function(error) {
+                LxNotificationService.error(error.data);
+            });
+        },
+        hide: function(inter) {
+            return inter.s !== "A Vérifier" && inter.s !== 'Envoyé'
         }
     }, {
         hidden: false,
         title: "Annuler",
         click: function(inter) {
-            edisonAPI.annulationInter(inter.id).then(function(res) {
+            edisonAPI.intervention.annulation(inter.id).then(function(res) {
                 LxNotificationService.success("L'intervention " + inter.id + " à été annulé");
             });
-        },
+        }
 
     }]
 

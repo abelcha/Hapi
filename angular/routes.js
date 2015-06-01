@@ -23,7 +23,7 @@ angular.module('edison').controller('MainController', function(tabContainer, $sc
         title: 'Nouvelle Intervention',
         icon: 'plus'
     }];
-
+    $scope.dateFormat = moment().format('llll').slice(0, -5);
     $scope.tabs = tabContainer;
     $scope.$watch('tabs.selectedTab', function(prev, curr) {
         if (prev === -1 && curr !== -1) {
@@ -33,6 +33,24 @@ angular.module('edison').controller('MainController', function(tabContainer, $sc
     $rootScope.options = {
         showMap: true
     };
+
+    var reloadStats = function() {
+        edisonAPI.intervention.getStats()
+            .success(function(result) {
+                $scope.userStats = _.find(result, function(e) {
+                    return e.login === $scope.user.login;
+                });
+                $scope.interventionsStats = result
+            })
+    }
+    
+    edisonAPI.getUser().success(function(result) {
+        $rootScope.user = result;
+        reloadStats();
+    })
+    
+
+    $rootScope.$on('InterventionListChange', reloadStats)
 
     var initTabs = function(baseUrl) {
         $scope.tabsInitialized = true;
@@ -69,8 +87,8 @@ angular.module('edison').controller('MainController', function(tabContainer, $sc
 
 
     $scope.checkTitle = function(tab) {
-   /*     var currentTab = tabContainer.getCurrentTab();
-        console.log(tab, currentTab)*/
+        /*     var currentTab = tabContainer.getCurrentTab();
+             console.log(tab, currentTab)*/
     }
 
     $scope.linkClick = function($event, tab) {
@@ -157,15 +175,11 @@ var getIntervention = function($route, $q, edisonAPI) {
 }
 
 
-var whoAmI = function(edisonAPI) {
-    return edisonAPI.getUser()
-}
 
 angular.module('edison').config(function($routeProvider, $locationProvider) {
     $routeProvider
         .when('/', {
             resolve: {
-                user: whoAmI,
                 interventions: getInterList,
                 artisans: getArtisanList
             },
@@ -175,7 +189,6 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
             templateUrl: "Pages/Artisan/artisan.html",
             controller: "ArtisanController",
             resolve: {
-                user: whoAmI,
                 artisan: getArtisan,
                 interventions: getInterList,
                 artisans: getArtisanList
@@ -185,7 +198,6 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
             templateUrl: "Pages/ListeInterventions/listeInterventions.html",
             controller: "InterventionsController",
             resolve: {
-                user: whoAmI,
                 interventions: getInterList,
                 interventionsStats: getInterventionStats,
                 artisans: getArtisanList
@@ -195,7 +207,6 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
             templateUrl: "Pages/ListeInterventions/listeInterventions.html",
             controller: "InterventionsController",
             resolve: {
-                user: whoAmI,
                 interventionsStats: getInterventionStats,
                 interventions: getInterList,
                 artisans: getArtisanList
@@ -215,7 +226,6 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
             templateUrl: "Pages/ListeInterventions/listeInterventions.html",
             controller: "InterventionsController",
             resolve: {
-                user: whoAmI,
                 interventionsStats: getInterventionStats,
                 interventions: getInterList,
                 artisans: getArtisanList
@@ -226,7 +236,6 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
             controller: "InterventionController",
             controllerAs: "vm",
             resolve: {
-                user: whoAmI,
                 interventions: getInterList,
                 intervention: getIntervention,
                 artisans: getArtisanList
@@ -237,7 +246,6 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
             controller: 'DashboardController',
             templateUrl: "Pages/Dashboard/dashboard.html",
             resolve: {
-                user: whoAmI,
                 interventions: getInterList,
                 artisans: getArtisanList
 

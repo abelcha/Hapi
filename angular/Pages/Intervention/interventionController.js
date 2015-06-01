@@ -15,7 +15,7 @@ Map.prototype.show = function() {
 }
 
 
-var InterventionCtrl = function($window, $scope, $location, $routeParams, dialog, fourniture, LxNotificationService, tabContainer, edisonAPI, Address, $q, mapAutocomplete, productsList, config, intervention, artisans, user) {
+var InterventionCtrl = function($window, $scope, $location, $routeParams, dialog, fourniture, LxNotificationService, tabContainer, edisonAPI, Address, $q, mapAutocomplete, productsList, config, intervention, artisans) {
     var _this = this;
     _this.artisans = artisans.data;
     _this.config = config;
@@ -44,7 +44,7 @@ var InterventionCtrl = function($window, $scope, $location, $routeParams, dialog
     _this.data = tab.data;
     if (!_this.data.id)
         _this.data.login = {
-            ajout: user.data.login
+            ajout: $rootScope.user.login
         }
 
     _this.data.produits = _this.data.produits || [];
@@ -128,7 +128,7 @@ var InterventionCtrl = function($window, $scope, $location, $routeParams, dialog
 
     $scope.addComment = function() {
         _this.data.comments.push({
-            login: user.data.login,
+            login: $rootScope.user.login,
             text: $scope.commentText,
             date: new Date()
         })

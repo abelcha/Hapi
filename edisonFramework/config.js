@@ -70,7 +70,7 @@ module.exports = {
             c: 'pink darken-4'
         },
         APR: {
-            n: 'A Progr.',
+            n: 'A Programmer',
             c: 'blue'
         },
         AVR: {
@@ -78,7 +78,7 @@ module.exports = {
             c: 'brown darken-3'
         },
         ANN: {
-            n: 'Annuler',
+            n: 'Annulé',
             c: 'red'
         },
         DEV: {

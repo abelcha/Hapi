@@ -47,7 +47,7 @@
     <script src="/dist/all.js"></script>
 </head>
 
-<body ng-app="edison" ng-controller="MainController" style="  background: #f4f4f4 url(/img/mooning.png);"class="ng-cloak main-menu-fixed main-navbar-fixed theme-adminflare main-menu-animated">
+<body ng-app="edison" ng-controller="MainController" style="  background: #f4f4f4 url(/img/mooning.png);" class="ng-cloak main-menu-fixed main-navbar-fixed theme-adminflare main-menu-animated">
     <script>
     var init = [];
     </script>
@@ -81,23 +81,58 @@
                         </a>
                     </li>
                     <li class="mm-dropdown">
-                        <a href="#"><i class="menu-icon fa fa-th"></i><span class="mm-text">Interventions</span><span class="label label-warning">17234</span></a>
+                        <a href="#"><i class="menu-icon fa fa-th"></i><span class="mm-text">{{dateFormat}}</span></a>
                         <ul>
-                            <li ng-repeat="link in config.filters">
-                                <a tabindex="-1" href="/interventions{{link.url}}"><i class="menu-icon fa fa-th-list"></i><span class="mm-text">{{link.long}}</span><span class="label label-warning">103</span></a>
+                            <li><a tabindex="-1" href="/interventions?d=t#{{user.login}}"><i class="menu-icon fa fa-th-list"></i><span class="mm-text">Ajouté</span><span class="label label-success">{{userStats.total}}</span></a>
+                            </li>
+                            <li><a tabindex="-1" href="/interventions/envoye?d=t#{{user.login}}"><i class="menu-icon fa fa-th-list"></i><span class="mm-text">Envoyé</span><span class="label label-warning">{{userStats.status.ENV.total || 0}}</span></a>
+                            </li>
+                            <li><a tabindex="-1" href="/interventions/aProgrammer?d=t#{{user.login}}"><i class="menu-icon fa fa-th-list"></i><span class="mm-text">A Programmer</span><span class="label label-warning">{{userStats.status.APR.total || 0}}</span></a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="mm-dropdown">
+                        <a href="#"><i class="menu-icon fa fa-th"></i><span class="mm-text">Mes Sous-traitants</span></a>
+                        <ul>
+                            <li><a tabindex="-1" href="/interventions/sstaRelancer#{{user.login}}"><i class="menu-icon fa fa-th-list"></i><span class="mm-text">A Relancer</span><span class="label label-success">{{userStats.sarl.total || 0}}</span></a>
+                            </li>
+                            <li><a tabindex="-1" href="/interventions/sstaRelancerUrgent#{{user.login}}"><i class="menu-icon fa fa-th-list"></i><span class="mm-text">Urgence Verif</span><span class="label label-warning">{{userStats.usarl.total || 0}}</span></a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="mm-dropdown">
+                        <a href="#"><i class="menu-icon fa fa-th"></i><span class="mm-text">Mes Clients</span></a>
+                        <ul>
+                            <li><a tabindex="-1" href="/interventions/clientaRelancer#{{user.login}}"><i class="menu-icon fa fa-th-list"></i><span class="mm-text">A Relancer</span><span class="label label-success">{{userStats.carl.total || 0}}</span></a>
+                            </li>
+                            <li><a tabindex="-1" href="/interventions/clientaRelancerUrgent#{{user.login}}"><i class="menu-icon fa fa-th-list"></i><span class="mm-text">Urgence Verif</span><span class="label label-warning">{{userStats.ucarl.total || 0}}</span></a>
                             </li>
                         </ul>
                     </li>
                 </ul>
                 <!-- / .navigation -->
                 <div class="menu-content">
-                    <a href="/#/intervention" class="btn btn-primary btn-block btn-outline dark">Ajout d'une intervention</a>
+                    <a href="/#/intervention" class="btn btn-primary btn-block btn-outline dark">Ajout d'une Intervention</a>
+                    <a href="/#/intervention" class="btn btn-primary btn-block btn-outline dark">Ajout d'un Devis</a>
                 </div>
             </div>
             <!-- / #main-menu-inner -->
         </div>
         <div class="page-header" style="background: #f4f4f4 url(/img/mooning.png);">
             <div id="content-wrapper">
+                <div class="row " style="height:200px" ng-if="!recap">
+                    <div class="col-sm-2" ng-repeat="telepro in interventionsStats | limitTo:6">
+                        <div class="card">
+                            <div style="width:95%;margin-right:0" class="p+">
+                                {{telepro.login.slice(0, 1).toUpperCase()}}{{telepro.login.slice(1, -2)}}
+                                <br> Ajouté:&nbsp; <a href="/interventions?d=t#{{telepro.login}}">{{telepro|TotalMontant}}</a>
+                                <br> Envoyés: <a href="/interventions/envoye?d=t#{{telepro.login}}">{{telepro.status.ENV|TotalMontant}}</a>
+                                <br> A Prog:&nbsp; <a href="/interventions/aProgrammer#{{telepro.login}}">{{telepro.apr|TotalMontant}}</a>
+                                <br> A Vérif: <a href="/interventions/aVerifier#{{telepro.login}}">{{telepro.avr|TotalMontant}}</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div ng-view></div>
             </div>
             <!-- content here -->
