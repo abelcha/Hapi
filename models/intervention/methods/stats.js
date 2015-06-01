@@ -42,17 +42,15 @@ module.exports = function(schema) {
 
     schema.statics.stats = function(req, res) {
         return new Promise(function(resolve, reject) {
-            var today = new Date().strtotime('last friday')
-            today.setHours(0);
             var p1 = statusDistinctFactory({
                 'date.ajout': {
-                    $gt: today
+                    $gt: edison.utils.date.today(true)
                 }
             });
 
             var p2 = statusDistinctFactory({
                 'date.ajout': {
-                    $gt: today
+                    $gt: edison.utils.date.today(true)
                 }
             }, {
                 st: '$status'

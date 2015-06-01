@@ -49,7 +49,7 @@ module.exports = function(schema) {
                 }
             }
         }
-        if (inter.status === 'ENV')
+        if (inter.status === 'ENV' || inter.status ==='AVR')
             fltr.env = 1;
         if (inter.status === 'APR') {
             fltr.apr = 1;

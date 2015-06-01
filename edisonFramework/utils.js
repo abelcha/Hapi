@@ -12,8 +12,10 @@ module.exports = {
             date = date.strtotime("last month + 1 month");
             return date.setHours(0);
         },
-        today: function() {
+        today: function(dateObj) {
             var date = new Date;
+            if (dateObj)
+                return new Date(date.setHours(0))
             return date.setHours(0);
         }
     }
