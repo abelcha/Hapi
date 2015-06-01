@@ -17,21 +17,10 @@ module.exports = function(schema) {
         return /CR|MN|MC|PT|PL|SR|CL|CH|VT|EL|AS/i.test(value);
     }, 'Categorie inconnue.');
 
+/*
     schema.pre('save', function(next) {
-        var _this = this;
-        if (!_this.id) {
-            db.model('intervention').findOne({}).sort("-id").exec(function(err, latestDoc) {
-                _this.id = latestDoc.id + 1;
-                next();
-            });
-        } else {
             next();
-        }
-
-        /*var err = new Error('something went wrong');
-        next(err);
-        */
-    });
+    });*/
 
     schema.post('save', function(doc) {
         if (!isWorker)

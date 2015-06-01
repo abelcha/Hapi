@@ -28,19 +28,23 @@ module.exports = function(schema) {
 
     var createInter = function(data) {
         return new Promise(function(resolve, reject) {
-            var inter = db.model('intervention')(data);
-            inter.save().then(function(doc) {
-                resolve(doc);
-                db.model('document').changeLink({
-                    oldID: data.tmpID,
-                    newID: doc.id,
-                    model: 'intervention'
-                });
-                db.model('calls').changeLink({
-                    oldID: data.tmpID,
-                    newID: doc.id,
-                })
-            }, dbError(reject))
+            db.model('intervention').getNextID(function(nextID) {
+                data.id = nextID;
+                data._id = nextID;
+                var inter = db.model('intervention')(data);
+                inter.save().then(function(doc) {
+                    resolve(doc);
+                    db.model('document').changeLink({
+                        oldID: data.tmpID,
+                        newID: doc.id,
+                        model: 'intervention'
+                    });
+                    db.model('calls').changeLink({
+                        oldID: data.tmpID,
+                        newID: doc.id,
+                    })
+                }, dbError(reject))
+            })
         })
     }
 

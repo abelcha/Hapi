@@ -15,7 +15,7 @@ Map.prototype.show = function() {
 }
 
 
-var InterventionCtrl = function($window, $scope, $location, $routeParams, dialog, LxNotificationService, tabContainer, edisonAPI, Address, $q, mapAutocomplete, produits, config, intervention, artisans, user) {
+var InterventionCtrl = function($window, $scope, $location, $routeParams, dialog, fourniture, LxNotificationService, tabContainer, edisonAPI, Address, $q, mapAutocomplete, productsList, config, intervention, artisans, user) {
     var _this = this;
     _this.artisans = artisans.data;
     _this.config = config;
@@ -46,8 +46,12 @@ var InterventionCtrl = function($window, $scope, $location, $routeParams, dialog
         _this.data.login = {
             ajout: user.data.login
         }
-    $scope.showMap = false;
-    $scope.produits = produits.init(_this.data.produits ||  []);
+
+    _this.data.produits = _this.data.produits || [];
+    $scope.produits = new productsList(_this.data.produits);
+
+    _this.data.fourniture = _this.data.fourniture || [];
+    $scope.fourniture = fourniture.init(_this.data.fourniture);
 
 
 
@@ -106,17 +110,20 @@ var InterventionCtrl = function($window, $scope, $location, $routeParams, dialog
         })
     }
 
-    $scope.addProduct = function(prod) {
-        produits.add(prod);
+
+    $scope.addProductSupp = function(prod) {
+        $scope.produitsSupp.add(prod);
         $scope.searchProd = "";
     }
 
-    $scope.clickUpload = function() {
-        angular.element('.input-file__input').trigger('click');
+
+    $scope.addProduct = function(prod) {
+        $scope.produits.add(prod);
+        $scope.searchProd = "";
     }
-    $scope.previsualiseFacture = function() {
-        var url = '/api/intervention/facturePreview?html=true&data=';
-        $window.open(url + JSON.stringify(_this.data), "_blank");
+
+    $scope.clickTrigger = function(elem) {
+        angular.element(elem).trigger('click');
     }
 
     $scope.addComment = function() {

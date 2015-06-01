@@ -103,9 +103,8 @@
                         </div>
                     </div>
                 </div>
-                <br>
                 <div class="row" style="margin:0">
-                    <div flex-item style="width:65%;float:left">
+                    <div class="col-sm-8" style="padding-left:0">
                         <div class="card">
                             <div class="p+">
                                 <strong class="fs-headline display-block">
@@ -176,7 +175,7 @@
                             </div>
                         </div>
                     </div>
-                    <div flex-item style="width:34%;float:right;">
+                    <div class="col-sm-4" style="padding: 0;">
                         <div class="card">
                             <div class="p+">
                                 <strong class="fs-headline display-block">Artisans</strong>
@@ -359,13 +358,13 @@
                 </div>
             </div>
             <br>
-            <div flex-item>
+                        <div flex-item>
                 <div class="card">
                     <div class="p+">
                         <strong class="fs-headline display-block">Produits</strong>
                         <md-content class="autocomplete" style="width: 40%;margin-top: -22px;margin-left: 54%;float: left;" layout-padding layout="column" md-input-container flex>
-                            <md-autocomplete md-autoselect md-selected-item-change="addProduct(selectedProduct)" md-selected-item="selectedProduct" md-search-text="searchProd" md-items="item in produits.search(searchProd)" md-item-text="item.title" placeholder="Entrer un produit">
-                                <span md-highlight-text="searchProd"> {{item.title}}</span>
+                            <md-autocomplete md-autoselect md-selected-item-change="produits.add(selectedProduct)" md-selected-item="selectedProduct" md-search-text="produits.searchText" md-items="item in produits.search(produits.searchText)" md-item-text="item.title" placeholder="Entrer un produit">
+                                <span md-highlight-text="produits.searchText"> {{item.title}}</span>
                             </md-autocomplete>
                         </md-content>
                         <span class="fs-subhead tc-black-2 display-block">Pour generation de factures/devis</span>
@@ -425,7 +424,7 @@
                     </div>
                     <div class="card__actions">
                         <span style="float:left;width:50%">
-                        <button ng-click="previsualiseFacture()" class="btn--no-conflicts btn--m btn--black btn--flat" lx-ripple>Prévisualiser</button>
+                        <button ng-click="produits.previsualise(vm.data)" class="btn--no-conflicts btn--m btn--black btn--flat" lx-ripple>Prévisualiser</button>
                         <button class="btn--no-conflicts btn--m btn--orange btn--flat" lx-ripple>Envoyer Devis</button>
                                                 </span>
                         <span>
@@ -436,68 +435,142 @@
                         </span>
                     </div>
                 </div>
-                <br>
-                <div flex-item style="width:48%;float:left;">
-                    <div class="card">
-                        <div class="p+">
-                            <strong class="fs-headline display-block">Fichiers</strong>
-                            <span class="fs-subhead tc-black-2 display-block">Lorem Ipsum</span>
-                            <div class="paragraph fs-body-1 mt+" style="height: 216px;;overflow:scroll">
-                                <div>
-                                    <ul class="list mt++" style="padding-bottom:20px;margin-left: 0px">
-                                        <li class="list-row" ng-repeat="file in files | reverse">
-                                            <div class="list-row__content">
-                                                <a target="_blank" href="/api/document/{{file._id}}"> <span class="display-block">{{file.name || "Fichier" + $index}}</span></a>
-                                                <span class="display-block fs-body-1 tc-black-2">{{file.date | date:"dd/MM/yy"}} - {{file.type}} - {{file.login}}</span>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                </div>
+            </div>
+            <br>
+            <div flex-item>
+                <div class="card">
+                    <div class="p+">
+                        <strong class="fs-headline display-block">Fourniture</strong>
+                        <span class="fs-subhead tc-black-2 display-block">Fourniture</span>
+                        <div class="paragraph fs-body-1 mt+">
+                            <div class="data-table-container">
+                                <table class="data-table data-table--has-primary data-table--has-secondary">
+                                    <thead>
+                                        <tr>
+                                            <th style="font-weight:bold">Réf</th>
+                                            <th style="font-weight:bold">Désignation</th>
+                                            <th style="font-weight:bold">Q</th>
+                                            <th style="font-weight:bold">PU</th>
+                                            <th style="font-weight:bold">Montant</th>
+                                            <th style="font-weight:bold">Fournisseur</th>
+                                            <th style="font-weight:bold">Modif</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="products data-table__clickable-row" ng-repeat="p in vm.data.fourniture">
+                                            <td>
+                                                <span e-type="text" editable-text="p.ref">{{p.ref}}</span>
+                                            </td>
+                                            <td>
+                                                <span e-type="text" editable-text="p.title">{{p.title}}</span>
+                                            </td>
+                                            <td>
+                                                <span> 
+                                                     <a e-type="number" e-step="1" editable-text="p.quantite">{{p.quantite}}</a>
+                                                    </span>
+                                            </td>
+                                            <td>
+                                                <span>
+                                                 <a e-type="number" editable-text="p.pu" e-step="0.01">{{p.pu}} €</a>
+                                                    </span>
+                                            </td>
+                                            <td>
+                                                <span>{{p.pu * p.quantite}} €</span>
+                                            </td>
+                                            <td style="padding-right: 10%;  width: 30%;">
+                                                <select class="form-control" ng-model="p.fournisseur" ng-options="frn.short_name as frn.short_name group by frn.type for frn in config.fournisseur ">
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <lx-dropdown position="right" from-top>
+                                                    <button class="btn--no-conflicts btn--l btn--black btn--icon" lx-ripple lx-dropdown-toggle>
+                                                        <i class="mdi mdi-dots-vertical"></i>
+                                                    </button>
+                                                    <lx-dropdown-menu>
+                                                        <ul>
+                                                            <li><a ng-click="fourniture.moveDown($index)" class="dropdown-link">Descendre</a></li>
+                                                            <li><a ng-click="fourniture.moveTop($index)" class="dropdown-link">Monter</a></li>
+                                                            <li><a ng-click="fourniture.remove($index)" class="dropdown-link">Supprimer</a></li>
+                                                        </ul>
+                                                    </lx-dropdown-menu>
+                                                </lx-dropdown>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
-                        <div class="card__actions">
-                            <button ng-click="clickUpload()" class="btn--no-conflicts btn--m btn--blue  btn--raised" lx-ripple>Upload</button>
-                            <lx-file-input style="display:none" id="fileInput" label="Upload" value="fileUploadText" change="onFileUpload(e)"></lx-file-input>
-                        </div>
+                    </div>
+                    <div class="card__actions">
+                        <span style="float:left;width:50%">
+                        <button class="btn--no-conflicts btn--m btn--black btn--flat" ng-click="fourniture.add()" lx-ripple>Ajout Fourniture</button>
+                                                </span>
+                        <span style="float:right;margin-right:6%">
+                             <button class="btn--no-conflicts btn--m btn--black btn--flat" lx-ripple> TOTAL HT : {{fourniture.total() | currency:''}} €</button>
+                        </span>
                     </div>
                 </div>
-                <div flex-item style="width:48%;float:right">
-                    <div class="card">
-                        <div class="p+" s>
-                            <strong class="fs-headline display-block">Commentaires</strong>
-                            <span class="fs-subhead tc-black-2 display-block">Lorem Ipsum</span>
-                            <div class="paragraph fs-body-1 mt+" style="height:230px;overflow:scroll">
-                                <ul class="list mt++" style="padding-bottom:20px;margin-left: 0px;">
-                                    <li class="list-row" ng-repeat="com in vm.data.comments | reverse">
+            </div>
+            <br>
+            <div flex-item style="width:48%;float:left;">
+                <div class="card">
+                    <div class="p+">
+                        <strong class="fs-headline display-block">Fichiers</strong>
+                        <span class="fs-subhead tc-black-2 display-block">Lorem Ipsum</span>
+                        <div class="paragraph fs-body-1 mt+" style="height: 216px;;overflow:scroll">
+                            <div>
+                                <ul class="list mt++" style="padding-bottom:20px;margin-left: 0px">
+                                    <li class="list-row" ng-repeat="file in files | reverse">
                                         <div class="list-row__content">
-                                            <span class="display-block">{{com.text}}</span>
-                                            <span class="display-block fs-body-1 tc-black-2">{{com.date | date:"dd/MM/yy"}} - {{com.login}}</span>
+                                            <a target="_blank" href="/api/document/{{file._id}}"> <span class="display-block">{{file.name || "Fichier" + $index}}</span></a>
+                                            <span class="display-block fs-body-1 tc-black-2">{{file.date | date:"dd/MM/yy"}} - {{file.type}} - {{file.login}}</span>
                                         </div>
                                     </li>
                                 </ul>
                             </div>
                         </div>
-                        <div class="card__actions">
-                            <input style="border: 0;" type="text" ng-model="commentText" ng-enter="addComment()">
+                    </div>
+                    <div class="card__actions">
+                        <button ng-click="clickTrigger('.input-file__input')" class="btn--no-conflicts btn--m btn--blue  btn--raised" lx-ripple>Upload</button>
+                        <lx-file-input style="display:none" id="fileInput" label="Upload" value="fileUploadText" change="onFileUpload(e)"></lx-file-input>
+                    </div>
+                </div>
+            </div>
+            <div flex-item style="width:48%;float:right">
+                <div class="card">
+                    <div class="p+" s>
+                        <strong class="fs-headline display-block">Commentaires</strong>
+                        <span class="fs-subhead tc-black-2 display-block">Lorem Ipsum</span>
+                        <div class="paragraph fs-body-1 mt+" style="height:230px;overflow:scroll">
+                            <ul class="list mt++" style="padding-bottom:20px;margin-left: 0px;">
+                                <li class="list-row" ng-repeat="com in vm.data.comments | reverse">
+                                    <div class="list-row__content">
+                                        <span class="display-block">{{com.text}}</span>
+                                        <span class="display-block fs-body-1 tc-black-2">{{com.date | date:"dd/MM/yy"}} - {{com.login}}</span>
+                                    </div>
+                                </li>
+                            </ul>
                         </div>
+                    </div>
+                    <div class="card__actions">
+                        <input style="border: 0;" type="text" ng-model="commentText" ng-enter="addComment()">
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-<br>
-<br>
-<br>
-<div class="fab" style="float: right;position: fixed;right: 70px;z-index: 999;top: 87%;">
-    <button ng-click="saveInter({})" class="fab__primary btn--no-conflicts btn--xl btn--blue btn--fab" lx-ripple lx-tooltip="Enregistrer" tooltip-position="top">
-        <i class="mdi" ng-class="vm.data.id ? 'mdi-camera-iris' : 'mdi-plus'"></i>
-        <i class="mdi mdi-checkbox-marked-circle-outline"></i>
-    </button>
-    <div class="fab__actions fab__actions--left">
-        <button ng-show="vm.data.status === 'ENV'" ng-click="saveInter({verification:true})" class="btn--no-conflicts btn--l btn--black btn--fab" lx-ripple lx-tooltip="Verifier" tooltip-position="top"><i class="mdi mdi-check-all"></i></button>
-        <button ng-click="saveInter({annulation:true})" class="btn--no-conflicts btn--l btn--black btn--fab" lx-ripple lx-tooltip="Annuler" tooltip-position="top"><i class="mdi mdi-close"></i></button>
-        <button ng-show="vm.data.status === 'ANN' || vm.data.status === 'APR' " ng-click="saveInter({envoi:true})" class="btn--no-conflicts btn--l btn--black btn--fab" lx-ripple lx-tooltip="Envoyer" tooltip-position="top"><i class="mdi mdi-send"></i></button>
+    <br>
+    <br>
+    <br>
+    <div class="fab" style="float: right;position: fixed;right: 70px;z-index: 999;top: 87%;">
+        <button ng-click="saveInter({})" class="fab__primary btn--no-conflicts btn--xl btn--blue btn--fab" lx-ripple lx-tooltip="Enregistrer" tooltip-position="top">
+            <i class="mdi" ng-class="vm.data.id ? 'mdi-camera-iris' : 'mdi-plus'"></i>
+            <i class="mdi mdi-checkbox-marked-circle-outline"></i>
+        </button>
+        <div class="fab__actions fab__actions--left">
+            <button ng-show="vm.data.status === 'ENV'" ng-click="saveInter({verification:true})" class="btn--no-conflicts btn--l btn--black btn--fab" lx-ripple lx-tooltip="Verifier" tooltip-position="top"><i class="mdi mdi-check-all"></i></button>
+            <button ng-click="saveInter({annulation:true})" class="btn--no-conflicts btn--l btn--black btn--fab" lx-ripple lx-tooltip="Annuler" tooltip-position="top"><i class="mdi mdi-close"></i></button>
+            <button ng-show="vm.data.status === 'ANN' || vm.data.status === 'APR' " ng-click="saveInter({envoi:true})" class="btn--no-conflicts btn--l btn--black btn--fab" lx-ripple lx-tooltip="Envoyer" tooltip-position="top"><i class="mdi mdi-send"></i></button>
+        </div>
     </div>
-</div>
 </div>

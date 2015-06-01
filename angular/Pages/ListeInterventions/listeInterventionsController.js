@@ -7,7 +7,9 @@ angular.module('edison').controller('InterventionsController', function(tabConta
     if ($scope.recap) {
         $scope.tab.setTitle("Recap@" + $routeParams.artisanID)
     } else {
-        $scope.tab.setTitle($routeParams.fltr ? config.filters[$routeParams.fltr].long : 'Interventions');
+
+        var title = $routeParams.fltr ? config.filters[$routeParams.fltr].long : 'Interventions';
+        $scope.tab.setTitle(title, $location.hash());
     }
     $scope.api = edisonAPI;
     $scope.config = config;
@@ -17,7 +19,7 @@ angular.module('edison').controller('InterventionsController', function(tabConta
         $scope.dataProvider.setInterventionList(interventions.data);
     }
 
-    $scope.dataProvider.refreshInterventionListFilter($routeParams);
+    $scope.dataProvider.refreshInterventionListFilter($routeParams, $location.hash());
 
     var tableParameters = {
         page: 1, // show first page
@@ -40,7 +42,7 @@ angular.module('edison').controller('InterventionsController', function(tabConta
     $scope.tableParams = new ngTableParams(tableParameters, tableSettings);
 
     $rootScope.$on('InterventionListChange', function() {
-        $scope.dataProvider.refreshInterventionListFilter($routeParams);
+        $scope.dataProvider.refreshInterventionListFilter($location.hash());
         $scope.tableParams.reload();
     })
 

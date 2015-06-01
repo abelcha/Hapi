@@ -112,6 +112,13 @@ module.exports = function(db) {
             ref: String,
             desc: String
         }],
+        fourniture: [{
+            ref: String,
+            pu: Number,
+            quantite: Number,
+            title: String,
+            fournisseur: String
+        }],
         modeReglement: {
             type: String,
             required: true

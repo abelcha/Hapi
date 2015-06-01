@@ -18,6 +18,11 @@ angular.module('edison').factory('config', [function() {
             long: 'A Vérifier',
             url: '/aVerifier'
         },
+        aProgrammer: {
+            short: 'apr',
+            long: 'A Programmer',
+            url: '/aProgrammer'
+        },
         clientaRelancer: {
             short: 'carl',
             long: 'Client A Relancer',
@@ -109,32 +114,32 @@ angular.module('edison').factory('config', [function() {
     })
 
     config.fournisseur = [{
-        short_name: 'EDISON SERVICES',
-        type: 'Fourniture Edison'
+        short_name: 'ARTISAN',
+        type: 'Fourniture Artisan'
     }, {
         short_name: 'CEDEO',
-        type: 'Fourniture Artisan'
+        type: 'Fourniture Edison'
     }, {
         short_name: 'BROSSETTE',
-        type: 'Fourniture Artisan'
+        type: 'Fourniture Edison'
     }, {
         short_name: 'REXEL',
-        type: 'Fourniture Artisan'
+        type: 'Fourniture Edison'
     }, {
         short_name: 'COAXEL',
-        type: 'Fourniture Artisan'
+        type: 'Fourniture Edison'
     }, {
         short_name: 'YESSS ELECTRIQUE',
-        type: 'Fourniture Artisan'
+        type: 'Fourniture Edison'
     }, {
         short_name: 'CGED',
-        type: 'Fourniture Artisan'
+        type: 'Fourniture Edison'
     }, {
         short_name: 'COSTA',
-        type: 'Fourniture Artisan'
+        type: 'Fourniture Edison'
     }, {
         short_name: 'FORUM DU BATIMENT',
-        type: 'Fourniture Artisan'
+        type: 'Fourniture Edison'
     }]
 
     config.categories = [{

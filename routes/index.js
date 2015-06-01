@@ -13,8 +13,8 @@ module.exports = function() {
   var onFailure = function(res) {
     return function(err) {
       if (res.headersSent === false) {
-        console.log("error detected in route ==>", err)
-        res.status(400).send(typeof err === 'string' ? err : err.toString());
+        console.log("error detected in route ==>", JSON.stringify(err, undefined, 1))
+        res.status(400).send(JSON.stringify(err, undefined, 1));
       }
     }
   }

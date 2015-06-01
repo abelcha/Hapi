@@ -47,7 +47,7 @@
     <script src="/dist/all.js"></script>
 </head>
 
-<body ng-app="edison" ng-controller="MainController" class="ng-cloak main-menu-fixed main-navbar-fixed theme-adminflare main-menu-animated">
+<body ng-app="edison" ng-controller="MainController" style="  background: #f4f4f4 url(/img/mooning.png);"class="ng-cloak main-menu-fixed main-navbar-fixed theme-adminflare main-menu-animated">
     <script>
     var init = [];
     </script>
@@ -62,7 +62,7 @@
                     <md-tabs md-selected="tabs.selectedTab" md-border-bottom style="  margin-left: 61px;">
                         <a ng-repeat="tab in tabs._tabs" href="{{tab.url}}" ng-class="{'deleted' : tab.deleted}">
                             <md-tab>
-                                <md-tab-label>{{tab.title || "•••"}} <i ng-click="tabIconClick($event, tab)" class="fa fa-remove" style="cursor:crosshair"></i></md-tab-label>
+                                <md-tab-label ng-click="checkTitle(tab)">{{tab.title || "•••"}} <span ng-if="tab.subTitle" style="color:black;font-size:8px">{{tab.subTitle}}</span> <i ng-click="tabIconClick($event, tab)" class="fa fa-remove" style="cursor:crosshair"></i></md-tab-label>
                             </md-tab>
                         </a>
                     </md-tabs>

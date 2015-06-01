@@ -69,10 +69,9 @@ module.exports = function(schema) {
         var rtn = {
             tva: 20,
             aDemarcher: d.A_DEMARCHE,
-            fournisseur: d.fournisseur,
-            coutFourniture: parseInt(d.cout_fourniture),
             id: d.id,
             _id: d.id,
+            fourniture: [],
             login: {
                 ajout: user
             },
@@ -82,7 +81,15 @@ module.exports = function(schema) {
             client: client
         }
 
-
+        if (d.cout_fourniture > 0)  {
+            rtn.fourniture.push({
+                ref: "0",
+                title: "Inconnu",
+                fournisseur: d.fournisseur,
+                pu:d.cout_fourniture,
+                quantite:1
+            })
+        }
         if (d.devis && d.id > 13740) {
             var devis = JSON.parse(d.devis.split('<br>').join(""));
             rtn.produits = devis.devisTab;

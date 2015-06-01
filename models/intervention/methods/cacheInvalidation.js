@@ -2,6 +2,7 @@
 var async = require("async");
 var ms = require('milliseconds');
 var _ = require("lodash")
+require('date-util');
 module.exports = function(schema) {
 
     var selectedFields = [
@@ -48,9 +49,23 @@ module.exports = function(schema) {
                 }
             }
         }
+        if (inter.status === 'ENV')
+            fltr.env = 1;
         if (inter.status === 'APR') {
             fltr.apr = 1;
         }
+        //DateFilters
+        fltr.d = {};
+        if (inter.date.ajout > edison.utils.date.firstDayOfThisMonth()) {
+            fltr.d.m = 1;
+            if (inter.date.ajout > edison.utils.date.firstDayOfThisWeek())  {
+                fltr.d.w = 1;
+                if (inter.date.ajout > edison.utils.date.today()) {
+                    fltr.d.t = 1;
+                }
+            }
+        }
+
         return fltr;
     }
 

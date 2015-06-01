@@ -3,14 +3,16 @@
         <canvas id="pie" class="chart chart-pie" data="data" labels="labels"></canvas>
         {{data}}
     </div>
-    <div class=" shadow-box" style="height:200px">
-        <div class="col-sm-2" ng-repeat="telepro in interventionsStats | limitTo:6">
-            <div style="width:90%">
-                {{telepro.login.slice(0, 1).toUpperCase()}}{{telepro.login.slice(1, -2)}}
-                <br> Ajouté: {{telepro|TotalMontant}}
-                <br> Envoyés: {{telepro.status.ENV|TotalMontant}}
-                <br> A Prog: {{telepro.apr|TotalMontant}}
-                <br> A Vérif: {{telepro.avr|TotalMontant}}
+    <div class="row " style="height:200px">
+        <div class="col-sm-2"ng-repeat="telepro in interventionsStats | limitTo:6">
+            <div class="card" >
+                <div style="width:95%;margin-right:0" class="p+">
+                    {{telepro.login.slice(0, 1).toUpperCase()}}{{telepro.login.slice(1, -2)}}
+                    <br> Ajouté:&nbsp; <a href="/interventions?d=t#{{telepro.login}}">{{telepro|TotalMontant}}</a>
+                    <br> Envoyés: <a href="/interventions/envoye?d=t#{{telepro.login}}">{{telepro.status.ENV|TotalMontant}}</a>
+                    <br> A Prog:&nbsp; <a href="/interventions/aProgrammer#{{telepro.login}}">{{telepro.apr|TotalMontant}}</a>
+                    <br> A Vérif: <a href="/interventions/aVerifier#{{telepro.login}}">{{telepro.avr|TotalMontant}}</a>
+                </div>
             </div>
         </div>
     </div>

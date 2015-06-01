@@ -68,6 +68,11 @@ angular.module('edison').controller('MainController', function(tabContainer, $sc
     });
 
 
+    $scope.checkTitle = function(tab) {
+   /*     var currentTab = tabContainer.getCurrentTab();
+        console.log(tab, currentTab)*/
+    }
+
     $scope.linkClick = function($event, tab) {
         $event.preventDefault();
         $event.stopPropagation();
@@ -786,6 +791,11 @@ angular.module('edison').factory('config', [function() {
             long: 'A Vérifier',
             url: '/aVerifier'
         },
+        aProgrammer: {
+            short: 'apr',
+            long: 'A Programmer',
+            url: '/aProgrammer'
+        },
         clientaRelancer: {
             short: 'carl',
             long: 'Client A Relancer',
@@ -877,32 +887,32 @@ angular.module('edison').factory('config', [function() {
     })
 
     config.fournisseur = [{
-        short_name: 'EDISON SERVICES',
-        type: 'Fourniture Edison'
+        short_name: 'ARTISAN',
+        type: 'Fourniture Artisan'
     }, {
         short_name: 'CEDEO',
-        type: 'Fourniture Artisan'
+        type: 'Fourniture Edison'
     }, {
         short_name: 'BROSSETTE',
-        type: 'Fourniture Artisan'
+        type: 'Fourniture Edison'
     }, {
         short_name: 'REXEL',
-        type: 'Fourniture Artisan'
+        type: 'Fourniture Edison'
     }, {
         short_name: 'COAXEL',
-        type: 'Fourniture Artisan'
+        type: 'Fourniture Edison'
     }, {
         short_name: 'YESSS ELECTRIQUE',
-        type: 'Fourniture Artisan'
+        type: 'Fourniture Edison'
     }, {
         short_name: 'CGED',
-        type: 'Fourniture Artisan'
+        type: 'Fourniture Edison'
     }, {
         short_name: 'COSTA',
-        type: 'Fourniture Artisan'
+        type: 'Fourniture Edison'
     }, {
         short_name: 'FORUM DU BATIMENT',
-        type: 'Fourniture Artisan'
+        type: 'Fourniture Edison'
     }]
 
     config.categories = [{
@@ -1137,51 +1147,55 @@ angular.module('edison').factory('contextMenu', ['$location', 'edisonAPI', 'LxNo
 
 angular.module('edison').factory('dataProvider', ['socket', '$rootScope', 'config', '_', function(socket, $rootScope, config, _) {
 
-  var dataProvider = function() {
-    var _this = this;
-    socket.on('interventionListChange', function(data) {
-      _this.updateInterventionList(data);
-    });
-  }
-  dataProvider.prototype.setInterventionList = function(data) {
-    this.interventionList = data;
-  };
-
-  dataProvider.prototype.refreshInterventionListFilter = function(params) {
-    var _this = this;
-
-    this.interventionListFiltered = this.interventionList;
-
-    if (this.interventionList && params) {
-      if (params.fltr && params.fltr !== 'all' && config.filters[params.fltr]) {
-        this.interventionListFiltered = _.filter(this.interventionList, function(e) {
-          return e.fltr[config.filters[params.fltr].short];
-        })
-      } else if (params.artisanID) {
-        var artisanID = parseInt(params.artisanID);
-        this.interventionListFiltered = _.filter(this.interventionList, function(e) {
-          return e.ai === artisanID;
-        })
-      }
+    var dataProvider = function() {
+        var _this = this;
+        socket.on('interventionListChange', function(data) {
+            _this.updateInterventionList(data);
+        });
     }
-  }
+    dataProvider.prototype.setInterventionList = function(data) {
+        this.interventionList = data;
+    };
 
-  dataProvider.prototype.updateInterventionList = function(data) {
-    var _this = this;
-    if (this.interventionList) {
-      var index = _.findIndex(this.interventionList, function(e) {
-        return e.id === data.id
-      });
-      _this.interventionList[index] = data;
-      $rootScope.$broadcast('InterventionListChange');
+    dataProvider.prototype.refreshInterventionListFilter = function(params, hash) {
+        var _this = this;
+        console.log(params)
+        console.time("interFilter")
+        this.interventionListFiltered = this.interventionList;
+        if (this.interventionList && params) {
+            if (params.fltr && config.filters[params.fltr] || !params.fltr && hash) {
+                this.interventionListFiltered = _.filter(this.interventionList, function(e) {
+                    return (!params.fltr || e.fltr[config.filters[params.fltr].short]) &&
+                    (!hash || e.t === hash) &&
+                    (!params.d || e.fltr.d[params.d])
+                })
+            } else if (params.artisanID) {
+                var artisanID = parseInt(params.artisanID);
+                this.interventionListFiltered = _.filter(this.interventionList, function(e) {
+                    return e.ai === artisanID;
+                })
+            }
+        }
+        console.timeEnd("interFilter")
+
     }
-  }
 
-  dataProvider.prototype.getInterventionList = function() {
-    return this.interventionList;
-  }
+    dataProvider.prototype.updateInterventionList = function(data) {
+        var _this = this;
+        if (this.interventionList) {
+            var index = _.findIndex(this.interventionList, function(e) {
+                return e.id === data.id
+            });
+            _this.interventionList[index] = data;
+            $rootScope.$broadcast('InterventionListChange');
+        }
+    }
 
-  return new dataProvider;
+    dataProvider.prototype.getInterventionList = function() {
+        return this.interventionList;
+    }
+
+    return new dataProvider;
 
 }]);
 
@@ -1341,6 +1355,55 @@ angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', 'config', 
 
 }]);
 
+angular.module('edison').factory('fourniture', ['dialog', function(dialog) {    
+
+    return {
+        init: function(fourniture) {
+            this.fourniture = fourniture;
+            if (!this.fourniture)
+                this.fourniture = [];
+            return this;
+        },
+        remove: function(index) {
+            this.fourniture.splice(index, 1);
+        },
+        moveTop: function(index) {
+            if (index !== 0) {
+                var tmp = this.fourniture[index - 1];
+                this.fourniture[index - 1] = this.fourniture[index];
+                this.fourniture[index] = tmp;
+            }
+
+        },
+        moveDown: function(index) {
+            if (index !== this.fourniture.length - 1) {
+                var tmp = this.fourniture[index + 1];
+                this.fourniture[index + 1] = this.fourniture[index];
+                this.fourniture[index] = tmp;
+            }
+        },
+        add: function() {
+            console.log('add')
+            this.fourniture.push({
+                title: 'Fourniture',
+                fournisseur: 'ARTISAN',
+                quantite: 1,
+                pu: 0
+            });
+        },
+        total: function() {
+            var total = 0;
+            if (this.fourniture) {
+                this.fourniture.forEach(function(e) {
+                    total += (e.pu * e.quantite);
+                })
+            }
+            return total
+        }
+    }
+
+}]);
+
 
 angular.module('edison').factory('_', ['$window',
   function($window) {
@@ -1393,7 +1456,7 @@ angular.module('edison').factory('mapAutocomplete', ['$q', 'Address',
     }
 ]);
 
-angular.module('edison').factory('produits', ['dialog', function(dialog) {
+angular.module('edison').factory('productsList', ['dialog', '$window', function(dialog, $window) {
     var ps = [{
         quantite: 1,
         ref: "EDI001",
@@ -1474,11 +1537,11 @@ angular.module('edison').factory('produits', ['dialog', function(dialog) {
         desc: "",
         pu: 0
     }];
-    return {
-        init: function(produits) {
-            this.produits = produits;
-            return this;
-        },
+
+    var Produit = function(produits) {
+        this.produits = produits;
+    }
+    Produit.prototype = {
         remove: function(index) {
             this.produits.splice(index, 1);
         },
@@ -1504,6 +1567,7 @@ angular.module('edison').factory('produits', ['dialog', function(dialog) {
             })
         },
         add: function(prod) {
+            this.searchText = '';
             this.produits.push(prod);
         },
         search: function(text) {
@@ -1527,164 +1591,172 @@ angular.module('edison').factory('produits', ['dialog', function(dialog) {
                 })
             }
             return total
+        },
+        previsualise: function(data) {
+            var url = '/api/intervention/facturePreview?html=true&data=';
+            $window.open(url + JSON.stringify(data), "_blank");
         }
     }
+
+    return Produit;
+
 
 }]);
 
 angular.module('edison').factory('socket', function (socketFactory) {
   return socketFactory();
 });
-angular.module('edison').factory('tabContainer', ['$location', '$window', '$q', 'edisonAPI','_', function($location, $window, $q, edisonAPI, _) {
+angular.module('edison').factory('tabContainer', ['$location', '$window', '$q', 'edisonAPI', '_', function($location, $window, $q, edisonAPI, _) {
 
-  var Tab = function(args) {
+    var Tab = function(args) {
 
-    if (typeof args === 'object') {
-      //copy constructor
-      for (var k in args) {
-        this[k] = args[k];
-      }
-    } else {
-      this.url = args;
-      this.title = '';
-      this.position = null;
-      this.deleted = false;
-      this._timestamp = Date.now();
+        if (typeof args === 'object') {
+            //copy constructor
+            for (var k in args) {
+                this[k] = args[k];
+            }
+        } else {
+            this.url = args;
+            this.title = '';
+            this.position = null;
+            this.deleted = false;
+            this._timestamp = Date.now();
+        }
     }
-  }
 
-  Tab.prototype.setData = function(data) {
-    //slice create a copy
-    this._data = JSON.parse(JSON.stringify(data));
-    this.data = JSON.parse(JSON.stringify(data));
-  }
+    Tab.prototype.setData = function(data) {
+        //slice create a copy
+        this._data = JSON.parse(JSON.stringify(data));
+        this.data = JSON.parse(JSON.stringify(data));
+    }
 
-  Tab.prototype.setTitle = function(title) {
-    this.title = title;
-  }
+    Tab.prototype.setTitle = function(title, subTitle) {
+        this.title = title;
+        this.subTitle = subTitle
+    }
 
-  var TabContainer = function() {
+    var TabContainer = function() {
 
-    var self = this;
-    this._tabs = [];
-    this.selectedTab = 0;
-  }
+        var self = this;
+        this._tabs = [];
+        this.selectedTab = 0;
+    }
 
-  TabContainer.prototype.loadSessionTabs = function(currentUrl) {
-    var self = this;
+    TabContainer.prototype.loadSessionTabs = function(currentUrl) {
+        var self = this;
 
-    return $q(function(resolve, reject) {
-      var currentUrlInSessionTabs = false;
-      edisonAPI.request({
-        fn: "getSessionData",
-      }).then(function(result) {
-        self.selectedTab = result.data.selectedTab;
-        for (var i = 0; i < result.data._tabs.length; i++) {
-          self._tabs.push(new Tab(result.data._tabs[i]))
-          if (result.data._tabs[i].url === currentUrl) {
-            self.selectedTab = i;
-            currentUrlInSessionTabs = true;
-          }
-        }
-        if (!currentUrlInSessionTabs) {
-          return reject();
-        }
-        return resolve();
-      }).catch(reject);
+        return $q(function(resolve, reject) {
+            var currentUrlInSessionTabs = false;
+            edisonAPI.request({
+                fn: "getSessionData",
+            }).then(function(result) {
+                self.selectedTab = result.data.selectedTab;
+                for (var i = 0; i < result.data._tabs.length; i++) {
+                    self._tabs.push(new Tab(result.data._tabs[i]))
+                    if (result.data._tabs[i].url === currentUrl) {
+                        self.selectedTab = i;
+                        currentUrlInSessionTabs = true;
+                    }
+                }
+                if (!currentUrlInSessionTabs) {
+                    return reject();
+                }
+                return resolve();
+            }).catch(reject);
 
-    })
+        })
 
-  }
+    }
 
-  TabContainer.prototype.setFocus = function(tab) {
-    this.selectedTab = (typeof tab === 'number' ? tab : tab.position);
-  };
-
-  TabContainer.prototype.createTab = function(url, title) {
-    var tab = new Tab(url);
-
-    tab.position = this._tabs.length;
-    this._tabs.push(tab);
-    return (tab);
-  }
-
-  TabContainer.prototype.isOpen = function(url) {
-    var index = _.findIndex(this._tabs, function(e) {
-      return ((!e.deleted && e.url === url));
-    });
-    return (index >= 0);
-  };
-
-  TabContainer.prototype.getTab = function(url) {
-
-    return _.find(this._tabs, function(e) {
-      return ((!e.deleted && e.url === url));
-    });
-  };
-
-  TabContainer.prototype.len = function() {
-    var size = 0;
-
-    this._tabs.forEach(function(e, i) {
-      size += !e.deleted;
-    })
-    return (size);
-  }
-
-  TabContainer.prototype.getPrevTab = function(tab) {
-
-    for (var i = tab.position - 1; i >= 0; i--) {
-      if (this._tabs[i].deleted == false)
-        return (this._tabs[i]);
+    TabContainer.prototype.setFocus = function(tab) {
+        this.selectedTab = (typeof tab === 'number' ? tab : tab.position);
     };
 
-  };
+    TabContainer.prototype.createTab = function(url, title) {
+        var tab = new Tab(url);
 
-  TabContainer.prototype.remove = function(tab) {
-    var newTabs = [];
-    var j = 0;
-
-    if (this._tabs.length <= 1) {
-      return false;
+        tab.position = this._tabs.length;
+        this._tabs.push(tab);
+        return (tab);
     }
-    var reload = (this.selectedTab == tab.position);
-    for (var i = 0; i < this._tabs.length; i++) {
-      if (i != tab.position) {
-        newTabs.push(this._tabs[i]);
-        newTabs[j].position = j;
-        ++j;
-      }
+
+    TabContainer.prototype.isOpen = function(url) {
+        var index = _.findIndex(this._tabs, function(e) {
+            return ((!e.deleted && e.url === url));
+        });
+        return (index >= 0);
     };
-    this._tabs = newTabs;
 
-    if (this.selectedTab == tab.position && this.selectedTab != 0) {
-      this.selectedTab--;
-    }
-    if (this.selectedTab > tab.position) {
-      this.selectedTab--;
-    }
-    return (reload);
-  }
+    TabContainer.prototype.getTab = function(url) {
 
-  TabContainer.prototype.getCurrentTab = function() {
-    return this._tabs[this.selectedTab];
-  }
-  TabContainer.prototype.addTab = function(url, options) {
-    var tab;
-    if (!this.isOpen(url)) {
-      tab = this.createTab(url);
-    } else {
-      tab = this.getTab(url)
-    }
-    if (!(options && options.setFocus === false)) {
-      this.setFocus(tab)
-    }
-    if (options && options.title) {
-      tab.setTitle(options.title);
-    }
-  }
+        return _.find(this._tabs, function(e) {
+            return ((!e.deleted && e.url === url));
+        });
+    };
 
-  return (new TabContainer);
+    TabContainer.prototype.len = function() {
+        var size = 0;
+
+        this._tabs.forEach(function(e, i) {
+            size += !e.deleted;
+        })
+        return (size);
+    }
+
+    TabContainer.prototype.getPrevTab = function(tab) {
+
+        for (var i = tab.position - 1; i >= 0; i--) {
+            if (this._tabs[i].deleted == false)
+                return (this._tabs[i]);
+        };
+
+    };
+
+    TabContainer.prototype.remove = function(tab) {
+        var newTabs = [];
+        var j = 0;
+
+        if (this._tabs.length <= 1) {
+            return false;
+        }
+        var reload = (this.selectedTab == tab.position);
+        for (var i = 0; i < this._tabs.length; i++) {
+            if (i != tab.position) {
+                newTabs.push(this._tabs[i]);
+                newTabs[j].position = j;
+                ++j;
+            }
+        };
+        this._tabs = newTabs;
+
+        if (this.selectedTab == tab.position && this.selectedTab != 0) {
+            this.selectedTab--;
+        }
+        if (this.selectedTab > tab.position) {
+            this.selectedTab--;
+        }
+        return (reload);
+    }
+
+    TabContainer.prototype.getCurrentTab = function() {
+        return this._tabs[this.selectedTab];
+    }
+    TabContainer.prototype.addTab = function(url, options) {
+        var tab;
+        if (!this.isOpen(url)) {
+            tab = this.createTab(url);
+        } else {
+            tab = this.getTab(url)
+        }
+        if (!(options && options.setFocus === false)) {
+            this.setFocus(tab)
+        }
+        if (options && options.title) {
+            tab.setTitle(options.title);
+        }
+    }
+
+    return (new TabContainer);
 
 }]);
 
@@ -1927,7 +1999,7 @@ Map.prototype.show = function() {
 }
 
 
-var InterventionCtrl = function($window, $scope, $location, $routeParams, dialog, LxNotificationService, tabContainer, edisonAPI, Address, $q, mapAutocomplete, produits, config, intervention, artisans, user) {
+var InterventionCtrl = function($window, $scope, $location, $routeParams, dialog, fourniture, LxNotificationService, tabContainer, edisonAPI, Address, $q, mapAutocomplete, productsList, config, intervention, artisans, user) {
     var _this = this;
     _this.artisans = artisans.data;
     _this.config = config;
@@ -1958,8 +2030,12 @@ var InterventionCtrl = function($window, $scope, $location, $routeParams, dialog
         _this.data.login = {
             ajout: user.data.login
         }
-    $scope.showMap = false;
-    $scope.produits = produits.init(_this.data.produits ||  []);
+
+    _this.data.produits = _this.data.produits || [];
+    $scope.produits = new productsList(_this.data.produits);
+
+    _this.data.fourniture = _this.data.fourniture || [];
+    $scope.fourniture = fourniture.init(_this.data.fourniture);
 
 
 
@@ -2018,17 +2094,20 @@ var InterventionCtrl = function($window, $scope, $location, $routeParams, dialog
         })
     }
 
-    $scope.addProduct = function(prod) {
-        produits.add(prod);
+
+    $scope.addProductSupp = function(prod) {
+        $scope.produitsSupp.add(prod);
         $scope.searchProd = "";
     }
 
-    $scope.clickUpload = function() {
-        angular.element('.input-file__input').trigger('click');
+
+    $scope.addProduct = function(prod) {
+        $scope.produits.add(prod);
+        $scope.searchProd = "";
     }
-    $scope.previsualiseFacture = function() {
-        var url = '/api/intervention/facturePreview?html=true&data=';
-        $window.open(url + JSON.stringify(_this.data), "_blank");
+
+    $scope.clickTrigger = function(elem) {
+        angular.element(elem).trigger('click');
     }
 
     $scope.addComment = function() {
@@ -2245,7 +2324,9 @@ angular.module('edison').controller('InterventionsController', function(tabConta
     if ($scope.recap) {
         $scope.tab.setTitle("Recap@" + $routeParams.artisanID)
     } else {
-        $scope.tab.setTitle($routeParams.fltr ? config.filters[$routeParams.fltr].long : 'Interventions');
+
+        var title = $routeParams.fltr ? config.filters[$routeParams.fltr].long : 'Interventions';
+        $scope.tab.setTitle(title, $location.hash());
     }
     $scope.api = edisonAPI;
     $scope.config = config;
@@ -2255,7 +2336,7 @@ angular.module('edison').controller('InterventionsController', function(tabConta
         $scope.dataProvider.setInterventionList(interventions.data);
     }
 
-    $scope.dataProvider.refreshInterventionListFilter($routeParams);
+    $scope.dataProvider.refreshInterventionListFilter($routeParams, $location.hash());
 
     var tableParameters = {
         page: 1, // show first page
@@ -2278,7 +2359,7 @@ angular.module('edison').controller('InterventionsController', function(tabConta
     $scope.tableParams = new ngTableParams(tableParameters, tableSettings);
 
     $rootScope.$on('InterventionListChange', function() {
-        $scope.dataProvider.refreshInterventionListFilter($routeParams);
+        $scope.dataProvider.refreshInterventionListFilter($location.hash());
         $scope.tableParams.reload();
     })
 

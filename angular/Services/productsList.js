@@ -1,4 +1,4 @@
-angular.module('edison').factory('produits', ['dialog', function(dialog) {
+angular.module('edison').factory('productsList', ['dialog', '$window', function(dialog, $window) {
     var ps = [{
         quantite: 1,
         ref: "EDI001",
@@ -79,11 +79,11 @@ angular.module('edison').factory('produits', ['dialog', function(dialog) {
         desc: "",
         pu: 0
     }];
-    return {
-        init: function(produits) {
-            this.produits = produits;
-            return this;
-        },
+
+    var Produit = function(produits) {
+        this.produits = produits;
+    }
+    Produit.prototype = {
         remove: function(index) {
             this.produits.splice(index, 1);
         },
@@ -109,6 +109,7 @@ angular.module('edison').factory('produits', ['dialog', function(dialog) {
             })
         },
         add: function(prod) {
+            this.searchText = '';
             this.produits.push(prod);
         },
         search: function(text) {
@@ -132,7 +133,14 @@ angular.module('edison').factory('produits', ['dialog', function(dialog) {
                 })
             }
             return total
+        },
+        previsualise: function(data) {
+            var url = '/api/intervention/facturePreview?html=true&data=';
+            $window.open(url + JSON.stringify(data), "_blank");
         }
     }
+
+    return Produit;
+
 
 }]);

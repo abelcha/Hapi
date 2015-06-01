@@ -68,6 +68,11 @@ angular.module('edison').controller('MainController', function(tabContainer, $sc
     });
 
 
+    $scope.checkTitle = function(tab) {
+   /*     var currentTab = tabContainer.getCurrentTab();
+        console.log(tab, currentTab)*/
+    }
+
     $scope.linkClick = function($event, tab) {
         $event.preventDefault();
         $event.stopPropagation();
