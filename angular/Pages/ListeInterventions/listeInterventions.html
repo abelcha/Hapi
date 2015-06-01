@@ -3,7 +3,7 @@
         <canvas id="pie" class="chart chart-pie" data="data" labels="labels"></canvas>
         {{data}}
     </div>
-    <div class="row " style="height:200px">
+    <div class="row " style="height:200px" ng-if="!recap">
         <div class="col-sm-2"ng-repeat="telepro in interventionsStats | limitTo:6">
             <div class="card" >
                 <div style="width:95%;margin-right:0" class="p+">
@@ -89,7 +89,7 @@
                                 </div>
                             </div>
                             <div class="col-sm-4">
-                                <img style="width=100%" ng-src="{{getStaticMap(expendedRowData)}}" class="img-thumbnail" />
+                                <img style="height: 194px;" ng-src="{{getStaticMap(expendedRowData)}}" class="img-thumbnail" />
                             </div>
                         </div>
                     </td>
