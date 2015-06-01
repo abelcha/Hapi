@@ -216,6 +216,7 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
             controller: "InterventionsController",
             resolve: {
                 user: whoAmI,
+                interventionsStats: getInterventionStats,
                 interventions: getInterList,
                 artisans: getArtisanList
             }
@@ -765,6 +766,7 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvid
         getUser: function(id_sst) {
             return $http({
                 method: 'GET',
+                cache:true,
                 url: "/api/whoAmI"
             });
         },

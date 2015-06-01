@@ -185,6 +185,7 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvid
         getUser: function(id_sst) {
             return $http({
                 method: 'GET',
+                cache:true,
                 url: "/api/whoAmI"
             });
         },

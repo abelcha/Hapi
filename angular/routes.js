@@ -216,6 +216,7 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
             controller: "InterventionsController",
             resolve: {
                 user: whoAmI,
+                interventionsStats: getInterventionStats,
                 interventions: getInterList,
                 artisans: getArtisanList
             }
