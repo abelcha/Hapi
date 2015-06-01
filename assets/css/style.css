@@ -147,7 +147,7 @@ td[variable-length] {
 
 .select-style > label {
     position: absolute;
-     color: rgba(0, 0, 0, 0.56);
+    color: rgba(0, 0, 0, 0.56);
     top: 36px;
     pointer-events: none;
 }
@@ -266,9 +266,16 @@ md-checkbox.md-default-theme.md-checked .md-icon {
     -moz-appearance: none;
     appearance: none;
 }
-label.text-field__label, .text-field>label {
-  color: rgba(0, 0, 0, 0.56);
+
+label.text-field__label,
+.text-field>label {
+    color: rgba(0, 0, 0, 0.56);
 }
+
 .tc-black-2 {
-  color: rgba(0, 0, 0, 0.66)!important;
+    color: rgba(0, 0, 0, 0.66)!important;
+}
+
+.table-striped>tbody>tr:nth-of-type(odd) {
+    background-color: rgba(232, 232, 232, 0.75)!important;
 }
