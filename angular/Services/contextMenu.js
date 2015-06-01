@@ -28,10 +28,11 @@ angular.module('edison').factory('contextMenu', ['$location', 'edisonAPI', 'LxNo
                 title: "Texte du SMS",
                 text: "\nEdison Service"
             }, function(text) {
-                edisonAPI.sendSMS(text, "0633138868").success(function(e) {
-                    console.log(e);
-                }).error(function(err) {
-                    console.log(err)
+                edisonAPI.sms.send({
+                    link: inter.artisan.id,
+                    origin: inter.id,
+                    text: text,
+                    to: "0633138868"
                 })
             })
         },
