@@ -1,4 +1,4 @@
 {
   "verbose": false,
-  "watch":["routes/*", "edisonFramework/*", "models/*", "app.js", "worker.js"]
+  "watch":["server/routes/*", "server/edisonFramework/*", "server/models/*", "server/app.js", "server/worker.js"]
 }

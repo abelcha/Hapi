@@ -9,27 +9,27 @@ var minifyCSS = require('gulp-minify-css');
 
 // Concatenate & Minify JS
 gulp.task('scripts', function() {
-	return gulp.src(['angular/*.js', 'angular/*/*.js', 'angular/*/*/*.js'])
+	return gulp.src(['front/angular/*.js', 'front/angular/*/*.js', 'front/angular/*/*/*.js'])
         .pipe(sourcemaps.init())
         //.pipe(babel())
         .pipe(concat('all.js'))
-        .pipe(sourcemaps.write('./assets/'))
-        .pipe(gulp.dest('assets/dist'));
+        .pipe(sourcemaps.write('./front/assets/'))
+        .pipe(gulp.dest('front/assets/dist'));
 });
 
  
 gulp.task('styles', function() {
-  return gulp.src('assets/css/*.css')
+  return gulp.src('front/assets/css/*.css')
   	.pipe(concat('all.min.css'))
     .pipe(minifyCSS())
-    .pipe(gulp.dest('assets/dist'))
+    .pipe(gulp.dest('front/assets/dist'))
 });
 
 
 // Watch Files For Changes
 gulp.task('watch', function() {
-	gulp.watch(['angular/*.js', 'angular/*/*.js', 'angular/*/*/*.js'], ['scripts']);
-	gulp.watch('assets/css/*.css', ['styles'])
+	gulp.watch(['front/angular/*.js', 'front/angular/*/*.js', 'front/angular/*/*/*.js'], ['scripts']);
+	gulp.watch('front/assets/css/*.css', ['styles'])
 });
 
 // Default Task
