@@ -115,6 +115,29 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvid
                 })
             },
         },
+        task: {
+            get: function(params) {
+                return $http({
+                    method: 'GET',
+                    url: '/api/taks/get',
+                    params: params
+                })
+            },
+            add: function(params) {
+                return $http({
+                    method: 'GET',
+                    url: '/api/task/add',
+                    params: params
+                })
+            },
+            check: function(params) {
+                return $http({
+                    method: 'GET',
+                    url: '/api/task/add',
+                    params: params
+                })
+            },
+        },
         file: {
             upload: function(file, options) {
                 return Upload.upload({
@@ -131,7 +154,7 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvid
                     url: '/api/calls/get',
                     params: {
                         link: link,
-                       // origin: origin
+                        // origin: origin
                     }
                 })
             },
@@ -185,7 +208,7 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvid
         getUser: function(id_sst) {
             return $http({
                 method: 'GET',
-                cache:true,
+                cache: true,
                 url: "/api/whoAmI"
             });
         },

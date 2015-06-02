@@ -6,7 +6,7 @@ angular.module('edison', ['ngMaterial', 'lumx', 'ngAnimate', 'xeditable', 'ngDia
     });
 
 
-angular.module('edison').controller('MainController', function(tabContainer, $scope, socket, config, dataProvider, $rootScope, $location, edisonAPI) {
+angular.module('edison').controller('MainController', function(tabContainer, $scope, socket, config, dataProvider, $rootScope, $location, edisonAPI, taskList) {
 
     $scope.config = config;
     $rootScope.loadingData = true;
@@ -85,11 +85,7 @@ angular.module('edison').controller('MainController', function(tabContainer, $sc
 
     });
 
-
-    $scope.checkTitle = function(tab) {
-        /*     var currentTab = tabContainer.getCurrentTab();
-             console.log(tab, currentTab)*/
-    }
+    $scope.taskList = taskList;
 
     $scope.linkClick = function($event, tab) {
         $event.preventDefault();

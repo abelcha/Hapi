@@ -6,7 +6,7 @@ angular.module('edison', ['ngMaterial', 'lumx', 'ngAnimate', 'xeditable', 'ngDia
     });
 
 
-angular.module('edison').controller('MainController', function(tabContainer, $scope, socket, config, dataProvider, $rootScope, $location, edisonAPI) {
+angular.module('edison').controller('MainController', function(tabContainer, $scope, socket, config, dataProvider, $rootScope, $location, edisonAPI, taskList) {
 
     $scope.config = config;
     $rootScope.loadingData = true;
@@ -85,11 +85,7 @@ angular.module('edison').controller('MainController', function(tabContainer, $sc
 
     });
 
-
-    $scope.checkTitle = function(tab) {
-        /*     var currentTab = tabContainer.getCurrentTab();
-             console.log(tab, currentTab)*/
-    }
+    $scope.taskList = taskList;
 
     $scope.linkClick = function($event, tab) {
         $event.preventDefault();
@@ -704,6 +700,29 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvid
                 })
             },
         },
+        task: {
+            get: function(params) {
+                return $http({
+                    method: 'GET',
+                    url: '/api/taks/get',
+                    params: params
+                })
+            },
+            add: function(params) {
+                return $http({
+                    method: 'GET',
+                    url: '/api/task/add',
+                    params: params
+                })
+            },
+            check: function(params) {
+                return $http({
+                    method: 'GET',
+                    url: '/api/task/add',
+                    params: params
+                })
+            },
+        },
         file: {
             upload: function(file, options) {
                 return Upload.upload({
@@ -720,7 +739,7 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvid
                     url: '/api/calls/get',
                     params: {
                         link: link,
-                       // origin: origin
+                        // origin: origin
                     }
                 })
             },
@@ -774,7 +793,7 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvid
         getUser: function(id_sst) {
             return $http({
                 method: 'GET',
-                cache:true,
+                cache: true,
                 url: "/api/whoAmI"
             });
         },
@@ -1800,6 +1819,30 @@ angular.module('edison').factory('tabContainer', ['$location', '$window', '$q', 
 
 }]);
 
+angular.module('edison').factory('taskList', ['dialog', 'edisonAPI', function(dialog, edisonAPI) {
+
+    var Task = function(user) {
+        edisonAPI.get({
+            to: user,
+            done: false
+        })
+    }
+    Task.prototype = {
+        check: function(_id) {
+            edisonAPI.check({
+                _id: _id
+            })
+        },
+        add: function(params) {
+            edisonAPI.add(params)
+
+        }
+    }
+    return Task;
+
+
+}]);
+
 
 /*
  * Detects on which browser the user is navigating
@@ -1947,7 +1990,7 @@ Map.prototype.show = function() {
 }
 
 
-var InterventionCtrl = function($window, $scope, $location, $routeParams, dialog, fourniture, LxNotificationService, tabContainer, edisonAPI, Address, $q, mapAutocomplete, productsList, config, intervention, artisans) {
+var InterventionCtrl = function($rootScope, $window, $scope, $location, $routeParams, dialog, fourniture, LxNotificationService, tabContainer, edisonAPI, Address, $q, mapAutocomplete, productsList, config, intervention, artisans) {
     var _this = this;
     _this.artisans = artisans.data;
     _this.config = config;

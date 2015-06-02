@@ -15,7 +15,7 @@ Map.prototype.show = function() {
 }
 
 
-var InterventionCtrl = function($window, $scope, $location, $routeParams, dialog, fourniture, LxNotificationService, tabContainer, edisonAPI, Address, $q, mapAutocomplete, productsList, config, intervention, artisans) {
+var InterventionCtrl = function($rootScope, $window, $scope, $location, $routeParams, dialog, fourniture, LxNotificationService, tabContainer, edisonAPI, Address, $q, mapAutocomplete, productsList, config, intervention, artisans) {
     var _this = this;
     _this.artisans = artisans.data;
     _this.config = config;
