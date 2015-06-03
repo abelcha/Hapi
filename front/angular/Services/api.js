@@ -27,11 +27,7 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvid
                 });
             },
             save: function(params) {
-                return $http({
-                    method: 'GET',
-                    url: "/api/intervention/save",
-                    params: params
-                });
+                return $http.post("/api/intervention", params);
             },
             getFiles: function(id) {
                 return $http({
@@ -191,7 +187,7 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvid
             return $http({
                 method: 'GET',
                 cache: true,
-                url: '/api/map/direction',
+                url: '/api/mapGetDistance',
                 params: options
             }).success(function(result) {
                 return result;

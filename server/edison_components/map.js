@@ -18,7 +18,8 @@ module.exports = {
       }
     });
   },
-  direction: function(query, res) {
+  getDistance: function(req, res) {
+    var query = req.query
     edison.googleMap.directions(query.origin, query.destination, function(err, result) {
       res.json({
         distance: result.routes[0].legs[0].distance.text,
@@ -27,7 +28,8 @@ module.exports = {
     });
   },
 
-  staticDirections: function(query, res) {
+  getStaticDirections: function(req, res) {
+    var query = req.query;
     var directions = this.getDirectionPath(query, function(err, points) {
 
       if (err) {

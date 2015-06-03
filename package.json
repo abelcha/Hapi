@@ -42,7 +42,11 @@
     "waitress": "^0.1.5"
   },
   "devDependencies": {
+    "Faker": "^0.7.2",
     "chai": "^2.3.0",
+    "chai-http": "^1.0.0",
+    "chai-string": "^1.1.1",
+    "faker": "^2.1.3",
     "gulp": "^3.8.11",
     "gulp-concat": "^2.5.2",
     "gulp-minify-css": "^1.1.0",

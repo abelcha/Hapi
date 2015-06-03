@@ -50,7 +50,7 @@ angular.module('edison').controller('InterventionsController', function(tabConta
 
     $scope.getStaticMap = function(inter) {
         var q = "?width=500&height=200&precision=0&zoom=11&origin=" + inter.client.address.lt + ", " + inter.client.address.lg;
-        return "/api/map/staticDirections" + q;
+        return "/api/mapGetStatic" + q;
     }
     $scope.rowRightClick = function($event, inter) {
         $scope.contextMenu.setPosition($event.pageX, $event.pageY)

@@ -622,11 +622,7 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvid
                 });
             },
             save: function(params) {
-                return $http({
-                    method: 'GET',
-                    url: "/api/intervention/save",
-                    params: params
-                });
+                return $http.post("/api/intervention", params);
             },
             getFiles: function(id) {
                 return $http({
@@ -786,7 +782,7 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvid
             return $http({
                 method: 'GET',
                 cache: true,
-                url: '/api/map/direction',
+                url: '/api/mapGetDistance',
                 params: options
             }).success(function(result) {
                 return result;
@@ -920,11 +916,47 @@ angular.module('edison').factory('config', [function() {
             c: 'deep-orange white-text'
         }
     }
-    config.categoriesAKV = [];
-    _.each(config.categoriesKV, function(e) {
-        config.categoriesAKV[e.o] = e;
-    })
-
+    config.categoriesAKV = [{
+        s: 'PL',
+        o: 0,
+        n: 'Plomberie',
+        c: 'blue white-text'
+    }, {
+        s: 'CH',
+        o: 1,
+        n: 'Chauffage',
+        c: 'red white-text'
+    }, {
+        s: 'EL',
+        o: 2,
+        n: 'Electricité',
+        c: 'yellow  accent-4 black-text'
+    }, {
+        s: 'SR',
+        o: 3,
+        n: 'Serrurerie',
+        c: 'brown white-text'
+    }, {
+        s: 'VT',
+        o: 4,
+        n: 'Vitrerie',
+        c: 'green white-text'
+    }, {
+        s: 'AS',
+        o: 5,
+        n: 'Assainissement',
+        c: 'orange white-text'
+    }, {
+        s: 'CL',
+        o: 6,
+        n: 'Climatisation',
+        c: 'teal white-text'
+    }, {
+        s: 'PT',
+        o: 7,
+        n: 'Peinture',
+        c: 'deep-orange white-text'
+    }]
     config.fournisseur = [{
         short_name: 'ARTISAN',
         type: 'Fourniture Artisan'
@@ -954,37 +986,6 @@ angular.module('edison').factory('config', [function() {
         type: 'Fourniture Edison'
     }]
 
-    config.categories = [{
-        short_name: 'EL',
-        long_name: 'Electricité'
-    }, {
-        short_name: 'PL',
-        long_name: 'Plomberie'
-    }, {
-        short_name: 'CH',
-        long_name: 'Chauffage'
-    }, {
-        short_name: 'CL',
-        long_name: 'Climatisation'
-    }, {
-        short_name: 'SR',
-        long_name: 'Serrurerie'
-    }, {
-        short_name: 'VT',
-        long_name: 'Vitrerie'
-    }, {
-        short_name: 'CR',
-        long_name: 'Carrelage'
-    }, {
-        short_name: 'MN',
-        long_name: 'Menuiserie'
-    }, {
-        short_name: 'MC',
-        long_name: 'Maconnerie'
-    }, {
-        short_name: 'PT',
-        long_name: 'Peinture'
-    }];
 
     config.modeDeReglements = [{
         short_name: 'CB',
@@ -2185,23 +2186,22 @@ var InterventionCtrl = function($rootScope, $window, $scope, $location, $routePa
 
 
     $scope.saveInter = function(options) {
-        edisonAPI.intervention.save({
-            data: _this.data
-        }).then(function(result) {
-            LxNotificationService.success("Les données de l'intervention " + result.data.id + " ont à été enregistré");
-            if (options && options.envoi == true) {
-                action.envoi(result);
-            } else if (options && options.annulation) {
-                action.annulation(result);
-            } else if (options && options.verification) {
-                action.verification(result);
-            } else {
-                $location.url("/interventions");
-                tabContainer.remove(tab)
-            }
-        }).catch(function(error) {
-            LxNotificationService.error(error.data);
-        });
+        edisonAPI.intervention.save(_this.data)
+            .then(function(result) {
+                LxNotificationService.success("Les données de l'intervention " + result.data.id + " ont à été enregistré");
+                if (options && options.envoi == true) {
+                    action.envoi(result);
+                } else if (options && options.annulation) {
+                    action.annulation(result);
+                } else if (options && options.verification) {
+                    action.verification(result);
+                } else {
+                    $location.url("/interventions");
+                    tabContainer.remove(tab)
+                }
+            }).catch(function(error) {
+                LxNotificationService.error(error.data);
+            });
     }
 
     $scope.clickOnArtisanMarker = function(event, sst) {
@@ -2299,7 +2299,7 @@ var InterventionCtrl = function($rootScope, $window, $scope, $location, $routePa
             q += ("&origin=" + _this.data.client.address.latLng);
         if (_this.data.artisan && _this.data.artisan.id)
             q += ("&destination=" + _this.data.artisan.address.lt + "," + _this.data.artisan.address.lg);
-        return "/api/map/staticDirections" + q;
+        return "/api/mapGetStatic" + q;
     }
 
 
@@ -2368,7 +2368,7 @@ angular.module('edison').controller('InterventionsController', function(tabConta
 
     $scope.getStaticMap = function(inter) {
         var q = "?width=500&height=200&precision=0&zoom=11&origin=" + inter.client.address.lt + ", " + inter.client.address.lg;
-        return "/api/map/staticDirections" + q;
+        return "/api/mapGetStatic" + q;
     }
     $scope.rowRightClick = function($event, inter) {
         $scope.contextMenu.setPosition($event.pageX, $event.pageY)

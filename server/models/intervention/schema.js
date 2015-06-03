@@ -127,11 +127,26 @@ module.exports = function(db) {
             type: Number,
             default: 0
         },
-        prixFinal: Number,
-        reglementSurPlace: Boolean,
-        aDemarcher: Boolean,
+        prixFinal: {
+            type: Number,
+            default: 0
+        },
+        reglementSurPlace: {
+            type: Boolean,
+            default: true
+        },
+        aDemarcher: {
+            type: Boolean,
+            default: false
+        },
         fournisseur: String,
-        coutFourniture: Number,
-        tva: Number
+        coutFourniture: {
+            type: Number,
+            default: 0
+        },
+        tva: {
+            type: Number,
+            default: 20
+        }
     });
 }

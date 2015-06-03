@@ -6,48 +6,6 @@ module.exports = {
     mobytPASS: "2n3jwunu",
     locatDB: 'mongodb://localhost/EDISON',
     dropboxKEY: "vPCwuQ_iHHkAAAAAAAAEYXCJS5OETTlvzmXbhc1kjFOsMKO2futzgS-VM8p8S1un",
-    categoriesKV: {
-        EL: {
-            n: 'Electricité',
-            c: 'yellow  darken-2 black-text'
-        },
-        PL: {
-            n: 'Plomberie',
-            c: 'blue'
-        },
-        CH: {
-            n: 'Chauffage',
-            c: 'red'
-        },
-        CL: {
-            n: 'Climatisation',
-            c: ' teal darken-3'
-        },
-        SR: {
-            n: 'Serrurerie',
-            c: 'brown'
-        },
-        VT: {
-            n: 'Vitrerie',
-            c: ' green darken-3'
-        },
-        CR: {
-            n: 'Carrelage',
-            c: ''
-        },
-        MN: {
-            n: 'Menuiserie',
-            c: ''
-        },
-        MC: {
-            n: 'Maconnerie',
-            c: ''
-        },
-        PT: {
-            n: 'Peinture',
-            c: ''
-        }
-    },
     etatsKV: {
         ENV: {
             n: 'Envoyé',
@@ -61,6 +19,10 @@ module.exports = {
             n: 'Payé',
             c: 'green accent-4'
         },
+        ATT: {
+            n: 'Reglement En Attente',
+            c: 'purple'
+        },
         ATTC: {
             n: 'RC En Attente',
             c: 'purple'
@@ -70,7 +32,7 @@ module.exports = {
             c: 'pink darken-4'
         },
         APR: {
-            n: 'A Programmer',
+            n: 'A Progr.',
             c: 'blue'
         },
         AVR: {
@@ -78,7 +40,7 @@ module.exports = {
             c: 'brown darken-3'
         },
         ANN: {
-            n: 'Annulé',
+            n: 'Annuler',
             c: 'red'
         },
         DEV: {
@@ -86,6 +48,172 @@ module.exports = {
             c: 'light-blue'
         },
     },
+    civilites: [{
+        short_name: 'M.',
+        long_name: 'Monsieur'
+    }, {
+        short_name: 'Mme.',
+        long_name: 'Madame'
+    }, {
+        short_name: 'Soc.',
+        long_name: 'Société'
+    }],
+    civilitesTab: ['M.', 'Mme.', 'Soc.'],
+    categoriesKV: {
+        EL: {
+            s: 'EL',
+            o: 2,
+            n: 'Electricité',
+            c: 'yellow  accent-4 black-text'
+        },
+        PL: {
+            s: 'PL',
+            o: 0,
+            n: 'Plomberie',
+            c: 'blue white-text'
+        },
+        CH: {
+            s: 'CH',
+            o: 1,
+            n: 'Chauffage',
+            c: 'red white-text'
+        },
+        CL: {
+            s: 'CL',
+            o: 6,
+            n: 'Climatisation',
+            c: 'teal white-text'
+        },
+        SR: {
+            s: 'SR',
+            o: 3,
+            n: 'Serrurerie',
+            c: 'brown white-text'
+        },
+        VT: {
+            s: 'VT',
+            o: 4,
+            n: 'Vitrerie',
+            c: 'green white-text'
+        },
+        AS: {
+            s: 'AS',
+            o: 5,
+            n: 'Assainissement',
+            c: 'orange white-text'
+        },
+        PT: {
+            s: 'PT',
+            o: 7,
+            n: 'Peinture',
+            c: 'deep-orange white-text'
+        }
+    },
+    categoriesAKV: [{
+        s: 'PL',
+        o: 0,
+        n: 'Plomberie',
+        c: 'blue white-text'
+    }, {
+        s: 'CH',
+        o: 1,
+        n: 'Chauffage',
+        c: 'red white-text'
+    }, {
+        s: 'EL',
+        o: 2,
+        n: 'Electricité',
+        c: 'yellow  accent-4 black-text'
+    }, {
+        s: 'SR',
+        o: 3,
+        n: 'Serrurerie',
+        c: 'brown white-text'
+    }, {
+        s: 'VT',
+        o: 4,
+        n: 'Vitrerie',
+        c: 'green white-text'
+    }, {
+        s: 'AS',
+        o: 5,
+        n: 'Assainissement',
+        c: 'orange white-text'
+    }, {
+        s: 'CL',
+        o: 6,
+        n: 'Climatisation',
+        c: 'teal white-text'
+    }, {
+        s: 'PT',
+        o: 7,
+        n: 'Peinture',
+        c: 'deep-orange white-text'
+    }],
+    fournisseur: [{
+        short_name: 'ARTISAN',
+        type: 'Fourniture Artisan'
+    }, {
+        short_name: 'CEDEO',
+        type: 'Fourniture Edison'
+    }, {
+        short_name: 'BROSSETTE',
+        type: 'Fourniture Edison'
+    }, {
+        short_name: 'REXEL',
+        type: 'Fourniture Edison'
+    }, {
+        short_name: 'COAXEL',
+        type: 'Fourniture Edison'
+    }, {
+        short_name: 'YESSS ELECTRIQUE',
+        type: 'Fourniture Edison'
+    }, {
+        short_name: 'CGED',
+        type: 'Fourniture Edison'
+    }, {
+        short_name: 'COSTA',
+        type: 'Fourniture Edison'
+    }, {
+        short_name: 'FORUM DU BATIMENT',
+        type: 'Fourniture Edison'
+    }],
+
+    modeDeReglements: [{
+        short_name: 'CB',
+        long_name: 'Carte Bancaire'
+    }, {
+        short_name: 'CH',
+        long_name: 'Chèque'
+    }, {
+        short_name: 'CA',
+        long_name: 'Espèces'
+    }],
+    tva: [{
+        long_name: 10,
+    }, {
+        long_name: 20
+    }],
+    typePayeur: [{
+        short_name: 'SOC',
+        long_name: 'Société'
+    }, {
+        short_name: 'PRO',
+        long_name: 'Propriétaire'
+    }, {
+        short_name: 'LOC',
+        long_name: 'Locataire'
+    }, {
+        short_name: 'IMO',
+        long_name: 'Agence Immobilière'
+    }, {
+        short_name: 'CUR',
+        long_name: 'Curatelle'
+    }, {
+        short_name: 'AUT',
+        long_name: 'Autre'
+    }],
+
     users: [{
         login: 'abel_c',
         oldLogin: 'abel',

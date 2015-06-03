@@ -200,23 +200,22 @@ var InterventionCtrl = function($rootScope, $window, $scope, $location, $routePa
 
 
     $scope.saveInter = function(options) {
-        edisonAPI.intervention.save({
-            data: _this.data
-        }).then(function(result) {
-            LxNotificationService.success("Les données de l'intervention " + result.data.id + " ont à été enregistré");
-            if (options && options.envoi == true) {
-                action.envoi(result);
-            } else if (options && options.annulation) {
-                action.annulation(result);
-            } else if (options && options.verification) {
-                action.verification(result);
-            } else {
-                $location.url("/interventions");
-                tabContainer.remove(tab)
-            }
-        }).catch(function(error) {
-            LxNotificationService.error(error.data);
-        });
+        edisonAPI.intervention.save(_this.data)
+            .then(function(result) {
+                LxNotificationService.success("Les données de l'intervention " + result.data.id + " ont à été enregistré");
+                if (options && options.envoi == true) {
+                    action.envoi(result);
+                } else if (options && options.annulation) {
+                    action.annulation(result);
+                } else if (options && options.verification) {
+                    action.verification(result);
+                } else {
+                    $location.url("/interventions");
+                    tabContainer.remove(tab)
+                }
+            }).catch(function(error) {
+                LxNotificationService.error(error.data);
+            });
     }
 
     $scope.clickOnArtisanMarker = function(event, sst) {
@@ -314,7 +313,7 @@ var InterventionCtrl = function($rootScope, $window, $scope, $location, $routePa
             q += ("&origin=" + _this.data.client.address.latLng);
         if (_this.data.artisan && _this.data.artisan.id)
             q += ("&destination=" + _this.data.artisan.address.lt + "," + _this.data.artisan.address.lg);
-        return "/api/map/staticDirections" + q;
+        return "/api/mapGetStatic" + q;
     }
 
 

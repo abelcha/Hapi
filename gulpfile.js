@@ -4,7 +4,6 @@ var gulp = require('gulp');
 var concat = require('gulp-concat');
 var rename = require('gulp-rename');
 var sourcemaps = require('gulp-sourcemaps');
-var babel = require('gulp-babel');
 var minifyCSS = require('gulp-minify-css');
 
 // Concatenate & Minify JS

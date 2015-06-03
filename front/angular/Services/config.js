@@ -108,11 +108,47 @@ angular.module('edison').factory('config', [function() {
             c: 'deep-orange white-text'
         }
     }
-    config.categoriesAKV = [];
-    _.each(config.categoriesKV, function(e) {
-        config.categoriesAKV[e.o] = e;
-    })
-
+    config.categoriesAKV = [{
+        s: 'PL',
+        o: 0,
+        n: 'Plomberie',
+        c: 'blue white-text'
+    }, {
+        s: 'CH',
+        o: 1,
+        n: 'Chauffage',
+        c: 'red white-text'
+    }, {
+        s: 'EL',
+        o: 2,
+        n: 'Electricité',
+        c: 'yellow  accent-4 black-text'
+    }, {
+        s: 'SR',
+        o: 3,
+        n: 'Serrurerie',
+        c: 'brown white-text'
+    }, {
+        s: 'VT',
+        o: 4,
+        n: 'Vitrerie',
+        c: 'green white-text'
+    }, {
+        s: 'AS',
+        o: 5,
+        n: 'Assainissement',
+        c: 'orange white-text'
+    }, {
+        s: 'CL',
+        o: 6,
+        n: 'Climatisation',
+        c: 'teal white-text'
+    }, {
+        s: 'PT',
+        o: 7,
+        n: 'Peinture',
+        c: 'deep-orange white-text'
+    }]
     config.fournisseur = [{
         short_name: 'ARTISAN',
         type: 'Fourniture Artisan'
@@ -142,37 +178,6 @@ angular.module('edison').factory('config', [function() {
         type: 'Fourniture Edison'
     }]
 
-    config.categories = [{
-        short_name: 'EL',
-        long_name: 'Electricité'
-    }, {
-        short_name: 'PL',
-        long_name: 'Plomberie'
-    }, {
-        short_name: 'CH',
-        long_name: 'Chauffage'
-    }, {
-        short_name: 'CL',
-        long_name: 'Climatisation'
-    }, {
-        short_name: 'SR',
-        long_name: 'Serrurerie'
-    }, {
-        short_name: 'VT',
-        long_name: 'Vitrerie'
-    }, {
-        short_name: 'CR',
-        long_name: 'Carrelage'
-    }, {
-        short_name: 'MN',
-        long_name: 'Menuiserie'
-    }, {
-        short_name: 'MC',
-        long_name: 'Maconnerie'
-    }, {
-        short_name: 'PT',
-        long_name: 'Peinture'
-    }];
 
     config.modeDeReglements = [{
         short_name: 'CB',

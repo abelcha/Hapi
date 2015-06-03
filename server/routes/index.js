@@ -16,20 +16,14 @@ module.exports = function(app) {
     }
 
 
-    app.get('/api/map/:method', function(req, res) {
-        if (!edison.map[req.params.method]) {
-            return res.status(400).send("Unknown Method");
-        }
-        edison.map[req.params.method](req.query, res)
-    });
-
-    app.all('/api/:fn', function(req, res) {
-        if (typeof edison.ajax[req.params.fn] === 'function') {
-            return (edison.ajax[req.params.fn](req, res))
+    app.get('/api/:fn', function(req, res) {
+        if (typeof edison.methods[req.params.fn] === 'function') {
+            return (edison.methods[req.params.fn](req, res))
         } else {
             res.sendStatus(404);
         }
     })
+
 
     app.all('/api/:model/:id/:method', function(req, res, next) {
         var model = db.model(req.params.model);
@@ -39,6 +33,15 @@ module.exports = function(app) {
             return next();
         }
         model[method](req.params.id, req, res).then(onSuccess(res), onFailure(res));
+    });
+
+    app.post('/api/:model', function(req, res, next) {
+        var model = db.model(req.params.model);
+        var method = 'save';
+        if (!model ||  typeof model[method] !== "function" || model[method].length !== 2) {
+            return next();
+        }
+        model[method](req, res).then(onSuccess(res), onFailure(res))
     });
 
     app.all('/api/:model/:method', function(req, res, next) {
@@ -60,10 +63,16 @@ module.exports = function(app) {
         model.view(id, req, res).then(onSuccess(res), onFailure(res));
     });
 
+    app.get('/api/map/:method', function(req, res) {
+        if (!edison.map[req.params.method]) {
+            return res.status(400).send("Unknown Method");
+        }
+        edison.map[req.params.method](req.query, res)
+    });
 
 
     app.all("*", function(req, res) {
-        res.status(404).send('Not Found');
+        res.status(404).send('X Not Found');
     });
 
 };

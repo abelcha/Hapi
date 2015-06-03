@@ -94,14 +94,14 @@ app.use(function(req, res, next) {
     if (req.url.includes('.'))
         return next();
     if (req.session && !req.session.id && (!req.query.x || envProd)) {
-        if (req.url.startsWith('/server/')) {
-            return res.sendStatus(401);
+        if (req.url.startsWith('/api/')) {
+            return res.status(401).send("Unauthorized");
         } else {
-            return res.sendFile(process.cwd() + '/front/views/login.html');
+            return res.status(401).sendFile(process.cwd() + '/front/views/login.html');
         }
     } else {
 
-        if (!req.url.startsWith('/server/')) {
+        if (!req.url.startsWith('/api/')) {
             return res.sendFile(process.cwd() + "/front/views/index.html")
         }
         return next();
