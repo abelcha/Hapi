@@ -1,0 +1,66 @@
+<div class="container" style=" margin: auto;max-width: 1200px;">
+    <!--  <md-toolbar class="grey" style="border-top-left-radius:5px;border-top-right-radius:5px;">
+  </md-toolbar> -->
+    <div class="row">
+        <div class="col-sm-12 md-whiteframe-z1" style="background:white;height:2000px">
+            <form class="form-horizontal" ng-init="sst = tab.data" style="overflow:hidden;height:100%" novalidate>
+                <!-- Form Name -->
+                <!-- Text input-->
+                <br>
+                <h3>Fiche d'Artisan</h3>
+                <br>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        <lx-text-field label="Prénom Representant">
+                            <input capitalize type="text" ng-model="sst.representant.prenom">
+                        </lx-text-field>
+                    </div>
+                    <div class="col-sm-3">
+                        <lx-text-field label="Nom Representant">
+                            <input capitalize type="text" ng-model="sst.representant.nom">
+                        </lx-text-field>
+                    </div>
+                    <div class="col-sm-3">
+                        <lx-text-field label="Forme Juridique">
+                            <input capitalize type="text" ng-model="sst.formeJuridique">
+                        </lx-text-field>
+                    </div>
+                    <div class="col-sm-3">
+                        <lx-text-field label="Nom Société">
+                            <input capitalize type="text" ng-model="sst.nomSociete">
+                        </lx-text-field>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        <lx-text-field label="Téléphone 1">
+                            <input capitalize type="text" ng-model="sst.telephone.tel1">
+                        </lx-text-field>
+                    </div>
+                    <div class="col-sm-3">
+                        <lx-text-field label="Téléphone 2">
+                            <input capitalize type="text" ng-model="sst.telephone.tel2">
+                        </lx-text-field>
+                    </div>
+                    <div class="col-sm-3">
+                        <lx-text-field label="Email">
+                            <input capitalize type="text" ng-model="sst.email">
+                        </lx-text-field>
+                    </div>
+                    <div class="col-sm-3">
+                        <lx-text-field label="Email">
+                            <input capitalize type="text" ng-model="sst.email">
+                        </lx-text-field>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-6">
+                <map zoom="10" pan-control="false" style="height:350px" center="{{sst.address.lt}}, {{sst.address.lg}}">
+                            <marker  position="{{sst.address.lt}}, {{sst.address.lg}}" color="grey"></marker>
+                        </map>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
