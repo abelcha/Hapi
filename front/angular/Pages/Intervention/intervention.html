@@ -298,7 +298,7 @@
                     <div class="p+">
                         <strong class="fs-headline display-block">Facture</strong>
                         <md-content class="autocomplete" style="width: 40%;margin-top: -22px;margin-left: 54%;float: left;" layout-padding layout="column" md-input-container flex>
-                            <md-autocomplete class="address-autocomplete" placeholder="Addresse de Facturation" md-selected-item-change="changeAddressFacture(selectedAddress)" md-selected-item="selectedAddress" md-search-text="searchText" md-items="item in autocomplete.search(searchText)" md-item-text="item.description">
+                            <md-autocomplete class="address-autocomplete" md-selected-item-change="vm.changeAddressFacture(selectedAddress)" md-selected-item="selectedAddress" md-search-text="searchText" md-items="item in vm.autocomplete.search(searchText)" md-item-text="item.description">
                                 <span md-highlight-text="searchText"> {{item.description}}</span>
                             </md-autocomplete>
                         </md-content>
@@ -358,7 +358,7 @@
                 </div>
             </div>
             <br>
-                        <div flex-item>
+            <div flex-item>
                 <div class="card">
                     <div class="p+">
                         <strong class="fs-headline display-block">Produits</strong>

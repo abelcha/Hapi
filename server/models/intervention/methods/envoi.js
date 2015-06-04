@@ -3,6 +3,7 @@ module.exports = function(schema) {
     schema.statics.envoi = {
         unique: true,
         findBefore: true,
+        method:'POST',
         fn: function(inter, req, res) {
 
             var getSuppFile = function(file_id) {

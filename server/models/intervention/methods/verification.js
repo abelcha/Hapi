@@ -3,6 +3,7 @@ module.exports = function(schema) {
     schema.statics.verification = {
         unique: true,
         findBefore: true,
+        method:'POST',
         fn: function(inter, req, res) {
             return new Promise(function(resolve, reject) {
                 if (!inter.reglementSurPlace && !inter.date.envoiFacture)

@@ -55,7 +55,7 @@ var InterventionCtrl = function($rootScope, $window, $scope, $location, $routePa
 
 
 
-    $scope.changeAddressFacture = function(place) {
+    _this.changeAddressFacture = function(place) {
         mapAutocomplete.getPlaceAddress(place).then(function(addr)  {
             _this.data.facture.address = addr;
         });

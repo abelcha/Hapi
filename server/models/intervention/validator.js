@@ -28,7 +28,6 @@ module.exports = function(schema) {
         });*/
 
     schema.post('save', function(doc) {
-        console.log("save")
         if (!isWorker) {
             setTimeout(function() {
                 db.model('intervention').cacheActualise(doc);

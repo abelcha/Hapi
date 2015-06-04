@@ -4,7 +4,12 @@ var intervention = 123
 describe("[Interventions]", function() {
     before(function(done) {
         intervention = require("./module/intervention-utils")(global.app)
-        done();
+        app.get("/api/intervention/12")
+            .end(function(err, res) {
+                var resp = JSON.parse(res.text);
+                inter = resp;
+                done();
+            })
     })
 
     describe("Basic OP", function() {
@@ -14,6 +19,7 @@ describe("[Interventions]", function() {
                     expect(res).to.have.status(200);
                     var resp = JSON.parse(res.text);
                     expect(resp._id).to.be.equal(12);
+                    inter = resp;
                     done();
                 })
         })
@@ -54,7 +60,7 @@ describe("[Interventions]", function() {
 
     describe("Status Fest ", function() {
         it("envoi sans text sms".magenta, function(done) {
-            app.get("/api/intervention/" + inter.id + "/envoi")
+            app.post("/api/intervention/" + inter.id + "/envoi")
                 .end(function(err, res) {
                     expect(res).to.have.status(400);
                     done();
@@ -123,6 +129,7 @@ describe("[Interventions]", function() {
         });
         it("verification".blue, function(done) {
             intervention.verification(function(res) {
+                expect(res).to.have.status(200);
                 var resp = JSON.parse(res.text)
                 expect(resp.login.verification).to.be.equalIgnoreCase(config.username);
                 expect(resp.status).to.be.equalIgnoreCase("ATT");
@@ -188,41 +195,47 @@ describe("[Interventions]", function() {
                 done();
             })
         });
+        it("annulation".blue, function(done) {
+            intervention.annulation(function(res) {
+                expect(res).to.have.status(200);
+                done();
+            })
+        });
 
-        /*      });
+    });
 
-              describe("Verification", function() {
-                  this.timeout(60000);
-                  if (g.id === 12) {
-                      it("post /api/intervention/{valid}", newInter);
-                      it("post /api/intervention/{valid}/envoi", interEnvoi);
-                  }
-                  it("get /api/intervention/{valid}/verification", function(done) {
-                      app.post("/api/intervention/" + g.id + "/verification")
-                          .end(function(err, res) {
-                              expect(res).to.have.status(200);
-                              var resp = JSON.parse(res.text);
-                              expect(resp.status).to.be.equalIgnoreCase("ATT");
-                              expect(resp.login.verification).to.be.equalIgnoreCase(g.username);
-                              done();
-                          })
-                  })
-              });
-              describe("Annulation", function() {
-                  if (g.id === 12) {
-                      it("post /api/intervention/{valid}", newInter);
-                      it("post /api/intervention/{valid}/envoi", interEnvoi);
-                  }
-                  it("get /api/intervention/{valid}/annulation", function(done) {
-                      app.post("/api/intervention/" + g.id + "/annulation")
-                          .end(function(err, res) {
-                              expect(res).to.have.status(200);
-                              var resp = JSON.parse(res.text);
-                              expect(resp.status).to.be.equalIgnoreCase("ATT");
-                              expect(resp.login.annulation).to.be.equalIgnoreCase(g.username);
-                              done();
-                          })
-                  })
-              });*/
+    describe("Infos ", function() {
+        it("get /intervention/{id} ".blue, function(done) {
+            app.get("/api/intervention/" + inter.id)
+                .end(function(err, res) {
+                    expect(res).to.have.status(200);
+                    var resp = JSON.parse(res.text)
+                    expect(resp._id).to.be.equal(inter.id);
+                    done();
+                })
+        });
+        it("get /intervention/{id}/getFiles ".blue, function(done) {
+            app.get("/api/intervention/" + inter.id + "/getFiles")
+                .end(function(err, res) {
+                    expect(res).to.have.status(200);
+                    var resp = JSON.parse(res.text)
+                    expect(resp).to.be.an('array')
+                    done();
+                })
+        });
+        it("get /intervention/stats ".blue, function(done) {
+            app.get("/api/intervention/stats")
+                .end(function(err, res) {
+                    expect(res).to.have.status(200);
+                    var resp = JSON.parse(res.text)
+                    expect(resp).to.be.an('array')
+                    expect(resp[0].total).to.be.an('number');
+                    expect(resp[0].montant).to.be.an('number');
+                    expect(resp[0].login).to.be.an('string');
+                    expect(resp[0].status).to.be.an('object');
+                    expect(resp[0].apr).to.be.an('object');
+                    done();
+                })
+        });
     });
 });

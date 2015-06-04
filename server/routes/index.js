@@ -26,7 +26,6 @@ module.exports = function(app) {
 
     var uniqueModel = function(model, method, req, res) {
         return new Promise(function(resolve, reject) {
-
             if (model[method].findBefore === void(0) || model[method].findBefore !== false) {
                 model.findOne({
                     _id: req.params.id
@@ -50,8 +49,10 @@ module.exports = function(app) {
             return next();
         if (typeof model[method] === "undefined")
             return next();
-        if (model[method].unique === true) {
+        if (model[method].unique === true && model[method].method === req.method) {
             uniqueModel(model, method, req, res).then(onSuccess(res), onFailure(res));
+        } else {
+            next();
         }
     });
 

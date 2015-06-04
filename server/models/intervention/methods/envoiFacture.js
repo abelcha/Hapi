@@ -3,6 +3,7 @@ module.exports = function(schema) {
     schema.statics.envoiFacture = {
         unique: true,
         findBefore: true,
+        method: 'POST',
         fn: function(inter, req, res) {
             return new Promise(function(resolve, reject) {
                 inter.date.envoiFacture = new Date;

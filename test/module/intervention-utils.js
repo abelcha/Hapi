@@ -20,7 +20,7 @@ module.exports = function(app, config) {
                 })
         },
         envoi: function(cb) {
-            app.get('/api/intervention/' + inter.id + '/envoi')
+            app.post('/api/intervention/' + inter.id + '/envoi')
                 .send({
                     sms: faker.lorem.sentences()
                 })

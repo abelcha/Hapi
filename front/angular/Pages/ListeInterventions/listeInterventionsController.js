@@ -78,6 +78,7 @@ angular.module('edison').controller('InterventionsController', function(tabConta
                 allowDuplicates: false
             });
         } else {
+            console.log("jere")
             if ($rootScope.expendedRow === inter.id) {
                 $rootScope.expendedRow = -1;
             } else {
@@ -85,6 +86,7 @@ angular.module('edison').controller('InterventionsController', function(tabConta
                     edisonAPI.intervention.get(inter.id),
                     edisonAPI.artisan.getStats(inter.ai)
                 ]).then(function(result)  {
+            console.log("jere123")
 
                     $rootScope.expendedRow = inter.id;
                     $rootScope.expendedRowData = result[0].data;

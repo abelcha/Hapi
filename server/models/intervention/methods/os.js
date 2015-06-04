@@ -14,7 +14,7 @@ module.exports = function(schema) {
                 logo: edison.logo,
             },
             buffer: true,
-            mail:true,
+            mail: true,
         })
     }
 
@@ -30,13 +30,19 @@ module.exports = function(schema) {
     };
 
 
-    schema.statics.osPreview = function(id, req, res) {
-        if (!req.query.html)
-            res.contentType("application/pdf")
-        return this.getOS({
-            html: req.query.html,
-            buffer: true,
-            id: id
-        })
+    schema.statics.osPreview = {
+        unique: true,
+        findBefore: false,
+        method:'GET',
+        fn: function(id, req, res) {
+            if (!req.query.html)
+                res.contentType("application/pdf")
+            return this.getOS({
+                html: req.query.html,
+                buffer: true,
+                id: id
+            })
+        }
     }
+
 }

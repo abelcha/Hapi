@@ -108,7 +108,6 @@ module.exports = function(schema) {
                     }
                     redis.set("interventionList", JSON.stringify(data), function() {
                         io.sockets.emit('interventionListChange', result);
-                        console.log("release")
                         release();
                     });
                 }

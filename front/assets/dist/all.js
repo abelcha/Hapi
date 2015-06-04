@@ -631,24 +631,13 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvid
                 });
             },
             verification: function(id, options) {
-                return $http({
-                    method: 'GET',
-                    params: options,
-                    url: "/api/intervention/" + id + "/verification"
-                });
+                return $http.post("/api/intervention/" + id + "/verification", options);
             },
             annulation: function(id) {
-                return $http({
-                    method: 'GET',
-                    url: "/api/intervention/" + id + "/annulation"
-                });
+                return $http.post("/api/intervention/" + id + "/annulation");
             },
             envoi: function(id, options) {
-                return $http({
-                    method: 'GET',
-                    params: options,
-                    url: "/api/intervention/" + id + "/envoi"
-                });
+                return $http.post("/api/envoi/" + id + "/envoi", options);
             },
 
         },
@@ -2041,7 +2030,7 @@ var InterventionCtrl = function($rootScope, $window, $scope, $location, $routePa
 
 
 
-    $scope.changeAddressFacture = function(place) {
+    _this.changeAddressFacture = function(place) {
         mapAutocomplete.getPlaceAddress(place).then(function(addr)  {
             _this.data.facture.address = addr;
         });
@@ -2396,6 +2385,7 @@ angular.module('edison').controller('InterventionsController', function(tabConta
                 allowDuplicates: false
             });
         } else {
+            console.log("jere")
             if ($rootScope.expendedRow === inter.id) {
                 $rootScope.expendedRow = -1;
             } else {
@@ -2403,6 +2393,7 @@ angular.module('edison').controller('InterventionsController', function(tabConta
                     edisonAPI.intervention.get(inter.id),
                     edisonAPI.artisan.getStats(inter.ai)
                 ]).then(function(result)  {
+            console.log("jere123")
 
                     $rootScope.expendedRow = inter.id;
                     $rootScope.expendedRowData = result[0].data;

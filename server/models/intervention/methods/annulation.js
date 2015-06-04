@@ -3,6 +3,7 @@ module.exports = function(schema) {
     schema.statics.annulation = {
         unique: true,
         findBefore: true,
+        method: 'POST',
         fn: function(inter, req, res) {
             return new Promise(function(resolve, reject) {
                 inter.date.annulation = new Date;
