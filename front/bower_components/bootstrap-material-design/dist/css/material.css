@@ -1,0 +1,1754 @@
+.checkbox {
+  -webkit-transform: translateZ(0);
+          transform: translateZ(0);
+}
+.checkbox label {
+  cursor: pointer;
+  padding-left: 0;
+}
+.checkbox input[type=checkbox] {
+  opacity: 0;
+  position: absolute;
+  margin: 0;
+  z-index: -1;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  left: 0;
+  pointer-events: none;
+}
+.checkbox .checkbox-material {
+  vertical-align: middle;
+  position: relative;
+  top: 3px;
+}
+.checkbox .checkbox-material:before {
+  display: block;
+  position: absolute;
+  left: 0;
+  content: "";
+  background-color: rgba(0, 0, 0, 0.84);
+  height: 20px;
+  width: 20px;
+  border-radius: 100%;
+  z-index: 1;
+  opacity: 0;
+  margin: 0;
+  -webkit-transform: scale3d(2.3, 2.3, 1);
+          transform: scale3d(2.3, 2.3, 1);
+}
+.checkbox .checkbox-material .check {
+  position: relative;
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 2px solid;
+  border-radius: 2px;
+  overflow: hidden;
+  z-index: 1;
+}
+.checkbox .checkbox-material .check:before {
+  position: absolute;
+  content: "";
+  -webkit-transform: rotate(45deg);
+      -ms-transform: rotate(45deg);
+          transform: rotate(45deg);
+  display: block;
+  margin-top: -4px;
+  margin-left: 6px;
+  width: 0;
+  height: 0;
+  box-shadow: 0 0 0 0,
+        0 0 0 0,
+        0 0 0 0,
+        0 0 0 0,
+        0 0 0 0,
+        0 0 0 0,
+        0 0 0 0 inset;
+  -webkit-animation: checkbox-off 0.3s forwards;
+          animation: checkbox-off 0.3s forwards;
+}
+.checkbox input[type=checkbox]:focus + .checkbox-material .check:after {
+  opacity: 0.2;
+}
+.checkbox input[type=checkbox]:checked + .checkbox-material .check:before {
+  box-shadow: 0 0 0 10px, 10px -10px 0 10px, 32px 0px 0 20px, 0px 32px 0 20px, -5px 5px 0 10px, 20px -12px 0 11px;
+  -webkit-animation: checkbox-on 0.3s forwards;
+          animation: checkbox-on 0.3s forwards;
+}
+.checkbox input[type=checkbox]:not(:checked) + .checkbox-material:before {
+  -webkit-animation: rippleOff 500ms;
+          animation: rippleOff 500ms;
+}
+.checkbox input[type=checkbox]:checked + .checkbox-material:before {
+  -webkit-animation: rippleOn 500ms;
+          animation: rippleOn 500ms;
+}
+.checkbox input[type=checkbox]:not(:checked) + .checkbox-material .check:after {
+  -webkit-animation: rippleOff 500ms forwards;
+          animation: rippleOff 500ms forwards;
+}
+.checkbox input[type=checkbox]:checked + .checkbox-material .check:after {
+  -webkit-animation: rippleOn 500ms forwards;
+          animation: rippleOn 500ms forwards;
+}
+.checkbox input[type=checkbox][disabled]:not(:checked) ~ .checkbox-material .check:before,
+.checkbox input[type=checkbox][disabled] + .circle {
+  opacity: 0.5;
+}
+.checkbox input[type=checkbox][disabled] + .checkbox-material .check:after {
+  background-color: rgba(0, 0, 0, 0.84);
+  -webkit-transform: rotate(-45deg);
+      -ms-transform: rotate(-45deg);
+          transform: rotate(-45deg);
+}
+.checkbox input[type=checkbox]:checked + .checkbox-material .check:after,
+.checkbox-default input[type=checkbox]:checked + .checkbox-material .check:after {
+  background-color: #4caf50;
+}
+.checkbox-black input[type=checkbox]:checked + .checkbox-material .check:after {
+  background-color: #000000;
+}
+.checkbox-white input[type=checkbox]:checked + .checkbox-material .check:after {
+  background-color: #ffffff;
+}
+.checkbox-inverse input[type=checkbox]:checked + .checkbox-material .check:after {
+  background-color: #3f51b5;
+}
+.checkbox-primary input[type=checkbox]:checked + .checkbox-material .check:after {
+  background-color: #009688;
+}
+.checkbox-success input[type=checkbox]:checked + .checkbox-material .check:after {
+  background-color: #4caf50;
+}
+.checkbox-info input[type=checkbox]:checked + .checkbox-material .check:after {
+  background-color: #03a9f4;
+}
+.checkbox-warning input[type=checkbox]:checked + .checkbox-material .check:after {
+  background-color: #ff5722;
+}
+.checkbox-danger input[type=checkbox]:checked + .checkbox-material .check:after {
+  background-color: #f44336;
+}
+.checkbox-material-red input[type=checkbox]:checked + .checkbox-material .check:after {
+  background-color: #f44336;
+}
+.checkbox-material-pink input[type=checkbox]:checked + .checkbox-material .check:after {
+  background-color: #e91e63;
+}
+.checkbox-material-purple input[type=checkbox]:checked + .checkbox-material .check:after {
+  background-color: #9c27b0;
+}
+.checkbox-material-deep-purple input[type=checkbox]:checked + .checkbox-material .check:after {
+  background-color: #673ab7;
+}
+.checkbox-material-indigo input[type=checkbox]:checked + .checkbox-material .check:after {
+  background-color: #3f51b5;
+}
+.checkbox-material-blue input[type=checkbox]:checked + .checkbox-material .check:after {
+  background-color: #2196f3;
+}
+.checkbox-material-light-blue input[type=checkbox]:checked + .checkbox-material .check:after {
+  background-color: #03a9f4;
+}
+.checkbox-material-cyan input[type=checkbox]:checked + .checkbox-material .check:after {
+  background-color: #00bcd4;
+}
+.checkbox-material-teal input[type=checkbox]:checked + .checkbox-material .check:after {
+  background-color: #009688;
+}
+.checkbox-material-green input[type=checkbox]:checked + .checkbox-material .check:after {
+  background-color: #4caf50;
+}
+.checkbox-material-light-green input[type=checkbox]:checked + .checkbox-material .check:after {
+  background-color: #8bc34a;
+}
+.checkbox-material-lime input[type=checkbox]:checked + .checkbox-material .check:after {
+  background-color: #cddc39;
+}
+.checkbox-material-yellow input[type=checkbox]:checked + .checkbox-material .check:after {
+  background-color: #ffeb3b;
+}
+.checkbox-material-amber input[type=checkbox]:checked + .checkbox-material .check:after {
+  background-color: #ffc107;
+}
+.checkbox-material-orange input[type=checkbox]:checked + .checkbox-material .check:after {
+  background-color: #ff9800;
+}
+.checkbox-material-deep-orange input[type=checkbox]:checked + .checkbox-material .check:after {
+  background-color: #ff5722;
+}
+.checkbox-material-brown input[type=checkbox]:checked + .checkbox-material .check:after {
+  background-color: #795548;
+}
+.checkbox-material-grey input[type=checkbox]:checked + .checkbox-material .check:after {
+  background-color: #9e9e9e;
+}
+.checkbox-material-blue-grey input[type=checkbox]:checked + .checkbox-material .check:after {
+  background-color: #607d8b;
+}
+.checkbox input[type=checkbox]:checked + .checkbox-material .check:before,
+.checkbox-default input[type=checkbox]:checked + .checkbox-material .check:before {
+  color: #4caf50;
+}
+.checkbox-black input[type=checkbox]:checked + .checkbox-material .check:before {
+  color: #000000;
+}
+.checkbox-white input[type=checkbox]:checked + .checkbox-material .check:before {
+  color: #ffffff;
+}
+.checkbox-inverse input[type=checkbox]:checked + .checkbox-material .check:before {
+  color: #3f51b5;
+}
+.checkbox-primary input[type=checkbox]:checked + .checkbox-material .check:before {
+  color: #009688;
+}
+.checkbox-success input[type=checkbox]:checked + .checkbox-material .check:before {
+  color: #4caf50;
+}
+.checkbox-info input[type=checkbox]:checked + .checkbox-material .check:before {
+  color: #03a9f4;
+}
+.checkbox-warning input[type=checkbox]:checked + .checkbox-material .check:before {
+  color: #ff5722;
+}
+.checkbox-danger input[type=checkbox]:checked + .checkbox-material .check:before {
+  color: #f44336;
+}
+.checkbox-material-red input[type=checkbox]:checked + .checkbox-material .check:before {
+  color: #f44336;
+}
+.checkbox-material-pink input[type=checkbox]:checked + .checkbox-material .check:before {
+  color: #e91e63;
+}
+.checkbox-material-purple input[type=checkbox]:checked + .checkbox-material .check:before {
+  color: #9c27b0;
+}
+.checkbox-material-deep-purple input[type=checkbox]:checked + .checkbox-material .check:before {
+  color: #673ab7;
+}
+.checkbox-material-indigo input[type=checkbox]:checked + .checkbox-material .check:before {
+  color: #3f51b5;
+}
+.checkbox-material-blue input[type=checkbox]:checked + .checkbox-material .check:before {
+  color: #2196f3;
+}
+.checkbox-material-light-blue input[type=checkbox]:checked + .checkbox-material .check:before {
+  color: #03a9f4;
+}
+.checkbox-material-cyan input[type=checkbox]:checked + .checkbox-material .check:before {
+  color: #00bcd4;
+}
+.checkbox-material-teal input[type=checkbox]:checked + .checkbox-material .check:before {
+  color: #009688;
+}
+.checkbox-material-green input[type=checkbox]:checked + .checkbox-material .check:before {
+  color: #4caf50;
+}
+.checkbox-material-light-green input[type=checkbox]:checked + .checkbox-material .check:before {
+  color: #8bc34a;
+}
+.checkbox-material-lime input[type=checkbox]:checked + .checkbox-material .check:before {
+  color: #cddc39;
+}
+.checkbox-material-yellow input[type=checkbox]:checked + .checkbox-material .check:before {
+  color: #ffeb3b;
+}
+.checkbox-material-amber input[type=checkbox]:checked + .checkbox-material .check:before {
+  color: #ffc107;
+}
+.checkbox-material-orange input[type=checkbox]:checked + .checkbox-material .check:before {
+  color: #ff9800;
+}
+.checkbox-material-deep-orange input[type=checkbox]:checked + .checkbox-material .check:before {
+  color: #ff5722;
+}
+.checkbox-material-brown input[type=checkbox]:checked + .checkbox-material .check:before {
+  color: #795548;
+}
+.checkbox-material-grey input[type=checkbox]:checked + .checkbox-material .check:before {
+  color: #9e9e9e;
+}
+.checkbox-material-blue-grey input[type=checkbox]:checked + .checkbox-material .check:before {
+  color: #607d8b;
+}
+.checkbox input[type=checkbox]:checked + .checkbox-material .check,
+.checkbox-default input[type=checkbox]:checked + .checkbox-material .check {
+  color: #4caf50;
+}
+.checkbox-black input[type=checkbox]:checked + .checkbox-material .check {
+  color: #000000;
+}
+.checkbox-white input[type=checkbox]:checked + .checkbox-material .check {
+  color: #ffffff;
+}
+.checkbox-inverse input[type=checkbox]:checked + .checkbox-material .check {
+  color: #3f51b5;
+}
+.checkbox-primary input[type=checkbox]:checked + .checkbox-material .check {
+  color: #009688;
+}
+.checkbox-success input[type=checkbox]:checked + .checkbox-material .check {
+  color: #4caf50;
+}
+.checkbox-info input[type=checkbox]:checked + .checkbox-material .check {
+  color: #03a9f4;
+}
+.checkbox-warning input[type=checkbox]:checked + .checkbox-material .check {
+  color: #ff5722;
+}
+.checkbox-danger input[type=checkbox]:checked + .checkbox-material .check {
+  color: #f44336;
+}
+.checkbox-material-red input[type=checkbox]:checked + .checkbox-material .check {
+  color: #f44336;
+}
+.checkbox-material-pink input[type=checkbox]:checked + .checkbox-material .check {
+  color: #e91e63;
+}
+.checkbox-material-purple input[type=checkbox]:checked + .checkbox-material .check {
+  color: #9c27b0;
+}
+.checkbox-material-deep-purple input[type=checkbox]:checked + .checkbox-material .check {
+  color: #673ab7;
+}
+.checkbox-material-indigo input[type=checkbox]:checked + .checkbox-material .check {
+  color: #3f51b5;
+}
+.checkbox-material-blue input[type=checkbox]:checked + .checkbox-material .check {
+  color: #2196f3;
+}
+.checkbox-material-light-blue input[type=checkbox]:checked + .checkbox-material .check {
+  color: #03a9f4;
+}
+.checkbox-material-cyan input[type=checkbox]:checked + .checkbox-material .check {
+  color: #00bcd4;
+}
+.checkbox-material-teal input[type=checkbox]:checked + .checkbox-material .check {
+  color: #009688;
+}
+.checkbox-material-green input[type=checkbox]:checked + .checkbox-material .check {
+  color: #4caf50;
+}
+.checkbox-material-light-green input[type=checkbox]:checked + .checkbox-material .check {
+  color: #8bc34a;
+}
+.checkbox-material-lime input[type=checkbox]:checked + .checkbox-material .check {
+  color: #cddc39;
+}
+.checkbox-material-yellow input[type=checkbox]:checked + .checkbox-material .check {
+  color: #ffeb3b;
+}
+.checkbox-material-amber input[type=checkbox]:checked + .checkbox-material .check {
+  color: #ffc107;
+}
+.checkbox-material-orange input[type=checkbox]:checked + .checkbox-material .check {
+  color: #ff9800;
+}
+.checkbox-material-deep-orange input[type=checkbox]:checked + .checkbox-material .check {
+  color: #ff5722;
+}
+.checkbox-material-brown input[type=checkbox]:checked + .checkbox-material .check {
+  color: #795548;
+}
+.checkbox-material-grey input[type=checkbox]:checked + .checkbox-material .check {
+  color: #9e9e9e;
+}
+.checkbox-material-blue-grey input[type=checkbox]:checked + .checkbox-material .check {
+  color: #607d8b;
+}
+@-webkit-keyframes checkbox-on {
+  0% {
+    box-shadow: 0 0 0 10px, 10px -10px 0 10px, 32px 0px 0 20px, 0px 32px 0 20px, -5px 5px 0 10px, 15px 2px 0 11px;
+  }
+  50% {
+    box-shadow: 0 0 0 10px, 10px -10px 0 10px, 32px 0px 0 20px, 0px 32px 0 20px, -5px 5px 0 10px, 20px 2px 0 11px;
+  }
+  100% {
+    box-shadow: 0 0 0 10px, 10px -10px 0 10px, 32px 0px 0 20px, 0px 32px 0 20px, -5px 5px 0 10px, 20px -12px 0 11px;
+  }
+}
+@keyframes checkbox-on {
+  0% {
+    box-shadow: 0 0 0 10px, 10px -10px 0 10px, 32px 0px 0 20px, 0px 32px 0 20px, -5px 5px 0 10px, 15px 2px 0 11px;
+  }
+  50% {
+    box-shadow: 0 0 0 10px, 10px -10px 0 10px, 32px 0px 0 20px, 0px 32px 0 20px, -5px 5px 0 10px, 20px 2px 0 11px;
+  }
+  100% {
+    box-shadow: 0 0 0 10px, 10px -10px 0 10px, 32px 0px 0 20px, 0px 32px 0 20px, -5px 5px 0 10px, 20px -12px 0 11px;
+  }
+}
+@-webkit-keyframes checkbox-off {
+  0% {
+    box-shadow: 0 0 0 10px, 10px -10px 0 10px, 32px 0px 0 20px, 0px 32px 0 20px, -5px 5px 0 10px, 20px -12px 0 11px, 0 0 0 0 inset;
+  }
+  25% {
+    box-shadow: 0 0 0 10px, 10px -10px 0 10px, 32px 0px 0 20px, 0px 32px 0 20px, -5px 5px 0 10px, 20px -12px 0 11px, 0 0 0 0 inset;
+  }
+  50% {
+    -webkit-transform: rotate(45deg);
+            transform: rotate(45deg);
+    margin-top: -4px;
+    margin-left: 6px;
+    width: 0px;
+    height: 0px;
+    box-shadow: 0 0 0 10px, 10px -10px 0 10px, 32px 0px 0 20px, 0px 32px 0 20px, -5px 5px 0 10px, 15px 2px 0 11px, 0 0 0 0 inset;
+  }
+  51% {
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+    margin-top: -2px;
+    margin-left: -2px;
+    width: 20px;
+    height: 20px;
+    box-shadow: 0 0 0 0,
+      0 0 0 0,
+      0 0 0 0,
+      0 0 0 0,
+      0 0 0 0,
+      0 0 0 0,
+      0px 0px 0 10px inset;
+  }
+  100% {
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+    margin-top: -2px;
+    margin-left: -2px;
+    width: 20px;
+    height: 20px;
+    box-shadow: 0 0 0 0,
+      0 0 0 0,
+      0 0 0 0,
+      0 0 0 0,
+      0 0 0 0,
+      0 0 0 0,
+      0px 0px 0 0px inset;
+  }
+}
+@keyframes checkbox-off {
+  0% {
+    box-shadow: 0 0 0 10px, 10px -10px 0 10px, 32px 0px 0 20px, 0px 32px 0 20px, -5px 5px 0 10px, 20px -12px 0 11px, 0 0 0 0 inset;
+  }
+  25% {
+    box-shadow: 0 0 0 10px, 10px -10px 0 10px, 32px 0px 0 20px, 0px 32px 0 20px, -5px 5px 0 10px, 20px -12px 0 11px, 0 0 0 0 inset;
+  }
+  50% {
+    -webkit-transform: rotate(45deg);
+            transform: rotate(45deg);
+    margin-top: -4px;
+    margin-left: 6px;
+    width: 0px;
+    height: 0px;
+    box-shadow: 0 0 0 10px, 10px -10px 0 10px, 32px 0px 0 20px, 0px 32px 0 20px, -5px 5px 0 10px, 15px 2px 0 11px, 0 0 0 0 inset;
+  }
+  51% {
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+    margin-top: -2px;
+    margin-left: -2px;
+    width: 20px;
+    height: 20px;
+    box-shadow: 0 0 0 0,
+      0 0 0 0,
+      0 0 0 0,
+      0 0 0 0,
+      0 0 0 0,
+      0 0 0 0,
+      0px 0px 0 10px inset;
+  }
+  100% {
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+    margin-top: -2px;
+    margin-left: -2px;
+    width: 20px;
+    height: 20px;
+    box-shadow: 0 0 0 0,
+      0 0 0 0,
+      0 0 0 0,
+      0 0 0 0,
+      0 0 0 0,
+      0 0 0 0,
+      0px 0px 0 0px inset;
+  }
+}
+@-webkit-keyframes rippleOn {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.2;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes rippleOn {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.2;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@-webkit-keyframes rippleOff {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.2;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes rippleOff {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.2;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+.togglebutton {
+  vertical-align: middle;
+}
+.togglebutton,
+.togglebutton label,
+.togglebutton input,
+.togglebutton .toggle {
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
+.togglebutton label {
+  font-weight: 400;
+  cursor: pointer;
+}
+.togglebutton label input[type=checkbox] {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.togglebutton label .toggle,
+.togglebutton label input[type=checkbox][disabled] + .toggle {
+  content: "";
+  display: inline-block;
+  width: 30px;
+  height: 15px;
+  background-color: rgba(80, 80, 80, 0.7);
+  border-radius: 15px;
+  margin-right: 10px;
+  transition: background 0.3s ease;
+  vertical-align: middle;
+}
+.togglebutton label .toggle:after {
+  content: "";
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  background-color: #F1F1F1;
+  border-radius: 20px;
+  position: relative;
+  box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.4);
+  left: -5px;
+  top: -2px;
+  transition: left 0.3s ease, background 0.3s ease, box-shadow 0.1s ease;
+}
+.togglebutton label input[type=checkbox][disabled] + .toggle:after,
+.togglebutton label input[type=checkbox][disabled]:checked + .toggle:after {
+  background-color: #BDBDBD;
+}
+.togglebutton label input[type=checkbox] + .toggle:active:after,
+.togglebutton label input[type=checkbox][disabled] + .toggle:active:after {
+  box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.4), 0 0 0 15px rgba(0, 0, 0, 0.1);
+}
+.togglebutton label input[type=checkbox]:checked + .toggle:after {
+  left: 15px;
+}
+.togglebutton label input[type=checkbox]:checked + .toggle,
+.togglebutton-default label input[type=checkbox]:checked + .toggle {
+  background-color: rgba(0, 150, 136, 0.5);
+}
+.togglebutton-black label input[type=checkbox]:checked + .toggle {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+.togglebutton-white label input[type=checkbox]:checked + .toggle {
+  background-color: rgba(255, 255, 255, 0.5);
+}
+.togglebutton-inverse label input[type=checkbox]:checked + .toggle {
+  background-color: rgba(63, 81, 181, 0.5);
+}
+.togglebutton-primary label input[type=checkbox]:checked + .toggle {
+  background-color: rgba(0, 150, 136, 0.5);
+}
+.togglebutton-success label input[type=checkbox]:checked + .toggle {
+  background-color: rgba(76, 175, 80, 0.5);
+}
+.togglebutton-info label input[type=checkbox]:checked + .toggle {
+  background-color: rgba(3, 169, 244, 0.5);
+}
+.togglebutton-warning label input[type=checkbox]:checked + .toggle {
+  background-color: rgba(255, 87, 34, 0.5);
+}
+.togglebutton-danger label input[type=checkbox]:checked + .toggle {
+  background-color: rgba(244, 67, 54, 0.5);
+}
+.togglebutton-material-red label input[type=checkbox]:checked + .toggle {
+  background-color: rgba(244, 67, 54, 0.5);
+}
+.togglebutton-material-pink label input[type=checkbox]:checked + .toggle {
+  background-color: rgba(233, 30, 99, 0.5);
+}
+.togglebutton-material-purple label input[type=checkbox]:checked + .toggle {
+  background-color: rgba(156, 39, 176, 0.5);
+}
+.togglebutton-material-deep-purple label input[type=checkbox]:checked + .toggle {
+  background-color: rgba(103, 58, 183, 0.5);
+}
+.togglebutton-material-indigo label input[type=checkbox]:checked + .toggle {
+  background-color: rgba(63, 81, 181, 0.5);
+}
+.togglebutton-material-blue label input[type=checkbox]:checked + .toggle {
+  background-color: rgba(33, 150, 243, 0.5);
+}
+.togglebutton-material-light-blue label input[type=checkbox]:checked + .toggle {
+  background-color: rgba(3, 169, 244, 0.5);
+}
+.togglebutton-material-cyan label input[type=checkbox]:checked + .toggle {
+  background-color: rgba(0, 188, 212, 0.5);
+}
+.togglebutton-material-teal label input[type=checkbox]:checked + .toggle {
+  background-color: rgba(0, 150, 136, 0.5);
+}
+.togglebutton-material-green label input[type=checkbox]:checked + .toggle {
+  background-color: rgba(76, 175, 80, 0.5);
+}
+.togglebutton-material-light-green label input[type=checkbox]:checked + .toggle {
+  background-color: rgba(139, 195, 74, 0.5);
+}
+.togglebutton-material-lime label input[type=checkbox]:checked + .toggle {
+  background-color: rgba(205, 220, 57, 0.5);
+}
+.togglebutton-material-yellow label input[type=checkbox]:checked + .toggle {
+  background-color: rgba(255, 235, 59, 0.5);
+}
+.togglebutton-material-amber label input[type=checkbox]:checked + .toggle {
+  background-color: rgba(255, 193, 7, 0.5);
+}
+.togglebutton-material-orange label input[type=checkbox]:checked + .toggle {
+  background-color: rgba(255, 152, 0, 0.5);
+}
+.togglebutton-material-deep-orange label input[type=checkbox]:checked + .toggle {
+  background-color: rgba(255, 87, 34, 0.5);
+}
+.togglebutton-material-brown label input[type=checkbox]:checked + .toggle {
+  background-color: rgba(121, 85, 72, 0.5);
+}
+.togglebutton-material-grey label input[type=checkbox]:checked + .toggle {
+  background-color: rgba(158, 158, 158, 0.5);
+}
+.togglebutton-material-blue-grey label input[type=checkbox]:checked + .toggle {
+  background-color: rgba(96, 125, 139, 0.5);
+}
+.togglebutton label input[type=checkbox]:checked + .toggle:after,
+.togglebutton-default label input[type=checkbox]:checked + .toggle:after {
+  background-color: #009688;
+}
+.togglebutton-black label input[type=checkbox]:checked + .toggle:after {
+  background-color: #000000;
+}
+.togglebutton-white label input[type=checkbox]:checked + .toggle:after {
+  background-color: #ffffff;
+}
+.togglebutton-inverse label input[type=checkbox]:checked + .toggle:after {
+  background-color: #3f51b5;
+}
+.togglebutton-primary label input[type=checkbox]:checked + .toggle:after {
+  background-color: #009688;
+}
+.togglebutton-success label input[type=checkbox]:checked + .toggle:after {
+  background-color: #4caf50;
+}
+.togglebutton-info label input[type=checkbox]:checked + .toggle:after {
+  background-color: #03a9f4;
+}
+.togglebutton-warning label input[type=checkbox]:checked + .toggle:after {
+  background-color: #ff5722;
+}
+.togglebutton-danger label input[type=checkbox]:checked + .toggle:after {
+  background-color: #f44336;
+}
+.togglebutton-material-red label input[type=checkbox]:checked + .toggle:after {
+  background-color: #f44336;
+}
+.togglebutton-material-pink label input[type=checkbox]:checked + .toggle:after {
+  background-color: #e91e63;
+}
+.togglebutton-material-purple label input[type=checkbox]:checked + .toggle:after {
+  background-color: #9c27b0;
+}
+.togglebutton-material-deep-purple label input[type=checkbox]:checked + .toggle:after {
+  background-color: #673ab7;
+}
+.togglebutton-material-indigo label input[type=checkbox]:checked + .toggle:after {
+  background-color: #3f51b5;
+}
+.togglebutton-material-blue label input[type=checkbox]:checked + .toggle:after {
+  background-color: #2196f3;
+}
+.togglebutton-material-light-blue label input[type=checkbox]:checked + .toggle:after {
+  background-color: #03a9f4;
+}
+.togglebutton-material-cyan label input[type=checkbox]:checked + .toggle:after {
+  background-color: #00bcd4;
+}
+.togglebutton-material-teal label input[type=checkbox]:checked + .toggle:after {
+  background-color: #009688;
+}
+.togglebutton-material-green label input[type=checkbox]:checked + .toggle:after {
+  background-color: #4caf50;
+}
+.togglebutton-material-light-green label input[type=checkbox]:checked + .toggle:after {
+  background-color: #8bc34a;
+}
+.togglebutton-material-lime label input[type=checkbox]:checked + .toggle:after {
+  background-color: #cddc39;
+}
+.togglebutton-material-yellow label input[type=checkbox]:checked + .toggle:after {
+  background-color: #ffeb3b;
+}
+.togglebutton-material-amber label input[type=checkbox]:checked + .toggle:after {
+  background-color: #ffc107;
+}
+.togglebutton-material-orange label input[type=checkbox]:checked + .toggle:after {
+  background-color: #ff9800;
+}
+.togglebutton-material-deep-orange label input[type=checkbox]:checked + .toggle:after {
+  background-color: #ff5722;
+}
+.togglebutton-material-brown label input[type=checkbox]:checked + .toggle:after {
+  background-color: #795548;
+}
+.togglebutton-material-grey label input[type=checkbox]:checked + .toggle:after {
+  background-color: #9e9e9e;
+}
+.togglebutton-material-blue-grey label input[type=checkbox]:checked + .toggle:after {
+  background-color: #607d8b;
+}
+.togglebutton label input[type=checkbox]:checked + .toggle:active:after,
+.togglebutton-default label input[type=checkbox]:checked + .toggle:active:after {
+  box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.4), 0 0 0 15px rgba(0, 150, 136, 0.1);
+}
+.togglebutton-black label input[type=checkbox]:checked + .toggle:active:after {
+  box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.4), 0 0 0 15px rgba(0, 0, 0, 0.1);
+}
+.togglebutton-white label input[type=checkbox]:checked + .toggle:active:after {
+  box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.4), 0 0 0 15px rgba(255, 255, 255, 0.1);
+}
+.togglebutton-inverse label input[type=checkbox]:checked + .toggle:active:after {
+  box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.4), 0 0 0 15px rgba(63, 81, 181, 0.1);
+}
+.togglebutton-primary label input[type=checkbox]:checked + .toggle:active:after {
+  box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.4), 0 0 0 15px rgba(0, 150, 136, 0.1);
+}
+.togglebutton-success label input[type=checkbox]:checked + .toggle:active:after {
+  box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.4), 0 0 0 15px rgba(76, 175, 80, 0.1);
+}
+.togglebutton-info label input[type=checkbox]:checked + .toggle:active:after {
+  box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.4), 0 0 0 15px rgba(3, 169, 244, 0.1);
+}
+.togglebutton-warning label input[type=checkbox]:checked + .toggle:active:after {
+  box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.4), 0 0 0 15px rgba(255, 87, 34, 0.1);
+}
+.togglebutton-danger label input[type=checkbox]:checked + .toggle:active:after {
+  box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.4), 0 0 0 15px rgba(244, 67, 54, 0.1);
+}
+.togglebutton-material-red label input[type=checkbox]:checked + .toggle:active:after {
+  box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.4), 0 0 0 15px rgba(244, 67, 54, 0.1);
+}
+.togglebutton-material-pink label input[type=checkbox]:checked + .toggle:active:after {
+  box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.4), 0 0 0 15px rgba(233, 30, 99, 0.1);
+}
+.togglebutton-material-purple label input[type=checkbox]:checked + .toggle:active:after {
+  box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.4), 0 0 0 15px rgba(156, 39, 176, 0.1);
+}
+.togglebutton-material-deep-purple label input[type=checkbox]:checked + .toggle:active:after {
+  box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.4), 0 0 0 15px rgba(103, 58, 183, 0.1);
+}
+.togglebutton-material-indigo label input[type=checkbox]:checked + .toggle:active:after {
+  box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.4), 0 0 0 15px rgba(63, 81, 181, 0.1);
+}
+.togglebutton-material-blue label input[type=checkbox]:checked + .toggle:active:after {
+  box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.4), 0 0 0 15px rgba(33, 150, 243, 0.1);
+}
+.togglebutton-material-light-blue label input[type=checkbox]:checked + .toggle:active:after {
+  box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.4), 0 0 0 15px rgba(3, 169, 244, 0.1);
+}
+.togglebutton-material-cyan label input[type=checkbox]:checked + .toggle:active:after {
+  box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.4), 0 0 0 15px rgba(0, 188, 212, 0.1);
+}
+.togglebutton-material-teal label input[type=checkbox]:checked + .toggle:active:after {
+  box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.4), 0 0 0 15px rgba(0, 150, 136, 0.1);
+}
+.togglebutton-material-green label input[type=checkbox]:checked + .toggle:active:after {
+  box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.4), 0 0 0 15px rgba(76, 175, 80, 0.1);
+}
+.togglebutton-material-light-green label input[type=checkbox]:checked + .toggle:active:after {
+  box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.4), 0 0 0 15px rgba(139, 195, 74, 0.1);
+}
+.togglebutton-material-lime label input[type=checkbox]:checked + .toggle:active:after {
+  box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.4), 0 0 0 15px rgba(205, 220, 57, 0.1);
+}
+.togglebutton-material-yellow label input[type=checkbox]:checked + .toggle:active:after {
+  box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.4), 0 0 0 15px rgba(255, 235, 59, 0.1);
+}
+.togglebutton-material-amber label input[type=checkbox]:checked + .toggle:active:after {
+  box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.4), 0 0 0 15px rgba(255, 193, 7, 0.1);
+}
+.togglebutton-material-orange label input[type=checkbox]:checked + .toggle:active:after {
+  box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.4), 0 0 0 15px rgba(255, 152, 0, 0.1);
+}
+.togglebutton-material-deep-orange label input[type=checkbox]:checked + .toggle:active:after {
+  box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.4), 0 0 0 15px rgba(255, 87, 34, 0.1);
+}
+.togglebutton-material-brown label input[type=checkbox]:checked + .toggle:active:after {
+  box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.4), 0 0 0 15px rgba(121, 85, 72, 0.1);
+}
+.togglebutton-material-grey label input[type=checkbox]:checked + .toggle:active:after {
+  box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.4), 0 0 0 15px rgba(158, 158, 158, 0.1);
+}
+.togglebutton-material-blue-grey label input[type=checkbox]:checked + .toggle:active:after {
+  box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.4), 0 0 0 15px rgba(96, 125, 139, 0.1);
+}
+.form-horizontal .radio {
+  margin-bottom: 10px;
+}
+.radio label {
+  cursor: pointer;
+  padding-left: 45px;
+  position: relative;
+}
+.radio label span {
+  display: block;
+  position: absolute;
+  left: 10px;
+  top: 2px;
+  transition-duration: 0.2s;
+}
+.radio label .circle {
+  border: 2px solid rgba(0, 0, 0, 0.84);
+  height: 15px;
+  width: 15px;
+  border-radius: 100%;
+}
+.radio label .check {
+  height: 15px;
+  width: 15px;
+  border-radius: 100%;
+  background-color: rgba(0, 0, 0, 0.84);
+  -webkit-transform: scale3d(0, 0, 0);
+          transform: scale3d(0, 0, 0);
+}
+.radio label .check:after {
+  display: block;
+  position: absolute;
+  content: "";
+  background-color: rgba(0, 0, 0, 0.84);
+  left: -18px;
+  top: -18px;
+  height: 50px;
+  width: 50px;
+  border-radius: 100%;
+  z-index: 1;
+  opacity: 0;
+  margin: 0;
+  -webkit-transform: scale3d(1.5, 1.5, 1);
+          transform: scale3d(1.5, 1.5, 1);
+}
+.radio label input[type=radio]:not(:checked) ~ .check:after {
+  -webkit-animation: rippleOff 500ms;
+          animation: rippleOff 500ms;
+}
+.radio label input[type=radio]:checked ~ .check:after {
+  -webkit-animation: rippleOn 500ms;
+          animation: rippleOn 500ms;
+}
+.radio input[type=radio]:checked ~ .check,
+.radio-default input[type=radio]:checked ~ .check {
+  background-color: rgba(0, 0, 0, 0.84);
+}
+.radio-black input[type=radio]:checked ~ .check {
+  background-color: #000000;
+}
+.radio-white input[type=radio]:checked ~ .check {
+  background-color: #ffffff;
+}
+.radio-inverse input[type=radio]:checked ~ .check {
+  background-color: #3f51b5;
+}
+.radio-primary input[type=radio]:checked ~ .check {
+  background-color: #009688;
+}
+.radio-success input[type=radio]:checked ~ .check {
+  background-color: #4caf50;
+}
+.radio-info input[type=radio]:checked ~ .check {
+  background-color: #03a9f4;
+}
+.radio-warning input[type=radio]:checked ~ .check {
+  background-color: #ff5722;
+}
+.radio-danger input[type=radio]:checked ~ .check {
+  background-color: #f44336;
+}
+.radio-material-red input[type=radio]:checked ~ .check {
+  background-color: #f44336;
+}
+.radio-material-pink input[type=radio]:checked ~ .check {
+  background-color: #e91e63;
+}
+.radio-material-purple input[type=radio]:checked ~ .check {
+  background-color: #9c27b0;
+}
+.radio-material-deep-purple input[type=radio]:checked ~ .check {
+  background-color: #673ab7;
+}
+.radio-material-indigo input[type=radio]:checked ~ .check {
+  background-color: #3f51b5;
+}
+.radio-material-blue input[type=radio]:checked ~ .check {
+  background-color: #2196f3;
+}
+.radio-material-light-blue input[type=radio]:checked ~ .check {
+  background-color: #03a9f4;
+}
+.radio-material-cyan input[type=radio]:checked ~ .check {
+  background-color: #00bcd4;
+}
+.radio-material-teal input[type=radio]:checked ~ .check {
+  background-color: #009688;
+}
+.radio-material-green input[type=radio]:checked ~ .check {
+  background-color: #4caf50;
+}
+.radio-material-light-green input[type=radio]:checked ~ .check {
+  background-color: #8bc34a;
+}
+.radio-material-lime input[type=radio]:checked ~ .check {
+  background-color: #cddc39;
+}
+.radio-material-yellow input[type=radio]:checked ~ .check {
+  background-color: #ffeb3b;
+}
+.radio-material-amber input[type=radio]:checked ~ .check {
+  background-color: #ffc107;
+}
+.radio-material-orange input[type=radio]:checked ~ .check {
+  background-color: #ff9800;
+}
+.radio-material-deep-orange input[type=radio]:checked ~ .check {
+  background-color: #ff5722;
+}
+.radio-material-brown input[type=radio]:checked ~ .check {
+  background-color: #795548;
+}
+.radio-material-grey input[type=radio]:checked ~ .check {
+  background-color: #9e9e9e;
+}
+.radio-material-blue-grey input[type=radio]:checked ~ .check {
+  background-color: #607d8b;
+}
+.radio input[type=radio]:checked ~ .circle,
+.radio-default input[type=radio]:checked ~ .circle {
+  border-color: rgba(0, 0, 0, 0.84);
+}
+.radio-black input[type=radio]:checked ~ .circle {
+  border-color: #000000;
+}
+.radio-white input[type=radio]:checked ~ .circle {
+  border-color: #ffffff;
+}
+.radio-inverse input[type=radio]:checked ~ .circle {
+  border-color: #3f51b5;
+}
+.radio-primary input[type=radio]:checked ~ .circle {
+  border-color: #009688;
+}
+.radio-success input[type=radio]:checked ~ .circle {
+  border-color: #4caf50;
+}
+.radio-info input[type=radio]:checked ~ .circle {
+  border-color: #03a9f4;
+}
+.radio-warning input[type=radio]:checked ~ .circle {
+  border-color: #ff5722;
+}
+.radio-danger input[type=radio]:checked ~ .circle {
+  border-color: #f44336;
+}
+.radio-material-red input[type=radio]:checked ~ .circle {
+  border-color: #f44336;
+}
+.radio-material-pink input[type=radio]:checked ~ .circle {
+  border-color: #e91e63;
+}
+.radio-material-purple input[type=radio]:checked ~ .circle {
+  border-color: #9c27b0;
+}
+.radio-material-deep-purple input[type=radio]:checked ~ .circle {
+  border-color: #673ab7;
+}
+.radio-material-indigo input[type=radio]:checked ~ .circle {
+  border-color: #3f51b5;
+}
+.radio-material-blue input[type=radio]:checked ~ .circle {
+  border-color: #2196f3;
+}
+.radio-material-light-blue input[type=radio]:checked ~ .circle {
+  border-color: #03a9f4;
+}
+.radio-material-cyan input[type=radio]:checked ~ .circle {
+  border-color: #00bcd4;
+}
+.radio-material-teal input[type=radio]:checked ~ .circle {
+  border-color: #009688;
+}
+.radio-material-green input[type=radio]:checked ~ .circle {
+  border-color: #4caf50;
+}
+.radio-material-light-green input[type=radio]:checked ~ .circle {
+  border-color: #8bc34a;
+}
+.radio-material-lime input[type=radio]:checked ~ .circle {
+  border-color: #cddc39;
+}
+.radio-material-yellow input[type=radio]:checked ~ .circle {
+  border-color: #ffeb3b;
+}
+.radio-material-amber input[type=radio]:checked ~ .circle {
+  border-color: #ffc107;
+}
+.radio-material-orange input[type=radio]:checked ~ .circle {
+  border-color: #ff9800;
+}
+.radio-material-deep-orange input[type=radio]:checked ~ .circle {
+  border-color: #ff5722;
+}
+.radio-material-brown input[type=radio]:checked ~ .circle {
+  border-color: #795548;
+}
+.radio-material-grey input[type=radio]:checked ~ .circle {
+  border-color: #9e9e9e;
+}
+.radio-material-blue-grey input[type=radio]:checked ~ .circle {
+  border-color: #607d8b;
+}
+.radio input[type=radio][disabled] ~ .check,
+.radio input[type=radio][disabled] ~ .circle {
+  opacity: 0.5;
+}
+.radio input[type=radio] {
+  opacity: 0;
+  height: 0;
+  width: 0;
+  overflow: hidden;
+}
+.radio input[type=radio]:checked ~ .check {
+  -webkit-transform: scale3d(0.55, 0.55, 1);
+          transform: scale3d(0.55, 0.55, 1);
+}
+.radio input[type=radio][disabled] ~ .circle {
+  border-color: rgba(0, 0, 0, 0.84);
+}
+.radio input[type=radio][disabled] ~ .check {
+  background-color: rgba(0, 0, 0, 0.84);
+}
+@keyframes rippleOn {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.2;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes rippleOff {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.2;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+fieldset[disabled] .form-control,
+.form-control-wrapper .form-control,
+.form-control,
+fieldset[disabled] .form-control:focus,
+.form-control-wrapper .form-control:focus,
+.form-control:focus,
+fieldset[disabled] .form-control.focus,
+.form-control-wrapper .form-control.focus,
+.form-control.focus {
+  padding: 0;
+  float: none;
+  border: 0;
+  box-shadow: none;
+  border-radius: 0;
+}
+fieldset[disabled] .form-control:not(textarea),
+.form-control-wrapper .form-control:not(textarea),
+.form-control:not(textarea),
+fieldset[disabled] .form-control:focus:not(textarea),
+.form-control-wrapper .form-control:focus:not(textarea),
+.form-control:focus:not(textarea),
+fieldset[disabled] .form-control.focus:not(textarea),
+.form-control-wrapper .form-control.focus:not(textarea),
+.form-control.focus:not(textarea) {
+  height: 28px;
+}
+fieldset[disabled] .form-control:disabled,
+.form-control-wrapper .form-control:disabled,
+.form-control:disabled,
+fieldset[disabled] .form-control:focus:disabled,
+.form-control-wrapper .form-control:focus:disabled,
+.form-control:focus:disabled,
+fieldset[disabled] .form-control.focus:disabled,
+.form-control-wrapper .form-control.focus:disabled,
+.form-control.focus:disabled {
+  border-style: dashed;
+  border-bottom: 1px solid #757575;
+}
+select[multiple].form-control,
+select[multiple].form-control:focus,
+select[multiple].form-control.focus {
+  height: 85px;
+}
+.form-control {
+  border: 0;
+  background-image: linear-gradient(#009688, #009688), linear-gradient(#d2d2d2, #d2d2d2);
+  background-size: 0 2px, 100% 1px;
+  background-repeat: no-repeat;
+  background-position: center bottom, center calc(100% - 1px);
+  background-color: transparent;
+  background-color: rgba(0, 0, 0, 0);
+}
+.form-control[disabled],
+.form-control[readonly],
+fieldset[disabled] .form-control {
+  background-color: transparent;
+  background-color: rgba(0, 0, 0, 0);
+}
+fieldset[disabled] .form-control:disabled,
+.form-control-wrapper .form-control:disabled,
+.form-control:disabled,
+fieldset[disabled] .form-control:focus:disabled,
+.form-control-wrapper .form-control:focus:disabled,
+.form-control:focus:disabled,
+fieldset[disabled] .form-control.focus:disabled,
+.form-control-wrapper .form-control.focus:disabled,
+.form-control.focus:disabled {
+  border: 0;
+}
+.form-control:focus,
+.form-control.focus {
+  outline: none;
+  background-image: linear-gradient(#009688, #009688), linear-gradient(#d2d2d2, #d2d2d2);
+  -webkit-animation: input-highlight 0.5s forwards;
+          animation: input-highlight 0.5s forwards;
+  box-shadow: none;
+  background-size: 0 2px, 100% 1px;
+}
+.form-control-wrapper {
+  position: relative;
+}
+.form-control-wrapper .floating-label {
+  color: #7E7E7E;
+  font-size: 14px;
+  position: absolute;
+  pointer-events: none;
+  left: 0px;
+  top: 5px;
+  transition: 0.2s ease all;
+  opacity: 0;
+}
+.form-control-wrapper .form-control:focus ~ .floating-label,
+.form-control-wrapper .form-control:not(.empty) ~ .floating-label {
+  top: -10px;
+  font-size: 10px;
+  opacity: 1;
+}
+.form-control-wrapper .form-control:focus ~ .floating-label {
+  color: #009688;
+}
+.form-control-wrapper .form-control:not(.empty):invalid ~ .floating-label,
+.form-control-wrapper .form-control.focus:invalid ~ .floating-label {
+  color: #f44336;
+}
+.form-control-wrapper .form-control:focus ~ .material-input:after,
+.form-control-wrapper .form-control.focus ~ .material-input:after {
+  background-color: #009688;
+}
+.form-control-wrapper .form-control:invalid {
+  background-image: linear-gradient(#f44336, #f44336), linear-gradient(#d2d2d2, #d2d2d2);
+}
+.form-control-wrapper .form-control.empty ~ .floating-label {
+  opacity: 1;
+}
+.form-control-wrapper textarea {
+  resize: none;
+}
+.form-control-wrapper textarea ~ .form-control-highlight {
+  margin-top: -11px;
+}
+.form-control-wrapper .hint {
+  position: absolute;
+  font-size: 80%;
+  display: none;
+}
+.form-control-wrapper .form-control:focus ~ .hint,
+.form-control-wrapper .form-control.focus ~ .hint {
+  display: block;
+}
+.form-control-wrapper select ~ .material-input:after {
+  display: none;
+}
+.form-control-wrapper select {
+  appearance: none;
+}
+.form-group.has-warning .form-control {
+  box-shadow: none;
+}
+.form-group.has-warning .material-input:focus,
+.form-group.has-warning .form-control:focus,
+.form-group.has-warning .form-control.focus {
+  background-image: linear-gradient(#ff5722, #ff5722), linear-gradient(#d2d2d2, #d2d2d2);
+  box-shadow: none;
+}
+.form-group.has-warning .control-label,
+.form-group.has-warning input.form-control:focus ~ .floating-label {
+  color: #ff5722;
+}
+.form-group.has-error .form-control {
+  box-shadow: none;
+}
+.form-group.has-error .material-input:focus,
+.form-group.has-error .form-control:focus,
+.form-group.has-error .form-control.focus {
+  background-image: linear-gradient(#f44336, #f44336), linear-gradient(#d2d2d2, #d2d2d2);
+  box-shadow: none;
+}
+.form-group.has-error .control-label,
+.form-group.has-error input.form-control:focus ~ .floating-label {
+  color: #f44336;
+}
+.form-group.has-success .form-control {
+  box-shadow: none;
+}
+.form-group.has-success .material-input:focus,
+.form-group.has-success .form-control:focus,
+.form-group.has-success .form-control.focus {
+  background-image: linear-gradient(#4caf50, #4caf50), linear-gradient(#d2d2d2, #d2d2d2);
+  box-shadow: none;
+}
+.form-group.has-success .control-label,
+.form-group.has-success input.form-control:focus ~ .floating-label {
+  color: #4caf50;
+}
+.form-group.has-info .form-control {
+  box-shadow: none;
+}
+.form-group.has-info .material-input:focus,
+.form-group.has-info .form-control:focus,
+.form-group.has-info .form-control.focus {
+  background-image: linear-gradient(#03a9f4, #03a9f4), linear-gradient(#d2d2d2, #d2d2d2);
+  box-shadow: none;
+}
+.form-group.has-info .control-label,
+.form-group.has-info input.form-control:focus ~ .floating-label {
+  color: #03a9f4;
+}
+.form-group .form-control:focus,
+.form-group-default .form-control:focus {
+  background-image: linear-gradient(#009688, #009688), linear-gradient(#d2d2d2, #d2d2d2);
+}
+.form-group-black .form-control:focus {
+  background-image: linear-gradient(#000000, #000000), linear-gradient(#d2d2d2, #d2d2d2);
+}
+.form-group-white .form-control:focus {
+  background-image: linear-gradient(#ffffff, #ffffff), linear-gradient(#d2d2d2, #d2d2d2);
+}
+.form-group-inverse .form-control:focus {
+  background-image: linear-gradient(#3f51b5, #3f51b5), linear-gradient(#d2d2d2, #d2d2d2);
+}
+.form-group-primary .form-control:focus {
+  background-image: linear-gradient(#009688, #009688), linear-gradient(#d2d2d2, #d2d2d2);
+}
+.form-group-success .form-control:focus {
+  background-image: linear-gradient(#4caf50, #4caf50), linear-gradient(#d2d2d2, #d2d2d2);
+}
+.form-group-info .form-control:focus {
+  background-image: linear-gradient(#03a9f4, #03a9f4), linear-gradient(#d2d2d2, #d2d2d2);
+}
+.form-group-warning .form-control:focus {
+  background-image: linear-gradient(#ff5722, #ff5722), linear-gradient(#d2d2d2, #d2d2d2);
+}
+.form-group-danger .form-control:focus {
+  background-image: linear-gradient(#f44336, #f44336), linear-gradient(#d2d2d2, #d2d2d2);
+}
+.form-group-material-red .form-control:focus {
+  background-image: linear-gradient(#f44336, #f44336), linear-gradient(#d2d2d2, #d2d2d2);
+}
+.form-group-material-pink .form-control:focus {
+  background-image: linear-gradient(#e91e63, #e91e63), linear-gradient(#d2d2d2, #d2d2d2);
+}
+.form-group-material-purple .form-control:focus {
+  background-image: linear-gradient(#9c27b0, #9c27b0), linear-gradient(#d2d2d2, #d2d2d2);
+}
+.form-group-material-deep-purple .form-control:focus {
+  background-image: linear-gradient(#673ab7, #673ab7), linear-gradient(#d2d2d2, #d2d2d2);
+}
+.form-group-material-indigo .form-control:focus {
+  background-image: linear-gradient(#3f51b5, #3f51b5), linear-gradient(#d2d2d2, #d2d2d2);
+}
+.form-group-material-blue .form-control:focus {
+  background-image: linear-gradient(#2196f3, #2196f3), linear-gradient(#d2d2d2, #d2d2d2);
+}
+.form-group-material-light-blue .form-control:focus {
+  background-image: linear-gradient(#03a9f4, #03a9f4), linear-gradient(#d2d2d2, #d2d2d2);
+}
+.form-group-material-cyan .form-control:focus {
+  background-image: linear-gradient(#00bcd4, #00bcd4), linear-gradient(#d2d2d2, #d2d2d2);
+}
+.form-group-material-teal .form-control:focus {
+  background-image: linear-gradient(#009688, #009688), linear-gradient(#d2d2d2, #d2d2d2);
+}
+.form-group-material-green .form-control:focus {
+  background-image: linear-gradient(#4caf50, #4caf50), linear-gradient(#d2d2d2, #d2d2d2);
+}
+.form-group-material-light-green .form-control:focus {
+  background-image: linear-gradient(#8bc34a, #8bc34a), linear-gradient(#d2d2d2, #d2d2d2);
+}
+.form-group-material-lime .form-control:focus {
+  background-image: linear-gradient(#cddc39, #cddc39), linear-gradient(#d2d2d2, #d2d2d2);
+}
+.form-group-material-yellow .form-control:focus {
+  background-image: linear-gradient(#ffeb3b, #ffeb3b), linear-gradient(#d2d2d2, #d2d2d2);
+}
+.form-group-material-amber .form-control:focus {
+  background-image: linear-gradient(#ffc107, #ffc107), linear-gradient(#d2d2d2, #d2d2d2);
+}
+.form-group-material-orange .form-control:focus {
+  background-image: linear-gradient(#ff9800, #ff9800), linear-gradient(#d2d2d2, #d2d2d2);
+}
+.form-group-material-deep-orange .form-control:focus {
+  background-image: linear-gradient(#ff5722, #ff5722), linear-gradient(#d2d2d2, #d2d2d2);
+}
+.form-group-material-brown .form-control:focus {
+  background-image: linear-gradient(#795548, #795548), linear-gradient(#d2d2d2, #d2d2d2);
+}
+.form-group-material-grey .form-control:focus {
+  background-image: linear-gradient(#9e9e9e, #9e9e9e), linear-gradient(#d2d2d2, #d2d2d2);
+}
+.form-group-material-blue-grey .form-control:focus {
+  background-image: linear-gradient(#607d8b, #607d8b), linear-gradient(#d2d2d2, #d2d2d2);
+}
+.form-group .form-control.focus,
+.form-group-default .form-control.focus {
+  background-image: linear-gradient(#009688, #009688), linear-gradient(#d2d2d2, #d2d2d2);
+}
+.form-group-black .form-control.focus {
+  background-image: linear-gradient(#000000, #000000), linear-gradient(#d2d2d2, #d2d2d2);
+}
+.form-group-white .form-control.focus {
+  background-image: linear-gradient(#ffffff, #ffffff), linear-gradient(#d2d2d2, #d2d2d2);
+}
+.form-group-inverse .form-control.focus {
+  background-image: linear-gradient(#3f51b5, #3f51b5), linear-gradient(#d2d2d2, #d2d2d2);
+}
+.form-group-primary .form-control.focus {
+  background-image: linear-gradient(#009688, #009688), linear-gradient(#d2d2d2, #d2d2d2);
+}
+.form-group-success .form-control.focus {
+  background-image: linear-gradient(#4caf50, #4caf50), linear-gradient(#d2d2d2, #d2d2d2);
+}
+.form-group-info .form-control.focus {
+  background-image: linear-gradient(#03a9f4, #03a9f4), linear-gradient(#d2d2d2, #d2d2d2);
+}
+.form-group-warning .form-control.focus {
+  background-image: linear-gradient(#ff5722, #ff5722), linear-gradient(#d2d2d2, #d2d2d2);
+}
+.form-group-danger .form-control.focus {
+  background-image: linear-gradient(#f44336, #f44336), linear-gradient(#d2d2d2, #d2d2d2);
+}
+.form-group-material-red .form-control.focus {
+  background-image: linear-gradient(#f44336, #f44336), linear-gradient(#d2d2d2, #d2d2d2);
+}
+.form-group-material-pink .form-control.focus {
+  background-image: linear-gradient(#e91e63, #e91e63), linear-gradient(#d2d2d2, #d2d2d2);
+}
+.form-group-material-purple .form-control.focus {
+  background-image: linear-gradient(#9c27b0, #9c27b0), linear-gradient(#d2d2d2, #d2d2d2);
+}
+.form-group-material-deep-purple .form-control.focus {
+  background-image: linear-gradient(#673ab7, #673ab7), linear-gradient(#d2d2d2, #d2d2d2);
+}
+.form-group-material-indigo .form-control.focus {
+  background-image: linear-gradient(#3f51b5, #3f51b5), linear-gradient(#d2d2d2, #d2d2d2);
+}
+.form-group-material-blue .form-control.focus {
+  background-image: linear-gradient(#2196f3, #2196f3), linear-gradient(#d2d2d2, #d2d2d2);
+}
+.form-group-material-light-blue .form-control.focus {
+  background-image: linear-gradient(#03a9f4, #03a9f4), linear-gradient(#d2d2d2, #d2d2d2);
+}
+.form-group-material-cyan .form-control.focus {
+  background-image: linear-gradient(#00bcd4, #00bcd4), linear-gradient(#d2d2d2, #d2d2d2);
+}
+.form-group-material-teal .form-control.focus {
+  background-image: linear-gradient(#009688, #009688), linear-gradient(#d2d2d2, #d2d2d2);
+}
+.form-group-material-green .form-control.focus {
+  background-image: linear-gradient(#4caf50, #4caf50), linear-gradient(#d2d2d2, #d2d2d2);
+}
+.form-group-material-light-green .form-control.focus {
+  background-image: linear-gradient(#8bc34a, #8bc34a), linear-gradient(#d2d2d2, #d2d2d2);
+}
+.form-group-material-lime .form-control.focus {
+  background-image: linear-gradient(#cddc39, #cddc39), linear-gradient(#d2d2d2, #d2d2d2);
+}
+.form-group-material-yellow .form-control.focus {
+  background-image: linear-gradient(#ffeb3b, #ffeb3b), linear-gradient(#d2d2d2, #d2d2d2);
+}
+.form-group-material-amber .form-control.focus {
+  background-image: linear-gradient(#ffc107, #ffc107), linear-gradient(#d2d2d2, #d2d2d2);
+}
+.form-group-material-orange .form-control.focus {
+  background-image: linear-gradient(#ff9800, #ff9800), linear-gradient(#d2d2d2, #d2d2d2);
+}
+.form-group-material-deep-orange .form-control.focus {
+  background-image: linear-gradient(#ff5722, #ff5722), linear-gradient(#d2d2d2, #d2d2d2);
+}
+.form-group-material-brown .form-control.focus {
+  background-image: linear-gradient(#795548, #795548), linear-gradient(#d2d2d2, #d2d2d2);
+}
+.form-group-material-grey .form-control.focus {
+  background-image: linear-gradient(#9e9e9e, #9e9e9e), linear-gradient(#d2d2d2, #d2d2d2);
+}
+.form-group-material-blue-grey .form-control.focus {
+  background-image: linear-gradient(#607d8b, #607d8b), linear-gradient(#d2d2d2, #d2d2d2);
+}
+.form-group .control-label,
+.form-group-default .control-label {
+  color: rgba(0, 0, 0, 0.84);
+}
+.form-group-black .control-label {
+  color: #000000;
+}
+.form-group-white .control-label {
+  color: #ffffff;
+}
+.form-group-inverse .control-label {
+  color: #3f51b5;
+}
+.form-group-primary .control-label {
+  color: #009688;
+}
+.form-group-success .control-label {
+  color: #4caf50;
+}
+.form-group-info .control-label {
+  color: #03a9f4;
+}
+.form-group-warning .control-label {
+  color: #ff5722;
+}
+.form-group-danger .control-label {
+  color: #f44336;
+}
+.form-group-material-red .control-label {
+  color: #f44336;
+}
+.form-group-material-pink .control-label {
+  color: #e91e63;
+}
+.form-group-material-purple .control-label {
+  color: #9c27b0;
+}
+.form-group-material-deep-purple .control-label {
+  color: #673ab7;
+}
+.form-group-material-indigo .control-label {
+  color: #3f51b5;
+}
+.form-group-material-blue .control-label {
+  color: #2196f3;
+}
+.form-group-material-light-blue .control-label {
+  color: #03a9f4;
+}
+.form-group-material-cyan .control-label {
+  color: #00bcd4;
+}
+.form-group-material-teal .control-label {
+  color: #009688;
+}
+.form-group-material-green .control-label {
+  color: #4caf50;
+}
+.form-group-material-light-green .control-label {
+  color: #8bc34a;
+}
+.form-group-material-lime .control-label {
+  color: #cddc39;
+}
+.form-group-material-yellow .control-label {
+  color: #ffeb3b;
+}
+.form-group-material-amber .control-label {
+  color: #ffc107;
+}
+.form-group-material-orange .control-label {
+  color: #ff9800;
+}
+.form-group-material-deep-orange .control-label {
+  color: #ff5722;
+}
+.form-group-material-brown .control-label {
+  color: #795548;
+}
+.form-group-material-grey .control-label {
+  color: #9e9e9e;
+}
+.form-group-material-blue-grey .control-label {
+  color: #607d8b;
+}
+.form-group input.form-control:focus ~ .floating-label,
+.form-group-default input.form-control:focus ~ .floating-label {
+  color: #009688;
+}
+.form-group-black input.form-control:focus ~ .floating-label {
+  color: #000000;
+}
+.form-group-white input.form-control:focus ~ .floating-label {
+  color: #ffffff;
+}
+.form-group-inverse input.form-control:focus ~ .floating-label {
+  color: #3f51b5;
+}
+.form-group-primary input.form-control:focus ~ .floating-label {
+  color: #009688;
+}
+.form-group-success input.form-control:focus ~ .floating-label {
+  color: #4caf50;
+}
+.form-group-info input.form-control:focus ~ .floating-label {
+  color: #03a9f4;
+}
+.form-group-warning input.form-control:focus ~ .floating-label {
+  color: #ff5722;
+}
+.form-group-danger input.form-control:focus ~ .floating-label {
+  color: #f44336;
+}
+.form-group-material-red input.form-control:focus ~ .floating-label {
+  color: #f44336;
+}
+.form-group-material-pink input.form-control:focus ~ .floating-label {
+  color: #e91e63;
+}
+.form-group-material-purple input.form-control:focus ~ .floating-label {
+  color: #9c27b0;
+}
+.form-group-material-deep-purple input.form-control:focus ~ .floating-label {
+  color: #673ab7;
+}
+.form-group-material-indigo input.form-control:focus ~ .floating-label {
+  color: #3f51b5;
+}
+.form-group-material-blue input.form-control:focus ~ .floating-label {
+  color: #2196f3;
+}
+.form-group-material-light-blue input.form-control:focus ~ .floating-label {
+  color: #03a9f4;
+}
+.form-group-material-cyan input.form-control:focus ~ .floating-label {
+  color: #00bcd4;
+}
+.form-group-material-teal input.form-control:focus ~ .floating-label {
+  color: #009688;
+}
+.form-group-material-green input.form-control:focus ~ .floating-label {
+  color: #4caf50;
+}
+.form-group-material-light-green input.form-control:focus ~ .floating-label {
+  color: #8bc34a;
+}
+.form-group-material-lime input.form-control:focus ~ .floating-label {
+  color: #cddc39;
+}
+.form-group-material-yellow input.form-control:focus ~ .floating-label {
+  color: #ffeb3b;
+}
+.form-group-material-amber input.form-control:focus ~ .floating-label {
+  color: #ffc107;
+}
+.form-group-material-orange input.form-control:focus ~ .floating-label {
+  color: #ff9800;
+}
+.form-group-material-deep-orange input.form-control:focus ~ .floating-label {
+  color: #ff5722;
+}
+.form-group-material-brown input.form-control:focus ~ .floating-label {
+  color: #795548;
+}
+.form-group-material-grey input.form-control:focus ~ .floating-label {
+  color: #9e9e9e;
+}
+.form-group-material-blue-grey input.form-control:focus ~ .floating-label {
+  color: #607d8b;
+}
+.input-group .form-control-wrapper {
+  margin-right: 5px;
+  margin-left: 5px;
+}
+.input-group .form-control-wrapper .form-control {
+  float: none;
+}
+.input-group .input-group-addon {
+  border: 0;
+  background: transparent;
+}
+.input-group .input-group-btn .btn {
+  border-radius: 4px;
+  margin: 0;
+}
+select.form-control {
+  border: 0;
+  box-shadow: none;
+  border-radius: 0;
+}
+select.form-control:focus,
+select.form-control.focus {
+  box-shadow: none;
+  border-color: #757575;
+}
+@-webkit-keyframes input-highlight {
+  0% {
+    background-size: 0 2px, 100% 1px;
+  }
+  100% {
+    background-size: 100% 2px, 100% 1px;
+  }
+}
+@keyframes input-highlight {
+  0% {
+    background-size: 0 2px, 100% 1px;
+  }
+  100% {
+    background-size: 100% 2px, 100% 1px;
+  }
+}
+.form-control-wrapper input[type=file] {
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 100;
+}
+legend {
+  border-bottom: 0;
+}
+.mdi-material-red,
+icon-material-red {
+  color: #f44336;
+}
+.mdi-material-pink,
+icon-material-pink {
+  color: #e91e63;
+}
+.mdi-material-purple,
+icon-material-purple {
+  color: #9c27b0;
+}
+.mdi-material-deep-purple,
+icon-material-deep-purple {
+  color: #673ab7;
+}
+.mdi-material-indigo,
+icon-material-indigo {
+  color: #3f51b5;
+}
+.mdi-material-blue,
+icon-material-blue {
+  color: #2196f3;
+}
+.mdi-material-light-blue,
+icon-material-light-blue {
+  color: #03a9f4;
+}
+.mdi-material-cyan,
+icon-material-cyan {
+  color: #00bcd4;
+}
+.mdi-material-teal,
+icon-material-teal {
+  color: #009688;
+}
+.mdi-material-green,
+icon-material-green {
+  color: #4caf50;
+}
+.mdi-material-light-green,
+icon-material-light-green {
+  color: #8bc34a;
+}
+.mdi-material-lime,
+icon-material-lime {
+  color: #cddc39;
+}
+.mdi-material-yellow,
+icon-material-yellow {
+  color: #ffeb3b;
+}
+.mdi-material-amber,
+icon-material-amber {
+  color: #ffc107;
+}
+.mdi-material-orange,
+icon-material-orange {
+  color: #ff9800;
+}
+.mdi-material-deep-orange,
+icon-material-deep-orange {
+  color: #ff5722;
+}
+.mdi-material-brown,
+icon-material-brown {
+  color: #795548;
+}
+.mdi-material-grey,
+icon-material-grey {
+  color: #9e9e9e;
+}
+.mdi-material-blue-grey,
+icon-material-blue-grey {
+  color: #607d8b;
+}
