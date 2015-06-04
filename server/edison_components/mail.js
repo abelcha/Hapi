@@ -11,7 +11,7 @@ var Mail = function(params) {
 Mail.prototype.renderTemplate = function(templateName, args) {
     var fs = require('fs');
     var ejs = require('ejs');
-    var fileName = process.cwd() + '/Emails/Template/' + templateName + '.html';
+    var fileName = process.cwd() + '/server/Emails/Template/' + templateName + '.html';
 
     return new Promise(function(resolve, reject) {
         fs.readFile(fileName, 'utf8', function(err, template) {
@@ -44,8 +44,6 @@ Mail.prototype.getAttachements = function(osFileBuffer, fileSupp) {
 
 Mail.prototype.sendOS = function(data, osFileBuffer, fileSupp) {
     var _this = this;
-
-
     return new Promise(function(resolve, reject) {
         _this.renderTemplate('os', data).then(function(textOS) {
             _this.client.sendEmail({

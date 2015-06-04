@@ -12,7 +12,6 @@ var dep = require(process.cwd() + '/server/loadDependencies');
 global.edison = dep.loadDir(process.cwd() + "/server/edison_components");
 global.envProd = process.env.NODE_ENV === "production";
 global.envDev = process.env.NODE_ENV === "developement";
-
 global.redis = edison.redis();
 global.db = edison.db();
 global.sms = new edison.mobyt(edison.config.mobytID, edison.config.mobytPASS);
@@ -93,7 +92,7 @@ app.get("/ping", function(req, res)  {
 app.use(function(req, res, next) {
     if (req.url.includes('.'))
         return next();
-    if (req.session && !req.session.id && (!req.query.x || envProd)) {
+    if (req.session && !req.session.id && (!req.query.x )) {
         if (req.url.startsWith('/api/')) {
             return res.status(401).send("Unauthorized");
         } else {
@@ -130,6 +129,7 @@ app.use(function(err, req, res, next) {
 
 process.on('uncaughtException', function(error) {
     console.log(error.stack);
+    throw error;
 });
 
 

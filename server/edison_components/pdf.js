@@ -20,7 +20,7 @@ var PdfCreator = function(params) {
 PdfCreator.prototype.renderTemplate = function(templateName, args) {
     var fs = require('fs');
     var ejs = require('ejs');
-    var fileName = process.cwd() + '/pdf/' + templateName + '.html';
+    var fileName = process.cwd() + '/server/pdf/' + templateName + '.html';
 
     return new Promise(function(resolve, reject) {
         fs.readFile(fileName, 'utf8', function(err, template) {

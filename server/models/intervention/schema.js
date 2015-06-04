@@ -50,10 +50,11 @@ module.exports = function(db) {
             },
             email: String,
             telephone: {
-                /*
-                t1: String,
-                t2: String,
-                */
+                tel1: {
+                    type: String,
+                    required: true
+                },
+                tel2: String
             },
             address: {
                 n: {

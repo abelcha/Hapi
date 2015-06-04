@@ -1,4 +1,6 @@
 module.exports = function(schema) {
+    var ReadWriteLock = require('rwlock');
+    var lock = new ReadWriteLock();
 
     function dbError(reject) {
         return function(err) {
@@ -20,35 +22,39 @@ module.exports = function(schema) {
                     for (k in data) {
                         doc[k] = data[k];
                     }
-                    doc.save().then(function(result) {
-                        resolve(result);
-                    }, dbError(reject));
+                    doc.save().then(resolve, dbError(reject));
                 }, dbError(reject))
             })
         }
 
         var createInter = function(data) {
             return new Promise(function(resolve, reject) {
-                db.model('intervention').getNextID(function(nextID) {
-                    data.id = nextID;
-                    data._id = nextID;
-                    data.login = {
-                        ajout: req.session.login
-                    }
-                    var inter = db.model('intervention')(data);
-                    inter.save().then(function(doc) {
-                        resolve(doc);
-                        db.model('document').changeLink({
-                            oldID: data.tmpID,
-                            newID: doc.id,
-                            model: 'intervention'
+                lock.writeLock(function(release) {
+                    db.model('intervention').getNextID(function(nextID) {
+                        data.login = {
+                            ajout: req.session.login
+                        }
+                        data.id = nextID;
+                        data._id = nextID;
+                        var inter = db.model('intervention')(data);
+                        inter.save().then(function(doc) {
+                            release();
+                            resolve(doc);
+                            db.model('document').changeLink({
+                                oldID: data.tmpID,
+                                newID: doc.id,
+                                model: 'intervention'
+                            });
+                            db.model('calls').changeLink({
+                                oldID: data.tmpID,
+                                newID: doc.id,
+                            })
+                        }, function(err) {
+                            release();
+                            dbError(reject)(err)
                         });
-                        db.model('calls').changeLink({
-                            oldID: data.tmpID,
-                            newID: doc.id,
-                        })
-                    }, dbError(reject))
-                })
+                    });
+                });
             })
         }
 

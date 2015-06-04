@@ -1,17 +1,20 @@
 module.exports = function(schema) {
 
-    schema.statics.verification = function(id, req, res) {
-        return new Promise(function(resolve, reject) {
-            db.model('intervention').findOne({
-                id: id
-            }).then(function(inter) {
+    schema.statics.verification = {
+        unique: true,
+        findBefore: true,
+        fn: function(inter, req, res) {
+            return new Promise(function(resolve, reject) {
                 if (!inter.reglementSurPlace && !inter.date.envoiFacture)
-                    reject("Veuillez envoyer la facture avant de vérifier")
+                    return reject("Veuillez envoyer la facture avant de vérifier")
+                if (inter.date.verification)
+                    return reject("L'intervention est deja vérifiée");
                 inter.date.verification = new Date;
-                inter.login.verification = req.session.verification;
+                inter.login.verification = req.session.login;
                 inter.status = "ATT";
-                inter.save(resolve, reject)
-            }, reject)
-        })
+                inter.save().then(resolve, reject)
+            })
+        }
     }
+
 }

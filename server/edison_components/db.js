@@ -21,6 +21,7 @@ module.exports = function() {
             if (method.endsWith('.js')) {
                 require(folder + '/methods/' + method)(schema)
             }
+            
         });
         var model = mongoose.model(model, schema);
     })

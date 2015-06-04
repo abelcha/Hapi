@@ -13,8 +13,9 @@ global.db = edison.db();
 global.sms = new edison.mobyt(edison.config.mobytID, edison.config.mobytPASS);
 global.isWorker = true;
 
-
-var redisUrl = url.parse(process.env.REDISCLOUD_URL);
+if (envProd) {
+    var redisUrl = url.parse(process.env.REDISCLOUD_URL);
+}
 
 redis.keys("kue*", function(err, re) {
     re.forEach(function(k) {

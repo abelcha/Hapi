@@ -1,59 +1,47 @@
-var chai = require("chai");
-chai.should();
-var util = require('util');
-chai.use(require('chai-http'));
-chai.use(require('chai-string'));
-var assert = chai.assert;
-var expect = chai.expect;
-var cookie = require('cookie')
-var request = require('request');
-var sessionCookie;
-var g = {
-    username: "abel_c",
-    password: "toto42"
-}
-var data = require("./data/data.js")
-require('colors');
-var app;
+//require("./module/init.js")()
 
-var testPort = function(port, cb) {
-    var url = "http://localhost:" + port;
-    chai.request(url)
-        .get('/ping')
-        .end(function(err, res) {
-            if (!err) {
-                console.log(("    Connected to port " + port).green)
-                app = chai.request.agent(url);
-            }
-            cb(!err)
-        })
-}
 
-var x = function(err, res) {
-    console.log(err, res);
-}
-
-var loginPageSample = '<input class="btn btn-lg btn-success btn-block" type="submit" id="login" value="Se Connecter">'
-
-describe('Connection', function() {
-    it('finding port', function(done) {
-        testPort(8080, function(ok) {
-            if (ok)
-                return done();
-            testPort(5000, function(ok) {
-                if (!ok) {
-                    console.log("Direct connection to server")
-                    app = chai.request.agent(require(process.cwd() + '/api/app.js'))
-                }
-                return done();
-            })
-        })
-
+/*
+var newInter = function(done) {
+    g.fakeData = data.intervention.createValid({
+        artisan: true
     });
-})
+    app.post('/api/intervention')
+        .send(g.fakeData)
+        .end(function(err, res) {
+            expect(res).to.have.status(200);
+            var resp = JSON.parse(res.text);
+            expect(resp.client.nom).to.be.equalIgnoreCase(g.fakeData.client.nom);
+            g.id = resp.id;
+            done();
+        })
+};
+
+var interEnvoi = function(done) {
+    app.get('/api/intervention/' + g.id + '/envoi')
+        .send({
+            sms: faker.lorem.sentences()
+        })
+        .end(function(err, res) {
+            expect(res).to.have.status(200);
+            var resp = JSON.parse(res.text);
+            expect(resp.status).to.be.equalIgnoreCase("ENV");
+            expect(resp.login.envoi).to.be.equalIgnoreCase(g.username);
+            done();
+        })
+}
+
+
 
 
 describe('Login', function() {
+    it('logout', function(done) {
+        app.get('/logout')
+            .end(function(err, res) {
+                expect(res.redirects).to.be.an('array').and.not.to.be.empty
+                done();
+            })
+    });
     it('check api access', function(done) {
         app.get('/api/intervention/12')
             .end(function(err, res) {
@@ -66,7 +54,7 @@ describe('Login', function() {
         app.get('/dashboard')
             .end(function(err, res) {
                 expect(res).to.have.status(401);
-                assert((res.text).includes(loginPageSample), 'Not redirected to login page')
+                assert((res.text).includes(g.loginPageSample), 'Not redirected to login page')
                 done()
             })
     });
@@ -95,7 +83,6 @@ describe('Login', function() {
                 expect(res).to.have.status(200);
                 expect(res.redirects[0]).to.endsWith('/test123')
                 expect(res.req).to.have.cookie('edison');
-                //sessionCookie = res.headers['set-cookie'][0]
                 done();
             })
     });
@@ -139,18 +126,7 @@ describe('API', function() {
                             done();
                         })
                 })
-                it('post /api/intervention/{valid}', function(done) {
-                    g.fakeData = data.intervention.createValid();
-                    app.post('/api/intervention')
-                        .send(g.fakeData)
-                        .end(function(err, res) {
-                            expect(res).to.have.status(200);
-                            var resp = JSON.parse(res.text);
-                            expect(resp.client.nom).to.be.equalIgnoreCase(g.fakeData.client.nom);
-                            g.id = resp.id;
-                            done();
-                        })
-                })
+                it('post /api/intervention/{valid}', newInter);
                 it('get /api/intervention/{valid}', function(done) {
                     app.get('/api/intervention/' + g.id)
                         .end(function(err, res) {
@@ -162,16 +138,55 @@ describe('API', function() {
                         })
                 })
             });
+            describe('Envoi', function() {
+                this.timeout(60000);
+                if (g.id === 12) {
+                    it('post /api/intervention/{valid}', newInter);
+                }
+                it('get /api/intervention/{valid}/envoi (no smsText)', function(done) {
+                    app.get('/api/intervention/' + g.id + '/envoi')
+                        .end(function(err, res) {
+                            expect(res).to.have.status(400);
+                            done();
+                        })
+                })
+                it('get /api/intervention/{valid}/envoi OK', interEnvoi)
+            });
+
+            describe('Verification', function() {
+                this.timeout(60000);
+                if (g.id === 12) {
+                    it('post /api/intervention/{valid}', newInter);
+                    it('post /api/intervention/{valid}/envoi', interEnvoi);
+                }
+                it('get /api/intervention/{valid}/verification', function(done) {
+                    app.post('/api/intervention/' + g.id + '/verification')
+                        .end(function(err, res) {
+                            expect(res).to.have.status(200);
+                            var resp = JSON.parse(res.text);
+                            expect(resp.status).to.be.equalIgnoreCase("ATT");
+                            expect(resp.login.verification).to.be.equalIgnoreCase(g.username);
+                            done();
+                        })
+                })
+            });
+            describe('Annulation', function() {
+                if (g.id === 12) {
+                    it('post /api/intervention/{valid}', newInter);
+                    it('post /api/intervention/{valid}/envoi', interEnvoi);
+                }
+                it('get /api/intervention/{valid}/annulation', function(done) {
+                    app.post('/api/intervention/' + g.id + '/annulation')
+                        .end(function(err, res) {
+                            expect(res).to.have.status(200);
+                            var resp = JSON.parse(res.text);
+                            expect(resp.status).to.be.equalIgnoreCase("ATT");
+                            expect(resp.login.annulation).to.be.equalIgnoreCase(g.username);
+                            done();
+                        })
+                })
+            });
         });
     });
 });
-describe('Logout', function() {
-
-    it('logout', function(done) {
-        app.get('/logout')
-            .end(function(err, res) {
-                expect(res.redirects).to.be.an('array').and.not.to.be.empty
-                done();
-            })
-    });
-});
+*/

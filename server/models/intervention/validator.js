@@ -17,13 +17,22 @@ module.exports = function(schema) {
         return /CR|MN|MC|PT|PL|SR|CL|CH|VT|EL|AS/i.test(value);
     }, 'Categorie inconnue.');
 
-/*
-    schema.pre('save', function(next) {
-            next();
-    });*/
+    /*
+        schema.pre('save', function(next) {
+            var _this = this;
+            db.model('intervention').getNextID(function(nextID) {
+                _this.id = nextID;
+                _this._id = nextID;
+                next();
+            });
+        });*/
 
     schema.post('save', function(doc) {
-      /*  if (!isWorker)
-            db.model('intervention').cacheActualise(doc);*/
+        console.log("save")
+        if (!isWorker) {
+            setTimeout(function() {
+                db.model('intervention').cacheActualise(doc);
+            }, 100)
+        }
     })
 }

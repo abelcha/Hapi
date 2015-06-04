@@ -2,6 +2,9 @@
 var async = require("async");
 var ms = require('milliseconds');
 var _ = require("lodash")
+var ReadWriteLock = require('rwlock');
+var lock = new ReadWriteLock();
+
 module.exports = function(schema) {
 
     var selectedFields = [
@@ -90,34 +93,36 @@ module.exports = function(schema) {
     }
     schema.statics.translate = translate;
     schema.statics.cacheActualise = function(doc) {
-        redis.get("interventionList", function(err, reply) {
-            if (!err && reply) {
-                var data = JSON.parse(reply);
-                var index = _.findIndex(data, function(e, i) {
-                    return e.id === doc.id;
-                })
-
-                var result = translate(doc)
-                if (index !== -1) {
-                    data[index] = result;
-                } else {
-                    data.unshift(result);
+        lock.writeLock(function(release) {
+            redis.get("interventionList", function(err, reply) {
+                if (!err && reply) {
+                    var data = JSON.parse(reply);
+                    var index = _.findIndex(data, function(e, i) {
+                        return e.id === doc.id;
+                    })
+                    var result = translate(doc)
+                    if (index !== -1) {
+                        data[index] = result;
+                    } else {
+                        data.unshift(result);
+                    }
+                    redis.set("interventionList", JSON.stringify(data), function() {
+                        io.sockets.emit('interventionListChange', result);
+                        console.log("release")
+                        release();
+                    });
                 }
-                redis.set("interventionList", JSON.stringify(data));
-                io.sockets.emit('interventionListChange', result);
-            }
+            });
         });
-
     }
 
     schema.statics.cacheReload = function() {
         return new Promise(function(resolve, reject) {
             db.model('intervention').find().sort('-id').select(selectedFields).then(function(docs) {
                 var result = docs.map(translate)
-                redis.set("interventionList", JSON.stringify(result), function() {
-                    resolve(result);
-                })
-            }, function(err) {});
+                redis.set("interventionList", JSON.stringify(result), function() {})
+                resolve(result);
+            }, reject);
         });
     }
 }

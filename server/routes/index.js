@@ -24,15 +24,35 @@ module.exports = function(app) {
         }
     })
 
+    var uniqueModel = function(model, method, req, res) {
+        return new Promise(function(resolve, reject) {
+
+            if (model[method].findBefore === void(0) || model[method].findBefore !== false) {
+                model.findOne({
+                    _id: req.params.id
+                }).then(function(data) {
+                    if (!data)
+                        reject("Not Found");
+                    model[method].fn(data, req, res)
+                        .then(resolve, reject);
+                }, reject)
+            } else {
+                model[method].fn(req.params.id, req, res)
+                    .then(resolve, reject);
+            }
+        })
+    }
 
     app.all('/api/:model/:id/:method', function(req, res, next) {
         var model = db.model(req.params.model);
         var method = req.params.method;
-
-        if (!model ||  typeof model[method] !== "function" || model[method].length !== 3) {
+        if (!model)
             return next();
+        if (typeof model[method] === "undefined")
+            return next();
+        if (model[method].unique === true) {
+            uniqueModel(model, method, req, res).then(onSuccess(res), onFailure(res));
         }
-        model[method](req.params.id, req, res).then(onSuccess(res), onFailure(res));
     });
 
     app.post('/api/:model', function(req, res, next) {
@@ -76,4 +96,3 @@ module.exports = function(app) {
     });
 
 };
-
