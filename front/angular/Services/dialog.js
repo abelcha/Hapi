@@ -2,6 +2,26 @@ angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', 'config', 
 
 
     return {
+        envoiFacture: function(inter, cb) {
+            $mdDialog.show({
+                controller: function DialogController($scope, $mdDialog, config) {
+                    var template = "{{client.civilite}} {{client.nom}}, \n" +
+                        "Vous trouverez ci-joint la facture de notre intervention\n" +
+                        "Cordialement\n" +
+                        "Edison Services"
+                    $scope.text = _.template(template)(inter);
+                    $scope.date = new Date;
+                    $scope.acquitte = false;
+                    $scope.answer = function(cancel) {
+                        $mdDialog.hide();
+                        if (!cancel) {
+                            cb($scope.text, $scope.acquitte, $scope.date);
+                        }
+                    }
+                },
+                templateUrl: '/DialogTemplates/envoiFacture.html',
+            });
+        },
         recap: function(inters) {
             $mdDialog.show({
                 controller: function DialogController($scope, $mdDialog, config) {

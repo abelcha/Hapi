@@ -8,6 +8,7 @@ var path = require('path');
 require('pretty-error').start();
 
 
+
 var dep = require(process.cwd() + '/server/loadDependencies');
 global.edison = dep.loadDir(process.cwd() + "/server/edison_components");
 global.envProd = process.env.NODE_ENV === "production";
@@ -19,7 +20,7 @@ global.mail = new edison.mail;
 global.document = new edison.dropbox();
 global.isWorker = false;
 global.io = require('socket.io')(http);
-
+edison.extendPrototypes();
 if (envProd ||  envDev)
     global.jobs = edison.worker.initJobQueue();
 
@@ -128,8 +129,8 @@ app.use(function(err, req, res, next) {
 //}
 
 process.on('uncaughtException', function(error) {
-    console.log(error.stack);
-    throw error;
+    console.log("==ss>", error.stack);
+   // throw error;
 });
 
 

@@ -42,6 +42,28 @@ Mail.prototype.getAttachements = function(osFileBuffer, fileSupp) {
     return attachements;
 }
 
+Mail.prototype.sendFacture = function(options) {
+    //title, htmlTemplate, mailText
+    var _this = this;
+    return new Promise(function(resolve, reject) {
+        _this.client.sendEmail({
+            From: "intervention@edison-services.fr",
+            To: "abel@chalier.me",
+            Subject: "Facture de l'intervention " + options.data.id,
+            HtmlBody: options.text,
+            Attachments:  [{
+                Content: options.file.toString('base64'),
+                Name: "Facture",
+                ContentType: "application/pdf"
+            }]
+        }, function(err, resp) {
+            if (err)
+                return reject(err);
+            resolve(resp)
+        })
+    });
+}
+
 Mail.prototype.sendOS = function(data, osFileBuffer, fileSupp) {
     var _this = this;
     return new Promise(function(resolve, reject) {

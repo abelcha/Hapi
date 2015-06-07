@@ -24,27 +24,35 @@ module.exports = function(schema) {
 
     }
 
-    var getFacture = function(doc, html, date) {
+    schema.statics.getFacture = function(options) {
         return edison.pdf({
-            html: html,
+            html: options.html,
             template: 'facture',
             args: {
-                data: doc,
+                data: options.data,
                 logo: edison.logo,
+                acquitte: options.acquitte,
                 title: 'Facture',
-                info: getInfo(doc),
-                date: moment(date || doc.date.ajout ||  new Date).format('LL')
+                info: getInfo(options.data),
+                date: moment(options.date || options.data.date.ajout ||  new Date).format('LL')
             },
             buffer: true
         })
     }
 
     schema.statics.facturePreview = function(req, res) {
+        var _this = this;
+        req.body.html = false
         return new Promise(function(resolve, reject) {
-            var doc = JSON.parse(req.query.data);
-            getFacture(doc, req.query.html, req.query.date)
+            var doc = JSON.parse(req.body.data);
+            _this.getFacture({
+                    data: doc,
+                    html: true,
+                    date: req.body.date,
+                    acquitte: true
+                })
                 .then(function(result) {
-                    if (!req.query.html)
+                    if (!true)
                         res.contentType("application/pdf");
                     resolve(result);
                 }, reject)
@@ -52,18 +60,4 @@ module.exports = function(schema) {
         })
     }
 
-    schema.statics.facture = function(id, req, res) {
-        return new Promise(function(resolve, reject) {
-            db.model('intervention').findOne({
-                id: id
-            }).then(function(doc)  {
-                getFacture(doc, req.query.html, req.query.date)
-                    .then(function(result) {
-                        if (!req.query.html)
-                            res.contentType("application/pdf");
-                        resolve(result);
-                    }, reject)
-            }, reject)
-        })
-    }
 }

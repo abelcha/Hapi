@@ -42,7 +42,10 @@ module.exports = function(schema) {
     }
 
     var cleanUp = function(name, telepro, result) {
-        telepro[name] = _.get(result, name + '.' + telepro.login + '[0]', {});
+        telepro[name] = _.get(result, name + '.' + telepro.login + '[0]', {
+            montant: 0,
+            total: 0
+        });
         if (telepro[name] !== {}) {
             delete telepro[name]._id;
             delete telepro[name].login;
@@ -52,109 +55,120 @@ module.exports = function(schema) {
 
     schema.statics.stats = function(req, res) {
         return new Promise(function(resolve, reject) {
-            var p1 = statusDistinctFactory({
-                'date.ajout': {
-                    $gt: edison.utils.date.today(true)
-                }
-            });
 
-            var p2 = statusDistinctFactory({
-                'date.ajout': {
-                    $gt: edison.utils.date.today(true)
-                }
-            }, {
-                st: '$status'
-            });
-
-            var p3 = statusDistinctFactory({
-                'status': 'APR',
-                'date.ajout': {
-                    $gt: new Date(0)
-                },
-            });
-            var p4 = statusDistinctFactory({
-                status: 'ENV',
-                'date.intervention': {
-                    $lt: new Date(Date.now() + ms.hours(1))
-                }
-            });
-            var p5 = statusDistinctFactory({
-                status: 'ATT',
-                reglementSurPlace: true,
-                'date.intervention': {
-                    $lt: new Date(Date.now() - ms.weeks(2)),
-                }
-            });
-            var p6 = statusDistinctFactory({
-                status: 'ATT',
-                reglementSurPlace: true,
-                'date.intervention': {
-                    $lt: new Date(Date.now() - ms.months(1))
-                }
-            });
-            var p7 = statusDistinctFactory({
-                status: 'ATT',
-                reglementSurPlace: false,
-                'date.intervention': {
-                    $lt: new Date(Date.now() - ms.weeks(2)),
-                }
-            });
-            var p8 = statusDistinctFactory({
-                status: 'ATT',
-                reglementSurPlace: false,
-                'date.intervention': {
-                    $lt: new Date(Date.now() - ms.months(1))
-                }
-            });
-            //p1.then(console.log)
-
-            async.parallel({
-                todayTotal: p1,
-                todayStatus: p2,
-                apr: p3,
-                avr: p4,
-                sarl: p5,
-                usarl: p6,
-                carl: p7,
-                ucarl: p8,
-            }, function(err, result) {
-                if (err)
-                    console.log(err);
-                result.apr = _.groupBy(result.apr, 'login')
-                result.avr = _.groupBy(result.avr, 'login')
-                result.sarl = _.groupBy(result.sarl, 'login')
-                result.usarl = _.groupBy(result.usarl, 'login')
-                result.carl = _.groupBy(result.carl, 'login')
-                result.ucarl = _.groupBy(result.ucarl, 'login')
-                result.todayTotal = _.groupBy(result.todayTotal, 'login');
-                result.todayStatus = _.groupBy(result.todayStatus, 'login')
-                var rtn = [];
-                edison.config.users.forEach(function(user) {
-                    if (user.service === "INTERVENTION") {
-                        var telepro = _.get(result, 'todayTotal[' + user.login + '][0]') || {
-                            login: user.login,
-                            total: 0,
-                            montant: 0
-                        }
-
-                        telepro.status = cleanStatus(result.todayStatus[telepro.login]);
-                        cleanUp('apr', telepro, result);
-                        cleanUp('avr', telepro, result);
-                        cleanUp('sarl', telepro, result);
-                        cleanUp('usarl', telepro, result);
-                        cleanUp('carl', telepro, result);
-                        cleanUp('ucarl', telepro, result);
-                        if (telepro._id) {
-                            delete telepro._id;
-                        }
-                        //console.log(telepro)
-                        rtn.push(telepro);
+            var everydayOP = {
+                todayTotal: statusDistinctFactory({
+                    'date.ajout': {
+                        $gt: edison.utils.date.today(true)
                     }
+                }),
+                todayStatus: statusDistinctFactory({
+                    'date.ajout': {
+                        $gt: edison.utils.date.today(true)
+                    }
+                }, {
+                    st: '$status'
                 })
-                resolve(rtn)
-            })
+            }
 
+            var todayOP = {
 
+                apr: statusDistinctFactory({
+                    'status': 'APR',
+                    'date.ajout': {
+                        $gt: new Date(0)
+                    },
+                }),
+                avr: statusDistinctFactory({
+                    status: 'ENV',
+                    'date.intervention': {
+                        $lt: new Date(Date.now() + ms.hours(1))
+                    }
+                }),
+                sarl: statusDistinctFactory({
+                    status: 'ATT',
+                    reglementSurPlace: true,
+                    'date.intervention': {
+                        $lt: new Date(Date.now() - ms.weeks(2)),
+                    }
+                }),
+                usarl: statusDistinctFactory({
+                    status: 'ATT',
+                    reglementSurPlace: true,
+                    'date.intervention': {
+                        $lt: new Date(Date.now() - ms.months(1))
+                    }
+                }),
+                carl: statusDistinctFactory({
+                    status: 'ATT',
+                    reglementSurPlace: false,
+                    'date.intervention': {
+                        $lt: new Date(Date.now() - ms.weeks(2)),
+                    }
+                }),
+                ucarl: statusDistinctFactory({
+                    status: 'ATT',
+                    reglementSurPlace: false,
+                    'date.intervention': {
+                        $lt: new Date(Date.now() - ms.months(1))
+                    }
+                }),
+                fact: statusDistinctFactory({
+                    'date.intervention': {
+                        $lt: new Date(Date.now() + ms.hours(1))
+                    },
+                    status: 'ENV',
+                    reglementSurPlace: false
+                }),
+                savEnc: statusDistinctFactory({
+                    sav: {
+                        $elemMatch:  {
+                            status: 'ENV'
+                        }
+                    }
+                }),
+                sav: statusDistinctFactory({
+                    sav: {
+                        $ne: {
+                            $size: 0
+                        }
+                    }
+                }),
+            }
+
+            async.parallel(everydayOP, function(err, everydayResult) {
+                if (err)
+                    return reject(err)
+                everydayResult.status = _.groupBy(everydayResult.status, 'login');
+                everydayResult.status = _.groupBy(everydayResult.status, 'login')
+                async.parallel(todayOP, function(err2, result) {
+                    if (err2)
+                        reject(err);
+                    result = _.mapValues(result, function(e) {
+                        return _.groupBy(e, 'login')
+                    })
+                    var rtn = [];
+                    edison.config.users.forEach(function(user) {
+                        if (user.service === "INTERVENTION") {
+                            var telepro = _.get(everydayResult, 'total[' + user.login + '][0]') || {
+                                login: user.login,
+                                total: 0,
+                                montant: 0
+                            }
+                            telepro.status = cleanStatus(everydayResult.status[telepro.login]);
+                            _.each(result, function(fltr, key) {
+                                cleanUp(key, telepro, result);
+                            })
+                            if (telepro._id) {
+                                delete telepro._id;
+                            }
+                            rtn.push(telepro);
+                        }
+                    })
+                    resolve(rtn)
+                })
+
+            });
         });
     }
 }

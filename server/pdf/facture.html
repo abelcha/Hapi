@@ -123,7 +123,6 @@
                 <% if (data.client && data.client.address && data.client.address.n) { %>
                     <p>
                         <%=(data.client.civilite || "") + " " + (data.client.prenom || "") + " " + (data.client.nom || "") %>
-                        
                     </p>
                     <p>
                         <%=data.client.address.n + " " + data.client.address.r %>
@@ -193,25 +192,30 @@
                             <p>PAIEMENT : 40% à la signature du devis</p>
                             <div id="signature_client" style="height:100px;width:380px;border:1px solid rgb(112,112,112);text-align:center;">
                                 <p style="font-size:11px;font-weight:bold;margin-top:5px;">Signature précédée de la mention "BON POUR ACCORD"</p>
+                                <% if (acquitte===(true)) { %>
+                                    <div style="margin-left:100px;border-radius: 15px;border: 3px solid red;width: 135px;height: 45px;padding-top:10px; ">
+                                    <p style="color:red;font-size:47px">Payé</p>
+                                    </div>
+                                    <% } %>
                             </div>
                         </td>
                         <td id="bottom_right" style="width: 299px;;text-align: left;float:left;padding-left:40px;padding-top:40px;border-top: 1px solid rgb(143,188,47);">
                             <p style="width:300px;margin-top:20px;margin-right:180px;">
                                 &nbsp;&nbsp;&nbsp;&nbsp;Total H.T<span style="float:right"> <%=(info.montantTotal).toFixed(2)%> €</span>
                             </p>
-                            <%var tva = data.tva || 20%>
-                            <p style="width:300px;margin-top:8px;margin-right:180px;">
-                                TVA (
-                                <%=tva%> %)
-                                    <span style="float:right"> 
+                            <% var tva=(data.tva) || 20 %>
+                                <p style="width:300px;margin-top:8px;margin-right:180px;">
+                                    TVA (
+                                    <%=tva%> %)
+                                        <span style="float:right"> 
                         <%=((info.montantTotal * (tva / 100))).toFixed(2)%> €
                         </span> </p>
-                            <p style="width:300px;margin-top:8px;margin-right:180px;color:rgb(143,188,47)">
-                                Total T.T.C
-                                <span style="float:right"> 
+                                <p style="width:300px;margin-top:8px;margin-right:180px;color:rgb(143,188,47)">
+                                    Total T.T.C
+                                    <span style="float:right"> 
                         <%=(info.montantTotal + (info.montantTotal * (tva / 100))).toFixed(2)%> €
                         </span>
-                            </p>
+                                </p>
                         </td>
                     </tr>
                 </table>

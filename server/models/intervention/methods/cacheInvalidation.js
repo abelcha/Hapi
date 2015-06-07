@@ -11,6 +11,7 @@ module.exports = function(schema) {
         '-_id',
         'id',
         'login',
+        "sav",
         'status',
         'client.civilite',
         'client.nom',
@@ -30,6 +31,8 @@ module.exports = function(schema) {
 
         if (inter.status === 'AVR') {
             fltr.avr = 1;
+            if (inter.reglementSurPlace === false)
+                fltr.fact = 1;
             if (now > dateInter + ms.hours(1)) {
                 fltr.avr = 1;
                 if (now > dateInter + ms.weeks(1)) {
@@ -55,6 +58,11 @@ module.exports = function(schema) {
             fltr.env = 1;
         if (inter.status === 'APR') {
             fltr.apr = 1;
+        }
+        if (inter.sav && inter.sav.length) {
+            fltr.sav = 1;
+            if (inter.sav[inter.sav.length - 1].status == "ENV")
+                fltr.savEnc = 1;
         }
         //DateFilters
         fltr.d = {};
@@ -119,8 +127,9 @@ module.exports = function(schema) {
         return new Promise(function(resolve, reject) {
             db.model('intervention').find().sort('-id').select(selectedFields).then(function(docs) {
                 var result = docs.map(translate)
-                redis.set("interventionList", JSON.stringify(result), function() {})
-                resolve(result);
+                redis.set("interventionList", JSON.stringify(result), function() {
+                    resolve(result);
+                })
             }, reject);
         });
     }

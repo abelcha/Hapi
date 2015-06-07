@@ -43,6 +43,11 @@ angular.module('edison').factory('config', [function() {
             long: 'SST A Relancer Urgent',
             url: '/sstaRelancerUrgent'
         },
+        factureaEnvoyer: {
+            short: 'fact',
+            long: 'Facture à envoyer',
+            url: '/factureaEnvoyer'
+        },
     }
 
     config.civilites = [{
@@ -191,9 +196,11 @@ angular.module('edison').factory('config', [function() {
     }];
 
     config.tva = [{
-        long_name: 10,
+        short_name: 10,
+        long_name: "TVA: 10%"
     }, {
-        long_name: 20
+        short_name: 20,
+        long_name: "TVA: 20%"
     }];
     config.typePayeur = [{
         short_name: 'SOC',

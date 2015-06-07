@@ -21,11 +21,11 @@ module.exports = function(db) {
             paiementSST: String,
         },
         telepro: String,
-        comments: [
-            /*
-            {login, text, date},
-            */
-        ],
+        comments: [{
+            login: String,
+            text: String,
+            date: String
+        }],
         date: {
             envoi: Date,
             ajout: {
@@ -79,20 +79,31 @@ module.exports = function(db) {
             location: [],
         },
         facture: {
-            /*    type: String,
-                nom: String,
-                prenom: String,
-                tel: String,
-                email: String,
-                address: {
-                  n: String,
-                  r: String,
-                  v: String,
-                  cp: String,
-                },
-                tva:Number
-            */
+            payeur: String,
+            nom: String,
+            prenom: String,
+            tel: String,
+            email: String,
+            address: {
+                n: String,
+                r: String,
+                v: String,
+                cp: String,
+            },
+            tva: Number
+
         },
+        sav: [{
+            status: String,
+            description: String,
+            login: String,
+            artisan: {
+                id: Number,
+                nomSociete: String,
+            },
+            status: String,
+            date: Date,
+        }],
         categorie: {
             type: String,
             required: true

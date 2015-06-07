@@ -49,6 +49,11 @@ module.exports = function(app, config) {
         },
         envoiFacture: function(cb) {
             app.post('/api/intervention/' + inter.id + '/envoiFacture')
+                .send({
+                    data: inter,
+                    date: new Date,
+                    text: "Envoi Facture UT"
+                })
                 .end(function(err, res) {
                     cb(res);
                 });

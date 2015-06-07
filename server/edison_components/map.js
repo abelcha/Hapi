@@ -20,10 +20,11 @@ module.exports = {
   },
   getDistance: function(req, res) {
     var query = req.query
+    var _ = require('lodash')
     edison.googleMap.directions(query.origin, query.destination, function(err, result) {
       res.json({
-        distance: result.routes[0].legs[0].distance.text,
-        duration: result.routes[0].legs[0].duration.text
+        distance: _.get(result, 'routes[0].legs[0].distance.text', 0),
+        duration: _.get(result, 'routes[0].legs[0].duration.text', 0)
       });
     });
   },

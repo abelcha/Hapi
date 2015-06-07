@@ -61,6 +61,7 @@ module.exports = function(schema) {
 
         var data = req.body
         return new Promise(function(resolve, reject) {
+
             var saveData = data.id ? updateInter(data) : createInter(data);
             saveData.then(function(doc) {
                 resolve(doc);

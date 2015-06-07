@@ -1,3 +1,5 @@
+"use strict";
+
 angular.module('edison', ['ngMaterial', 'lumx', 'ngAnimate', 'xeditable', 'ngDialog', 'btford.socket-io', 'ngFileUpload', 'pickadate', 'ngRoute', 'ngResource', 'ngTable', 'ngMap'])
     .config(function($mdThemingProvider) {
         $mdThemingProvider.theme('default')
@@ -525,6 +527,131 @@ angular.module("edison").filter('tableFilter', function() {
   }
 });
 
+angular.module('edison')
+    .factory('actionIntervention', ['$window', 'LxNotificationService', 'dialog', 'edisonAPI', 'config',
+        function($window, LxNotificationService, dialog, edisonAPI, config) {
+            return {
+                envoiFacture: function(inter, cb) {
+                    dialog.envoiFacture(inter, function(text, acquitte, date) {
+                        edisonAPI.intervention.envoiFacture(inter.id, {
+                            text: text,
+                            acquitte: acquitte,
+                            date: date,
+                            data: inter,
+                        }).success(function(resp) {
+                            var validationMessage = _.template("La facture de l'intervention {{id}} à été envoyé")(inter)
+                            LxNotificationService.success(validationMessage);
+                            if (typeof cb === 'function')
+                                cb(null, resp);
+                        }).catch(function(err) {
+                            var validationMessage = _.template("L'envoi de la facture {{id}} à échoué")(inter)
+                            LxNotificationService.error(validationMessage);
+                            if (typeof cb === 'function')
+                                cb(err);
+                        })
+
+                    })
+                },
+                smsArtisan: function(inter, cb) {
+                    dialog.getText({
+                        title: "Texte du SMS",
+                        text: "\nEdison Service"
+                    }, function(text) {
+                        edisonAPI.sms.save({
+                            link: inter.artisan.id,
+                            origin: inter.id || inter.tmpID,
+                            text: text,
+                            to: "0633138868"
+                        }).success(function(resp) {
+                            if (typeof cb === 'function')
+                                cb(null, resp);
+                        }).catch(function(err) {
+                            if (typeof cb === 'function')
+                                cb(err);
+                        })
+                    })
+                },
+                callArtisan: function(inter, cb) {
+                    var now = Date.now();
+                    var x = $window.open('callto:' + inter.artisan.telephone.tel1, '_self', false)
+                    dialog.choiceText({
+                        title: 'Nouvel Appel',
+                    }, function(response, text) {
+                        edisonAPI.call.save({
+                            date: now,
+                            to: inter.artisan.telephone.tel1,
+                            link: inter.artisan.id,
+                            origin: inter.id || inter.tmpID || 0,
+                            description: text,
+                            response: response
+                        }).success(function(resp) {
+                            if (typeof cb === 'function')
+                                cb(null, resp);
+                        }).catch(function(err) {
+                            if (typeof cb === 'function')
+                                cb(err);
+                        })
+                    })
+                },
+                save: function(inter, cb) {
+                    edisonAPI.intervention.save(inter)
+                        .then(function(resp) {
+                            console.log("yey")
+                            var validationMessage = _.template("Les données de l'intervention {{id}} ont à été enregistré")(resp.data)
+                            LxNotificationService.success(validationMessage);
+                            if (typeof cb === 'function')
+                                cb(null, resp.data)
+                        }).catch(function(error) {
+                            LxNotificationService.error(error.data);
+                            if (typeof cb === 'function')
+                                cb(error.data)
+                        });
+                },
+                envoi: function(inter, cb) {
+                    dialog.getFileAndText(inter, inter.files, function(text, file) {
+                        edisonAPI.intervention.envoi(inter.id, {
+                            sms: text,
+                            file: file
+                        }).then(function(resp) {
+                            var validationMessage = _.template("L'intervention {{id}} est envoyé")(resp.data)
+                            LxNotificationService.success(validationMessage);
+                            if (typeof cb === 'function')
+                                cb(null, resp.data)
+
+                        }).catch(function(error) {
+                            LxNotificationService.error(error.data);
+                            if (typeof cb === 'function')
+                                cb(error.data);
+                        });
+                    })
+                },
+                annulation: function(inter, cb) {
+                    edisonAPI.intervention.annulation(inter.id)
+                        .then(function(resp) {
+                            console.log(resp.data)
+                            var validationMessage = _.template("L'intervention {{id}} est annulé")(resp.data)
+                            LxNotificationService.success(validationMessage);
+                            if (typeof cb === 'function')
+                                cb(null, resp.data)
+                        });
+                },
+                verification: function(inter, cb) {
+                    edisonAPI.intervention.verification(inter.id)
+                        .then(function(resp) {
+                            var validationMessage = _.template("L'intervention {{id}} est vérifié")(resp.data)
+                            LxNotificationService.success(validationMessage);
+                            if (typeof cb === 'function')
+                                cb(resp.data);
+                        }).catch(function(error) {
+                            LxNotificationService.error(error.data);
+                            if (typeof cb === 'function')
+                                cb(error.data);
+                        })
+                }
+            }
+        }
+    ]);
+
 angular.module('edison').factory('Address', function() {
 
 
@@ -637,9 +764,11 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvid
                 return $http.post("/api/intervention/" + id + "/annulation");
             },
             envoi: function(id, options) {
-                return $http.post("/api/envoi/" + id + "/envoi", options);
+                return $http.post("/api/intervention/" + id + "/envoi", options);
             },
-
+            envoiFacture: function(id, options) {
+                return $http.post("/api/intervention/" + id + "/envoiFacture", options);
+            },
         },
         artisan: {
             list: function(options) {
@@ -739,11 +868,7 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvid
                 })
             },
             save: function(params) {
-                return $http({
-                    method: 'GET',
-                    url: '/api/calls/add',
-                    params: params
-                })
+                return $http.post('/api/calls', params);
             },
         },
         sms: {
@@ -757,13 +882,8 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvid
                     }
                 })
             },
-            send: function(params) {
-                console.log(params)
-                return $http({
-                    method: 'GET',
-                    url: '/api/sms/send',
-                    params: params
-                })
+            save: function(params) {
+                return $http.post("/api/sms", params)
             },
 
         },
@@ -839,6 +959,11 @@ angular.module('edison').factory('config', [function() {
             short: 'Usarl',
             long: 'SST A Relancer Urgent',
             url: '/sstaRelancerUrgent'
+        },
+        factureaEnvoyer: {
+            short: 'fact',
+            long: 'Facture à envoyer',
+            url: '/factureaEnvoyer'
         },
     }
 
@@ -988,9 +1113,11 @@ angular.module('edison').factory('config', [function() {
     }];
 
     config.tva = [{
-        long_name: 10,
+        short_name: 10,
+        long_name: "TVA: 10%"
     }, {
-        long_name: 20
+        short_name: 20,
+        long_name: "TVA: 20%"
     }];
     config.typePayeur = [{
         short_name: 'SOC',
@@ -1064,7 +1191,7 @@ angular.module('edison').factory('config', [function() {
 
 }]);
 
-angular.module('edison').factory('contextMenu', ['$location', 'edisonAPI', 'LxNotificationService', '$window', 'dialog', function($location, edisonAPI, LxNotificationService, $window, dialog) {
+angular.module('edison').factory('contextMenu', ['$location', 'edisonAPI', 'actionIntervention', '$window', 'dialog', function($location, edisonAPI, actionIntervention, $window, dialog) {
 
     var content = {};
 
@@ -1122,44 +1249,21 @@ angular.module('edison').factory('contextMenu', ['$location', 'edisonAPI', 'LxNo
     }, {
         hidden: false,
         title: "Envoyer",
-        click: function(inter) {
-            dialog.getFileAndText(inter, [], function(text, file) {
-                edisonAPI.intervention.envoi(inter.id, {
-                    sms: text,
-                    file: file
-                }).then(function(res) {
-                    console.log(res)
-                    LxNotificationService.success(res.data);
-                }).catch(function(error) {
-                    console.log(error)
-                    LxNotificationService.error(error.data);
-                });
-            })
-        },
+        click: actionIntervention.envoi,
         hide: function(inter) {
             return inter.s !== "A Programmer" && inter.s !== 'Annulé'
         }
     }, {
         hidden: false,
         title: "Vérifier",
-        click: function(inter) {
-            edisonAPI.intervention.verification(inter.id).then(function(res) {
-                LxNotificationService.success("L'intervention " + inter.id + " à été vérifié");
-            }).catch(function(error) {
-                LxNotificationService.error(error.data);
-            });
-        },
+        click: actionIntervention.verification,
         hide: function(inter) {
             return inter.s !== "A Vérifier" && inter.s !== 'Envoyé'
         }
     }, {
         hidden: false,
         title: "Annuler",
-        click: function(inter) {
-            edisonAPI.intervention.annulation(inter.id).then(function(res) {
-                LxNotificationService.success("L'intervention " + inter.id + " à été annulé");
-            });
-        }
+        click: actionIntervention.annulation
 
     }]
 
@@ -1262,6 +1366,26 @@ angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', 'config', 
 
 
     return {
+        envoiFacture: function(inter, cb) {
+            $mdDialog.show({
+                controller: function DialogController($scope, $mdDialog, config) {
+                    var template = "{{client.civilite}} {{client.nom}}, \n" +
+                        "Vous trouverez ci-joint la facture de notre intervention\n" +
+                        "Cordialement\n" +
+                        "Edison Services"
+                    $scope.text = _.template(template)(inter);
+                    $scope.date = new Date;
+                    $scope.acquitte = false;
+                    $scope.answer = function(cancel) {
+                        $mdDialog.hide();
+                        if (!cancel) {
+                            cb($scope.text, $scope.acquitte, $scope.date);
+                        }
+                    }
+                },
+                templateUrl: '/DialogTemplates/envoiFacture.html',
+            });
+        },
         recap: function(inters) {
             $mdDialog.show({
                 controller: function DialogController($scope, $mdDialog, config) {
@@ -1515,7 +1639,30 @@ angular.module('edison').factory('mapAutocomplete', ['$q', 'Address',
     }
 ]);
 
-angular.module('edison').factory('productsList', ['dialog', '$window', function(dialog, $window) {
+angular.module('edison').factory('openPost', ['$window', function($window) {
+    return function(url, data) {
+        var mapForm = document.createElement("form");
+        mapForm.target = "_blank";
+        mapForm.method = "POST";
+        mapForm.action = url;
+
+        // Create an input
+        _.each(data, function(e, i) {
+            var mapInput = document.createElement("input");
+            mapInput.type = "text";
+            mapInput.name = i;
+            mapInput.value = e;
+            mapForm.appendChild(mapInput);
+        })
+        // Add the form to dom
+        document.body.appendChild(mapForm);
+
+        // Just submit
+        mapForm.submit();
+    }
+}]);
+
+angular.module('edison').factory('productsList', ['dialog', 'openPost', function(dialog, openPost) {
     var ps = [{
         quantite: 1,
         ref: "EDI001",
@@ -1652,8 +1799,10 @@ angular.module('edison').factory('productsList', ['dialog', '$window', function(
             return total
         },
         previsualise: function(data) {
-            var url = '/api/intervention/facturePreview?html=true&data=';
-            $window.open(url + JSON.stringify(data), "_blank");
+            openPost('/api/intervention/facturePreview', {
+                data:JSON.stringify(data),
+                html:true
+            })
         }
     }
 
@@ -1946,6 +2095,11 @@ angular.module('edison').directive('watchWindowResize', ['$window', '$timeout', 
   }
 ]);
 
+angular.module('edison').controller('DashboardController', function(tabContainer, $location, $scope, $rootScope, interventions, artisans){
+
+	$scope.tab = tabContainer.getCurrentTab();
+	$scope.tab.setTitle('dashBoard')
+});
 angular.module('edison').controller('ArtisanController', function(tabContainer, $location, $mdSidenav, $interval, ngDialog, LxNotificationService, edisonAPI, config, $routeParams, $scope, windowDimensions, artisan) {
   $scope.config = config;
   $scope.tab = tabContainer.getCurrentTab();
@@ -1968,11 +2122,6 @@ angular.module('edison').controller('ArtisanController', function(tabContainer, 
   }
 });
 
-angular.module('edison').controller('DashboardController', function(tabContainer, $location, $scope, $rootScope, interventions, artisans){
-
-	$scope.tab = tabContainer.getCurrentTab();
-	$scope.tab.setTitle('dashBoard')
-});
 var Map = function() {
     this.display = false;
 }
@@ -1985,15 +2134,15 @@ Map.prototype.setZoom = function(value) {
     this.zoom = value
 }
 Map.prototype.show = function() {
-    console.log("here")
     this.display = true;
 }
 
 
-var InterventionCtrl = function($rootScope, $window, $scope, $location, $routeParams, dialog, fourniture, LxNotificationService, tabContainer, edisonAPI, Address, $q, mapAutocomplete, productsList, config, intervention, artisans) {
+var InterventionCtrl = function($rootScope, $window, $scope, $location, $routeParams, dialog, fourniture, LxNotificationService, tabContainer, edisonAPI, Address, $q, mapAutocomplete, productsList, config, intervention, artisans, actionIntervention) {
     var _this = this;
     _this.artisans = artisans.data;
     _this.config = config;
+    _this.dialog = dialog;
     _this.autocomplete = mapAutocomplete;
     var tab = tabContainer.getCurrentTab();
     var id = parseInt($routeParams.id);
@@ -2035,53 +2184,55 @@ var InterventionCtrl = function($rootScope, $window, $scope, $location, $routePa
             _this.data.facture.address = addr;
         });
     }
-    $scope.sms = function(sst) {
-        dialog.getText({
-            title: "Texte du SMS",
-            text: "\nEdison Service"
-        }, function(text) {
-            edisonAPI.sms.send({
-                link: sst.id,
-                origin: _this.data.id || _this.data.tmpID,
-                text: text,
-                to: "0633138868"
-            }).success(function(resp) {
-                sst.sms.unshift(resp)
-            }).error(function(err) {
-                console.log(err)
-            })
+    $scope.envoiSAV = function(sav) {
+        sav.status = "ENV"
+    }
+    $scope.changeArtisan = function(sav) {
+        sav.artisan = _.find(_this.artisans, function(e) {
+            return e.id === sav.sst;
         })
     }
 
-    $scope.smsList = function(sst) {
-        dialog.smsList(sst);
+    $scope.addSAV = function() {
+        dialog.getText({
+            title: "Description du SAV",
+            text: ""
+        }, function(resp) {
+            if (!_this.data.sav)
+                _this.data.sav = [];
+            _this.data.sav.push({
+                date: new Date,
+                login: $rootScope.user.login,
+                description: resp,
+                regle: false
+            })
+            console.log(_this.data.sav);
+        })
     }
 
-    $scope.recap = function(sst) {
+    $scope.envoiFacture = function() {
+        actionIntervention.envoiFacture(_this.data, function(err, res) {
+            _this.data.date.envoiFacture = new Date;
+        })
+    }
+
+
+    $scope.recapArtisan = function(sst) {
         edisonAPI.artisan.lastInters(sst.id)
             .success(dialog.recap);
     }
 
-    $scope.callsList = function(sst) {
-        dialog.callsList(sst);
+    $scope.smsArtisan = function() {
+        actionIntervention.smsArtisan(_this.data, function(err, resp) {
+            if (!err)
+                _this.data.artisan.calls.unshift(resp)
+        })
     }
 
-    $scope.call = function(sst) {
-        var now = Date.now();
-        var x = $window.open('callto:' + sst.telephone.tel1, '_self', false)
-        dialog.choiceText({
-            title: 'Nouvel Appel',
-        }, function(response, text) {
-            edisonAPI.call.save({
-                date: now,
-                to: sst.telephone.tel1,
-                link: sst.id,
-                origin: _this.data.id || _this.data.tmpID,
-                description: text,
-                response: response
-            }).success(function(resp) {
-                sst.calls.unshift(resp)
-            })
+    $scope.callArtisan = function() {
+        actionIntervention.callArtisan(_this.data, function(err, resp) {
+            if (!err)
+                _this.data.artisan.calls.unshift(resp)
         })
     }
 
@@ -2132,65 +2283,32 @@ var InterventionCtrl = function($rootScope, $window, $scope, $location, $routePa
 
     $scope.loadFilesList = function() {
         edisonAPI.intervention.getFiles(_this.data.id || _this.data.tmpID).then(function(result) {
-            $scope.files = result.data;
+            _this.data.files = result.data;
         }, console.log)
     }
     $scope.loadFilesList();
 
 
-    var action = {
-        envoi: function(result) {
-            dialog.getFileAndText(_this.data, $scope.files, function(text, file) {
-                edisonAPI.intervention.envoi(result.data.id, {
-                    sms: text,
-                    file: file
-                }).then(function(res) {
-                    LxNotificationService.success(res.data);
-
-                }).catch(function(error) {
-                    console.log(error)
-                    LxNotificationService.error(error.data);
-                });
-                $location.url("/interventions");
-                tabContainer.remove(tab);
-            })
-        },
-        annulation: function(result) {
-            edisonAPI.intervention.annulation(result.data.id).then(function(res) {
-                LxNotificationService.success("L'intervention " + result.data.id + " à été annulé");
-                _this.data.status = "ANN";
-            });
-        },
-        verification: function(result) {
-            edisonAPI.intervention.verification(result.data.id).then(function(res) {
-                LxNotificationService.success("L'intervention " + result.data.id + " à été vérifié");
-
-                $location.url("/interventions");
-                tabContainer.remove(tab);
-            }).catch(function(error) {
-                LxNotificationService.error(error.data);
-            })
-        }
+    var closeTab = function() {
+        $location.url("/interventions");
+        tabContainer.remove(tab)
     }
 
-
     $scope.saveInter = function(options) {
-        edisonAPI.intervention.save(_this.data)
-            .then(function(result) {
-                LxNotificationService.success("Les données de l'intervention " + result.data.id + " ont à été enregistré");
-                if (options && options.envoi == true) {
-                    action.envoi(result);
-                } else if (options && options.annulation) {
-                    action.annulation(result);
-                } else if (options && options.verification) {
-                    action.verification(result);
-                } else {
-                    $location.url("/interventions");
-                    tabContainer.remove(tab)
-                }
-            }).catch(function(error) {
-                LxNotificationService.error(error.data);
-            });
+        actionIntervention.save(_this.data, function(err, resp) {
+            if (err) {
+                return false;
+            } else if (options && options.envoi == true) {
+                actionIntervention.envoi(resp, closeTab);
+            } else if (options && options.annulation) {
+                actionIntervention.annulation(resp, closeTab);
+            } else if (options && options.verification) {
+                actionIntervention.verification(resp, closeTab);
+            } else {
+                closeTab();
+            }
+        })
+
     }
 
     $scope.clickOnArtisanMarker = function(event, sst) {
@@ -2231,14 +2349,11 @@ var InterventionCtrl = function($rootScope, $window, $scope, $location, $routePa
 
     _this.changeAddress = function(place, searchText) {
         mapAutocomplete.getPlaceAddress(place).then(function(addr)  {
-                _this.map.zoom = 12;
-                _this.map.center = addr;
-                _this.data.client.address = addr;
-                _this.searchArtisans();
-            },
-            function(err) {
-                console.log(err);
-            })
+            _this.map.zoom = 12;
+            _this.map.center = addr;
+            _this.data.client.address = addr;
+            _this.searchArtisans();
+        });
     }
 
 
@@ -2275,15 +2390,14 @@ var InterventionCtrl = function($rootScope, $window, $scope, $location, $routePa
 
 
     $scope.sstAbsence = function(id) {
-        if (id)
-            dialog.absence.open(id, function() {
-                _this.searchArtisans();
-            })
+        if (id) {
+            dialog.absence.open(id, _this.searchArtisans())
+        }
     }
 
 
     $scope.getStaticMap = function() {
-        var q = "?width=" + $window.outerWidth * 0.8;
+        var q = "?width=" + Math.round($window.outerWidth * 0.8);
         if (_this.data.client && _this.data.client.address && _this.data.client.address.latLng)
             q += ("&origin=" + _this.data.client.address.latLng);
         if (_this.data.artisan && _this.data.artisan.id)

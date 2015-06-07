@@ -9,7 +9,7 @@ module.exports = function(app) {
     var onFailure = function(res) {
         return function(err) {
             if (res.headersSent === false) {
-                console.log("error detected in route ==>", JSON.stringify(err, undefined, 1))
+                console.log(err.stack || JSON.stringify(err, undefined, 1))
                 res.status(400).send(JSON.stringify(err, undefined, 1));
             }
         }
@@ -27,11 +27,12 @@ module.exports = function(app) {
     var uniqueModel = function(model, method, req, res) {
         return new Promise(function(resolve, reject) {
             if (model[method].findBefore === void(0) || model[method].findBefore !== false) {
+                var idIsNumber = model.schema.paths._id.instance === 'Number'
                 model.findOne({
-                    _id: req.params.id
+                    _id: idIsNumber ? (parseInt(req.params.id) || 0) : req.params.id
                 }).then(function(data) {
                     if (!data)
-                        reject("Not Found");
+                        reject("Document Not Found");
                     model[method].fn(data, req, res)
                         .then(resolve, reject);
                 }, reject)
@@ -41,6 +42,7 @@ module.exports = function(app) {
             }
         })
     }
+
 
     app.all('/api/:model/:id/:method', function(req, res, next) {
         var model = db.model(req.params.model);

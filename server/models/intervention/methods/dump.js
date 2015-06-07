@@ -86,8 +86,8 @@ module.exports = function(schema) {
                 ref: "0",
                 title: "Inconnu",
                 fournisseur: d.fournisseur,
-                pu:d.cout_fourniture,
-                quantite:1
+                pu: d.cout_fourniture,
+                quantite: 1
             })
         }
         if (d.devis && d.id > 13740) {
@@ -153,7 +153,7 @@ module.exports = function(schema) {
         if (d.fact === true) {
             rtn.facture = {
                 tva: d.tva_facture,
-                type: d.type_facture,
+                payeur: d.type_facture,
                 email: d.mail_facture,
                 nom: d.nom_facture,
                 prenom: d.prenom_facture,
@@ -194,22 +194,16 @@ module.exports = function(schema) {
         })
     }
 
-    schema.statics.dump = function(req, res) {
-        var self = this;
-        var exit = false;
-        var t = Date.now();
-        if ((envDev || envProd) && !isWorker) {
-            return edison.worker.createJob({
-                name: 'db',
-                model: 'intervention',
-                method: 'dump'
-            })
-        }
-        return new Promise(function(resolve, reject) {
+    var execDump = function(limit) {
+       return new Promise(function(resolve, reject) {
             var inters = [];
-            db.model('intervention').remove({}, function() {
-                request(edison.config.alvinURL + "/dumpIntervention.php?key=" + edison.config.alvinKEY, function(err, rest, body) {
-                    // console.log("===>", err, rest, body);
+            var t = Date.now();
+            db.model('intervention').remove({
+                id: {
+                    $gt: limit
+                }
+            }, function() {
+                request(edison.config.alvinURL + "/dumpIntervention.php?limit=" + limit + "&key=" + edison.config.alvinKEY, function(err, rest, body) {
                     var data = JSON.parse(body);
                     addInDB(data, 0, function(err) {
                         if (err)
@@ -223,5 +217,24 @@ module.exports = function(schema) {
                 });
             });
         });
+    }
+
+    schema.statics.workerDump = function(limit) {
+        return execDump(limit)
+    }
+
+    schema.statics.dump = function(req, res) {
+        var limit = req.query.limit || 0;
+        if ((envDev || envProd) && !isWorker) {
+            return edison.worker.createJob({
+                name: 'db',
+                model: 'intervention',
+                method: 'workerDump',
+                arg: limit
+            })
+        } else {
+            return execDump(limit);
+        }
+
     }
 }

@@ -1,4 +1,4 @@
-angular.module('edison').factory('productsList', ['dialog', '$window', function(dialog, $window) {
+angular.module('edison').factory('productsList', ['dialog', 'openPost', function(dialog, openPost) {
     var ps = [{
         quantite: 1,
         ref: "EDI001",
@@ -135,8 +135,10 @@ angular.module('edison').factory('productsList', ['dialog', '$window', function(
             return total
         },
         previsualise: function(data) {
-            var url = '/api/intervention/facturePreview?html=true&data=';
-            $window.open(url + JSON.stringify(data), "_blank");
+            openPost('/api/intervention/facturePreview', {
+                data:JSON.stringify(data),
+                html:true
+            })
         }
     }
 

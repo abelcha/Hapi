@@ -42,9 +42,11 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvid
                 return $http.post("/api/intervention/" + id + "/annulation");
             },
             envoi: function(id, options) {
-                return $http.post("/api/envoi/" + id + "/envoi", options);
+                return $http.post("/api/intervention/" + id + "/envoi", options);
             },
-
+            envoiFacture: function(id, options) {
+                return $http.post("/api/intervention/" + id + "/envoiFacture", options);
+            },
         },
         artisan: {
             list: function(options) {
@@ -144,11 +146,7 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvid
                 })
             },
             save: function(params) {
-                return $http({
-                    method: 'GET',
-                    url: '/api/calls/add',
-                    params: params
-                })
+                return $http.post('/api/calls', params);
             },
         },
         sms: {
@@ -162,13 +160,8 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvid
                     }
                 })
             },
-            send: function(params) {
-                console.log(params)
-                return $http({
-                    method: 'GET',
-                    url: '/api/sms/send',
-                    params: params
-                })
+            save: function(params) {
+                return $http.post("/api/sms", params)
             },
 
         },

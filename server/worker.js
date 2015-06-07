@@ -37,7 +37,7 @@ var jobs = kue.createQueue({
 jobs.process('db', function(job, done) {
     var terminated = false
     console.log(job.data.model, job.data.method)
-    db.model(job.data.model)[job.data.method]().then(function(result)  {
+    db.model(job.data.model)[job.data.method](job.data.arg).then(function(result)  {
         terminated = true;
         console.log("job success")
         done(null, result);

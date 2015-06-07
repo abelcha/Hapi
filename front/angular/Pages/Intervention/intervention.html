@@ -147,14 +147,14 @@
                                             Disponible
                                                 </span>
                                             <br>
-                                            <span ng-if="vm.data.artisan.calls.length > 0" ng-click="callsList(vm.data.artisan)">
+                                            <span ng-if="vm.data.artisan.calls.length > 0" ng-click="vm.dialog.callsList(vm.data.artisan)">
                                                Dernier Appel le {{vm.data.artisan.calls[0].date | date:"dd/MM à HH:mm" }}  ({{vm.data.artisan.calls[0].login}})
                                         </span>
                                             <span ng-if="vm.data.artisan.calls.length == 0">
                                             Aucuns Appels
                                             </span>
                                             <br>
-                                            <span ng-if="vm.data.artisan.sms.length > 0" ng-click="smsList(vm.data.artisan)">
+                                            <span ng-if="vm.data.artisan.sms.length > 0" ng-click="vm.dialog.smsList(vm.data.artisan)">
                                                Dernier SMS le {{vm.data.artisan.sms[0].date | date:"dd/MM à HH:mm" }}  ({{vm.data.artisan.sms[0].login}})
                                         </span>
                                             <span ng-if="vm.data.artisan.sms.length == 0">
@@ -165,9 +165,9 @@
                                 </div>
                             </div>
                             <div class="card__actions" style="border-bottom: 2px solid rgba(0, 0, 0, .12);">
-                                <button ng-click="call(vm.data.artisan)" class="btn--no-conflicts btn--m btn--black btn--flat" lx-ripple>Appeler</button>
-                                <button class="btn--no-conflicts btn--m btn--blue btn--flat" lx-ripple ng-click="sms(vm.data.artisan)">SMS</button>
-                                <button class="btn--no-conflicts btn--m btn--orange btn--flat" ng-click="recap(vm.data.artisan)" lx-ripple>Recap'</button>
+                                <button ng-click="callArtisan()" class="btn--no-conflicts btn--m btn--black btn--flat" lx-ripple>Appeler</button>
+                                <button class="btn--no-conflicts btn--m btn--blue btn--flat" lx-ripple ng-click="smsArtisan(vm.data.artisan)">SMS</button>
+                                <button class="btn--no-conflicts btn--m btn--orange btn--flat" ng-click="recapArtisan(vm.data.artisan)" lx-ripple>Recap'</button>
                                 <a href="/artisan/{{vm.data.artisan.id}}">
                                     <button class="btn--no-conflicts btn--m btn--purple btn--flat" lx-ripple>Fiche</button>
                                 </a>
@@ -272,23 +272,69 @@
                                 </div>
                             </div>
                         </div>
-                        <!--                         <span class="fs-subhead tc-black-2 display-block">Fourniture</span>
-                        <div class="pad-paragraph paragraph fs-body-1 mt+">
-                            <div class="row">
-                                <div class="col-sm-4">
-                                    <div class="select-style text-field">
-                                        <select ng-model="vm.data.fournisseur" ng-options="frn.short_name as frn.short_name group by frn.type for frn in config.fournisseur ">
-                                        </select>
-                                        <label ng-class="{'selected' : vm.data.fournisseur}">Fournisseur</label>
-                                    </div>
-                                </div>
-                                <div class="col-sm-3">
-                                    <lx-text-field label="Cout Fourniture">
-                                        <input eurofilter ng-model="vm.data.coutFourniture">
-                                    </lx-text-field>
-                                </div>
+                       
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div flex-item>
+                <div class="card">
+                    <div class="p+">
+                        <strong class="fs-headline display-block">S.A.V</strong>
+                        <span class="fs-subhead tc-black-2 display-block">Service Apres Ventes</span>
+                        <div class="paragraph fs-body-1 mt+">
+                            <div class="data-table-container">
+                                <table class="data-table data-table--has-primary data-table--has-secondary">
+                                    <thead>
+                                        <tr>
+                                            <th style="font-weight:bold">Ajouté Par</th>
+                                            <th style="font-weight:bold">Date</th>
+                                            <th style="font-weight:bold">Description</th>
+                                            <th style="font-weight:bold">Artisan</th>
+                                            <th style="font-weight:bold">Status</th>
+                                            <th style="font-weight:bold">Modif</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="products data-table__clickable-row" ng-repeat="p in vm.data.sav"
+                                        ng-init="p.sst = p.artisan.id || 0">
+                                            <td>
+                                                <span>{{p.login}}</span>
+                                            </td>
+                                            <td>
+                                                <span>{{p.date |  date:"dd/MM/yy"}}</span>
+                                            </td>
+                                            <td>
+                                                <span>{{p.description}}</span>
+                                            </td>
+                                            <td style="width:100px"><span><select ng-change="changeArtisan(p);" class="form-control" ng-model="p.sst" ng-options="sst.id as sst.nomSociete for sst in vm.artisans">
+                                        </select></span>
+                                            </td>
+                                            <td>
+                                                  <span ng-if="p.status === 'ENV'" style="width:90px" class="label orange"> Envoyé</span>
+                                                  <span ng-if="p.status === 'OK'" style="width:90px" class="label green"> OK</span>
+                                            </td>
+                                            <td>
+                                             <lx-dropdown position="right" from-top>
+                                                    <button class="btn--no-conflicts btn--l btn--black btn--icon" lx-ripple lx-dropdown-toggle>
+                                                        <i class="mdi mdi-dots-vertical"></i>
+                                                    </button>
+                                                    <lx-dropdown-menu>
+                                                        <ul>
+                                                            <li><a ng-click="p.status = 'ENV'" class="dropdown-link">Envoyer</a></li>
+                                                             <li><a ng-click="p.status = 'OK'" class="dropdown-link">Regler</a></li>
+                                                        </ul>
+                                                    </lx-dropdown-menu>
+                                                </lx-dropdown>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
-                        </div> -->
+                        </div>
+                    </div>
+                    <div class="card__actions">
+                        <button ng-click="addSAV();" class="btn--no-conflicts btn--m btn--orange btn--flat" lx-ripple>Ajouter</button>
                     </div>
                 </div>
             </div>
@@ -307,9 +353,9 @@
                             <div class="form-group" ng-if="!vm.data.reglementSurPlace">
                                 <div class="col-sm-4">
                                     <div class="select-style text-field">
-                                        <select ng-model="vm.data.facture.type" ng-options="f.short_name as f.long_name for f in config.typePayeur">
+                                        <select ng-model="vm.data.facture.payeur" ng-options="f.short_name as f.long_name for f in config.typePayeur">
                                         </select>
-                                        <label ng-class="{'selected' : vm.data.facture.type}">Type payeur</label>
+                                        <label ng-class="{'selected' : vm.data.facture.payeur}">Type payeur</label>
                                     </div>
                                 </div>
                                 <div class="col-sm-2">
@@ -426,9 +472,11 @@
                         <span style="float:left;width:50%">
                         <button ng-click="produits.previsualise(vm.data)" class="btn--no-conflicts btn--m btn--black btn--flat" lx-ripple>Prévisualiser</button>
                         <button class="btn--no-conflicts btn--m btn--orange btn--flat" lx-ripple>Envoyer Devis</button>
-                                                </span>
-                        <span>
-                        TVA: <select ng-model="vm.data.tva" ng-options="tva.long_name as tva.long_name for tva in config.tva">
+                        <button class="btn--no-conflicts btn--m btn--blue btn--flat" ng-click="envoiFacture();" lx-ripple>Envoyer Facture</button>
+                        <button class="btn--no-conflicts btn--m btn--black btn--flat" lx-ripple></button>
+                         </span>
+                        <span style="width: 110px;float: left;padding-bottom: 7px;">
+                         <select class="form-control" ng-model="vm.data.tva" ng-options="tva.short_name as tva.long_name for tva in config.tva">
                             </select></span>
                         <span style="float:right;width:25%">
                              <button class="btn--no-conflicts btn--m btn--black btn--flat" lx-ripple> TOTAL HT : {{produits.total() | currency:''}} €  -  TTC : {{produits.total() * (vm.data.tva / 100 + 1) | currency:''}} €</button>
@@ -447,7 +495,7 @@
                                 <table class="data-table data-table--has-primary data-table--has-secondary">
                                     <thead>
                                         <tr>
-                                            <th style="font-weight:bold">Réf</th>
+                                            <th style="font-weight:bold">BL</th>
                                             <th style="font-weight:bold">Désignation</th>
                                             <th style="font-weight:bold">Q</th>
                                             <th style="font-weight:bold">PU</th>
@@ -520,7 +568,7 @@
                         <div class="paragraph fs-body-1 mt+" style="height: 216px;;overflow:scroll">
                             <div>
                                 <ul class="list mt++" style="padding-bottom:20px;margin-left: 0px">
-                                    <li class="list-row" ng-repeat="file in files | reverse">
+                                    <li class="list-row" ng-repeat="file in vm.data.files | reverse">
                                         <div class="list-row__content">
                                             <a target="_blank" href="/api/document/{{file._id}}"> <span class="display-block">{{file.name || "Fichier" + $index}}</span></a>
                                             <span class="display-block fs-body-1 tc-black-2">{{file.date | date:"dd/MM/yy"}} - {{file.type}} - {{file.login}}</span>
@@ -553,7 +601,7 @@
                         </div>
                     </div>
                     <div class="card__actions">
-                        <input style="border: 0;" type="text" ng-model="commentText" ng-enter="addComment()">
+                        <input style="border: 0;width:100%" type="text" ng-model="commentText" ng-enter="addComment()">
                     </div>
                 </div>
             </div>

@@ -1,4 +1,4 @@
-angular.module('edison').factory('contextMenu', ['$location', 'edisonAPI', 'LxNotificationService', '$window', 'dialog', function($location, edisonAPI, LxNotificationService, $window, dialog) {
+angular.module('edison').factory('contextMenu', ['$location', 'edisonAPI', 'actionIntervention', '$window', 'dialog', function($location, edisonAPI, actionIntervention, $window, dialog) {
 
     var content = {};
 
@@ -56,44 +56,21 @@ angular.module('edison').factory('contextMenu', ['$location', 'edisonAPI', 'LxNo
     }, {
         hidden: false,
         title: "Envoyer",
-        click: function(inter) {
-            dialog.getFileAndText(inter, [], function(text, file) {
-                edisonAPI.intervention.envoi(inter.id, {
-                    sms: text,
-                    file: file
-                }).then(function(res) {
-                    console.log(res)
-                    LxNotificationService.success(res.data);
-                }).catch(function(error) {
-                    console.log(error)
-                    LxNotificationService.error(error.data);
-                });
-            })
-        },
+        click: actionIntervention.envoi,
         hide: function(inter) {
             return inter.s !== "A Programmer" && inter.s !== 'Annulé'
         }
     }, {
         hidden: false,
         title: "Vérifier",
-        click: function(inter) {
-            edisonAPI.intervention.verification(inter.id).then(function(res) {
-                LxNotificationService.success("L'intervention " + inter.id + " à été vérifié");
-            }).catch(function(error) {
-                LxNotificationService.error(error.data);
-            });
-        },
+        click: actionIntervention.verification,
         hide: function(inter) {
             return inter.s !== "A Vérifier" && inter.s !== 'Envoyé'
         }
     }, {
         hidden: false,
         title: "Annuler",
-        click: function(inter) {
-            edisonAPI.intervention.annulation(inter.id).then(function(res) {
-                LxNotificationService.success("L'intervention " + inter.id + " à été annulé");
-            });
-        }
+        click: actionIntervention.annulation
 
     }]
 

@@ -11,16 +11,14 @@ module.exports = {
                 email: faker.internet.email(),
                 tel: faker.phone.phoneNumber(),
                 address: {
-                    n: _.random(100),
+                    n: _.random(100).toFixed(0),
                     r: 'allée ' + faker.address.streetName(),
                     cp: faker.address.zipCode(),
                     v: faker.address.city(),
-                    lt: faker.address.latitude(),
-                    lg: faker.address.longitude()
                 },
                 prenom: faker.name.firstName(),
                 nom: faker.name.lastName(),
-                type: edconfig.typePayeur[_.random(5)].short_name
+                payeur: edconfig.typePayeur[_.random(5)].short_name
             }
         },
         createValid: function(options) {

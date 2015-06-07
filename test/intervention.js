@@ -59,6 +59,7 @@ describe("[Interventions]", function() {
 
 
     describe("Status Fest ", function() {
+        this.timeout(10000);
         it("envoi sans text sms".magenta, function(done) {
             app.post("/api/intervention/" + inter.id + "/envoi")
                 .end(function(err, res) {
@@ -177,7 +178,7 @@ describe("[Interventions]", function() {
             intervention.update(inter, function(res) {
                 var resp = JSON.parse(res.text)
                 expect(res).to.have.status(200);
-                expect(_.isMatch(inter.facture, resp.facture)).to.be.true
+                expect(JSON.stringify(inter.facture)).to.be.equal(JSON.stringify(resp.facture))
                 done();
             });
         });

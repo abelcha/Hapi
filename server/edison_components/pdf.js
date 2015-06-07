@@ -25,7 +25,13 @@ PdfCreator.prototype.renderTemplate = function(templateName, args) {
     return new Promise(function(resolve, reject) {
         fs.readFile(fileName, 'utf8', function(err, template) {
             if (err) return reject(err);
-            resolve(ejs.render(template, args))
+            try {
+                var tmp = ejs.render(template, args)
+                resolve(tmp);
+            } catch (e) {
+                console.log(e);
+                reject("error while generating pdf")
+            }
         });
     })
 }

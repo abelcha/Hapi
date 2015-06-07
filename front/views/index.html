@@ -11,7 +11,7 @@
     <!-- <link href="//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,600,700,300&subset=latin" rel="stylesheet" type="text/css">
     -->
     <!-- Pixel Admin's stylesheets -->
-    <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet" type="text/css">
     <link href="/css/pixel-admin.min.css" rel="stylesheet" type="text/css">
     <link href="/css/themes.min.css" rel="stylesheet" type="text/css">
@@ -81,7 +81,7 @@
                         </a>
                     </li>
                     <li class="mm-dropdown">
-                        <a href="#"><i class="menu-icon fa fa-th"></i><span class="mm-text">{{dateFormat}}</span></a>
+                        <a href="#"><i class="menu-icon fa fa-calendar"></i><span class="mm-text">{{dateFormat}}</span></a>
                         <ul>
                             <li><a tabindex="-1" href="/interventions?d=t#{{user.login}}"><i class="menu-icon fa fa-th-list"></i><span class="mm-text">Ajouté</span><span class="label label-success">{{userStats.total}}</span></a>
                             </li>
@@ -92,7 +92,27 @@
                         </ul>
                     </li>
                     <li class="mm-dropdown">
-                        <a href="#"><i class="menu-icon fa fa-th"></i><span class="mm-text">Mes Sous-traitants</span></a>
+                        <a href="#"><i class="menu-icon fa fa-sitemap"></i><span class="mm-text">Mes Collegues</span><span class="badge badge-primary">{{interventionsStats.length}}</span></a>
+                        <ul>
+                            <li class="mm-dropdown" ng-repeat="telepro in interventionsStats | orderBy:'-total' ">
+                                <a tabindex="-1" href="#"><span class="mm-text">{{telepro.login.slice(0, 1).toUpperCase()}}{{telepro.login.slice(1, -2)}}</span><span class="label label-primary"></span></a>
+                                <ul>
+                                    <li><a tabindex="-1" href="/interventions/clientaRelancer#{{telepro.login}}"><i class="menu-icon fa fa-th-list"></i><span class="mm-text">A Relancer</span><span class="label label-success">{{telepro.carl.total || 0}}</span></a>
+                                    </li>
+                                    <li><a tabindex="-1" href="/interventions/clientaRelancerUrgent#{{telepro.login}}"><i class="menu-icon fa fa-th-list"></i><span class="mm-text">Urgence Verif</span><span class="label label-warning">{{telepro.ucarl.total || 0}}</span></a>
+                                    </li>
+                                    <li><a tabindex="-1" href="/interventions/sstaRelancer#{{telepro.login}}"><i class="menu-icon fa fa-th-list"></i><span class="mm-text">A Relancer</span><span class="label label-success">{{telepro.sarl.total || 0}}</span></a>
+                                    </li>
+                                    <li><a tabindex="-1" href="/interventions/sstaRelancerUrgent#{{telepro.login}}"><i class="menu-icon fa fa-th-list"></i><span class="mm-text">Urgence Verif</span><span class="label label-warning">{{telepro.usarl.total || 0}}</span></a>
+                                    </li>
+                                    <li><a tabindex="-1" href="/interventions/factureaEnvoyer#{{telepro.login}}"><i class="menu-icon fa fa-th-list"></i><span class="mm-text">Facture à envoyer</span><span class="label label-success">{{telepro.fact.total || 0}}</span></a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="mm-dropdown">
+                        <a href="#"><i class="menu-icon fa fa-truck"></i><span class="mm-text">Mes Sous-traitants</span></a>
                         <ul>
                             <li><a tabindex="-1" href="/interventions/sstaRelancer#{{user.login}}"><i class="menu-icon fa fa-th-list"></i><span class="mm-text">A Relancer</span><span class="label label-success">{{userStats.sarl.total || 0}}</span></a>
                             </li>
@@ -101,8 +121,10 @@
                         </ul>
                     </li>
                     <li class="mm-dropdown">
-                        <a href="#"><i class="menu-icon fa fa-th"></i><span class="mm-text">Mes Clients</span></a>
+                        <a href="#"><i class="menu-icon fa fa-user"></i><span class="mm-text">Mes Clients</span></a>
                         <ul>
+                            <li><a tabindex="-1" href="/interventions/factureaEnvoyer#{{user.login}}"><i class="menu-icon fa fa-th-list"></i><span class="mm-text">Facture à envoyer</span><span class="label label-success">{{userStats.fact.total || 0}}</span></a>
+                            </li>
                             <li><a tabindex="-1" href="/interventions/clientaRelancer#{{user.login}}"><i class="menu-icon fa fa-th-list"></i><span class="mm-text">A Relancer</span><span class="label label-success">{{userStats.carl.total || 0}}</span></a>
                             </li>
                             <li><a tabindex="-1" href="/interventions/clientaRelancerUrgent#{{user.login}}"><i class="menu-icon fa fa-th-list"></i><span class="mm-text">Urgence Verif</span><span class="label label-warning">{{userStats.ucarl.total || 0}}</span></a>
@@ -112,8 +134,8 @@
                 </ul>
                 <!-- / .navigation -->
                 <div class="menu-content">
-                    <a href="/#/intervention" class="btn btn-primary btn-block btn-outline dark">Ajout d'une Intervention</a>
-                    <a href="/#/intervention" class="btn btn-primary btn-block btn-outline dark">Ajout d'un Devis</a>
+                    <a href="/intervention" class="btn btn-primary btn-block btn-outline dark">Ajout d'une Intervention</a>
+                    <a href="/intervention" class="btn btn-primary btn-block btn-outline dark">Ajout d'un Devis</a>
                 </div>
             </div>
             <!-- / #main-menu-inner -->
@@ -179,6 +201,7 @@
     <script src="/pixel-admin/events.js"></script>
     <script type="text/javascript">
     window.PixelAdmin.start(init);
+    _.templateSettings.interpolate = /{{([\s\S]+?)}}/g;
     </script>
 
 </html>
