@@ -1,4 +1,5 @@
 angular.module('edison').factory('productsList', ['dialog', 'openPost', function(dialog, openPost) {
+    "use strict";
     var ps = [{
         quantite: 1,
         ref: "EDI001",
@@ -70,7 +71,7 @@ angular.module('edison').factory('productsList', ['dialog', 'openPost', function
         quantite: 1,
         ref: "CAM001",
         title: "Camion D'assainisement",
-        desc: "DÉGORGEMENT CANALISATION TRÈS HAUTE PRESSION PAR CAMION D’ASSAINISSEMENT : \nCurage et nettoyage complet de la canalisation jusqu\'à 10M",
+        desc: "DÉGORGEMENT CANALISATION TRÈS HAUTE PRESSION PAR CAMION D’ASSAINISSEMENT : \nCurage et nettoyage complet de la canalisation jusqu\'à 10M",
         pu: 696.25
     }, {
         quantite: 1,
@@ -115,7 +116,7 @@ angular.module('edison').factory('productsList', ['dialog', 'openPost', function
         search: function(text) {
             var rtn = []
             for (var i = 0; i < ps.length; ++i) {
-                if (text == ps[i].title)
+                if (text === ps[i].title)
                     return [];
                 var needle = _.deburr(text).toLowerCase()
                 var haystack = _.deburr(ps[i].title).toLowerCase();

@@ -1,5 +1,5 @@
-angular.module('edison').factory('fourniture', ['dialog', function(dialog) {    
-
+angular.module('edison').factory('fourniture', [function() {    
+    "use strict";
     return {
         init: function(fourniture) {
             this.fourniture = fourniture;

@@ -1,7 +1,7 @@
-angular.module('edison').controller('ArtisanController', function(tabContainer, $location, $mdSidenav, $interval, ngDialog, LxNotificationService, edisonAPI, config, $routeParams, $scope, windowDimensions, artisan) {
+angular.module('edison').controller('ArtisanController', function(tabContainer, $location, $mdSidenav, $interval, ngDialog, LxNotificationService, edisonAPI, config, $routeParams, $scope, artisan) {
+  "use strict";
   $scope.config = config;
   $scope.tab = tabContainer.getCurrentTab();
-  var id = parseInt($routeParams.id);
 
   if (!$scope.tab.data) {
     if ($routeParams.id.length > 12) {

@@ -135,4 +135,4 @@ module.exports = {
 },{}]},{},[1,2])
 
 
-//# sourceMappingURL=bundle.js.map
+//# sourceMappingURL=assets/dist/bundle.js.map

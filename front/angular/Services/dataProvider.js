@@ -1,5 +1,5 @@
-angular.module('edison').factory('dataProvider', ['socket', '$rootScope', 'config', '_', function(socket, $rootScope, config, _) {
-
+angular.module('edison').factory('dataProvider', ['socket', '$rootScope', 'config', function(socket, $rootScope, config) {
+    "use strict";
     var dataProvider = function() {
         var _this = this;
         socket.on('interventionListChange', function(data) {
@@ -11,7 +11,6 @@ angular.module('edison').factory('dataProvider', ['socket', '$rootScope', 'confi
     };
 
     dataProvider.prototype.refreshInterventionListFilter = function(params, hash) {
-        var _this = this;
         console.time("interFilter")
         this.interventionListFiltered = this.interventionList;
         if (this.interventionList && params) {
@@ -47,6 +46,6 @@ angular.module('edison').factory('dataProvider', ['socket', '$rootScope', 'confi
         return this.interventionList;
     }
 
-    return new dataProvider;
+    return new dataProvider();
 
 }]);

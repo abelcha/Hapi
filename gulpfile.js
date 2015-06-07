@@ -1,10 +1,4 @@
 'use strict';
-
-
-
-
-
-
 var gulp = require('gulp');
 
 // Include Our Plugins
@@ -21,7 +15,6 @@ var gutil = require('gulp-util');
 var assign = require('lodash').assign
 var glob = require("glob")
 var jshint = require('gulp-jshint');
-//var jshint = require('jshint-stylish');
 // Concatenate & Minify JS
 gulp.task('scripts', function() {
     return gulp.src(['front/angular/*.js', 'front/angular/*/*.js', 'front/angular/*/*/*.js'])
@@ -56,8 +49,8 @@ var bundle = function() { // so you can run `gulp js` to build the file
             loadMaps: true
         })) // loads map from browserify file
         // Add transformation tasks to the pipeline here.
-        .pipe(sourcemaps.write('./')) // writes .map file
-        .pipe(gulp.dest('./'));
+        .pipe(sourcemaps.write('./assets/dist')) // writes .map file
+        .pipe(gulp.dest('./assets/dist/config.js'));
 }
 
 gulp.task('bundle', bundle);

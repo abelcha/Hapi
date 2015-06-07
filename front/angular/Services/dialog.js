@@ -1,16 +1,16 @@
-angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', 'config', function($mdDialog, edisonAPI, config) {
-
+angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', function($mdDialog, edisonAPI) {
+    "use strict";
 
     return {
         envoiFacture: function(inter, cb) {
             $mdDialog.show({
-                controller: function DialogController($scope, $mdDialog, config) {
+                controller: function DialogController($scope, $mdDialog) {
                     var template = "{{client.civilite}} {{client.nom}}, \n" +
                         "Vous trouverez ci-joint la facture de notre intervention\n" +
                         "Cordialement\n" +
                         "Edison Services"
                     $scope.text = _.template(template)(inter);
-                    $scope.date = new Date;
+                    $scope.date = new Date();
                     $scope.acquitte = false;
                     $scope.answer = function(cancel) {
                         $mdDialog.hide();
@@ -24,7 +24,7 @@ angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', 'config', 
         },
         recap: function(inters) {
             $mdDialog.show({
-                controller: function DialogController($scope, $mdDialog, config) {
+                controller: function DialogController($scope, $mdDialog) {
                     $scope.inters = inters;
                     $scope.answer = function() {
                         $mdDialog.hide();
@@ -35,7 +35,7 @@ angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', 'config', 
         },
         callsList: function(sst) {
             $mdDialog.show({
-                controller: function DialogController($scope, $mdDialog, config) {
+                controller: function DialogController($scope, $mdDialog) {
                     $scope.sst = sst;
                     $scope.answer = function() {
                         $mdDialog.hide();
@@ -46,7 +46,7 @@ angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', 'config', 
         },
         smsList: function(sst) {
             $mdDialog.show({
-                controller: function DialogController($scope, $mdDialog, config) {
+                controller: function DialogController($scope, $mdDialog) {
                     $scope.sst = sst;
                     $scope.answer = function() {
                         $mdDialog.hide();
@@ -57,7 +57,7 @@ angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', 'config', 
         },
         choiceText: function(options, cb) {
             $mdDialog.show({
-                controller: function DialogController($scope, $mdDialog, config) {
+                controller: function DialogController($scope, $mdDialog) {
                     $scope.options = options;
                     $scope.answer = function(resp, text) {
                         $mdDialog.hide();
@@ -69,7 +69,7 @@ angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', 'config', 
         },
         getText: function(options, cb) {
             $mdDialog.show({
-                controller: function DialogController($scope, $mdDialog, config) {
+                controller: function DialogController($scope, $mdDialog) {
                     $scope.options = options;
                     $scope.answer = function() {
                         $mdDialog.hide();
@@ -81,7 +81,7 @@ angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', 'config', 
         },
         getFileAndText: function(data, files, cb) {
             $mdDialog.show({
-                controller: function DialogController($scope, $mdDialog, config) {
+                controller: function DialogController($scope, $mdDialog) {
 
                     var getSMS = function() {
                         var sms = data.id ? "OS " + data.id + ". \n" : "";
@@ -99,7 +99,7 @@ angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', 'config', 
                     $scope.smsText = getSMS();
                     $scope.answer = function(cancel) {
                         $mdDialog.hide();
-                        if (cancel == false) {
+                        if (cancel === false) {
                             return cb($scope.smsText, $scope.addedFile);
                         }
                     }
@@ -153,12 +153,12 @@ angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', 'config', 
                             $mdDialog.hide(answer);
                             var hours = 0;
                             if (answer === "TODAY") {
-                                hours = 23 - (new Date).getHours() + 1;
+                                hours = 23 - (new Date()).getHours() + 1;
                             } else {
                                 hours = parseInt(answer);
                             }
-                            start = new Date;
-                            end = new Date;
+                            var start = new Date();
+                            var end = new Date();
                             end.setHours(end.getHours() + hours)
                             edisonAPI.artisan.setAbsence(id, {
                                 start: start,

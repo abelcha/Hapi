@@ -1,9 +1,9 @@
 angular.module('edison').factory('config', [function() {
-
+    "use strict";
     var config = {};
 
     config.filters = {
-        all:  {
+        all: {
             short: 'all',
             long: 'Toutes les Inters',
             url: ''

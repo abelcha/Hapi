@@ -1,6 +1,6 @@
 angular.module('edison').factory('mapAutocomplete', ['$q', 'Address',
     function($q, Address) {
-
+        "use strict";
         var autocomplete = function() {
             this.service = new google.maps.places.AutocompleteService();
             this.geocoder = new google.maps.Geocoder();
@@ -13,10 +13,10 @@ angular.module('edison').factory('mapAutocomplete', ['$q', 'Address',
                 componentRestrictions: {
                     country: 'fr'
                 }
-            }, function(predictions, status) {
+            }, function(predictions) {
                 if (predictions)
                     predictions.forEach(function(e) {
-                        if (e.description == input)
+                        if (e.description === input)
                             predictions = null;
                     })
                 deferred.resolve(predictions || []);
@@ -38,7 +38,7 @@ angular.module('edison').factory('mapAutocomplete', ['$q', 'Address',
             });
         };
 
-        return new autocomplete;
+        return new autocomplete();
 
     }
 ]);

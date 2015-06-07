@@ -1,12 +1,12 @@
-angular.module('edison').factory('tabContainer', ['$location', '$window', '$q', 'edisonAPI', '_', function($location, $window, $q, edisonAPI, _) {
-
+angular.module('edison').factory('tabContainer', ['$location', '$window', '$q', 'edisonAPI', function($location, $window, $q, edisonAPI) {
+    "use strict";
     var Tab = function(args) {
 
         if (typeof args === 'object') {
             //copy constructor
-            for (var k in args) {
-                this[k] = args[k];
-            }
+            _.each(args, function(e, k) {
+                this[k] = e;
+            })
         } else {
             this.url = args;
             this.title = '';
@@ -28,25 +28,23 @@ angular.module('edison').factory('tabContainer', ['$location', '$window', '$q', 
     }
 
     var TabContainer = function() {
-
-        var self = this;
         this._tabs = [];
         this.selectedTab = 0;
     }
 
     TabContainer.prototype.loadSessionTabs = function(currentUrl) {
-        var self = this;
+        var _this = this;
 
         return $q(function(resolve, reject) {
             var currentUrlInSessionTabs = false;
             edisonAPI.request({
                 fn: "getSessionData",
             }).then(function(result) {
-                self.selectedTab = result.data.selectedTab;
+                _this.selectedTab = result.data.selectedTab;
                 for (var i = 0; i < result.data._tabs.length; i++) {
-                    self._tabs.push(new Tab(result.data._tabs[i]))
+                    _this._tabs.push(new Tab(result.data._tabs[i]))
                     if (result.data._tabs[i].url === currentUrl) {
-                        self.selectedTab = i;
+                        _this.selectedTab = i;
                         currentUrlInSessionTabs = true;
                     }
                 }
@@ -64,7 +62,7 @@ angular.module('edison').factory('tabContainer', ['$location', '$window', '$q', 
         this.selectedTab = (typeof tab === 'number' ? tab : tab.position);
     };
 
-    TabContainer.prototype.createTab = function(url, title) {
+    TabContainer.prototype.createTab = function(url) {
         var tab = new Tab(url);
 
         tab.position = this._tabs.length;
@@ -89,7 +87,7 @@ angular.module('edison').factory('tabContainer', ['$location', '$window', '$q', 
     TabContainer.prototype.len = function() {
         var size = 0;
 
-        this._tabs.forEach(function(e, i) {
+        this._tabs.forEach(function(e) {
             size += !e.deleted;
         })
         return (size);
@@ -98,9 +96,9 @@ angular.module('edison').factory('tabContainer', ['$location', '$window', '$q', 
     TabContainer.prototype.getPrevTab = function(tab) {
 
         for (var i = tab.position - 1; i >= 0; i--) {
-            if (this._tabs[i].deleted == false)
+            if (this._tabs[i].deleted === false)
                 return (this._tabs[i]);
-        };
+        }
 
     };
 
@@ -111,17 +109,17 @@ angular.module('edison').factory('tabContainer', ['$location', '$window', '$q', 
         if (this._tabs.length <= 1) {
             return false;
         }
-        var reload = (this.selectedTab == tab.position);
+        var reload = (this.selectedTab === tab.position);
         for (var i = 0; i < this._tabs.length; i++) {
-            if (i != tab.position) {
+            if (i !== tab.position) {
                 newTabs.push(this._tabs[i]);
                 newTabs[j].position = j;
                 ++j;
             }
-        };
+        }
         this._tabs = newTabs;
 
-        if (this.selectedTab == tab.position && this.selectedTab != 0) {
+        if (this.selectedTab === tab.position && this.selectedTab !== 0) {
             this.selectedTab--;
         }
         if (this.selectedTab > tab.position) {
@@ -148,6 +146,6 @@ angular.module('edison').factory('tabContainer', ['$location', '$window', '$q', 
         }
     }
 
-    return (new TabContainer);
+    return (new TabContainer());
 
 }]);

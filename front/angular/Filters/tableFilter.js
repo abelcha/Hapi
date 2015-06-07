@@ -1,44 +1,38 @@
-function getValue(path, origin) {
-  if (origin === void 0 || origin === null) origin = self ? self : this;
-  if (typeof path !== 'string') path = '' + path;
-  var c = '',
-    pc, i = 0,
-    n = path.length,
-    name = '';
-  if (n)
-    while (i <= n)((c = path[i++]) == '.' || c == '[' || c == ']' || c == void 0) ? (name ? (origin = origin[name], name = '') : (pc == '.' || pc == '[' || pc == ']' && c == ']' ? i = n + 2 : void 0), pc = c) : name += c;
-  if (i == n + 2) throw "Invalid path: " + path;
-  return origin;
-}
-
-function cleanString(str) {
-  str = str.toString().toLowerCase();
-  str = str.replace(/[éèeê]/g, "e");
-  str = str.replace(/[àâ]/g, "a");
-  return str;
-}
-
 angular.module("edison").filter('tableFilter', function() {
-  return function(data, fltr, c) {
-    var rtn = [];
-    for (x in fltr) {
-      fltr[x] = cleanString(fltr[x]);
+    "use strict";
+
+    var clean = function(str) {
+        return _.deburr(str).toLowerCase();
     }
 
-    for (var k in data) {
-      if (data[k].id) {
-        var psh = true;
-        for (x in fltr) {
-          var str = data[k][x];
-          if (!str || str.length === 0 || cleanString(str).indexOf(fltr[x]) < 0) {
-            psh = false;
-            break;
-          }
+    var compare = function(a, b) {
+        if (typeof a === "string") {
+            return clean(a).includes(b);
+        } else {
+            return clean(String(a)).startsWith(b);
         }
-        if (psh)
-          rtn.push(data[k]);
-      }
     }
-    return rtn;
-  }
+
+    return function(dataContainer, inputs) {
+        var rtn = [];
+        console.time('fltr')
+        inputs = _.mapValues(inputs, clean);
+        _.each(dataContainer, function(data) {
+            if (data.id) {
+                var psh = true;
+                _.each(inputs, function(input, k) {
+                    if (input && input.length > 0 && !compare(data[k], input)) {
+                        psh = false;
+                        return false
+                    }
+                });
+                if (psh === true) {
+                    rtn.push(data);
+                }
+            }
+        })
+        console.timeEnd('fltr')
+
+        return rtn;
+    }
 });

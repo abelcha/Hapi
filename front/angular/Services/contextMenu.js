@@ -1,5 +1,5 @@
 angular.module('edison').factory('contextMenu', ['$location', 'edisonAPI', 'actionIntervention', '$window', 'dialog', function($location, edisonAPI, actionIntervention, $window, dialog) {
-
+    "use strict";
     var content = {};
 
     content.interventionList = [{
@@ -14,7 +14,7 @@ angular.module('edison').factory('contextMenu', ['$location', 'edisonAPI', 'acti
         click: function(inter) {
             if (inter.artisan) {
                 var now = Date.now();
-                var x = $window.open('callto:' + inter.artisan.telephone.tel1, '_self', false)
+                $window.open('callto:' + inter.artisan.telephone.tel1, '_self', false)
                 dialog.choiceText({
                     title: 'Nouvel Appel',
                 }, function(response, text) {

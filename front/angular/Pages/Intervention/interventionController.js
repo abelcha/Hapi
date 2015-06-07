@@ -1,34 +1,19 @@
-var Map = function() {
-    this.display = false;
-}
+var InterventionCtrl = function($rootScope, $window, $scope, $location, $routeParams, dialog, fourniture, LxNotificationService, tabContainer, edisonAPI, Address, $q, mapAutocomplete, productsList, config, intervention, artisans, actionIntervention, Map) {
+    "use strict";
 
-Map.prototype.setCenter = function(address) {
-    this.center = address;
-}
-
-Map.prototype.setZoom = function(value) {
-    this.zoom = value
-}
-Map.prototype.show = function() {
-    this.display = true;
-}
-
-
-var InterventionCtrl = function($rootScope, $window, $scope, $location, $routeParams, dialog, fourniture, LxNotificationService, tabContainer, edisonAPI, Address, $q, mapAutocomplete, productsList, config, intervention, artisans, actionIntervention) {
     var _this = this;
     _this.artisans = artisans.data;
     _this.config = config;
     _this.dialog = dialog;
     _this.autocomplete = mapAutocomplete;
     var tab = tabContainer.getCurrentTab();
-    var id = parseInt($routeParams.id);
     if (!tab.data) {
         tab.setData(intervention.data);
         tab.data.sst = intervention.data.artisan ? intervention.data.artisan.id : 0;
 
         if ($routeParams.id.length > 12) {
             _this.isNew = true;
-            tab.data.tmpID =  $routeParams.id;
+            tab.data.tmpID = $routeParams.id;
             tab.setTitle('#' + moment((new Date(parseInt(tab.data.tmpID))).toISOString()).format("HH:mm").toString());
         } else {
             tab.setTitle('#' + $routeParams.id);
@@ -53,10 +38,8 @@ var InterventionCtrl = function($rootScope, $window, $scope, $location, $routePa
     _this.data.fourniture = _this.data.fourniture || [];
     $scope.fourniture = fourniture.init(_this.data.fourniture);
 
-
-
     _this.changeAddressFacture = function(place) {
-        mapAutocomplete.getPlaceAddress(place).then(function(addr)  {
+        mapAutocomplete.getPlaceAddress(place).then(function(addr) {
             _this.data.facture.address = addr;
         });
     }
@@ -77,7 +60,7 @@ var InterventionCtrl = function($rootScope, $window, $scope, $location, $routePa
             if (!_this.data.sav)
                 _this.data.sav = [];
             _this.data.sav.push({
-                date: new Date,
+                date: new Date(),
                 login: $rootScope.user.login,
                 description: resp,
                 regle: false
@@ -88,7 +71,9 @@ var InterventionCtrl = function($rootScope, $window, $scope, $location, $routePa
 
     $scope.envoiFacture = function() {
         actionIntervention.envoiFacture(_this.data, function(err, res) {
-            _this.data.date.envoiFacture = new Date;
+            if (!err)
+                _this.data.date.envoiFacture = new Date();
+            console.log(res);
         })
     }
 
@@ -174,7 +159,7 @@ var InterventionCtrl = function($rootScope, $window, $scope, $location, $routePa
         actionIntervention.save(_this.data, function(err, resp) {
             if (err) {
                 return false;
-            } else if (options && options.envoi == true) {
+            } else if (options && options.envoi === true) {
                 actionIntervention.envoi(resp, closeTab);
             } else if (options && options.annulation) {
                 actionIntervention.annulation(resp, closeTab);
@@ -202,7 +187,7 @@ var InterventionCtrl = function($rootScope, $window, $scope, $location, $routePa
 
 
     /*MAP CONTROLLER*/
-    _this.map = new Map;
+    _this.map = new Map();
     _this.map.setZoom(_this.data.client.address ? 12 : 6)
     if (_this.isNew) {
         _this.map.show();
@@ -223,8 +208,8 @@ var InterventionCtrl = function($rootScope, $window, $scope, $location, $routePa
         return _this.data.client.address && _this.data.client.address.latLng;
     }
 
-    _this.changeAddress = function(place, searchText) {
-        mapAutocomplete.getPlaceAddress(place).then(function(addr)  {
+    _this.changeAddress = function(place) {
+        mapAutocomplete.getPlaceAddress(place).then(function(addr) {
             _this.map.zoom = 12;
             _this.map.center = addr;
             _this.data.client.address = addr;
@@ -246,7 +231,7 @@ var InterventionCtrl = function($rootScope, $window, $scope, $location, $routePa
                 }),
                 edisonAPI.call.get(_this.data.id || _this.data.tmpID, id_sst),
                 edisonAPI.sms.get(_this.data.id || _this.data.tmpID, id_sst)
-            ]).then(function(result)  {
+            ]).then(function(result) {
                 _this.data.artisan = result[0].data;
                 _this.data.artisan.stats = result[1].data;
                 _this.data.artisan.calls = result[2].data;

@@ -1,4 +1,5 @@
 angular.module('edison').controller('InterventionsController', function(tabContainer, $window, contextMenu, edisonAPI, dataProvider, $routeParams, $location, $scope, $q, $rootScope, $filter, config, ngTableParams, interventions, interventionsStats) {
+    "use strict";
     $scope.interventionsStats = interventionsStats.data;
     $scope.tab = tabContainer.getCurrentTab();
 
@@ -36,7 +37,7 @@ angular.module('edison').controller('InterventionsController', function(tabConta
             data = $filter('orderBy')(data, params.orderBy());
             $defer.resolve(data.slice((params.page() - 1) * params.count(), params.page() * params.count()));
         },
-        filterDelay: 150
+        filterDelay: 100
     }
     $scope.tableParams = new ngTableParams(tableParameters, tableSettings);
 
@@ -64,7 +65,7 @@ angular.module('edison').controller('InterventionsController', function(tabConta
             })
     }
 
-    $scope.rowClick = function($event, inter, doubleClick) {
+    $scope.rowClick = function($event, inter) {
         if ($scope.contextMenu.active)
             return $scope.contextMenu.close();
         /*        if (doubleClick) {
@@ -78,16 +79,13 @@ angular.module('edison').controller('InterventionsController', function(tabConta
                 allowDuplicates: false
             });
         } else {
-            console.log("jere")
             if ($rootScope.expendedRow === inter.id) {
                 $rootScope.expendedRow = -1;
             } else {
                 $q.all([
                     edisonAPI.intervention.get(inter.id),
                     edisonAPI.artisan.getStats(inter.ai)
-                ]).then(function(result)  {
-            console.log("jere123")
-
+                ]).then(function(result) {
                     $rootScope.expendedRow = inter.id;
                     $rootScope.expendedRowData = result[0].data;
                     $rootScope.expendedRowData.artisanStats = result[1].data

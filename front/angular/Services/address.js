@@ -1,5 +1,5 @@
 angular.module('edison').factory('Address', function() {
-
+    "use strict";
 
     var Address = function(place, copyContructor) {
         if (place.lat && place.lng) {
@@ -10,8 +10,8 @@ angular.module('edison').factory('Address', function() {
             this.streetAddress = true;
         } else if (this.isStreetAddress(place)) {
             this.getPlaceProprieties(place);
-        } else if (this.isLocalityAddress(place)){
-           this.getPlaceLocalityProprieties(place);
+        } else if (this.isLocalityAddress(place)) {
+            this.getPlaceLocalityProprieties(place);
         }
         if (place.geometry) {
             this.lt = place.geometry.location.lat();
@@ -21,10 +21,7 @@ angular.module('edison').factory('Address', function() {
     };
 
     Address.prototype.getPlaceLocalityProprieties = function(place) {
-      console.log(place);
         var a = place.address_components;
-/*        this.n = a[0] && a[0].short_name;
-        this.r = a[1] && a[1].short_name;*/
         this.cp = a[1] && a[1].short_name;
         this.v = a[0] && a[0].short_name;
     }
@@ -38,12 +35,12 @@ angular.module('edison').factory('Address', function() {
     }
 
     Address.prototype.getAddressProprieties = function(address) {
-        this.n = address.n,
-            this.r = address.r,
-            this.cp = address.cp,
-            this.v = address.v,
-            this.lt = address.lt,
-            this.lg = address.lg
+        this.n = address.n;
+        this.r = address.r;
+        this.cp = address.cp;
+        this.v = address.v;
+        this.lt = address.lt;
+        this.lg = address.lg;
     }
 
     Address.prototype.isLocalityAddress = function(place) {
@@ -57,7 +54,7 @@ angular.module('edison').factory('Address', function() {
         return (this.streetAddress);
     }
 
-    Address.prototype.toString = function()  {
+    Address.prototype.toString = function() {
         return (this.n + " " + this.r + " " + this.cp + ", " + this.v + ", France")
     }
 

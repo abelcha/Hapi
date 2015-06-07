@@ -1,6 +1,7 @@
 angular.module('edison')
-    .factory('actionIntervention', ['$window', 'LxNotificationService', 'dialog', 'edisonAPI', 'config',
-        function($window, LxNotificationService, dialog, edisonAPI, config) {
+    .factory('actionIntervention', ['$window', 'LxNotificationService', 'dialog', 'edisonAPI',
+        function($window, LxNotificationService, dialog, edisonAPI) {
+            "use strict";
             return {
                 envoiFacture: function(inter, cb) {
                     dialog.envoiFacture(inter, function(text, acquitte, date) {
@@ -44,7 +45,7 @@ angular.module('edison')
                 },
                 callArtisan: function(inter, cb) {
                     var now = Date.now();
-                    var x = $window.open('callto:' + inter.artisan.telephone.tel1, '_self', false)
+                    $window.open('callto:' + inter.artisan.telephone.tel1, '_self', false)
                     dialog.choiceText({
                         title: 'Nouvel Appel',
                     }, function(response, text) {

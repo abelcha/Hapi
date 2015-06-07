@@ -1,3 +1,4 @@
-angular.module('edison').factory('socket', function (socketFactory) {
-  return socketFactory();
+angular.module('edison').factory('socket', function(socketFactory) {
+    "use strict";
+    return socketFactory();
 });

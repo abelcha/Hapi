@@ -1,7 +1,6 @@
-"use strict"
-
 angular.module('edison', ['ngMaterial', 'lumx', 'ngAnimate', 'xeditable', 'ngDialog', 'btford.socket-io', 'ngFileUpload', 'pickadate', 'ngRoute', 'ngResource', 'ngTable', 'ngMap'])
     .config(function($mdThemingProvider) {
+        "use strict";
         $mdThemingProvider.theme('default')
             .primaryPalette('indigo')
             .accentPalette('blue-grey');
@@ -9,10 +8,10 @@ angular.module('edison', ['ngMaterial', 'lumx', 'ngAnimate', 'xeditable', 'ngDia
 
 
 angular.module('edison').controller('MainController', function(tabContainer, $scope, socket, config, dataProvider, $rootScope, $location, edisonAPI, taskList) {
-
+    "use strict";
     $scope.config = config;
     $rootScope.loadingData = true;
-    $rootScope.$on('$routeChangeSuccess', function(e, curr, prev) {
+    $rootScope.$on('$routeChangeSuccess', function() {
         $rootScope.loadingData = false;
     });
 
@@ -25,61 +24,61 @@ angular.module('edison').controller('MainController', function(tabContainer, $sc
         title: 'Nouvelle Intervention',
         icon: 'plus'
     }];
-    $scope.dateFormat = moment().format('llll').slice(0, -5);
     $scope.tabs = tabContainer;
     $scope.$watch('tabs.selectedTab', function(prev, curr) {
         if (prev === -1 && curr !== -1) {
             $scope.tabs.selectedTab = curr;
         }
-    })
+    });
     $rootScope.options = {
         showMap: true
     };
 
     var reloadStats = function() {
+
         edisonAPI.intervention.getStats()
             .success(function(result) {
                 $scope.userStats = _.find(result, function(e) {
                     return e.login === $scope.user.login;
                 });
-                $scope.interventionsStats = result
-            })
-    }
-    
+                $scope.interventionsStats = result;
+            });
+    };
+
     edisonAPI.getUser().success(function(result) {
         $rootScope.user = result;
         reloadStats();
-    })
-    
+    });
 
-    $rootScope.$on('InterventionListChange', reloadStats)
+
+    $rootScope.$on('InterventionListChange', reloadStats);
 
     var initTabs = function(baseUrl) {
         $scope.tabsInitialized = true;
         $scope.tabs.loadSessionTabs(baseUrl)
-            .then(function(urlIsInTabs) {
-                $location.url(baseUrl)
+            .then(function() {
+                $location.url(baseUrl);
             }).catch(function() {
                 $scope.tabs.addTab(baseUrl);
             });
         return 0;
-    }
+    };
 
-    $scope.$on("$locationChangeStart", function(event, next, current) {
+    $scope.$on("$locationChangeStart", function(event) {
         if (!event) {
             edisonAPI.request({
                 fn: 'setSessionData',
                 data: {
                     tabContainer: $scope.tabs
                 }
-            })
+            });
 
         }
         if ($location.path() === "/") {
             return 0;
         }
         if (!$scope.tabsInitialized) {
-            return initTabs($location.path())
+            return initTabs($location.path());
         }
         if ($location.path() !== "/intervention") {
             $scope.tabs.addTab($location.path());
@@ -89,12 +88,10 @@ angular.module('edison').controller('MainController', function(tabContainer, $sc
 
     $scope.taskList = taskList;
 
-    $scope.linkClick = function($event, tab) {
+    $scope.linkClick = function($event) {
         $event.preventDefault();
         $event.stopPropagation();
-        console.log(tab);
-
-    }
+    };
 
     $scope.tabIconClick = function($event, tab) {
         $event.preventDefault();
@@ -102,33 +99,36 @@ angular.module('edison').controller('MainController', function(tabContainer, $sc
         if ($scope.tabs.remove(tab)) {
             $location.url($scope.tabs.getCurrentTab().url);
         }
-    }
+    };
 });
 
 var getInterList = function(edisonAPI) {
+    "use strict";
     return edisonAPI.intervention.list({
         cache: true
     });
-}
+};
 var getArtisanList = function(edisonAPI) {
+    "use strict";
     return edisonAPI.artisan.list({
         cache: true
     });
-}
+};
 
 var getArtisan = function($route, $q, edisonAPI) {
+    "use strict";
     var id = $route.current.params.id;
 
     if (id.length > 10) {
-        return $q(function(resolve, reject) {
+        return $q(function(resolve) {
             resolve({
                 data: {
-                    telephone:  {},
+                    telephone: {},
                     pourcentage: {},
                     add: {},
                     representant: {},
                 }
-            })
+            });
         });
     } else {
         return edisonAPI.artisan.get(id, {
@@ -138,15 +138,17 @@ var getArtisan = function($route, $q, edisonAPI) {
     }
 };
 
-getInterventionStats = function(edisonAPI) {
+var getInterventionStats = function(edisonAPI) {
+    "use strict";
     return edisonAPI.intervention.getStats();
-}
+};
 
 var getIntervention = function($route, $q, edisonAPI) {
+    "use strict";
     var id = $route.current.params.id;
 
     if (id.length > 10) {
-        return $q(function(resolve, reject) {
+        return $q(function(resolve) {
             resolve({
                 data: {
                     prixAnnonce: 0,
@@ -162,7 +164,7 @@ var getIntervention = function($route, $q, edisonAPI) {
                         intervention: Date.now()
                     }
                 }
-            })
+            });
         });
     } else {
         return edisonAPI.intervention.get(id, {
@@ -170,18 +172,19 @@ var getIntervention = function($route, $q, edisonAPI) {
             extend: true
         });
     }
-}
+};
 
 
 
 angular.module('edison').config(function($routeProvider, $locationProvider) {
+    "use strict";
     $routeProvider
         .when('/', {
             resolve: {
                 interventions: getInterList,
                 artisans: getArtisanList
             },
-            redirectTo: '/dashboard',
+            redirectTo: '/interventions',
         })
         .when('/artisan/:id', {
             templateUrl: "Pages/Artisan/artisan.html",
@@ -257,5 +260,6 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
 });
 
 angular.module('edison').run(function(editableOptions) {
+    "use strict";
     editableOptions.theme = 'bs3'; // bootstrap3 theme. Can be also 'bs2', 'default'
 });

@@ -1,5 +1,5 @@
 angular.module('edison').factory('taskList', ['dialog', 'edisonAPI', function(dialog, edisonAPI) {
-
+    "use strict";
     var Task = function(user) {
         edisonAPI.get({
             to: user,

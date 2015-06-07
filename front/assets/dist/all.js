@@ -1,7 +1,6 @@
-"use strict";
-
 angular.module('edison', ['ngMaterial', 'lumx', 'ngAnimate', 'xeditable', 'ngDialog', 'btford.socket-io', 'ngFileUpload', 'pickadate', 'ngRoute', 'ngResource', 'ngTable', 'ngMap'])
     .config(function($mdThemingProvider) {
+        "use strict";
         $mdThemingProvider.theme('default')
             .primaryPalette('indigo')
             .accentPalette('blue-grey');
@@ -9,10 +8,10 @@ angular.module('edison', ['ngMaterial', 'lumx', 'ngAnimate', 'xeditable', 'ngDia
 
 
 angular.module('edison').controller('MainController', function(tabContainer, $scope, socket, config, dataProvider, $rootScope, $location, edisonAPI, taskList) {
-
+    "use strict";
     $scope.config = config;
     $rootScope.loadingData = true;
-    $rootScope.$on('$routeChangeSuccess', function(e, curr, prev) {
+    $rootScope.$on('$routeChangeSuccess', function() {
         $rootScope.loadingData = false;
     });
 
@@ -25,61 +24,61 @@ angular.module('edison').controller('MainController', function(tabContainer, $sc
         title: 'Nouvelle Intervention',
         icon: 'plus'
     }];
-    $scope.dateFormat = moment().format('llll').slice(0, -5);
     $scope.tabs = tabContainer;
     $scope.$watch('tabs.selectedTab', function(prev, curr) {
         if (prev === -1 && curr !== -1) {
             $scope.tabs.selectedTab = curr;
         }
-    })
+    });
     $rootScope.options = {
         showMap: true
     };
 
     var reloadStats = function() {
+
         edisonAPI.intervention.getStats()
             .success(function(result) {
                 $scope.userStats = _.find(result, function(e) {
                     return e.login === $scope.user.login;
                 });
-                $scope.interventionsStats = result
-            })
-    }
-    
+                $scope.interventionsStats = result;
+            });
+    };
+
     edisonAPI.getUser().success(function(result) {
         $rootScope.user = result;
         reloadStats();
-    })
-    
+    });
 
-    $rootScope.$on('InterventionListChange', reloadStats)
+
+    $rootScope.$on('InterventionListChange', reloadStats);
 
     var initTabs = function(baseUrl) {
         $scope.tabsInitialized = true;
         $scope.tabs.loadSessionTabs(baseUrl)
-            .then(function(urlIsInTabs) {
-                $location.url(baseUrl)
+            .then(function() {
+                $location.url(baseUrl);
             }).catch(function() {
                 $scope.tabs.addTab(baseUrl);
             });
         return 0;
-    }
+    };
 
-    $scope.$on("$locationChangeStart", function(event, next, current) {
+    $scope.$on("$locationChangeStart", function(event) {
         if (!event) {
             edisonAPI.request({
                 fn: 'setSessionData',
                 data: {
                     tabContainer: $scope.tabs
                 }
-            })
+            });
 
         }
         if ($location.path() === "/") {
             return 0;
         }
         if (!$scope.tabsInitialized) {
-            return initTabs($location.path())
+            return initTabs($location.path());
         }
         if ($location.path() !== "/intervention") {
             $scope.tabs.addTab($location.path());
@@ -89,12 +88,10 @@ angular.module('edison').controller('MainController', function(tabContainer, $sc
 
     $scope.taskList = taskList;
 
-    $scope.linkClick = function($event, tab) {
+    $scope.linkClick = function($event) {
         $event.preventDefault();
         $event.stopPropagation();
-        console.log(tab);
-
-    }
+    };
 
     $scope.tabIconClick = function($event, tab) {
         $event.preventDefault();
@@ -102,33 +99,36 @@ angular.module('edison').controller('MainController', function(tabContainer, $sc
         if ($scope.tabs.remove(tab)) {
             $location.url($scope.tabs.getCurrentTab().url);
         }
-    }
+    };
 });
 
 var getInterList = function(edisonAPI) {
+    "use strict";
     return edisonAPI.intervention.list({
         cache: true
     });
-}
+};
 var getArtisanList = function(edisonAPI) {
+    "use strict";
     return edisonAPI.artisan.list({
         cache: true
     });
-}
+};
 
 var getArtisan = function($route, $q, edisonAPI) {
+    "use strict";
     var id = $route.current.params.id;
 
     if (id.length > 10) {
-        return $q(function(resolve, reject) {
+        return $q(function(resolve) {
             resolve({
                 data: {
-                    telephone:  {},
+                    telephone: {},
                     pourcentage: {},
                     add: {},
                     representant: {},
                 }
-            })
+            });
         });
     } else {
         return edisonAPI.artisan.get(id, {
@@ -138,15 +138,17 @@ var getArtisan = function($route, $q, edisonAPI) {
     }
 };
 
-getInterventionStats = function(edisonAPI) {
+var getInterventionStats = function(edisonAPI) {
+    "use strict";
     return edisonAPI.intervention.getStats();
-}
+};
 
 var getIntervention = function($route, $q, edisonAPI) {
+    "use strict";
     var id = $route.current.params.id;
 
     if (id.length > 10) {
-        return $q(function(resolve, reject) {
+        return $q(function(resolve) {
             resolve({
                 data: {
                     prixAnnonce: 0,
@@ -162,7 +164,7 @@ var getIntervention = function($route, $q, edisonAPI) {
                         intervention: Date.now()
                     }
                 }
-            })
+            });
         });
     } else {
         return edisonAPI.intervention.get(id, {
@@ -170,18 +172,19 @@ var getIntervention = function($route, $q, edisonAPI) {
             extend: true
         });
     }
-}
+};
 
 
 
 angular.module('edison').config(function($routeProvider, $locationProvider) {
+    "use strict";
     $routeProvider
         .when('/', {
             resolve: {
                 interventions: getInterList,
                 artisans: getArtisanList
             },
-            redirectTo: '/dashboard',
+            redirectTo: '/interventions',
         })
         .when('/artisan/:id', {
             templateUrl: "Pages/Artisan/artisan.html",
@@ -257,23 +260,25 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
 });
 
 angular.module('edison').run(function(editableOptions) {
+    "use strict";
     editableOptions.theme = 'bs3'; // bootstrap3 theme. Can be also 'bs2', 'default'
 });
 
 angular.module('edison').directive('capitalize', function() {
+    "use strict";
     return {
         require: 'ngModel',
         link: function(scope, element, attrs, modelCtrl) {
             modelCtrl.$parsers.push(function(input) {
                 return input ? input.toUpperCase() : "";
             });
-            element.css("text-transform","uppercase");
+            element.css("text-transform", "uppercase");
         }
     };
-})
-
+});
 
 angular.module('edison').directive('ngEnter', function () {
+    "use strict";
     return function (scope, element, attrs) {
         element.bind("keydown keypress", function (event) {
             if(event.which === 13) {
@@ -298,20 +303,8 @@ angular.module('edison').directive('ngEnter', function () {
   }
 });
 */
-
-angular.module('edison').directive('newlines', function() {
-    return {
-        require: 'ngModel',
-        link: function(scope, element, attrs, modelCtrl) {
-            modelCtrl.$parsers.push(function(input) {
-                return input ? input.replace(/\n/g, '<br/>') : "";
-            });
-        }
-    };
-})
-
-
 angular.module('edison').directive('ngRightClick', function($parse) {
+    "use strict";
     return function(scope, element, attrs) {
         var fn = $parse(attrs.ngRightClick);
         element.bind('contextmenu', function(event) {
@@ -325,30 +318,63 @@ angular.module('edison').directive('ngRightClick', function($parse) {
     };
 });
 
-angular.module('edison').directive('sglclick', ['$parse', function($parse) {
-    return {
-        restrict: 'A',
-        link: function(scope, element, attr) {
-          var fn = $parse(attr['sglclick']);
-          var delay = 300, clicks = 0, timer = null;
-          element.on('click', function (event) {
-            clicks++;  //count clicks
-            if(clicks === 1) {
-              timer = setTimeout(function() {
-                scope.$apply(function () {
-                    fn(scope, { $event: event });
-                }); 
-                clicks = 0;             //after action performed, reset counter
-              }, delay);
-              } else {
-                clearTimeout(timer);    //prevent single-click action
-                clicks = 0;             //after action performed, reset counter
-              }
-          });
-        }
+angular.module('edison').filter('crlf', function() {
+	"use strict";
+    return function(text) {
+        return text.split(/\n/g).join('<br>');
     };
-}])
+});
+
+angular.module('edison').filter('reverse', function() {
+    "use strict";
+    return function(items) {
+        if (!items)
+            return [];
+        return items.slice().reverse();
+    };
+});
+
+angular.module("edison").filter('tableFilter', function() {
+    "use strict";
+
+    var clean = function(str) {
+        return _.deburr(str).toLowerCase();
+    }
+
+    var compare = function(a, b) {
+        if (typeof a === "string") {
+            return clean(a).includes(b);
+        } else {
+            return clean(String(a)).startsWith(b);
+        }
+    }
+
+    return function(dataContainer, inputs) {
+        var rtn = [];
+        console.time('fltr')
+        inputs = _.mapValues(inputs, clean);
+        _.each(dataContainer, function(data) {
+            if (data.id) {
+                var psh = true;
+                _.each(inputs, function(input, k) {
+                    if (input && input.length > 0 && !compare(data[k], input)) {
+                        psh = false;
+                        return false
+                    }
+                });
+                if (psh === true) {
+                    rtn.push(data);
+                }
+            }
+        })
+        console.timeEnd('fltr')
+
+        return rtn;
+    }
+});
+
 angular.module('edison').filter('total', function() {
+    "use strict";
     return function(obj) {
         if (obj && obj.total) {
         	return obj.total;
@@ -358,178 +384,19 @@ angular.module('edison').filter('total', function() {
 });
 
 angular.module('edison').filter('montant', function() {
+    "use strict";
     return function(obj) {
         if (obj && obj.montant) {
-        	return (obj.montant > 999 ? (obj.montant / 1000).toFixed(0) + 'k' : obj.montant.toFixed(0)) + '€'
+        	return (obj.montant > 999 ? (obj.montant / 1000).toFixed(0) + 'k' : obj.montant.toFixed(0)) + '€';
         }
         return "0€";
     };
 });
 
-angular.module("edison").filter('addressPrettify', function() {
-  return function(address) {
-    return (address.n + " " +
-      address.r + " " +
-      address.cp + ", " +
-      address.v + ", " +
-      "France")
-  };
-});
-
-angular.module("edison").filter('addressXY', function() {
-  return function(address) {
-    if (!address ||  !address.lt || !address.lg)
-      return ("0, 0");
-    return (address.lt + ", " + address.lg);
-  };
-});
-
-angular.module("edison").filter('placeToXY', function() {
-  return function(place) {
-    var location = place.geometry.location;
-    console.log(location)
-    return location.lat() + ', ' + location.lng();
-  }
-});
-
-
-angular.module("edison").filter('placeToAddress', function() {
-  return function(place) {
-    var address = function(place) {
-      if (place.address_components) {
-        var a = place.address_components;
-        this.n = a[0] && a[0].short_name;
-        this.r = a[1] && a[1].short_name;
-        this.cp = a[6] && a[6].short_name;
-        this.v = a[2] && a[2].short_name;
-      }
-      this.lt = place.geometry.location.lat();
-      this.lg = place.geometry.location.lng();
-    };
-    address.prototype.isStreetAddress = (this.n && this.r);
-    address.prototype.latLng = this.isStreetAddress ? (this.lt + ', ' + this.lg) : '0, 0'
-    
-    return new address(place);
-  }
-});
-
-
-angular.module("edison").filter('artisanPractice', function(){
-  return function(sst, categorie){
-    return (sst.categories.indexOf(categorie) > 0);
-  }
-});
-angular.module("edison").filter('categoryFilter', function(){
-  return function(sst, categorie){
-    return (sst.categories.indexOf(categorie) > 0);
-  }
-});
-angular.module('edison').filter('crlf', function() {
-    return function(text) {
-        return text.split(/\n/g).join('<br>');
-    };
-});
-
-angular.module("edison").filter('pricify', function() {
-	return function(price) {
-		if (price > 800)
-			return 900;
-		return (price - (price % 100)) + 200;
-	}
-});
-function pad(number) {
-  return number < 10 ? '0' + number : number
-}
-angular.module("edison").filter('relativeDate', function() {
-
-  var minute = 60 * 1000;
-  var hour = 60 * minute;
-  var day = 24 * hour;
-  var week = 7 * day;
-  var month = 4 * week;
-  var year = 12 * month;
-
-  return function(date) {
-    var now = Date.now();
-    var date = new Date(date);
-    var today = (new Date()).setHours(0, 0, 0, 0);
-
-    var diff = now - date.getTime();
-    if (diff < minute)
-      return ("à l'instant");
-    if (diff < hour)
-      return Math.round(diff / minute) + ' minutes';
-    if (diff < day) {
-      if (date > today) {
-        return 'Auj. ' + pad(date.getHours()) + "H" + pad(date.getMinutes());
-      } else {
-        return 'Hier ' + pad(date.getHours()) + "H" + pad(date.getMinutes());
-      }
-    }
-    if (diff < week)
-      return Math.round(diff / day) + ' jours';
-    if (diff < month)
-      return Math.round(diff / week) + ' semaines'
-    if (diff < year)
-      return Math.round(diff / week) + ' ans'
-  }
-});
-
-angular.module('edison').filter('reverse', function() {
-  return function(items) {
-  	if (!items)
-  		return [];
-    return items.slice().reverse();
-  };
-});
-function getValue(path, origin) {
-  if (origin === void 0 || origin === null) origin = self ? self : this;
-  if (typeof path !== 'string') path = '' + path;
-  var c = '',
-    pc, i = 0,
-    n = path.length,
-    name = '';
-  if (n)
-    while (i <= n)((c = path[i++]) == '.' || c == '[' || c == ']' || c == void 0) ? (name ? (origin = origin[name], name = '') : (pc == '.' || pc == '[' || pc == ']' && c == ']' ? i = n + 2 : void 0), pc = c) : name += c;
-  if (i == n + 2) throw "Invalid path: " + path;
-  return origin;
-}
-
-function cleanString(str) {
-  str = str.toString().toLowerCase();
-  str = str.replace(/[éèeê]/g, "e");
-  str = str.replace(/[àâ]/g, "a");
-  return str;
-}
-
-angular.module("edison").filter('tableFilter', function() {
-  return function(data, fltr, c) {
-    var rtn = [];
-    for (x in fltr) {
-      fltr[x] = cleanString(fltr[x]);
-    }
-
-    for (var k in data) {
-      if (data[k].id) {
-        var psh = true;
-        for (x in fltr) {
-          var str = data[k][x];
-          if (!str || str.length === 0 || cleanString(str).indexOf(fltr[x]) < 0) {
-            psh = false;
-            break;
-          }
-        }
-        if (psh)
-          rtn.push(data[k]);
-      }
-    }
-    return rtn;
-  }
-});
-
 angular.module('edison')
-    .factory('actionIntervention', ['$window', 'LxNotificationService', 'dialog', 'edisonAPI', 'config',
-        function($window, LxNotificationService, dialog, edisonAPI, config) {
+    .factory('actionIntervention', ['$window', 'LxNotificationService', 'dialog', 'edisonAPI',
+        function($window, LxNotificationService, dialog, edisonAPI) {
+            "use strict";
             return {
                 envoiFacture: function(inter, cb) {
                     dialog.envoiFacture(inter, function(text, acquitte, date) {
@@ -573,7 +440,7 @@ angular.module('edison')
                 },
                 callArtisan: function(inter, cb) {
                     var now = Date.now();
-                    var x = $window.open('callto:' + inter.artisan.telephone.tel1, '_self', false)
+                    $window.open('callto:' + inter.artisan.telephone.tel1, '_self', false)
                     dialog.choiceText({
                         title: 'Nouvel Appel',
                     }, function(response, text) {
@@ -653,7 +520,7 @@ angular.module('edison')
     ]);
 
 angular.module('edison').factory('Address', function() {
-
+    "use strict";
 
     var Address = function(place, copyContructor) {
         if (place.lat && place.lng) {
@@ -664,8 +531,8 @@ angular.module('edison').factory('Address', function() {
             this.streetAddress = true;
         } else if (this.isStreetAddress(place)) {
             this.getPlaceProprieties(place);
-        } else if (this.isLocalityAddress(place)){
-           this.getPlaceLocalityProprieties(place);
+        } else if (this.isLocalityAddress(place)) {
+            this.getPlaceLocalityProprieties(place);
         }
         if (place.geometry) {
             this.lt = place.geometry.location.lat();
@@ -675,10 +542,7 @@ angular.module('edison').factory('Address', function() {
     };
 
     Address.prototype.getPlaceLocalityProprieties = function(place) {
-      console.log(place);
         var a = place.address_components;
-/*        this.n = a[0] && a[0].short_name;
-        this.r = a[1] && a[1].short_name;*/
         this.cp = a[1] && a[1].short_name;
         this.v = a[0] && a[0].short_name;
     }
@@ -692,12 +556,12 @@ angular.module('edison').factory('Address', function() {
     }
 
     Address.prototype.getAddressProprieties = function(address) {
-        this.n = address.n,
-            this.r = address.r,
-            this.cp = address.cp,
-            this.v = address.v,
-            this.lt = address.lt,
-            this.lg = address.lg
+        this.n = address.n;
+        this.r = address.r;
+        this.cp = address.cp;
+        this.v = address.v;
+        this.lt = address.lt;
+        this.lg = address.lg;
     }
 
     Address.prototype.isLocalityAddress = function(place) {
@@ -711,7 +575,7 @@ angular.module('edison').factory('Address', function() {
         return (this.streetAddress);
     }
 
-    Address.prototype.toString = function()  {
+    Address.prototype.toString = function() {
         return (this.n + " " + this.r + " " + this.cp + ", " + this.v + ", France")
     }
 
@@ -721,9 +585,9 @@ angular.module('edison').factory('Address', function() {
 });
 
 angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvider', 'Upload', function($http, $location, dataProvider, Upload) {
-
+    "use strict";
     return {
-        intervention:  {
+        intervention: {
             getStats: function() {
                 return $http({
                     method: 'GET',
@@ -743,7 +607,7 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvid
                     method: 'GET',
                     cache: false,
                     url: '/api/intervention/' + id,
-                    params: options ||  {}
+                    params: options || {}
                 }).success(function(result) {
                     return result;
                 });
@@ -791,7 +655,7 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvid
                     method: 'GET',
                     cache: options && options.cache,
                     url: '/api/artisan/' + id,
-                    params: options ||  {}
+                    params: options || {}
                 }).success(function(result) {
                     return result;
                 });
@@ -801,7 +665,7 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvid
                     method: 'GET',
                     url: "/api/artisan/rank",
                     cache: false,
-                    params:  {
+                    params: {
                         categorie: categorie,
                         lat: address.lt,
                         lng: address.lg,
@@ -905,7 +769,7 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvid
             });
         },
 
-        getUser: function(id_sst) {
+        getUser: function() {
             return $http({
                 method: 'GET',
                 cache: true,
@@ -916,11 +780,11 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvid
 }]);
 
 angular.module('edison').factory('config', [function() {
-
+    "use strict";
     var config = {};
 
     config.filters = {
-        all:  {
+        all: {
             short: 'all',
             long: 'Toutes les Inters',
             url: ''
@@ -1192,7 +1056,7 @@ angular.module('edison').factory('config', [function() {
 }]);
 
 angular.module('edison').factory('contextMenu', ['$location', 'edisonAPI', 'actionIntervention', '$window', 'dialog', function($location, edisonAPI, actionIntervention, $window, dialog) {
-
+    "use strict";
     var content = {};
 
     content.interventionList = [{
@@ -1207,7 +1071,7 @@ angular.module('edison').factory('contextMenu', ['$location', 'edisonAPI', 'acti
         click: function(inter) {
             if (inter.artisan) {
                 var now = Date.now();
-                var x = $window.open('callto:' + inter.artisan.telephone.tel1, '_self', false)
+                $window.open('callto:' + inter.artisan.telephone.tel1, '_self', false)
                 dialog.choiceText({
                     title: 'Nouvel Appel',
                 }, function(response, text) {
@@ -1309,8 +1173,8 @@ angular.module('edison').factory('contextMenu', ['$location', 'edisonAPI', 'acti
 
 }]);
 
-angular.module('edison').factory('dataProvider', ['socket', '$rootScope', 'config', '_', function(socket, $rootScope, config, _) {
-
+angular.module('edison').factory('dataProvider', ['socket', '$rootScope', 'config', function(socket, $rootScope, config) {
+    "use strict";
     var dataProvider = function() {
         var _this = this;
         socket.on('interventionListChange', function(data) {
@@ -1322,7 +1186,6 @@ angular.module('edison').factory('dataProvider', ['socket', '$rootScope', 'confi
     };
 
     dataProvider.prototype.refreshInterventionListFilter = function(params, hash) {
-        var _this = this;
         console.time("interFilter")
         this.interventionListFiltered = this.interventionList;
         if (this.interventionList && params) {
@@ -1358,23 +1221,23 @@ angular.module('edison').factory('dataProvider', ['socket', '$rootScope', 'confi
         return this.interventionList;
     }
 
-    return new dataProvider;
+    return new dataProvider();
 
 }]);
 
-angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', 'config', function($mdDialog, edisonAPI, config) {
-
+angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', function($mdDialog, edisonAPI) {
+    "use strict";
 
     return {
         envoiFacture: function(inter, cb) {
             $mdDialog.show({
-                controller: function DialogController($scope, $mdDialog, config) {
+                controller: function DialogController($scope, $mdDialog) {
                     var template = "{{client.civilite}} {{client.nom}}, \n" +
                         "Vous trouverez ci-joint la facture de notre intervention\n" +
                         "Cordialement\n" +
                         "Edison Services"
                     $scope.text = _.template(template)(inter);
-                    $scope.date = new Date;
+                    $scope.date = new Date();
                     $scope.acquitte = false;
                     $scope.answer = function(cancel) {
                         $mdDialog.hide();
@@ -1388,7 +1251,7 @@ angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', 'config', 
         },
         recap: function(inters) {
             $mdDialog.show({
-                controller: function DialogController($scope, $mdDialog, config) {
+                controller: function DialogController($scope, $mdDialog) {
                     $scope.inters = inters;
                     $scope.answer = function() {
                         $mdDialog.hide();
@@ -1399,7 +1262,7 @@ angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', 'config', 
         },
         callsList: function(sst) {
             $mdDialog.show({
-                controller: function DialogController($scope, $mdDialog, config) {
+                controller: function DialogController($scope, $mdDialog) {
                     $scope.sst = sst;
                     $scope.answer = function() {
                         $mdDialog.hide();
@@ -1410,7 +1273,7 @@ angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', 'config', 
         },
         smsList: function(sst) {
             $mdDialog.show({
-                controller: function DialogController($scope, $mdDialog, config) {
+                controller: function DialogController($scope, $mdDialog) {
                     $scope.sst = sst;
                     $scope.answer = function() {
                         $mdDialog.hide();
@@ -1421,7 +1284,7 @@ angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', 'config', 
         },
         choiceText: function(options, cb) {
             $mdDialog.show({
-                controller: function DialogController($scope, $mdDialog, config) {
+                controller: function DialogController($scope, $mdDialog) {
                     $scope.options = options;
                     $scope.answer = function(resp, text) {
                         $mdDialog.hide();
@@ -1433,7 +1296,7 @@ angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', 'config', 
         },
         getText: function(options, cb) {
             $mdDialog.show({
-                controller: function DialogController($scope, $mdDialog, config) {
+                controller: function DialogController($scope, $mdDialog) {
                     $scope.options = options;
                     $scope.answer = function() {
                         $mdDialog.hide();
@@ -1445,7 +1308,7 @@ angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', 'config', 
         },
         getFileAndText: function(data, files, cb) {
             $mdDialog.show({
-                controller: function DialogController($scope, $mdDialog, config) {
+                controller: function DialogController($scope, $mdDialog) {
 
                     var getSMS = function() {
                         var sms = data.id ? "OS " + data.id + ". \n" : "";
@@ -1463,7 +1326,7 @@ angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', 'config', 
                     $scope.smsText = getSMS();
                     $scope.answer = function(cancel) {
                         $mdDialog.hide();
-                        if (cancel == false) {
+                        if (cancel === false) {
                             return cb($scope.smsText, $scope.addedFile);
                         }
                     }
@@ -1517,12 +1380,12 @@ angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', 'config', 
                             $mdDialog.hide(answer);
                             var hours = 0;
                             if (answer === "TODAY") {
-                                hours = 23 - (new Date).getHours() + 1;
+                                hours = 23 - (new Date()).getHours() + 1;
                             } else {
                                 hours = parseInt(answer);
                             }
-                            start = new Date;
-                            end = new Date;
+                            var start = new Date();
+                            var end = new Date();
                             end.setHours(end.getHours() + hours)
                             edisonAPI.artisan.setAbsence(id, {
                                 start: start,
@@ -1538,8 +1401,8 @@ angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', 'config', 
 
 }]);
 
-angular.module('edison').factory('fourniture', ['dialog', function(dialog) {    
-
+angular.module('edison').factory('fourniture', [function() {    
+    "use strict";
     return {
         init: function(fourniture) {
             this.fourniture = fourniture;
@@ -1588,15 +1451,29 @@ angular.module('edison').factory('fourniture', ['dialog', function(dialog) {
 }]);
 
 
-angular.module('edison').factory('_', ['$window',
-  function($window) {
-    return $window._;
-  }
-])
+angular.module('edison').factory('Map', function() {
+    "use strict";
+
+    var Map = function() {
+        this.display = false;
+    }
+
+    Map.prototype.setCenter = function(address) {
+        this.center = address;
+    }
+
+    Map.prototype.setZoom = function(value) {
+        this.zoom = value
+    }
+    Map.prototype.show = function() {
+        this.display = true;
+    }
+    return Map;
+});
 
 angular.module('edison').factory('mapAutocomplete', ['$q', 'Address',
     function($q, Address) {
-
+        "use strict";
         var autocomplete = function() {
             this.service = new google.maps.places.AutocompleteService();
             this.geocoder = new google.maps.Geocoder();
@@ -1609,10 +1486,10 @@ angular.module('edison').factory('mapAutocomplete', ['$q', 'Address',
                 componentRestrictions: {
                     country: 'fr'
                 }
-            }, function(predictions, status) {
+            }, function(predictions) {
                 if (predictions)
                     predictions.forEach(function(e) {
-                        if (e.description == input)
+                        if (e.description === input)
                             predictions = null;
                     })
                 deferred.resolve(predictions || []);
@@ -1634,12 +1511,13 @@ angular.module('edison').factory('mapAutocomplete', ['$q', 'Address',
             });
         };
 
-        return new autocomplete;
+        return new autocomplete();
 
     }
 ]);
 
-angular.module('edison').factory('openPost', ['$window', function($window) {
+angular.module('edison').factory('openPost', [function() {
+    "use strict";
     return function(url, data) {
         var mapForm = document.createElement("form");
         mapForm.target = "_blank";
@@ -1648,13 +1526,13 @@ angular.module('edison').factory('openPost', ['$window', function($window) {
 
         // Create an input
         _.each(data, function(e, i) {
-            var mapInput = document.createElement("input");
-            mapInput.type = "text";
-            mapInput.name = i;
-            mapInput.value = e;
-            mapForm.appendChild(mapInput);
-        })
-        // Add the form to dom
+                var mapInput = document.createElement("input");
+                mapInput.type = "text";
+                mapInput.name = i;
+                mapInput.value = e;
+                mapForm.appendChild(mapInput);
+            })
+            // Add the form to dom
         document.body.appendChild(mapForm);
 
         // Just submit
@@ -1663,6 +1541,7 @@ angular.module('edison').factory('openPost', ['$window', function($window) {
 }]);
 
 angular.module('edison').factory('productsList', ['dialog', 'openPost', function(dialog, openPost) {
+    "use strict";
     var ps = [{
         quantite: 1,
         ref: "EDI001",
@@ -1734,7 +1613,7 @@ angular.module('edison').factory('productsList', ['dialog', 'openPost', function
         quantite: 1,
         ref: "CAM001",
         title: "Camion D'assainisement",
-        desc: "DÉGORGEMENT CANALISATION TRÈS HAUTE PRESSION PAR CAMION D’ASSAINISSEMENT : \nCurage et nettoyage complet de la canalisation jusqu\'à 10M",
+        desc: "DÉGORGEMENT CANALISATION TRÈS HAUTE PRESSION PAR CAMION D’ASSAINISSEMENT : \nCurage et nettoyage complet de la canalisation jusqu\'à 10M",
         pu: 696.25
     }, {
         quantite: 1,
@@ -1779,7 +1658,7 @@ angular.module('edison').factory('productsList', ['dialog', 'openPost', function
         search: function(text) {
             var rtn = []
             for (var i = 0; i < ps.length; ++i) {
-                if (text == ps[i].title)
+                if (text === ps[i].title)
                     return [];
                 var needle = _.deburr(text).toLowerCase()
                 var haystack = _.deburr(ps[i].title).toLowerCase();
@@ -1811,18 +1690,20 @@ angular.module('edison').factory('productsList', ['dialog', 'openPost', function
 
 }]);
 
-angular.module('edison').factory('socket', function (socketFactory) {
-  return socketFactory();
+angular.module('edison').factory('socket', function(socketFactory) {
+    "use strict";
+    return socketFactory();
 });
-angular.module('edison').factory('tabContainer', ['$location', '$window', '$q', 'edisonAPI', '_', function($location, $window, $q, edisonAPI, _) {
 
+angular.module('edison').factory('tabContainer', ['$location', '$window', '$q', 'edisonAPI', function($location, $window, $q, edisonAPI) {
+    "use strict";
     var Tab = function(args) {
 
         if (typeof args === 'object') {
             //copy constructor
-            for (var k in args) {
-                this[k] = args[k];
-            }
+            _.each(args, function(e, k) {
+                this[k] = e;
+            })
         } else {
             this.url = args;
             this.title = '';
@@ -1844,25 +1725,23 @@ angular.module('edison').factory('tabContainer', ['$location', '$window', '$q', 
     }
 
     var TabContainer = function() {
-
-        var self = this;
         this._tabs = [];
         this.selectedTab = 0;
     }
 
     TabContainer.prototype.loadSessionTabs = function(currentUrl) {
-        var self = this;
+        var _this = this;
 
         return $q(function(resolve, reject) {
             var currentUrlInSessionTabs = false;
             edisonAPI.request({
                 fn: "getSessionData",
             }).then(function(result) {
-                self.selectedTab = result.data.selectedTab;
+                _this.selectedTab = result.data.selectedTab;
                 for (var i = 0; i < result.data._tabs.length; i++) {
-                    self._tabs.push(new Tab(result.data._tabs[i]))
+                    _this._tabs.push(new Tab(result.data._tabs[i]))
                     if (result.data._tabs[i].url === currentUrl) {
-                        self.selectedTab = i;
+                        _this.selectedTab = i;
                         currentUrlInSessionTabs = true;
                     }
                 }
@@ -1880,7 +1759,7 @@ angular.module('edison').factory('tabContainer', ['$location', '$window', '$q', 
         this.selectedTab = (typeof tab === 'number' ? tab : tab.position);
     };
 
-    TabContainer.prototype.createTab = function(url, title) {
+    TabContainer.prototype.createTab = function(url) {
         var tab = new Tab(url);
 
         tab.position = this._tabs.length;
@@ -1905,7 +1784,7 @@ angular.module('edison').factory('tabContainer', ['$location', '$window', '$q', 
     TabContainer.prototype.len = function() {
         var size = 0;
 
-        this._tabs.forEach(function(e, i) {
+        this._tabs.forEach(function(e) {
             size += !e.deleted;
         })
         return (size);
@@ -1914,9 +1793,9 @@ angular.module('edison').factory('tabContainer', ['$location', '$window', '$q', 
     TabContainer.prototype.getPrevTab = function(tab) {
 
         for (var i = tab.position - 1; i >= 0; i--) {
-            if (this._tabs[i].deleted == false)
+            if (this._tabs[i].deleted === false)
                 return (this._tabs[i]);
-        };
+        }
 
     };
 
@@ -1927,17 +1806,17 @@ angular.module('edison').factory('tabContainer', ['$location', '$window', '$q', 
         if (this._tabs.length <= 1) {
             return false;
         }
-        var reload = (this.selectedTab == tab.position);
+        var reload = (this.selectedTab === tab.position);
         for (var i = 0; i < this._tabs.length; i++) {
-            if (i != tab.position) {
+            if (i !== tab.position) {
                 newTabs.push(this._tabs[i]);
                 newTabs[j].position = j;
                 ++j;
             }
-        };
+        }
         this._tabs = newTabs;
 
-        if (this.selectedTab == tab.position && this.selectedTab != 0) {
+        if (this.selectedTab === tab.position && this.selectedTab !== 0) {
             this.selectedTab--;
         }
         if (this.selectedTab > tab.position) {
@@ -1964,12 +1843,12 @@ angular.module('edison').factory('tabContainer', ['$location', '$window', '$q', 
         }
     }
 
-    return (new TabContainer);
+    return (new TabContainer());
 
 }]);
 
 angular.module('edison').factory('taskList', ['dialog', 'edisonAPI', function(dialog, edisonAPI) {
-
+    "use strict";
     var Task = function(user) {
         edisonAPI.get({
             to: user,
@@ -1993,117 +1872,10 @@ angular.module('edison').factory('taskList', ['dialog', 'edisonAPI', function(di
 }]);
 
 
-/*
- * Detects on which browser the user is navigating
- *
- * Usage:
- * var browser = detectBrowser();
- *
- */
-angular.module('edison').service('detectBrowser', ['$window',
-  function($window) {
-
-    // http://stackoverflow.com/questions/22947535/how-to-detect-browser-using-angular
-    return function() {
-      var userAgent = $window.navigator.userAgent,
-        browsers = {
-          chrome: /chrome/i,
-          safari: /safari/i,
-          firefox: /firefox/i,
-          ie: /internet explorer/i
-        };
-
-      for (var key in browsers) {
-        if (browsers[key].test(userAgent)) {
-          return key;
-        }
-      }
-
-      return 'unknown';
-    }
-  }
-]);
-
-/*
- * Get window height and width
- *
- * Usage:
- * windowDimensions.height();
- * windowDimensions.width();
- *
- */
-angular.module('edison').factory('windowDimensions', ['$window', 'detectBrowser',
-  function($window, detectBrowser) {
-    var browser = detectBrowser();
-
-    return {
-      height: function() {
-        return (browser === 'safari') ? document.documentElement.clientHeight : window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
-      },
-
-      width: function() {
-        console.log('watchDimensions')
-        return (browser === 'safari') ? document.documentElement.clientWidth : window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth
-      }
-    }
-  }
-]);
-
-/*
- * Watch window resizing event to set new window dimensions,
- * and broadcast the event to the app
- *
- * Usage:
- * <html watch-window-resize>...</html>
- *
- * Bind the resize event:
-   $scope.$on('watchWindowResize::resize', function() {
-       // Do something
-   });
- *
- */
-angular.module('edison').directive('watchWindowResize', ['$window', '$timeout', 'windowDimensions',
-  function($window, $timeout, windowDimensions) {
-
-    return {
-      link: function($scope) {
-        // Get window's dimensions
-        $scope.getDimensions = function() {
-
-          // Namespacing events with name of directive + event to avoid collisions
-          // http://stackoverflow.com/questions/23272169/what-is-the-best-way-to-bind-to-a-global-event-in-a-angularjs-directive
-          $scope.$broadcast('watchWindowResize::resize', {
-            height: windowDimensions.height(),
-            width: windowDimensions.width()
-          });
-        }
-
-        // On window resize...
-        angular.element($window).on('resize', function(e) {
-
-          // Reset timeout
-          $timeout.cancel($scope.resizing);
-
-          // Add a timeout to not call the resizing function every pixel
-          $scope.resizing = $timeout(function() {
-
-            $scope.getDimensions();
-          }, 300);
-        });
-      }
-    }
-  }
-]);
-
-angular.module('edison').controller('DashboardController', function(tabContainer, $location, $scope, $rootScope, interventions, artisans){
-
-	$scope.tab = tabContainer.getCurrentTab();
-	$scope.tab.setTitle('dashBoard')
-});
-angular.module('edison').controller('ArtisanController', function(tabContainer, $location, $mdSidenav, $interval, ngDialog, LxNotificationService, edisonAPI, config, $routeParams, $scope, windowDimensions, artisan) {
+angular.module('edison').controller('ArtisanController', function(tabContainer, $location, $mdSidenav, $interval, ngDialog, LxNotificationService, edisonAPI, config, $routeParams, $scope, artisan) {
+  "use strict";
   $scope.config = config;
   $scope.tab = tabContainer.getCurrentTab();
-  var id = parseInt($routeParams.id);
 
   if (!$scope.tab.data) {
     if ($routeParams.id.length > 12) {
@@ -2122,37 +1894,28 @@ angular.module('edison').controller('ArtisanController', function(tabContainer, 
   }
 });
 
-var Map = function() {
-    this.display = false;
-}
+angular.module('edison').controller('DashboardController', function(tabContainer, $scope) {
+    "use strict";
+    $scope.tab = tabContainer.getCurrentTab();
+    $scope.tab.setTitle('dashBoard')
+});
 
-Map.prototype.setCenter = function(address) {
-    this.center = address;
-}
+var InterventionCtrl = function($rootScope, $window, $scope, $location, $routeParams, dialog, fourniture, LxNotificationService, tabContainer, edisonAPI, Address, $q, mapAutocomplete, productsList, config, intervention, artisans, actionIntervention, Map) {
+    "use strict";
 
-Map.prototype.setZoom = function(value) {
-    this.zoom = value
-}
-Map.prototype.show = function() {
-    this.display = true;
-}
-
-
-var InterventionCtrl = function($rootScope, $window, $scope, $location, $routeParams, dialog, fourniture, LxNotificationService, tabContainer, edisonAPI, Address, $q, mapAutocomplete, productsList, config, intervention, artisans, actionIntervention) {
     var _this = this;
     _this.artisans = artisans.data;
     _this.config = config;
     _this.dialog = dialog;
     _this.autocomplete = mapAutocomplete;
     var tab = tabContainer.getCurrentTab();
-    var id = parseInt($routeParams.id);
     if (!tab.data) {
         tab.setData(intervention.data);
         tab.data.sst = intervention.data.artisan ? intervention.data.artisan.id : 0;
 
         if ($routeParams.id.length > 12) {
             _this.isNew = true;
-            tab.data.tmpID =  $routeParams.id;
+            tab.data.tmpID = $routeParams.id;
             tab.setTitle('#' + moment((new Date(parseInt(tab.data.tmpID))).toISOString()).format("HH:mm").toString());
         } else {
             tab.setTitle('#' + $routeParams.id);
@@ -2177,10 +1940,8 @@ var InterventionCtrl = function($rootScope, $window, $scope, $location, $routePa
     _this.data.fourniture = _this.data.fourniture || [];
     $scope.fourniture = fourniture.init(_this.data.fourniture);
 
-
-
     _this.changeAddressFacture = function(place) {
-        mapAutocomplete.getPlaceAddress(place).then(function(addr)  {
+        mapAutocomplete.getPlaceAddress(place).then(function(addr) {
             _this.data.facture.address = addr;
         });
     }
@@ -2201,7 +1962,7 @@ var InterventionCtrl = function($rootScope, $window, $scope, $location, $routePa
             if (!_this.data.sav)
                 _this.data.sav = [];
             _this.data.sav.push({
-                date: new Date,
+                date: new Date(),
                 login: $rootScope.user.login,
                 description: resp,
                 regle: false
@@ -2212,7 +1973,9 @@ var InterventionCtrl = function($rootScope, $window, $scope, $location, $routePa
 
     $scope.envoiFacture = function() {
         actionIntervention.envoiFacture(_this.data, function(err, res) {
-            _this.data.date.envoiFacture = new Date;
+            if (!err)
+                _this.data.date.envoiFacture = new Date();
+            console.log(res);
         })
     }
 
@@ -2298,7 +2061,7 @@ var InterventionCtrl = function($rootScope, $window, $scope, $location, $routePa
         actionIntervention.save(_this.data, function(err, resp) {
             if (err) {
                 return false;
-            } else if (options && options.envoi == true) {
+            } else if (options && options.envoi === true) {
                 actionIntervention.envoi(resp, closeTab);
             } else if (options && options.annulation) {
                 actionIntervention.annulation(resp, closeTab);
@@ -2326,7 +2089,7 @@ var InterventionCtrl = function($rootScope, $window, $scope, $location, $routePa
 
 
     /*MAP CONTROLLER*/
-    _this.map = new Map;
+    _this.map = new Map();
     _this.map.setZoom(_this.data.client.address ? 12 : 6)
     if (_this.isNew) {
         _this.map.show();
@@ -2347,8 +2110,8 @@ var InterventionCtrl = function($rootScope, $window, $scope, $location, $routePa
         return _this.data.client.address && _this.data.client.address.latLng;
     }
 
-    _this.changeAddress = function(place, searchText) {
-        mapAutocomplete.getPlaceAddress(place).then(function(addr)  {
+    _this.changeAddress = function(place) {
+        mapAutocomplete.getPlaceAddress(place).then(function(addr) {
             _this.map.zoom = 12;
             _this.map.center = addr;
             _this.data.client.address = addr;
@@ -2370,7 +2133,7 @@ var InterventionCtrl = function($rootScope, $window, $scope, $location, $routePa
                 }),
                 edisonAPI.call.get(_this.data.id || _this.data.tmpID, id_sst),
                 edisonAPI.sms.get(_this.data.id || _this.data.tmpID, id_sst)
-            ]).then(function(result)  {
+            ]).then(function(result) {
                 _this.data.artisan = result[0].data;
                 _this.data.artisan.stats = result[1].data;
                 _this.data.artisan.calls = result[2].data;
@@ -2413,13 +2176,13 @@ var InterventionCtrl = function($rootScope, $window, $scope, $location, $routePa
 angular.module('edison').controller('InterventionController', InterventionCtrl);
 
 angular.module('edison').controller('statsController', function($scope) {
-
-    console.log("hey")
-  $scope.labels = ["Download Sales", "In-Store Sales", "Mail-Order Sales"];
-  $scope.data = [300, 500, 100];
+    "use strict";
+    $scope.labels = ["Download Sales", "In-Store Sales", "Mail-Order Sales"];
+    $scope.data = [300, 500, 100];
 });
 
 angular.module('edison').controller('InterventionsController', function(tabContainer, $window, contextMenu, edisonAPI, dataProvider, $routeParams, $location, $scope, $q, $rootScope, $filter, config, ngTableParams, interventions, interventionsStats) {
+    "use strict";
     $scope.interventionsStats = interventionsStats.data;
     $scope.tab = tabContainer.getCurrentTab();
 
@@ -2457,7 +2220,7 @@ angular.module('edison').controller('InterventionsController', function(tabConta
             data = $filter('orderBy')(data, params.orderBy());
             $defer.resolve(data.slice((params.page() - 1) * params.count(), params.page() * params.count()));
         },
-        filterDelay: 150
+        filterDelay: 100
     }
     $scope.tableParams = new ngTableParams(tableParameters, tableSettings);
 
@@ -2485,7 +2248,7 @@ angular.module('edison').controller('InterventionsController', function(tabConta
             })
     }
 
-    $scope.rowClick = function($event, inter, doubleClick) {
+    $scope.rowClick = function($event, inter) {
         if ($scope.contextMenu.active)
             return $scope.contextMenu.close();
         /*        if (doubleClick) {
@@ -2499,16 +2262,13 @@ angular.module('edison').controller('InterventionsController', function(tabConta
                 allowDuplicates: false
             });
         } else {
-            console.log("jere")
             if ($rootScope.expendedRow === inter.id) {
                 $rootScope.expendedRow = -1;
             } else {
                 $q.all([
                     edisonAPI.intervention.get(inter.id),
                     edisonAPI.artisan.getStats(inter.ai)
-                ]).then(function(result)  {
-            console.log("jere123")
-
+                ]).then(function(result) {
                     $rootScope.expendedRow = inter.id;
                     $rootScope.expendedRowData = result[0].data;
                     $rootScope.expendedRowData.artisanStats = result[1].data

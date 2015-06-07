@@ -1,7 +1,7 @@
 angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvider', 'Upload', function($http, $location, dataProvider, Upload) {
-
+    "use strict";
     return {
-        intervention:  {
+        intervention: {
             getStats: function() {
                 return $http({
                     method: 'GET',
@@ -21,7 +21,7 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvid
                     method: 'GET',
                     cache: false,
                     url: '/api/intervention/' + id,
-                    params: options ||  {}
+                    params: options || {}
                 }).success(function(result) {
                     return result;
                 });
@@ -69,7 +69,7 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvid
                     method: 'GET',
                     cache: options && options.cache,
                     url: '/api/artisan/' + id,
-                    params: options ||  {}
+                    params: options || {}
                 }).success(function(result) {
                     return result;
                 });
@@ -79,7 +79,7 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvid
                     method: 'GET',
                     url: "/api/artisan/rank",
                     cache: false,
-                    params:  {
+                    params: {
                         categorie: categorie,
                         lat: address.lt,
                         lng: address.lg,
@@ -183,7 +183,7 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvid
             });
         },
 
-        getUser: function(id_sst) {
+        getUser: function() {
             return $http({
                 method: 'GET',
                 cache: true,
