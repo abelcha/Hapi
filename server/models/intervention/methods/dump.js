@@ -200,6 +200,7 @@
             return new Promise(function(resolve, reject) {
                 var inters = [];
                 var t = Date.now();
+                console.log("==>", limit)
                 db.model('intervention').remove({
                     id: {
                         $gt: limit
