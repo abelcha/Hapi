@@ -67,6 +67,17 @@ var InterventionCtrl = function($rootScope, $window, $scope, $location, $routePa
             })
         })
     }
+
+    $scope.searchPhone = function(tel) {
+        if (tel.length > 2)
+            edisonAPI.searchPhone(tel)
+            .success(function(tel) {
+                $scope.searchedPhone = tel
+            }).catch(function() {
+                $scope.searchedPhone = {};
+            })
+    }
+
     $scope.addLitige = function() {
         dialog.getText({
             title: "Description du Litige",

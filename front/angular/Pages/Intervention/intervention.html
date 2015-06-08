@@ -48,13 +48,18 @@
                                 <div class="form-group">
                                     <div class="col-sm-3">
                                         <lx-text-field label="Téléphone 1">
-                                            <input capitalize type="text" ng-model="vm.data.client.telephone.tel1">
+                                            <input capitalize type="text" ng-model="vm.data.client.telephone.tel1" ng-focus="tel1focus=true;" ng-blur="tel1focus=false;" ng-change="searchPhone(vm.data.client.telephone.tel1)">
                                         </lx-text-field>
                                     </div>
                                     <div class="col-sm-3">
                                         <lx-text-field label="Téléphone 2">
                                             <input capitalize type="text" ng-model="vm.data.client.telephone.tel2">
                                         </lx-text-field>
+                                    </div>
+                                </div>
+                                <div class="form-group" ng-if="tel1focus" ng-show="tel1focus">
+                                    <div class="col-sm-3" >
+                                        <p ng-repeat="loc in searchedPhone|limitTo:5">{{loc.e}} - {{loc.t}}</p>
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -103,24 +108,24 @@
                     </div>
                 </div>
                 <br>
-                <br>
                 <div class="row" style="margin:0" ng-if="!vm.data.categorie">
                     <div flex-item>
                         <div class="card">
                             <div class="p+">
                                 <strong class="fs-headline display-block">Categorie</strong>
                                 <br>
-                                <button ng-click="changeCategorie(cat.s);" style="width: 12.5%;" ng-repeat="cat in config.categoriesAKV" class="btn--no-conflicts btn--m {{cat.c}} btn--flat" lx-ripple>{{cat.n}}</button>
+                                <button ng-click="changeCategorie(cat.short_name);" style="width: 12.5%;" ng-repeat="cat in config.categories" class="btn--no-conflicts btn--m {{cat.color}} btn--flat" lx-ripple>{{cat.long_name}}</button>
                             </div>
                         </div>
                     </div>
                 </div>
+                <br>
                 <div class="row" style="margin:0">
                     <div class="col-sm-8" style="padding-left:0">
                         <div class="card">
                             <div class="p+">
                                 <strong class="fs-headline display-block">
-         <button ng-click="vm.data.categorie = undefined" style="font-weight:900;float:left" class="btn--no-conflicts btn--m {{config.categoriesKV[vm.data.categorie].c}} btn--flat" lx-ripple> {{vm.data.categorie ? config.categoriesKV[vm.data.categorie].n : ""}}</button></strong>
+         <button ng-click="vm.data.categorie = undefined" style="font-weight:900;float:left" class="btn--no-conflicts btn--m {{config.categories[vm.data.categorie].color}} btn--flat" lx-ripple> {{vm.data.categorie ? config.categories[vm.data.categorie].long_name : ""}}</button></strong>
                                 <!--  <span class="fs-subhead tc-black-2 display-block">Carte</span> -->
                                 <div class="fs-body-1 mt+" style="padding-top:10px">
                                     <md-content ng-if="vm.map.display" class="autocomplete" style="margin-left: 20%;width: 70%;  margin-top: -36px;" layout-padding layout="column" md-input-container flex>
@@ -312,7 +317,7 @@
                                             <td>
                                                 <span>{{litige.date |  date:"dd/MM/yy"}}</span>
                                             </td>
-                                            <td >
+                                            <td>
                                                 <span style="white-space: pre;">{{litige.description}}</span>
                                             </td>
                                             <td>
@@ -405,7 +410,7 @@
                         <span class="fs-subhead tc-black-2 display-block">Lorem Ipsum</span>
                         <div class="paragraph fs-body-1 mt+">
                             <div class="form-group" ng-if="!vm.data.reglementSurPlace">
-                                <div class="col-sm-4">
+                                <div class="col-sm-2">
                                     <div class="select-style text-field">
                                         <select ng-model="vm.data.facture.payeur" ng-options="f.short_name as f.long_name for f in config.typePayeur">
                                         </select>
@@ -427,7 +432,7 @@
                                         <input capitalize type="text" ng-model="vm.data.facture.tel">
                                     </lx-text-field>
                                 </div>
-                                <div class="col-sm-2">
+                                <div class="col-sm-4">
                                     <lx-text-field label="Email">
                                         <input capitalize type="text" ng-model="vm.data.facture.email">
                                     </lx-text-field>

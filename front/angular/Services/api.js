@@ -47,7 +47,7 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvid
             envoiFacture: function(id, options) {
                 return $http.post("/api/intervention/" + id + "/envoiFacture", options);
             },
-             envoiDevis: function(id, options) {
+            envoiDevis: function(id, options) {
                 return $http.post("/api/intervention/" + id + "/envoiDevis", options);
             },
         },
@@ -185,7 +185,12 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvid
                 params: options.data
             });
         },
-
+        searchPhone: function(tel) {
+            return $http({
+                method: 'GET',
+                url: "api/arcep/" + tel + "/search"
+            });
+        },
         getUser: function() {
             return $http({
                 method: 'GET',
