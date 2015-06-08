@@ -543,14 +543,15 @@ angular.module('edison')
                     })
                 },
                 annulation: function(inter, cb) {
-                    edisonAPI.intervention.annulation(inter.id)
-                        .then(function(resp) {
-                            console.log(resp.data)
-                            var validationMessage = _.template("L'intervention {{id}} est annulé")(resp.data)
-                            LxNotificationService.success(validationMessage);
-                            if (typeof cb === 'function')
-                                cb(null, resp.data)
-                        });
+                    dialog.getCauseAnnulation(function(causeAnnulation) {
+                        edisonAPI.intervention.annulation(inter.id, causeAnnulation)
+                            .then(function(resp) {
+                                var validationMessage = _.template("L'intervention {{id}} est annulé")(resp.data)
+                                LxNotificationService.success(validationMessage);
+                                if (typeof cb === 'function')
+                                    cb(null, resp.data)
+                            });
+                    });
                 },
                 verification: function(inter, cb) {
                     edisonAPI.intervention.verification(inter.id)
@@ -676,8 +677,10 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvid
             verification: function(id, options) {
                 return $http.post("/api/intervention/" + id + "/verification", options);
             },
-            annulation: function(id) {
-                return $http.post("/api/intervention/" + id + "/annulation");
+            annulation: function(id, causeAnnulation) {
+                return $http.post("/api/intervention/" + id + "/annulation", {
+                    causeAnnulation: causeAnnulation
+                });
             },
             envoi: function(id, options) {
                 return $http.post("/api/intervention/" + id + "/envoi", options);
@@ -1241,7 +1244,7 @@ angular.module('edison').factory('dataProvider', ['socket', '$rootScope', 'confi
 
 }]);
 
-angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', function($mdDialog, edisonAPI) {
+angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', 'config', function($mdDialog, edisonAPI, config) {
     "use strict";
 
     return {
@@ -1308,6 +1311,19 @@ angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', function($
                     }
                 },
                 templateUrl: '/DialogTemplates/choiceText.html',
+            });
+        },
+        getCauseAnnulation: function(cb) {
+            $mdDialog.show({
+                controller: function($scope, config) {
+                    $scope.causeAnnulation = config.causeAnnulation;
+                    $scope.answer = function(resp) {
+                        $mdDialog.hide();
+                        if (resp)
+                            return cb(resp);
+                    }
+                },
+                templateUrl: '/DialogTemplates/causeAnnulation.html',
             });
         },
         getText: function(options, cb) {

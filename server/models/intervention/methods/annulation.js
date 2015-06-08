@@ -9,6 +9,7 @@ module.exports = function(schema) {
                 inter.date.annulation = new Date;
                 inter.login.annulation = req.session.login;
                 inter.status = "ANN";
+                inter.causeAnnulation = req.body.causeAnnulation;
                 inter.save().then(resolve, reject)
             })
         }

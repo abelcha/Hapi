@@ -120,14 +120,15 @@ angular.module('edison')
                     })
                 },
                 annulation: function(inter, cb) {
-                    edisonAPI.intervention.annulation(inter.id)
-                        .then(function(resp) {
-                            console.log(resp.data)
-                            var validationMessage = _.template("L'intervention {{id}} est annulé")(resp.data)
-                            LxNotificationService.success(validationMessage);
-                            if (typeof cb === 'function')
-                                cb(null, resp.data)
-                        });
+                    dialog.getCauseAnnulation(function(causeAnnulation) {
+                        edisonAPI.intervention.annulation(inter.id, causeAnnulation)
+                            .then(function(resp) {
+                                var validationMessage = _.template("L'intervention {{id}} est annulé")(resp.data)
+                                LxNotificationService.success(validationMessage);
+                                if (typeof cb === 'function')
+                                    cb(null, resp.data)
+                            });
+                    });
                 },
                 verification: function(inter, cb) {
                     edisonAPI.intervention.verification(inter.id)

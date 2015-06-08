@@ -1,0 +1,20 @@
+<md-dialog aria-label="Mango (Fruit)">
+    <md-dialog-content class="sticky-container">
+        <md-subheader class="md-sticky-no-effect">Cause Annulation</md-subheader>
+        <div style="padding:15px">
+           <!--  <select ng-model="absenceTime" ng-options="ind.value as ind.title for ind in absence">
+            </select> -->
+             <select class="form-control" ng-model="ca" 
+             ng-options="csa.short_name as csa.long_name group by csa.type for csa in causeAnnulation">
+                                                </select>
+        </div>
+    </md-dialog-content>
+    <div class="md-actions" layout="row">
+        <md-button ng-click="answer()" class="md-primary">
+           Annuler
+        </md-button>
+        <md-button ng-click="answer(ca)" class="md-primary">
+            Valider
+        </md-button>
+    </div>
+</md-dialog>

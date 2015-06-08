@@ -11,6 +11,7 @@ module.exports = function(db) {
             index: true,
             default: 'APR'
         },
+        causeAnnulation:String,
         login: {
             ajout: String,
             envoi: String,

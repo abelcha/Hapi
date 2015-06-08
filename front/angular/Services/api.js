@@ -38,8 +38,10 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvid
             verification: function(id, options) {
                 return $http.post("/api/intervention/" + id + "/verification", options);
             },
-            annulation: function(id) {
-                return $http.post("/api/intervention/" + id + "/annulation");
+            annulation: function(id, causeAnnulation) {
+                return $http.post("/api/intervention/" + id + "/annulation", {
+                    causeAnnulation: causeAnnulation
+                });
             },
             envoi: function(id, options) {
                 return $http.post("/api/intervention/" + id + "/envoi", options);

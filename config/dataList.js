@@ -180,5 +180,34 @@ module.exports = {
     }, {
         short_name: 'Soc.',
         long_name: 'Société'
+    }],
+    causeAnnulation: [{
+        type: "client",
+        short_name: "PB_RES",
+        long_name: "Le problème est résolu"
+    }, {
+        type: "client",
+        short_name: "PX_TP_CHR",
+        long_name: "Le prix est trop cher"
+    }, {
+        type: "client",
+        short_name:"CLI_REP_P",
+        long_name: "Le client ne répond pas"
+    }, {
+        type: "sous-traitant",
+        short_name:"SST_P_DSP",
+        long_name: "Le sous-traitant n'est pas disponible"
+    }, {
+        type: "sous-traitant",
+        short_name:"SST_REP_PS",
+        long_name: "Le sous-traitant ne répond pas"
+    }, {
+        type: "sous-traitant",
+        short_name:"SST_SHT_PS",
+        long_name: "Le ne souhaite pas faire l'intervention"
+    }, {
+        type: "sous-traitant",
+        short_name:"SST_PS_APL",
+        long_name: "Le sous-traitant n'a jamais appelé le client"
     }]
 }

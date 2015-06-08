@@ -1,4 +1,4 @@
-angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', function($mdDialog, edisonAPI) {
+angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', 'config', function($mdDialog, edisonAPI, config) {
     "use strict";
 
     return {
@@ -65,6 +65,19 @@ angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', function($
                     }
                 },
                 templateUrl: '/DialogTemplates/choiceText.html',
+            });
+        },
+        getCauseAnnulation: function(cb) {
+            $mdDialog.show({
+                controller: function($scope, config) {
+                    $scope.causeAnnulation = config.causeAnnulation;
+                    $scope.answer = function(resp) {
+                        $mdDialog.hide();
+                        if (resp)
+                            return cb(resp);
+                    }
+                },
+                templateUrl: '/DialogTemplates/causeAnnulation.html',
             });
         },
         getText: function(options, cb) {
