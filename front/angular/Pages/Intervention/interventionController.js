@@ -78,6 +78,13 @@ var InterventionCtrl = function($rootScope, $window, $scope, $location, $routePa
     }
 
 
+    $scope.envoiDevis = function() {
+        actionIntervention.envoiDevis(_this.data, function(err, res) {
+            if (!err)
+                _this.data.date.envoiFacture = new Date();
+            console.log(res);
+        })
+    }
     $scope.recapArtisan = function(sst) {
         edisonAPI.artisan.lastInters(sst.id)
             .success(dialog.recap);

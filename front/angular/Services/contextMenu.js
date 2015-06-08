@@ -58,14 +58,14 @@ angular.module('edison').factory('contextMenu', ['$location', 'edisonAPI', 'acti
         title: "Envoyer",
         click: actionIntervention.envoi,
         hide: function(inter) {
-            return inter.s !== "A Programmer" && inter.s !== 'Annulé'
+            return inter.s !== "APR" && inter.s !== 'ANN'
         }
     }, {
         hidden: false,
         title: "Vérifier",
         click: actionIntervention.verification,
         hide: function(inter) {
-            return inter.s !== "A Vérifier" && inter.s !== 'Envoyé'
+            return inter.s !== "AVR" && inter.s !== 'ENV'
         }
     }, {
         hidden: false,

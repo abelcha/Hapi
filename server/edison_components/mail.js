@@ -1,11 +1,14 @@
-var postmark = require("postmark");
 var ejs = require('ejs');
 var fs = require("fs");
 
 
 
 var Mail = function(params) {
-    this.client = new postmark.Client("b2c424bc-af2b-4175-b76f-c863bb3915c3");
+
+    var postmark = require("postmark");
+    var key = requireLocal('config/_keys');
+
+    this.client = new postmark.Client(key.postmark);
 }
 
 Mail.prototype.renderTemplate = function(templateName, args) {
@@ -54,6 +57,28 @@ Mail.prototype.sendFacture = function(options) {
             Attachments:  [{
                 Content: options.file.toString('base64'),
                 Name: "Facture",
+                ContentType: "application/pdf"
+            }]
+        }, function(err, resp) {
+            if (err)
+                return reject(err);
+            resolve(resp)
+        })
+    });
+}
+
+Mail.prototype.sendDevis = function(options) {
+    //title, htmlTemplate, mailText
+    var _this = this;
+    return new Promise(function(resolve, reject) {
+        _this.client.sendEmail({
+            From: "intervention@edison-services.fr",
+            To: "abel@chalier.me",
+            Subject: "Devis de l'intervention " + options.data.id,
+            HtmlBody: options.text,
+            Attachments:  [{
+                Content: options.file.toString('base64'),
+                Name: "Devis",
                 ContentType: "application/pdf"
             }]
         }, function(err, resp) {

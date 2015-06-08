@@ -1,4 +1,4 @@
-angular.module('edison', ['ngMaterial', 'lumx', 'ngAnimate', 'xeditable', 'ngDialog', 'btford.socket-io', 'ngFileUpload', 'pickadate', 'ngRoute', 'ngResource', 'ngTable', 'ngMap'])
+angular.module('edison', ['browserify', 'ngMaterial', 'lumx', 'ngAnimate', 'xeditable', 'ngDialog', 'btford.socket-io', 'ngFileUpload', 'pickadate', 'ngRoute', 'ngResource', 'ngTable', 'ngMap'])
     .config(function($mdThemingProvider) {
         "use strict";
         $mdThemingProvider.theme('default')
@@ -398,6 +398,28 @@ angular.module('edison')
         function($window, LxNotificationService, dialog, edisonAPI) {
             "use strict";
             return {
+                envoiDevis: function(inter, cb) {
+                    dialog.getText({
+                        title: "Texte envoi devis",
+                        text: _.template("Voici le devis de l'inter {{id}}\nEdison Services")(inter)
+                    }, function(text) {
+                        edisonAPI.intervention.envoiDevis(inter.id, {
+                            text: text,
+                            data: inter,
+                        }).success(function(resp) {
+                            var validationMessage = _.template("le devis de l'intervention {{id}} à été envoyé")(inter);
+                            LxNotificationService.success(validationMessage);
+                            if (typeof cb === 'function')
+                                cb(null, resp);
+                        }).catch(function(err) {
+                            var validationMessage = _.template("L'envoi du devis {{id}} à échoué")(inter)
+                            LxNotificationService.error(validationMessage);
+                            if (typeof cb === 'function')
+                                cb(err);
+                        })
+
+                    })
+                },
                 envoiFacture: function(inter, cb) {
                     dialog.envoiFacture(inter, function(text, acquitte, date) {
                         edisonAPI.intervention.envoiFacture(inter.id, {
@@ -555,13 +577,15 @@ angular.module('edison').factory('Address', function() {
         this.v = a[2] && a[2].short_name;
     }
 
-    Address.prototype.getAddressProprieties = function(address) {
+    Address.prototype.getAddressProprieties = function(address) { 
         this.n = address.n;
         this.r = address.r;
         this.cp = address.cp;
         this.v = address.v;
         this.lt = address.lt;
         this.lg = address.lg;
+        this.code = address.code;
+        this.etage = address.etage;
     }
 
     Address.prototype.isLocalityAddress = function(place) {
@@ -632,6 +656,9 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvid
             },
             envoiFacture: function(id, options) {
                 return $http.post("/api/intervention/" + id + "/envoiFacture", options);
+            },
+             envoiDevis: function(id, options) {
+                return $http.post("/api/intervention/" + id + "/envoiDevis", options);
             },
         },
         artisan: {
@@ -779,57 +806,10 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvid
     }
 }]);
 
-angular.module('edison').factory('config', [function() {
+/*angular.module('edison').factory('config', [function() {
     "use strict";
+    console.log(window.config)
     var config = {};
-
-    config.filters = {
-        all: {
-            short: 'all',
-            long: 'Toutes les Inters',
-            url: ''
-        },
-        envoye: {
-            short: 'env',
-            long: 'Envoyé',
-            url: '/envoye'
-        },
-        aVerifier: {
-            short: 'avr',
-            long: 'A Vérifier',
-            url: '/aVerifier'
-        },
-        aProgrammer: {
-            short: 'apr',
-            long: 'A Programmer',
-            url: '/aProgrammer'
-        },
-        clientaRelancer: {
-            short: 'carl',
-            long: 'Client A Relancer',
-            url: '/clientaRelancer'
-        },
-        clientaRelancerUrgent: {
-            short: 'Ucarl',
-            long: 'Client A Relancer Urgent',
-            url: '/clientaRelancerUrgent'
-        },
-        sstaRelancer: {
-            short: 'sarl',
-            long: 'SST A Relancer',
-            url: '/sstaRelancer'
-        },
-        sstaRelancerUrgent: {
-            short: 'Usarl',
-            long: 'SST A Relancer Urgent',
-            url: '/sstaRelancerUrgent'
-        },
-        factureaEnvoyer: {
-            short: 'fact',
-            long: 'Facture à envoyer',
-            url: '/factureaEnvoyer'
-        },
-    }
 
     config.civilites = [{
         short_name: 'M.',
@@ -1054,7 +1034,7 @@ angular.module('edison').factory('config', [function() {
     return config;
 
 }]);
-
+*/
 angular.module('edison').factory('contextMenu', ['$location', 'edisonAPI', 'actionIntervention', '$window', 'dialog', function($location, edisonAPI, actionIntervention, $window, dialog) {
     "use strict";
     var content = {};
@@ -1115,14 +1095,14 @@ angular.module('edison').factory('contextMenu', ['$location', 'edisonAPI', 'acti
         title: "Envoyer",
         click: actionIntervention.envoi,
         hide: function(inter) {
-            return inter.s !== "A Programmer" && inter.s !== 'Annulé'
+            return inter.s !== "APR" && inter.s !== 'ANN'
         }
     }, {
         hidden: false,
         title: "Vérifier",
         click: actionIntervention.verification,
         hide: function(inter) {
-            return inter.s !== "A Vérifier" && inter.s !== 'Envoyé'
+            return inter.s !== "AVR" && inter.s !== 'ENV'
         }
     }, {
         hidden: false,
@@ -1187,13 +1167,15 @@ angular.module('edison').factory('dataProvider', ['socket', '$rootScope', 'confi
 
     dataProvider.prototype.refreshInterventionListFilter = function(params, hash) {
         console.time("interFilter")
+        console.log(params)
         this.interventionListFiltered = this.interventionList;
         if (this.interventionList && params) {
-            if (params.fltr && config.filters[params.fltr] || !params.fltr && hash) {
+            var filterParam = config.filters().get(params.fltr);
+            if (params.fltr && filterParam || !params.fltr && hash) {
                 this.interventionListFiltered = _.filter(this.interventionList, function(e) {
-                    return (!params.fltr || e.fltr[config.filters[params.fltr].short]) &&
+                    return (!params.fltr || e.fltr[filterParam.short_name]) &&
                     (!hash || e.t === hash) &&
-                    (!params.d || e.fltr.d[params.d])
+                    ((!params.d) || (e.fltr.d && e.fltr.d[params.d]))
                 })
             } else if (params.artisanID) {
                 var artisanID = parseInt(params.artisanID);
@@ -1980,6 +1962,13 @@ var InterventionCtrl = function($rootScope, $window, $scope, $location, $routePa
     }
 
 
+    $scope.envoiDevis = function() {
+        actionIntervention.envoiDevis(_this.data, function(err, res) {
+            if (!err)
+                _this.data.date.envoiFacture = new Date();
+            console.log(res);
+        })
+    }
     $scope.recapArtisan = function(sst) {
         edisonAPI.artisan.lastInters(sst.id)
             .success(dialog.recap);
@@ -2190,8 +2179,7 @@ angular.module('edison').controller('InterventionsController', function(tabConta
     if ($scope.recap) {
         $scope.tab.setTitle("Recap@" + $routeParams.artisanID)
     } else {
-
-        var title = $routeParams.fltr ? config.filters[$routeParams.fltr].long : 'Interventions';
+        var title = $routeParams.fltr ? config.filters().get($routeParams.fltr).long_name : 'Interventions';
         $scope.tab.setTitle(title, $location.hash());
     }
     $scope.api = edisonAPI;
@@ -2279,4 +2267,4 @@ angular.module('edison').controller('InterventionsController', function(tabConta
 
 });
 
-//# sourceMappingURL=front/assets/all.js.map
+//# sourceMappingURL=all.js.map

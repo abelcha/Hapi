@@ -73,6 +73,8 @@ module.exports = function(db) {
                     type: String,
                     required: true
                 },
+                etage: String,
+                code: String,
                 lt: String,
                 lg: String,
             },

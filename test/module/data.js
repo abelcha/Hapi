@@ -4,7 +4,7 @@ module.exports = {
         createFacture: function(options) {
             var faker = require('faker');
             var _ = require('lodash');
-            var edconfig = require(process.cwd() + '/server/edison_components/config.js')
+            var edconfig = require(process.cwd() + '/config/dataList.js')
             faker.locale = "fr";
             return {
                 tva: _.random(2) ? 20 : 0,
@@ -24,11 +24,11 @@ module.exports = {
         createValid: function(options) {
             var faker = require('faker');
             var _ = require('lodash');
-            var edconfig = require(process.cwd() + '/server/edison_components/config.js')
+            var edconfig = require(process.cwd()+ '/config/dataList.js')
             faker.locale = "fr";
             var rtn = {
                 client: {
-                    civilite: edconfig.civilitesTab[_.random(2)],
+                    civilite: edconfig.civilites[_.random(2)],
                     prenom: faker.name.firstName(),
                     nom: faker.name.lastName(),
                     address: {
@@ -43,7 +43,7 @@ module.exports = {
                         tel1: faker.phone.phoneNumber()
                     }
                 },
-                categorie: edconfig.categoriesAKV[_.random(6)].s,
+                categorie: edconfig.categories[_.random(6)].short_name,
                 description: faker.lorem.sentence(),
                 modeReglement: edconfig.modeDeReglements[_.random(2)].short_name,
             }

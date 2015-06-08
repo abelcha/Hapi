@@ -3,6 +3,28 @@ angular.module('edison')
         function($window, LxNotificationService, dialog, edisonAPI) {
             "use strict";
             return {
+                envoiDevis: function(inter, cb) {
+                    dialog.getText({
+                        title: "Texte envoi devis",
+                        text: _.template("Voici le devis de l'inter {{id}}\nEdison Services")(inter)
+                    }, function(text) {
+                        edisonAPI.intervention.envoiDevis(inter.id, {
+                            text: text,
+                            data: inter,
+                        }).success(function(resp) {
+                            var validationMessage = _.template("le devis de l'intervention {{id}} à été envoyé")(inter);
+                            LxNotificationService.success(validationMessage);
+                            if (typeof cb === 'function')
+                                cb(null, resp);
+                        }).catch(function(err) {
+                            var validationMessage = _.template("L'envoi du devis {{id}} à échoué")(inter)
+                            LxNotificationService.error(validationMessage);
+                            if (typeof cb === 'function')
+                                cb(err);
+                        })
+
+                    })
+                },
                 envoiFacture: function(inter, cb) {
                     dialog.envoiFacture(inter, function(text, acquitte, date) {
                         edisonAPI.intervention.envoiFacture(inter.id, {

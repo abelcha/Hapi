@@ -67,7 +67,7 @@ describe('Login', function() {
             .end(function(err, res) {
                 expect(res).to.have.status(200);
                 expect(res.redirects[0]).to.endsWith('/test123')
-                expect(res.req).to.have.cookie('edison');
+                expect(res.req).to.have.cookie('EDISON-SESSION');
                 done();
             })
     });

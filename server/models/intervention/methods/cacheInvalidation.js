@@ -1,6 +1,7 @@
 'use strict';
+var config = requireLocal('config/dataList')
 var async = require("async");
-var ms = require('milliseconds');
+var FiltersFactory = requireLocal('config/FiltersFactory');
 var _ = require("lodash")
 var ReadWriteLock = require('rwlock');
 var lock = new ReadWriteLock();
@@ -25,72 +26,23 @@ module.exports = function(schema) {
     ].join(' ');
 
 
-    var getFltr = function(inter, dateInter) {
-        var now = Date.now();
-        var fltr = {};
 
-        if (inter.status === 'AVR') {
-            fltr.avr = 1;
-            if (inter.reglementSurPlace === false)
-                fltr.fact = 1;
-            if (now > dateInter + ms.hours(1)) {
-                fltr.avr = 1;
-                if (now > dateInter + ms.weeks(1)) {
-                    fltr.Uavr = 1;
-                }
-            }
-        }
-        if (inter.status.startsWith('ATT') && !inter.date.paiementCLI && now > dateInter + ms.weeks(2)) {
-            if (inter.reglementSurPlace) {
-                fltr.sarl = 1;
-            } else {
-                fltr.carl = 1;
-            }
-            if (now > dateInter + ms.months(1)) {
-                if (inter.reglementSurPlace) {
-                    fltr.Usarl = 1;
-                } else {
-                    fltr.Ucarl = 1
-                }
-            }
-        }
-        if (inter.status === 'ENV' || inter.status === 'AVR')
-            fltr.env = 1;
-        if (inter.status === 'APR') {
-            fltr.apr = 1;
-        }
-        if (inter.sav && inter.sav.length) {
-            fltr.sav = 1;
-            if (inter.sav[inter.sav.length - 1].status == "ENV")
-                fltr.savEnc = 1;
-        }
-        //DateFilters
-        fltr.d = {};
-        if (inter.date.ajout > edison.utils.date.today()) {
-            fltr.d.t = 1;
-        }
-        return fltr;
-    }
 
 
     var translate = function(e) {
-        //console.log(e.id);
-        //console.log(e.status)
-        var dateInter = (new Date(e.date.intervention)).getTime();
-        if (e.status === "ENV" && Date.now() > dateInter) {
+        if (e.status === "ENV" && Date.now() > (new Date(e.date.intervention)).getTime()) {
             e.status = 'AVR';
         }
-        if (e.status === 'ATT')
-            e.status += (e.reglementSurPlace ? 'S' : 'C');
+        var fltr = FiltersFactory(e).create();
         return {
-            fltr: getFltr(e, dateInter),
+            fltr: fltr,
             t: e.login.ajout,
             id: e.id,
             ai: e.artisan.id,
-            s: edison.config.etatsKV[e.status].n,
-            sx: edison.config.etatsKV[e.status].c,
-            c: edison.config.categoriesKV[e.categorie].n,
-            cx: edison.config.categoriesKV[e.categorie].c,
+            s: e.status,
+            sx: config.etats[e.status].long_name,
+            c: e.categorie,
+            cx: config.categories[e.categorie].long_name,
             n: e.client.civilite + ' ' + e.client.nom,
             a: e.artisan.nomSociete ||  "",
             pa: e.prixAnnonce,

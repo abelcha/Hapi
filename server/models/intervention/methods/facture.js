@@ -40,6 +40,24 @@ module.exports = function(schema) {
         })
     }
 
+
+    schema.statics.getDevis = function(options) {
+        return edison.pdf({
+            html: options.html,
+            template: 'facture',
+            args: {
+                data: options.data,
+                logo: edison.logo,
+                acquitte: options.acquitte,
+                title: 'Devis',
+                info: getInfo(options.data),
+                date: moment(options.date || options.data.date.ajout ||  new Date).format('LL')
+            },
+            buffer: true
+        })
+    }
+
+
     schema.statics.facturePreview = function(req, res) {
         var _this = this;
         req.body.html = false
@@ -49,7 +67,7 @@ module.exports = function(schema) {
                     data: doc,
                     html: true,
                     date: req.body.date,
-                    acquitte: true
+                    acquitte: false
                 })
                 .then(function(result) {
                     if (!true)

@@ -47,6 +47,9 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvid
             envoiFacture: function(id, options) {
                 return $http.post("/api/intervention/" + id + "/envoiFacture", options);
             },
+             envoiDevis: function(id, options) {
+                return $http.post("/api/intervention/" + id + "/envoiDevis", options);
+            },
         },
         artisan: {
             list: function(options) {

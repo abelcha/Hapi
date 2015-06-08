@@ -2,7 +2,9 @@
 
 var kue = require('kue');
 var url = require('url');
-
+global.requireLocal = function(pth) {
+    return require(process.cwd() + '/' + pth)
+}
 
 global.envProd = process.env.NODE_ENV === "production";
 global.envDev = process.env.NODE_ENV === "developement";
@@ -10,7 +12,8 @@ var dep = require(process.cwd() + '/server/loadDependencies');
 global.edison = dep.loadDir(process.cwd() + "/server/edison_components");
 global.redis = edison.redis();
 global.db = edison.db();
-global.sms = new edison.mobyt(edison.config.mobytID, edison.config.mobytPASS);
+var key = requireLocal('config/_keys');
+global.sms = new edison.mobyt(key.mobyt.login,key.mobyt.pass);
 global.isWorker = true;
 
 if (envProd) {

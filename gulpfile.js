@@ -22,13 +22,12 @@ gulp.task('scripts', function() {
         .pipe(jshint.reporter('jshint-stylish'))
         .pipe(sourcemaps.init())
         .pipe(concat('all.js'))
-        .pipe(sourcemaps.write('./front/assets/'))
+        .pipe(sourcemaps.write('.'))
         .pipe(gulp.dest('front/assets/dist'));
 });
 
-// add custom browserify options here
 var customOpts = {
-    entries: glob.sync('./config/*.js'),
+    entries: glob.sync('config/[^_]*.js'),
     debug: true
 };
 var opts = assign({}, watchify.args, customOpts);
@@ -37,20 +36,23 @@ var b = watchify(browserify(opts));
 // add transformations here
 // i.e. b.transform(coffeeify);
 
+
 var bundle = function() { // so you can run `gulp js` to build the file
     return b.bundle()
         // log errors if they happen
         .on('error', gutil.log.bind(gutil, 'Browserify Error'))
-        .pipe(source('bundle.js'))
+        .pipe(source('.'))
         // optional, remove if you don't need to buffer file contents
         .pipe(buffer())
         // optional, remove if you dont want sourcemaps
         .pipe(sourcemaps.init({
             loadMaps: true
+
         })) // loads map from browserify file
         // Add transformation tasks to the pipeline here.
-        .pipe(sourcemaps.write('./assets/dist')) // writes .map file
-        .pipe(gulp.dest('./assets/dist/config.js'));
+        .pipe(sourcemaps.write('../bundle')) // writes .map file
+        .pipe(gulp.dest('./front/assets/dist/bundle.js'));
+
 }
 
 gulp.task('bundle', bundle);

@@ -34,13 +34,15 @@ angular.module('edison').factory('Address', function() {
         this.v = a[2] && a[2].short_name;
     }
 
-    Address.prototype.getAddressProprieties = function(address) {
+    Address.prototype.getAddressProprieties = function(address) { 
         this.n = address.n;
         this.r = address.r;
         this.cp = address.cp;
         this.v = address.v;
         this.lt = address.lt;
         this.lg = address.lg;
+        this.code = address.code;
+        this.etage = address.etage;
     }
 
     Address.prototype.isLocalityAddress = function(place) {

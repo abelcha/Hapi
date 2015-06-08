@@ -36,6 +36,14 @@
      prenom: 'jeremie',
      activated: false
  }, {
+     login: 'laurent_x',
+     oldLogin: 'laurent',
+     service: 'INTERVENTION',
+     root: false,
+     nom: 'Clement',
+     prenom: 'xxx',
+     activated: false
+ }, {
      login: 'tayeb_g',
      oldLogin: 'tayeb',
      service: 'INTERVENTION',

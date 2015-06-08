@@ -1,9 +1,10 @@
 var uuid = require('uuid');
+var key = requireLocal('config/_keys');
 
 var Dropbox = function() {
   var DropboxAPI = require("dropbox")
   this.client = new DropboxAPI.Client({
-    token: edison.config.dropboxKEY
+    token: key.dropbox
   });
 }
 Dropbox.prototype.getFilename = function(p) {

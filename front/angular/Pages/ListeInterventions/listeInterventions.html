@@ -13,8 +13,8 @@
                     <td data-title="'Télépro'" sortable="'t'" filter="{ 't': 'text' }">
                         {{::inter.t}}
                     </td>
-                    <td data-title="'Cat.'" sortable="'c'" filter="{ 'c': 'text' }">
-                        <span style="width:80px" class="label {{::inter.cx}}">{{::inter.c}}</span>
+                    <td data-title="'Cat.'" sortable="'c'" filter="{ 'cx': 'text' }">
+                        <span style="width:80px" class="label {{::config.categories[inter.c].color}}">{{::config.categories[inter.c].long_name}}</span>
                     </td>
                     <td data-title="'Date Ajout'" sortable="'da'" filter="{ 'da': 'text' }">
                         {{::inter.da | date:"dd/MM/yy" || ""}} {{::inter.da | date:"HH'h'mm" || ""}}
@@ -36,8 +36,9 @@
                     <td data-title="'Prix'" sortable="'pa'" filter="{ 'pa': 'text' }">
                         {{::(inter.pa | number:2) || 0}} €
                     </td>
-                    <td data-title="'Status'" sortable="'s'" filter="{ 's': 'text' }">
-                        <span style="width:90px" class="label {{::inter.sx}}"> {{::inter.s}}</span>
+                    <td data-title="'Status'" sortable="'s'" filter="{ 'sx': 'text' }">
+                        <span style="width:90px" class="label {{::config.etats[inter.s].color}}"> 
+                        {{::config.etats[inter.s].long_name}}</span>
                     </td>
                 </tr>
                 <tr ng-if="expendedRow === inter.id" ng-repeat-end style="background-color:white!important">

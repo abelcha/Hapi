@@ -86,6 +86,18 @@
                                         </lx-text-field>
                                     </div>
                                 </div>
+                                <div class="form-group">
+                                          <div class="col-sm-2">
+                                        <lx-text-field label="Etage">
+                                            <input capitalize type="text" ng-model="vm.data.client.address.etage">
+                                        </lx-text-field>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <lx-text-field label="Code">
+                                            <input capitalize type="text" ng-model="vm.data.client.address.code">
+                                        </lx-text-field>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -471,7 +483,7 @@
                     <div class="card__actions">
                         <span style="float:left;width:50%">
                         <button ng-click="produits.previsualise(vm.data)" class="btn--no-conflicts btn--m btn--black btn--flat" lx-ripple>Prévisualiser</button>
-                        <button class="btn--no-conflicts btn--m btn--orange btn--flat" lx-ripple>Envoyer Devis</button>
+                        <button class="btn--no-conflicts btn--m btn--orange btn--flat" ng-click="envoiDevis();" lx-ripple>Envoyer Devis</button>
                         <button class="btn--no-conflicts btn--m btn--blue btn--flat" ng-click="envoiFacture();" lx-ripple>Envoyer Facture</button>
                         <button class="btn--no-conflicts btn--m btn--black btn--flat" lx-ripple></button>
                          </span>

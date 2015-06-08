@@ -1,54 +1,7 @@
-angular.module('edison').factory('config', [function() {
+/*angular.module('edison').factory('config', [function() {
     "use strict";
+    console.log(window.config)
     var config = {};
-
-    config.filters = {
-        all: {
-            short: 'all',
-            long: 'Toutes les Inters',
-            url: ''
-        },
-        envoye: {
-            short: 'env',
-            long: 'Envoyé',
-            url: '/envoye'
-        },
-        aVerifier: {
-            short: 'avr',
-            long: 'A Vérifier',
-            url: '/aVerifier'
-        },
-        aProgrammer: {
-            short: 'apr',
-            long: 'A Programmer',
-            url: '/aProgrammer'
-        },
-        clientaRelancer: {
-            short: 'carl',
-            long: 'Client A Relancer',
-            url: '/clientaRelancer'
-        },
-        clientaRelancerUrgent: {
-            short: 'Ucarl',
-            long: 'Client A Relancer Urgent',
-            url: '/clientaRelancerUrgent'
-        },
-        sstaRelancer: {
-            short: 'sarl',
-            long: 'SST A Relancer',
-            url: '/sstaRelancer'
-        },
-        sstaRelancerUrgent: {
-            short: 'Usarl',
-            long: 'SST A Relancer Urgent',
-            url: '/sstaRelancerUrgent'
-        },
-        factureaEnvoyer: {
-            short: 'fact',
-            long: 'Facture à envoyer',
-            url: '/factureaEnvoyer'
-        },
-    }
 
     config.civilites = [{
         short_name: 'M.',
@@ -273,3 +226,4 @@ angular.module('edison').factory('config', [function() {
     return config;
 
 }]);
+*/

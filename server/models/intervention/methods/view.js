@@ -15,6 +15,7 @@ module.exports = function(schema) {
             db.model('intervention').findOne({
                 id: id
             }).then(function(doc)  {
+
                 if (doc === null)
                     return reject('not found')
                 rtn = doc.toObject();
