@@ -103,8 +103,14 @@ module.exports = function(db) {
                 id: Number,
                 nomSociete: String,
             },
-            status: String,
             date: Date,
+        }],
+        litiges: [{
+            status: String,
+            description: String,
+            login: String,
+            date: Date,
+            regle: Boolean
         }],
         categorie: {
             type: String,

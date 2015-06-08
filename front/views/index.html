@@ -82,14 +82,14 @@
                         </a>
                     </li>
                     <li>
-                        <a href="/interventions" >
-                            <i class="menu-icon fa fa-circle-o"></i>
-                            <span class="mm-text">Toute les interventions</span>
-                        </a>
+                        <side-link fltr="all" icon="circle-o"></side-link>
                     </li>
                     <li class="mm-dropdown">
                         <a href="#"><i class="menu-icon fa fa-calendar"></i><span class="mm-text">Mes Interventions</span></a>
                         <ul>
+                            <li>
+                                <side-link fltr="all" today login="{{user.login}}" icon="th-list" total></side-link>
+                            </li>
                             <li><a tabindex="-1" href="/interventions?d=t#{{user.login}}"><i class="menu-icon fa fa-th-list"></i><span class="mm-text">Ajouté</span><span class="label label-success">{{userStats.total}}</span></a>
                             </li>
                             <li><a tabindex="-1" href="/interventions/envoye?d=t#{{user.login}}"><i class="menu-icon fa fa-th-list"></i><span class="mm-text">Envoyé</span><span class="label label-warning">{{userStats.status.ENV.total || 0}}</span></a>
@@ -108,7 +108,6 @@
                                     </li>
                                     <li><a tabindex="-1" href="/interventions/relanceArtisan#{{telepro.login}}"><i class="menu-icon fa fa-th-list"></i><span class="mm-text">Artisan à Relancer</span><span class="label label-success">{{telepro.sarl.total || 0}}</span></a>
                                     </li>
-                                  
                                     <li><a tabindex="-1" href="/interventions/factureaEnvoyer#{{telepro.login}}"><i class="menu-icon fa fa-th-list"></i><span class="mm-text">Facture à envoyer</span><span class="label label-success">{{telepro.fact.total || 0}}</span></a>
                                     </li>
                                 </ul>
@@ -129,7 +128,28 @@
                             </li>
                             <li><a tabindex="-1" href="/interventions/relanceClient#{{user.login}}"><i class="menu-icon fa fa-th-list"></i><span class="mm-text">A Relancer</span><span class="label label-success">{{userStats.carl.total || 0}}</span></a>
                             </li>
-                            
+                        </ul>
+                    </li>
+                    <li class="mm-dropdown">
+                        <a href="#"><i class="menu-icon fa fa-share"></i><span class="mm-text">Mes S.A.V</span></a>
+                        <ul>
+                            <li>
+                                <side-link fltr="sav" today login="{{user.login}}" icon="th-list" total="{{userStats.sav.total || 0}}"></side-link>
+                            </li>
+                             <li>
+                                <side-link fltr="savEnc" today login="{{user.login}}" icon="th-list" total="{{userStats.savEnc.total || 0}}"></side-link>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="mm-dropdown">
+                        <a href="#"><i class="menu-icon fa fa-bolt"></i><span class="mm-text">Mes Litiges</span></a>
+                        <ul>
+                            <li>
+                                <side-link fltr="lit" today login="{{user.login}}" icon="th-list" total="{{userStats.lit.total || 0}}"></side-link>
+                            </li>
+                             <li>
+                                <side-link fltr="litEnc" today login="{{user.login}}" icon="th-list" total="{{userStats.litEnc.total || 0}}"></side-link>
+                            </li>
                         </ul>
                     </li>
                 </ul>

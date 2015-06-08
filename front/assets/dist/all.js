@@ -318,80 +318,33 @@ angular.module('edison').directive('ngRightClick', function($parse) {
     };
 });
 
-angular.module('edison').filter('crlf', function() {
-	"use strict";
-    return function(text) {
-        return text.split(/\n/g).join('<br>');
-    };
-});
-
-angular.module('edison').filter('reverse', function() {
-    "use strict";
-    return function(items) {
-        if (!items)
-            return [];
-        return items.slice().reverse();
-    };
-});
-
-angular.module("edison").filter('tableFilter', function() {
-    "use strict";
-
-    var clean = function(str) {
-        return _.deburr(str).toLowerCase();
-    }
-
-    var compare = function(a, b) {
-        if (typeof a === "string") {
-            return clean(a).includes(b);
-        } else {
-            return clean(String(a)).startsWith(b);
-        }
-    }
-
-    return function(dataContainer, inputs) {
-        var rtn = [];
-        console.time('fltr')
-        inputs = _.mapValues(inputs, clean);
-        _.each(dataContainer, function(data) {
-            if (data.id) {
-                var psh = true;
-                _.each(inputs, function(input, k) {
-                    if (input && input.length > 0 && !compare(data[k], input)) {
-                        psh = false;
-                        return false
-                    }
-                });
-                if (psh === true) {
-                    rtn.push(data);
-                }
-            }
-        })
-        console.timeEnd('fltr')
-
-        return rtn;
-    }
-});
-
-angular.module('edison').filter('total', function() {
-    "use strict";
-    return function(obj) {
-        if (obj && obj.total) {
-        	return obj.total;
-        }
-        return "0";
-    };
-});
-
-angular.module('edison').filter('montant', function() {
-    "use strict";
-    return function(obj) {
-        if (obj && obj.montant) {
-        	return (obj.montant > 999 ? (obj.montant / 1000).toFixed(0) + 'k' : obj.montant.toFixed(0)) + '€';
-        }
-        return "0€";
-    };
-});
+ angular.module('edison').directive('sideLink', ['config', function(config) {
+     "use strict";
+     return {
+         restrict: 'AE',
+         replace: 'true',
+         template: '<a href="/interventions{{exFltr.url}}{{date}}{{exLogin}}" >' +
+             '            <i ng-if="icon" class = "menu-icon fa fa-{{icon}}"> </i>' +
+             '            <span class="mm-text">{{exFltr.long_name}}</span>' +
+             '			  <span ng-if="total" class="label label-success">{{total}}</span>' +
+             '        </a>',
+         scope: {
+             fltr: '@',
+             login: '@',
+             today: '@',
+             icon: '@',
+             total:'@'
+         },
+         link: function(scope, element, attrs) {
+             scope.exFltr = _.clone(config.filters().get({
+                 short_name: scope.fltr
+             }));
+             scope.exFltr.url = scope.exFltr.url.length ? "/" + scope.exFltr.url : scope.exFltr.url;
+             scope.exLogin = scope.login ? ("#" + scope.login) : '';
+             scope.date = scope.today ? "?d=t" : '';
+         }
+     };
+ }]);
 
 angular.module('edison')
     .factory('actionIntervention', ['$window', 'LxNotificationService', 'dialog', 'edisonAPI',
@@ -1167,15 +1120,16 @@ angular.module('edison').factory('dataProvider', ['socket', '$rootScope', 'confi
 
     dataProvider.prototype.refreshInterventionListFilter = function(params, hash) {
         console.time("interFilter")
-        console.log(params)
         this.interventionListFiltered = this.interventionList;
         if (this.interventionList && params) {
-            var filterParam = config.filters().get(params.fltr);
+            var filterParam = config.filters().get({
+                url: params.fltr
+            });
             if (params.fltr && filterParam || !params.fltr && hash) {
                 this.interventionListFiltered = _.filter(this.interventionList, function(e) {
                     return (!params.fltr || e.fltr[filterParam.short_name]) &&
-                    (!hash || e.t === hash) &&
-                    ((!params.d) || (e.fltr.d && e.fltr.d[params.d]))
+                        (!hash || e.t === hash) &&
+                        ((!params.d) || (e.fltr.d && e.fltr.d[params.d]))
                 })
             } else if (params.artisanID) {
                 var artisanID = parseInt(params.artisanID);
@@ -1854,6 +1808,81 @@ angular.module('edison').factory('taskList', ['dialog', 'edisonAPI', function(di
 }]);
 
 
+angular.module('edison').filter('crlf', function() {
+	"use strict";
+    return function(text) {
+        return text.split(/\n/g).join('<br>');
+    };
+});
+
+angular.module('edison').filter('reverse', function() {
+    "use strict";
+    return function(items) {
+        if (!items)
+            return [];
+        return items.slice().reverse();
+    };
+});
+
+angular.module("edison").filter('tableFilter', function() {
+    "use strict";
+
+    var clean = function(str) {
+        return _.deburr(str).toLowerCase();
+    }
+
+    var compare = function(a, b) {
+        if (typeof a === "string") {
+            return clean(a).includes(b);
+        } else {
+            return clean(String(a)).startsWith(b);
+        }
+    }
+
+    return function(dataContainer, inputs) {
+        var rtn = [];
+        console.time('fltr')
+        inputs = _.mapValues(inputs, clean);
+        _.each(dataContainer, function(data) {
+            if (data.id) {
+                var psh = true;
+                _.each(inputs, function(input, k) {
+                    if (input && input.length > 0 && !compare(data[k], input)) {
+                        psh = false;
+                        return false
+                    }
+                });
+                if (psh === true) {
+                    rtn.push(data);
+                }
+            }
+        })
+        console.timeEnd('fltr')
+
+        return rtn;
+    }
+});
+
+angular.module('edison').filter('total', function() {
+    "use strict";
+    return function(obj) {
+        if (obj && obj.total) {
+        	return obj.total;
+        }
+        return "0";
+    };
+});
+
+angular.module('edison').filter('montant', function() {
+    "use strict";
+    return function(obj) {
+        if (obj && obj.montant) {
+        	return (obj.montant > 999 ? (obj.montant / 1000).toFixed(0) + 'k' : obj.montant.toFixed(0)) + '€';
+        }
+        return "0€";
+    };
+});
+
 angular.module('edison').controller('ArtisanController', function(tabContainer, $location, $mdSidenav, $interval, ngDialog, LxNotificationService, edisonAPI, config, $routeParams, $scope, artisan) {
   "use strict";
   $scope.config = config;
@@ -1949,9 +1978,24 @@ var InterventionCtrl = function($rootScope, $window, $scope, $location, $routePa
                 description: resp,
                 regle: false
             })
-            console.log(_this.data.sav);
         })
     }
+    $scope.addLitige = function() {
+        dialog.getText({
+            title: "Description du Litige",
+            text: ""
+        }, function(resp) {
+            if (!_this.data.litiges)
+                _this.data.litiges = [];
+            _this.data.litiges.push({
+                date: new Date(),
+                login: $rootScope.user.login,
+                description: resp,
+                regle: false
+            })
+        })
+    }
+
 
     $scope.envoiFacture = function() {
         actionIntervention.envoiFacture(_this.data, function(err, res) {
@@ -2179,7 +2223,10 @@ angular.module('edison').controller('InterventionsController', function(tabConta
     if ($scope.recap) {
         $scope.tab.setTitle("Recap@" + $routeParams.artisanID)
     } else {
-        var title = $routeParams.fltr ? config.filters().get($routeParams.fltr).long_name : 'Interventions';
+        console.log(config.filters())
+        var title = $routeParams.fltr ? config.filters().get({
+            url: $routeParams.fltr
+        }).long_name : 'Interventions';
         $scope.tab.setTitle(title, $location.hash());
     }
     $scope.api = edisonAPI;

@@ -12,15 +12,16 @@ angular.module('edison').factory('dataProvider', ['socket', '$rootScope', 'confi
 
     dataProvider.prototype.refreshInterventionListFilter = function(params, hash) {
         console.time("interFilter")
-        console.log(params)
         this.interventionListFiltered = this.interventionList;
         if (this.interventionList && params) {
-            var filterParam = config.filters().get(params.fltr);
+            var filterParam = config.filters().get({
+                url: params.fltr
+            });
             if (params.fltr && filterParam || !params.fltr && hash) {
                 this.interventionListFiltered = _.filter(this.interventionList, function(e) {
                     return (!params.fltr || e.fltr[filterParam.short_name]) &&
-                    (!hash || e.t === hash) &&
-                    ((!params.d) || (e.fltr.d && e.fltr.d[params.d]))
+                        (!hash || e.t === hash) &&
+                        ((!params.d) || (e.fltr.d && e.fltr.d[params.d]))
                 })
             } else if (params.artisanID) {
                 var artisanID = parseInt(params.artisanID);

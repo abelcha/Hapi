@@ -7,7 +7,10 @@ angular.module('edison').controller('InterventionsController', function(tabConta
     if ($scope.recap) {
         $scope.tab.setTitle("Recap@" + $routeParams.artisanID)
     } else {
-        var title = $routeParams.fltr ? config.filters().get($routeParams.fltr).long_name : 'Interventions';
+        console.log(config.filters())
+        var title = $routeParams.fltr ? config.filters().get({
+            url: $routeParams.fltr
+        }).long_name : 'Interventions';
         $scope.tab.setTitle(title, $location.hash());
     }
     $scope.api = edisonAPI;

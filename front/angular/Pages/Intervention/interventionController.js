@@ -65,9 +65,24 @@ var InterventionCtrl = function($rootScope, $window, $scope, $location, $routePa
                 description: resp,
                 regle: false
             })
-            console.log(_this.data.sav);
         })
     }
+    $scope.addLitige = function() {
+        dialog.getText({
+            title: "Description du Litige",
+            text: ""
+        }, function(resp) {
+            if (!_this.data.litiges)
+                _this.data.litiges = [];
+            _this.data.litiges.push({
+                date: new Date(),
+                login: $rootScope.user.login,
+                description: resp,
+                regle: false
+            })
+        })
+    }
+
 
     $scope.envoiFacture = function() {
         actionIntervention.envoiFacture(_this.data, function(err, res) {

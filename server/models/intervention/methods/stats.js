@@ -130,7 +130,21 @@
                     }),
                     sav: statusDistinctFactory({
                         sav: {
-                            $ne: {
+                            $gt: {
+                                $size: 0
+                            }
+                        }
+                    }),
+                    litEnc: statusDistinctFactory({
+                        litiges: {
+                            $elemMatch:  {
+                                regle: false
+                            }
+                        }
+                    }),
+                    lit: statusDistinctFactory({
+                        litiges: {
+                            $gt: {
                                 $size: 0
                             }
                         }

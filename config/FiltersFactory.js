@@ -19,7 +19,7 @@ FiltersFactory = function(inter) {
 FiltersFactory.prototype.get = function(fltr) {
     var _this = this;
     for (var i = 0; i < _this.data.length; ++i) {
-        if (_this.data[i].url === fltr)
+        if (_this.data[i][Object.keys(fltr)] === fltr[Object.keys(fltr)])
             return _this.data[i];
     }
     return null;
@@ -79,8 +79,8 @@ FiltersFactory.prototype.data = [{
     }
 }, {
     short_name: 'att',
-    long_name: 'Paiement SST en attente',
-    url: 'paiementArtisanEnAttente',
+    long_name: 'Paiement en attente',
+    url: 'paiementEnAttente',
     match: {},
     cache: true,
     fn: function() {
@@ -139,6 +139,44 @@ FiltersFactory.prototype.data = [{
         return this.fltr.avr &&
             this.inter.reglementSurPlace === false;
             !this.inter.date.envoiFacture;
+    }
+}, {
+    short_name: 'sav',
+    long_name: 'Tous les S.A.V',
+    url: 'serviceApresVente',
+    match: {},
+    cache: true,
+    fn: function() {
+        return this.inter.sav && this.inter.sav.length > 0;
+    }
+}, {
+    short_name: 'savEnc',
+    long_name: 'S.A.V En Cours',
+    url: 'serviceApresVenteEnCours',
+    match: {},
+    cache: true,
+    fn: function() {
+        return this.inter.sav && this.inter.sav.length > 0 &&
+        this.inter.sav[this.inter.sav.length - 1].status === "ENV"
+    }
+}, {
+    short_name: 'lit',
+    long_name: 'Tous les Litige',
+    url: 'litiges',
+    match: {},
+    cache: true,
+    fn: function() {
+        return this.inter.sav && this.inter.sav.length > 0;
+    }
+}, {
+    short_name: 'litEnc',
+    long_name: 'Litiges non résolus',
+    url: 'litigesEnCours',
+    match: {},
+    cache: true,
+    fn: function() {
+        return this.inter.litiges && this.inter.litiges.length > 0 &&
+        this.inter.litiges[this.inter.litiges.length - 1].regle === false
     }
 }]
 
