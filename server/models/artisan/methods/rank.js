@@ -32,20 +32,27 @@ module.exports = function(schema) {
 
   var mapRank = function(docs, i, noobs, req, cb) {
     if (i === 0) {
+      console.log("empty artisan array")
       this.rtn = [];
       this.x = -1;
     }
 
     if (!docs.length || i === docs.length - 1) {
+      console.log("end of shit")
       return cb(this.rtn)
     }
     if (!docs[i].obj.archive && (!req.query.categorie || docs[i].obj.categories.indexOf(req.query.categorie) >= 0)) {
+      console.log("artisan " + docs[i].obj.id + " is added")
       if (++this.x > req.query.limit) {
+      console.log("check limit")
         return cb(this.rtn)
       }
       if (docs[i].obj.absence && docs[i].obj.absence.start) {
+      console.log("useless abesnce check")
 
       }
+      console.log("push artisan " +docs[i].obj.id )
+
       this.rtn.push({
         disponible: docs[i].obj.disponible,
         distance: docs[i].dis.toFixed(1),
@@ -61,6 +68,8 @@ module.exports = function(schema) {
         nomSociete: docs[i].obj.nomSociete
       });
     }
+      console.log("recursive callback" )
+
     return mapRank(docs, i + 1, noobs, req, cb)
   }
 
