@@ -66,6 +66,7 @@ module.exports = function(schema) {
 
   schema.statics.rank = function(req, res) {
     var self = this;
+    console.log("rank")
     return new Promise(function(resolve, reject) {
       var point = {
         type: "Point",
@@ -75,11 +76,19 @@ module.exports = function(schema) {
         distanceMultiplier: 0.001,
         maxDistance: (parseFloat(req.query.maxDistance) || 50) / 0.001
       }
+    console.log("start geonear")
+
       db.model('artisan').geoNear(point, options, function(err, docs) {
         if (err)
           return resolve(err);
+    console.log("start getnoobs")
+
         getNoobs().then(function(noobs) {
+    console.log("start maprank")
+
           mapRank(docs, 0, noobs, req, function(rtn) {
+    console.log("resolve")
+
             resolve(rtn);
           })
         });
