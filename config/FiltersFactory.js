@@ -1,5 +1,5 @@
 var ms = require('milliseconds');
-
+var today = (new Date()).setHours(0);
 FiltersFactory = function(inter) {
     if (!(this instanceof FiltersFactory)) {
         return new FiltersFactory(inter);
@@ -66,7 +66,8 @@ FiltersFactory.prototype.data = [{
     },
     cache: true,
     fn: function() {
-        return this.inter.status === "ENV";
+        console.log((new Date(this.inter.date.ajout)).getTime() , (new Date()).setHours(0));
+        return this.inter.status === "ENV" && (new Date(this.inter.date.ajout)).getTime() > (new Date()).setHours(0);
     }
 }, {
     short_name: 'avr',
