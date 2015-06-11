@@ -17,6 +17,13 @@ FiltersFactory = function(inter) {
 
 }
 
+var today = function() {
+    var tdy = (new Date()).setHours(0);
+    console.log(tdy, new Date(tdy));
+    return  tdy
+}
+
+
 
 FiltersFactory.prototype.get = function(fltr) {
     var _this = this;
@@ -61,13 +68,14 @@ FiltersFactory.prototype.data = [{
     url: 'envoye',
     match: {
         'status': 'ENV',
-        'date.ajout': {
-            $gt: (new Date()).setHours(0)
-        },
+         'date.intervention': {
+            $gt: new Date(Date.now() + ms.hours(1))
+        }
     },
     cache: true,
     fn: function() {
-        return this.inter.status === "ENV";
+        //console.log((new Date(this.inter.date.ajout)).getTime() , (new Date()).setHours(0), (new Date(this.inter.date.ajout)).getTime() > (new Date()).setHours(0));
+        return this.inter.status === "ENV" && this.inter.date.intervention >  (Date.now() + ms.hours(1));
     }
 }, {
     short_name: 'avr',
@@ -103,7 +111,7 @@ FiltersFactory.prototype.data = [{
     long_name: 'Paiement en attente',
     url: 'paiementEnAttente',
     match: {},
-    stats:false,
+    stats: false,
     cache: true,
     fn: function() {
         return this.inter.status === "ATT";
@@ -114,7 +122,7 @@ FiltersFactory.prototype.data = [{
     long_name: 'Paiement SST en attente',
     url: 'paiementArtisanEnAttente',
     match: {},
-    stats:false,
+    stats: false,
     cache: true,
     fn: function() {
         return this.fltr.att &&
@@ -132,7 +140,7 @@ FiltersFactory.prototype.data = [{
             $lt: new Date(Date.now() - ms.weeks(2)),
         }
     },
-    stats:false,
+    stats: true,
     cache: true,
     fn: function() {
         return this.fltr.atts &&
@@ -143,7 +151,7 @@ FiltersFactory.prototype.data = [{
     long_name: 'Paiement Client en attente',
     url: 'paiementClientEnAttente',
     match: {},
-    stats:false,
+    stats: false,
     cache: true,
     fn: function() {
         return this.fltr.att &&

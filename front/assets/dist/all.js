@@ -383,7 +383,7 @@ angular.module('edison').directive('ngRightClick', function($parse) {
              '      <a href="/interventions{{exFltr.url}}{{date}}{{exLogin}}" >' +
              '            <i ng-if="icon" class = "menu-icon fa fa-{{icon}}"> </i>' +
              '            <span class="mm-text">{{title || exFltr.long_name}}</span>' +
-             '            <span ng-if="total" class="label label-success">{{total}}</span>' +
+             '            <span ng-if="total !== void(0)"class="label label-success">{{total}}</span>' +
              '        </a>' +
              '      </li>',
          scope: {

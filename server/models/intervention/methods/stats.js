@@ -31,6 +31,7 @@ module.exports = function(schema) {
         }
     }
 
+
     var cleanStatus = function(intersStatus) {
         intersStatus = _.indexBy(intersStatus, 'name')
         intersStatus = _.mapValues(intersStatus, function(e) {
