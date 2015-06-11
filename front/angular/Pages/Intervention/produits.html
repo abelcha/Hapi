@@ -1,0 +1,78 @@
+<div class="card">
+    <div class="p+">
+        <strong ng-click="displayPROD = !displayPROD" class="fs-headline display-block">Produits</strong>
+        <md-content class="autocomplete" style="width: 40%;margin-top: -22px;margin-left: 54%;float: left;" layout-padding layout="column" md-input-container flex>
+            <md-autocomplete ng-if="data.produits.length || displayPROD" md-autoselect md-selected-item-change="produits.add(selectedProduct)" md-selected-item="selectedProduct" md-search-text="produits.searchText" md-items="item in produits.search(produits.searchText)" md-item-text="item.title" placeholder="Entrer un produit">
+                <span md-highlight-text="produits.searchText"> {{item.title}}</span>
+            </md-autocomplete>
+        </md-content>
+        <span class="fs-subhead tc-black-2 display-block">Pour generation de factures/devis</span>
+        <div class="paragraph fs-body-1 mt+" ng-if="data.produits.length || displayPROD">
+            <div class="data-table-container">
+                <table class="data-table data-table--has-primary data-table--has-secondary">
+                    <thead>
+                        <tr>
+                            <th style="font-weight:bold">Référence</th>
+                            <th style="font-weight:bold">Désignation</th>
+                            <th style="font-weight:bold">Q</th>
+                            <th style="font-weight:bold">PU</th>
+                            <th style="font-weight:bold">Montant</th>
+                            <th style="font-weight:bold">Modif</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="products data-table__clickable-row" ng-repeat="p in data.produits">
+                            <td>
+                                <span>{{p.ref}}</span>
+                            </td>
+                            <td lx-ripple ng-click="produits.edit($index)" lx-tooltip="{{p.desc|crlf}}">
+                                <span>{{p.title}}</span>
+                            </td>
+                            <td>
+                                <span> 
+                                                     <a e-type="number" e-step="1" editable-text="p.quantite">{{p.quantite}}</a>
+                                                    </span>
+                            </td>
+                            <td>
+                                <span>
+                                                 <a e-type="number" editable-text="p.pu" e-step="0.01">{{p.pu}} €</a>
+                                                    </span>
+                            </td>
+                            <td>
+                                <span>{{p.pu * p.quantite}} €</span>
+                            </td>
+                            <td>
+                                <lx-dropdown position="right" from-top>
+                                    <button class="btn--no-conflicts btn--l btn--black btn--icon" lx-ripple lx-dropdown-toggle>
+                                        <i class="mdi mdi-dots-vertical"></i>
+                                    </button>
+                                    <lx-dropdown-menu>
+                                        <ul>
+                                            <li><a ng-click="produits.moveDown($index)" class="dropdown-link">Descendre</a></li>
+                                            <li><a ng-click="produits.moveTop($index)" class="dropdown-link">Monter</a></li>
+                                            <li><a ng-click="produits.remove($index)" class="dropdown-link">Supprimer</a></li>
+                                        </ul>
+                                    </lx-dropdown-menu>
+                                </lx-dropdown>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="card__actions" ng-if="data.produits.length || displayPROD">
+        <span style="float:left;width:50%">
+                        <button ng-click="produits.previsualise(data)" class="btn--no-conflicts btn--m btn--black btn--flat" lx-ripple>Prévisualiser</button>
+                        <button class="btn--no-conflicts btn--m btn--orange btn--flat" ng-click="envoiDevis();" lx-ripple>Envoyer Devis</button>
+                        <button class="btn--no-conflicts btn--m btn--blue btn--flat" ng-click="envoiFacture();" lx-ripple>Envoyer Facture</button>
+                        <button class="btn--no-conflicts btn--m btn--black btn--flat" lx-ripple></button>
+                         </span>
+        <span style="width: 110px;float: left;padding-bottom: 7px;">
+                         <select class="form-control" ng-model="data.tva" ng-options="tva.short_name as tva.long_name for tva in config.tva">
+                            </select></span>
+        <span style="float:right;width:25%">
+                             <button class="btn--no-conflicts btn--m btn--black btn--flat" lx-ripple> TOTAL HT : {{produits.total() | currency:''}} €  -  TTC : {{produits.total() * (vm.data.tva / 100 + 1) | currency:''}} €</button>
+                        </span>
+    </div>
+</div>

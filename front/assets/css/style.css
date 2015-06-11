@@ -123,15 +123,6 @@ td[variable-length] {
     background: #fff url("/img/arrowdown.gif") no-repeat 90% 73%;
 }
 
-.select-style.black >label {
-    color: rgba(255, 255, 255, .3);
-}
-
-.select-style.black {
-    color: white!important;
-    background: transparent url("/img/arrowdown.gif") no-repeat 90% 73%!important;
-}
-
 .select-style select {
     cursor: pointer;
     padding: 5px 0px;
@@ -148,7 +139,7 @@ td[variable-length] {
 .select-style > label {
     position: absolute;
     color: rgba(0, 0, 0, 0.56);
-    top: 36px;
+    top: 10px!important;
     pointer-events: none;
 }
 
@@ -279,3 +270,12 @@ label.text-field__label,
 .table-striped>tbody>tr:nth-of-type(odd) {
     background-color: rgba(232, 232, 232, 0.75)!important;
 }
+
+.text-field {
+    padding-top: 24px!important;
+}
+
+.text-field>label {
+    top: 0px!important;
+}
+

@@ -1,4 +1,4 @@
-angular.module('edison').controller('InterventionsController', function(tabContainer, $window, contextMenu, edisonAPI, dataProvider, $routeParams, $location, $scope, $q, $rootScope, $filter, config, ngTableParams, interventions, interventionsStats) {
+angular.module('edison').controller('InterventionsController', function($timeout, tabContainer, $window, contextMenu, edisonAPI, dataProvider, $routeParams, $location, $scope, $q, $rootScope, $filter, config, ngTableParams, interventions, interventionsStats) {
     "use strict";
     $scope.interventionsStats = interventionsStats.data;
     $scope.tab = tabContainer.getCurrentTab();
@@ -12,6 +12,7 @@ angular.module('edison').controller('InterventionsController', function(tabConta
             url: $routeParams.fltr
         }).long_name : 'Interventions';
         $scope.tab.setTitle(title, $location.hash());
+        $scope.tab.hash = $location.hash();
     }
     $scope.api = edisonAPI;
     $scope.config = config;
@@ -21,7 +22,7 @@ angular.module('edison').controller('InterventionsController', function(tabConta
         $scope.dataProvider.setInterventionList(interventions.data);
     }
 
-    $scope.dataProvider.refreshInterventionListFilter($routeParams, $location.hash());
+    $scope.dataProvider.refreshInterventionListFilter($routeParams, $scope.tab.hash);
 
     var tableParameters = {
         page: 1, // show first page
@@ -44,7 +45,7 @@ angular.module('edison').controller('InterventionsController', function(tabConta
     $scope.tableParams = new ngTableParams(tableParameters, tableSettings);
 
     $rootScope.$on('InterventionListChange', function() {
-        $scope.dataProvider.refreshInterventionListFilter($routeParams, $location.hash());
+        $scope.dataProvider.refreshInterventionListFilter($routeParams, $scope.tab.hash);
         $scope.tableParams.reload();
     })
 
@@ -82,15 +83,35 @@ angular.module('edison').controller('InterventionsController', function(tabConta
             });
         } else {
             if ($rootScope.expendedRow === inter.id) {
-                $rootScope.expendedRow = -1;
+                $("#expended").velocity({
+                    height: 0,
+                }, 200, function() {
+                    $scope.$apply(function() {
+                        $rootScope.expendedRow = -1;
+                    })
+                });
             } else {
+                $scope.expendedStyle = {
+                    height: 0,
+                    overflow: 'hidden'
+                }
+                $rootScope.expendedReady = false;
+                $rootScope.expendedRowData = {};
+                $rootScope.expendedRow = inter.id;
+                $timeout(function() {
+                    $("#expended").velocity({
+                        height: 194,
+                    }, 150, function() {
+                       // delete $scope.expendedStyle.height
+                    });
+                }, 50)
                 $q.all([
                     edisonAPI.intervention.get(inter.id),
                     edisonAPI.artisan.getStats(inter.ai)
                 ]).then(function(result) {
-                    $rootScope.expendedRow = inter.id;
                     $rootScope.expendedRowData = result[0].data;
                     $rootScope.expendedRowData.artisanStats = result[1].data
+                    $rootScope.expendedReady = true;
                 })
             }
         }

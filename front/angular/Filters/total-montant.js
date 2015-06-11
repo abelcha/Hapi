@@ -17,3 +17,5 @@ angular.module('edison').filter('montant', function() {
         return "0€";
     };
 });
+
+

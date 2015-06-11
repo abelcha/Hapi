@@ -466,7 +466,7 @@ module.exports = {
             color: 'deep-orange white-text'
         }
     },
-    categorieArray: function() {
+    categoriesArray: function() {
         var x = [];
         for (var i in this.categories)
             x.push(this.categories[i]);
@@ -608,24 +608,32 @@ module.exports = {
         long_name: "Le prix est trop cher"
     }, {
         type: "client",
-        short_name:"CLI_REP_P",
+        short_name: "CLI_REP_P",
         long_name: "Le client ne répond pas"
     }, {
         type: "sous-traitant",
-        short_name:"SST_P_DSP",
+        short_name: "SST_P_DSP",
         long_name: "Le sous-traitant n'est pas disponible"
     }, {
         type: "sous-traitant",
-        short_name:"SST_REP_PS",
+        short_name: "SST_REP_PS",
         long_name: "Le sous-traitant ne répond pas"
     }, {
         type: "sous-traitant",
-        short_name:"SST_SHT_PS",
+        short_name: "SST_SHT_PS",
         long_name: "Le ne souhaite pas faire l'intervention"
     }, {
         type: "sous-traitant",
-        short_name:"SST_PS_APL",
+        short_name: "SST_PS_APL",
         long_name: "Le sous-traitant n'a jamais appelé le client"
+    }, {
+        type: "partenariat",
+        short_name: "PS_SST",
+        long_name: "Il n'y a pas de sst dans la zone"
+    }, {
+        type: "partenariat",
+        short_name: "PS_SST",
+        long_name: "Il n'y a pas de sst dans la zone"
     }]
 }
 

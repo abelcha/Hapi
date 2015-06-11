@@ -11,7 +11,7 @@ module.exports = function(db) {
             index: true,
             default: 'APR'
         },
-        causeAnnulation:String,
+        causeAnnulation: String,
         login: {
             ajout: String,
             envoi: String,
@@ -25,7 +25,7 @@ module.exports = function(db) {
         comments: [{
             login: String,
             text: String,
-            date: String
+            date: Date
         }],
         date: {
             envoi: Date,
@@ -39,6 +39,11 @@ module.exports = function(db) {
             paiementCLI: Date,
             paiementSST: Date,
         },
+        historique: [{
+            date: Date,
+            login: String,
+            data: {},
+        }],
         client: { //
             civilite: {
                 type: String,

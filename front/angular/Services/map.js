@@ -6,10 +6,16 @@ angular.module('edison').factory('Map', function() {
     }
 
     Map.prototype.setCenter = function(address) {
+        var myLatLng = new google.maps.LatLng(address.lt, address.lg);
+        console.log("==>", window.map)
         this.center = address;
+        if (window.map)
+            window.map.setCenter(myLatLng)
     }
 
     Map.prototype.setZoom = function(value) {
+         if (window.map)
+            window.map.setZoom(value)
         this.zoom = value
     }
     Map.prototype.show = function() {

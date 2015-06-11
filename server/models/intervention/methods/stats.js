@@ -73,7 +73,12 @@
                 }
 
                 var todayOP = {
-
+                    env: statusDistinctFactory({
+                        'status': 'ENV',
+                        'date.ajout': {
+                            $gt: edison.utils.date.today(true)
+                        },
+                    }),
                     apr: statusDistinctFactory({
                         'status': 'APR',
                         'date.ajout': {

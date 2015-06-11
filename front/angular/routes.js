@@ -9,6 +9,10 @@ angular.module('edison', ['browserify', 'ngMaterial', 'lumx', 'ngAnimate', 'xedi
 
 angular.module('edison').controller('MainController', function(tabContainer, $scope, socket, config, dataProvider, $rootScope, $location, edisonAPI, taskList) {
     "use strict";
+    edisonAPI.getUser().success(function(result) {
+        $rootScope.user = result;
+        reloadStats();
+    });
     $scope.config = config;
     $rootScope.loadingData = true;
     $rootScope.$on('$routeChangeSuccess', function() {
@@ -24,6 +28,7 @@ angular.module('edison').controller('MainController', function(tabContainer, $sc
         title: 'Nouvelle Intervention',
         icon: 'plus'
     }];
+    $scope.dateFormat = moment().format('llll').slice(0, -5);
     $scope.tabs = tabContainer;
     $scope.$watch('tabs.selectedTab', function(prev, curr) {
         if (prev === -1 && curr !== -1) {
@@ -41,25 +46,23 @@ angular.module('edison').controller('MainController', function(tabContainer, $sc
                 $scope.userStats = _.find(result, function(e) {
                     return e.login === $scope.user.login;
                 });
-                $scope.interventionsStats = result;
+                $rootScope.interventionsStats = result;
             });
     };
 
-    edisonAPI.getUser().success(function(result) {
-        $rootScope.user = result;
-        reloadStats();
-    });
 
 
     $rootScope.$on('InterventionListChange', reloadStats);
 
-    var initTabs = function(baseUrl) {
+    var initTabs = function(baseUrl, baseHash) {
         $scope.tabsInitialized = true;
         $scope.tabs.loadSessionTabs(baseUrl)
             .then(function() {
                 $location.url(baseUrl);
             }).catch(function() {
-                $scope.tabs.addTab(baseUrl);
+                $scope.tabs.addTab(baseUrl, {
+                    hash: baseHash
+                });
             });
         return 0;
     };
@@ -78,10 +81,12 @@ angular.module('edison').controller('MainController', function(tabContainer, $sc
             return 0;
         }
         if (!$scope.tabsInitialized) {
-            return initTabs($location.path());
+            return initTabs($location.path(), $location.hash());
         }
         if ($location.path() !== "/intervention") {
-            $scope.tabs.addTab($location.path());
+            $scope.tabs.addTab($location.path(), {
+                hash: $location.hash()
+            });
         }
 
     });

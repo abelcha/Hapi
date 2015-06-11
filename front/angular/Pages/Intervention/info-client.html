@@ -1,0 +1,89 @@
+<div flex-item>
+    <div class="card">
+        <div class="p+">
+            <strong class="fs-headline display-block">Informations Client</strong>
+            <span class="fs-subhead tc-black-2 display-block">Informations Client</span>
+            <div class="paragraph pad-paragraph fs-body-1 mt+">
+                <div class="form-group">
+                    <div class="col-sm-2">
+                        <div class="select-style text-field">
+                            <select ng-model="client.civilite" ng-options="civ.short_name as civ.long_name for civ in config.civilites">
+                            </select>
+                            <label ng-class="{'selected' : client.civilite}">Civilité</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-5">
+                        <lx-text-field label="Nom">
+                            <input capitalize type="text" ng-model="client.nom">
+                        </lx-text-field>
+                    </div>
+                    <div class="col-sm-5">
+                        <lx-text-field label="{{client.civilite === 'Soc.' ? 'Nom Representant' : 'Prénom'}}">
+                            <input capitalize type="text" ng-model="client.prenom">
+                        </lx-text-field>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        <lx-text-field label="Téléphone 1">
+                            <input capitalize type="text" ng-model="client.telephone.tel1" ng-focus="tel1focus=true;" ng-blur="tel1focus=false;" ng-change="searchPhone(client.telephone.tel1)">
+                        </lx-text-field>
+                    </div>
+                    <div class="col-sm-3">
+                        <lx-text-field label="Téléphone 2">
+                            <input capitalize type="text" ng-model="client.telephone.tel2">
+                        </lx-text-field>
+                    </div>
+                </div>
+                <div class="form-group" ng-if="tel1focus" ng-show="tel1focus">
+                    <div class="col-sm-3">
+                        <p ng-repeat="loc in searchedPhone|limitTo:5">{{loc.e}} - {{loc.t}}</p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        <lx-text-field label="Email">
+                            <input capitalize type="text" ng-model="client.email">
+                        </lx-text-field>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-1">
+                        <lx-text-field label="Numero">
+                            <input capitalize type="text" ng-model="client.address.n">
+                        </lx-text-field>
+                    </div>
+                    <div class="col-sm-5">
+                        <lx-text-field label="Addresse">
+                            <input capitalize type="text" ng-model="client.address.r">
+                        </lx-text-field>
+                    </div>
+                    <div class="col-sm-2">
+                        <lx-text-field label="Code Postal">
+                            <input capitalize type="text" ng-model="client.address.cp">
+                        </lx-text-field>
+                    </div>
+                    <div class="col-sm-4">
+                        <lx-text-field label="Ville">
+                            <input capitalize type="text" ng-model="client.address.v">
+                        </lx-text-field>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-2">
+                        <lx-text-field label="Etage">
+                            <input capitalize type="text" ng-model="client.address.etage">
+                        </lx-text-field>
+                    </div>
+                    <div class="col-sm-2">
+                        <lx-text-field label="Code">
+                            <input capitalize type="text" ng-model="client.address.code">
+                        </lx-text-field>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

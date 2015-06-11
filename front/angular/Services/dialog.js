@@ -24,8 +24,9 @@ angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', 'config', 
         },
         recap: function(inters) {
             $mdDialog.show({
-                controller: function DialogController($scope, $mdDialog) {
+                controller: function DialogController($scope, $mdDialog, config) {
                     $scope.inters = inters;
+                    $scope.config = config
                     $scope.answer = function() {
                         $mdDialog.hide();
                     }

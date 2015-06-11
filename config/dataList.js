@@ -49,7 +49,7 @@ module.exports = {
             color: 'deep-orange white-text'
         }
     },
-    categorieArray: function() {
+    categoriesArray: function() {
         var x = [];
         for (var i in this.categories)
             x.push(this.categories[i]);

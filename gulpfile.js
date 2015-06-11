@@ -18,8 +18,8 @@ var jshint = require('gulp-jshint');
 // Concatenate & Minify JS
 gulp.task('scripts', function() {
     return gulp.src(['front/angular/*.js', 'front/angular/*/*.js', 'front/angular/*/*/*.js'])
-        .pipe(jshint('.jshintrc'))
-        .pipe(jshint.reporter('jshint-stylish'))
+       // .pipe(jshint('.jshintrc'))
+        //.pipe(jshint.reporter('jshint-stylish'))
         .pipe(sourcemaps.init())
         .pipe(concat('all.js'))
         .pipe(sourcemaps.write('.'))

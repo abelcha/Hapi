@@ -48,22 +48,20 @@
     <script src="/dist/all.js"></script>
 </head>
 
-<body ng-app="edison" ng-controller="MainController" style="  background: #f4f4f4 url(/img/mooning.png);" class="ng-cloak main-menu-fixed main-navbar-fixed theme-adminflare main-menu-animated">
-    <script>
-    var init = [];
-    </script>
+<body ng-app="edison" ng-controller="MainController" style="  background: #f4f4f4 url(/img/mooning.png);" class="ng-cloak main-menu-fixed main-navbar-fixed theme-adminflare main-menu-animated" ng-class="{'mmc' : sideBarIsOpen}">
     <div id="main-wrapper" ng-hide="loadingData">
         <div id="main-navbar" class="navbar navbar-inverse" role="navigation">
             <!-- Main menu toggle -->
-            <button type="button" id="main-menu-toggle"><i class="navbar-icon fa fa-bars icon"></i><span class="hide-menu-text">HIDE MENU</span></button>
+            <button type="button" id="main-menu-toggle" ng-click="sideBarIsOpen = !sideBarIsOpen">
+                <i class="navbar-icon fa fa-bars icon"></i><span class="hide-menu-text">HIDE MENU</span></button>
             <div class="navbar-inner">
                 <!-- Main navbar header -->
                 <!-- / .navbar-header -->
                 <div id="main-navbar-collapse" class="collapse navbar-collapse main-navbar-collapse">
                     <md-tabs md-selected="tabs.selectedTab" md-border-bottom style="  margin-left: 61px;">
-                        <a ng-repeat="tab in tabs._tabs" href="{{tab.url}}" ng-class="{'deleted' : tab.deleted}">
+                        <a ng-repeat="tab in tabs._tabs" href="{{tab.fullUrl}}" ng-class="{'deleted' : tab.deleted}">
                             <md-tab>
-                                <md-tab-label ng-click="checkTitle(tab)">{{tab.title || "•••"}} <span ng-if="tab.subTitle" style="color:black;font-size:8px">{{tab.subTitle}}</span> <i ng-click="tabIconClick($event, tab)" class="fa fa-remove" style="cursor:crosshair"></i></md-tab-label>
+                                <md-tab-label ng-click="checkTitle(tab)">{{tab.title || "•••"}} <span ng-if="tab.hash" style="color:black;font-size:8px">{{tab.hash|loginify}}</span> <i ng-click="tabIconClick($event, tab)" class="fa fa-remove" style="cursor:crosshair"></i></md-tab-label>
                             </md-tab>
                         </a>
                     </md-tabs>
@@ -72,18 +70,55 @@
             </div>
             <!-- / .navbar-inner -->
         </div>
-        <div id="main-menu" role="navigation">
-            <div id="main-menu-inner">
-                <ul class="navigation">
-                    <li>
-                        <side-link fltr="all" icon="circle-o"></side-link>
-                    </li>
-                    <li class="mm-dropdown">
+        <side-bar ng-if="user.login && interventionsStats">
+            <link fltr="all" icon="th-list"></link>
+            <drop-down title="Mes Interventions" icon="calendar">
+                <link fltr="all" icon="th-list" login="{{user.login}}"></link>
+                <link fltr="all" icon="th-list" title="{{dateFormat}}" login="{{user.login}}" today></link>
+                <link fltr="env" icon="th-list" login="{{user.login}}"></link>
+                <link fltr="apr" icon="th-list" login="{{user.login}}"></link>
+                <link fltr="avr" icon="th-list" login="{{user.login}}"></link>
+            </drop-down>
+            <drop-down title="Mes Collegues" icon="sitemap">
+                <drop-down title="{{telepro.login | loginify}}" ng-repeat="telepro in interventionsStats | orderBy:'-total'">
+                    <link fltr="all" icon="th-list" login="{{telepro.login}}"></link>
+                    <link fltr="all" icon="th-list" title="{{dateFormat}}" login="{{telepro.login}}" today></link>
+                    <link fltr="env" icon="th-list" login="{{telepro.login}}"></link>
+                    <link fltr="apr" icon="th-list" login="{{telepro.login}}"></link>
+                    <link fltr="fact" icon="th-list" login="{{telepro.login}}"></link>
+                    <link fltr="carl" icon="th-list" login="{{telepro.login}}"></link>
+                    <link fltr="sarl" icon="th-list" login="{{telepro.login}}"></link>
+                </drop-down>
+            </drop-down>
+            <drop-down title="Mes Sous-Traitants" icon="truck">
+                <link fltr="sarl" icon="th-list" login="{{user.login}}"></link>
+            </drop-down>
+            <drop-down title="Mes Clients" icon="truck">
+                <link fltr="fact" icon="th-list" login="{{user.login}}"></link>
+                <link fltr="carl" icon="th-list" login="{{user.login}}"></link>
+            </drop-down>
+            <drop-down icon="share" title="Mes S.A.V">
+                <link fltr="sav" icon="th-list" login="{{user.login}}"></link>
+                <link fltr="savEnc" icon="th-list" login="{{user.login}}"></link>
+            </drop-down>
+            <drop-down icon="bolt" title="Mes Litiges">
+                <link fltr="lit" icon="th-list" login="{{user.login}}"></link>
+                <link fltr="litEnc" icon="th-list" login="{{user.login}}"></link>
+            </drop-down>
+            <!--             <drop-down title="Mes Collegues" icon="sitemap">
+                <link fltr="carl" icon="th-list" login="{{user.login}}" count=""></link>
+                <link fltr="sarl" icon="th-list"></link>
+                <drop-down title="Mes Sav" icon="sitemap">
+                    <link fltr="sav" icon="th-list"></link>
+                    <link fltr="savEnc" icon="th-list"></link>
+                </drop-down>
+                <link fltr="carl" icon="th-list" login="{{user.login}}" count=""></link>
+                <link fltr="sav" icon="th-list"></link>
+            </drop-down> -->
+            <!--  <li class="mm-dropdown">
                         <a href="#"><i class="menu-icon fa fa-calendar"></i><span class="mm-text">Mes Interventions</span></a>
                         <ul>
-                            <li>
-                                <side-link fltr="all" today login="{{user.login}}" icon="th-list" total></side-link>
-                            </li>
+                            <side-link fltr="all" today login="{{user.login}}" icon="th-list" total></side-link>
                             <li><a tabindex="-1" href="/interventions?d=t#{{user.login}}"><i class="menu-icon fa fa-th-list"></i><span class="mm-text">Ajouté</span><span class="label label-success">{{userStats.total}}</span></a>
                             </li>
                             <li><a tabindex="-1" href="/interventions/envoye?d=t#{{user.login}}"><i class="menu-icon fa fa-th-list"></i><span class="mm-text">Envoyé</span><span class="label label-warning">{{userStats.status.ENV.total || 0}}</span></a>
@@ -91,70 +126,60 @@
                             <li><a tabindex="-1" href="/interventions/aProgrammer?d=t#{{user.login}}"><i class="menu-icon fa fa-th-list"></i><span class="mm-text">A Programmer</span><span class="label label-warning">{{userStats.status.APR.total || 0}}</span></a>
                             </li>
                         </ul>
-                    </li>
-                    <li class="mm-dropdown">
-                        <a href="#"><i class="menu-icon fa fa-sitemap"></i><span class="mm-text">Mes Collegues</span><span class="badge badge-primary">{{interventionsStats.length}}</span></a>
+                    </li> -->
+            <!--        <li class="mm-dropdown">
+                <a href="#"><i class="menu-icon fa fa-sitemap"></i><span class="mm-text">Mes Collegues</span><span class="badge badge-primary">{{interventionsStats.length}}</span></a>
+                <ul>
+                    <li class="mm-dropdown" ng-repeat="telepro in interventionsStats | orderBy:'-total' ">
+                        <a tabindex="-1" href="#"><span class="mm-text">{{telepro.login.slice(0, 1).toUpperCase()}}{{telepro.login.slice(1, -2)}}</span><span class="label label-primary"></span></a>
                         <ul>
-                            <li class="mm-dropdown" ng-repeat="telepro in interventionsStats | orderBy:'-total' ">
-                                <a tabindex="-1" href="#"><span class="mm-text">{{telepro.login.slice(0, 1).toUpperCase()}}{{telepro.login.slice(1, -2)}}</span><span class="label label-primary"></span></a>
-                                <ul>
-                                    <li><a tabindex="-1" href="/interventions/relanceClient#{{telepro.login}}"><i class="menu-icon fa fa-th-list"></i><span class="mm-text">Client à Relancer</span><span class="label label-success">{{telepro.carl.total || 0}}</span></a>
-                                    </li>
-                                    <li><a tabindex="-1" href="/interventions/relanceArtisan#{{telepro.login}}"><i class="menu-icon fa fa-th-list"></i><span class="mm-text">Artisan à Relancer</span><span class="label label-success">{{telepro.sarl.total || 0}}</span></a>
-                                    </li>
-                                    <li><a tabindex="-1" href="/interventions/factureaEnvoyer#{{telepro.login}}"><i class="menu-icon fa fa-th-list"></i><span class="mm-text">Facture à envoyer</span><span class="label label-success">{{telepro.fact.total || 0}}</span></a>
-                                    </li>
-                                </ul>
+                            <li><a tabindex="-1" href="/interventions/relanceClient#{{telepro.login}}"><i class="menu-icon fa fa-th-list"></i><span class="mm-text">Client à Relancer</span><span class="label label-success">{{telepro.carl.total || 0}}</span></a>
                             </li>
-                        </ul>
-                    </li>
-                    <li class="mm-dropdown">
-                        <a href="#"><i class="menu-icon fa fa-truck"></i><span class="mm-text">Mes Sous-traitants</span></a>
-                        <ul>
-                            <li><a tabindex="-1" href="/interventions/relanceArtisan#{{user.login}}"><i class="menu-icon fa fa-th-list"></i><span class="mm-text">A Relancer</span><span class="label label-success">{{userStats.sarl.total || 0}}</span></a>
+                            <li><a tabindex="-1" href="/interventions/relanceArtisan#{{telepro.login}}"><i class="menu-icon fa fa-th-list"></i><span class="mm-text">Artisan à Relancer</span><span class="label label-success">{{telepro.sarl.total || 0}}</span></a>
                             </li>
-                        </ul>
-                    </li>
-                    <li class="mm-dropdown">
-                        <a href="#"><i class="menu-icon fa fa-user"></i><span class="mm-text">Mes Clients</span></a>
-                        <ul>
-                            <li><a tabindex="-1" href="/interventions/factureaEnvoyer#{{user.login}}"><i class="menu-icon fa fa-th-list"></i><span class="mm-text">Facture à envoyer</span><span class="label label-success">{{userStats.fact.total || 0}}</span></a>
-                            </li>
-                            <li><a tabindex="-1" href="/interventions/relanceClient#{{user.login}}"><i class="menu-icon fa fa-th-list"></i><span class="mm-text">A Relancer</span><span class="label label-success">{{userStats.carl.total || 0}}</span></a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="mm-dropdown">
-                        <a href="#"><i class="menu-icon fa fa-share"></i><span class="mm-text">Mes S.A.V</span></a>
-                        <ul>
-                            <li>
-                                <side-link fltr="sav" today login="{{user.login}}" icon="th-list" total="{{userStats.sav.total || 0}}"></side-link>
-                            </li>
-                             <li>
-                                <side-link fltr="savEnc" today login="{{user.login}}" icon="th-list" total="{{userStats.savEnc.total || 0}}"></side-link>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="mm-dropdown">
-                        <a href="#"><i class="menu-icon fa fa-bolt"></i><span class="mm-text">Mes Litiges</span></a>
-                        <ul>
-                            <li>
-                                <side-link fltr="lit" today login="{{user.login}}" icon="th-list" total="{{userStats.lit.total || 0}}"></side-link>
-                            </li>
-                             <li>
-                                <side-link fltr="litEnc" today login="{{user.login}}" icon="th-list" total="{{userStats.litEnc.total || 0}}"></side-link>
+                            <li><a tabindex="-1" href="/interventions/factureaEnvoyer#{{telepro.login}}"><i class="menu-icon fa fa-th-list"></i><span class="mm-text">Facture à envoyer</span><span class="label label-success">{{telepro.fact.total || 0}}</span></a>
                             </li>
                         </ul>
                     </li>
                 </ul>
-                <!-- / .navigation -->
-                <div class="menu-content">
-                    <a href="/intervention" class="btn btn-primary btn-block btn-outline dark">Ajout d'une Intervention</a>
-                    <a href="/intervention" class="btn btn-primary btn-block btn-outline dark">Ajout d'un Devis</a>
-                </div>
-            </div>
-            <!-- / #main-menu-inner -->
-        </div>
+            </li>
+            <li class="mm-dropdown">
+                <a href="#"><i class="menu-icon fa fa-truck"></i><span class="mm-text">Mes Sous-traitants</span></a>
+                <ul>
+                    <li><a tabindex="-1" href="/interventions/relanceArtisan#{{user.login}}"><i class="menu-icon fa fa-th-list"></i><span class="mm-text">A Relancer</span><span class="label label-success">{{userStats.sarl.total || 0}}</span></a>
+                    </li>
+                </ul>
+            </li>
+            <li class="mm-dropdown">
+                <a href="#"><i class="menu-icon fa fa-user"></i><span class="mm-text">Mes Clients</span></a>
+                <ul>
+                    <li><a tabindex="-1" href="/interventions/factureaEnvoyer#{{user.login}}"><i class="menu-icon fa fa-th-list"></i><span class="mm-text">Facture à envoyer</span><span class="label label-success">{{userStats.fact.total || 0}}</span></a>
+                    </li>
+                    <li><a tabindex="-1" href="/interventions/relanceClient#{{user.login}}"><i class="menu-icon fa fa-th-list"></i><span class="mm-text">A Relancer</span><span class="label label-success">{{userStats.carl.total || 0}}</span></a>
+                    </li>
+                </ul>
+            </li>
+            <li class="mm-dropdown">
+                <a href="#"><i class="menu-icon fa fa-share"></i><span class="mm-text">Mes S.A.V</span></a>
+                <ul>
+                    <side-link fltr="sav" today login="{{user.login}}" icon="th-list" total="{{userStats.sav.total || 0}}"></side-link>
+                    <side-link fltr="savEnc" today login="{{user.login}}" icon="th-list" total="{{userStats.savEnc.total || 0}}"></side-link>
+                </ul>
+            </li>
+            <li class="mm-dropdown">
+                <a href="#"><i class="menu-icon fa fa-bolt"></i><span class="mm-text">Mes Litiges</span></a>
+                <ul>
+                    <side-link fltr="lit" today login="{{user.login}}" icon="th-list" total="{{userStats.lit.total || 0}}"></side-link>
+                    <side-link fltr="litEnc" today login="{{user.login}}" icon="th-list" total="{{userStats.litEnc.total || 0}}"></side-link>
+                </ul>
+            </li>
+            <li>
+                <a href="/intervention">
+                    <i ng-if="icon" class="menu-icon a fa-plus"> </i>
+                    <span class="mm-text ng-binding">Ajout d'une Intervention</span>
+                </a>
+            </li> -->
+        </side-bar>
         <div class="page-header" style="background: #f4f4f4 url(/img/mooning.png);">
             <div id="content-wrapper">
                 <div class="row " ng-if="!recap">
@@ -211,11 +236,11 @@
     <script src="/pixel-admin/pixel-slimscroll.js"></script>
     <script src="/pixel-admin/app.js"></script>
     <script src="/pixel-admin/utils.js"></script>
-    <script src="/pixel-admin/components_main-menu.js"></script>
-    <script src="/pixel-admin/components_main-navbar.js"></script>
+    <!--    <script src="/pixel-admin/components_main-menu.js"></script>
+ -->
     <script src="/pixel-admin/events.js"></script>
     <script type="text/javascript">
-    window.PixelAdmin.start(init);
+    //  window.PixelAdmin.start(init);
     _.templateSettings.interpolate = /{{([\s\S]+?)}}/g;
     </script>
 

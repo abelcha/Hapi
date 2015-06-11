@@ -1,6 +1,6 @@
 angular.module('edison').factory('tabContainer', ['$location', '$window', '$q', 'edisonAPI', function($location, $window, $q, edisonAPI) {
     "use strict";
-    var Tab = function(args) {
+    var Tab = function(args, hash) {
 
         if (typeof args === 'object') {
             //copy constructor
@@ -8,12 +8,16 @@ angular.module('edison').factory('tabContainer', ['$location', '$window', '$q', 
                 this[k] = e;
             })
         } else {
+            this.hash = hash
             this.url = args;
             this.title = '';
             this.position = null;
             this.deleted = false;
             this._timestamp = Date.now();
         }
+        this.fullUrl = this.url;
+        if (this.hash)
+            this.fullUrl += ("#" + this.hash)
     }
 
     Tab.prototype.setData = function(data) {
@@ -24,7 +28,6 @@ angular.module('edison').factory('tabContainer', ['$location', '$window', '$q', 
 
     Tab.prototype.setTitle = function(title, subTitle) {
         this.title = title;
-        this.subTitle = subTitle
     }
 
     var TabContainer = function() {
@@ -62,25 +65,24 @@ angular.module('edison').factory('tabContainer', ['$location', '$window', '$q', 
         this.selectedTab = (typeof tab === 'number' ? tab : tab.position);
     };
 
-    TabContainer.prototype.createTab = function(url) {
-        var tab = new Tab(url);
-
+    TabContainer.prototype.createTab = function(url, hash) {
+        var tab = new Tab(url, hash);
         tab.position = this._tabs.length;
         this._tabs.push(tab);
         return (tab);
     }
 
-    TabContainer.prototype.isOpen = function(url) {
+    TabContainer.prototype.isOpen = function(url, hash) {
         var index = _.findIndex(this._tabs, function(e) {
-            return ((!e.deleted && e.url === url));
+            return ((!e.deleted && e.url === url && hash == e.hash));
         });
         return (index >= 0);
     };
 
-    TabContainer.prototype.getTab = function(url) {
+    TabContainer.prototype.getTab = function(url, hash) {
 
         return _.find(this._tabs, function(e) {
-            return ((!e.deleted && e.url === url));
+            return ((!e.deleted && e.url === url && e.hash === hash));
         });
     };
 
@@ -133,10 +135,10 @@ angular.module('edison').factory('tabContainer', ['$location', '$window', '$q', 
     }
     TabContainer.prototype.addTab = function(url, options) {
         var tab;
-        if (!this.isOpen(url)) {
-            tab = this.createTab(url);
+        if (!this.isOpen(url, options.hash || undefined)) {
+            tab = this.createTab(url, options.hash || undefined);
         } else {
-            tab = this.getTab(url)
+            tab = this.getTab(url, options.hash)
         }
         if (!(options && options.setFocus === false)) {
             this.setFocus(tab)

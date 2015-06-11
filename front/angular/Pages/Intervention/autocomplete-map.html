@@ -1,0 +1,17 @@
+<div>
+    <md-content ng-if="map.display" class="autocomplete" style="margin-left: 20%;width: 70%;  margin-top: -36px;" layout-padding layout="column" md-input-container flex>
+        <md-autocomplete class="address-autocomplete" md-selected-item-change="changeAddress(selectedAddress)" md-selected-item="selectedAddress" md-search-text="searchText" md-items="item in autocomplete.search(searchText)" md-item-text="item.description">
+            <span md-highlight-text="searchText"> {{item.description}}</span>
+        </md-autocomplete>
+    </md-content>
+    <br>
+    <div ng-if="!map.display" style="height:315px;width:100%;overflow:hidden">
+        <img id="static-map" style="width:100%;top: -9999px;bottom: -9999px;left: -9999px;right: -9999px;margin: auto;" ng-click="map.show()" ng-src="{{getStaticMap()}}" />
+    </div>
+    <map ng-if="map.display" zoom="{{map.zoom}}" pan-control="false" style="height:315" center="{{map.center.latLng}}">
+        <directions ng-if="data.artisan" travel-mode="DRIVING" origin="{{data.artisan.address.lt}}, {{data.artisan.address.lg}}" destination="{{data.client.address.latLng}}">
+        </directions>
+        <marker ng-if="data.client.address.lt" position="{{data.client.address.lt}}, {{data.client.address.lg}}" color="grey"></marker>
+        <marker ng-repeat="sst in xmarkers" on-click="clickOnArtisanMarker(sst)" position="{{sst.address.lt}}, {{sst.address.lg}}" color="red"></marker>
+    </map>
+</div>
