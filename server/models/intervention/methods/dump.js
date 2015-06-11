@@ -54,8 +54,10 @@
             };
 
             client.telephone = {};
-            addProp(client.telephone, d.tel1, 'tel1');
-            addProp(client.telephone, d.tel2, 'tel2');
+            if (d.tel1)
+                client.telephone.tel1 = d.tel1.replace(/[^0-9]/g, '');
+            if (d.tel2)
+                client.telephone.tel2 = d.tel2.replace(/[^0-9]/g, '');
 
             /* COMMENTS */
             var user = getUser(d.ajoute_par)

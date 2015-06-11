@@ -44,9 +44,10 @@
             };
 
             client.telephone = {};
-            addProp(client.telephone, d.tel1, 'tel1');
-            addProp(client.telephone, d.tel2, 'tel2');
-
+            if (d.tel1)
+                client.telephone.tel1 = d.tel1.replace(/[^0-9]/g, '');
+            if (d.tel2)
+                client.telephone.tel2 = d.tel2.replace(/[^0-9]/g, '');
             /* COMMENTS */
             var user = getUser(d.ajoute_par)
             user = user ? user.login : d.ajoute_par;
@@ -125,10 +126,11 @@
             return new Promise(function(resolve, reject) {
                 var inters = [];
                 var t = Date.now();
-                db.model('intervention').remove({
-                    id: {
+                console.log("--------", limit)
+                db.model('devis').remove({
+          /*          id: {
                         $gt: limit
-                    }
+                    }*/
                 }, function() {
                     request(key.alvin.url + "/dumpDevis.php?limit=" + limit + "&key=" + key.alvin.pass, function(err, rest, body) {
                         var data = JSON.parse(body);

@@ -6,7 +6,8 @@
              templateUrl: '/Pages/intervention/produits.html',
              scope: {
                  data: "=",
-                 tva: '='
+                 tva: '=',
+                 display:'@'
              },
              link: function(scope, element, attrs) {
                  scope.config = config

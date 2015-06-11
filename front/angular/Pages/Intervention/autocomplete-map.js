@@ -7,13 +7,15 @@
              templateUrl: '/Pages/Intervention/autocomplete-map.html',
              scope: {
                  data: "=",
+                 height: "@",
                  xmarkers: "=",
                  addressChange: '&',
                  isNew: "="
              },
              link: function(scope, element, attrs) {
+                 scope._height = scope.height || 315;
                  scope.map = new Map();
-                 scope.map.setZoom(scope.data.client.address ? 12 : 6)
+                 scope.map.setZoom(_.get(scope, 'data.client.address') ? 12 : 6)
                  if (scope.isNew) {
                      scope.map.show()
                  }
@@ -23,7 +25,7 @@
                      scope.mapDisplay = true
                  }
 
-                 if (scope.data.client.address) {
+                 if (_.get(scope, 'data.client.address')) {
                      scope.data.client.address = Address(scope.data.client.address, true); //true -> copyContructor
                      scope.map.setCenter(scope.data.client.address);
                  } else {
@@ -51,7 +53,6 @@
                      return "/api/mapGetStatic" + q;
                  }
                  scope.showClientMarker = function() {
-                     console.log(scope.data.client.address && scope.data.client.address.latLng);
                      return scope.data.client.address && scope.data.client.address.latLng;
                  }
                  scope.clickOnArtisanMarker = function(event, sst) {

@@ -1,4 +1,6 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+var ms = require('milliseconds');
+
 FiltersFactory = function(inter) {
     if (!(this instanceof FiltersFactory)) {
         return new FiltersFactory(inter);
@@ -6,7 +8,6 @@ FiltersFactory = function(inter) {
     if (inter && typeof inter === 'object') {
         this.inter = inter;
         this.fltr = {};
-        this.ms = require('milliseconds');
         this.today = new Date;
         this.today = this.today.setHours(0);
         this.dateInter = (new Date(inter.date.intervention)).getTime();
@@ -41,6 +42,10 @@ FiltersFactory.prototype.create = function() {
     return _this.fltr;
 }
 
+FiltersFactory.prototype.list = function() {
+    return this.data;
+}
+
 FiltersFactory.prototype.data = [{
     short_name: 'all',
     long_name: 'Toutes les Inters',
@@ -54,7 +59,12 @@ FiltersFactory.prototype.data = [{
     short_name: 'env',
     long_name: 'Envoyé',
     url: 'envoye',
-    match: {},
+    match: {
+        'status': 'ENV',
+        'date.ajout': {
+            $gt: (new Date()).setHours(0)
+        },
+    },
     cache: true,
     fn: function() {
         return this.inter.status === "ENV";
@@ -63,7 +73,12 @@ FiltersFactory.prototype.data = [{
     short_name: 'avr',
     long_name: 'A Vérifier',
     url: 'aVerifier',
-    match: {},
+    match: {
+        status: 'ENV',
+        'date.intervention': {
+            $lt: new Date(Date.now() + ms.hours(1))
+        }
+    },
     cache: true,
     fn: function() {
         return this.inter.status === "AVR" ||
@@ -73,7 +88,12 @@ FiltersFactory.prototype.data = [{
     short_name: 'apr',
     long_name: 'A Programmer',
     url: 'aProgrammer',
-    match: {},
+    match: {
+        'status': 'APR',
+        'date.ajout': {
+            $gt: new Date(0)
+        },
+    },
     cache: true,
     fn: function() {
         return this.inter.status === "APR";
@@ -83,6 +103,7 @@ FiltersFactory.prototype.data = [{
     long_name: 'Paiement en attente',
     url: 'paiementEnAttente',
     match: {},
+    stats:false,
     cache: true,
     fn: function() {
         return this.inter.status === "ATT";
@@ -93,6 +114,7 @@ FiltersFactory.prototype.data = [{
     long_name: 'Paiement SST en attente',
     url: 'paiementArtisanEnAttente',
     match: {},
+    stats:false,
     cache: true,
     fn: function() {
         return this.fltr.att &&
@@ -103,17 +125,25 @@ FiltersFactory.prototype.data = [{
     short_name: 'sarl',
     long_name: 'SST à Relancer',
     url: 'relanceArtisan',
-    match: {},
+    match: {
+        status: 'ATT',
+        reglementSurPlace: true,
+        'date.intervention': {
+            $lt: new Date(Date.now() - ms.weeks(2)),
+        }
+    },
+    stats:false,
     cache: true,
     fn: function() {
         return this.fltr.atts &&
-            this.now > this.dateInter + this.ms.weeks(2);
+            this.now > this.dateInter + ms.weeks(2);
     }
 }, {
     short_name: 'attc',
     long_name: 'Paiement Client en attente',
     url: 'paiementClientEnAttente',
     match: {},
+    stats:false,
     cache: true,
     fn: function() {
         return this.fltr.att &&
@@ -124,28 +154,46 @@ FiltersFactory.prototype.data = [{
     short_name: 'carl',
     long_name: 'Client à Relancer',
     url: 'relanceClient',
-    match: {},
+    match: {
+        status: 'ATT',
+        reglementSurPlace: false,
+        'date.intervention': {
+            $lt: new Date(Date.now() - ms.weeks(2)),
+        }
+    },
     cache: true,
     fn: function() {
         return this.fltr.attc &&
-            this.now > this.dateInter + this.ms.weeks(3);
+            this.now > this.dateInter + ms.weeks(3);
     }
 }, {
     short_name: 'fact',
     long_name: 'Facture à envoyer',
     url: 'factureaEnvoyer',
-    match: {},
+    match: {
+        'date.intervention': {
+            $lt: new Date(Date.now() + ms.hours(1))
+        },
+        status: 'ENV',
+        reglementSurPlace: false
+    },
     cache: true,
     fn: function() {
         return this.fltr.avr &&
             this.inter.reglementSurPlace === false;
-            !this.inter.date.envoiFacture;
+        !this.inter.date.envoiFacture;
     }
 }, {
     short_name: 'sav',
     long_name: 'Tous les S.A.V',
     url: 'serviceApresVente',
-    match: {},
+    match: {
+        sav: {
+            $gt: {
+                $size: 0
+            }
+        }
+    },
     cache: true,
     fn: function() {
         return this.inter.sav && this.inter.sav.length > 0;
@@ -154,17 +202,29 @@ FiltersFactory.prototype.data = [{
     short_name: 'savEnc',
     long_name: 'S.A.V En Cours',
     url: 'serviceApresVenteEnCours',
-    match: {},
+    match: {
+        sav: {
+            $elemMatch:  {
+                status: 'ENV'
+            }
+        }
+    },
     cache: true,
     fn: function() {
         return this.inter.sav && this.inter.sav.length > 0 &&
-        this.inter.sav[this.inter.sav.length - 1].status === "ENV"
+            this.inter.sav[this.inter.sav.length - 1].status === "ENV"
     }
 }, {
     short_name: 'lit',
     long_name: 'Tous les Litige',
     url: 'litiges',
-    match: {},
+    match: {
+        litiges: {
+            $elemMatch:  {
+                regle: false
+            }
+        }
+    },
     cache: true,
     fn: function() {
         return this.inter.sav && this.inter.sav.length > 0;
@@ -173,11 +233,17 @@ FiltersFactory.prototype.data = [{
     short_name: 'litEnc',
     long_name: 'Litiges non résolus',
     url: 'litigesEnCours',
-    match: {},
+    match: {
+        litiges: {
+            $gt: {
+                $size: 0
+            }
+        }
+    },
     cache: true,
     fn: function() {
         return this.inter.litiges && this.inter.litiges.length > 0 &&
-        this.inter.litiges[this.inter.litiges.length - 1].regle === false
+            this.inter.litiges[this.inter.litiges.length - 1].regle === false
     }
 }]
 

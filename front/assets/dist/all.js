@@ -83,7 +83,7 @@ angular.module('edison').controller('MainController', function(tabContainer, $sc
         if (!$scope.tabsInitialized) {
             return initTabs($location.path(), $location.hash());
         }
-        if ($location.path() !== "/intervention") {
+        if ($location.path() !== "/intervention" && $location.path() !== "/devis") {
             $scope.tabs.addTab($location.path(), {
                 hash: $location.hash()
             });
@@ -179,6 +179,27 @@ var getIntervention = function($route, $q, edisonAPI) {
     }
 };
 
+var getDevis = function($route, $q, edisonAPI) {
+    "use strict";
+    var id = $route.current.params.id;
+    console.log(id);
+    if (id.length > 10) {
+        return $q(function(resolve) {
+            resolve({
+                data: {
+                    produits: [],
+                    tva: 20,
+                    client: {},
+                    date: {
+                        ajout: Date.now(),
+                    }
+                }
+            });
+        });
+    } else {
+        return edisonAPI.devis.get(id);
+    }
+};
 
 
 angular.module('edison').config(function($routeProvider, $locationProvider) {
@@ -223,6 +244,11 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
                 return '/intervention/' + Date.now();
             }
         })
+        .when('/devis', {
+            redirectTo: function() {
+                return '/devis/' + Date.now();
+            }
+        })
         .when('/artisan', {
             redirectTo: function() {
                 return '/artisan/' + Date.now();
@@ -246,6 +272,16 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
                 intervention: getIntervention,
                 artisans: getArtisanList
 
+            }
+        })
+         .when('/devis/:id', {
+            templateUrl: "Pages/Intervention/devis.html",
+            controller: "DevisController",
+            controllerAs: "vm",
+            resolve: {
+                interventions: getInterList,
+                devis: getDevis,
+                artisans: getArtisanList
             }
         })
         .when('/dashboard', {
@@ -761,6 +797,18 @@ angular.module('edison').factory('Address', function() {
 angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvider', 'Upload', function($http, $location, dataProvider, Upload) {
     "use strict";
     return {
+        devis: {
+            get: function(id, options) {
+                return $http({
+                    method: 'GET',
+                    cache: false,
+                    url: '/api/devis/' + id,
+                    params: options || {}
+                }).success(function(result) {
+                    return result;
+                });
+            },
+        },
         intervention: {
             getStats: function() {
                 return $http({
@@ -1613,7 +1661,6 @@ angular.module('edison').factory('Map', function() {
 
     Map.prototype.setCenter = function(address) {
         var myLatLng = new google.maps.LatLng(address.lt, address.lg);
-        console.log("==>", window.map)
         this.center = address;
         if (window.map)
             window.map.setCenter(myLatLng)
@@ -2070,13 +2117,15 @@ angular.module('edison').controller('DashboardController', function(tabContainer
              templateUrl: '/Pages/Intervention/autocomplete-map.html',
              scope: {
                  data: "=",
+                 height: "@",
                  xmarkers: "=",
                  addressChange: '&',
                  isNew: "="
              },
              link: function(scope, element, attrs) {
+                 scope._height = scope.height || 315;
                  scope.map = new Map();
-                 scope.map.setZoom(scope.data.client.address ? 12 : 6)
+                 scope.map.setZoom(_.get(scope, 'data.client.address') ? 12 : 6)
                  if (scope.isNew) {
                      scope.map.show()
                  }
@@ -2086,7 +2135,7 @@ angular.module('edison').controller('DashboardController', function(tabContainer
                      scope.mapDisplay = true
                  }
 
-                 if (scope.data.client.address) {
+                 if (_.get(scope, 'data.client.address')) {
                      scope.data.client.address = Address(scope.data.client.address, true); //true -> copyContructor
                      scope.map.setCenter(scope.data.client.address);
                  } else {
@@ -2114,7 +2163,6 @@ angular.module('edison').controller('DashboardController', function(tabContainer
                      return "/api/mapGetStatic" + q;
                  }
                  scope.showClientMarker = function() {
-                     console.log(scope.data.client.address && scope.data.client.address.latLng);
                      return scope.data.client.address && scope.data.client.address.latLng;
                  }
                  scope.clickOnArtisanMarker = function(event, sst) {
@@ -2124,6 +2172,44 @@ angular.module('edison').controller('DashboardController', function(tabContainer
          }
      }
  ]);
+
+var DevisCtrl = function($rootScope, $location, $routeParams, tabContainer, config, dialog, devis) {
+    "use strict";
+    console.log("==>", devis.data);
+    var _this = this;
+    _this.config = config;
+    _this.dialog = dialog;
+    var tab = tabContainer.getCurrentTab();
+    if (!tab.data) {
+    	console.log("nodata")
+        tab.setData(devis.data);
+        if ($routeParams.id.length > 12) {
+    	console.log("nEw")
+            _this.isNew = true;
+            tab.data.tmpID = $routeParams.id;
+            tab.setTitle('#' + moment((new Date(parseInt(tab.data.tmpID))).toISOString()).format("HH:mm").toString());
+        } else {
+    	console.log("old")
+
+            tab.setTitle('#' + $routeParams.id);
+            if (!devis) {
+                alert("Impossible de trouver les informations !");
+                $location.url("/dashboard");
+                tabContainer.remove(tab);
+                return 0;
+            }
+        }
+    }
+
+    _this.data = tab.data;
+    if (!_this.data.id) {
+        _this.data.login = {
+            ajout: $rootScope.user.login
+        }
+    }
+
+}
+angular.module('edison').controller('DevisController', DevisCtrl);
 
  angular.module('edison').directive('infoCategorie', ['config', function(config) {
      "use strict";
@@ -2469,7 +2555,8 @@ angular.module('edison').controller('InterventionController', InterventionCtrl);
              templateUrl: '/Pages/intervention/produits.html',
              scope: {
                  data: "=",
-                 tva: '='
+                 tva: '=',
+                 display:'@'
              },
              link: function(scope, element, attrs) {
                  scope.config = config

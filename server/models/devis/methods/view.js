@@ -5,7 +5,7 @@ module.exports = function(schema) {
             id = parseInt(id);
             if (id == 0 || isNaN(id))
                 return reject("Invalid ID")
-            db.model('devis').find({
+            db.model('devis').findOne({
                 _id: id
             }).exec(function(err, doc) {
                 if (err)

@@ -1,0 +1,25 @@
+<div class="container" style=" margin: auto;max-width: 1200px;">
+    <div class="row">
+        <div class="col-sm-12 " style="height:100%">
+            <div class="form-horizontal" style="overflow:hidden;height:100%" novalidate>
+                <info-client model="vm.data.client"></info-client>
+                <br>
+                <info-categorie model="vm.data.categorie" change="vm.searchArtisans(newCategorie)"></info-categorie>
+                <br>
+                <div class="row" style="margin:0">
+                    <div class="card">
+                        <div class="p+">
+                            <strong class="fs-headline display-block">
+         <button ng-click="vm.data.categorie = undefined" style="font-weight:900;float:left" class="btn--no-conflicts btn--m {{config.categories[vm.data.categorie].color}} btn--flat" lx-ripple> {{config.categories[vm.data.categorie].long_name}}</button></strong>
+                            <div class="fs-body-1 mt+" style="padding-top:10px">
+                                <edison-map is-new="vm.isNew" height="500" data="vm.data"></edison-map>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <produits display="true" data="vm.data"></produits>
+        </div>
+    </div>
+</div>

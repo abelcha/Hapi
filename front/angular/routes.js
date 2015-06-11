@@ -83,7 +83,7 @@ angular.module('edison').controller('MainController', function(tabContainer, $sc
         if (!$scope.tabsInitialized) {
             return initTabs($location.path(), $location.hash());
         }
-        if ($location.path() !== "/intervention") {
+        if ($location.path() !== "/intervention" && $location.path() !== "/devis") {
             $scope.tabs.addTab($location.path(), {
                 hash: $location.hash()
             });
@@ -179,6 +179,27 @@ var getIntervention = function($route, $q, edisonAPI) {
     }
 };
 
+var getDevis = function($route, $q, edisonAPI) {
+    "use strict";
+    var id = $route.current.params.id;
+    console.log(id);
+    if (id.length > 10) {
+        return $q(function(resolve) {
+            resolve({
+                data: {
+                    produits: [],
+                    tva: 20,
+                    client: {},
+                    date: {
+                        ajout: Date.now(),
+                    }
+                }
+            });
+        });
+    } else {
+        return edisonAPI.devis.get(id);
+    }
+};
 
 
 angular.module('edison').config(function($routeProvider, $locationProvider) {
@@ -223,6 +244,11 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
                 return '/intervention/' + Date.now();
             }
         })
+        .when('/devis', {
+            redirectTo: function() {
+                return '/devis/' + Date.now();
+            }
+        })
         .when('/artisan', {
             redirectTo: function() {
                 return '/artisan/' + Date.now();
@@ -246,6 +272,16 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
                 intervention: getIntervention,
                 artisans: getArtisanList
 
+            }
+        })
+         .when('/devis/:id', {
+            templateUrl: "Pages/Intervention/devis.html",
+            controller: "DevisController",
+            controllerAs: "vm",
+            resolve: {
+                interventions: getInterList,
+                devis: getDevis,
+                artisans: getArtisanList
             }
         })
         .when('/dashboard', {

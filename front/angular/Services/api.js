@@ -1,6 +1,18 @@
 angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvider', 'Upload', function($http, $location, dataProvider, Upload) {
     "use strict";
     return {
+        devis: {
+            get: function(id, options) {
+                return $http({
+                    method: 'GET',
+                    cache: false,
+                    url: '/api/devis/' + id,
+                    params: options || {}
+                }).success(function(result) {
+                    return result;
+                });
+            },
+        },
         intervention: {
             getStats: function() {
                 return $http({

@@ -7,7 +7,6 @@ angular.module('edison').factory('Map', function() {
 
     Map.prototype.setCenter = function(address) {
         var myLatLng = new google.maps.LatLng(address.lt, address.lg);
-        console.log("==>", window.map)
         this.center = address;
         if (window.map)
             window.map.setCenter(myLatLng)
