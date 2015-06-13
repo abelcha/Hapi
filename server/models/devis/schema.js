@@ -2,6 +2,7 @@ module.exports = function(db) {
 
     return new db.Schema({
         _id: Number,
+        id: Number,
         status: {
             type: String,
             index: true,
@@ -24,7 +25,6 @@ module.exports = function(db) {
         historique: [{
             date: Date,
             login: String,
-            data: {},
         }],
         client: { //
             civilite: {

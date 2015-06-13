@@ -1,5 +1,5 @@
- angular.module('edison').directive('produits', ['config', 'productsList', 'actionIntervention',
-     function(config, productsList, actionIntervention) {
+ angular.module('edison').directive('produits', ['config', 'productsList',
+     function(config, productsList) {
          "use strict";
          return {
              restrict: 'E',
@@ -7,27 +7,39 @@
              scope: {
                  data: "=",
                  tva: '=',
-                 display:'@'
+                 display: '@'
              },
              link: function(scope, element, attrs) {
+                 var model = scope.data;
                  scope.config = config
-                 scope.data.produits = scope.data.produits || [];
+                 model.produits = model.produits || [];
                  scope.config = config;
-                 scope.produits = new productsList(scope.data.produits);
+                 scope.produits = new productsList(model.produits);
 
                  scope.envoiFacture = function() {
-                     actionIntervention.envoiFacture(scope.data, function(err, res) {
+                     model.envoiFacture(function(err, res) {
                          if (!err)
-                             scope.data.date.envoiFacture = new Date();
+                             model.date.envoiFacture = new Date();
                      })
                  }
 
 
                  scope.envoiDevis = function() {
-                     actionIntervention.envoiDevis(scope.data, function(err, res) {
-                         if (!err)
-                             _this.data.date.envoiFacture = new Date();
-                     })
+                    console.log(model.typeOf())
+                     if (model.typeOf() === "Intervention") {
+                         model.envoiDevis(function(err, res) {
+                             console.log(err, resp)
+                             if (!err)
+                                 model.date.envoiFacture = new Date();
+                         })
+                     } else if (model.typeOf() === "Devis") {
+                         model.envoi(function(err, resp) {
+                             console.log(err, resp)
+                         })
+
+                     } else {
+                        console.error("unknown model")
+                     }
                  }
              },
          }

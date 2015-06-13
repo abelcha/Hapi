@@ -106,7 +106,10 @@ module.exports = function(db) {
             description: String,
             login: String,
             artisan: {
-                id: Number,
+                id: {
+                    type: Number,
+                    ref:'artisan'
+                },
                 nomSociete: String,
             },
             date: Date,

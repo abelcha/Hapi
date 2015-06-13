@@ -90,7 +90,7 @@
         <!-- ngIf: isDropped -->
         <div class="dropdown-menu__content ng-scope">
             <ul class="ng-scope">
-                <li ng-repeat="content in contextMenu.content" ng-hide="content.hidden" ng-click="contextMenu.close();content.click(contextMenu.data)">
+                <li ng-repeat="content in contextMenu.content" ng-hide="content.hidden" ng-click="contextMenu.close();contextMenu.click(content)">
                     <a class="dropdown-link" tabindex="0">{{content.title}}</a>
                 </li>
                 <!-- <li><a ng-click="" class="dropdown-link" tabindex="0">Ouvrir Fiche</a></li>

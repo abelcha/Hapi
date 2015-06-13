@@ -22,8 +22,7 @@ angular.module('edison').factory('tabContainer', ['$location', '$window', '$q', 
 
     Tab.prototype.setData = function(data) {
         //slice create a copy
-        this._data = JSON.parse(JSON.stringify(data));
-        this.data = JSON.parse(JSON.stringify(data));
+        this.data = data;
     }
 
     Tab.prototype.setTitle = function(title, subTitle) {
@@ -74,7 +73,7 @@ angular.module('edison').factory('tabContainer', ['$location', '$window', '$q', 
 
     TabContainer.prototype.isOpen = function(url, hash) {
         var index = _.findIndex(this._tabs, function(e) {
-            return ((!e.deleted && e.url === url && hash == e.hash));
+            return ((!e.deleted && e.url === url && (!hash && !e.hash || hash == e.hash)));
         });
         return (index >= 0);
     };
@@ -82,7 +81,7 @@ angular.module('edison').factory('tabContainer', ['$location', '$window', '$q', 
     TabContainer.prototype.getTab = function(url, hash) {
 
         return _.find(this._tabs, function(e) {
-            return ((!e.deleted && e.url === url && e.hash === hash));
+            return ((!e.deleted && e.url === url && (!hash && !e.hash || hash == e.hash)));
         });
     };
 
@@ -135,10 +134,10 @@ angular.module('edison').factory('tabContainer', ['$location', '$window', '$q', 
     }
     TabContainer.prototype.addTab = function(url, options) {
         var tab;
-        if (!this.isOpen(url, options.hash || undefined)) {
+        if (!this.isOpen(url, options.hash ||  undefined)) {
             tab = this.createTab(url, options.hash || undefined);
         } else {
-            tab = this.getTab(url, options.hash)
+            tab = this.getTab(url, options.hash || undefined)
         }
         if (!(options && options.setFocus === false)) {
             this.setFocus(tab)

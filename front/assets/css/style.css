@@ -279,3 +279,6 @@ label.text-field__label,
     top: 0px!important;
 }
 
+map.big-map {
+    height: 500px!important;
+}

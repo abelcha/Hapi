@@ -71,10 +71,6 @@ angular.module('edison').controller('InterventionsController', function($timeout
     $scope.rowClick = function($event, inter) {
         if ($scope.contextMenu.active)
             return $scope.contextMenu.close();
-        /*        if (doubleClick) {
-                  return   
-
-                } */
         if ($event.metaKey || $event.ctrlKey) {
             tabContainer.addTab('/intervention/' + inter.id, {
                 title: ('#' + inter.id),

@@ -45,7 +45,7 @@ jobs.process('db', function(job, done) {
         console.log("job success")
         done(null, result);
     }, function(err) {
-        console.log("job error", err);
+        console.log("job error", JSON.stringify(err, undefined, 1));
         return done(err ||  "error");
     })
 });

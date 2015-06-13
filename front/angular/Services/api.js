@@ -12,6 +12,12 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvid
                     return result;
                 });
             },
+            save: function(params) {
+                return $http.post("/api/devis", params);
+            },
+            envoi: function(id, options) {
+                return $http.post("/api/devis/envoi", options);
+            },
         },
         intervention: {
             getStats: function() {
@@ -60,10 +66,7 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvid
             },
             envoiFacture: function(id, options) {
                 return $http.post("/api/intervention/" + id + "/envoiFacture", options);
-            },
-            envoiDevis: function(id, options) {
-                return $http.post("/api/intervention/" + id + "/envoiDevis", options);
-            },
+            }
         },
         artisan: {
             list: function(options) {
@@ -177,7 +180,7 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvid
                     }
                 })
             },
-            save: function(params) {
+            send: function(params) {
                 return $http.post("/api/sms", params)
             },
 

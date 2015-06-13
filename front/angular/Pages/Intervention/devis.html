@@ -20,6 +20,45 @@
             </div>
             <br>
             <produits display="true" data="vm.data"></produits>
+            <br>
+            <div class="card">
+                <div class="p+">
+                    <strong class="fs-headline display-block" ng-click="displayHIST = !displayHIST">Historique</strong>
+                    <span class="fs-subhead tc-black-2 display-block">Historique des envois</span>
+                    <div class="paragraph fs-body-1 mt+">
+                        <div class="data-table-container" ng-show="vm.data.historique.length || displayHIST">
+                            <table class="data-table data-table--has-primary data-table--has-secondary">
+                                <thead>
+                                    <tr>
+                                        <th style="font-weight:bold">Login</th>
+                                        <th style="font-weight:bold">Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="data-table__clickable-row" ng-repeat="h in vm.data.historique">
+                                        <td>
+                                            <span>{{h.login}}</span>
+                                        </td>
+                                        <td>
+                                            <span>{{vm.moment(h.date).format('LLLL')}}</span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="fab" style="float: right;position: fixed;right: 70px;z-index: 999;top: 87%;">
+        <button ng-click="vm.saveDevis({})" class="fab__primary btn--no-conflicts btn--xl btn--blue btn--fab" lx-ripple lx-tooltip="Enregistrer" tooltip-position="top">
+            <i class="mdi" ng-class="vm.data.id ? 'mdi-camera-iris' : 'mdi-plus'"></i>
+            <i class="mdi mdi-checkbox-marked-circle-outline"></i>
+        </button>
+        <div class="fab__actions fab__actions--left">
+            <button ng-click="vm.saveDevis({annulation:true})" class="btn--no-conflicts btn--l btn--black btn--fab" lx-ripple lx-tooltip="Annuler" tooltip-position="top"><i class="mdi mdi-close"></i></button>
+            <button ng-show="vm.data.status === 'ANN' || vm.data.status === 'APR' " ng-click="vm.saveDevis({envoi:true})" class="btn--no-conflicts btn--l btn--black btn--fab" lx-ripple lx-tooltip="Envoyer" tooltip-position="top"><i class="mdi mdi-send"></i></button>
         </div>
     </div>
 </div>

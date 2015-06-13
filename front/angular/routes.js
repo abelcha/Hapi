@@ -269,7 +269,7 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
             controllerAs: "vm",
             resolve: {
                 interventions: getInterList,
-                intervention: getIntervention,
+                interventionPrm: getIntervention,
                 artisans: getArtisanList
 
             }
@@ -280,7 +280,7 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
             controllerAs: "vm",
             resolve: {
                 interventions: getInterList,
-                devis: getDevis,
+                devisPrm: getDevis,
                 artisans: getArtisanList
             }
         })

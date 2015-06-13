@@ -32,7 +32,11 @@
                      scope.total = 0;
                  }
              }
-             scope.exFltr.url = scope.exFltr.url.length ? "/" + scope.exFltr.url : scope.exFltr.url;
+             if (scope.exFltr) {
+                 scope.exFltr.url = scope.exFltr.url.length ? "/" + scope.exFltr.url : scope.exFltr.url;
+             } else {
+                 console.log(scope.fltr)
+             }
              scope.exLogin = scope.login ? ("#" + scope.login) : '';
              scope.date = attrs.today != void(0) ? "?d=t" : '';
          }

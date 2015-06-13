@@ -1,4 +1,4 @@
-var InterventionCtrl = function($timeout, $rootScope, $window, $scope, $location, $routeParams, dialog, fourniture, LxNotificationService, tabContainer, edisonAPI, Address, $q, mapAutocomplete, productsList, config, intervention, artisans, actionIntervention, Map) {
+var InterventionCtrl = function($timeout, $rootScope, $scope, $location, $routeParams, dialog, fourniture, LxNotificationService, tabContainer, edisonAPI, Address, $q, mapAutocomplete, productsList, config, interventionPrm, artisans, Intervention, Map) {
     "use strict";
 
     var _this = this;
@@ -8,38 +8,37 @@ var InterventionCtrl = function($timeout, $rootScope, $window, $scope, $location
     _this.autocomplete = mapAutocomplete;
     var tab = tabContainer.getCurrentTab();
     if (!tab.data) {
-        tab.setData(intervention.data);
-        tab.data.sst = intervention.data.artisan ? intervention.data.artisan.id : 0;
-
+        var intervention = new Intervention(interventionPrm.data)
+        intervention.sst = intervention.artisan ? intervention.artisan.id : 0;
+        tab.setData(intervention);
         if ($routeParams.id.length > 12) {
             _this.isNew = true;
-            tab.data.tmpID = $routeParams.id;
-            tab.setTitle('#' + moment((new Date(parseInt(tab.data.tmpID))).toISOString()).format("HH:mm").toString());
+            intervention.tmpID = $routeParams.id;
+            tab.setTitle('#' + moment((new Date(parseInt(intervention.tmpID))).toISOString()).format("HH:mm").toString());
         } else {
             tab.setTitle('#' + $routeParams.id);
             if (!intervention) {
-                alert("Impossible de trouver les informations !");
+                LxNotificationService.error("Impossible de trouver les informations !");
                 $location.url("/dashboard");
                 tabContainer.remove(tab);
                 return 0;
             }
         }
+    } else {
+        var intervention = tab.data;
     }
-
     _this.data = tab.data;
-    if (!_this.data.id)
-        _this.data.login = {
+    if (!intervention.id)
+        intervention.login = {
             ajout: $rootScope.user.login
         }
 
-
-
-    _this.data.fourniture = _this.data.fourniture || [];
-    $scope.fourniture = fourniture.init(_this.data.fourniture);
+    intervention.fourniture = intervention.fourniture || [];
+    $scope.fourniture = fourniture.init(intervention.fourniture);
 
     _this.changeAddressFacture = function(place) {
         mapAutocomplete.getPlaceAddress(place).then(function(addr) {
-            _this.data.facture.address = addr;
+            intervention.facture.address = addr;
         });
     }
     $scope.envoiSAV = function(sav) {
@@ -56,9 +55,9 @@ var InterventionCtrl = function($timeout, $rootScope, $window, $scope, $location
             title: "Description du SAV",
             text: ""
         }, function(resp) {
-            if (!_this.data.sav)
-                _this.data.sav = [];
-            _this.data.sav.push({
+            if (!intervention.sav)
+                intervention.sav = [];
+            intervention.sav.push({
                 date: new Date(),
                 login: $rootScope.user.login,
                 description: resp,
@@ -73,9 +72,9 @@ var InterventionCtrl = function($timeout, $rootScope, $window, $scope, $location
             title: "Description du Litige",
             text: ""
         }, function(resp) {
-            if (!_this.data.litiges)
-                _this.data.litiges = [];
-            _this.data.litiges.push({
+            if (!intervention.litiges)
+                intervention.litiges = [];
+            intervention.litiges.push({
                 date: new Date(),
                 login: $rootScope.user.login,
                 description: resp,
@@ -91,16 +90,16 @@ var InterventionCtrl = function($timeout, $rootScope, $window, $scope, $location
     }
 
     $scope.smsArtisan = function() {
-        actionIntervention.smsArtisan(_this.data, function(err, resp) {
+        intervention.smsArtisan(intervention, function(err, resp) {
             if (!err)
-                _this.data.artisan.sms.unshift(resp)
+                intervention.artisan.sms.unshift(resp)
         })
     }
 
     $scope.callArtisan = function() {
-        actionIntervention.callArtisan(_this.data, function(err, resp) {
+        intervention.callArtisan(intervention, function(err, resp) {
             if (!err)
-                _this.data.artisan.calls.unshift(resp)
+                intervention.artisan.calls.unshift(resp)
         })
     }
 
@@ -121,7 +120,7 @@ var InterventionCtrl = function($timeout, $rootScope, $window, $scope, $location
     }
 
     $scope.addComment = function() {
-        _this.data.comments.push({
+        intervention.comments.push({
             login: $rootScope.user.login,
             text: $scope.commentText,
             date: new Date()
@@ -130,15 +129,14 @@ var InterventionCtrl = function($timeout, $rootScope, $window, $scope, $location
     }
 
     $scope.changeCategorie = function(key) {
-        console.log("-----------", key)
-        if (_this.data.client.address)
+        if (intervention.client.address)
             _this.searchArtisans();
     }
 
     $scope.onFileUpload = function(file) {
         if (file) {
             edisonAPI.file.upload(file, {
-                link: _this.data.id || _this.data.tmpID,
+                link: intervention.id || intervention.tmpID,
                 model: 'intervention',
                 type: 'fiche'
             }).success(function() {
@@ -150,8 +148,8 @@ var InterventionCtrl = function($timeout, $rootScope, $window, $scope, $location
 
 
     $scope.loadFilesList = function() {
-        edisonAPI.intervention.getFiles(_this.data.id || _this.data.tmpID).then(function(result) {
-            _this.data.files = result.data;
+        edisonAPI.intervention.getFiles(intervention.id || intervention.tmpID).then(function(result) {
+            intervention.files = result.data;
         }, console.log)
     }
     $scope.loadFilesList();
@@ -163,15 +161,15 @@ var InterventionCtrl = function($timeout, $rootScope, $window, $scope, $location
     }
 
     $scope.saveInter = function(options) {
-        actionIntervention.save(_this.data, function(err, resp) {
+        intervention.save(function(err, resp) {
             if (err) {
                 return false;
             } else if (options && options.envoi === true) {
-                actionIntervention.envoi(resp, closeTab);
+                intervention.envoi(resp, closeTab);
             } else if (options && options.annulation) {
-                actionIntervention.annulation(resp, closeTab);
+                intervention.annulation(resp, closeTab);
             } else if (options && options.verification) {
-                actionIntervention.verification(resp, closeTab);
+                intervention.verification(resp, closeTab);
             } else {
                 closeTab();
             }
@@ -180,42 +178,21 @@ var InterventionCtrl = function($timeout, $rootScope, $window, $scope, $location
     }
 
     $scope.clickOnArtisanMarker = function(event, sst) {
-        _this.data.sst = sst.id;
+        intervention.sst = sst.id;
     }
 
     _this.searchArtisans = function(categorie) {
-        edisonAPI.artisan.getNearest(_this.data.client.address, categorie || _this.data.categorie)
+        edisonAPI.artisan.getNearest(intervention.client.address, categorie || intervention.categorie)
             .success(function(result) {
                 _this.nearestArtisans = result;
             });
     }
-    if (_this.data.client.address)
+    if (intervention.client.address)
         _this.searchArtisans();
 
 
-    /*MAP CONTROLLER*/
-    /*_this.map = new Map();
-    _this.map.setZoom(_this.data.client.address ? 12 : 6)
-    if (_this.isNew) {
-        _this.map.show();
-    }
-    _this.autocomplete = mapAutocomplete;
-
-    if (_this.data.client.address) {
-        _this.data.client.address = Address(_this.data.client.address, true); //true -> copyContructor
-        _this.map.setCenter(_this.data.client.address);
-    } else {
-        _this.map.setCenter(Address({
-            lat: 46.3333,
-            lng: 2.6
-        }));
-    }*/
-
-
-
-
     $scope.$watch(function() {
-        return _this.data.sst;
+        return intervention.sst;
     }, function(id_sst) {
         if (id_sst) {
             $q.all([
@@ -225,20 +202,20 @@ var InterventionCtrl = function($timeout, $rootScope, $window, $scope, $location
                 edisonAPI.artisan.getStats(id_sst, {
                     cache: true
                 }),
-                edisonAPI.call.get(_this.data.id || _this.data.tmpID, id_sst),
-                edisonAPI.sms.get(_this.data.id || _this.data.tmpID, id_sst)
+                edisonAPI.call.get(intervention.id || intervention.tmpID, id_sst),
+                edisonAPI.sms.get(intervention.id || intervention.tmpID, id_sst)
             ]).then(function(result) {
-                _this.data.artisan = result[0].data;
-                _this.data.artisan.stats = result[1].data;
-                _this.data.artisan.calls = result[2].data;
-                _this.data.artisan.sms = result[3].data;
+                intervention.artisan = result[0].data;
+                intervention.artisan.stats = result[1].data;
+                intervention.artisan.calls = result[2].data;
+                intervention.artisan.sms = result[3].data;
                 if (result[0].data.address) {
                     edisonAPI.getDistance({
                             origin: result[0].data.address.lt + ", " + result[0].data.address.lg,
-                            destination: _this.data.client.address.lt + ", " + _this.data.client.address.lg
+                            destination: intervention.client.address.lt + ", " + intervention.client.address.lg
                         })
                         .then(function(result) {
-                            _this.data.artisan.stats.direction = result.data;
+                            intervention.artisan.stats.direction = result.data;
                         })
                 }
             });

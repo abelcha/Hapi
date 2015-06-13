@@ -74,42 +74,33 @@ module.exports = function(schema) {
             }
             var todayOP = {};
             _.each(filters.data, function(e) {
-                if (e.match && (e.stats === void(0) || e.stats)) {
-                    todayOP[e.short_name] = statusDistinctFactory(e.match);
+                if (e.stats !== false && e.match) {
+                    var match = typeof e.match === 'function' ? e.match() : e.match;
+                    todayOP[e.short_name] = statusDistinctFactory(match);
                 }
             });
-            async.parallel(everydayOP, function(err, everydayResult) {
-                if (err)
-                    return reject(err)
-                everydayResult.todayTotal = _.groupBy(everydayResult.todayTotal, 'login');
-                everydayResult.todayStatus = _.groupBy(everydayResult.todayStatus, 'login');
-                async.parallel(todayOP, function(err2, result) {
-                    if (err2)
-                        reject(err);
-                    result = _.mapValues(result, function(e) {
-                        return _.groupBy(e, 'login')
-                    })
-                    var rtn = [];
-                    users.forEach(function(user) {
-                        if (user.service === "INTERVENTION") {
-                            var telepro = _.get(everydayResult, 'todayTotal[' + user.login + '][0]') || {
-                                login: user.login,
-                                total: 0,
-                                montant: 0
-                            }
-                            telepro.status = cleanStatus(everydayResult.todayStatus[telepro.login]);
-                            _.each(result, function(fltr, key) {
-                                cleanUp(key, telepro, result);
-                            })
-                            if (telepro._id) {
-                                delete telepro._id;
-                            }
-                            rtn.push(telepro);
+            async.parallel(todayOP, function(err2, result) {
+                if (err2)
+                    reject(err);
+                result = _.mapValues(result, function(e) {
+                    return _.groupBy(e, 'login')
+                })
+                var rtn = [];
+                users.forEach(function(user) {
+                    if (user.service === "INTERVENTION") {
+                        var telepro = {
+                            login: user.login,
                         }
-                    });
-                    resolve(rtn)
+                        _.each(result, function(fltr, key) {
+                            cleanUp(key, telepro, result);
+                        })
+                        if (telepro._id) {
+                            delete telepro._id;
+                        }
+                        rtn.push(telepro);
+                    }
                 });
-
+                resolve(rtn)
             });
         });
     }

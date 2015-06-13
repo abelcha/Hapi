@@ -8,19 +8,13 @@ FiltersFactory = function(inter) {
     if (inter && typeof inter === 'object') {
         this.inter = inter;
         this.fltr = {};
-        this.today = new Date;
-        this.today = this.today.setHours(0);
         this.dateInter = (new Date(inter.date.intervention)).getTime();
-        this.now = Date.now();
-        this.fltr = {};
     }
 
 }
 
 var today = function() {
-    var tdy = (new Date()).setHours(0);
-    console.log(tdy, new Date(tdy));
-    return  tdy
+    return new Date((new Date()).setHours(0));
 }
 
 
@@ -41,11 +35,6 @@ FiltersFactory.prototype.create = function() {
             _this.fltr[_this.data[i].short_name] = 1;
         }
     }
-    if (this.inter.date.ajout > _this.today) {
-        _this.fltr.d = {
-            t: 1
-        }
-    }
     return _this.fltr;
 }
 
@@ -56,41 +45,59 @@ FiltersFactory.prototype.list = function() {
 FiltersFactory.prototype.data = [{
     short_name: 'all',
     long_name: 'Toutes les Inters',
-    url: '',
+    url: 'all',
     cache: false,
     match: {},
     fn: function() {
         return true;
     }
 }, {
-    short_name: 'env',
-    long_name: 'Envoyé',
-    url: 'envoye',
-    match: {
-        'status': 'ENV',
-         'date.intervention': {
-            $gt: new Date(Date.now() + ms.hours(1))
+    short_name: 'tall',
+    long_name: "tall",
+    url: 'ajd',
+    match: function() {
+        return {
+            'date.ajout': {
+                $gt: today()
+            }
         }
     },
     cache: true,
     fn: function() {
-        //console.log((new Date(this.inter.date.ajout)).getTime() , (new Date()).setHours(0), (new Date(this.inter.date.ajout)).getTime() > (new Date()).setHours(0));
-        return this.inter.status === "ENV" && this.inter.date.intervention >  (Date.now() + ms.hours(1));
+        return this.inter.date.ajout > today();
+    }
+}, {
+    short_name: 'tenv',
+    long_name: 'Envoyé',
+    url: 'envoyeAjd',
+    match: function() {
+        return {
+            'status': 'ENV',
+            'date.ajout': {
+                $gt: today()
+            }
+        }
+    },
+    cache: true,
+    fn: function() {
+        return (this.inter.status === "ENV" || this.inter.status === "AVR") && this.inter.date.ajout > today();
     }
 }, {
     short_name: 'avr',
     long_name: 'A Vérifier',
     url: 'aVerifier',
-    match: {
-        status: 'ENV',
-        'date.intervention': {
-            $lt: new Date(Date.now() + ms.hours(1))
+    match: function() {
+        return {
+            status: 'ENV',
+            'date.intervention': {
+                $lt: new Date(Date.now() + ms.hours(1))
+            }
         }
     },
     cache: true,
     fn: function() {
         return this.inter.status === "AVR" ||
-            (this.inter.status === "ENV" && this.now > this.dateInter);
+            (this.inter.status === "ENV" && Date.now() > this.dateInter);
     }
 }, {
     short_name: 'apr',
@@ -98,9 +105,6 @@ FiltersFactory.prototype.data = [{
     url: 'aProgrammer',
     match: {
         'status': 'APR',
-        'date.ajout': {
-            $gt: new Date(0)
-        },
     },
     cache: true,
     fn: function() {
@@ -144,7 +148,7 @@ FiltersFactory.prototype.data = [{
     cache: true,
     fn: function() {
         return this.fltr.atts &&
-            this.now > this.dateInter + ms.weeks(2);
+            Date.now() > this.dateInter + ms.weeks(2);
     }
 }, {
     short_name: 'attc',
@@ -172,7 +176,7 @@ FiltersFactory.prototype.data = [{
     cache: true,
     fn: function() {
         return this.fltr.attc &&
-            this.now > this.dateInter + ms.weeks(3);
+            Date.now() > this.dateInter + ms.weeks(3);
     }
 }, {
     short_name: 'fact',
@@ -257,283 +261,73 @@ FiltersFactory.prototype.data = [{
 
 module.exports = FiltersFactory;
 
-},{"milliseconds":4}],2:[function(require,module,exports){
+},{"milliseconds":5}],2:[function(require,module,exports){
 angular.module('browserify', [])
     .factory('config', [function() {
         "use strict";
-        var config =  require("./dataList.js")
+        var config = require("./dataList.js")
         config.filters = require('./FiltersFactory');
         return config;
-            /*    config.civilites = [{
-                    short_name: 'M.',
-                    long_name: 'Monsieur'
-                }, {
-                    short_name: 'Mme.',
-                    long_name: 'Madame'
-                }, {
-                    short_name: 'Soc.',
-                    long_name: 'Société'
-                }];
 
-                config.civilitesTab = ['M.', 'Mme.', 'Soc.'];
+    }])
+    .factory('textTemplate', [function() {
+        return require('./textTemplate.js')
+    }])
 
-                config.categoriesKV = {
-                    EL: {
-                        s: 'EL',
-                        o: 2,
-                        n: 'Electricité',
-                        c: 'yellow  accent-4 black-text'
-                    },
-                    PL: {
-                        s: 'PL',
-                        o: 0,
-                        n: 'Plomberie',
-                        c: 'blue white-text'
-                    },
-                    CH: {
-                        s: 'CH',
-                        o: 1,
-                        n: 'Chauffage',
-                        c: 'red white-text'
-                    },
-                    CL: {
-                        s: 'CL',
-                        o: 6,
-                        n: 'Climatisation',
-                        c: 'teal white-text'
-                    },
-                    SR: {
-                        s: 'SR',
-                        o: 3,
-                        n: 'Serrurerie',
-                        c: 'brown white-text'
-                    },
-                    VT: {
-                        s: 'VT',
-                        o: 4,
-                        n: 'Vitrerie',
-                        c: 'green white-text'
-                    },
-                    AS: {
-                        s: 'AS',
-                        o: 5,
-                        n: 'Assainissement',
-                        c: 'orange white-text'
-                    },
-                    PT: {
-                        s: 'PT',
-                        o: 7,
-                        n: 'Peinture',
-                        c: 'deep-orange white-text'
-                    }
-                }
-                config.categoriesAKV = [{
-                    s: 'PL',
-                    o: 0,
-                    n: 'Plomberie',
-                    c: 'blue white-text'
-                }, {
-                    s: 'CH',
-                    o: 1,
-                    n: 'Chauffage',
-                    c: 'red white-text'
-                }, {
-                    s: 'EL',
-                    o: 2,
-                    n: 'Electricité',
-                    c: 'yellow  accent-4 black-text'
-                }, {
-                    s: 'SR',
-                    o: 3,
-                    n: 'Serrurerie',
-                    c: 'brown white-text'
-                }, {
-                    s: 'VT',
-                    o: 4,
-                    n: 'Vitrerie',
-                    c: 'green white-text'
-                }, {
-                    s: 'AS',
-                    o: 5,
-                    n: 'Assainissement',
-                    c: 'orange white-text'
-                }, {
-                    s: 'CL',
-                    o: 6,
-                    n: 'Climatisation',
-                    c: 'teal white-text'
-                }, {
-                    s: 'PT',
-                    o: 7,
-                    n: 'Peinture',
-                    c: 'deep-orange white-text'
-                }]
-                config.fournisseur = [{
-                    short_name: 'ARTISAN',
-                    type: 'Fourniture Artisan'
-                }, {
-                    short_name: 'CEDEO',
-                    type: 'Fourniture Edison'
-                }, {
-                    short_name: 'BROSSETTE',
-                    type: 'Fourniture Edison'
-                }, {
-                    short_name: 'REXEL',
-                    type: 'Fourniture Edison'
-                }, {
-                    short_name: 'COAXEL',
-                    type: 'Fourniture Edison'
-                }, {
-                    short_name: 'YESSS ELECTRIQUE',
-                    type: 'Fourniture Edison'
-                }, {
-                    short_name: 'CGED',
-                    type: 'Fourniture Edison'
-                }, {
-                    short_name: 'COSTA',
-                    type: 'Fourniture Edison'
-                }, {
-                    short_name: 'FORUM DU BATIMENT',
-                    type: 'Fourniture Edison'
-                }]
-
-
-                config.modeDeReglements = [{
-                    short_name: 'CB',
-                    long_name: 'Carte Bancaire'
-                }, {
-                    short_name: 'CH',
-                    long_name: 'Chèque'
-                }, {
-                    short_name: 'CA',
-                    long_name: 'Espèces'
-                }];
-
-                config.tva = [{
-                    short_name: 10,
-                    long_name: "TVA: 10%"
-                }, {
-                    short_name: 20,
-                    long_name: "TVA: 20%"
-                }];
-                config.typePayeur = [{
-                    short_name: 'SOC',
-                    long_name: 'Société'
-                }, {
-                    short_name: 'PRO',
-                    long_name: 'Propriétaire'
-                }, {
-                    short_name: 'LOC',
-                    long_name: 'Locataire'
-                }, {
-                    short_name: 'IMO',
-                    long_name: 'Agence Immobilière'
-                }, {
-                    short_name: 'CUR',
-                    long_name: 'Curatelle'
-                }, {
-                    short_name: 'AUT',
-                    long_name: 'Autre'
-                }];
-
-                config.etatsKV = {
-                    ENV: {
-                        n: 'Envoyé',
-                        c: 'orange'
-                    },
-                    RGL: {
-                        n: 'Reglé',
-                        c: 'green'
-                    },
-                    PAY: {
-                        n: 'Payé',
-                        c: 'green accent-4'
-                    },
-                    ATT: {
-                        n: 'Reglement En Attente',
-                        c: 'purple'
-                    },
-                    ATTC: {
-                        n: 'RC En Attente',
-                        c: 'purple'
-                    },
-                    ATTS: {
-                        n: 'RS En Attente',
-                        c: 'pink darken-4'
-                    },
-                    APR: {
-                        n: 'A Progr.',
-                        c: 'blue'
-                    },
-                    AVR: {
-                        n: 'A Vérifier',
-                        c: 'brown darken-3'
-                    },
-                    ANN: {
-                        n: 'Annuler',
-                        c: 'red'
-                    },
-                    DEV: {
-                        n: 'Devis',
-                        c: 'light-blue'
-                    },
-                }
-
-                config.status = function(inter) {
-                    return {
-                        intervention: config.etatsKV[inter.status]
-                    }
-                }
-                return config;*/
-
-    }]);
-
-},{"./FiltersFactory":1,"./dataList.js":3}],3:[function(require,module,exports){
+},{"./FiltersFactory":1,"./dataList.js":3,"./textTemplate.js":4}],3:[function(require,module,exports){
 module.exports = {
     categories: {
         PL: {
+            suffix:'de',
             short_name: 'PL',
             long_name: 'Plomberie',
             order: 0,
             color: 'blue white-text'
         },
         CH: {
+            suffix:'de',
             short_name: 'CH',
             long_name: 'Chauffage',
             order: 1,
             color: 'red white-text'
         },
         EL: {
+            suffix:"d'",
             short_name: 'EL',
-            long_name: 'Electricité',
+            long_name: 'Électricité',
             order: 2,
             color: 'yellow  accent-4 black-text'
         },
         SR: {
+            suffix:'de',
             short_name: 'SR',
             long_name: 'Serrurerie',
             order: 3,
             color: 'brown white-text'
         },
         VT: {
+            suffix:'de',
             short_name: 'VT',
             long_name: 'Vitrerie',
             order: 4,
             color: 'green white-text'
         },
         AS: {
+            suffix:'de',
             short_name: 'AS',
             long_name: 'Assainissement',
             order: 5,
             color: 'orange white-text'
         },
         CL: {
+            suffix:'de',
             short_name: 'CL',
             long_name: 'Climatisation',
             order: 6,
             color: 'teal white-text'
         },
         PT: {
+            suffix:'de',
             short_name: 'PT',
             long_name: 'Peinture',
             order: 7,
@@ -712,6 +506,17 @@ module.exports = {
 }
 
 },{}],4:[function(require,module,exports){
+module.exports = {
+
+    mail: {
+        devis: {
+            envoi: "{{client.civilite}}{{client.prenom ? (' ' + _.startCase(client.prenom.toLowerCase())) : ''}} {{client.nom}}"
+        }
+    }
+
+};
+
+},{}],5:[function(require,module,exports){
 function calc(m) {
     return function(n) { return Math.round(n * m); };
 };
@@ -725,5 +530,5 @@ module.exports = {
     years: calc(315576e5)
 };
 
-},{}]},{},[1,2,3])
+},{}]},{},[1,2,3,4])
 

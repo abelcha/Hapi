@@ -40,7 +40,9 @@
                          scope.map.setZoom(12);
                          scope.map.setCenter(addr)
                          scope.data.client.address = addr;
-                         scope.addressChange();
+                         scope.addressChange({
+                             test: 123
+                         });
                      });
                  }
 

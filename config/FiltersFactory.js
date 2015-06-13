@@ -7,19 +7,13 @@ FiltersFactory = function(inter) {
     if (inter && typeof inter === 'object') {
         this.inter = inter;
         this.fltr = {};
-        this.today = new Date;
-        this.today = this.today.setHours(0);
         this.dateInter = (new Date(inter.date.intervention)).getTime();
-        this.now = Date.now();
-        this.fltr = {};
     }
 
 }
 
 var today = function() {
-    var tdy = (new Date()).setHours(0);
-    console.log(tdy, new Date(tdy));
-    return  tdy
+    return new Date((new Date()).setHours(0));
 }
 
 
@@ -40,11 +34,6 @@ FiltersFactory.prototype.create = function() {
             _this.fltr[_this.data[i].short_name] = 1;
         }
     }
-    if (this.inter.date.ajout > _this.today) {
-        _this.fltr.d = {
-            t: 1
-        }
-    }
     return _this.fltr;
 }
 
@@ -55,41 +44,59 @@ FiltersFactory.prototype.list = function() {
 FiltersFactory.prototype.data = [{
     short_name: 'all',
     long_name: 'Toutes les Inters',
-    url: '',
+    url: 'all',
     cache: false,
     match: {},
     fn: function() {
         return true;
     }
 }, {
-    short_name: 'env',
-    long_name: 'Envoyé',
-    url: 'envoye',
-    match: {
-        'status': 'ENV',
-         'date.intervention': {
-            $gt: new Date(Date.now() + ms.hours(1))
+    short_name: 'tall',
+    long_name: "tall",
+    url: 'ajd',
+    match: function() {
+        return {
+            'date.ajout': {
+                $gt: today()
+            }
         }
     },
     cache: true,
     fn: function() {
-        //console.log((new Date(this.inter.date.ajout)).getTime() , (new Date()).setHours(0), (new Date(this.inter.date.ajout)).getTime() > (new Date()).setHours(0));
-        return this.inter.status === "ENV" && this.inter.date.intervention >  (Date.now() + ms.hours(1));
+        return this.inter.date.ajout > today();
+    }
+}, {
+    short_name: 'tenv',
+    long_name: 'Envoyé',
+    url: 'envoyeAjd',
+    match: function() {
+        return {
+            'status': 'ENV',
+            'date.ajout': {
+                $gt: today()
+            }
+        }
+    },
+    cache: true,
+    fn: function() {
+        return (this.inter.status === "ENV" || this.inter.status === "AVR") && this.inter.date.ajout > today();
     }
 }, {
     short_name: 'avr',
     long_name: 'A Vérifier',
     url: 'aVerifier',
-    match: {
-        status: 'ENV',
-        'date.intervention': {
-            $lt: new Date(Date.now() + ms.hours(1))
+    match: function() {
+        return {
+            status: 'ENV',
+            'date.intervention': {
+                $lt: new Date(Date.now() + ms.hours(1))
+            }
         }
     },
     cache: true,
     fn: function() {
         return this.inter.status === "AVR" ||
-            (this.inter.status === "ENV" && this.now > this.dateInter);
+            (this.inter.status === "ENV" && Date.now() > this.dateInter);
     }
 }, {
     short_name: 'apr',
@@ -97,9 +104,6 @@ FiltersFactory.prototype.data = [{
     url: 'aProgrammer',
     match: {
         'status': 'APR',
-        'date.ajout': {
-            $gt: new Date(0)
-        },
     },
     cache: true,
     fn: function() {
@@ -143,7 +147,7 @@ FiltersFactory.prototype.data = [{
     cache: true,
     fn: function() {
         return this.fltr.atts &&
-            this.now > this.dateInter + ms.weeks(2);
+            Date.now() > this.dateInter + ms.weeks(2);
     }
 }, {
     short_name: 'attc',
@@ -171,7 +175,7 @@ FiltersFactory.prototype.data = [{
     cache: true,
     fn: function() {
         return this.fltr.attc &&
-            this.now > this.dateInter + ms.weeks(3);
+            Date.now() > this.dateInter + ms.weeks(3);
     }
 }, {
     short_name: 'fact',

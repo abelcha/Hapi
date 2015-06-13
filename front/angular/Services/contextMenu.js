@@ -1,76 +1,45 @@
-angular.module('edison').factory('contextMenu', ['$location', 'edisonAPI', 'actionIntervention', '$window', 'dialog', function($location, edisonAPI, actionIntervention, $window, dialog) {
+angular.module('edison').factory('contextMenu', ['$location', 'edisonAPI', '$window', 'dialog','Intervention', function($location, edisonAPI, $window, dialog, Intervention) {
     "use strict";
     var content = {};
 
     content.interventionList = [{
         hidden: false,
         title: 'Ouvrir Fiche',
-        click: function(inter) {
+        action: function(inter) {
             $location.url('/intervention/' + inter.id)
         }
     }, {
         hidden: false,
         title: "Appeler l'artisan",
-        click: function(inter) {
-            if (inter.artisan) {
-                var now = Date.now();
-                $window.open('callto:' + inter.artisan.telephone.tel1, '_self', false)
-                dialog.choiceText({
-                    title: 'Nouvel Appel',
-                }, function(response, text) {
-                    edisonAPI.call.save({
-                        date: now,
-                        to: inter.artisan.telephone.tel1,
-                        link: inter.artisan.id,
-                        origin: inter.id || inter.tmpID,
-                        description: text,
-                        response: response
-                    }).success(function(resp) {
-                        inter.artisan.calls.unshift(resp)
-                    })
-                })
-            }
-        },
+        action: 'callArtisan',
         hide: function(inter) {
             return !inter.ai
         }
     }, {
         hidden: false,
         title: "SMS artisan",
-        click: function(inter) {
-            dialog.getText({
-                title: "Texte du SMS",
-                text: "\nEdison Service"
-            }, function(text) {
-                edisonAPI.sms.send({
-                    link: inter.artisan.id,
-                    origin: inter.id,
-                    text: text,
-                    to: "0633138868"
-                })
-            })
-        },
+        action: 'smsArtisan',
         hide: function(inter) {
             return !inter.ai
         }
     }, {
         hidden: false,
         title: "Envoyer",
-        click: actionIntervention.envoi,
+        action: 'envoi',
         hide: function(inter) {
             return inter.s !== "APR" && inter.s !== 'ANN'
         }
     }, {
         hidden: false,
         title: "Vérifier",
-        click: actionIntervention.verification,
+        action: 'verification',
         hide: function(inter) {
             return inter.s !== "AVR" && inter.s !== 'ENV'
         }
     }, {
         hidden: false,
         title: "Annuler",
-        click: actionIntervention.annulation
+        action: 'annulation'
 
     }]
 
@@ -78,6 +47,9 @@ angular.module('edison').factory('contextMenu', ['$location', 'edisonAPI', 'acti
         this.content = content[page];
     }
 
+    ContextMenu.prototype.getData = function() {
+        return this.data;
+    }
     ContextMenu.prototype.setData = function(data) {
         this.data = data;
     }
@@ -102,6 +74,17 @@ angular.module('edison').factory('contextMenu', ['$location', 'edisonAPI', 'acti
         this.style.display = "none";
         this.active = false;
 
+    }
+
+    ContextMenu.prototype.click = function(link) {
+        if (typeof link.action === 'function') {
+            return link.action(this.getData())
+        } else if (typeof link.action === 'string') {
+            console.log(Intervention()[link.action])
+            return Intervention()[link.action].bind(this.data)();
+        } else {
+            console.log("error here")
+        }
     }
 
     ContextMenu.prototype.style = {

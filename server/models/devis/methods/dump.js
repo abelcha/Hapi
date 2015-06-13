@@ -62,31 +62,36 @@
                 client: client
             }
 
-            if (d.devis && d.id > 13740) {
-                var devis = JSON.parse(d.devis.split('<br>').join(""));
-                rtn.produits = devis.devisTab;
-                rtn.tva = devis.tva;
-                rtn.produits.map(function(p) {
-                    p.desc = sanitizeHtml(entities.decode(p.desc))
-                    p.ref = sanitizeHtml(entities.decode(p.ref))
-                    p.pu = sanitizeHtml(entities.decode(p.pu))
-                    p.ref = p.ref.replace(' ', '');
-                    if (p.ref.startsWith("CAM"))
-                        p.ref = "CAM001";
-                    if (p.ref.startsWith("EDI003") ||  p.ref.startsWith("FRN"))
-                        p.ref = "FRN001";
-                    var origin = _.find(edison.produits, function(e) {
-                        return e.ref === p.ref;
-                    });
-                    if (origin) {
-                        p.title = origin.title;
-                    } else {
-                        p.ref = "AUT001";
-                        p.title = "Autre"
-                    }
-                    return p
+            var devis = JSON.parse(d.devis.split('<br>').join(""));
+            rtn.historique = [];
+            _.each(new Array(devis.envoyer), function() {
+                rtn.historique.push({
+                    login: user,
+                    date: rtn.date.ajout
+                })
+            })
+            rtn.produits = devis.devisTab;
+            rtn.tva = devis.tva;
+            rtn.produits.map(function(p) {
+                p.desc = sanitizeHtml(entities.decode(p.desc))
+                p.ref = sanitizeHtml(entities.decode(p.ref))
+                p.pu = parseInt(sanitizeHtml(entities.decode(p.pu))) || 0
+                p.ref = p.ref.replace(' ', '');
+                if (p.ref.startsWith("CAM"))
+                    p.ref = "CAM001";
+                if (p.ref.startsWith("EDI003") ||  p.ref.startsWith("FRN"))
+                    p.ref = "FRN001";
+                var origin = _.find(edison.produits, function(e) {
+                    return e.ref === p.ref;
                 });
-            }
+                if (origin) {
+                    p.title = origin.title;
+                } else {
+                    p.ref = "AUT001";
+                    p.title = "Autre"
+                }
+                return p
+            });
 
             /* FACTURE */
             rtn.reglementSurPlace = !d.fact;
@@ -128,9 +133,9 @@
                 var t = Date.now();
                 console.log("--------", limit)
                 db.model('devis').remove({
-          /*          id: {
-                        $gt: limit
-                    }*/
+                    /*          id: {
+                                  $gt: limit
+                              }*/
                 }, function() {
                     request(key.alvin.url + "/dumpDevis.php?limit=" + limit + "&key=" + key.alvin.pass, function(err, rest, body) {
                         var data = JSON.parse(body);

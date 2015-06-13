@@ -1,48 +1,56 @@
 module.exports = {
     categories: {
         PL: {
+            suffix:'de',
             short_name: 'PL',
             long_name: 'Plomberie',
             order: 0,
             color: 'blue white-text'
         },
         CH: {
+            suffix:'de',
             short_name: 'CH',
             long_name: 'Chauffage',
             order: 1,
             color: 'red white-text'
         },
         EL: {
+            suffix:"d'",
             short_name: 'EL',
-            long_name: 'Electricité',
+            long_name: 'Électricité',
             order: 2,
             color: 'yellow  accent-4 black-text'
         },
         SR: {
+            suffix:'de',
             short_name: 'SR',
             long_name: 'Serrurerie',
             order: 3,
             color: 'brown white-text'
         },
         VT: {
+            suffix:'de',
             short_name: 'VT',
             long_name: 'Vitrerie',
             order: 4,
             color: 'green white-text'
         },
         AS: {
+            suffix:'de',
             short_name: 'AS',
             long_name: 'Assainissement',
             order: 5,
             color: 'orange white-text'
         },
         CL: {
+            suffix:'de',
             short_name: 'CL',
             long_name: 'Climatisation',
             order: 6,
             color: 'teal white-text'
         },
         PT: {
+            suffix:'de',
             short_name: 'PT',
             long_name: 'Peinture',
             order: 7,
