@@ -1,31 +1,32 @@
-angular.module('edison').factory('dataProvider', ['socket', '$rootScope', 'config', function(socket, $rootScope, config) {
+angular.module('edison').factory('DataProvider', ['socket', '$rootScope', 'config', function(socket, $rootScope, config) {
     "use strict";
-    var dataProvider = function() {
+    var DataProvider = function(model) {
         var _this = this;
-        socket.on('interventionListChange', function(data) {
-            _this.updateInterventionList(data);
+        this.model = model;
+        socket.on(this.model + 'ListChange', function(data) {
+            _this.updateData(data);
         });
     }
-    dataProvider.prototype.setInterventionList = function(data) {
-        this.interventionList = data;
+    DataProvider.prototype.setData = function(data) {
+        this.data = data;
     };
 
-    dataProvider.prototype.refreshInterventionListFilter = function(params, hash) {
+    DataProvider.prototype.refreshFilters = function(params, hash) {
         console.time("interFilter")
-        this.interventionListFiltered = this.interventionList;
-        if (this.interventionList && params) {
+        this.filteredData = this.data;
+        if (this.data && params) {
             var filterParam = config.filters().get({
                 url: params.fltr
             });
             if (params.fltr && filterParam || !params.fltr && hash) {
-                this.interventionListFiltered = _.filter(this.interventionList, function(e) {
+                this.filteredData = _.filter(this.data, function(e) {
                     return (!params.fltr || e.fltr[filterParam.short_name]) &&
                         (!hash || e.t === hash) &&
                         ((!params.d) || (e.fltr.d && e.fltr.d[params.d]))
                 })
             } else if (params.artisanID) {
                 var artisanID = parseInt(params.artisanID);
-                this.interventionListFiltered = _.filter(this.interventionList, function(e) {
+                this.filteredData = _.filter(this.data, function(e) {
                     return e.ai === artisanID;
                 })
             }
@@ -34,21 +35,25 @@ angular.module('edison').factory('dataProvider', ['socket', '$rootScope', 'confi
 
     }
 
-    dataProvider.prototype.updateInterventionList = function(data) {
+    DataProvider.prototype.updateData = function(newRow) {
         var _this = this;
-        if (this.interventionList) {
-            var index = _.findIndex(this.interventionList, function(e) {
-                return e.id === data.id
+        if (this.data) {
+            var index = _.findIndex(this.data, function(e) {
+                return e.id === newRow.id
             });
-            _this.interventionList[index] = data;
-            $rootScope.$broadcast('InterventionListChange');
+            if (index === -1) {
+                _this.data.unshift(newRow)
+            } else {
+                _this.data[index] = newRow;
+            }
+            $rootScope.$broadcast(_this.model + 'ListChange');
         }
     }
 
-    dataProvider.prototype.getInterventionList = function() {
-        return this.interventionList;
+    DataProvider.prototype.getData = function() {
+        return this.data;
     }
 
-    return new dataProvider();
+    return DataProvider;
 
 }]);

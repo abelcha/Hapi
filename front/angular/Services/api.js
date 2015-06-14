@@ -1,4 +1,4 @@
-angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvider', 'Upload', function($http, $location, dataProvider, Upload) {
+angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', function($http, $location, Upload) {
     "use strict";
     return {
         devis: {
@@ -17,6 +17,18 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvid
             },
             envoi: function(id, options) {
                 return $http.post("/api/devis/envoi", options);
+            },
+            annulation: function(id, causeAnnulation) {
+                return $http.post("/api/intervention/" + id + "/annulation", {
+                    causeAnnulation: causeAnnulation
+                });
+            },
+            list: function(options) {
+                return $http({
+                    method: 'GET',
+                    cache: options && options.cache,
+                    url: '/api/devis/list'
+                })
             },
         },
         intervention: {
@@ -116,7 +128,7 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvid
             },
             setAbsence: function(id, options) {
                 return $http({
-                    method: 'GET',
+                    method: 'POST',
                     url: '/api/artisan/' + id + '/absence',
                     params: options
                 })
@@ -160,8 +172,9 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvid
                     method: 'GET',
                     url: '/api/calls/get',
                     params: {
-                        link: link,
-                        // origin: origin
+                        q: JSON.stringify({
+                            link: link
+                        })
                     }
                 })
             },
@@ -175,8 +188,10 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'dataProvid
                     method: 'GET',
                     url: '/api/sms/get',
                     params: {
-                        link: link,
-                        origin: origin
+                        q: JSON.stringify({
+                            link: link,
+                            origin: origin
+                        })
                     }
                 })
             },

@@ -41,9 +41,6 @@ var InterventionCtrl = function($timeout, $rootScope, $scope, $location, $routeP
             intervention.facture.address = addr;
         });
     }
-    $scope.envoiSAV = function(sav) {
-        sav.status = "ENV"
-    }
     $scope.changeArtisan = function(sav) {
         sav.artisan = _.find(_this.artisans, function(e) {
             return e.id === sav.sst;
@@ -90,14 +87,14 @@ var InterventionCtrl = function($timeout, $rootScope, $scope, $location, $routeP
     }
 
     $scope.smsArtisan = function() {
-        intervention.smsArtisan(intervention, function(err, resp) {
+        intervention.smsArtisan(function(err, resp) {
             if (!err)
                 intervention.artisan.sms.unshift(resp)
         })
     }
 
     $scope.callArtisan = function() {
-        intervention.callArtisan(intervention, function(err, resp) {
+        intervention.callArtisan( function(err, resp) {
             if (!err)
                 intervention.artisan.calls.unshift(resp)
         })
@@ -128,10 +125,6 @@ var InterventionCtrl = function($timeout, $rootScope, $scope, $location, $routeP
         $scope.commentText = "";
     }
 
-    $scope.changeCategorie = function(key) {
-        if (intervention.client.address)
-            _this.searchArtisans();
-    }
 
     $scope.onFileUpload = function(file) {
         if (file) {
@@ -165,11 +158,12 @@ var InterventionCtrl = function($timeout, $rootScope, $scope, $location, $routeP
             if (err) {
                 return false;
             } else if (options && options.envoi === true) {
-                intervention.envoi(resp, closeTab);
+                resp.files = intervention.files;
+                intervention.envoi.bind(resp)(closeTab);
             } else if (options && options.annulation) {
-                intervention.annulation(resp, closeTab);
+                intervention.annulation(closeTab);
             } else if (options && options.verification) {
-                intervention.verification(resp, closeTab);
+                intervention.verification(closeTab);
             } else {
                 closeTab();
             }
@@ -182,13 +176,14 @@ var InterventionCtrl = function($timeout, $rootScope, $scope, $location, $routeP
     }
 
     _this.searchArtisans = function(categorie) {
-        edisonAPI.artisan.getNearest(intervention.client.address, categorie || intervention.categorie)
-            .success(function(result) {
-                _this.nearestArtisans = result;
-            });
+        if (_.get(intervention, 'client.address.lt')) {
+            edisonAPI.artisan.getNearest(intervention.client.address, categorie || intervention.categorie)
+                .success(function(result) {
+                    _this.nearestArtisans = result;
+                });
+        }
     }
-    if (intervention.client.address)
-        _this.searchArtisans();
+    _this.searchArtisans();
 
 
     $scope.$watch(function() {
@@ -249,7 +244,7 @@ var InterventionCtrl = function($timeout, $rootScope, $scope, $location, $routeP
 
     $scope.sstAbsence = function(id) {
         if (id) {
-            dialog.absence.open(id, _this.searchArtisans())
+            intervention.absenceArtisan(_this.searchArtisans);
         }
     }
 

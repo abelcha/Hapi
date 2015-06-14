@@ -21,10 +21,27 @@ module.exports = function() {
             if (method.endsWith('.js')) {
                 require(folder + '/methods/' + method)(schema)
             }
-            
         });
         var model = mongoose.model(model, schema);
+
     })
+
+    basePath = basePath + '/' + "event"
+    getDirectories(basePath).forEach(function(model) {
+        if (model !==  "methods") {
+            var folder = basePath + '/' + model;
+            var schema = require(folder + '/schema')(mongoose);
+
+            require(folder + '/validator')(schema);
+
+            fs.readdirSync(folder + '/methods').forEach(function(method) {
+                if (method.endsWith('.js')) {
+                    require(folder + '/methods/' + method)(schema)
+                }
+            });
+            var model = mongoose.model(model, schema);
+        }
+    });
     mongoose.utils = {
         round: function(field) {
             return {

@@ -8,8 +8,8 @@
                             <strong class="fs-headline display-block">Fiche d'intervention</strong>
                             <span class="fs-subhead tc-black-2 display-block">Ajoute le {{vm.data.date.ajout| date:"dd/MM à HH:mm"}} par {{vm.data.login.ajout}}</span>
                         </div>
-                        <div style="float:right;width:40%;text-align:right" ng-if="vm.data.status">
-                            <strong class="fs-headline display-block" style="color:{{config.etatsKV[vm.data.status].c}}">{{config.etatsKV[vm.data.status].n}}</strong>
+                        <div style="float:right;width:40%;text-align:right" >
+                            <strong ng-if="vm.data.status" class="fs-headline display-block" style="color:{{config.etats[vm.data.status].color}}">{{config.etats[vm.data.status].long_name}}</strong>
                         </div>
                     </div>
                 </div>
@@ -465,8 +465,8 @@
         </button>
         <div class="fab__actions fab__actions--left">
             <button ng-show="vm.data.status === 'ENV'" ng-click="saveInter({verification:true})" class="btn--no-conflicts btn--l btn--black btn--fab" lx-ripple lx-tooltip="Verifier" tooltip-position="top"><i class="mdi mdi-check-all"></i></button>
-            <button ng-click="saveInter({annulation:true})" class="btn--no-conflicts btn--l btn--black btn--fab" lx-ripple lx-tooltip="Annuler" tooltip-position="top"><i class="mdi mdi-close"></i></button>
-            <button ng-show="vm.data.status === 'ANN' || vm.data.status === 'APR' " ng-click="saveInter({envoi:true})" class="btn--no-conflicts btn--l btn--black btn--fab" lx-ripple lx-tooltip="Envoyer" tooltip-position="top"><i class="mdi mdi-send"></i></button>
+            <button ng-if="vm.data.status" ng-click="saveInter({annulation:true})" class="btn--no-conflicts btn--l btn--black btn--fab" lx-ripple lx-tooltip="Annuler" tooltip-position="top"><i class="mdi mdi-close"></i></button>
+            <button ng-if="!vm.data.status || vm.data.status === 'ANN' || vm.data.status === 'APR'" ng-click="saveInter({envoi:true})" class="btn--no-conflicts btn--l btn--black btn--fab" lx-ripple lx-tooltip="Envoyer" tooltip-position="top"><i class="mdi mdi-send"></i></button>
         </div>
     </div>
 </div>

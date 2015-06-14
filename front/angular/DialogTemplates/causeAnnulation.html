@@ -5,7 +5,8 @@
            <!--  <select ng-model="absenceTime" ng-options="ind.value as ind.title for ind in absence">
             </select> -->
              <select class="form-control" ng-model="ca" 
-             ng-options="csa.short_name as csa.long_name group by csa.type for csa in causeAnnulation">
+             ng-options="csa.short_name as csa.long_name group by csa.type for csa in causeAnnulation"
+             default-option="Cause D'annulation">
                                                 </select>
         </div>
     </md-dialog-content>

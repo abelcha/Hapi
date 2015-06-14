@@ -25,21 +25,10 @@
 
 
                  scope.envoiDevis = function() {
-                    console.log(model.typeOf())
-                     if (model.typeOf() === "Intervention") {
-                         model.envoiDevis(function(err, res) {
-                             console.log(err, resp)
-                             if (!err)
-                                 model.date.envoiFacture = new Date();
-                         })
-                     } else if (model.typeOf() === "Devis") {
-                         model.envoi(function(err, resp) {
-                             console.log(err, resp)
-                         })
-
-                     } else {
-                        console.error("unknown model")
-                     }
+                     model.envoiDevis(function(err, res) {
+                         if (!err)
+                             model.date.envoiFacture = new Date();
+                     })
                  }
              },
          }

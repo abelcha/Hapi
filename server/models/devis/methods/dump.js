@@ -67,9 +67,17 @@
             _.each(new Array(devis.envoyer), function() {
                 rtn.historique.push({
                     login: user,
-                    date: rtn.date.ajout
+                    date: rtn.date.ajout,
                 })
             })
+            //db.model('event').collection.insert(historique)
+            if (d.etat_intervention === "ANN") {
+                devis.status = "ANN";
+            } else if (d.etat_intervention === "DEV") {
+                devis.status = "ATT"
+            } else {
+                devis.status = 'TRA'
+            }
             rtn.produits = devis.devisTab;
             rtn.tva = devis.tva;
             rtn.produits.map(function(p) {
@@ -131,7 +139,9 @@
             return new Promise(function(resolve, reject) {
                 var inters = [];
                 var t = Date.now();
-                console.log("--------", limit)
+                db.model('event').remove({
+                    type: 'ENV_DEV'
+                })
                 db.model('devis').remove({
                     /*          id: {
                                   $gt: limit

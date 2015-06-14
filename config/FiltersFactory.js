@@ -17,7 +17,6 @@ var today = function() {
 }
 
 
-
 FiltersFactory.prototype.get = function(fltr) {
     var _this = this;
     for (var i = 0; i < _this.data.length; ++i) {
@@ -42,9 +41,9 @@ FiltersFactory.prototype.list = function() {
 }
 
 FiltersFactory.prototype.data = [{
-    short_name: 'all',
+    short_name: '',
     long_name: 'Toutes les Inters',
-    url: 'all',
+    url: '',
     cache: false,
     match: {},
     fn: function() {
@@ -52,7 +51,7 @@ FiltersFactory.prototype.data = [{
     }
 }, {
     short_name: 'tall',
-    long_name: "tall",
+    long_name: "uAjourd'hui",
     url: 'ajd',
     match: function() {
         return {

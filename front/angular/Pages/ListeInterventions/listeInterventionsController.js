@@ -1,4 +1,4 @@
-angular.module('edison').controller('InterventionsController', function($timeout, tabContainer, $window, contextMenu, edisonAPI, dataProvider, $routeParams, $location, $scope, $q, $rootScope, $filter, config, ngTableParams, interventions, interventionsStats) {
+angular.module('edison').controller('InterventionsController', function($timeout, tabContainer, $window, ContextMenu, edisonAPI, DataProvider, $routeParams, $location, $scope, $q, $rootScope, $filter, config, ngTableParams, interventions, interventionsStats) {
     "use strict";
     $scope.interventionsStats = interventionsStats.data;
     $scope.tab = tabContainer.getCurrentTab();
@@ -16,25 +16,28 @@ angular.module('edison').controller('InterventionsController', function($timeout
     }
     $scope.api = edisonAPI;
     $scope.config = config;
-    $scope.dataProvider = dataProvider;
+    $scope.dataProvider = new DataProvider('intervention');
 
-    if (!$scope.dataProvider.getInterventionList()) {
-        $scope.dataProvider.setInterventionList(interventions.data);
+    if (!$scope.dataProvider.getData()) {
+        $scope.dataProvider.setData(interventions.data);
     }
 
-    $scope.dataProvider.refreshInterventionListFilter($routeParams, $scope.tab.hash);
-
+    $scope.dataProvider.refreshFilters($routeParams, $scope.tab.hash);
+    console.log($scope.dataProvider);
     var tableParameters = {
         page: 1, // show first page
-        total: $scope.dataProvider.interventionListFiltered.length,
+        total: $scope.dataProvider.filteredData.length,
         filter: {},
+        sorting: {
+            id: 'desc'
+        },
         count: 100 // count per page
     };
     var tableSettings = {
         //groupBy:$rootScope.config.selectedGrouping,
-        total: $scope.dataProvider.interventionListFiltered,
+        total: $scope.dataProvider.filteredData,
         getData: function($defer, params) {
-            var data = $scope.dataProvider.interventionListFiltered;
+            var data = $scope.dataProvider.filteredData;
             data = $filter('tableFilter')(data, params.filter());
             params.total(data.length);
             data = $filter('orderBy')(data, params.orderBy());
@@ -44,12 +47,12 @@ angular.module('edison').controller('InterventionsController', function($timeout
     }
     $scope.tableParams = new ngTableParams(tableParameters, tableSettings);
 
-    $rootScope.$on('InterventionListChange', function() {
-        $scope.dataProvider.refreshInterventionListFilter($routeParams, $scope.tab.hash);
+    $rootScope.$on('interventionListChange', function() {
+        $scope.dataProvider.refreshFilters($routeParams, $scope.tab.hash);
         $scope.tableParams.reload();
     })
 
-    $scope.contextMenu = contextMenu('interventionList')
+    $scope.contextMenu = new ContextMenu('intervention')
 
 
     $scope.getStaticMap = function(inter) {
@@ -98,7 +101,7 @@ angular.module('edison').controller('InterventionsController', function($timeout
                     $("#expended").velocity({
                         height: 194,
                     }, 150, function() {
-                       // delete $scope.expendedStyle.height
+                        // delete $scope.expendedStyle.height
                     });
                 }, 50)
                 $q.all([

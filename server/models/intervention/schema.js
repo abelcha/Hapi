@@ -108,7 +108,7 @@ module.exports = function(db) {
             artisan: {
                 id: {
                     type: Number,
-                    ref:'artisan'
+                    ref: 'artisan'
                 },
                 nomSociete: String,
             },
@@ -168,6 +168,7 @@ module.exports = function(db) {
             type: Boolean,
             default: false
         },
+        devisOrigine: Number,
         fournisseur: String,
         coutFourniture: {
             type: Number,

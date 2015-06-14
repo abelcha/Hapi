@@ -57,8 +57,9 @@
             <i class="mdi mdi-checkbox-marked-circle-outline"></i>
         </button>
         <div class="fab__actions fab__actions--left">
-            <button ng-click="vm.saveDevis({annulation:true})" class="btn--no-conflicts btn--l btn--black btn--fab" lx-ripple lx-tooltip="Annuler" tooltip-position="top"><i class="mdi mdi-close"></i></button>
-            <button ng-show="vm.data.status === 'ANN' || vm.data.status === 'APR' " ng-click="vm.saveDevis({envoi:true})" class="btn--no-conflicts btn--l btn--black btn--fab" lx-ripple lx-tooltip="Envoyer" tooltip-position="top"><i class="mdi mdi-send"></i></button>
+             <button ng-if="vm.data.status" ng-click="vm.saveDevis({transform:true})" class="btn--no-conflicts btn--l btn--black btn--fab" lx-ripple lx-tooltip="Transformer" tooltip-position="top"><i class="fa fa-plus"></i></button>
+            <button ng-if="vm.data.status" ng-click="vm.saveDevis({annulation:true})" class="btn--no-conflicts btn--l btn--black btn--fab" lx-ripple lx-tooltip="Annuler" tooltip-position="top"><i class="mdi mdi-close"></i></button>
+            <button ng-click="vm.saveDevis({envoi:true})" class="btn--no-conflicts btn--l btn--black btn--fab" lx-ripple lx-tooltip="Envoyer" tooltip-position="top"><i class="mdi mdi-send"></i></button>
         </div>
     </div>
 </div>

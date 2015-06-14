@@ -1,6 +1,6 @@
 angular.module('edison')
-    .factory('Devis', ['$window', 'LxNotificationService', 'dialog', 'edisonAPI', 'textTemplate',
-        function($window, LxNotificationService, dialog, edisonAPI, textTemplate) {
+    .factory('Devis', ['$window','$rootScope', '$location', 'LxNotificationService', 'dialog', 'edisonAPI', 'textTemplate',
+        function($window, $rootScope, $location, LxNotificationService, dialog, edisonAPI, textTemplate) {
             "use strict";
             var Devis = function(data) {
                 if (!(this instanceof Devis)) {
@@ -15,6 +15,7 @@ angular.module('edison')
             }
             Devis.prototype.save = function(cb) {
                 var _this = this;
+
                 edisonAPI.devis.save(_this)
                     .then(function(resp) {
                         var validationMessage = _.template("Les données du devis {{id}} ont à été enregistré")(resp.data);
@@ -28,11 +29,12 @@ angular.module('edison')
                     });
             };
             Devis.prototype.envoi = function(cb) {
-                // console.log(_.template(textTemplate.mail.devis.envoi)(_this));
                 var _this = this;
                 dialog.getText({
                     title: "Texte envoi devis",
-                    text: _.template("Voici le devis de l'inter {{id}}\nEdison Services")(_this)
+                    text: textTemplate.mail.devis.envoi.bind(_this)($rootScope.user),
+                    width:"60%",
+                    height:"80%"
                 }, function(text) {
                     edisonAPI.devis.envoi(_this.id, {
                         text: text,
@@ -43,13 +45,31 @@ angular.module('edison')
                         if (typeof cb === 'function')
                             cb(null, resp);
                     }).catch(function(err) {
-                        var validationMessage = _.template("L'envoi du devis {{id}} à échoué")(_this)
+                        var validationMessage = _.template("L'envoi du devis {{id}} à échoué\n")(_this)
+                        if (err && err.data && typeof err.data === 'string')
+                            validationMessage += ('\n(' + err.data + ')')
                         LxNotificationService.error(validationMessage);
                         if (typeof cb === 'function')
                             cb(err);
                     })
 
                 })
+            }
+            Devis.prototype.annulation = function(cb) {
+                var _this = this;
+                dialog.getCauseAnnulation(function(causeAnnulation) {
+                    edisonAPI.devis.annulation(_this.id, causeAnnulation)
+                        .then(function(resp) {
+                            var validationMessage = _.template("Le devis {{id}} est annulé")(resp.data)
+                            LxNotificationService.success(validationMessage);
+                            if (typeof cb === 'function')
+                                cb(null, resp.data)
+                        });
+                });
+            };
+            Devis.prototype.transform = function() {
+                var _this = this;
+                 $location.url("/intervention?devis=" + _this.id);
             }
             return Devis;
         }

@@ -3,10 +3,14 @@ module.exports = function(db) {
     return new db.Schema({
         _id: Number,
         id: Number,
+        isDevis: {
+            type: Boolean,
+            default: true
+        },
         status: {
             type: String,
             index: true,
-            default: 'APR' // ANN ATT AEV TRA
+            default: 'AEV' // ANN ATT AEV TRA
         },
         causeAnnulation: String,
         login: {
@@ -23,8 +27,12 @@ module.exports = function(db) {
             transfert: Date
         },
         historique: [{
-            date: Date,
+            date: {
+                type: Date,
+                default: Date.now,
+            },
             login: String,
+            mail: {}
         }],
         client: { //
             civilite: {

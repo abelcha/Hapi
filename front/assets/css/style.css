@@ -275,7 +275,7 @@ label.text-field__label,
     padding-top: 24px!important;
 }
 
-.text-field>label {
+.text-field:not(.select-style)>label {
     top: 0px!important;
 }
 

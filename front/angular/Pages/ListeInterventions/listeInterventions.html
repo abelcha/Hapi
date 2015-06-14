@@ -4,7 +4,7 @@
         {{data}}
     </div>
     <div class="shadow-box listeInterventions">
-        <table style="background:white;" ng-table="tableParams" class="table table-bordered table-hover table-hover table-striped" id="table-list" show-filter="true">
+        <table style="background:white;cursor:pointer" ng-table="tableParams" class="table table-bordered table-hover table-hover table-striped" id="table-list" show-filter="true">
             <tbody id="tbody-list">
                 <tr data-id="{{inter.id}}" ng-repeat-start="inter in $data" ng-right-click="rowRightClick($event, inter)" ng-click="rowClick($event, inter, false)" ng-dblclick="rowClick($event, inter, true)" ng-class="{success : contextMenu.active && contextMenu.data.id === inter.id}">
                     <td data-title="'Os'" sortable="'id'" filter="{ 'id': 'text' }">
@@ -87,21 +87,12 @@
         </table>
     </div>
     <div class="dropdown-menu--no-conflicts dropdown-menu--right dropdown__menu--is-dropped" style=" width: auto; height: auto; opacity: 1;" ng-style="contextMenu.style">
-        <!-- ngIf: isDropped -->
         <div class="dropdown-menu__content ng-scope">
             <ul class="ng-scope">
-                <li ng-repeat="content in contextMenu.content" ng-hide="content.hidden" ng-click="contextMenu.close();contextMenu.click(content)">
-                    <a class="dropdown-link" tabindex="0">{{content.title}}</a>
+                <li ng-repeat="item in contextMenu.list"  ng-click="contextMenu.close();contextMenu.click(item)">
+                    <a class="dropdown-link" tabindex="0">{{item.title}}</a>
                 </li>
-                <!-- <li><a ng-click="" class="dropdown-link" tabindex="0">Ouvrir Fiche</a></li>
-                <li><a ng-click="" class="dropdown-link" tabindex="0">Envoyer</a></li>
-                <li><a ng-click="" class="dropdown-link" tabindex="0">Annuler</a></li>
-                <li><a ng-click="" class="dropdown-link" tabindex="0">Appeler SST</a></li>
-                <li><a ng-click="" class="dropdown-link" tabindex="0">Message SST</a></li>
-                <li><a ng-click="" class="dropdown-link" tabindex="0">Appeler Client</a></li>
-                <li><a ng-click="" class="dropdown-link" tabindex="0">Message Client</a></li> -->
             </ul>
         </div>
-        <!-- end ngIf: isDropped -->
     </div>
 </div>

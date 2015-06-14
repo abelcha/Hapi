@@ -17,9 +17,7 @@ angular.module('edison')
                 return 'Intervention';
             };
             Intervention.prototype.envoiDevis = function(cb) {
-                Devis().envoi.bind(this)(function(err, resp) {
-                    console.log("-------", err, resp)
-                })
+                Devis().envoi.bind(this)(cb)
             };
 
             Intervention.prototype.envoiFacture = function(cb) {
@@ -92,7 +90,15 @@ angular.module('edison')
                     })
                 })
             };
-
+            Intervention.prototype.absenceArtisan = function(cb) {
+                var _this = this;
+                dialog.absence(function(start, end) {
+                    edisonAPI.artisan.setAbsence(_this.artisan.id, {
+                        start: start,
+                        end: end
+                    }).success(cb)
+                })
+            }
             Intervention.prototype.save = function(cb) {
                 var _this = this;
                 edisonAPI.intervention.save(_this)
@@ -111,6 +117,7 @@ angular.module('edison')
 
             Intervention.prototype.envoi = function(cb) {
                 var _this = this;
+                console.log(_this.files)
                 dialog.getFileAndText(_this, _this.files, function(text, file) {
                     edisonAPI.intervention.envoi(_this.id, {
                         sms: text,

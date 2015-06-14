@@ -5,15 +5,15 @@ var DevisCtrl = function($rootScope, $location, $routeParams, LxNotificationServ
     _this.dialog = dialog;
     _this.moment = moment;
     var tab = tabContainer.getCurrentTab();
-   if (!tab.data) {
+    if (!tab.data) {
         var devis = new Devis(devisPrm.data)
         tab.setData(devis);
         if ($routeParams.id.length > 12) {
             _this.isNew = true;
             devis.tmpID = $routeParams.id;
-            tab.setTitle('#' + moment((new Date(parseInt(devis.tmpID))).toISOString()).format("HH:mm").toString());
+            tab.setTitle('DEVIS ' + moment((new Date(parseInt(devis.tmpID))).toISOString()).format("HH:mm").toString());
         } else {
-            tab.setTitle('#' + $routeParams.id);
+            tab.setTitle('DEVIS ' + $routeParams.id);
             if (!devis) {
                 LxNotificationService.error("Impossible de trouver les informations !");
                 $location.url("/dashboard");
@@ -30,12 +30,24 @@ var DevisCtrl = function($rootScope, $location, $routeParams, LxNotificationServ
             ajout: $rootScope.user.login
         }
     }
-    _this.saveDevis = function(options) {
-        devis.envoi(_this.data);
-/*        actionDevis.save(_this.data, function(err, resp) {
-            console.log(err, resp)
-        })*/
+    var closeTab = function(err) {
+        if (!err) {
+            $location.url("/interventions");
+            tabContainer.remove(tab)
+        }
     }
-    $('map').css('height', '500px')
+    _this.saveDevis = function(options) {
+        devis.save(function(err, resp) {
+            if (err) {
+                return false;
+            } else if (options.envoi) {
+                devis.envoi.bind(resp)(closeTab);
+            } else if (options.annulation) {
+                devis.annulation(closeTab);
+            } else if (options.transform) {
+                devis.transform()
+            }
+        })
+    }
 }
 angular.module('edison').controller('DevisController', DevisCtrl);

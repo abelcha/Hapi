@@ -19,5 +19,6 @@ angular.module('edison').factory('openPost', [function() {
 
         // Just submit
         mapForm.submit();
+        mapForm.remove();
     }
 }]);

@@ -17,6 +17,7 @@
      root: true,
      nom: 'boukris',
      prenom: 'benjamin',
+     pseudo: 'arnaud',
      activated: true
 
  }, {
@@ -26,6 +27,7 @@
      root: false,
      nom: 'xxx',
      prenom: 'harald',
+     pseudo: 'fabien',
      activated: false
  }, {
      login: 'jeremie_r',
@@ -34,13 +36,15 @@
      root: false,
      nom: 'roudier',
      prenom: 'jeremie',
+     pseudo: 'éric',
      activated: false
  }, {
-     login: 'laurent_x',
+     login: 'clement_x',
      oldLogin: 'laurent',
      service: 'INTERVENTION',
      root: false,
-     nom: 'Clement',
+     nom: 'clement',
+     pseudo: 'laurent',
      prenom: 'xxx',
      activated: false
  }, {
@@ -50,6 +54,7 @@
      root: false,
      nom: 'guillot',
      prenom: 'taieb',
+     pseudo: 'éric',
      activated: false
  }, {
      login: 'eliran_t',
@@ -58,6 +63,7 @@
      root: true,
      nom: 'taieb',
      prenom: 'eliran',
+     pseudo: 'damien',
      activated: true
  }, {
      login: 'thomas_x',
@@ -65,6 +71,7 @@
      service: 'INTERVENTION',
      root: true,
      nom: 'xxx',
+     pseudo: 'thomas',
      prenom: 'thomas',
      activated: false
  }, {

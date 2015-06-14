@@ -7,7 +7,7 @@ angular.module('edison', ['browserify', 'ngMaterial', 'lumx', 'ngAnimate', 'xedi
     });
 
 
-angular.module('edison').controller('MainController', function(tabContainer, $scope, socket, config, dataProvider, $rootScope, $location, edisonAPI, taskList) {
+angular.module('edison').controller('MainController', function(tabContainer, $scope, socket, config, $rootScope, $location, edisonAPI, taskList) {
     "use strict";
     edisonAPI.getUser().success(function(result) {
         $rootScope.user = result;
@@ -52,7 +52,7 @@ angular.module('edison').controller('MainController', function(tabContainer, $sc
 
 
 
-    $rootScope.$on('InterventionListChange', reloadStats);
+    $rootScope.$on('interventionListChange', reloadStats);
 
     var initTabs = function(baseUrl, baseHash) {
         $scope.tabsInitialized = true;
@@ -107,6 +107,13 @@ angular.module('edison').controller('MainController', function(tabContainer, $sc
     };
 });
 
+var getDevisList = function(edisonAPI) {
+    "use strict";
+    return edisonAPI.devis.list({
+        cache: true
+    });
+};
+
 var getInterList = function(edisonAPI) {
     "use strict";
     return edisonAPI.intervention.list({
@@ -151,8 +158,11 @@ var getInterventionStats = function(edisonAPI) {
 var getIntervention = function($route, $q, edisonAPI) {
     "use strict";
     var id = $route.current.params.id;
-
-    if (id.length > 10) {
+    if ($route.current.params.d) {
+        return edisonAPI.devis.get($route.current.params.d, {
+            transform:true
+        });
+    } else if (id.length > 10) {
         return $q(function(resolve) {
             resolve({
                 data: {
@@ -182,17 +192,19 @@ var getIntervention = function($route, $q, edisonAPI) {
 var getDevis = function($route, $q, edisonAPI) {
     "use strict";
     var id = $route.current.params.id;
-    console.log(id);
+    console.log($route.current)
     if (id.length > 10) {
         return $q(function(resolve) {
             resolve({
                 data: {
+                    isDevis: true,
                     produits: [],
                     tva: 20,
                     client: {},
                     date: {
                         ajout: Date.now(),
-                    }
+                    },
+                    historique: []
                 }
             });
         });
@@ -239,9 +251,29 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
                 artisans: getArtisanList
             }
         })
+        .when('/devisList', {
+            templateUrl: "Pages/ListeDevis/listeDevis.html",
+            controller: "ListeDevisController",
+            resolve: {
+                devis: getDevisList,
+                interventions: getInterList,
+                interventionsStats: getInterventionStats,
+                artisans: getArtisanList
+            }
+        })
+        .when('/devisList/:fltr', {
+            templateUrl: "Pages/ListeInterventions/listeInterventions.html",
+            controller: "InterventionsController",
+            resolve: {
+                interventionsStats: getInterventionStats,
+                interventions: getInterList,
+                artisans: getArtisanList
+            }
+        })
         .when('/intervention', {
-            redirectTo: function() {
-                return '/intervention/' + Date.now();
+            redirectTo: function(routeParams, path, params) {
+                var url = params.devis ? "?d=" + params.devis : "";
+                return '/intervention/' + Date.now() + url;
             }
         })
         .when('/devis', {
@@ -274,7 +306,7 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
 
             }
         })
-         .when('/devis/:id', {
+        .when('/devis/:id', {
             templateUrl: "Pages/Intervention/devis.html",
             controller: "DevisController",
             controllerAs: "vm",
@@ -302,5 +334,24 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
 
 angular.module('edison').run(function(editableOptions) {
     "use strict";
+
     editableOptions.theme = 'bs3'; // bootstrap3 theme. Can be also 'bs2', 'default'
-});
+}).run(function($templateCache, $route, $http) {
+    var url;
+    for (var i in $route.routes) {
+        if (url = $route.routes[i].templateUrl) {
+            $http.get(url, {
+                cache: $templateCache
+            });
+        }
+    }
+    $http.get("/Pages/intervention/info-client.html", {
+        cache: $templateCache
+    });
+    $http.get("/Pages/intervention/info-categorie.html", {
+        cache: $templateCache
+    });
+    $http.get("/Pages/intervention/autocomplete-map.html", {
+        cache: $templateCache
+    });
+})

@@ -2,21 +2,17 @@ module.exports = function(schema) {
     schema.statics.absence = {
         unique: true,
         findBefore: true,
-        method:'POST',
+        method: 'POST',
         fn: function(doc, req, res) {
             return new Promise(function(resolve, reject) {
                 doc.absence = {
-                    start: new Date(req.query.start),
-                    end: new Date(req.query.end),
+                    start: new Date(req.body.start),
+                    end: new Date(req.body.end),
                     login: req.session.login
                 }
-                doc.save()
-                    .then(function(re) {
-                        resolve(re)
-                    }, reject)
-            }, reject);
+                doc.save().then(resolve, reject)
+            });
         }
-
     }
 
     schema.virtual('disponible').get(function() {

@@ -73,6 +73,8 @@ angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', 'config', 
                 controller: function($scope, config) {
                     $scope.causeAnnulation = config.causeAnnulation;
                     $scope.answer = function(resp) {
+                        if (!$scope.ca)
+                            return false;
                         $mdDialog.hide();
                         if (resp)
                             return cb(resp);
@@ -136,53 +138,49 @@ angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', 'config', 
                 });
             }
         },
-        absence: {
-            open: function(id, cb) {
-                $mdDialog.show({
-                    controller: function DialogController($scope, $mdDialog) {
-                        $scope.absenceTime = 'TODAY';
-                        $scope.absence = [{
-                            title: 'Toute la journée',
-                            value: 'TODAY'
-                        }, {
-                            title: '1 Heure',
-                            value: '1'
-                        }, {
-                            title: '2 Heure',
-                            value: '2'
-                        }, {
-                            title: '3 Heure',
-                            value: '3'
-                        }, {
-                            title: '4 Heure',
-                            value: '4'
-                        }]
-                        $scope.hide = function() {
-                            $mdDialog.hide();
-                        };
-                        $scope.cancel = function() {
-                            $mdDialog.cancel();
-                        };
-                        $scope.answer = function(answer) {
-                            $mdDialog.hide(answer);
-                            var hours = 0;
-                            if (answer === "TODAY") {
-                                hours = 23 - (new Date()).getHours() + 1;
-                            } else {
-                                hours = parseInt(answer);
-                            }
-                            var start = new Date();
-                            var end = new Date();
-                            end.setHours(end.getHours() + hours)
-                            edisonAPI.artisan.setAbsence(id, {
-                                start: start,
-                                end: end
-                            }).success(cb)
-                        };
-                    },
-                    templateUrl: '/DialogTemplates/absence.html',
-                });
-            }
+        absence: function(cb) {
+            $mdDialog.show({
+                controller: function DialogController($scope, $mdDialog) {
+                    $scope.absenceTime = 'TODAY';
+                    $scope.absence = [{
+                        title: 'Toute la journée',
+                        value: 'TODAY'
+                    }, {
+                        title: '1 Heure',
+                        value: '1'
+                    }, {
+                        title: '2 Heure',
+                        value: '2'
+                    }, {
+                        title: '3 Heure',
+                        value: '3'
+                    }, {
+                        title: '4 Heure',
+                        value: '4'
+                    }]
+                    $scope.hide = function() {
+                        $mdDialog.hide();
+                    };
+                    $scope.cancel = function() {
+                        $mdDialog.cancel();
+                    };
+                    $scope.answer = function(answer) {
+                        $mdDialog.hide(answer);
+                        var hours = 0;
+                        if (answer === "TODAY") {
+                            hours = 23 - (new Date()).getHours() + 1;
+                        } else {
+                            hours = parseInt(answer);
+                        }
+                        var start = new Date();
+                        var end = new Date();
+                        end.setHours(end.getHours() + hours)
+                        cb(start, end);
+                      
+                    };
+                },
+                templateUrl: '/DialogTemplates/absence.html',
+            });
         }
     }
 
