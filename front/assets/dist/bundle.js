@@ -370,7 +370,7 @@ module.exports = {
     }, {
         hidden: false,
         title: "Envoyer",
-        action: 'envoyer',
+        action: 'envoi',
         hide: function(inter) {
             return inter.s !== "TRA" && inter.s !== 'ANN';
         }
@@ -393,6 +393,13 @@ module.exports = {
         hide: function(inter) {
             return !inter.ai
         }
+    },{
+        hidden: false,
+        title: "Appeler le client",
+        action: 'callClient',
+        hide: function(inter) {
+            return !inter.ai
+        }
     }, {
         hidden: false,
         title: "SMS artisan",
@@ -405,7 +412,7 @@ module.exports = {
         title: "Envoyer",
         action: 'envoi',
         hide: function(inter) {
-            return inter.s !== "APR" && inter.s !== 'ANN'
+            return inter.s == "APR" || inter.s === "ENV"
         }
     }, {
         hidden: false,

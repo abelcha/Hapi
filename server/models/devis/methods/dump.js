@@ -79,7 +79,7 @@
                 rtn.status = "ATT"
             } else {
                 rtn.status = 'TRA'
-                rtn.transfert_id = rtn.id;
+                rtn.transfertId = rtn.id;
             }
             console.log(rtn.status)
             rtn.produits = devis.devisTab;

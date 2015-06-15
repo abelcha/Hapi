@@ -4,7 +4,7 @@
         <div style="padding:15px">
             <md-input-container flex>
                 <label>Description de l'appel</label>
-                <textarea ng-model="text" columns="4"></textarea>
+                <textarea class="text-modal" ng-model="text" columns="4"></textarea>
             </md-input-container>
         </div>
     </md-dialog-content>
@@ -16,4 +16,11 @@
             Réponse
         </md-button>
     </div>
+    <script>
+    console.log($('textarea.text-modal'))
+    setTimeout(function() {
+    $('textarea.text-modal').focus()
+    }, 1000)
+    //$('textarea.text-modal').focus()
+    </script>
 </md-dialog>

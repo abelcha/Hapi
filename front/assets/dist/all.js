@@ -59,15 +59,7 @@ angular.module('edison').controller('MainController', function(tabContainer, $sc
     };
 
     $scope.$on("$locationChangeStart", function(event) {
-        if (!event) {
-            edisonAPI.request({
-                fn: 'setSessionData',
-                data: {
-                    tabContainer: $scope.tabs
-                }
-            });
-
-        }
+        console.log('here')
         if ($location.path() === "/") {
             return 0;
         }
@@ -1386,7 +1378,7 @@ angular.module('edison').factory('ContextMenu', ['$location', 'edisonAPI', '$win
 }]);
 
 angular.module('edison')
-    .factory('Devis', ['$window','$rootScope', '$location', 'LxNotificationService', 'dialog', 'edisonAPI', 'textTemplate',
+    .factory('Devis', ['$window', '$rootScope', '$location', 'LxNotificationService', 'dialog', 'edisonAPI', 'textTemplate',
         function($window, $rootScope, $location, LxNotificationService, dialog, edisonAPI, textTemplate) {
             "use strict";
             var Devis = function(data) {
@@ -1420,8 +1412,8 @@ angular.module('edison')
                 dialog.getText({
                     title: "Texte envoi devis",
                     text: textTemplate.mail.devis.envoi.bind(_this)($rootScope.user),
-                    width:"60%",
-                    height:"80%"
+                    width: "60%",
+                    height: "80%"
                 }, function(text) {
                     edisonAPI.devis.envoi(_this.id, {
                         text: text,
@@ -1455,10 +1447,10 @@ angular.module('edison')
                 });
             };
             Devis.prototype.ouvrirFiche = function() {
-                 $location.url("/devis/" + this.id);
+                $location.url("/devis/" + this.id);
             }
-            Devis.prototype.transform = function() {
-                 $location.url("/intervention?devis=" + _this.id);
+            Devis.prototype.transfert = function() {
+                $location.url("/intervention?devis=" + this.id);
             }
             return Devis;
         }
@@ -1702,8 +1694,9 @@ angular.module('edison').factory('fourniture', [function() {
 }]);
 
 angular.module('edison')
-    .factory('Intervention', ['$location', '$window', 'LxNotificationService', 'dialog', 'edisonAPI', 'Devis',
-        function($location, $window, LxNotificationService, dialog, edisonAPI, Devis) {
+    .factory('Intervention', ['$location', '$window', 'LxNotificationService', 'dialog', 'edisonAPI', 'Devis', '$rootScope',
+
+        function($location, $window, LxNotificationService, dialog, edisonAPI, Devis, $rootScope) {
             "use strict";
 
             var Intervention = function(data) {
@@ -1757,8 +1750,8 @@ angular.module('edison')
                     edisonAPI.sms.send({
                         link: _this.artisan.id,
                         origin: _this.id || _this.tmpID,
-                        text: text,
-                        to: "0633138868"
+                        text: 'message destiné à ' + _this.artisan.tel1 + '\n' + text,
+                        to: $rootScope.user.portable || "0633138868"
                     }).success(function(resp) {
                         var validationMessage = _.template("Un sms a été envoyé à M. {{artisan.representant.nom}}")(_this)
                         LxNotificationService.success(validationMessage);
@@ -1772,6 +1765,29 @@ angular.module('edison')
                 })
             };
 
+            Intervention.prototype.callClient = function(cb) {
+                var _this = this;
+                var now = Date.now();
+                $window.open('callto:' + _this.client.tel1, '_self', false)
+                dialog.choiceText({
+                    title: 'Nouvel Appel Client',
+                }, function(response, text) {
+                    edisonAPI.call.save({
+                        date: now,
+                        to: _this.client.tel1,
+                        link: _this.id,
+                        origin: _this.id || _this.tmpID || 0,
+                        description: text,
+                        response: response
+                    }).success(function(resp) {
+                        if (typeof cb === 'function')
+                            cb(null, resp);
+                    }).catch(function(err) {
+                        if (typeof cb === 'function')
+                            cb(err);
+                    })
+                })
+            }
             Intervention.prototype.callArtisan = function(cb) {
                 var _this = this;
                 var now = Date.now();
@@ -2399,6 +2415,7 @@ var DevisCtrl = function($rootScope, $location, $routeParams, LxNotificationServ
     var _this = this;
     _this.config = config;
     _this.dialog = dialog;
+    console.log("heeheh")
     _this.moment = moment;
     var tab = tabContainer.getCurrentTab();
     if (!tab.data) {
@@ -2428,7 +2445,7 @@ var DevisCtrl = function($rootScope, $location, $routeParams, LxNotificationServ
     }
     var closeTab = function(err) {
         if (!err) {
-            $location.url("/interventions");
+            $location.url("/devis/list");
             tabContainer.remove(tab)
         }
     }
@@ -2440,8 +2457,8 @@ var DevisCtrl = function($rootScope, $location, $routeParams, LxNotificationServ
                 devis.envoi.bind(resp)(closeTab);
             } else if (options.annulation) {
                 devis.annulation(closeTab);
-            } else if (options.transform) {
-                devis.transform()
+            } else if (options.transfert) {
+                devis.transfert()
             }
         })
     }
@@ -2529,6 +2546,9 @@ var InterventionCtrl = function($timeout, $rootScope, $scope, $location, $routeP
         }
     } else {
         var intervention = tab.data;
+    }
+    if ($routeParams.d) {
+        _this.devisOrigine = parseInt($routeParams)
     }
     _this.data = tab.data;
     if (!intervention.id)
@@ -2652,7 +2672,7 @@ var InterventionCtrl = function($timeout, $rootScope, $scope, $location, $routeP
 
 
     var closeTab = function() {
-        $location.url("/interventions");
+        $location.url("/intervention/list");
         tabContainer.remove(tab)
     }
 

@@ -1,5 +1,5 @@
 angular.module('edison')
-    .factory('Devis', ['$window','$rootScope', '$location', 'LxNotificationService', 'dialog', 'edisonAPI', 'textTemplate',
+    .factory('Devis', ['$window', '$rootScope', '$location', 'LxNotificationService', 'dialog', 'edisonAPI', 'textTemplate',
         function($window, $rootScope, $location, LxNotificationService, dialog, edisonAPI, textTemplate) {
             "use strict";
             var Devis = function(data) {
@@ -33,8 +33,8 @@ angular.module('edison')
                 dialog.getText({
                     title: "Texte envoi devis",
                     text: textTemplate.mail.devis.envoi.bind(_this)($rootScope.user),
-                    width:"60%",
-                    height:"80%"
+                    width: "60%",
+                    height: "80%"
                 }, function(text) {
                     edisonAPI.devis.envoi(_this.id, {
                         text: text,
@@ -68,10 +68,10 @@ angular.module('edison')
                 });
             };
             Devis.prototype.ouvrirFiche = function() {
-                 $location.url("/devis/" + this.id);
+                $location.url("/devis/" + this.id);
             }
-            Devis.prototype.transform = function() {
-                 $location.url("/intervention?devis=" + _this.id);
+            Devis.prototype.transfert = function() {
+                $location.url("/intervention?devis=" + this.id);
             }
             return Devis;
         }

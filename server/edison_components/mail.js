@@ -67,13 +67,13 @@ Mail.prototype.sendFacture = function(options) {
     });
 }
 
-Mail.prototype.sendDevis = function(options) {
+Mail.prototype.sendDevis = function(options, user) {
     //title, htmlTemplate, mailText
     var _this = this;
     return new Promise(function(resolve, reject) {
         _this.client.sendEmail({
             From: "intervention@edison-services.fr",
-            To: "abel@chalier.me",
+            To: user.email || "abel@chalier.me",
             Subject: "Devis de l'intervention " + options.data.id,
             HtmlBody: options.text,
             Attachments:  [{
@@ -89,13 +89,14 @@ Mail.prototype.sendDevis = function(options) {
     });
 }
 
-Mail.prototype.sendOS = function(data, osFileBuffer, fileSupp) {
+Mail.prototype.sendOS = function(data, osFileBuffer, fileSupp, user) {
     var _this = this;
+
     return new Promise(function(resolve, reject) {
         _this.renderTemplate('os', data).then(function(textOS) {
             _this.client.sendEmail({
                 From: "intervention@edison-services.fr",
-                To: "abel@chalier.me",
+                To: user.email || "abel@chalier.me",
                 Subject: "Ordre de service d'intervention No " + data.id,
                 HtmlBody: textOS,
                 Attachments: _this.getAttachements(osFileBuffer, fileSupp)

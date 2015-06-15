@@ -1,6 +1,6 @@
 <div class="card">
     <div class="p+">
-        <strong ng-click="display = !display" class="fs-headline display-block">Produits</strong>
+        <strong ng-click="display = !display" class="fs-headline display-block">Produits</strong><a ng-if="data.devisOrigine" href="/devis/{{data.devisOrigine}}">Devis Original</a>
         <md-content class="autocomplete" style="width: 40%;margin-top: -22px;margin-left: 54%;float: left;" layout-padding layout="column" md-input-container flex>
             <md-autocomplete ng-if="data.produits.length || display" md-autoselect md-selected-item-change="produits.add(selectedProduct)" md-selected-item="selectedProduct" md-search-text="produits.searchText" md-items="item in produits.search(produits.searchText)" md-item-text="item.title" placeholder="Entrer un produit">
                 <span md-highlight-text="produits.searchText"> {{item.title}}</span>

@@ -59,15 +59,7 @@ angular.module('edison').controller('MainController', function(tabContainer, $sc
     };
 
     $scope.$on("$locationChangeStart", function(event) {
-        if (!event) {
-            edisonAPI.request({
-                fn: 'setSessionData',
-                data: {
-                    tabContainer: $scope.tabs
-                }
-            });
-
-        }
+        console.log('here')
         if ($location.path() === "/") {
             return 0;
         }

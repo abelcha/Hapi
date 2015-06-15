@@ -17,7 +17,7 @@ module.exports = function(schema) {
             db.model('intervention').getDevis(options)
                 .then(function(buffer) {
                     options.file = buffer;
-                    mail.sendDevis(options).then(function() {
+                    mail.sendDevis(options, req.session).then(function() {
                         if (params.data.isDevis) {
                             db.model('devis').findOne({
                                 _id: params.data.id

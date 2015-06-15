@@ -49,6 +49,15 @@ module.exports = function(schema) {
                                 oldID: data.tmpID,
                                 newID: doc.id,
                             })
+                            if (data.devisOrigine) {
+                                db.model('devis').update({
+                                    id: data.devisOrigine
+                                }, {
+                                    transfertId: data.id
+                                }).exec(function(err, resp) {
+                                    console.log(err, resp);
+                                })
+                            }
                         }, function(err) {
                             release();
                             dbError(reject)(err)

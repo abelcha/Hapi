@@ -1,6 +1,7 @@
 angular.module('edison')
-    .factory('Intervention', ['$location', '$window', 'LxNotificationService', 'dialog', 'edisonAPI', 'Devis',
-        function($location, $window, LxNotificationService, dialog, edisonAPI, Devis) {
+    .factory('Intervention', ['$location', '$window', 'LxNotificationService', 'dialog', 'edisonAPI', 'Devis', '$rootScope',
+
+        function($location, $window, LxNotificationService, dialog, edisonAPI, Devis, $rootScope) {
             "use strict";
 
             var Intervention = function(data) {
@@ -54,8 +55,8 @@ angular.module('edison')
                     edisonAPI.sms.send({
                         link: _this.artisan.id,
                         origin: _this.id || _this.tmpID,
-                        text: text,
-                        to: "0633138868"
+                        text: 'message destiné à ' + _this.artisan.tel1 + '\n' + text,
+                        to: $rootScope.user.portable || "0633138868"
                     }).success(function(resp) {
                         var validationMessage = _.template("Un sms a été envoyé à M. {{artisan.representant.nom}}")(_this)
                         LxNotificationService.success(validationMessage);
@@ -69,6 +70,29 @@ angular.module('edison')
                 })
             };
 
+            Intervention.prototype.callClient = function(cb) {
+                var _this = this;
+                var now = Date.now();
+                $window.open('callto:' + _this.client.tel1, '_self', false)
+                dialog.choiceText({
+                    title: 'Nouvel Appel Client',
+                }, function(response, text) {
+                    edisonAPI.call.save({
+                        date: now,
+                        to: _this.client.tel1,
+                        link: _this.id,
+                        origin: _this.id || _this.tmpID || 0,
+                        description: text,
+                        response: response
+                    }).success(function(resp) {
+                        if (typeof cb === 'function')
+                            cb(null, resp);
+                    }).catch(function(err) {
+                        if (typeof cb === 'function')
+                            cb(err);
+                    })
+                })
+            }
             Intervention.prototype.callArtisan = function(cb) {
                 var _this = this;
                 var now = Date.now();

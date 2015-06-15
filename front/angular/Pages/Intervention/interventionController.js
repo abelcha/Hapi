@@ -27,6 +27,9 @@ var InterventionCtrl = function($timeout, $rootScope, $scope, $location, $routeP
     } else {
         var intervention = tab.data;
     }
+    if ($routeParams.d) {
+        _this.devisOrigine = parseInt($routeParams)
+    }
     _this.data = tab.data;
     if (!intervention.id)
         intervention.login = {
@@ -149,7 +152,7 @@ var InterventionCtrl = function($timeout, $rootScope, $scope, $location, $routeP
 
 
     var closeTab = function() {
-        $location.url("/interventions");
+        $location.url("/intervention/list");
         tabContainer.remove(tab)
     }
 

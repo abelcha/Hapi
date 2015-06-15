@@ -77,7 +77,7 @@ module.exports = function(db) {
             },
             location: [],
         },
-        transfert_id: Number,
+        transfertId: Number,
         categorie: String,
         produits: [{
             pu: Number,

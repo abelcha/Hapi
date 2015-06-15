@@ -3,7 +3,7 @@ module.exports = function(schema) {
     schema.statics.envoi = {
         unique: true,
         findBefore: true,
-        method:'POST',
+        method: 'POST',
         fn: function(inter, req, res) {
 
             var getSuppFile = function(file_id) {
@@ -15,11 +15,11 @@ module.exports = function(schema) {
             }
 
 
-            var sendSMS = function(text, inter, login) {
+            var sendSMS = function(text, inter, user) {
                 return db.model('sms').send({
-                    to: '0633138868',
-                    text: text,
-                    login: login,
+                    to: user.portable || '0633138868',
+                    text: "Message destiné à " + inter.artisan.tel1 + '\n' + text,
+                    login: user.login,
                     origin: inter.id,
                     link: inter.artisan.id,
                     type: 'OS'
@@ -46,8 +46,8 @@ module.exports = function(schema) {
                     getSuppFile(req.body.file).then(function(result) {
                         var suppFile = result || null;
                         db.model('intervention').getOSFile(inter).then(function(osFileBuffer) {
-                            mail.sendOS(inter, osFileBuffer, suppFile).then(function(mail) {
-                                sendSMS(req.body.sms, inter, req.session.login).then(function(data) {
+                            mail.sendOS(inter, osFileBuffer, suppFile, req.session).then(function(mail) {
+                                sendSMS(req.body.sms, inter, req.session).then(function(data) {
                                     save(inter, resolve, reject)
                                 }, reject)
                             }, reject)

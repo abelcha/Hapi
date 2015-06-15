@@ -95,6 +95,7 @@
                 })
             }
             if (d.devis && d.id > 13740) {
+                rtn.devisOrigine = d.id;
                 var devis = JSON.parse(d.devis.split('<br>').join(""));
                 rtn.produits = devis.devisTab;
                 rtn.tva = devis.tva;
