@@ -78,12 +78,13 @@
          transclude: true,
          scope: {
              title: '@',
-             icon: '@'
+             icon: '@',
+             isOpen: '@'
          },
          link: function(scope, element, attrs) {
              scope.toggleSidebar = function($event, $elem) {
                  var $ul = $(element).find('>ul')
-                     //  openDropdown(element);
+
                  if ($('#main-menu').width() > 200) {
                      if (scope.isOpen) {
                          $ul.velocity({

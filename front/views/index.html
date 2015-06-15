@@ -72,7 +72,7 @@
         </div>
         <side-bar ng-if="user.login && interventionsStats">
             <link fltr="all" icon="th-list" title="Toute les Interventions"></link>
-            <drop-down title="Mes Interventions" icon="calendar">
+            <drop-down title="Mes Interventions" icon="calendar" is-open="true">
                 <link fltr="tall" icon="th-list" title="{{dateFormat}}" login="{{user.login}}"></link>
                 <link fltr="tenv" icon="th-list" login="{{user.login}}"></link>
                 <link fltr="apr" icon="th-list" login="{{user.login}}"></link>
