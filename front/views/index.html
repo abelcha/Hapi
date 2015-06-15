@@ -130,7 +130,7 @@
         <div class="page-header" style="background: #f4f4f4 url(/img/mooning.png);">
             <div id="content-wrapper">
                 <div class="row " ng-if="!recap">
-                    <div class="col-sm-2" style="height:200px" ng-repeat="telepro in interventionsStats | orderBy:'-total' | limitTo:6">
+                    <div class="col-sm-2" style="height:200px" ng-repeat="telepro in interventionsStats | orderBy:'-tall.total' | limitTo:6">
                         <div class="card">
                             <div style="width:95%;margin-right:0" class="p+">
                                 {{telepro.login|loginify}}

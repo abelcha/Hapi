@@ -27,7 +27,7 @@ module.exports = function(schema) {
     schema.statics.translate = translate;
 
     schema.statics.list = function(req, res) {
-        var async = require("async")
+        var _ = require('lodash')
         return new Promise(function(resolve, reject) {
             redis.exists('devisList', function(err, reply) {
                 if (!err && reply) { // we just want to refresh the cache 
@@ -38,8 +38,8 @@ module.exports = function(schema) {
                         .find()
                         .then(function(docs) {
                             docs = _.map(docs, translate)
-                            resolve(result);
-                            redis.set("devisList", JSON.stringify(result))
+                            resolve(docs);
+                            redis.set("devisList", JSON.stringify(docs))
                         })
                 }
             });
