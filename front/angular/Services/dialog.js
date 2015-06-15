@@ -73,7 +73,7 @@ angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', 'config', 
                 controller: function($scope, config) {
                     $scope.causeAnnulation = config.causeAnnulation;
                     $scope.answer = function(resp) {
-                        if (!$scope.ca)
+                        if (!$scope.ca && resp)
                             return false;
                         $mdDialog.hide();
                         if (resp)

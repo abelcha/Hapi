@@ -2,18 +2,19 @@ var users = requireLocal('config/_users');
 var ms = require('milliseconds');
 var async = require('async')
 var _ = require("lodash")
+var FiltersFactory = requireLocal('config/FiltersFactory');
 
 module.exports = function(schema) {
-    var statusDistinctFactory = function(customMatch, customGroup) {
-        var group = customGroup || {};
-        group.telepro = '$login.ajout';
+    var statusDistinctFactory = function(customMatch, model) {
         var match = customMatch || {};
         return function(cb) {
-            db.model('intervention')
+            db.model(model ||  'intervention')
                 .aggregate()
                 .match(match)
                 .group({
-                    _id: group,
+                    _id: {
+                        telepro: '$login.ajout'
+                    },
                     mnt: {
                         $sum: "$prixAnnonce"
                     },
@@ -55,52 +56,64 @@ module.exports = function(schema) {
 
     }
 
+    var mergeFilters = function(allFilters, model) {
+        var filters = FiltersFactory(model).getAllFilters();
+        _.each(filters, function(e) {
+            if (e.stats !== false && e.match) {
+                var match = typeof e.match === 'function' ? e.match() : e.match;
+                allFilters[e.short_name] = statusDistinctFactory(match, model);
+            }
+        });
+    }
+
     schema.statics.stats = function(req, res) {
         return new Promise(function(resolve, reject) {
-            var filters = requireLocal('config/FiltersFactory')();
-            var everydayOP = {
-                todayTotal: statusDistinctFactory({
-                    'date.ajout': {
-                        $gt: edison.utils.date.today(true)
-                    }
-                }),
-                todayStatus: statusDistinctFactory({
-                    'date.ajout': {
-                        $gt: edison.utils.date.today(true)
-                    }
-                }, {
-                    st: '$status'
-                })
-            }
-            var todayOP = {};
-            _.each(filters.data, function(e) {
-                if (e.stats !== false && e.match) {
-                    var match = typeof e.match === 'function' ? e.match() : e.match;
-                    todayOP[e.short_name] = statusDistinctFactory(match);
+            redis.get('interventionStats', function(err, resp) {
+                if (!err && resp && !req.query.cache)
+                    return resolve(JSON.parse(resp))
+                var everydayOP = {
+                    todayTotal: statusDistinctFactory({
+                        'date.ajout': {
+                            $gt: edison.utils.date.today(true)
+                        }
+                    }),
+                    todayStatus: statusDistinctFactory({
+                        'date.ajout': {
+                            $gt: edison.utils.date.today(true)
+                        }
+                    }, {
+                        st: '$status'
+                    })
                 }
-            });
-            async.parallel(todayOP, function(err2, result) {
-                if (err2)
-                    reject(err);
-                result = _.mapValues(result, function(e) {
-                    return _.groupBy(e, 'login')
-                })
-                var rtn = [];
-                users.forEach(function(user) {
-                    if (user.service === "INTERVENTION") {
-                        var telepro = {
-                            login: user.login,
+                var allFilters = {};
+                mergeFilters(allFilters, 'intervention')
+                mergeFilters(allFilters, 'devis')
+                async.parallel(allFilters, function(err2, result) {
+                    if (err2)
+                        reject(err);
+                    result = _.mapValues(result, function(e) {
+                        return _.groupBy(e, 'login')
+                    })
+                    var rtn = [];
+                    users.forEach(function(user) {
+                        if (user.service === "INTERVENTION") {
+                            var telepro = {
+                                login: user.login,
+                            }
+                            _.each(result, function(fltr, key) {
+                                cleanUp(key, telepro, result);
+                            })
+                            if (telepro._id) {
+                                delete telepro._id;
+                            }
+                            rtn.push(telepro);
                         }
-                        _.each(result, function(fltr, key) {
-                            cleanUp(key, telepro, result);
-                        })
-                        if (telepro._id) {
-                            delete telepro._id;
-                        }
-                        rtn.push(telepro);
-                    }
+                    });
+                    resolve(rtn)
+                        redis.set('interventionStats', JSON.stringify(rtn));
+                        redis.expire('interventionStats', 5)
+                        //redis.del('interventionStats')
                 });
-                resolve(rtn)
             });
         });
     }

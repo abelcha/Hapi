@@ -26,6 +26,7 @@ module.exports = function(db) {
             },
             transfert: Date
         },
+        prixFinal: Number,
         historique: [{
             date: {
                 type: Date,
@@ -76,6 +77,7 @@ module.exports = function(db) {
             },
             location: [],
         },
+        transfert_id: Number,
         categorie: String,
         produits: [{
             pu: Number,

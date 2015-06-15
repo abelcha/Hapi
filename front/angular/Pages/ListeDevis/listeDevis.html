@@ -1,8 +1,4 @@
 <div>
-    <!--     <div ng-if="recap" class="shadow-box" ng-controller="statsController">
-        <canvas id="pie" class="chart chart-pie" data="data" labels="labels"></canvas>
-        {{data}}
-    </div> -->
     <div class="shadow-box listeInterventions">
         <table style="background:white;cursor:pointer" ng-table="vm.tableParams" class="table table-bordered table-hover table-hover table-striped" id="table-list" show-filter="true">
             <tbody id="tbody-list">
@@ -22,22 +18,17 @@
                     <td variable-length data-title="'Client'" sortable="'n'" filter="{ 'n': 'text' }">
                         {{::inter.n}}
                     </td>
+                    <td variable-length data-title="'Code P.'" sortable="'cp'" filter="{ 'cp': 'text' }">
+                        {{::inter.cp}}
+                    </td>
                     <td variable-length data-title="'Ville'" sortable="'ad'" filter="{ 'ad': 'text' }">
                         {{::inter.ad}}
-                    </td>
-                    <td variable-length class="variable-length one-liner" data-title="'Artisan'" sortable="'a'" filter="{ 'a': 'text' }">
-                        <strong>{{::inter.a}}</strong>
-                    </td>
-                    <td data-title="'Date Intervention'" sortable="'di'" filter="{ 'di': 'text' }">
-                        <div ng-show="inter.di[0] != 1">
-                            {{::inter.di | date:"dd/MM/yy" || ""}} {{::inter.di | date:"HH'h'mm" || ""}}
-                        </div>
                     </td>
                     <td data-title="'Prix'" sortable="'pa'" filter="{ 'pa': 'text' }">
                         {{::(inter.pa | number:2) || 0}} €
                     </td>
                     <td data-title="'Status'" sortable="'s'" filter="{ 'sx': 'text' }">
-                        <span style="width:90px" class="label {{::vm.config.etats[inter.s].color}}"> 
+                        <span style="width:90px" class="label {{::vm.config.etatsDevis[inter.s].color}}"> 
                         {{::inter.sx}}</span>
                     </td>
                 </tr>

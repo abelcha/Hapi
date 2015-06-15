@@ -2,7 +2,7 @@
   "name": "EDSN",
   "version": "0.3.0",
   "engines": {
-    "iojs": "2.3.*"
+    "iojs": "2.2.*"
   },
   "scripts": {
     "start": "node server/app.js"

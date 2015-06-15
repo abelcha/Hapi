@@ -27,13 +27,11 @@ module.exports = function(schema) {
 
 
 
-
-
     var translate = function(e) {
         if (e.status === "ENV" && Date.now() > (new Date(e.date.intervention)).getTime()) {
             e.status = 'AVR';
         }
-        var fltr = FiltersFactory(e).create();
+        var fltr = FiltersFactory("intervention").filter(e);
         return {
             fltr: fltr,
             t: e.login.ajout,

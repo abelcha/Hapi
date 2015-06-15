@@ -1,10 +1,10 @@
- angular.module('edison').directive('link', ['config', '$rootScope', function(config, $rootScope) {
+ angular.module('edison').directive('link', ['FiltersFactory', '$rootScope', function(FiltersFactory, $rootScope) {
      "use strict";
      return {
          restrict: 'AE',
          replace: true,
          template: '<li>' +
-             '      <a href="/interventions{{exFltr.url}}{{date}}{{exLogin}}" >' +
+             '      <a href="/{{_model}}/list{{url}}{{_login}}" >' +
              '            <i ng-if="icon" class = "menu-icon fa fa-{{icon}}"> </i>' +
              '            <span class="mm-text">{{title || exFltr.long_name}}</span>' +
              '            <span ng-if="total !== void(0)"class="label label-success">{{total}}</span>' +
@@ -16,12 +16,13 @@
              today: '@',
              icon: '@',
              title: '@',
+             model: '@',
              count: '@'
          },
          link: function(scope, element, attrs) {
-             scope.exFltr = _.clone(config.filters().get({
-                 short_name: scope.fltr
-             }))
+             scope._model = scope.model || 'intervention';
+             var filtersFactory = new FiltersFactory(scope._model);
+             scope.exFltr = filtersFactory.getFilterByName(scope.fltr);
              if (scope.login) {
                  var t = _.find($rootScope.interventionsStats, function(e) {
                      return e.login === scope.login;
@@ -32,13 +33,8 @@
                      scope.total = 0;
                  }
              }
-             if (scope.exFltr) {
-                 scope.exFltr.url = scope.exFltr.url.length ? "/" + scope.exFltr.url : scope.exFltr.url;
-             } else {
-                 console.log(scope.fltr)
-             }
-             scope.exLogin = scope.login ? ("#" + scope.login) : '';
-             scope.date = attrs.today != void(0) ? "?d=t" : '';
+             scope.url = scope.exFltr.url.length ? "/" + scope.exFltr.url : scope.exFltr.url;
+             scope._login = scope.login ? ("#" + scope.login) : '';
          }
      };
  }]);

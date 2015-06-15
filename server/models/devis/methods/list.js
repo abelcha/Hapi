@@ -7,25 +7,35 @@ module.exports = function(schema) {
         return new Promise(function(resolve, reject) {
             redis.get('devisList', function(err, reply) {
                 if (!err && reply && !req.query.cache) {
-                    return resolve(JSON.parse(reply));
+                    return res.send(reply);
                 }
+                var FiltersFactory = requireLocal('config/FiltersFactory')
+                var config = requireLocal('config/dataList');
                 db.model('devis')
                     .find()
-                    .select('id client status client.address categorie')
                     .then(function(docs) {
                         async.map(docs, function(e, cb) {
+                            var fltr = FiltersFactory('devis').filter(e);
                             cb(null, {
+                                fltr: fltr,
+                                da: e.date.ajout,
+                                t: e.login.ajout,
                                 c: e.categorie,
+                                cx: config.categories[e.categorie].long_name,
                                 id: e._id,
-                                cl: e.client.civilite + " " + e.client.nom,
+                                n: e.client.civilite + " " + e.client.nom,
                                 s: e.status,
+                                sx: config.etatsDevis[e.status].long_name,
                                 cp: e.client.address.cp,
-                                v: e.client.address.v
+                                ad: e.client.address.v,
+                                ev: e.envois,
+                                pa: e.prixFinal,
                             });
                         }, function(err, result)  {
                             resolve(result);
-                           // redis.set("devisList", JSON.stringify(result))
-                            //redis.expire("devisList", 6000)
+                            redis.set("devisList", JSON.stringify(result))
+                            redis.expire("devisList", 30)
+                            //redis.del('devisList')
                         });
                     })
             });

@@ -1,56 +1,56 @@
 module.exports = {
     categories: {
         PL: {
-            suffix:'de',
+            suffix: 'de',
             short_name: 'PL',
             long_name: 'Plomberie',
             order: 0,
             color: 'blue white-text'
         },
         CH: {
-            suffix:'de',
+            suffix: 'de',
             short_name: 'CH',
             long_name: 'Chauffage',
             order: 1,
             color: 'red white-text'
         },
         EL: {
-            suffix:"d'",
+            suffix: "d'",
             short_name: 'EL',
             long_name: 'Électricité',
             order: 2,
             color: 'yellow  accent-4 black-text'
         },
         SR: {
-            suffix:'de',
+            suffix: 'de',
             short_name: 'SR',
             long_name: 'Serrurerie',
             order: 3,
             color: 'brown white-text'
         },
         VT: {
-            suffix:'de',
+            suffix: 'de',
             short_name: 'VT',
             long_name: 'Vitrerie',
             order: 4,
             color: 'green white-text'
         },
         AS: {
-            suffix:'de',
+            suffix: 'de',
             short_name: 'AS',
             long_name: 'Assainissement',
             order: 5,
             color: 'orange white-text'
         },
         CL: {
-            suffix:'de',
+            suffix: 'de',
             short_name: 'CL',
             long_name: 'Climatisation',
             order: 6,
             color: 'teal white-text'
         },
         PT: {
-            suffix:'de',
+            suffix: 'de',
             short_name: 'PT',
             long_name: 'Peinture',
             order: 7,
@@ -114,6 +114,28 @@ module.exports = {
             long_name: 'Devis',
             color: 'light-blue'
         },
+    },
+    etatsDevis: {
+        AEV: {
+            short_name: 'ENV',
+            long_name: 'A Envoyer',
+            color: 'blue'
+        },
+        ANN: {
+            short_name: 'ANN',
+            long_name: 'Annuler',
+            color: 'red'
+        },
+        TRA: {
+            short_name: 'TRA',
+            long_name: 'Transferé',
+            color: 'green accent-4'
+        },
+        ATT: {
+            short_name: 'ATT',
+            long_name: 'En Attente',
+            color: 'purple'
+        }
     },
     fournisseur: [{
         short_name: 'ARTISAN',

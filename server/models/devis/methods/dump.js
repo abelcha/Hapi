@@ -5,6 +5,7 @@
     var Entities = require('html-entities').XmlEntities;
     var _ = require('lodash');
     var entities = new Entities();
+    var ms = require('milliseconds');
 
     module.exports = function(schema) {
 
@@ -65,19 +66,22 @@
             var devis = JSON.parse(d.devis.split('<br>').join(""));
             rtn.historique = [];
             _.each(new Array(devis.envoyer), function() {
-                rtn.historique.push({
-                    login: user,
-                    date: rtn.date.ajout,
+                    rtn.historique.push({
+                        login: user,
+                        date: rtn.date.ajout,
+                    })
                 })
-            })
-            //db.model('event').collection.insert(historique)
-            if (d.etat_intervention === "ANN") {
-                devis.status = "ANN";
+                //db.model('event').collection.insert(historique)
+            if (d.etat_intervention === "ANN" ||
+                (d.etat_intervention === "DEV" && date.ajout.getTime() < Date.now() - ms.weeks(1))) {
+                rtn.status = "ANN";
             } else if (d.etat_intervention === "DEV") {
-                devis.status = "ATT"
+                rtn.status = "ATT"
             } else {
-                devis.status = 'TRA'
+                rtn.status = 'TRA'
+                rtn.transfert_id = rtn.id;
             }
+            console.log(rtn.status)
             rtn.produits = devis.devisTab;
             rtn.tva = devis.tva;
             rtn.produits.map(function(p) {

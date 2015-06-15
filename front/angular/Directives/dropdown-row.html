@@ -1,0 +1,38 @@
+<div id="expended" ng-style="expendedStyle">
+    <div class="row">
+        <div class="col-sm-4 info-ext">
+            <h4>Client</h4>
+            <p><strong>Nom:</strong> {{::expendedRowData.client.civilite}} {{::expendedRowData.client.prenom}} {{::expendedRowData.client.nom}}</p>
+            <p><strong>Addresse:</strong> {{::expendedRowData.client.address.n}} {{::expendedRowData.client.address.r}} {{::expendedRowData.client.address.cp}}, {{::expendedRowData.client.address.v}}</p>
+            <p><strong>Description:</strong> {{::expendedRowData.description}}</p>
+            <p><strong>Remarque:</strong> {{::expendedRowData.remarque}}</p>
+            <p><strong>Prix:</strong> {{::expendedRowData.prixAnnonce}} € | {{::expendedRowData.prixFinal || 0}} €</p>
+            <p>
+                <a href="/intervention/{{inter.id}}"> <span style="width:100px" class="label grey darken-3"> Fiche</span></a>
+            </p>
+        </div>
+        <div class="col-sm-4 info-ext">
+            <div ng-if="expendedRowData.artisan && expendedRowData.artisan.id">
+                <h4>Artisan</h4>
+                <p>
+                    {{::expendedRowData.artisan.nomSociete}}
+                </p>
+                <p>
+                    <strong>Note:</strong> 7.6/10
+                </p>
+                <p>
+                    Interventions réalisés: {{::expendedRowData.artisanStats.total.total}}
+                </p>
+                <p>
+                    Reglement en attente: {{::expendedRowData.artisanStats.impaye.total}} ({{expendedRowData.artisanStats.impaye.montant}} €)
+                </p>
+                <p>
+                    <a href="/artisan/{{expendedRowData.artisan.id}}"> <span style="width:100px" class="label grey darken-3"> Fiche</span></a>
+                    <a href="/artisan/{{expendedRowData.artisan.id}}/recap"><span style="width:100px" class="label grey darken-3"> Recap'</span></p></a>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <img ng-if="expendedRowData && expendedRowData.client && expendedRowData.client.address " style="height: 194px;" ng-src="{{getStaticMap(expendedRowData)}}" class="img-thumbnail" />
+        </div>
+    </div>
+</div>

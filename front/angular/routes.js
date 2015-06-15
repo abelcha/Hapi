@@ -19,15 +19,6 @@ angular.module('edison').controller('MainController', function(tabContainer, $sc
         $rootScope.loadingData = false;
     });
 
-    $scope.sideBarlinks = [{
-        url: '/dashboard',
-        title: 'Dashboard',
-        icon: 'dashboard'
-    }, {
-        url: '/intervention',
-        title: 'Nouvelle Intervention',
-        icon: 'plus'
-    }];
     $scope.dateFormat = moment().format('llll').slice(0, -5);
     $scope.tabs = tabContainer;
     $scope.$watch('tabs.selectedTab', function(prev, curr) {
@@ -160,7 +151,7 @@ var getIntervention = function($route, $q, edisonAPI) {
     var id = $route.current.params.id;
     if ($route.current.params.d) {
         return edisonAPI.devis.get($route.current.params.d, {
-            transform:true
+            transform: true
         });
     } else if (id.length > 10) {
         return $q(function(resolve) {
@@ -222,48 +213,22 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
                 interventions: getInterList,
                 artisans: getArtisanList
             },
-            redirectTo: '/interventions',
+            redirectTo: '/intervention/list',
         })
-        .when('/artisan/:id', {
-            templateUrl: "Pages/Artisan/artisan.html",
-            controller: "ArtisanController",
-            resolve: {
-                artisan: getArtisan,
-                interventions: getInterList,
-                artisans: getArtisanList
-            }
-        })
-        .when('/interventions', {
+        .when('/intervention/list', {
             templateUrl: "Pages/ListeInterventions/listeInterventions.html",
             controller: "InterventionsController",
+            controllerAs: 'vm',
             resolve: {
                 interventions: getInterList,
                 interventionsStats: getInterventionStats,
                 artisans: getArtisanList
             }
         })
-        .when('/interventions/:fltr', {
+        .when('/intervention/list/:fltr', {
             templateUrl: "Pages/ListeInterventions/listeInterventions.html",
             controller: "InterventionsController",
-            resolve: {
-                interventionsStats: getInterventionStats,
-                interventions: getInterList,
-                artisans: getArtisanList
-            }
-        })
-        .when('/devisList', {
-            templateUrl: "Pages/ListeDevis/listeDevis.html",
-            controller: "ListeDevisController",
-            resolve: {
-                devis: getDevisList,
-                interventions: getInterList,
-                interventionsStats: getInterventionStats,
-                artisans: getArtisanList
-            }
-        })
-        .when('/devisList/:fltr', {
-            templateUrl: "Pages/ListeInterventions/listeInterventions.html",
-            controller: "InterventionsController",
+            controllerAs: 'vm',
             resolve: {
                 interventionsStats: getInterventionStats,
                 interventions: getInterList,
@@ -274,25 +239,6 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
             redirectTo: function(routeParams, path, params) {
                 var url = params.devis ? "?d=" + params.devis : "";
                 return '/intervention/' + Date.now() + url;
-            }
-        })
-        .when('/devis', {
-            redirectTo: function() {
-                return '/devis/' + Date.now();
-            }
-        })
-        .when('/artisan', {
-            redirectTo: function() {
-                return '/artisan/' + Date.now();
-            }
-        })
-        .when('/artisan/:artisanID/recap', {
-            templateUrl: "Pages/ListeInterventions/listeInterventions.html",
-            controller: "InterventionsController",
-            resolve: {
-                interventionsStats: getInterventionStats,
-                interventions: getInterList,
-                artisans: getArtisanList
             }
         })
         .when('/intervention/:id', {
@@ -306,6 +252,45 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
 
             }
         })
+        .when('/devis/list', {
+            templateUrl: "Pages/ListeDevis/listeDevis.html",
+            controller: "ListeDevisController",
+            controllerAs: 'vm',
+            resolve: {
+                devis: getDevisList,
+                //interventions: getInterList,
+                //interventionsStats: getInterventionStats,
+                //artisans: getArtisanList
+            }
+        })
+        .when('/devis/list/:fltr', {
+            templateUrl: "Pages/ListeInterventions/listeInterventions.html",
+            controller: "InterventionsController",
+            resolve: {
+                interventionsStats: getInterventionStats,
+                interventions: getInterList,
+                artisans: getArtisanList
+            }
+        })
+        .when('/devis', {
+            redirectTo: function() {
+                return '/devis/' + Date.now();
+            }
+        })
+        .when('/artisan/:id', {
+            templateUrl: "Pages/Artisan/artisan.html",
+            controller: "ArtisanController",
+            resolve: {
+                artisan: getArtisan,
+                interventions: getInterList,
+                artisans: getArtisanList
+            }
+        })
+        .when('/artisan', {
+            redirectTo: function() {
+                return '/artisan/' + Date.now();
+            }
+        })
         .when('/devis/:id', {
             templateUrl: "Pages/Intervention/devis.html",
             controller: "DevisController",
@@ -313,6 +298,15 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
             resolve: {
                 interventions: getInterList,
                 devisPrm: getDevis,
+                artisans: getArtisanList
+            }
+        })
+        .when('/artisan/:artisanID/recap', {
+            templateUrl: "Pages/ListeInterventions/listeInterventions.html",
+            controller: "InterventionsController",
+            resolve: {
+                interventionsStats: getInterventionStats,
+                interventions: getInterList,
                 artisans: getArtisanList
             }
         })
@@ -345,6 +339,9 @@ angular.module('edison').run(function(editableOptions) {
             });
         }
     }
+    $http.get("/Directives/dropdown-row.html", {
+        cache: $templateCache
+    });
     $http.get("/Pages/intervention/info-client.html", {
         cache: $templateCache
     });

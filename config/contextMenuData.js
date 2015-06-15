@@ -2,9 +2,7 @@ module.exports = {
     intervention: [{
         hidden: false,
         title: 'Ouvrir Fiche',
-        action: function(inter) {
-            $location.url('/intervention/' + inter.id)
-        }
+        action: "ouvrirFiche"
     }, {
         hidden: false,
         title: "Appeler l'artisan",

@@ -11,25 +11,34 @@ angular.module('edison').factory('DataProvider', ['socket', '$rootScope', 'confi
         this.data = data;
     };
 
-    DataProvider.prototype.refreshFilters = function(params, hash) {
+    DataProvider.prototype.applyCustomFilter = function() {
+
+    }
+
+    DataProvider.prototype.rowFilterFactory = function(filter, hash) {
+        if (!filter && hash) {
+            return function onlyLogin(inter) {
+                return inter.t === hash;
+            }
+        }
+        if (filter && hash) {
+            return function loginAndFilter(inter) {
+                return inter.fltr[filter.short_name] === 1 && inter.t === hash;
+            }
+        }
+        if (filter && !hash) {
+            return function onlyFilter(inter) {
+                return inter.fltr[filter.short_name] === 1;
+            }
+        }
+    }
+
+    DataProvider.prototype.applyFilter = function(filter, hash) {
         console.time("interFilter")
         this.filteredData = this.data;
-        if (this.data && params) {
-            var filterParam = config.filters().get({
-                url: params.fltr
-            });
-            if (params.fltr && filterParam || !params.fltr && hash) {
-                this.filteredData = _.filter(this.data, function(e) {
-                    return (!params.fltr || e.fltr[filterParam.short_name]) &&
-                        (!hash || e.t === hash) &&
-                        ((!params.d) || (e.fltr.d && e.fltr.d[params.d]))
-                })
-            } else if (params.artisanID) {
-                var artisanID = parseInt(params.artisanID);
-                this.filteredData = _.filter(this.data, function(e) {
-                    return e.ai === artisanID;
-                })
-            }
+        if (this.data && (filter || hash)) {
+            var filterFunction = this.rowFilterFactory(filter, hash)
+            this.filteredData = _.filter(this.data, filterFunction);
         }
         console.timeEnd("interFilter")
 

@@ -1,6 +1,6 @@
 angular.module('edison')
-    .factory('Intervention', ['$window', 'LxNotificationService', 'dialog', 'edisonAPI', 'Devis',
-        function($window, LxNotificationService, dialog, edisonAPI, Devis) {
+    .factory('Intervention', ['$location', '$window', 'LxNotificationService', 'dialog', 'edisonAPI', 'Devis',
+        function($location, $window, LxNotificationService, dialog, edisonAPI, Devis) {
             "use strict";
 
             var Intervention = function(data) {
@@ -42,7 +42,9 @@ angular.module('edison')
 
                 })
             };
-
+            Intervention.prototype.ouvrirFiche = function() {
+                $location.url('/intervention/' + this.id)
+            }
             Intervention.prototype.smsArtisan = function(cb) {
                 var _this = this;
                 dialog.getText({
