@@ -76,7 +76,7 @@
                     </div>
                     <div class="col-sm-4" style="padding: 0;">
                         <div class="card">
-                            <div class="p+">
+                            <div class="p+" style='overflow:hidden;'>
                                 <strong class="fs-headline display-block">Artisans</strong>
                                 <span class="fs-subhead tc-black-2 display-block select-style-neutral">
                                    <select ng-show="vm.data.sst" ng-model="vm.data.sst" ng-options="sst.id as sst.nomSociete for sst in vm.artisans">
@@ -416,7 +416,7 @@
                 <div class="p+">
                     <strong class="fs-headline display-block">Fichiers</strong>
                     <span class="fs-subhead tc-black-2 display-block">Lorem Ipsum</span>
-                    <div class="paragraph fs-body-1 mt+" style="height: 216px;;overflow:scroll">
+                    <div class="paragraph fs-body-1 mt+" style="height: 216px;" lx-scrollbar>
                         <div>
                             <ul class="list mt++" style="padding-bottom:20px;margin-left: 0px">
                                 <li class="list-row" ng-repeat="file in vm.data.files | reverse">
@@ -436,9 +436,10 @@
             </div>
             <div class="card" style="width:48%;float:right">
                 <div class="p+" s>
-                    <strong class="fs-headline display-block">Commentaires</strong>
+                    <strong class="fs-headline display-block">Commenta
+ires</strong>
                     <span class="fs-subhead tc-black-2 display-block">Lorem Ipsum</span>
-                    <div class="paragraph fs-body-1 mt+" style="height:230px;overflow:scroll">
+                    <div class="paragraph fs-body-1 mt+" style="height:230px;" lx-scrollbar>
                         <ul style="padding-bottom:20px;margin-left: 0px;">
                             <li class="list-row" ng-repeat="com in vm.data.comments | reverse">
                                 <div class="list-row__content">
