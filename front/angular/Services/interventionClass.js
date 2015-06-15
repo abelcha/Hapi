@@ -129,7 +129,6 @@ angular.module('edison')
                 var _this = this;
                 edisonAPI.intervention.save(_this)
                     .then(function(resp) {
-                        console.log("yey", cb)
                         var validationMessage = _.template("Les données de l'intervention {{id}} ont à été enregistré")(resp.data)
                         LxNotificationService.success(validationMessage);
                         if (typeof cb === 'function')
@@ -143,7 +142,6 @@ angular.module('edison')
 
             Intervention.prototype.envoi = function(cb) {
                 var _this = this;
-                console.log(_this.files)
                 dialog.getFileAndText(_this, _this.files, function(text, file) {
                     edisonAPI.intervention.envoi(_this.id, {
                         sms: text,

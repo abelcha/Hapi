@@ -9,12 +9,14 @@ module.exports = function(schema) {
                 _id: id
             });
             if (req.query.transform) {
-                prm.select('produits tva client categorie -_id').then(function(resp) {
+                prm.select('produits tva client prixAnnonce categorie -_id').then(function(resp) {
                     if (!resp)
-                        reject('Not Found');
+                        return reject('Not Found');
                     var rtn = resp.toObject();
                     rtn.devisOrigine = id;
                     rtn.reglementSurPlace = true;
+                    rtn.modeReglement = 'CB';
+                    rtn.description = 'un earrea rae are ea '
                     rtn.date = {
                         ajout: Date.now(),
                         intervention: Date.now()

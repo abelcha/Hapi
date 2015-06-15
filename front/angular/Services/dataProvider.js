@@ -5,15 +5,17 @@ angular.module('edison').factory('DataProvider', ['socket', '$rootScope', 'confi
         this.model = model;
         socket.on(this.model + 'ListChange', function(data) {
             _this.updateData(data);
+
         });
     }
     DataProvider.prototype.setData = function(data) {
-        this.data = data;
+        this.constructor.prototype.data = data;
     };
 
     DataProvider.prototype.applyCustomFilter = function() {
 
     }
+
 
     DataProvider.prototype.rowFilterFactory = function(filter, hash) {
         if (!filter && hash) {

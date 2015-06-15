@@ -59,7 +59,6 @@ angular.module('edison').controller('MainController', function(tabContainer, $sc
     };
 
     $scope.$on("$locationChangeStart", function(event) {
-        console.log('here')
         if ($location.path() === "/") {
             return 0;
         }
@@ -397,7 +396,7 @@ angular.module('edison').directive('capitalize', function() {
     };
 });
 
-angular.module('edison').directive('dropdownRow', ['edisonAPI', '$q', '$timeout', function(edisonAPI, $q, $timeout) {
+angular.module('edison').directive('dropdownRow', ['edisonAPI', 'config', '$q', '$timeout', function(edisonAPI, config, $q, $timeout) {
     "use strict";
 
     return {
@@ -418,7 +417,7 @@ angular.module('edison').directive('dropdownRow', ['edisonAPI', '$q', '$timeout'
             scope.data = {};
             $timeout(function() {
                 $("#expended").velocity({
-                    height: 194,
+                    height: 205,
                 }, 200);
             }, 50)
 
@@ -430,6 +429,8 @@ angular.module('edison').directive('dropdownRow', ['edisonAPI', '$q', '$timeout'
                 var pThen = function(result) {
                     scope.data = result[0].data;
                     scope.data.artisanStats = result[1].data
+                    if (scope.data.status === 'ANN')
+                        scope.data.ca = config.getCauseAnnulation(scope.data.causeAnnulation)
                 }
             } else if (scope.model === "devis") {
                 var pAll = [
@@ -438,6 +439,8 @@ angular.module('edison').directive('dropdownRow', ['edisonAPI', '$q', '$timeout'
                 var pThen = function(result) {
                     scope.data = result[0].data;
                     scope.data.flagship = _.max(scope.data.produits, 'pu');
+                    if (scope.data.status === 'ANN')
+                        scope.data.ca = config.getCauseAnnulation(scope.data.causeAnnulation)
                 }
             }
 
@@ -548,6 +551,28 @@ angular.module('edison').directive('select', function($interpolate) {
          }
      };
  }]);
+
+ angular.module('edison').directive('linkSeparator', [function() {
+     "use strict";
+     return {
+         restrict: 'AE',
+         replace: true,
+         template: '<li>' +
+             '      <a>' +
+             '            <i ng-if="icon" class = "menu-icon fa fa-{{icon}}"> </i>' +
+             '            <strong><span class="mm-text">{{title}}</span></strong>' +
+             '        </a>' +
+             '      </li>',
+         scope: {
+             icon: '@',
+             title: '@',
+         },
+         link: function(scope, element, attrs) {
+            
+         }
+     };
+ }]);
+
 
  angular.module('edison').service('sidebarSM', function() {
 
@@ -727,15 +752,17 @@ angular.module('edison').factory('DataProvider', ['socket', '$rootScope', 'confi
         this.model = model;
         socket.on(this.model + 'ListChange', function(data) {
             _this.updateData(data);
+
         });
     }
     DataProvider.prototype.setData = function(data) {
-        this.data = data;
+        this.constructor.prototype.data = data;
     };
 
     DataProvider.prototype.applyCustomFilter = function() {
 
     }
+
 
     DataProvider.prototype.rowFilterFactory = function(filter, hash) {
         if (!filter && hash) {
@@ -1574,7 +1601,8 @@ angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', 'config', 
                         sms += data.client.telephone.tel2 ? "ou au " + data.client.telephone.tel2 : ""
                         return sms + ".\nEdison Services."
                     }
-                    $scope.xfiles = files
+                    $scope.xfiles = _.clone(files);
+                    $scope.xfiles.push({_id:'devis', name:'devis.pdf'})
                     $scope.smsText = getSMS();
                     $scope.answer = function(cancel) {
                         $mdDialog.hide();
@@ -1829,7 +1857,6 @@ angular.module('edison')
                 var _this = this;
                 edisonAPI.intervention.save(_this)
                     .then(function(resp) {
-                        console.log("yey", cb)
                         var validationMessage = _.template("Les données de l'intervention {{id}} ont à été enregistré")(resp.data)
                         LxNotificationService.success(validationMessage);
                         if (typeof cb === 'function')
@@ -1843,7 +1870,6 @@ angular.module('edison')
 
             Intervention.prototype.envoi = function(cb) {
                 var _this = this;
-                console.log(_this.files)
                 dialog.getFileAndText(_this, _this.files, function(text, file) {
                     edisonAPI.intervention.envoi(_this.id, {
                         sms: text,
@@ -2109,9 +2135,16 @@ angular.module('edison').factory('productsList', ['dialog', 'openPost', function
                 if (text === ps[i].title)
                     return [];
                 var needle = _.deburr(text).toLowerCase()
+
                 var haystack = _.deburr(ps[i].title).toLowerCase();
-                if (haystack.indexOf(needle) >= 0) {
-                    rtn.push(_.clone(ps[i]))
+                var haystack2 = _.deburr(ps[i].ref).toLowerCase();
+                var haystack3 = _.deburr(ps[i].desc).toLowerCase();
+                if (_.includes(haystack, needle) ||
+                    _.includes(haystack2, needle) ||
+                    _.includes(haystack3, needle)) {
+                    var x = _.clone(ps[i])
+                    x.random = _.random();
+                    rtn.push(x)
                 }
             }
             return rtn
@@ -2127,8 +2160,8 @@ angular.module('edison').factory('productsList', ['dialog', 'openPost', function
         },
         previsualise: function(data) {
             openPost('/api/intervention/facturePreview', {
-                data:JSON.stringify(data),
-                html:true
+                data: JSON.stringify(data),
+                html: true
             })
         }
     }
@@ -2342,6 +2375,12 @@ angular.module('edison').controller('ArtisanController', function(tabContainer, 
   }
 });
 
+angular.module('edison').controller('DashboardController', function(tabContainer, $scope) {
+    "use strict";
+    $scope.tab = tabContainer.getCurrentTab();
+    $scope.tab.setTitle('dashBoard')
+});
+
  angular.module('edison').directive('edisonMap', ['$window', 'Map', 'mapAutocomplete', 'Address',
      function($window, Map, mapAutocomplete, Address) {
          "use strict";
@@ -2414,7 +2453,6 @@ var DevisCtrl = function($rootScope, $location, $routeParams, LxNotificationServ
     var _this = this;
     _this.config = config;
     _this.dialog = dialog;
-    console.log("heeheh")
     _this.moment = moment;
     var tab = tabContainer.getCurrentTab();
     if (!tab.data) {
@@ -2442,11 +2480,9 @@ var DevisCtrl = function($rootScope, $location, $routeParams, LxNotificationServ
             ajout: $rootScope.user.login
         }
     }
-    var closeTab = function(err) {
-        if (!err) {
-            $location.url("/devis/list");
-            tabContainer.remove(tab)
-        }
+    var closeTab = function() {
+        $location.url("/devis/list");
+        tabContainer.remove(tab)
     }
     _this.saveDevis = function(options) {
         devis.save(function(err, resp) {
@@ -2458,6 +2494,8 @@ var DevisCtrl = function($rootScope, $location, $routeParams, LxNotificationServ
                 devis.annulation(closeTab);
             } else if (options.transfert) {
                 devis.transfert()
+            } else {
+                closeTab();
             }
         })
     }
@@ -2498,10 +2536,12 @@ angular.module('edison').controller('DevisController', DevisCtrl);
          templateUrl: '/Templates/info-client.html',
          transclude: true,
          scope: {
-             client: '=model'
+             client: '=model',
+             noDetails:'@'
          },
          link: function(scope, element, attrs) {
              scope.config = config;
+             console.log(scope.noDetails)
              scope.searchPhone = function(tel) {
                  if (tel.length > 2) {
                      edisonAPI.searchPhone(tel)
@@ -2813,11 +2853,87 @@ angular.module('edison').controller('InterventionController', InterventionCtrl);
      }
  ]);
 
-angular.module('edison').controller('DashboardController', function(tabContainer, $scope) {
+var DevisController = function($timeout, tabContainer, FiltersFactory, ContextMenu, edisonAPI, DataProvider, $routeParams, $location, $q, $rootScope, $filter, config, ngTableParams, devis) {
     "use strict";
-    $scope.tab = tabContainer.getCurrentTab();
-    $scope.tab.setTitle('dashBoard')
-});
+    var _this = this;
+    _this.tab = tabContainer.getCurrentTab();
+    _this.recap = $routeParams.artisanID;
+    var filtersFactory = new FiltersFactory('devis')
+    var currentFilter;
+    if ($routeParams.fltr) {
+        currentFilter = filtersFactory.getFilterByUrl($routeParams.fltr)
+    }
+    var currentHash = $location.hash();
+    var title = currentFilter ? currentFilter.long_name : "Devis";
+    _this.tab.setTitle(title, currentHash);
+    _this.tab.hash = currentHash;
+    _this.config = config;
+    _this.moment = moment;
+    var dataProvider = new DataProvider('devis');
+    if (!dataProvider.getData()) {
+        dataProvider.setData(devis.data);
+    }
+    dataProvider.applyFilter(currentFilter, _this.tab.hash);
+    var tableParameters = {
+        page: 1, // show first page
+        total: dataProvider.filteredData.length,
+        filter: {},
+        sorting: {
+            id: 'desc'
+        },
+        count: 100 // count per page
+    };
+    var tableSettings = {
+        //groupBy:$rootScope.config.selectedGrouping,
+        total: dataProvider.filteredData,
+        getData: function($defer, params) {
+            var data = dataProvider.filteredData;
+            data = $filter('tableFilter')(data, params.filter());
+            params.total(data.length);
+            data = $filter('orderBy')(data, params.orderBy());
+            $defer.resolve(data.slice((params.page() - 1) * params.count(), params.page() * params.count()));
+        },
+        filterDelay: 100
+    }
+    _this.tableParams = new ngTableParams(tableParameters, tableSettings);
+
+    $rootScope.$on('devisListChange', function() {
+        dataProvider.applyFilter(currentFilter, _this.tab.hash);
+        _this.tableParams.reload();
+    })
+
+    _this.contextMenu = new ContextMenu('devis')
+
+    _this.rowRightClick = function($event, inter) {
+        _this.contextMenu.setPosition($event.pageX, $event.pageY)
+        _this.contextMenu.setData(inter);
+        _this.contextMenu.open();
+        edisonAPI.devis.get(inter.id)
+            .then(function(resp) {
+                _this.contextMenu.setData(resp.data);
+            })
+    }
+
+    _this.rowClick = function($event, inter) {
+        if (_this.contextMenu.active)
+            return _this.contextMenu.close();
+        if ($event.metaKey || $event.ctrlKey) {
+            tabContainer.addTab('/devis/' + inter.id, {
+                title: ('#' + inter.id),
+                setFocus: false,
+                allowDuplicates: false
+            });
+        } else {
+            if ($rootScope.expendedRow === inter.id) {
+                $rootScope.expendedRow = undefined;
+            } else {
+                $rootScope.expendedRow = inter.id
+            }
+        }
+    }
+
+}
+angular.module('edison').controller('ListeDevisController', DevisController);
 
 angular.module('edison').controller('statsController', function($scope) {
     "use strict";
@@ -2911,87 +3027,5 @@ var InterventionsController = function($timeout, tabContainer, FiltersFactory, C
 
 }
 angular.module('edison').controller('InterventionsController', InterventionsController);
-
-var DevisController = function($timeout, tabContainer, FiltersFactory, ContextMenu, edisonAPI, DataProvider, $routeParams, $location, $q, $rootScope, $filter, config, ngTableParams, devis) {
-    "use strict";
-    var _this = this;
-    _this.tab = tabContainer.getCurrentTab();
-    _this.recap = $routeParams.artisanID;
-    var filtersFactory = new FiltersFactory('devis')
-    var currentFilter;
-    if ($routeParams.fltr) {
-        currentFilter = filtersFactory.getFilterByUrl($routeParams.fltr)
-    }
-    var currentHash = $location.hash();
-    var title = currentFilter ? currentFilter.long_name : "Devis";
-    _this.tab.setTitle(title, currentHash);
-    _this.tab.hash = currentHash;
-    _this.config = config;
-    _this.moment = moment;
-    var dataProvider = new DataProvider('devis');
-    if (!dataProvider.getData()) {
-        dataProvider.setData(devis.data);
-    }
-    dataProvider.applyFilter(currentFilter, _this.tab.hash);
-    var tableParameters = {
-        page: 1, // show first page
-        total: dataProvider.filteredData.length,
-        filter: {},
-        sorting: {
-            id: 'desc'
-        },
-        count: 100 // count per page
-    };
-    var tableSettings = {
-        //groupBy:$rootScope.config.selectedGrouping,
-        total: dataProvider.filteredData,
-        getData: function($defer, params) {
-            var data = dataProvider.filteredData;
-            data = $filter('tableFilter')(data, params.filter());
-            params.total(data.length);
-            data = $filter('orderBy')(data, params.orderBy());
-            $defer.resolve(data.slice((params.page() - 1) * params.count(), params.page() * params.count()));
-        },
-        filterDelay: 100
-    }
-    _this.tableParams = new ngTableParams(tableParameters, tableSettings);
-
-    $rootScope.$on('devisListChange', function() {
-        dataProvider.applyFilter(currentFilter, _this.tab.hash);
-        _this.tableParams.reload();
-    })
-
-    _this.contextMenu = new ContextMenu('devis')
-
-    _this.rowRightClick = function($event, inter) {
-        _this.contextMenu.setPosition($event.pageX, $event.pageY)
-        _this.contextMenu.setData(inter);
-        _this.contextMenu.open();
-        edisonAPI.devis.get(inter.id)
-            .then(function(resp) {
-                _this.contextMenu.setData(resp.data);
-            })
-    }
-
-    _this.rowClick = function($event, inter) {
-        if (_this.contextMenu.active)
-            return _this.contextMenu.close();
-        if ($event.metaKey || $event.ctrlKey) {
-            tabContainer.addTab('/devis/' + inter.id, {
-                title: ('#' + inter.id),
-                setFocus: false,
-                allowDuplicates: false
-            });
-        } else {
-            if ($rootScope.expendedRow === inter.id) {
-                $rootScope.expendedRow = undefined;
-            } else {
-                $rootScope.expendedRow = inter.id
-            }
-        }
-    }
-
-}
-angular.module('edison').controller('ListeDevisController', DevisController);
 
 //# sourceMappingURL=all.js.map

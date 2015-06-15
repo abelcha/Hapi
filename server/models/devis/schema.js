@@ -26,7 +26,7 @@ module.exports = function(db) {
             },
             transfert: Date
         },
-        prixFinal: Number,
+        prixAnnonce: Number,
         historique: [{
             date: {
                 type: Date,

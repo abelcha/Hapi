@@ -119,9 +119,16 @@ angular.module('edison').factory('productsList', ['dialog', 'openPost', function
                 if (text === ps[i].title)
                     return [];
                 var needle = _.deburr(text).toLowerCase()
+
                 var haystack = _.deburr(ps[i].title).toLowerCase();
-                if (haystack.indexOf(needle) >= 0) {
-                    rtn.push(_.clone(ps[i]))
+                var haystack2 = _.deburr(ps[i].ref).toLowerCase();
+                var haystack3 = _.deburr(ps[i].desc).toLowerCase();
+                if (_.includes(haystack, needle) ||
+                    _.includes(haystack2, needle) ||
+                    _.includes(haystack3, needle)) {
+                    var x = _.clone(ps[i])
+                    x.random = _.random();
+                    rtn.push(x)
                 }
             }
             return rtn
@@ -137,8 +144,8 @@ angular.module('edison').factory('productsList', ['dialog', 'openPost', function
         },
         previsualise: function(data) {
             openPost('/api/intervention/facturePreview', {
-                data:JSON.stringify(data),
-                html:true
+                data: JSON.stringify(data),
+                html: true
             })
         }
     }

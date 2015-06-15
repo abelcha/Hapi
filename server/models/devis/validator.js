@@ -6,9 +6,7 @@ module.exports = function(schema) {
 
 
     schema.pre('save', function(next) {
-        console.log('pre')
-
-        this.prixFinal = _reduce(this.produits, function(result, n, key) {
+        this.prixAnnonce = _reduce(this.produits, function(result, n, key) {
             if (key === 1)
                 result = result.pu
             return result + n.pu;
@@ -26,9 +24,7 @@ module.exports = function(schema) {
     schema.post('save', function(doc) {
         if (!isWorker) {
             db.model('devis').cacheActualise(doc);
-            db.model('intervention').stats().then(function(resp) {
-                console.log(resp);
-            } );
+            db.model('intervention').stats().then();
         }
     })
 

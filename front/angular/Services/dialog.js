@@ -111,7 +111,8 @@ angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', 'config', 
                         sms += data.client.telephone.tel2 ? "ou au " + data.client.telephone.tel2 : ""
                         return sms + ".\nEdison Services."
                     }
-                    $scope.xfiles = files
+                    $scope.xfiles = _.clone(files);
+                    $scope.xfiles.push({_id:'devis', name:'devis.pdf'})
                     $scope.smsText = getSMS();
                     $scope.answer = function(cancel) {
                         $mdDialog.hide();

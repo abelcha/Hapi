@@ -23,7 +23,7 @@ module.exports = function(schema) {
             cp: e.client.address.cp,
             ad: e.client.address.v,
             ev: e.envois,
-            pa: e.prixFinal,
+            pa: e.prixAnnonce,
         };
     }
 
@@ -44,7 +44,6 @@ module.exports = function(schema) {
                     } else {
                         data.unshift(result);
                     }
-                    console.log(result);
                     redis.set("devisList", JSON.stringify(data), function() {
                         io.sockets.emit('devisListChange', result);
                         release();

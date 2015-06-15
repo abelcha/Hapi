@@ -115,7 +115,7 @@ module.exports = {
             color: 'light-blue'
         },
     },
-    colorEnvoisDevis:function(i) {
+    colorEnvoisDevis: function(i) {
         if (i === 0)
             return 'white';
         if (i === 1)
@@ -256,5 +256,11 @@ module.exports = {
         type: "partenariat",
         short_name: "PS_SST",
         long_name: "Il n'y a pas de sst dans la zone"
-    }]
+    }],
+    getCauseAnnulation: function(short_name) {
+        var _find = require('lodash/collection/find');
+        return _find(this.causeAnnulation, function(e) {
+            return e.short_name === short_name
+        })
+    }
 }

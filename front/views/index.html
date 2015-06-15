@@ -79,22 +79,43 @@
                 <link fltr="avr" icon="th-list" login="{{user.login}}"></link>
             </drop-down>
             <drop-down ng-click="mcs=true" title="Mes Collegues" icon="sitemap">
-                <drop-down  ng-if="mcs" title="{{telepro.login | loginify}}" ng-repeat="telepro in interventionsStats | orderBy:'-total'">
-                    <link fltr="tall" icon="th-list" title="{{dateFormat}}" login="{{telepro.login}}"></link>
-                        <link fltr="sarl" icon="th-list" login="{{user.login}}"></link>
-                        <link fltr="fact" icon="th-list" login="{{user.login}}"></link>
-                        <link fltr="carl" icon="th-list" login="{{user.login}}"></link>
-                        <link fltr="sav" icon="th-list" login="{{user.login}}"></link>
-                        <link fltr="savEnc" icon="th-list" login="{{user.login}}"></link>
-                        <link fltr="lit" icon="th-list" login="{{user.login}}"></link>
-                        <link fltr="litEnc" icon="th-list" login="{{user.login}}"></link>
-                        <link fltr="d_all" model="devis" icon="th-list" login="{{user.login}}"></link>
-                        <link fltr="d_tall" model="devis" icon="th-list" login="{{user.login}}"></link>
-                        <link fltr="d_att" model="devis" icon="th-list" login="{{user.login}}"></link>
-                        <link fltr="d_aev" model="devis" icon="th-list" login="{{user.login}}"></link>
-                        <link fltr="d_ann" model="devis" icon="th-list" login="{{user.login}}"></link>
-                    </drop-down>
+                <drop-down ng-if="mcs" title="{{telepro.login | loginify}}" ng-repeat="telepro in interventionsStats | orderBy:'-total'">
+                    <link-separator title="Mes Interventions" icon="calendar"></link-separator>
+
+                   <link fltr="tall" icon="th-list" title="{{dateFormat}}" login="{{telepro.login}}"></link>
+                <link fltr="tenv" icon="th-list" login="{{telepro.login}}"></link>
+                <link fltr="apr" icon="th-list" login="{{telepro.login}}"></link>
+                <link fltr="avr" icon="th-list" login="{{telepro.login}}"></link>
+                    
+                    <link-separator title="Mes Sous-Traitants" icon="truck"></link-separator>
+                    
+                    <link fltr="sarl" icon="th-list" login="{{telepro.login}}"></link>
+                    <link fltr="fact" icon="th-list" login="{{telepro.login}}"></link>
+                    
+                    <link-separator title="Mes Clients" icon="truck"></link-separator>
+                    
+                    <link fltr="fact" icon="th-list" login="{{telepro.login}}"></link>
+                    <link fltr="carl" icon="th-list" login="{{telepro.login}}"></link>
+                    
+                    <link-separator icon="share" title="Mes S.A.V"></link-separator>
+
+                    <link fltr="sav" icon="th-list" login="{{telepro.login}}"></link>
+                    <link fltr="savEnc" icon="th-list" login="{{telepro.login}}"></link>
+
+                    <link-separator icon="bolt" title="Mes Litiges"></link-separator>
+                    
+                    <link fltr="lit" icon="th-list" login="{{telepro.login}}"></link>
+                    <link fltr="litEnc" icon="th-list" login="{{telepro.login}}"></link>
+
+                    <link-separator icon="hospital-o" title="Mes Devis"></link-separator>
+
+                    <link fltr="d_all" model="devis" icon="th-list" login="{{telepro.login}}"></link>
+                    <link fltr="d_tall" model="devis" icon="th-list" login="{{telepro.login}}"></link>
+                    <link fltr="d_att" model="devis" icon="th-list" login="{{telepro.login}}"></link>
+                    <link fltr="d_aev" model="devis" icon="th-list" login="{{telepro.login}}"></link>
+                    <link fltr="d_ann" model="devis" icon="th-list" login="{{telepro.login}}"></link>
                 </drop-down>
+            </drop-down>
             </drop-down>
             <drop-down title="Mes Sous-Traitants" icon="truck">
                 <link fltr="sarl" icon="th-list" login="{{user.login}}"></link>

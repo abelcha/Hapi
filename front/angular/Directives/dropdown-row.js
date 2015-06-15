@@ -1,4 +1,4 @@
-angular.module('edison').directive('dropdownRow', ['edisonAPI', '$q', '$timeout', function(edisonAPI, $q, $timeout) {
+angular.module('edison').directive('dropdownRow', ['edisonAPI', 'config', '$q', '$timeout', function(edisonAPI, config, $q, $timeout) {
     "use strict";
 
     return {
@@ -19,7 +19,7 @@ angular.module('edison').directive('dropdownRow', ['edisonAPI', '$q', '$timeout'
             scope.data = {};
             $timeout(function() {
                 $("#expended").velocity({
-                    height: 194,
+                    height: 205,
                 }, 200);
             }, 50)
 
@@ -31,6 +31,8 @@ angular.module('edison').directive('dropdownRow', ['edisonAPI', '$q', '$timeout'
                 var pThen = function(result) {
                     scope.data = result[0].data;
                     scope.data.artisanStats = result[1].data
+                    if (scope.data.status === 'ANN')
+                        scope.data.ca = config.getCauseAnnulation(scope.data.causeAnnulation)
                 }
             } else if (scope.model === "devis") {
                 var pAll = [
@@ -39,6 +41,8 @@ angular.module('edison').directive('dropdownRow', ['edisonAPI', '$q', '$timeout'
                 var pThen = function(result) {
                     scope.data = result[0].data;
                     scope.data.flagship = _.max(scope.data.produits, 'pu');
+                    if (scope.data.status === 'ANN')
+                        scope.data.ca = config.getCauseAnnulation(scope.data.causeAnnulation)
                 }
             }
 

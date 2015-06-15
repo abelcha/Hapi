@@ -99,7 +99,6 @@ module.exports = function(db) {
                 cp: String,
             },
             tva: Number
-
         },
         sav: [{
             status: String,

@@ -59,7 +59,6 @@ angular.module('edison').controller('MainController', function(tabContainer, $sc
     };
 
     $scope.$on("$locationChangeStart", function(event) {
-        console.log('here')
         if ($location.path() === "/") {
             return 0;
         }

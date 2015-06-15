@@ -2,18 +2,21 @@
     <div class="row">
         <div class="col-sm-4 info-ext">
             <h4>Client</h4>
+            <br>
+            <p ng-if="data.ca"><strong>Annulation:</strong> {{::data.ca.long_name}}</p>
             <p><strong>Nom:</strong> {{::data.client.civilite}} {{::data.client.prenom}} {{::data.client.nom}}</p>
             <p><strong>Addresse:</strong> {{::data.client.address.n}} {{::data.client.address.r}} {{::data.client.address.cp}}, {{::data.client.address.v}}</p>
             <p><strong>Description:</strong> {{::data.description}}</p>
             <p><strong>Remarque:</strong> {{::data.remarque}}</p>
             <p><strong>Prix:</strong> {{::data.prixAnnonce || 0}} € | {{::data.prixFinal || 0}} €</p>
             <p>
-                <a href="/intervention/{{inter.id}}"> <span style="width:100px" class="label grey darken-3"> Fiche</span></a>
+                <a href="/{{model}}/{{inter.id}}"> <span style="width:100px" class="label grey darken-3"> Fiche</span></a>
             </p>
         </div>
         <div ng-if="model === 'intervention'" class="col-sm-4 info-ext">
             <div ng-if="data.artisan && data.artisan.id">
                 <h4>Artisan</h4>
+                <br>
                 <p>
                     {{::data.artisan.nomSociete}}
                 </p>
@@ -34,6 +37,7 @@
         <div ng-if="model === 'devis'" class="col-sm-4 info-ext">
             <div>
                 <h4>Produits</h4>
+                <br>
                 <p>
                    <strong> Nombre de produits : </strong> {{::data.produits.length}}
                 </p>
@@ -46,7 +50,7 @@
             </div>
         </div>
         <div class="col-sm-4">
-            <img ng-if="data.client.address " style="height: 194px;" ng-src="{{getStaticMap(data)}}" class="img-thumbnail" />
+            <img ng-if="data.client.address " style="height: 194px;width: 411px;" ng-src="{{getStaticMap(data)}}" class="img-thumbnail" />
         </div>
     </div>
 </div>

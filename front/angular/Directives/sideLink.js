@@ -39,6 +39,28 @@
      };
  }]);
 
+ angular.module('edison').directive('linkSeparator', [function() {
+     "use strict";
+     return {
+         restrict: 'AE',
+         replace: true,
+         template: '<li>' +
+             '      <a>' +
+             '            <i ng-if="icon" class = "menu-icon fa fa-{{icon}}"> </i>' +
+             '            <strong><span class="mm-text">{{title}}</span></strong>' +
+             '        </a>' +
+             '      </li>',
+         scope: {
+             icon: '@',
+             title: '@',
+         },
+         link: function(scope, element, attrs) {
+            
+         }
+     };
+ }]);
+
+
  angular.module('edison').service('sidebarSM', function() {
 
      var C = function() {

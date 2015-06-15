@@ -3,7 +3,6 @@ var DevisCtrl = function($rootScope, $location, $routeParams, LxNotificationServ
     var _this = this;
     _this.config = config;
     _this.dialog = dialog;
-    console.log("heeheh")
     _this.moment = moment;
     var tab = tabContainer.getCurrentTab();
     if (!tab.data) {
@@ -31,11 +30,9 @@ var DevisCtrl = function($rootScope, $location, $routeParams, LxNotificationServ
             ajout: $rootScope.user.login
         }
     }
-    var closeTab = function(err) {
-        if (!err) {
-            $location.url("/devis/list");
-            tabContainer.remove(tab)
-        }
+    var closeTab = function() {
+        $location.url("/devis/list");
+        tabContainer.remove(tab)
     }
     _this.saveDevis = function(options) {
         devis.save(function(err, resp) {
@@ -47,6 +44,8 @@ var DevisCtrl = function($rootScope, $location, $routeParams, LxNotificationServ
                 devis.annulation(closeTab);
             } else if (options.transfert) {
                 devis.transfert()
+            } else {
+                closeTab();
             }
         })
     }

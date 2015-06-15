@@ -13,7 +13,6 @@
                         </div>
                     </div>
                 </div>
-                
                 <div class="form-group">
                     <div class="col-sm-5">
                         <lx-text-field label="Nom">
@@ -44,7 +43,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-sm-6">
                         <lx-text-field label="Email">
                             <input capitalize type="text" allow-pattern="[a-z|@|.]" ng-model="client.email">
                         </lx-text-field>
@@ -72,7 +71,7 @@
                         </lx-text-field>
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group" ng-if="!noDetails">
                     <div class="col-sm-2">
                         <lx-text-field label="Etage">
                             <input capitalize type="text" ng-model="client.address.etage">

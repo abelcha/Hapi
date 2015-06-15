@@ -6,10 +6,12 @@
          templateUrl: '/Templates/info-client.html',
          transclude: true,
          scope: {
-             client: '=model'
+             client: '=model',
+             noDetails:'@'
          },
          link: function(scope, element, attrs) {
              scope.config = config;
+             console.log(scope.noDetails)
              scope.searchPhone = function(tel) {
                  if (tel.length > 2) {
                      edisonAPI.searchPhone(tel)

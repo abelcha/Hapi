@@ -7,7 +7,13 @@ module.exports = function(schema) {
         fn: function(inter, req, res) {
 
             var getSuppFile = function(file_id) {
-                if (file_id) {
+                if (file_id === 'devis') {
+                    return db.model('intervention').getDevisFile({
+                        data: inter,
+                        html: false,
+                        obj:true,
+                    })
+                } else if (file_id) {
                     return document.download(file_id);
                 } else {
                     return Promise.resolve(null)
@@ -17,7 +23,7 @@ module.exports = function(schema) {
 
             var sendSMS = function(text, inter, user) {
                 return db.model('sms').send({
-                    to: user.portable || '0633138868',
+                    to: user.portable ||  '0633138868',
                     text: "Message destiné à " + inter.artisan.tel1 + '\n' + text,
                     login: user.login,
                     origin: inter.id,
@@ -44,6 +50,7 @@ module.exports = function(schema) {
                 if (envProd || envDev) {
 
                     getSuppFile(req.body.file).then(function(result) {
+                        console.log("==>", result);
                         var suppFile = result || null;
                         db.model('intervention').getOSFile(inter).then(function(osFileBuffer) {
                             mail.sendOS(inter, osFileBuffer, suppFile, req.session).then(function(mail) {

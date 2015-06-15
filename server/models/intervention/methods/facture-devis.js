@@ -56,7 +56,18 @@ module.exports = function(schema) {
             buffer: true
         })
     }
-
+    schema.statics.getDevisFile = function(options) {
+        var _this = this;
+        return new Promise(function(resolve, reject) {
+            _this.getDevis(options).then(function(buffer) {
+                resolve({
+                    data: buffer,
+                    name: 'devis.pdf',
+                    mimeType: "application/pdf"
+                })
+            }, reject)
+        })
+    }
 
     schema.statics.facturePreview = function(req, res) {
         var _this = this;

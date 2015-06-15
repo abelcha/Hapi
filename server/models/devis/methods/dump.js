@@ -81,7 +81,6 @@
                 rtn.status = 'TRA'
                 rtn.transfertId = rtn.id;
             }
-            console.log(rtn.status)
             rtn.produits = devis.devisTab;
             rtn.tva = devis.tva;
             rtn.produits.map(function(p) {
