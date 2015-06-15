@@ -6,6 +6,8 @@ module.exports = function(schema) {
 
 
     schema.pre('save', function(next) {
+        console.log('pre')
+
         this.prixFinal = _reduce(this.produits, function(result, n, key) {
             if (key === 1)
                 result = result.pu
@@ -17,13 +19,16 @@ module.exports = function(schema) {
         this.client.address.n = upper(this.client.address.n)
         this.client.address.r = upper(this.client.address.r)
         this.client.address.v = upper(this.client.address.v)
-        redis.del('interventionStats', next);
-        redis.del('devisList');
+        next();
+
     });
 
     schema.post('save', function(doc) {
         if (!isWorker) {
-           io.sockets.emit('devisListChange', db.model('devis').translate(doc));
+            db.model('devis').cacheActualise(doc);
+            db.model('intervention').stats().then(function(resp) {
+                console.log(resp);
+            } );
         }
     })
 

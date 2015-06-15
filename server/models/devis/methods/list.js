@@ -4,6 +4,9 @@ module.exports = function(schema) {
     var redisRStream = require('redis-rstream')
     var FiltersFactory = requireLocal('config/FiltersFactory')
     var config = requireLocal('config/dataList');
+    var ReadWriteLock = require('rwlock');
+    var lock = new ReadWriteLock();
+        var _ = require('lodash')
 
     var translate = function(e) {
         var fltr = FiltersFactory('devis').filter(e);
@@ -26,13 +29,39 @@ module.exports = function(schema) {
 
     schema.statics.translate = translate;
 
+    schema.statics.cacheActualise = function(doc) {
+        lock.writeLock(function(release) {
+            console.log("cacheActualise")
+            redis.get("devisList", function(err, reply) {
+                if (!err && reply) {
+                    var data = JSON.parse(reply);
+                    var index = _.findIndex(data, function(e, i) {
+                        return e.id === doc.id;
+                    })
+                    var result = translate(doc)
+                    if (index !== -1) {
+                        data[index] = result;
+                    } else {
+                        data.unshift(result);
+                    }
+                    console.log(result);
+                    redis.set("devisList", JSON.stringify(data), function() {
+                        io.sockets.emit('devisListChange', result);
+                        release();
+                    });
+                } else {
+                    db.model('devis').list()
+                }
+            });
+        });
+    }
+
+
     schema.statics.list = function(req, res) {
-        var _ = require('lodash')
         return new Promise(function(resolve, reject) {
-            redis.exists('devisList', function(err, reply) {
-                if (!err && reply) { // we just want to refresh the cache 
-                    redisRStream(redis, 'devisList')
-                        .pipe(res)
+            redis.get('devisList', function(err, reply) {
+                if (!err && reply && !_.get(req, 'query.cache')) { // we just want to refresh the cache 
+                    return res.send(reply)
                 } else {
                     db.model('devis')
                         .find()

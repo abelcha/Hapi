@@ -16,6 +16,7 @@ module.exports = function(schema) {
                     date: new Date,
                     id_devis: devis.id
                 }).save();
+                console.log("yayaysave")
                 devis.save().then(resolve, reject)
             })
         }

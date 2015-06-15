@@ -50,13 +50,18 @@ module.exports = function(schema) {
                                 newID: doc.id,
                             })
                             if (data.devisOrigine) {
-                                db.model('devis').update({
-                                    id: data.devisOrigine
-                                }, {
-                                    transfertId: data.id
-                                }).exec(function(err, resp) {
-                                    console.log(err, resp);
-                                })
+                                db.model('devis').findOne({
+                                        id: data.devisOrigine
+                                    })
+                                    .then(function(devis) {
+                                        if (!devis)
+                                            return false;
+                                        devis.status = "TRA";
+                                        devis.transfertId = data.id;
+                                        devis.save().then(function(resp) {
+                                            console.log("-->", resp)
+                                        })
+                                    })
                             }
                         }, function(err) {
                             release();
