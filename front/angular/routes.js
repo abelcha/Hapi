@@ -338,13 +338,13 @@ angular.module('edison').run(function(editableOptions) {
     $http.get("/Directives/dropdown-row.html", {
         cache: $templateCache
     });
-    $http.get("/Pages/intervention/info-client.html", {
+    $http.get("/Templates/info-client.html", {
         cache: $templateCache
     });
-    $http.get("/Pages/intervention/info-categorie.html", {
+    $http.get("/Templates/info-categorie.html", {
         cache: $templateCache
     });
-    $http.get("/Pages/intervention/autocomplete-map.html", {
+    $http.get("/Templates/autocomplete-map.html", {
         cache: $templateCache
     });
 })

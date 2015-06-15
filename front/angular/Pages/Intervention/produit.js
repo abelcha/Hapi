@@ -3,7 +3,7 @@
          "use strict";
          return {
              restrict: 'E',
-             templateUrl: '/Pages/intervention/produits.html',
+             templateUrl: '/Templates/produits.html',
              scope: {
                  data: "=",
                  tva: '=',

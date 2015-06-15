@@ -3,7 +3,7 @@
      return {
          replace: true,
          restrict: 'E',
-         templateUrl: '/Pages/intervention/info-categorie.html',
+         templateUrl: '/Templates/info-categorie.html',
          transclude: true,
          scope: {
              model: "=",

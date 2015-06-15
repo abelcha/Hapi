@@ -338,13 +338,13 @@ angular.module('edison').run(function(editableOptions) {
     $http.get("/Directives/dropdown-row.html", {
         cache: $templateCache
     });
-    $http.get("/Pages/intervention/info-client.html", {
+    $http.get("/Templates/info-client.html", {
         cache: $templateCache
     });
-    $http.get("/Pages/intervention/info-categorie.html", {
+    $http.get("/Templates/info-categorie.html", {
         cache: $templateCache
     });
-    $http.get("/Pages/intervention/autocomplete-map.html", {
+    $http.get("/Templates/autocomplete-map.html", {
         cache: $templateCache
     });
 })
@@ -2333,7 +2333,7 @@ angular.module('edison').controller('DashboardController', function(tabContainer
          return {
              replace: true,
              restrict: 'E',
-             templateUrl: '/Pages/Intervention/autocomplete-map.html',
+             templateUrl: '/Templates/autocomplete-map.html',
              scope: {
                  data: "=",
                  height: "@",
@@ -2453,7 +2453,7 @@ angular.module('edison').controller('DevisController', DevisCtrl);
      return {
          replace: true,
          restrict: 'E',
-         templateUrl: '/Pages/intervention/info-categorie.html',
+         templateUrl: '/Templates/info-categorie.html',
          transclude: true,
          scope: {
              model: "=",
@@ -2479,7 +2479,7 @@ angular.module('edison').controller('DevisController', DevisCtrl);
      return {
          replace: true,
          restrict: 'E',
-         templateUrl: '/Pages/intervention/info-client.html',
+         templateUrl: '/Templates/info-client.html',
          transclude: true,
          scope: {
              client: '=model'
@@ -2761,7 +2761,7 @@ angular.module('edison').controller('InterventionController', InterventionCtrl);
          "use strict";
          return {
              restrict: 'E',
-             templateUrl: '/Pages/intervention/produits.html',
+             templateUrl: '/Templates/produits.html',
              scope: {
                  data: "=",
                  tva: '=',

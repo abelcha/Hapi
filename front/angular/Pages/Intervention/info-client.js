@@ -3,7 +3,7 @@
      return {
          replace: true,
          restrict: 'E',
-         templateUrl: '/Pages/intervention/info-client.html',
+         templateUrl: '/Templates/info-client.html',
          transclude: true,
          scope: {
              client: '=model'

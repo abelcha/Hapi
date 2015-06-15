@@ -4,7 +4,7 @@
          return {
              replace: true,
              restrict: 'E',
-             templateUrl: '/Pages/Intervention/autocomplete-map.html',
+             templateUrl: '/Templates/autocomplete-map.html',
              scope: {
                  data: "=",
                  height: "@",
