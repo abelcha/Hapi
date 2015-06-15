@@ -8,13 +8,13 @@ var Timer = module.exports = function() {
     this.emitter.add("*/5 * * * *", "every 5 minutes");
     this.emitter.add("*/2 * * * *", "every minute");
 
-/*    this.emitter.on("every 10 minutes", function() {
-        edison.worker.createJob({
-            name: 'db',
-            model: 'intervention',
-            method: 'cacheReload'
-        })
-    });*/
+    /*    this.emitter.on("every 10 minutes", function() {
+            edison.worker.createJob({
+                name: 'db',
+                model: 'intervention',
+                method: 'cacheReload'
+            })
+        });*/
 
     this.emitter.on("every 5 minutes", function() {
         edison.worker.createJob({
@@ -29,6 +29,13 @@ var Timer = module.exports = function() {
             model: 'intervention',
             method: 'workerDump',
             arg: 21000
+        }).then(function() {
+            edison.worker.createJob({
+                name: 'db',
+                model: 'devis',
+                method: 'workerDump',
+                arg: 21000
+            })
         })
     })
 }
