@@ -16,8 +16,8 @@
                     <td data-title="'Cat.'" sortable="'c'" filter="{ 'cx': 'text' }">
                         <span style="width:80px" class="label {{::vm.config.categories[inter.c].color}}">{{inter.cx}}</span>
                     </td>
-                    <td data-title="'Date Ajout'" sortable="'da'" filter="{ 'da': 'text' }">
-                        {{::inter.da | date:"dd/MM/yy" || ""}} {{::inter.da | date:"HH'h'mm" || ""}}
+                    <td data-title="'Ajout'" sortable="'da'" filter="{ 'da': 'text' }">
+                        {{::inter.da | relativeDate:true}}
                     </td>
                     <td variable-length data-title="'Client'" sortable="'n'" filter="{ 'n': 'text' }">
                         {{::inter.n}}
@@ -28,9 +28,9 @@
                     <td variable-length class="variable-length one-liner" data-title="'Artisan'" sortable="'a'" filter="{ 'a': 'text' }">
                         <strong>{{::inter.a}}</strong>
                     </td>
-                    <td data-title="'Date Intervention'" sortable="'di'" filter="{ 'di': 'text' }">
+                    <td data-title="'Intervention'" sortable="'di'" filter="{ 'di': 'text' }">
                         <div ng-show="inter.di[0] != 1">
-                            {{::inter.di | date:"dd/MM/yy" || ""}} {{::inter.di | date:"HH'h'mm" || ""}}
+                           {{::inter.di | relativeDate}}
                         </div>
                     </td>
                     <td data-title="'Prix'" sortable="'pa'" filter="{ 'pa': 'text' }">
@@ -43,7 +43,7 @@
                 </tr>
                 <tr ng-repeat-end ng-if="expendedRow && expendedRow === inter.id">
                     <td colspan="42" style="background-color:white!important">
-                        <dropdown-row intervention="inter" expendedRow="expendedRow"></dropdown-row>
+                        <dropdown-row row="inter" expendedRow="expendedRow"></dropdown-row>
                     </td>
                 </tr>
             </tbody>

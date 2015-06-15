@@ -13,7 +13,7 @@ var DevisController = function($timeout, tabContainer, FiltersFactory, ContextMe
     _this.tab.setTitle(title, currentHash);
     _this.tab.hash = currentHash;
     _this.config = config;
-
+    _this.moment = moment;
     var dataProvider = new DataProvider('devis');
     if (!dataProvider.getData()) {
         dataProvider.setData(devis.data);
@@ -43,7 +43,7 @@ var DevisController = function($timeout, tabContainer, FiltersFactory, ContextMe
     _this.tableParams = new ngTableParams(tableParameters, tableSettings);
 
     $rootScope.$on('devisListChange', function() {
-        dataProvider.refreshFilters($routeParams, _this.tab.hash);
+        dataProvider.applyFilter(currentFilter, _this.tab.hash);
         _this.tableParams.reload();
     })
 
@@ -53,9 +53,7 @@ var DevisController = function($timeout, tabContainer, FiltersFactory, ContextMe
         _this.contextMenu.setPosition($event.pageX, $event.pageY)
         _this.contextMenu.setData(inter);
         _this.contextMenu.open();
-        edisonAPI.intervention.get(inter.id, {
-                extend: true
-            })
+        edisonAPI.devis.get(inter.id)
             .then(function(resp) {
                 _this.contextMenu.setData(resp.data);
             })

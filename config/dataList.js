@@ -115,6 +115,15 @@ module.exports = {
             color: 'light-blue'
         },
     },
+    colorEnvoisDevis:function(i) {
+        if (i === 0)
+            return 'white';
+        if (i === 1)
+            return 'grey';
+        if (i === 2)
+            return 'black'
+        return 'red'
+    },
     etatsDevis: {
         AEV: {
             short_name: 'ENV',

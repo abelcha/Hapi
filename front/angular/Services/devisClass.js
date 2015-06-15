@@ -67,8 +67,10 @@ angular.module('edison')
                         });
                 });
             };
+            Devis.prototype.ouvrirFiche = function() {
+                 $location.url("/devis/" + this.id);
+            }
             Devis.prototype.transform = function() {
-                var _this = this;
                  $location.url("/intervention?devis=" + _this.id);
             }
             return Devis;

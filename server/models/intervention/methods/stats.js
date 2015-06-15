@@ -111,8 +111,6 @@ module.exports = function(schema) {
                     });
                     resolve(rtn)
                         redis.set('interventionStats', JSON.stringify(rtn));
-                        redis.expire('interventionStats', 5)
-                        //redis.del('interventionStats')
                 });
             });
         });

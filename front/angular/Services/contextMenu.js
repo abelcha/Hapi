@@ -1,7 +1,8 @@
-angular.module('edison').factory('ContextMenu', ['$location', 'edisonAPI', '$window', 'dialog', 'Intervention','contextMenuData', function($location, edisonAPI, $window, dialog, Intervention, contextMenuData) {
+angular.module('edison').factory('ContextMenu', ['$location', 'edisonAPI', '$window', 'dialog', 'Devis', 'Intervention', 'contextMenuData', function($location, edisonAPI, $window, dialog, Devis, Intervention, contextMenuData) {
     "use strict";
 
     var ContextMenu = function(model) {
+        this.model = model
         this.list = contextMenuData[model];
     }
 
@@ -34,11 +35,16 @@ angular.module('edison').factory('ContextMenu', ['$location', 'edisonAPI', '$win
 
     }
 
+    ContextMenu.prototype.modelObject = {
+        intervention: Intervention,
+        devis: Devis
+    }
+
     ContextMenu.prototype.click = function(link) {
         if (typeof link.action === 'function') {
             return link.action(this.getData())
         } else if (typeof link.action === 'string') {
-            return Intervention()[link.action].bind(this.data)();
+            return this.modelObject[this.model]()[link.action].bind(this.data)();
         } else {
             console.error("error here")
         }

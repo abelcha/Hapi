@@ -1,4 +1,30 @@
 module.exports = {
+    devis: [{
+        hidden: false,
+        title: 'Ouvrir Devis',
+        action: "ouvrirFiche"
+    }, {
+        hidden: false,
+        title: "Annuler",
+        action: 'annulation',
+        hide: function(inter) {
+            return inter.s !== 'ANN';
+        }
+    }, {
+        hidden: false,
+        title: "Envoyer",
+        action: 'envoyer',
+        hide: function(inter) {
+            return inter.s !== "TRA" && inter.s !== 'ANN';
+        }
+    }, {
+        hidden: false,
+        title: "Transferer",
+        action: 'transfert',
+        hide: function(inter) {
+            return inter.s !== 'TRA' && inter.s !== 'ANN';
+        }
+    }],
     intervention: [{
         hidden: false,
         title: 'Ouvrir Fiche',

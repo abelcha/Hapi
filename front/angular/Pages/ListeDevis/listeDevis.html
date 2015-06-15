@@ -2,39 +2,42 @@
     <div class="shadow-box listeInterventions">
         <table style="background:white;cursor:pointer" ng-table="vm.tableParams" class="table table-bordered table-hover table-hover table-striped" id="table-list" show-filter="true">
             <tbody id="tbody-list">
-                <tr data-id="{{inter.id}}" ng-repeat-start="inter in $data" ng-right-click="vm.rowRightClick($event, inter)" ng-click="vm.rowClick($event, inter, false)" ng-class="{success : vm.contextMenu.active && vm.contextMenu.data.id === inter.id}">
+                <tr data-id="{{devis.id}}" ng-repeat-start="devis in $data" ng-right-click="vm.rowRightClick($event, devis)" ng-click="vm.rowClick($event, devis, false)" ng-class="{success : vm.contextMenu.active && vm.contextMenu.data.id === devis.id}">
                     <td data-title="'Os'" sortable="'id'" filter="{ 'id': 'text' }">
-                        <strong>{{inter.id}}</strong>
+                        <strong>{{devis.id}}</strong>
                     </td>
                     <td data-title="'Télépro'" sortable="'t'" filter="{ 't': 'text' }">
-                        {{::inter.t}}
+                        {{::devis.t}}
                     </td>
                     <td data-title="'Cat.'" sortable="'c'" filter="{ 'cx': 'text' }">
-                        <span style="width:80px" class="label {{::vm.config.categories[inter.c].color}}">{{inter.cx}}</span>
+                        <span style="width:80px" class="label {{::vm.config.categories[devis.c].color}}">{{devis.cx}}</span>
                     </td>
-                    <td data-title="'Date Ajout'" sortable="'da'" filter="{ 'da': 'text' }">
-                        {{::inter.da | date:"dd/MM/yy" || ""}} {{::inter.da | date:"HH'h'mm" || ""}}
+                    <td data-title="'Ajout'" sortable="'da'" filter="{ 'da': 'text' }">
+                        {{devis.da|relativeDate}}
                     </td>
                     <td variable-length data-title="'Client'" sortable="'n'" filter="{ 'n': 'text' }">
-                        {{::inter.n}}
+                        {{::devis.n}}
                     </td>
-                    <td variable-length data-title="'Code P.'" sortable="'cp'" filter="{ 'cp': 'text' }">
-                        {{::inter.cp}}
+                    <td data-title="'CodeP'" sortable="'cp'" filter="{ 'cp': 'text' }">
+                        {{::devis.cp}}
                     </td>
                     <td variable-length data-title="'Ville'" sortable="'ad'" filter="{ 'ad': 'text' }">
-                        {{::inter.ad}}
+                        {{::devis.ad}}
                     </td>
                     <td data-title="'Prix'" sortable="'pa'" filter="{ 'pa': 'text' }">
-                        {{::(inter.pa | number:2) || 0}} €
+                        {{::(devis.pa | number:2) || 0}} €
+                    </td>
+                     <td data-title="'E.'" sortable="'ev'" filter="{ 'ev': 'text' }">
+                        <span style="width:30px" class="label {{config.colorEnvoisDevis(devis.ev)}}"><strong>{{::devis.ev}}</strong></span>
                     </td>
                     <td data-title="'Status'" sortable="'s'" filter="{ 'sx': 'text' }">
-                        <span style="width:90px" class="label {{::vm.config.etatsDevis[inter.s].color}}"> 
-                        {{::inter.sx}}</span>
+                        <span style="width:90px" class="label {{::vm.config.etatsDevis[devis.s].color}}"> 
+                        {{::devis.sx}}</span>
                     </td>
                 </tr>
-                <tr ng-repeat-end ng-if="expendedRow && expendedRow === inter.id">
+                <tr ng-repeat-end ng-if="expendedRow && expendedRow === devis.id">
                     <td colspan="42" style="background-color:white!important">
-                        <dropdown-row intervention="inter" expendedRow="expendedRow"></dropdown-row>
+                        <dropdown-row model="devis" row="devis" expendedRow="expendedRow"></dropdown-row>
                     </td>
                 </tr>
             </tbody>

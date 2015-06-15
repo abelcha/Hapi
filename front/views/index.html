@@ -78,14 +78,22 @@
                 <link fltr="apr" icon="th-list" login="{{user.login}}"></link>
                 <link fltr="avr" icon="th-list" login="{{user.login}}"></link>
             </drop-down>
-            <drop-down title="Mes Collegues" icon="sitemap">
-                <drop-down title="{{telepro.login | loginify}}" ng-repeat="telepro in interventionsStats | orderBy:'-total'">
+            <drop-down ng-click="mcs=true" title="Mes Collegues" icon="sitemap">
+                <drop-down  ng-if="mcs" title="{{telepro.login | loginify}}" ng-repeat="telepro in interventionsStats | orderBy:'-total'">
                     <link fltr="tall" icon="th-list" title="{{dateFormat}}" login="{{telepro.login}}"></link>
-                    <link fltr="tenv" icon="th-list" login="{{telepro.login}}"></link>
-                    <link fltr="apr" icon="th-list" login="{{telepro.login}}"></link>
-                    <link fltr="fact" icon="th-list" login="{{telepro.login}}"></link>
-                    <link fltr="carl" icon="th-list" login="{{telepro.login}}"></link>
-                    <link fltr="sarl" icon="th-list" login="{{telepro.login}}"></link>
+                        <link fltr="sarl" icon="th-list" login="{{user.login}}"></link>
+                        <link fltr="fact" icon="th-list" login="{{user.login}}"></link>
+                        <link fltr="carl" icon="th-list" login="{{user.login}}"></link>
+                        <link fltr="sav" icon="th-list" login="{{user.login}}"></link>
+                        <link fltr="savEnc" icon="th-list" login="{{user.login}}"></link>
+                        <link fltr="lit" icon="th-list" login="{{user.login}}"></link>
+                        <link fltr="litEnc" icon="th-list" login="{{user.login}}"></link>
+                        <link fltr="d_all" model="devis" icon="th-list" login="{{user.login}}"></link>
+                        <link fltr="d_tall" model="devis" icon="th-list" login="{{user.login}}"></link>
+                        <link fltr="d_att" model="devis" icon="th-list" login="{{user.login}}"></link>
+                        <link fltr="d_aev" model="devis" icon="th-list" login="{{user.login}}"></link>
+                        <link fltr="d_ann" model="devis" icon="th-list" login="{{user.login}}"></link>
+                    </drop-down>
                 </drop-down>
             </drop-down>
             <drop-down title="Mes Sous-Traitants" icon="truck">
@@ -156,8 +164,6 @@
             <div class="double-bounce2"></div>
         </div>
     </div>
-
-
     <script src="/ng-file-upload/ng-file-upload.min.js"></script>
     <script src="/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="/pickadate/lib/compressed/picker.js"></script>
@@ -173,7 +179,6 @@
     <script src="/moment/min/moment.min.js"></script>
     <script src="/moment/locale/fr.js"></script>
     <script src="/jquery.slimscroll/jquery.slimscroll.min.js"></script>
-
     <script type="text/javascript">
     //  window.PixelAdmin.start(init);
     _.templateSettings.interpolate = /{{([\s\S]+?)}}/g;

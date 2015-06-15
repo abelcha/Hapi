@@ -258,23 +258,29 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
             controllerAs: 'vm',
             resolve: {
                 devis: getDevisList,
-                //interventions: getInterList,
-                //interventionsStats: getInterventionStats,
-                //artisans: getArtisanList
             }
         })
         .when('/devis/list/:fltr', {
-            templateUrl: "Pages/ListeInterventions/listeInterventions.html",
-            controller: "InterventionsController",
+            templateUrl: "Pages/ListeDevis/listeDevis.html",
+            controller: "ListeDevisController",
+            controllerAs:"vm",
             resolve: {
-                interventionsStats: getInterventionStats,
-                interventions: getInterList,
-                artisans: getArtisanList
+                devis: getDevisList,
             }
         })
         .when('/devis', {
             redirectTo: function() {
                 return '/devis/' + Date.now();
+            }
+        })
+        .when('/devis/:id', {
+            templateUrl: "Pages/Intervention/devis.html",
+            controller: "DevisController",
+            controllerAs: "vm",
+            resolve: {
+                interventions: getInterList,
+                devisPrm: getDevis,
+                artisans: getArtisanList
             }
         })
         .when('/artisan/:id', {
@@ -289,16 +295,6 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
         .when('/artisan', {
             redirectTo: function() {
                 return '/artisan/' + Date.now();
-            }
-        })
-        .when('/devis/:id', {
-            templateUrl: "Pages/Intervention/devis.html",
-            controller: "DevisController",
-            controllerAs: "vm",
-            resolve: {
-                interventions: getInterList,
-                devisPrm: getDevis,
-                artisans: getArtisanList
             }
         })
         .when('/artisan/:artisanID/recap', {
@@ -413,27 +409,43 @@ angular.module('edison').directive('dropdownRow', ['edisonAPI', '$q', '$timeout'
         replace: true,
         templateUrl: '/Directives/dropdown-row.html',
         scope: {
-            intervention: '=',
+            model: "@",
+            row: '=',
         },
         link: function(scope, element, attrs) {
+            scope.model = scope.model || "intervention"
             scope.expendedStyle = {
                 height: 0,
                 overflow: 'hidden'
             };
             scope.expendedReady = false;
-            scope.expendedRowData = {};
+            scope.data = {};
             $timeout(function() {
                 $("#expended").velocity({
                     height: 194,
                 }, 200);
             }, 50)
-            $q.all([
-                edisonAPI.intervention.get(scope.intervention.id),
-                edisonAPI.artisan.getStats(scope.intervention.ai)
-            ]).then(function(result) {
-                scope.expendedRowData = result[0].data;
-                scope.expendedRowData.artisanStats = result[1].data
-            })
+
+            if (scope.model === "intervention") {
+                var pAll = [
+                    edisonAPI.intervention.get(scope.row.id),
+                    edisonAPI.artisan.getStats(scope.row.ai)
+                ];
+                var pThen = function(result) {
+                    scope.data = result[0].data;
+                    scope.data.artisanStats = result[1].data
+                }
+            } else if (scope.model === "devis") {
+                var pAll = [
+                    edisonAPI.devis.get(scope.row.id),
+                ]
+                var pThen = function(result) {
+                    scope.data = result[0].data;
+                    scope.data.flagship = _.max(scope.data.produits, 'pu');
+                }
+            }
+
+            $q.all(pAll).then(pThen)
 
             scope.getStaticMap = function(inter) {
                 var q = "?width=500&height=200&precision=0&zoom=11&origin=" + inter.client.address.lt + ", " + inter.client.address.lg;
@@ -631,6 +643,13 @@ angular.module('edison').filter('loginify', function() {
         if (!obj)
             return "";
         return obj.slice(0, 1).toUpperCase() + obj.slice(1, -2)
+    };
+});
+
+angular.module('edison').filter('relativeDate', function() {
+    "use strict";
+    return function(date, no) {
+        return moment(date).fromNow(no).toString()
     };
 });
 
@@ -861,7 +880,7 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
                 return $http.post("/api/devis/envoi", options);
             },
             annulation: function(id, causeAnnulation) {
-                return $http.post("/api/intervention/" + id + "/annulation", {
+                return $http.post("/api/devis/" + id + "/annulation", {
                     causeAnnulation: causeAnnulation
                 });
             },
@@ -1304,10 +1323,11 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
 
 }]);
 */
-angular.module('edison').factory('ContextMenu', ['$location', 'edisonAPI', '$window', 'dialog', 'Intervention','contextMenuData', function($location, edisonAPI, $window, dialog, Intervention, contextMenuData) {
+angular.module('edison').factory('ContextMenu', ['$location', 'edisonAPI', '$window', 'dialog', 'Devis', 'Intervention', 'contextMenuData', function($location, edisonAPI, $window, dialog, Devis, Intervention, contextMenuData) {
     "use strict";
 
     var ContextMenu = function(model) {
+        this.model = model
         this.list = contextMenuData[model];
     }
 
@@ -1340,11 +1360,16 @@ angular.module('edison').factory('ContextMenu', ['$location', 'edisonAPI', '$win
 
     }
 
+    ContextMenu.prototype.modelObject = {
+        intervention: Intervention,
+        devis: Devis
+    }
+
     ContextMenu.prototype.click = function(link) {
         if (typeof link.action === 'function') {
             return link.action(this.getData())
         } else if (typeof link.action === 'string') {
-            return Intervention()[link.action].bind(this.data)();
+            return this.modelObject[this.model]()[link.action].bind(this.data)();
         } else {
             console.error("error here")
         }
@@ -1429,8 +1454,10 @@ angular.module('edison')
                         });
                 });
             };
+            Devis.prototype.ouvrirFiche = function() {
+                 $location.url("/devis/" + this.id);
+            }
             Devis.prototype.transform = function() {
-                var _this = this;
                  $location.url("/intervention?devis=" + _this.id);
             }
             return Devis;
@@ -2782,7 +2809,7 @@ var DevisController = function($timeout, tabContainer, FiltersFactory, ContextMe
     _this.tab.setTitle(title, currentHash);
     _this.tab.hash = currentHash;
     _this.config = config;
-
+    _this.moment = moment;
     var dataProvider = new DataProvider('devis');
     if (!dataProvider.getData()) {
         dataProvider.setData(devis.data);
@@ -2812,7 +2839,7 @@ var DevisController = function($timeout, tabContainer, FiltersFactory, ContextMe
     _this.tableParams = new ngTableParams(tableParameters, tableSettings);
 
     $rootScope.$on('devisListChange', function() {
-        dataProvider.refreshFilters($routeParams, _this.tab.hash);
+        dataProvider.applyFilter(currentFilter, _this.tab.hash);
         _this.tableParams.reload();
     })
 
@@ -2822,9 +2849,7 @@ var DevisController = function($timeout, tabContainer, FiltersFactory, ContextMe
         _this.contextMenu.setPosition($event.pageX, $event.pageY)
         _this.contextMenu.setData(inter);
         _this.contextMenu.open();
-        edisonAPI.intervention.get(inter.id, {
-                extend: true
-            })
+        edisonAPI.devis.get(inter.id)
             .then(function(resp) {
                 _this.contextMenu.setData(resp.data);
             })

@@ -258,23 +258,29 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
             controllerAs: 'vm',
             resolve: {
                 devis: getDevisList,
-                //interventions: getInterList,
-                //interventionsStats: getInterventionStats,
-                //artisans: getArtisanList
             }
         })
         .when('/devis/list/:fltr', {
-            templateUrl: "Pages/ListeInterventions/listeInterventions.html",
-            controller: "InterventionsController",
+            templateUrl: "Pages/ListeDevis/listeDevis.html",
+            controller: "ListeDevisController",
+            controllerAs:"vm",
             resolve: {
-                interventionsStats: getInterventionStats,
-                interventions: getInterList,
-                artisans: getArtisanList
+                devis: getDevisList,
             }
         })
         .when('/devis', {
             redirectTo: function() {
                 return '/devis/' + Date.now();
+            }
+        })
+        .when('/devis/:id', {
+            templateUrl: "Pages/Intervention/devis.html",
+            controller: "DevisController",
+            controllerAs: "vm",
+            resolve: {
+                interventions: getInterList,
+                devisPrm: getDevis,
+                artisans: getArtisanList
             }
         })
         .when('/artisan/:id', {
@@ -289,16 +295,6 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
         .when('/artisan', {
             redirectTo: function() {
                 return '/artisan/' + Date.now();
-            }
-        })
-        .when('/devis/:id', {
-            templateUrl: "Pages/Intervention/devis.html",
-            controller: "DevisController",
-            controllerAs: "vm",
-            resolve: {
-                interventions: getInterList,
-                devisPrm: getDevis,
-                artisans: getArtisanList
             }
         })
         .when('/artisan/:artisanID/recap', {
