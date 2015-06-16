@@ -1,5 +1,4 @@
 'use strict'
-var redisRStream = require('redis-rstream')
 module.exports = function(schema) {
 
     schema.statics.list = function(req, res) {
@@ -26,29 +25,11 @@ module.exports = function(schema) {
             }
         }
 
-        var getList2 = function(resolve, reject) {
-            console.log("two")
+        var getList = function(resolve, reject) {
             if (!reloadCache)  {
                 redis.get('interventionList', function(err, reply) {
                     if (!err && reply) { // we just want to refresh the cache 
-                       res.send(reply)
-                    } else {
-                        return getCache(resolve, reject);
-                    }
-                });
-            } else {
-            console.log("one")
-
-                return getCache(resolve, reject);
-            }
-        }
-
-        var getList = function(resolve, reject) {
-            if (!reloadCache)  {
-                redis.exists('interventionList', function(err, reply) {
-                    if (!err && reply) { // we just want to refresh the cache 
-                        redisRStream(redis, 'interventionList')
-                            .pipe(res)
+                        res.send(reply)
                     } else {
                         return getCache(resolve, reject);
                     }
@@ -57,7 +38,7 @@ module.exports = function(schema) {
                 return getCache(resolve, reject);
             }
         }
-        return new Promise(req.query.lol ? getList2 : getList);
+        return new Promise(getList);
     };
 
 }
