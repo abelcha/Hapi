@@ -15,7 +15,7 @@ var DevisController = function($timeout, tabContainer, FiltersFactory, ContextMe
     _this.config = config;
     _this.moment = moment;
     var dataProvider = new DataProvider('devis');
-    if (!dataProvider.getData()) {
+    if (!dataProvider.isInit()) {
         dataProvider.setData(devis.data);
     }
     dataProvider.applyFilter(currentFilter, _this.tab.hash);

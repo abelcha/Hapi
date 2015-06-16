@@ -16,7 +16,7 @@ var InterventionsController = function($timeout, tabContainer, FiltersFactory, C
     _this.config = config;
 
     var dataProvider = new DataProvider('intervention');
-    if (!dataProvider.getData()) {
+    if (!dataProvider.isInit()) {
         dataProvider.setData(interventions.data);
     }
     dataProvider.applyFilter(currentFilter, _this.tab.hash);

@@ -671,7 +671,7 @@ angular.module('edison').filter('loginify', function() {
 angular.module('edison').filter('relativeDate', function() {
     "use strict";
     return function(date, no) {
-        return moment((date * 1000) + 1370000000).fromNow(no).toString()
+        return moment((date + 1370000000) * 1000).fromNow(no).toString()
     };
 });
 
@@ -756,10 +756,9 @@ angular.module('edison').factory('DataProvider', ['socket', '$rootScope', 'confi
         });
     }
 
-    this.constructor.prototype.data = {};
 
     DataProvider.prototype.setData = function(data) {
-        this.constructor.prototype.data[this.model] = data;
+        this.constructor.prototype.data = data;
     };
 
     DataProvider.prototype.applyCustomFilter = function() {
@@ -775,22 +774,22 @@ angular.module('edison').factory('DataProvider', ['socket', '$rootScope', 'confi
         }
         if (filter && hash) {
             return function loginAndFilter(inter) {
-                return inter.fltr && inter.fltr[filter.short_name] === 1 && inter.t === hash;
+                return inter.f && inter.f[filter.short_name] === 1 && inter.t === hash;
             }
         }
         if (filter && !hash) {
             return function onlyFilter(inter) {
-                return inter.fltr && inter.fltr[filter.short_name] === 1;
+                return inter.f && inter.f[filter.short_name] === 1;
             }
         }
     }
 
     DataProvider.prototype.applyFilter = function(filter, hash) {
         console.time("interFilter")
-        this.filteredData = this.getData();
-        if (this.getData() && (filter || hash)) {
+        this.filteredData = this.data;
+        if (this.data && (filter || hash)) {
             var filterFunction = this.rowFilterFactory(filter, hash)
-            this.filteredData = _.filter(this.getData(), filterFunction);
+            this.filteredData = _.filter(this.data, filterFunction);
         }
         console.timeEnd("interFilter")
 
@@ -798,27 +797,30 @@ angular.module('edison').factory('DataProvider', ['socket', '$rootScope', 'confi
 
     DataProvider.prototype.updateData = function(newRow) {
         var _this = this;
-        if (this.getData()) {
-            var index = _.findIndex(this.getData(), function(e) {
+        if (this.data) {
+            var index = _.findIndex(this.data, function(e) {
                 return e.id === newRow.id
             });
             if (index === -1) {
-                _this.getData().unshift(newRow)
+                _this.data.unshift(newRow)
             } else {
-                _this.getData()[index] = newRow;
+                _this.data[index] = newRow;
             }
             $rootScope.$broadcast(_this.model + 'ListChange');
         }
     }
 
     DataProvider.prototype.getData = function() {
-        return this.data[this.model];
+        return this.data;
     }
 
+
+    DataProvider.prototype.isInit = function() {
+        return this.model && this.data && this.data[this.model];
+    }
     return DataProvider;
 
 }]);
-
 angular.module('edison').factory('Address', function() {
     "use strict";
 
@@ -2873,7 +2875,7 @@ var DevisController = function($timeout, tabContainer, FiltersFactory, ContextMe
     _this.config = config;
     _this.moment = moment;
     var dataProvider = new DataProvider('devis');
-    if (!dataProvider.getData()) {
+    if (!dataProvider.isInit()) {
         dataProvider.setData(devis.data);
     }
     dataProvider.applyFilter(currentFilter, _this.tab.hash);
@@ -2962,7 +2964,7 @@ var InterventionsController = function($timeout, tabContainer, FiltersFactory, C
     _this.config = config;
 
     var dataProvider = new DataProvider('intervention');
-    if (!dataProvider.getData()) {
+    if (!dataProvider.isInit()) {
         dataProvider.setData(interventions.data);
     }
     dataProvider.applyFilter(currentFilter, _this.tab.hash);
