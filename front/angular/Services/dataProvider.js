@@ -8,8 +8,11 @@ angular.module('edison').factory('DataProvider', ['socket', '$rootScope', 'confi
 
         });
     }
+
+    this.constructor.prototype.data = {};
+
     DataProvider.prototype.setData = function(data) {
-        this.constructor.prototype.data = data;
+        this.constructor.prototype.data[this.model] = data;
     };
 
     DataProvider.prototype.applyCustomFilter = function() {
@@ -37,10 +40,10 @@ angular.module('edison').factory('DataProvider', ['socket', '$rootScope', 'confi
 
     DataProvider.prototype.applyFilter = function(filter, hash) {
         console.time("interFilter")
-        this.filteredData = this.data;
-        if (this.data && (filter || hash)) {
+        this.filteredData = this.getData();
+        if (this.getData() && (filter || hash)) {
             var filterFunction = this.rowFilterFactory(filter, hash)
-            this.filteredData = _.filter(this.data, filterFunction);
+            this.filteredData = _.filter(this.getData(), filterFunction);
         }
         console.timeEnd("interFilter")
 
@@ -48,21 +51,21 @@ angular.module('edison').factory('DataProvider', ['socket', '$rootScope', 'confi
 
     DataProvider.prototype.updateData = function(newRow) {
         var _this = this;
-        if (this.data) {
-            var index = _.findIndex(this.data, function(e) {
+        if (this.getData()) {
+            var index = _.findIndex(this.getData(), function(e) {
                 return e.id === newRow.id
             });
             if (index === -1) {
-                _this.data.unshift(newRow)
+                _this.getData().unshift(newRow)
             } else {
-                _this.data[index] = newRow;
+                _this.getData()[index] = newRow;
             }
             $rootScope.$broadcast(_this.model + 'ListChange');
         }
     }
 
     DataProvider.prototype.getData = function() {
-        return this.data;
+        return this.data[model];
     }
 
     return DataProvider;

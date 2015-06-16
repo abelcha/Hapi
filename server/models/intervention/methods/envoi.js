@@ -11,7 +11,7 @@ module.exports = function(schema) {
                     return db.model('intervention').getDevisFile({
                         data: inter,
                         html: false,
-                        obj:true,
+                        obj: true,
                     })
                 } else if (file_id) {
                     return document.download(file_id);
@@ -45,12 +45,10 @@ module.exports = function(schema) {
                     return reject("Annulez d'abords l'intervention avant de la réenvoyer")
                 if (!req.body.sms)
                     return reject("Pas de text SMS");
-                if (!inter.artisan.id)
+                if (!inter.artisan ||  !inter.artisan.id)
                     return reject("Aucun artisan selectionné");
                 if (envProd || envDev) {
-
                     getSuppFile(req.body.file).then(function(result) {
-                        console.log("==>", result);
                         var suppFile = result || null;
                         db.model('intervention').getOSFile(inter).then(function(osFileBuffer) {
                             mail.sendOS(inter, osFileBuffer, suppFile, req.session).then(function(mail) {
