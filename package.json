@@ -27,6 +27,7 @@
     "html-pdf": "^1.2.1",
     "kue": "^0.9.3",
     "lodash": "^3.8.0",
+    "lzjs": "^1.2.4",
     "milliseconds": "^1.0.3",
     "mime": "^1.3.4",
     "minimist": "^1.1.1",

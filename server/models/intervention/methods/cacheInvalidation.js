@@ -5,6 +5,9 @@ var FiltersFactory = requireLocal('config/FiltersFactory');
 var _ = require("lodash")
 var ReadWriteLock = require('rwlock');
 var lock = new ReadWriteLock();
+var d = requireLocal('config/dates.js')
+var lzjs = require('lzjs');
+
 
 module.exports = function(schema) {
 
@@ -31,25 +34,29 @@ module.exports = function(schema) {
         if (e.status === "ENV" && Date.now() > (new Date(e.date.intervention)).getTime()) {
             e.status = 'AVR';
         }
-        var fltr = FiltersFactory("intervention").filter(e);
+
         if (e.id % 10 === 1)
             console.log(e.id)
-        return {
-            fltr: fltr,
-            t: e.login.ajout,
+        var rtn = {
+            t: 3,//2e.login.ajout,
             id: e.id,
             ai: e.artisan.id,
-            s: e.status,
-            sx: config.etats[e.status].long_name,
-            c: e.categorie,
-            cx: config.categories[e.categorie].long_name,
+            s: 1,//e.status,
+            //sx: config.etats[e.status].long_name,
+            c: 2,//e.categorie,
+            // cx: config.categories[e.categorie].long_name,
             n: e.client.civilite + ' ' + e.client.nom,
-            a: e.artisan.nomSociete ||  "",
-            pa: e.prixAnnonce,
-            da: e.date.ajout,
-            di: e.date.intervention,
+            a: e.artisan.nomSociete,
+            pa: e.prixAnnonce || undefined,
+            da: d(e.date.ajout),
+            di: d(e.date.intervention),
             ad: e.client.address.cp + ', ' + e.client.address.v
         };
+        var fltr = FiltersFactory("intervention").filter(e);
+        if (!_.isEmpty(fltr)) {
+            rtn.f = fltr
+        }
+        return rtn;
     }
     schema.statics.translate = translate;
     schema.statics.cacheActualise = function(doc) {
