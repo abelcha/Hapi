@@ -1,0 +1,4 @@
+NODE_ENV=developement
+REDISCLOUD_URL=redis://rediscloud:iKpHepCHNELa6ijd@pub-redis-15500.eu-west-1-1.1.ec2.garantiadata.com:15500
+REDISTOGO_URL=redis://redistogo:2bbb8c0981c0f243d90d122886d6958a@soapfish.redistogo.com:9605/
+REDISGREEN_URL=redis://x:ad76a0f09452466d811775df38b508b5@superb-juniper-2983.redisgreen.net:11042/
