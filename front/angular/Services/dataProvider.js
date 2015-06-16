@@ -28,12 +28,12 @@ angular.module('edison').factory('DataProvider', ['socket', '$rootScope', 'confi
         }
         if (filter && hash) {
             return function loginAndFilter(inter) {
-                return inter.fltr[filter.short_name] === 1 && inter.t === hash;
+                return inter.fltr && inter.fltr[filter.short_name] === 1 && inter.t === hash;
             }
         }
         if (filter && !hash) {
             return function onlyFilter(inter) {
-                return inter.fltr[filter.short_name] === 1;
+                return inter.fltr && inter.fltr[filter.short_name] === 1;
             }
         }
     }
@@ -65,7 +65,7 @@ angular.module('edison').factory('DataProvider', ['socket', '$rootScope', 'confi
     }
 
     DataProvider.prototype.getData = function() {
-        return this.data[model];
+        return this.data[this.model];
     }
 
     return DataProvider;

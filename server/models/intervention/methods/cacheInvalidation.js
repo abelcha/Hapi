@@ -38,13 +38,11 @@ module.exports = function(schema) {
         if (e.id % 10 === 1)
             console.log(e.id)
         var rtn = {
-            t: 3,//2e.login.ajout,
+            t: e.login.ajout,
             id: e.id,
             ai: e.artisan.id,
-            s: 1,//e.status,
-            //sx: config.etats[e.status].long_name,
-            c: 2,//e.categorie,
-            // cx: config.categories[e.categorie].long_name,
+            s: config.etats[e.status].order,
+            c: config.categories[e.categorie].order,
             n: e.client.civilite + ' ' + e.client.nom,
             a: e.artisan.nomSociete,
             pa: e.prixAnnonce || undefined,

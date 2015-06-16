@@ -57,6 +57,17 @@ module.exports = {
             color: 'deep-orange white-text'
         }
     },
+    categoriesHash: function() {
+        return [this.categories.PL,
+            this.categories.CH,
+            this.categories.EL,
+            this.categories.SR,
+            this.categories.VT,
+            this.categories.AS,
+            this.categories.CL,
+            this.categories.PT
+        ]
+    },
     categoriesArray: function() {
         var x = [];
         for (var i in this.categories)
@@ -65,55 +76,57 @@ module.exports = {
     },
     etats: {
         ENV: {
+            order: 0,
             short_name: 'ENV',
             long_name: 'Envoyé',
             color: 'orange'
         },
         RGL: {
+            order: 1,
             short_name: 'RGL',
             long_name: 'Reglé',
             color: 'green'
         },
         PAY: {
+            order: 2,
             short_name: 'PAY',
             long_name: 'Payé',
             color: 'green accent-4'
         },
         ATT: {
+            order: 3,
             short_name: 'ATT',
             long_name: 'En Attente',
             color: 'purple'
         },
-        ATTC: {
-            short_name: 'ATTC',
-            long_name: 'RC En Attente',
-            color: 'purple'
-        },
-        ATTS: {
-            short_name: 'ATTS',
-            long_name: 'RS En Attente',
-            color: 'pink darken-4'
-        },
         APR: {
+            order: 4,
             short_name: 'APR',
             long_name: 'A Progr.',
             color: 'blue'
         },
         AVR: {
+            order: 5,
             short_name: 'AVR',
             long_name: 'A Vérifier',
             color: 'brown darken-3'
         },
         ANN: {
+            order: 6,
             short_name: 'ANN',
             long_name: 'Annuler',
             color: 'red'
-        },
-        DEV: {
-            short_name: 'DEV',
-            long_name: 'Devis',
-            color: 'light-blue'
-        },
+        }
+    },
+    etatsHash: function() {
+        return [this.etats.ENV,
+            this.etats.RGL,
+            this.etats.PAY,
+            this.etats.ATT,
+            this.etats.APT,
+            this.etats.AVR,
+            this.etats.ANN
+        ]
     },
     colorEnvoisDevis: function(i) {
         if (i === 0)
