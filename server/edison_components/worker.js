@@ -3,7 +3,7 @@ module.exports = {
     var kue = require("kue");
     var url = require("url");
     if (envProd) {
-      var redisURL = url.parse(process.env.REDISCLOUD_URL);
+      var redisURL = url.parse(process.env.REDISGREEN_URL);
       var redisOptions = {
         port: redisURL.port,
         host: redisURL.hostname,
