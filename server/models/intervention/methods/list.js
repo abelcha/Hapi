@@ -2,7 +2,6 @@
 module.exports = function(schema) {
 
     schema.statics.list = function(req, res) {
-        console.log("list")
         var reloadCache = (req && req.query && req.query.cache);
 
         var getWorkerCache = function(resolve, reject) {
@@ -27,7 +26,9 @@ module.exports = function(schema) {
 
         var getList = function(resolve, reject) {
             if (!reloadCache)  {
+                console.log("getreddis")
                 redis.get('interventionList', function(err, reply) {
+                    console.log("getcache")
                     if (!err && reply) { // we just want to refresh the cache 
                         res.send(reply)
                     } else {

@@ -13,7 +13,6 @@ global.requireLocal = function(pth) {
 }
 
 var key = requireLocal('config/_keys');
-
 var dep = require(process.cwd() + '/server/loadDependencies');
 global.edison = dep.loadDir(process.cwd() + "/server/edison_components");
 global.envProd = process.env.NODE_ENV === "production";

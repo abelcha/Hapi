@@ -1,9 +1,9 @@
 module.exports = function() {
   var redis = require("redis");
   var redisClient;
-  if (envProd) {
+  if (envProd || envDev) {
     var url = require('url');
-    var redisURL = url.parse(process.env.REDISCLOUD_URL);
+    var redisURL = url.parse(process.env.REDISGREEN_URL);
     redisClient = redis.createClient(redisURL.port, redisURL.hostname, {
       no_ready_check: true
     });

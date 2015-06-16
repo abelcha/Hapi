@@ -32,6 +32,8 @@ module.exports = function(schema) {
             e.status = 'AVR';
         }
         var fltr = FiltersFactory("intervention").filter(e);
+        if (e.id % 10 === 1)
+            console.log(e.id)
         return {
             fltr: fltr,
             t: e.login.ajout,
