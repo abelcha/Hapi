@@ -17,7 +17,7 @@ global.sms = new edison.mobyt(key.mobyt.login,key.mobyt.pass);
 global.isWorker = true;
 
 if (envProd) {
-    var redisUrl = url.parse(process.env.REDISCLOUD_ORANGE_URL);
+    var redisUrl = url.parse(process.env.REDISGREEN_URL);
 }
 
 redis.keys("kue*", function(err, re) {
