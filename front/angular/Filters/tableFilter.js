@@ -14,7 +14,6 @@ angular.module("edison").filter('tableFilter', function() {
     }
 
     return function(dataContainer, inputs, sec) {
-        console.log(inputs, sec)
         var rtn = [];
         console.time('fltr')
         inputs = _.mapValues(inputs, clean);

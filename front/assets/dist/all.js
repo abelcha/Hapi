@@ -700,7 +700,6 @@ angular.module("edison").filter('tableFilter', function() {
     }
 
     return function(dataContainer, inputs, sec) {
-        console.log(inputs, sec)
         var rtn = [];
         console.time('fltr')
         inputs = _.mapValues(inputs, clean);
@@ -2983,7 +2982,7 @@ var InterventionsController = function($timeout, tabContainer, FiltersFactory, C
         total: dataProvider.filteredData,
         getData: function($defer, params) {
             var data = dataProvider.filteredData;
-            data = $filter('tableFilter')(data, params.filter());
+            data = $filter('tableFilter')(data, params.filter(), "lolo");
             params.total(data.length);
             data = $filter('orderBy')(data, params.orderBy());
             $defer.resolve(data.slice((params.page() - 1) * params.count(), params.page() * params.count()));

@@ -17,9 +17,11 @@ var _ = require('lodash')
 var glob = require("glob")
 var jshint = require('gulp-jshint');
 // Concatenate & Minify JS
-
+var jslibs;
+var jssrc;
 gulp.task('scripts', function() {
-    return gulp.src(['front/angular/*.js', 'front/angular/*/*.js', 'front/angular/*/*/*.js'])
+    jssrc = ['front/angular/*.js', 'front/angular/*/*.js', 'front/angular/*/*/*.js'];
+    return gulp.src(jssrc)
         // .pipe(jshint('.jshintrc'))
         //.pipe(jshint.reporter('jshint-stylish'))
         .pipe(sourcemaps.init())
@@ -29,7 +31,8 @@ gulp.task('scripts', function() {
 });
 
 gulp.task('jsLibs', function() {
-    var libs = ['/jquery/dist/jquery.min.js',
+    console.log('hey')
+    jslibs = ['/jquery/dist/jquery.min.js',
         '/angular/angular.min.js',
         '/angular-route/angular-route.min.js',
         '/angular-resource/angular-resource.min.js',
@@ -54,10 +57,10 @@ gulp.task('jsLibs', function() {
         '/moment/min/moment.min.js',
         '/moment/locale/fr.js'
     ]
-    libs = libs.map(function(e) {
+    jslibs = jslibs.map(function(e) {
         return 'front/bower_components' + e
     })
-    return gulp.src(libs)
+    return gulp.src(jslibs)
         //.pipe(minify({mangle:false}))
         // .pipe(jshint('.jshintrc'))
         //.pipe(jshint.reporter('jshint-stylish'))
@@ -104,30 +107,34 @@ b.on('log', gutil.log); // output build logs to terminal
 
 gulp.task('styles', function() {
     var libs = [
-        '/front/bower_components/font-awesome/css/font-awesome.min.css',
-        '/front/bower_components/bootstrap/dist/css/bootstrap.min.css',
-        '/front/bower_components/assets/css/*.css',
-        '/front/bower_components/ng-table/dist/ng-table.css',
-        '/front/bower_components/angular-xeditable/xeditable.css',
-        '/front/bower_components/angular-material/angular-material.css',
-        '/front/bower_components/angular-loading-bar/build/loading-bar.min.css',
-        '/front/bower_components/pickadate/lib/compressed/themes/classic.css',
-        '/front/bower_components/pickadate/lib/compressed/themes/classic.date.css',
-        '/front/bower_components/pickadate/lib/compressed/themes/classic.time.css',
-        '/front/bower_components/ngDialog/css/ngDialog.min.css',
-        '/front/bower_components/ngDialog/css/ngDialog-theme-default.min.css',
-        '/front/bower_components/lumx/dist/lumx.css',
-        '/front/bower_components/mdi/css/materialdesignicons.css'
+        'front/bower_components/font-awesome/css/font-awesome.min.css',
+        'front/bower_components/bootstrap/dist/css/bootstrap.min.css',
+        'front/assets/css/pixel-admin.min.css',
+        'front/assets/css/themes.min.css',
+        'front/assets/css/loaders.css',
+        'front/assets/css/style.css',
+        'front/assets/css/pages.min.css',
+
+        
+        'front/bower_components/ng-table/dist/ng-table.css',
+        'front/bower_components/angular-xeditable/xeditable.css',
+        'front/bower_components/angular-material/angular-material.css',
+        'front/bower_components/angular-loading-bar/build/loading-bar.min.css',
+        'front/assets/css/material-color.css',
+        'front/bower_components/pickadate/lib/compressed/themes/classic.css',
+        'front/bower_components/pickadate/lib/compressed/themes/classic.date.css',
+        'front/bower_components/pickadate/lib/compressed/themes/classic.time.css',
+        'front/bower_components/ngDialog/css/ngDialog.min.css',
+        'front/bower_components/ngDialog/css/ngDialog-theme-default.min.css',
+        'front/bower_components/lumx/dist/lumx.css',
+        'front/bower_components/mdi/css/materialdesignicons.css'
     ]
-    libs = libs.map(function(e) {
-        return 'front/bower_components' + e
-    })
     return gulp.src(libs)
         //.pipe(minify({mangle:false}))
         // .pipe(jshint('.jshintrc'))
         //.pipe(jshint.reporter('jshint-stylish'))
         .pipe(sourcemaps.init())
-        .pipe(concat('style.css'))
+        .pipe(concat('styles.css'))
         .pipe(sourcemaps.write('.'))
         .pipe(gulp.dest('front/assets/dist'));
 });
@@ -136,9 +143,10 @@ gulp.task('styles', function() {
 
 // Watch Files For Changes
 gulp.task('watch', function() {
-    gulp.watch(['front/angular/*.js', 'front/angular/*/*.js', 'front/angular/*/*/*.js'], ['scripts']);
-    gulp.watch('front/assets/css/*.css', ['styles'])
+    gulp.watch(jssrc, ['scripts']);
+    gulp.watch(jslibs, ['jsLibs']);
+    gulp.watch(['front/assets/css/*.css','front/bower_components/*/*.css','front/bower_components/*/*/*.css'], ['styles'])
 });
 
 // Default Task
-gulp.task('default', ['scripts', 'styles', 'watch', 'bundle', 'jsLibs']);
+gulp.task('default', ['scripts', 'styles', 'bundle', 'jsLibs', 'watch']);

@@ -123,7 +123,7 @@ module.exports = {
             this.etats.RGL,
             this.etats.PAY,
             this.etats.ATT,
-            this.etats.APT,
+            this.etats.APR,
             this.etats.AVR,
             this.etats.ANN
         ]
