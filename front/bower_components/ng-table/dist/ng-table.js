@@ -78,7 +78,7 @@
         var NgTableParams = function(baseParameters, baseSettings) {
             var self = this,
                 log = function() {
-                    $log.debug.apply(this, arguments);
+                   // $log.debug.apply(this, arguments);
                 };
 
             this.data = [];

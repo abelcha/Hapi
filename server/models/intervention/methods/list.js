@@ -26,10 +26,8 @@ module.exports = function(schema) {
 
         var getList = function(resolve, reject) {
             if (!reloadCache)  {
-                console.log("getreddis")
                 redis.get('interventionList', function(err, reply) {
-                    console.log("getcache")
-                    if (!err && reply) { // we just want to refresh the cache 
+                    if (!err && reply) { 
                         res.send(reply)
                     } else {
                         return getCache(resolve, reject);

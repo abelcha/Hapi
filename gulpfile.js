@@ -4,6 +4,7 @@ var gulp = require('gulp');
 // Include Our Plugins
 var concat = require('gulp-concat');
 var rename = require('gulp-rename');
+var notify = require('gulp-notify');
 var sourcemaps = require('gulp-sourcemaps');
 var minifyCSS = require('gulp-minify-css');
 
@@ -12,13 +13,14 @@ var browserify = require('browserify');
 var source = require('vinyl-source-stream');
 var buffer = require('vinyl-buffer');
 var gutil = require('gulp-util');
-var assign = require('lodash').assign
+var _ = require('lodash')
 var glob = require("glob")
 var jshint = require('gulp-jshint');
 // Concatenate & Minify JS
+
 gulp.task('scripts', function() {
     return gulp.src(['front/angular/*.js', 'front/angular/*/*.js', 'front/angular/*/*/*.js'])
-       // .pipe(jshint('.jshintrc'))
+        // .pipe(jshint('.jshintrc'))
         //.pipe(jshint.reporter('jshint-stylish'))
         .pipe(sourcemaps.init())
         .pipe(concat('all.js'))
@@ -26,16 +28,53 @@ gulp.task('scripts', function() {
         .pipe(gulp.dest('front/assets/dist'));
 });
 
+gulp.task('jsLibs', function() {
+    var libs = ['/jquery/dist/jquery.min.js',
+        '/angular/angular.min.js',
+        '/angular-route/angular-route.min.js',
+        '/angular-resource/angular-resource.min.js',
+        '/angular-animate/angular-animate.min.js',
+        '/angular-aria/angular-aria.min.js',
+        '/ngDialog/js/ngDialog.min.js',
+        '/angular-material/angular-material.js',
+        '/socket.io/socket.io.js',
+        '/angular-socket-io/socket.min.js',
+        '/ngmap/build/scripts/ng-map.js',
+        '/ng-file-upload/ng-file-upload.min.js',
+        '/pickadate/lib/compressed/picker.js',
+        '/lodash/lodash.min.js',
+        '/angular-xeditable/xeditable.min.js',
+        '/pickadate/lib/compressed/picker.date.js',
+        '/pickadate/lib/compressed/picker.time.js',
+        '/pickadate/lib/compressed/translations/fr_FR.js',
+        '/ng-pickadate/ng-pickadate.js',
+        '/velocity/velocity.js',
+        '/lumx/dist/lumx.js',
+        '/ng-table/dist/ng-table.js',
+        '/moment/min/moment.min.js',
+        '/moment/locale/fr.js'
+    ]
+    libs = libs.map(function(e) {
+        return 'front/bower_components' + e
+    })
+    return gulp.src(libs)
+        //.pipe(minify({mangle:false}))
+        // .pipe(jshint('.jshintrc'))
+        //.pipe(jshint.reporter('jshint-stylish'))
+        .pipe(sourcemaps.init())
+        .pipe(concat('libs.js'))
+        .pipe(sourcemaps.write('.'))
+        .pipe(gulp.dest('front/assets/dist'));
+});
+
+
+
 var customOpts = {
     entries: glob.sync('config/[^_]*.js'),
     debug: true
 };
-var opts = assign({}, watchify.args, customOpts);
+var opts = _.assign({}, watchify.args, customOpts);
 var b = watchify(browserify(opts));
-
-// add transformations here
-// i.e. b.transform(coffeeify);
-
 
 var bundle = function() { // so you can run `gulp js` to build the file
     return b.bundle()
@@ -64,10 +103,33 @@ b.on('log', gutil.log); // output build logs to terminal
 
 
 gulp.task('styles', function() {
-    return gulp.src('front/assets/css/*.css')
-        .pipe(concat('all.min.css'))
-        .pipe(minifyCSS())
-        .pipe(gulp.dest('front/assets/dist'))
+    var libs = [
+        '/front/bower_components/font-awesome/css/font-awesome.min.css',
+        '/front/bower_components/bootstrap/dist/css/bootstrap.min.css',
+        '/front/bower_components/assets/css/*.css',
+        '/front/bower_components/ng-table/dist/ng-table.css',
+        '/front/bower_components/angular-xeditable/xeditable.css',
+        '/front/bower_components/angular-material/angular-material.css',
+        '/front/bower_components/angular-loading-bar/build/loading-bar.min.css',
+        '/front/bower_components/pickadate/lib/compressed/themes/classic.css',
+        '/front/bower_components/pickadate/lib/compressed/themes/classic.date.css',
+        '/front/bower_components/pickadate/lib/compressed/themes/classic.time.css',
+        '/front/bower_components/ngDialog/css/ngDialog.min.css',
+        '/front/bower_components/ngDialog/css/ngDialog-theme-default.min.css',
+        '/front/bower_components/lumx/dist/lumx.css',
+        '/front/bower_components/mdi/css/materialdesignicons.css'
+    ]
+    libs = libs.map(function(e) {
+        return 'front/bower_components' + e
+    })
+    return gulp.src(libs)
+        //.pipe(minify({mangle:false}))
+        // .pipe(jshint('.jshintrc'))
+        //.pipe(jshint.reporter('jshint-stylish'))
+        .pipe(sourcemaps.init())
+        .pipe(concat('style.css'))
+        .pipe(sourcemaps.write('.'))
+        .pipe(gulp.dest('front/assets/dist'));
 });
 
 
@@ -79,4 +141,4 @@ gulp.task('watch', function() {
 });
 
 // Default Task
-gulp.task('default', ['scripts', 'styles', 'watch', 'bundle']);
+gulp.task('default', ['scripts', 'styles', 'watch', 'bundle', 'jsLibs']);
