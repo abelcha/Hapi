@@ -28,20 +28,24 @@ module.exports = function(schema) {
         this.client.address.n = upper(this.client.address.n)
         this.client.address.r = upper(this.client.address.r)
         this.client.address.v = upper(this.client.address.v)
-        redis.del('interventionStats', next);
+        redis.del('interventionStats');
+        console.log("next")
+        next();
     });
 
     schema.post('save', function(doc) {
         if (!isWorker) {
             db.model('intervention').cacheActualise(doc);
-            if (doc.artisan.id)
+        console.log("next2")
+
+          /*  if (doc.artisan.id)
                 db.model('artisan').findOne({
                     id: doc.artisan.id
                 }).exec(function(err, resp) {
                     if (!err && resp) {
                         resp.save();
                     }
-                })
+                })*/
         }
     })
 }

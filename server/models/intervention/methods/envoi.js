@@ -22,23 +22,15 @@ module.exports = function(schema) {
 
 
             var sendSMS = function(text, inter, user) {
-                console.log(inter)
                 return db.model('sms').send({
                     to: user.portable ||  '0633138868',
-                    text: "Message destiné à " + inter.artisan.nomSociete + "("+ inter.artisan.telephone.tel1 + ')\n' + text,
+                    text: "Message destiné à " + inter.artisan.nomSociete + "(" + inter.artisan.telephone.tel1 + ')\n' + text,
                     login: user.login,
                     origin: inter.id,
                     link: inter.artisan.id,
                     type: 'OS'
                 })
 
-            }
-
-            var save = function(inter, resolve, reject) {
-                inter.status = "ENV";
-                inter.date.envoi = new Date();
-                inter.login.envoi = req.session.login;
-                inter.save().then(resolve, reject);
             }
 
             return new Promise(function(resolve, reject) {
@@ -51,24 +43,23 @@ module.exports = function(schema) {
                 db.model('artisan').findOne({
                     id: inter.artisan.id
                 }).exec(function(err, artisan) {
-                    if (err || !artisan)
+                    if (err ||  !artisan)
                         return reject("Impossible de trouver l'artisan");
-                    inter = inter.toObject();
-                    inter.artisan = artisan;
-                    if (envProd || envDev) {
-                        getSuppFile(req.body.file).then(function(result) {
-                            var suppFile = result || null;
-                            db.model('intervention').getOSFile(inter).then(function(osFileBuffer) {
-                                mail.sendOS(inter, osFileBuffer, suppFile, req.session).then(function(mail) {
-                                    sendSMS(req.body.sms, inter, req.session).then(function(data) {
-                                        save(inter, resolve, reject)
-                                    }, reject)
+                    var doc = inter.toObject();
+                    doc.artisan = artisan;
+                    getSuppFile(req.body.file).then(function(result) {
+                        var suppFile = result || null;
+                        db.model('intervention').getOSFile(doc).then(function(osFileBuffer) {
+                            mail.sendOS(doc, osFileBuffer, suppFile, req.session).then(function(mail) {
+                                sendSMS(req.body.sms, doc, req.session).then(function(data) {
+                                    inter.status = "ENV";
+                                    inter.date.envoi = new Date();
+                                    inter.login.envoi = req.session.login;
+                                    inter.save().then(resolve, reject);
                                 }, reject)
                             }, reject)
                         }, reject)
-                    } else {
-                        save(inter, resolve, reject)
-                    }
+                    }, reject)
                 })
             });
         }
