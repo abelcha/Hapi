@@ -80,7 +80,7 @@ module.exports = function(schema) {
 
     }
 
-    schema.statics.dump = function(req, res) {
+    var execDump = function(limit) {
         var _this = this;
         var exit = false;
         var t = Date.now();
@@ -102,5 +102,23 @@ module.exports = function(schema) {
                 });
             });
         });
+    }
+
+    schema.statics.workerDump = function(limit) {
+        return execDump(limit)
+    }
+
+    schema.statics.dump = function(req, res) {
+        var limit = req.query.limit ||  0;
+        if ((envDev || envProd) && !isWorker) {
+            return edison.worker.createJob({
+                name: 'db',
+                model: 'artisan',
+                method: 'workerDump',
+                arg: limit
+            })
+        } else {
+            return execDump(limit);
+        }
     }
 }
