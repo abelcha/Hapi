@@ -34,6 +34,11 @@ module.exports = function(schema) {
     schema.post('save', function(doc) {
         if (!isWorker) {
             db.model('intervention').cacheActualise(doc);
+            db.model('artisan').findOne(id:doc.id).exec(function(err, resp) {
+                if (!err && resp) {
+                    resp.save();
+                }
+            })
         }
     })
 }
