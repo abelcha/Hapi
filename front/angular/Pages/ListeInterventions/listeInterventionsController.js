@@ -17,6 +17,7 @@ var InterventionsController = function($timeout, tabContainer, FiltersFactory, C
 
     var dataProvider = new DataProvider('intervention');
     if (!dataProvider.isInit()) {
+        console.log("not init")
         dataProvider.setData(interventions.data);
     }
     dataProvider.applyFilter(currentFilter, _this.tab.hash);
@@ -44,6 +45,7 @@ var InterventionsController = function($timeout, tabContainer, FiltersFactory, C
     _this.tableParams = new ngTableParams(tableParameters, tableSettings);
 
     $rootScope.$on('interventionListChange', function() {
+        console.log("reload")
         dataProvider.applyFilter(currentFilter, _this.tab.hash);
         _this.tableParams.reload();
     })

@@ -810,14 +810,16 @@ angular.module('edison').factory('DataProvider', ['socket', '$rootScope', 'confi
         var _this = this;
         this.model = model;
         socket.on(this.model + 'ListChange', function(data) {
+            console.log(this.model + 'ListChange')
             _this.updateData(data);
 
         });
     }
 
+    DataProvider.prototype.data = {}
 
     DataProvider.prototype.setData = function(data) {
-        this.constructor.prototype.data = data;
+        this.data[this.model] = data;
     };
 
     DataProvider.prototype.applyCustomFilter = function() {
@@ -845,10 +847,10 @@ angular.module('edison').factory('DataProvider', ['socket', '$rootScope', 'confi
 
     DataProvider.prototype.applyFilter = function(filter, hash) {
         console.time("interFilter")
-        this.filteredData = this.data;
-        if (this.data && (filter || hash)) {
+        this.filteredData = this.getData();
+        if (this.getData() && (filter || hash)) {
             var filterFunction = this.rowFilterFactory(filter, hash)
-            this.filteredData = _.filter(this.data, filterFunction);
+            this.filteredData = _.filter(this.getData(), filterFunction);
         }
         console.timeEnd("interFilter")
 
@@ -856,21 +858,21 @@ angular.module('edison').factory('DataProvider', ['socket', '$rootScope', 'confi
 
     DataProvider.prototype.updateData = function(newRow) {
         var _this = this;
-        if (this.data) {
-            var index = _.findIndex(this.data, function(e) {
+        if (this.getData()) {
+            var index = _.findIndex(this.getData(), function(e) {
                 return e.id === newRow.id
             });
             if (index === -1) {
-                _this.data.unshift(newRow)
+                _this.getData().unshift(newRow)
             } else {
-                _this.data[index] = newRow;
+                _this.getData()[index] = newRow;
             }
             $rootScope.$broadcast(_this.model + 'ListChange');
         }
     }
 
     DataProvider.prototype.getData = function() {
-        return this.data;
+        return this.data[this.model];
     }
 
 
@@ -3275,6 +3277,7 @@ var InterventionsController = function($timeout, tabContainer, FiltersFactory, C
 
     var dataProvider = new DataProvider('intervention');
     if (!dataProvider.isInit()) {
+        console.log("not init")
         dataProvider.setData(interventions.data);
     }
     dataProvider.applyFilter(currentFilter, _this.tab.hash);
@@ -3302,6 +3305,7 @@ var InterventionsController = function($timeout, tabContainer, FiltersFactory, C
     _this.tableParams = new ngTableParams(tableParameters, tableSettings);
 
     $rootScope.$on('interventionListChange', function() {
+        console.log("reload")
         dataProvider.applyFilter(currentFilter, _this.tab.hash);
         _this.tableParams.reload();
     })

@@ -58,9 +58,7 @@ module.exports = function(schema) {
                                             return false;
                                         devis.status = "TRA";
                                         devis.transfertId = data.id;
-                                        devis.save().then(function(resp) {
-                                            console.log("-->", resp)
-                                        })
+                                        devis.save().then()
                                     })
                             }
                         }, function(err) {

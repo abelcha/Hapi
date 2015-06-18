@@ -33,6 +33,7 @@ module.exports = function(schema) {
 
     schema.post('save', function(doc) {
         if (!isWorker) {
+            console.log("cacheactualise")
             db.model('intervention').cacheActualise(doc);
 
           /*  if (doc.artisan.id)

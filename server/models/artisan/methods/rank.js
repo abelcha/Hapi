@@ -39,7 +39,7 @@ module.exports = function(schema) {
     if (!docs.length || i === docs.length - 1) {
       return cb(this.rtn)
     }
-    if (!docs[i].obj.archive && (!req.query.categorie || docs[i].obj.categories.indexOf(req.query.categorie) >= 0)) {
+    if (docs[i].obj.status === 'ARC' && (!req.query.categorie || docs[i].obj.categories.indexOf(req.query.categorie) >= 0)) {
       if (++this.x > req.query.limit) {
         return cb(this.rtn)
       }
