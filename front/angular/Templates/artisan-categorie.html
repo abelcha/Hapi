@@ -1,0 +1,13 @@
+<div class="row" style="margin:0">
+    <div flex-item>
+        <div class="card">
+            <div class="p+">
+                <strong class="fs-headline display-block">Categorie</strong>
+                <br>
+                <button ng-click="toggleCategorie(cat.short_name);" style="width: 12.5%;" ng-repeat="cat in ::config.categoriesArray()" class="btn--no-conflicts btn--m {{findColor(cat)}} btn--flat" lx-ripple>{{::cat.long_name}}</button>
+            </div>
+        </div>
+    </div>
+    <br>
+    
+</div>

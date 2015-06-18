@@ -22,9 +22,10 @@ module.exports = function(schema) {
 
 
             var sendSMS = function(text, inter, user) {
+                console.log(inter)
                 return db.model('sms').send({
                     to: user.portable ||  '0633138868',
-                    text: "Message destiné à " + inter.artisan.tel1 + '\n' + text,
+                    text: "Message destiné à " + inter.artisan.nomSociete + "("+ inter.artisan.telephone.tel1 + ')\n' + text,
                     login: user.login,
                     origin: inter.id,
                     link: inter.artisan.id,
@@ -47,20 +48,28 @@ module.exports = function(schema) {
                     return reject("Pas de text SMS");
                 if (!inter.artisan ||  !inter.artisan.id)
                     return reject("Aucun artisan selectionné");
-                if (envProd || envDev) {
-                    getSuppFile(req.body.file).then(function(result) {
-                        var suppFile = result || null;
-                        db.model('intervention').getOSFile(inter).then(function(osFileBuffer) {
-                            mail.sendOS(inter, osFileBuffer, suppFile, req.session).then(function(mail) {
-                                sendSMS(req.body.sms, inter, req.session).then(function(data) {
-                                    save(inter, resolve, reject)
+                db.model('artisan').findOne({
+                    id: inter.artisan.id
+                }).exec(function(err, artisan) {
+                    if (err || !artisan)
+                        return reject("Impossible de trouver l'artisan");
+                    inter = inter.toObject();
+                    inter.artisan = artisan;
+                    if (envProd || envDev) {
+                        getSuppFile(req.body.file).then(function(result) {
+                            var suppFile = result || null;
+                            db.model('intervention').getOSFile(inter).then(function(osFileBuffer) {
+                                mail.sendOS(inter, osFileBuffer, suppFile, req.session).then(function(mail) {
+                                    sendSMS(req.body.sms, inter, req.session).then(function(data) {
+                                        save(inter, resolve, reject)
+                                    }, reject)
                                 }, reject)
                             }, reject)
                         }, reject)
-                    }, reject)
-                } else {
-                    save(inter, resolve, reject)
-                }
+                    } else {
+                        save(inter, resolve, reject)
+                    }
+                })
             });
         }
     }

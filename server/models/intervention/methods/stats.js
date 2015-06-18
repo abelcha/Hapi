@@ -52,7 +52,8 @@ module.exports = function(schema) {
         if (telepro[name] !== {}) {
             delete telepro[name]._id;
             delete telepro[name].login;
-        }
+        };
+        return telepro[name];
 
     }
 
@@ -88,6 +89,7 @@ module.exports = function(schema) {
                 var allFilters = {};
                 mergeFilters(allFilters, 'intervention')
                 mergeFilters(allFilters, 'devis')
+                mergeFilters(allFilters, 'artisan')
                 async.parallel(allFilters, function(err2, result) {
                     if (err2)
                         reject(err);
@@ -95,13 +97,24 @@ module.exports = function(schema) {
                         return _.groupBy(e, 'login')
                     })
                     var rtn = [];
+                    var sum = {
+                    }
                     users.forEach(function(user) {
                         if (user.service === "INTERVENTION") {
                             var telepro = {
                                 login: user.login,
                             }
                             _.each(result, function(fltr, key) {
-                                cleanUp(key, telepro, result);
+                                if (key.startsWith('i_') ||  key.startsWith('d_')) {
+                                    var tmp = cleanUp(key, telepro, result);
+                                    if (!sum[key])
+                                        sum[key] = {
+                                            total: 0,
+                                            montant: 0
+                                        };
+                                    sum[key].montant = Math.round((sum[key].montant + tmp.montant) * 100) / 100;
+                                    sum[key].total += tmp.total;
+                                }
                             })
                             if (telepro._id) {
                                 delete telepro._id;
@@ -109,8 +122,9 @@ module.exports = function(schema) {
                             rtn.push(telepro);
                         }
                     });
+                    rtn.push(sum);
                     resolve(rtn)
-                        redis.set('interventionStats', JSON.stringify(rtn));
+                    redis.set('interventionStats', JSON.stringify(rtn));
                 });
             });
         });

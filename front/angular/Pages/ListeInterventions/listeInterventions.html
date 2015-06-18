@@ -13,8 +13,8 @@
                     <td data-title="'Télépro'" sortable="'t'" filter="{ 't': 'text' }">
                         {{::inter.t}}
                     </td>
-                    <td ng-init="inter.categorie = vm.config.categoriesHash()[inter.c].long_name" data-title="'Cat.'" sortable="'c'" filter="{ 'categorie': 'text' }">
-                        <span style="width:80px" class="label {{::vm.config.categoriesHash()[inter.c].color}}">{{::inter.categorie}}</span>
+                    <td ng-init="inter._categorie = vm.config.categoriesHash()[inter.c].long_name" data-title="'Cat.'" sortable="'c'" filter="{ '_categorie': 'text' }">
+                        <span style="width:80px" class="label {{::vm.config.categoriesHash()[inter.c].color}}">{{::inter._categorie}}</span>
                     </td>
                     <td data-title="'Ajout'" sortable="'da'" filter="{ 'da': 'text' }">
                         {{::inter.da | relativeDate:true}}
@@ -36,9 +36,9 @@
                     <td data-title="'Prix'" sortable="'pa'" filter="{ 'pa': 'text' }">
                         {{::(inter.pa | number:2) || 0}} €
                     </td>
-                    <td ng-init="inter.etat = vm.config.etatsHash()[inter.s].long_name" data-title="'Status'" sortable="'s'" filter="{ 'etat': 'text' }">
+                    <td ng-init="inter._etat = vm.config.etatsHash()[inter.s].long_name" data-title="'Status'" sortable="'s'" filter="{ '_etat': 'text' }">
                         <span style="width:90px" class="label {{::vm.config.etatsHash()[inter.s].color}}"> 
-                        {{inter.etat}}</span>
+                        {{inter._etat}}</span>
                     </td>
                 </tr>
                 <tr ng-repeat-end ng-if="expendedRow && expendedRow === inter.id">
@@ -52,8 +52,8 @@
     <div class="dropdown-menu--no-conflicts dropdown-menu--right dropdown__menu--is-dropped" style=" width: auto; height: auto; opacity: 1;" ng-style="vm.contextMenu.style">
         <div class="dropdown-menu__content ng-scope">
             <ul class="ng-scope">
-                <li ng-repeat="item in vm.contextMenu.list" ng-click="vm.contextMenu.close();vm.contextMenu.click(item)">
-                    <a class="dropdown-link" tabindex="0">{{item.title}}</a>
+                <li ng-repeat="item in vm.contextMenu.list" ng-hide="item.hidden" ng-click="vm.contextMenu.close();vm.contextMenu.click(item)">
+                    <a class="dropdown-link" tabindex="{{$index}}">{{item.title}}</a>
                 </li>
             </ul>
         </div>

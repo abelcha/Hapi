@@ -1,49 +1,86 @@
 'use strict'
 
-var async = require('async');
-
 module.exports = function(schema) {
+    var redisRStream = require('redis-rstream')
+    var FiltersFactory = requireLocal('config/FiltersFactory')
+    var config = requireLocal('config/dataList');
+    var ReadWriteLock = require('rwlock');
+    var d = requireLocal('config/dates.js')
 
-    var selectedFields = [
-        '-_id',
-        'id',
-        'address',
-        'nomSociete',
-        'categories'
-    ]
-    var s = "";
-    selectedFields.forEach(function(e)  {
-        s += (' ' + e);
-    })
-    schema.statics.list = function(req, res) {
-        var _this = this;
-        return new Promise(function(resolve, reject) {
-            redis.get('artisanList', function(err, reply) {
-                if (!err && reply && !req.query.cache) {
-                    return resolve(JSON.parse(reply));
-                }
-                _this.model('artisan').find({
-                    archive: false
-                }).sort('-nomSociete').select(s).then(function(docs) {
-                    async.map(docs, function(e, cb) {
-                        cb(null, {
-                            id: e.id,
-                            nomSociete: e.nomSociete,
-                            c: e.categories,
-                            add: {
-                                lt: e.address.lt,
-                                lg: e.address.lg
-                            }
-                        });
-                    }, function(err, result)  {
-                        resolve(result);
-                        //console.timeEnd('interList')
-                        //console.log('nocache')
-                       /* redis.set("artisanList", JSON.stringify(result))
-                        redis.expire("artisanList", 6000)*/
+    var lock = new ReadWriteLock();
+        var _ = require('lodash')
+
+    var translate = function(e) {
+        var fltr = FiltersFactory('artisan').filter(e);
+        return {
+            f: fltr,
+
+            da: d(e.date.ajout),
+            t: e.login.ajout,
+            c: e.categories,
+            id: e._id,
+            n:e.nomSociete,
+            r:e.representant.civilite + " " + e.representant.prenom + " " + e.representant.nom,
+            s: e.status,
+            cp: e.address.cp,
+            v: e.address.v,
+            /*cx: config.categories[e.categorie].long_name,
+            n: e.client.civilite + " " + e.client.nom,
+            s: e.status,
+            sx: config.etatsDevis[e.status].long_name,
+            cp: e.client.address.cp,
+            ad: e.client.address.v,
+            ev: e.envois,
+            pa: e.prixAnnonce,*/
+        };
+    }
+    schema.statics.translate = translate;
+
+    schema.statics.cacheActualise = function(doc) {
+        lock.writeLock(function(release) {
+            redis.get("artisanList", function(err, reply) {
+                if (!err && reply) {
+                    var data = JSON.parse(reply);
+                    var index = _.findIndex(data, function(e, i) {
+                        return e.id === doc.id;
+                    })
+                    var result = translate(doc)
+                    if (index !== -1) {
+                        data[index] = result;
+                    } else {
+                        data.unshift(result);
+                    }
+                    redis.set("artisanList", JSON.stringify(data), function() {
+                        io.sockets.emit('artisanListChange', result);
+                        release();
                     });
-                })
+                } else {
+                    db.model('artisan').list()
+                }
             });
         });
     }
+
+
+    schema.statics.list = function(req, res) {
+        return new Promise(function(resolve, reject) {
+            redis.get('artisanList', function(err, reply) {
+                if (!err && reply && !_.get(req, 'query.cache')) { // we just want to refresh the cache 
+                    console.log("cached")
+                    return res.send(reply)
+                } else {
+                    console.log("nocache")
+                    db.model('artisan')
+                        .find()
+                        .then(function(docs) {
+                            docs = _.map(docs, translate)
+                            resolve(docs);
+                            redis.set("artisanList", JSON.stringify(docs))
+                        })
+                }
+            });
+        });
+
+    };
+
 }

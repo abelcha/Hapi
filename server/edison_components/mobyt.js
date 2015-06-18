@@ -58,7 +58,6 @@ Mobyt.prototype.send = function(params) {
         if (!params.text || !params.to) {
             return reject("Invalid Parameters");
         }
-        console.log("===>", params.to)
         var f = {
             user: _this.user,
             pass: _this.pass,

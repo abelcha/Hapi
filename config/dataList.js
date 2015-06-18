@@ -275,5 +275,70 @@ module.exports = {
         return _find(this.causeAnnulation, function(e) {
             return e.short_name === short_name
         })
+    },
+    formeJuridique: {
+        AUT: {
+            type: "TVA 0%",
+            short_name: "AUT",
+            long_name: "AUTO-ENTREPRENEUR",
+        },
+        SARL: {
+            type: "TVA 20%",
+            short_name: "SARL",
+            long_name: "SARL"
+        },
+        SAS: {
+            type: "TVA 20%",
+            short_name: "SAS",
+            long_name: "SAS"
+        },
+        SASU: {
+            type: "TVA 20%",
+            short_name: "SASU",
+            long_name: "SASU"
+        },
+        EURL: {
+            type: "TVA 20%",
+            short_name: "EURL",
+            long_name: "EURL"
+        },
+        ART: {
+            type: "TVA 20%",
+            short_name: "ART",
+            long_name: "ARTISAN"
+        },
+        IND: {
+            type: "TVA 20%",
+            short_name: "IND",
+            long_name: "ENTREPRENEUR INDIVIDUEL"
+        }
+    },
+    formeJuridiqueHash: function() {
+        return [
+            this.formeJuridique.AUT,
+            this.formeJuridique.SARL,
+            this.formeJuridique.SAS,
+            this.formeJuridique.SASU,
+            this.formeJuridique.EURL,
+            this.formeJuridique.ART,
+            this.formeJuridique.IND,
+        ]
+    },
+    etatsArtisan: {
+        ACT: {
+            long_name: "Actif",
+            short_name: "ACT",
+            color: 'green'
+        },
+        ARC: {
+            long_name: "Archivé",
+            short_name: "ACT",
+            color: 'red'
+        },
+        POT: {
+            long_name: "Potentiel",
+            short_name: "POT",
+            color: 'blue'
+        }
     }
 }

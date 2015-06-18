@@ -1,21 +1,51 @@
-angular.module('edison').controller('ArtisanController', function(tabContainer, $location, $mdSidenav, $interval, ngDialog, LxNotificationService, edisonAPI, config, $routeParams, $scope, artisan) {
-  "use strict";
-  $scope.config = config;
-  $scope.tab = tabContainer.getCurrentTab();
-
-  if (!$scope.tab.data) {
-    if ($routeParams.id.length > 12) {
-      $scope.tab.isNew = true;
-      $scope.tab.setTitle('@' + moment().format("HH:mm").toString());
+var ArtisanCtrl = function($rootScope, $location, $routeParams, LxNotificationService, tabContainer, config, dialog, artisanPrm, Artisan) {
+    "use strict";
+    var _this = this;
+    _this.config = config;
+    _this.dialog = dialog;
+    _this.moment = moment;
+    var tab = tabContainer.getCurrentTab();
+    if (!tab.data) {
+        var artisan = new Artisan(artisanPrm.data)
+        tab.setData(artisan);
+        if ($routeParams.id.length > 12) {
+            _this.isNew = true;
+            artisan.tmpID = $routeParams.id;
+            tab.setTitle('SST  ' + moment((new Date(parseInt(artisan.tmpID))).toISOString()).format("HH:mm").toString());
+        } else {
+            tab.setTitle('SST  ' + $routeParams.id);
+            if (!artisan) {
+                LxNotificationService.error("Impossible de trouver les informations !");
+                $location.url("/dashboard");
+                tabContainer.remove(tab);
+                return 0;
+            }
+        }
     } else {
-      $scope.tab.setTitle('@' + $routeParams.id);
-      if (!artisan) {
-        alert("Impossible de trouver les informations !");
-        $location.url("/dashboard");
-        $scope.tabs.remove($scope.tab);
-        return 0;
-      }
+        var artisan = tab.data;
     }
-    $scope.tab.setData(artisan.data);
-  }
-});
+    _this.data = tab.data;
+    if (!_this.data.id) {
+        _this.data.login = {
+            ajout: $rootScope.user.login
+        }
+    }
+    var closeTab = function() {
+        $location.url("/artisan/list");
+        tabContainer.remove(tab)
+    }
+    _this.saveArtisan = function(options) {
+        console.log("yey")
+        artisan.save(function(err, resp) {
+            console.log(err, resp)
+            if (err) {
+                return false;
+            } else if (options.contrat) {
+                artisan.envoiContrat.bind(resp)(options.signe, closeTab);
+            } else {
+                closeTab();
+            }
+        })
+    }
+}
+angular.module('edison').controller('ArtisanController', ArtisanCtrl);

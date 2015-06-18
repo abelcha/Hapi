@@ -7,27 +7,76 @@ module.exports = function(db) {
             index: true
 
         },
-        nomSociete: String,
-        formeJuridique: String,
+        status: {
+            type: String,
+            default: 'POT'
+        },
+        date: {
+            ajout: {
+                type: Date,
+                default: Date.now
+            }
+        },
+        login: {
+            ajout: String,
+        },
+        origine: String, //CND/PRP
+        nomSociete: {
+            type: String,
+            required: true,
+        },
+        formeJuridique: {
+            type: String,
+            required: true
+        },
         representant: {
             civilite: String,
-            nom: String,
+            nom: {
+                type: String,
+                required: true
+            },
             prenom: String,
         },
         address: {
-            n: String,
-            r: String,
-            v: String,
-            cp: String,
+            n: {
+                type: String,
+                required: true
+            },
+            r: {
+                type: String,
+                required: true
+            },
+            v: {
+                type: String,
+                required: true
+            },
+            cp: {
+                type: String,
+                required: true
+            },
+            etage: String,
+            code: String,
             lt: Number,
             lg: Number,
         },
         pourcentage: {
-            deplacement: Number,
-            maindOeuvre: Number,
-            fourniture: Number
+            deplacement: {
+                type: Number,
+                required: true
+            },
+            maindOeuvre: {
+                type: Number,
+                required: true
+            },
+            fourniture: {
+                type: Number,
+                required: true
+            },
         },
-        zoneChalandise: Number,
+        zoneChalandise: {
+            type: Number,
+            required: true
+        },
         loc: {
             type: [Number],
             index: '2d'
@@ -42,9 +91,15 @@ module.exports = function(db) {
             }
         },
         categories: [],
-        email: String,
+        email: {
+            type: String,
+            required: true
+        },
         telephone: {
-            tel1: String,
+            tel1: {
+                type: String,
+                required: true
+            },
             tel2: String
         },
         archive: Boolean

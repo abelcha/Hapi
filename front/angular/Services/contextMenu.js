@@ -1,4 +1,4 @@
-angular.module('edison').factory('ContextMenu', ['$location', 'edisonAPI', '$window', 'dialog', 'Devis', 'Intervention', 'contextMenuData', function($location, edisonAPI, $window, dialog, Devis, Intervention, contextMenuData) {
+angular.module('edison').factory('ContextMenu', ['$location', 'edisonAPI', '$window', 'dialog', 'Devis', 'Intervention', 'Artisan', 'contextMenuData', function($location, edisonAPI, $window, dialog, Devis, Intervention, Artisan, contextMenuData) {
     "use strict";
 
     var ContextMenu = function(model) {
@@ -37,7 +37,8 @@ angular.module('edison').factory('ContextMenu', ['$location', 'edisonAPI', '$win
 
     ContextMenu.prototype.modelObject = {
         intervention: Intervention,
-        devis: Devis
+        devis: Devis,
+        artisan: Artisan
     }
 
     ContextMenu.prototype.click = function(link) {

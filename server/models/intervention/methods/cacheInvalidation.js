@@ -6,7 +6,6 @@ var _ = require("lodash")
 var ReadWriteLock = require('rwlock');
 var lock = new ReadWriteLock();
 var d = requireLocal('config/dates.js')
-var lzjs = require('lzjs');
 
 
 module.exports = function(schema) {

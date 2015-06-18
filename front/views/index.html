@@ -37,73 +37,69 @@
             <!-- / .navbar-inner -->
         </div>
         <side-bar ng-if="user.login && interventionsStats">
-            <link fltr="all" icon="th-list" title="Toute les Interventions"></link>
-            <drop-down title="Mes Interventions" icon="calendar" is-open="true">
-                <link fltr="tall" icon="th-list" title="{{dateFormat}}" login="{{user.login}}"></link>
-                <link fltr="tenv" icon="th-list" login="{{user.login}}"></link>
-                <link fltr="apr" icon="th-list" login="{{user.login}}"></link>
-                <link fltr="avr" icon="th-list" login="{{user.login}}"></link>
-            </drop-down>
-            <drop-down ng-click="mcs=true" title="Mes Collegues" icon="sitemap">
-                <drop-down ng-if="mcs" title="{{telepro.login | loginify}}" ng-repeat="telepro in interventionsStats | orderBy:'-total'">
-                    <link-separator title="Mes Interventions" icon="calendar"></link-separator>
-
-                   <link fltr="tall" icon="th-list" title="{{dateFormat}}" login="{{telepro.login}}"></link>
-                <link fltr="tenv" icon="th-list" login="{{telepro.login}}"></link>
-                <link fltr="apr" icon="th-list" login="{{telepro.login}}"></link>
-                <link fltr="avr" icon="th-list" login="{{telepro.login}}"></link>
-                    
-                    <link-separator title="Mes Sous-Traitants" icon="truck"></link-separator>
-                    
-                    <link fltr="sarl" icon="th-list" login="{{telepro.login}}"></link>
-                    <link fltr="fact" icon="th-list" login="{{telepro.login}}"></link>
-                    
-                    <link-separator title="Mes Clients" icon="truck"></link-separator>
-                    
-                    <link fltr="fact" icon="th-list" login="{{telepro.login}}"></link>
-                    <link fltr="carl" icon="th-list" login="{{telepro.login}}"></link>
-                    
-                    <link-separator icon="share" title="Mes S.A.V"></link-separator>
-
-                    <link fltr="sav" icon="th-list" login="{{telepro.login}}"></link>
-                    <link fltr="savEnc" icon="th-list" login="{{telepro.login}}"></link>
-
-                    <link-separator icon="bolt" title="Mes Litiges"></link-separator>
-                    
-                    <link fltr="lit" icon="th-list" login="{{telepro.login}}"></link>
-                    <link fltr="litEnc" icon="th-list" login="{{telepro.login}}"></link>
-
-                    <link-separator icon="hospital-o" title="Mes Devis"></link-separator>
-
-                    <link fltr="d_all" model="devis" icon="th-list" login="{{telepro.login}}"></link>
-                    <link fltr="d_tall" model="devis" icon="th-list" login="{{telepro.login}}"></link>
-                    <link fltr="d_att" model="devis" icon="th-list" login="{{telepro.login}}"></link>
-                    <link fltr="d_aev" model="devis" icon="th-list" login="{{telepro.login}}"></link>
-                    <link fltr="d_ann" model="devis" icon="th-list" login="{{telepro.login}}"></link>
+            <drop-down id="service-intervention" title="Service Intervention" icon="circle">
+                <link fltr="i_all" icon="th-list" title="Toute les Interventions"></link>
+                <drop-down title="Mes Interventions" icon="calendar" is-open="true">
+                    <link fltr="i_tall" icon="th-list" title="{{dateFormat}}" login="{{user.login}}"></link>
+                    <link fltr="i_tenv" icon="th-list" login="{{user.login}}"></link>
+                    <link fltr="i_apr" icon="th-list" login="{{user.login}}"></link>
+                    <link fltr="i_avr" icon="th-list" login="{{user.login}}"></link>
+                </drop-down>
+                <drop-down ng-click="mcs=true" title="Mes Collegues" icon="sitemap">
+                    <drop-down ng-if="mcs" title="{{telepro.login | loginify}}" ng-repeat="telepro in interventionsStats | orderBy:'-total'">
+                        <link-separator title="Mes Interventions" icon="calendar"></link-separator>
+                        <link fltr="i_tall" icon="th-list" title="{{dateFormat}}" login="{{telepro.login}}"></link>
+                        <link fltr="i_tenv" icon="th-list" login="{{telepro.login}}"></link>
+                        <link fltr="i_apr" icon="th-list" login="{{telepro.login}}"></link>
+                        <link fltr="i_avr" icon="th-list" login="{{telepro.login}}"></link>
+                        <link-separator title="Mes Sous-Traitants" icon="truck"></link-separator>
+                        <link fltr="i_sarl" icon="th-list" login="{{telepro.login}}"></link>
+                        <link fltr="i_fact" icon="th-list" login="{{telepro.login}}"></link>
+                        <link-separator title="Mes Clients" icon="truck"></link-separator>
+                        <link fltr="i_fact" icon="th-list" login="{{telepro.login}}"></link>
+                        <link fltr="i_carl" icon="th-list" login="{{telepro.login}}"></link>
+                        <link-separator icon="share" title="Mes S.A.V"></link-separator>
+                        <link fltr="i_sav" icon="th-list" login="{{telepro.login}}"></link>
+                        <link fltr="i_savEnc" icon="th-list" login="{{telepro.login}}"></link>
+                        <link-separator icon="bolt" title="Mes Litiges"></link-separator>
+                        <link fltr="i_lit" icon="th-list" login="{{telepro.login}}"></link>
+                        <link fltr="i_litEnc" icon="th-list" login="{{telepro.login}}"></link>
+                        <link-separator icon="hospital-o" title="Mes Devis"></link-separator>
+                        <link fltr="d_all" model="devis" icon="th-list" login="{{telepro.login}}"></link>
+                        <link fltr="d_tall" model="devis" icon="th-list" login="{{telepro.login}}"></link>
+                        <link fltr="d_att" model="devis" icon="th-list" login="{{telepro.login}}"></link>
+                        <link fltr="d_aev" model="devis" icon="th-list" login="{{telepro.login}}"></link>
+                        <link fltr="d_ann" model="devis" icon="th-list" login="{{telepro.login}}"></link>
+                    </drop-down>
+                </drop-down>
+                <drop-down title="Mes Sous-Traitants" icon="truck">
+                    <link fltr="i_sarl" icon="th-list" login="{{user.login}}"></link>
+                </drop-down>
+                <drop-down title="Mes Clients" icon="truck">
+                    <link fltr="i_fact" icon="th-list" login="{{user.login}}"></link>
+                    <link fltr="i_carl" icon="th-list" login="{{user.login}}"></link>
+                </drop-down>
+                <drop-down icon="share" title="Mes S.A.V">
+                    <link fltr="i_sav" icon="th-list" login="{{user.login}}"></link>
+                    <link fltr="i_savEnc" icon="th-list" login="{{user.login}}"></link>
+                </drop-down>
+                <drop-down icon="bolt" title="Mes Litiges">
+                    <link fltr="i_lit" icon="th-list" login="{{user.login}}"></link>
+                    <link fltr="i_litEnc" icon="th-list" login="{{user.login}}"></link>
+                </drop-down>
+                <drop-down icon="hospital-o" title="Mes Devis">
+                    <link fltr="d_all" model="devis" icon="th-list" login="{{user.login}}"></link>
+                    <link fltr="d_tall" model="devis" icon="th-list" login="{{user.login}}"></link>
+                    <link fltr="d_att" model="devis" icon="th-list" login="{{user.login}}"></link>
+                    <link fltr="d_aev" model="devis" icon="th-list" login="{{user.login}}"></link>
+                    <link fltr="d_ann" model="devis" icon="th-list" login="{{user.login}}"></link>
                 </drop-down>
             </drop-down>
-            </drop-down>
-            <drop-down title="Mes Sous-Traitants" icon="truck">
-                <link fltr="sarl" icon="th-list" login="{{user.login}}"></link>
-            </drop-down>
-            <drop-down title="Mes Clients" icon="truck">
-                <link fltr="fact" icon="th-list" login="{{user.login}}"></link>
-                <link fltr="carl" icon="th-list" login="{{user.login}}"></link>
-            </drop-down>
-            <drop-down icon="share" title="Mes S.A.V">
-                <link fltr="sav" icon="th-list" login="{{user.login}}"></link>
-                <link fltr="savEnc" icon="th-list" login="{{user.login}}"></link>
-            </drop-down>
-            <drop-down icon="bolt" title="Mes Litiges">
-                <link fltr="lit" icon="th-list" login="{{user.login}}"></link>
-                <link fltr="litEnc" icon="th-list" login="{{user.login}}"></link>
-            </drop-down>
-            <drop-down icon="hospital-o" title="Mes Devis">
-                <link fltr="d_all" model="devis" icon="th-list" login="{{user.login}}"></link>
-                <link fltr="d_tall" model="devis" icon="th-list" login="{{user.login}}"></link>
-                <link fltr="d_att" model="devis" icon="th-list" login="{{user.login}}"></link>
-                <link fltr="d_aev" model="devis" icon="th-list" login="{{user.login}}"></link>
-                <link fltr="d_ann" model="devis" icon="th-list" login="{{user.login}}"></link>
+            <drop-down title="Service Partenariat" icon="circle">
+                <link fltr="a_all" icon="th-list" model="artisan" title="Tous les Artisans"></link>
+                <link fltr="a_arc" icon="th-list" model="artisan" title="Archivés"></link>
+                <link fltr="a_pot" icon="th-list" model="artisan" title="Potentiels"></link>
+                <link fltr="a_act" icon="th-list" model="artisan" title="Actifs"></link>
             </drop-down>
             <br>
             <br>
@@ -113,10 +109,13 @@
             <li>
                 <a href="/devis"><i class="menu-icon fa fa-table"></i><span class="mm-text">Nouveau Devis</span></a>
             </li>
+            <li>
+                <a href="/artisan"><i class="menu-icon fa fa-truck"></i><span class="mm-text">Nouvel Artisan</span></a>
+            </li>
         </side-bar>
         <div class="page-header" style="background: #f4f4f4 url(/img/mooning.png);">
             <div id="content-wrapper">
-                <div class="row " ng-if="!recap">
+                <!--  <div class="row " ng-if="!recap">
                     <div class="col-sm-2" style="height:200px" ng-repeat="telepro in interventionsStats | orderBy:'-tall.total' | limitTo:6">
                         <div class="card">
                             <div style="width:95%;margin-right:0" class="p+">
@@ -136,12 +135,10 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
                 <div ng-view></div>
             </div>
-            <!-- content here -->
         </div>
-        <!-- / #content-wrapper -->
         <div id="main-menu-bg"></div>
     </div>
     <!-- / #main-wrapper -->

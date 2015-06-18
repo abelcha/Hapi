@@ -87,9 +87,10 @@ angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', 'config', 
             $mdDialog.show({
                 controller: function DialogController($scope, $mdDialog) {
                     $scope.options = options;
-                    $scope.answer = function() {
+                    $scope.answer = function(cancel) {
                         $mdDialog.hide();
-                        return cb($scope.options.text);
+                        if (!cancel)
+                            return cb($scope.options.text);
                     }
                 },
                 templateUrl: '/DialogTemplates/text.html',
@@ -111,8 +112,11 @@ angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', 'config', 
                         sms += data.client.telephone.tel2 ? "ou au " + data.client.telephone.tel2 : ""
                         return sms + ".\nEdison Services."
                     }
-                    $scope.xfiles = _.clone(files);
-                    $scope.xfiles.push({_id:'devis', name:'devis.pdf'})
+                    $scope.xfiles = _.clone(files || []);
+                    $scope.xfiles.push({
+                        _id: 'devis',
+                        name: 'devis.pdf'
+                    })
                     $scope.smsText = getSMS();
                     $scope.answer = function(cancel) {
                         $mdDialog.hide();
@@ -177,7 +181,7 @@ angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', 'config', 
                         var end = new Date();
                         end.setHours(end.getHours() + hours)
                         cb(start, end);
-                      
+
                     };
                 },
                 templateUrl: '/DialogTemplates/absence.html',

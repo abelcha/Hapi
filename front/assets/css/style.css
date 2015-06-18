@@ -270,7 +270,7 @@ label.text-field__label,
 .table-striped>tbody>tr:nth-of-type(odd) {
     background-color: rgba(232, 232, 232, 0.75)!important;
 }
-
+@
 .text-field {
     padding-top: 24px!important;
 }
@@ -281,4 +281,8 @@ label.text-field__label,
 
 map.big-map {
     height: 500px!important;
+}
+
+#service-intervention>ul {
+    margin-left: -19px;
 }

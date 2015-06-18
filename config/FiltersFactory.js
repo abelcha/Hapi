@@ -46,7 +46,6 @@ FiltersFactory.prototype.getAllFilters = function(model) {
 FiltersFactory.prototype.filter = function(inter) {
     var _this = this;
     this.fltr = {};
-
     _each(_this.list[_this.model], function(e, k) {
         if (!e.noCache && e.fn && typeof e.fn === 'function' && e.fn.bind(_this)(inter)) {
             _this.fltr[e.short_name] = 1;
@@ -57,6 +56,46 @@ FiltersFactory.prototype.filter = function(inter) {
 
 
 FiltersFactory.prototype.list = {
+    artisan: [{
+        short_name: 'a_all',
+        long_name: 'Tous les Artisans',
+        url: '',
+        match: {},
+        noCache: true,
+        fn: function() {
+            return true;
+        }
+    }, {
+        short_name: 'a_arc',
+        long_name: 'archivés',
+        url: 'archives',
+        match: {
+            status: 'ARC'
+        },
+        fn: function(artisan) {
+            return artisan.status === "ARC";
+        }
+    }, {
+        short_name: 'a_pot',
+        long_name: 'potentiel',
+        url: 'potentiel',
+        match: {
+            status: 'POT'
+        },
+        fn: function(artisan) {
+            return artisan.status === "POT";
+        }
+    }, {
+        short_name: 'a_act',
+        long_name: 'actifs',
+        url: 'actif',
+        match: {
+            status: 'ACT'
+        },
+        fn: function(artisan) {
+            return artisan.status === "ACT";
+        }
+    }],
     devis: [{
         short_name: 'd_all',
         long_name: 'Tous les devis',
@@ -96,10 +135,8 @@ FiltersFactory.prototype.list = {
         short_name: 'd_ann',
         long_name: "Annulés",
         url: 'annules',
-        match: function() {
-            return {
-                status: "ANN"
-            }
+        match: {
+            status: "ANN"
         },
         fn: function(devis) {
             return devis.status === "ANN";
@@ -130,7 +167,7 @@ FiltersFactory.prototype.list = {
         }
     }],
     intervention: [{
-        short_name: 'all',
+        short_name: 'i_all',
         long_name: 'Toutes les Inters',
         url: '',
         match: {},
@@ -139,7 +176,7 @@ FiltersFactory.prototype.list = {
             return true;
         }
     }, {
-        short_name: 'tall',
+        short_name: 'i_tall',
         long_name: "Aujourd'hui",
         url: 'ajd',
         match: function() {
@@ -153,7 +190,7 @@ FiltersFactory.prototype.list = {
             return inter.date.ajout > today();
         }
     }, {
-        short_name: 'tenv',
+        short_name: 'i_tenv',
         long_name: 'Envoyé',
         url: 'envoyeAjd',
         match: function() {
@@ -168,7 +205,7 @@ FiltersFactory.prototype.list = {
             return (inter.status === "ENV" ||  inter.status === "AVR") && inter.date.ajout > today();
         }
     }, {
-        short_name: 'avr',
+        short_name: 'i_avr',
         long_name: 'A Vérifier',
         url: 'aVerifier',
         match: function() {
@@ -184,7 +221,7 @@ FiltersFactory.prototype.list = {
                 (inter.status === "ENV" && Date.now() > dateInter(inter));
         }
     }, {
-        short_name: 'apr',
+        short_name: 'i_apr',
         long_name: 'A Programmer',
         url: 'aProgrammer',
         match: {
@@ -194,7 +231,7 @@ FiltersFactory.prototype.list = {
             return inter.status === "APR";
         }
     }, {
-        short_name: 'att',
+        short_name: 'i_att',
         long_name: 'Paiement en attente',
         url: 'paiementEnAttente',
         match: {},
@@ -204,7 +241,7 @@ FiltersFactory.prototype.list = {
 
         }
     }, {
-        short_name: 'atts',
+        short_name: 'i_atts',
         long_name: 'Paiement SST en attente',
         url: 'paiementArtisanEnAttente',
         match: {},
@@ -215,7 +252,7 @@ FiltersFactory.prototype.list = {
 
         }
     }, {
-        short_name: 'sarl',
+        short_name: 'i_sarl',
         long_name: 'SST à Relancer',
         url: 'relanceArtisan',
         match: {
@@ -231,7 +268,7 @@ FiltersFactory.prototype.list = {
                 Date.now() > dateInter(inter) + ms.weeks(2);
         }
     }, {
-        short_name: 'attc',
+        short_name: 'i_attc',
         long_name: 'Paiement Client en attente',
         url: 'paiementClientEnAttente',
         match: {},
@@ -242,7 +279,7 @@ FiltersFactory.prototype.list = {
 
         }
     }, {
-        short_name: 'carl',
+        short_name: 'i_carl',
         long_name: 'Client à Relancer',
         url: 'relanceClient',
         match: {
@@ -257,7 +294,7 @@ FiltersFactory.prototype.list = {
                 Date.now() > dateInter(inter) + ms.weeks(3);
         }
     }, {
-        short_name: 'fact',
+        short_name: 'i_fact',
         long_name: 'Facture à envoyer',
         url: 'factureaEnvoyer',
         match: {
@@ -273,7 +310,7 @@ FiltersFactory.prototype.list = {
             !inter.date.envoiFacture;
         }
     }, {
-        short_name: 'sav',
+        short_name: 'i_sav',
         long_name: 'Tous les S.A.V',
         url: 'serviceApresVente',
         match: {
@@ -287,7 +324,7 @@ FiltersFactory.prototype.list = {
             return inter.sav && inter.sav.length > 0;
         }
     }, {
-        short_name: 'savEnc',
+        short_name: 'i_savEnc',
         long_name: 'S.A.V En Cours',
         url: 'serviceApresVenteEnCours',
         match: {
@@ -302,7 +339,7 @@ FiltersFactory.prototype.list = {
                 inter.sav[inter.sav.length - 1].status === "ENV"
         }
     }, {
-        short_name: 'lit',
+        short_name: 'i_lit',
         long_name: 'Tous les Litige',
         url: 'litiges',
         match: {
@@ -316,7 +353,7 @@ FiltersFactory.prototype.list = {
             return inter.sav && inter.sav.length > 0;
         }
     }, {
-        short_name: 'litEnc',
+        short_name: 'i_litEnc',
         long_name: 'Litiges non résolus',
         url: 'litigesEnCours',
         match: {

@@ -5,14 +5,16 @@ module.exports = function(schema) {
     var FiltersFactory = requireLocal('config/FiltersFactory')
     var config = requireLocal('config/dataList');
     var ReadWriteLock = require('rwlock');
+    var d = requireLocal('config/dates.js')
+
     var lock = new ReadWriteLock();
-        var _ = require('lodash')
+    var _ = require('lodash')
 
     var translate = function(e) {
         var fltr = FiltersFactory('devis').filter(e);
         return {
-            fltr: fltr,
-            da: e.date.ajout,
+            f: fltr,
+            da: d(e.date.ajout),
             t: e.login.ajout,
             c: e.categorie,
             cx: config.categories[e.categorie].long_name,

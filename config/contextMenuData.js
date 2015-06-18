@@ -1,71 +1,76 @@
 module.exports = {
-    devis: [{
-        hidden: false,
-        title: 'Ouvrir Devis',
-        action: "ouvrirFiche"
-    }, {
-        hidden: false,
-        title: "Annuler",
-        action: 'annulation',
-        hide: function(inter) {
-            return inter.s !== 'ANN';
-        }
-    }, {
-        hidden: false,
-        title: "Envoyer",
-        action: 'envoi',
-        hide: function(inter) {
-            return inter.s !== "TRA" && inter.s !== 'ANN';
-        }
-    }, {
-        hidden: false,
-        title: "Transferer",
-        action: 'transfert',
-        hide: function(inter) {
-            return inter.s !== 'TRA' && inter.s !== 'ANN';
-        }
-    }],
-    intervention: [{
-        hidden: false,
+    artisan: [{
         title: 'Ouvrir Fiche',
         action: "ouvrirFiche"
     }, {
-        hidden: false,
-        title: "Appeler l'artisan",
-        action: 'callArtisan',
-        hide: function(inter) {
-            return !inter.ai
-        }
-    },{
-        hidden: false,
-        title: "Appeler le client",
-        action: 'callClient',
-        hide: function(inter) {
-            return !inter.ai
+        title: 'Ouvrir Recap',
+        action: "ouvrirRecap"
+    }, {
+        title: "Archiver",
+        action: 'archiver',
+        hide: function(artisan) {
+            return artisan.status !== 'ARC';
         }
     }, {
-        hidden: false,
-        title: "SMS artisan",
-        action: 'smsArtisan',
+        title: "Appeler",
+        action: 'call',
+    }],
+    devis: [{
+        title: 'Ouvrir Devis',
+        action: "ouvrirFiche"
+    }, {
+        title: "Annuler",
+        action: 'annulation',
         hide: function(inter) {
-            return !inter.ai
+            return inter.statustatus !== 'ANN';
         }
     }, {
-        hidden: false,
         title: "Envoyer",
         action: 'envoi',
         hide: function(inter) {
-            return inter.s == "APR" || inter.s === "ENV"
+            return inter.statustatus !== "TRA" && inter.statustatus !== 'ANN';
         }
     }, {
-        hidden: false,
+        title: "Transferer",
+        action: 'transfert',
+        hide: function(inter) {
+            return inter.status !== 'TRA' && inter.status !== 'ANN';
+        }
+    }],
+    intervention: [{
+        title: 'Ouvrir Fiche',
+        action: "ouvrirFiche"
+    }, {
+        title: "Appeler l'artisan",
+        action: 'callArtisan',
+        hide: function(inter) {
+            return !inter.artisan || !inter.artisan.id
+        }
+    }, {
+        title: "Appeler le client",
+        action: 'callClient',
+        hide: function(inter) {
+            return false
+        }
+    }, {
+        title: "SMS artisan",
+        action: 'smsArtisan',
+        hide: function(inter) {
+            return !inter.artisan || !inter.artisan.id
+        }
+    }, {
+        title: "Envoyer",
+        action: 'envoi',
+        hide: function(inter) {
+            return inter.status == "APR" ||  inter.status === "ENV"
+        }
+    }, {
         title: "Vérifier",
         action: 'verification',
         hide: function(inter) {
-            return inter.s !== "AVR" && inter.s !== 'ENV'
+            return inter.status !== "AVR" && inter.status !== 'ENV'
         }
     }, {
-        hidden: false,
         title: "Annuler",
         action: 'annulation'
 

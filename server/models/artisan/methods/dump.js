@@ -1,5 +1,7 @@
 var request = require('request');
 var key = requireLocal('config/_keys');
+var _ = require('lodash')
+var config = requireLocal('config/dataList');
 
 module.exports = function(schema) {
 
@@ -10,8 +12,13 @@ module.exports = function(schema) {
             id: d.id,
             nomSociete: d.nom_societe,
             categories: [],
-            formeJuridique: d.forme_juridique,
             email: d.email,
+            login: {
+                ajout: d.ajoute_par || "yohann_r"
+            },
+            date: {
+                ajout: d.date_ajout ? (d.date_ajout * 1000) : Date.now()
+            },
             telephone: {
                 tel1: d.tel1,
                 tel2: d.tel2,
@@ -19,14 +26,14 @@ module.exports = function(schema) {
             representant: {
                 nom: d.nom_representant,
                 prenom: d.prenom_representant,
-                civilite: d.civilite
+                civilite: d.civilite ||  "M."
             },
             pourcentage: {
                 deplacement: d.pourcentage_deplacement,
                 maindOeuvre: d.pourcentage_main_d_oeuvre,
                 fourniture: d.pourcentage_fourniture
             },
-            zoneChalandise: d.zone_chalandise.slice(0, -2),
+            zoneChalandise: d.zone_chalandise ? d.zone_chalandise.slice(0, -2) : 30,
             address: {
                 n: d.numero,
                 r: d.adresse,
@@ -36,52 +43,27 @@ module.exports = function(schema) {
                 lg: d.lng,
             },
             loc: [parseFloat(d.lat), parseFloat(d.lng)],
-            archive: (d.archive == 1 ? true : false),
         };
-
-        var cat = [{
-            name: 'EL',
-            value: d.electricite
-        }, {
-            name: 'PL',
-            value: d.plomberie
-        }, {
-            name: 'CH',
-            value: d.chauffage
-        }, {
-            name: 'CL',
-            value: d.climatisation
-        }, {
-            name: 'SR',
-            value: d.serrurerie
-        }, {
-            name: 'VT',
-            value: d.vitrerie
-        }, {
-            name: 'MN',
-            value: d.menuiserie
-        }, {
-            name: 'PT',
-            value: d.peinture
-        }, {
-            name: 'CR',
-            value: d.carrelage
-        }, {
-            name: 'MC',
-            value: d.maconnerie
-        }];
-        for (var i = 0; i < cat.length; i++) {
-            if (cat[i].value === '1')
-                rtn.categories.push(cat[i].name);
+        var fj = _.find(config.formeJuridiqueHash(), function(e) {
+            return e.long_name.toUpperCase() === d.forme_juridique;
+            //       console.log(e.long_name.toUpperCase(), d.forme_juridique)
+        })
+        rtn.formeJuridique = fj ? fj.short_name : 'AUT'
+        if (d.archive === '1') {
+            rtn.status = "ARC"
         }
-
+        _.each(config.categories, function(e, k) {
+            var cat = _.deburr(e.long_name).toLowerCase();
+            if (d[cat] && d[cat] == 1) {
+                rtn.categories.push(e.short_name);
+            }
+        })
         return rtn;
     }
 
     var addInDB = function(data, i, cb) {
         if (i >= data.length - 1)
             return cb(null)
-        console.log(data[i].id)
         if (i % 100 === 0)
             console.log(((i / data.length) * 100).toFixed(2), '%')
         var artisan = db.model('artisan')(translateModel(data[i]));

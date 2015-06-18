@@ -55,7 +55,7 @@ angular.module('edison')
                     edisonAPI.sms.send({
                         link: _this.artisan.id,
                         origin: _this.id || _this.tmpID,
-                        text: 'message destiné à ' + _this.artisan.tel1 + '\n' + text,
+                        text: text,
                         to: $rootScope.user.portable || "0633138868"
                     }).success(function(resp) {
                         var validationMessage = _.template("Un sms a été envoyé à M. {{artisan.representant.nom}}")(_this)
@@ -142,7 +142,7 @@ angular.module('edison')
 
             Intervention.prototype.envoi = function(cb) {
                 var _this = this;
-                dialog.getFileAndText(_this, _this.files, function(text, file) {
+                dialog.getFileAndText(_this, _this.files , function(text, file) {
                     edisonAPI.intervention.envoi(_this.id, {
                         sms: text,
                         file: file

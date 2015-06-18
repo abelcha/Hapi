@@ -24,7 +24,7 @@
                                 <strong class="fs-headline display-block">
          <button ng-click="vm.data.categorie = undefined" style="font-weight:900;float:left" class="btn--no-conflicts btn--m {{config.categories[vm.data.categorie].color}} btn--flat" lx-ripple> {{config.categories[vm.data.categorie].long_name}}</button></strong>
                                 <div class="fs-body-1 mt+" style="padding-top:10px">
-                                    <edison-map is-new="vm.isNew" data="vm.data" xmarkers="vm.nearestArtisans" address-change="vm.searchArtisans()"></edison-map>
+                                    <edison-map is-new="vm.isNew" data="vm.data" client="vm.data.client" xmarkers="vm.nearestArtisans" address-change="vm.searchArtisans()" height="small"></edison-map>
                                 </div>
                                 <div class="p+" ng-if="vm.data.artisan.id && vm.data.artisan.stats.total">
                                     <span class="fs-subhead tc-black-2 display-block">

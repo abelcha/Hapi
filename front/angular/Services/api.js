@@ -81,6 +81,9 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
             }
         },
         artisan: {
+            save: function(params) {
+                return $http.post("/api/artisan", params);
+            },
             list: function(options) {
                 return $http({
                     method: 'GET',

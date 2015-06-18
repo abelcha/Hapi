@@ -1,66 +1,154 @@
 <div class="container" style=" margin: auto;max-width: 1200px;">
-    <!--  <md-toolbar class="grey" style="border-top-left-radius:5px;border-top-right-radius:5px;">
-  </md-toolbar> -->
     <div class="row">
-        <div class="col-sm-12 md-whiteframe-z1" style="background:white;height:2000px">
-            <form class="form-horizontal" ng-init="sst = tab.data" style="overflow:hidden;height:100%" novalidate>
-                <!-- Form Name -->
-                <!-- Text input-->
+        <div class="col-sm-12 " style="height:100%">
+            <div class="form-horizontal" style="overflow:hidden;height:100%" novalidate>
+                <div class="card" style="padding:20px">
+                    <div class="p+">
+                        <div style="float:left;width:40%">
+                            <strong class="fs-headline display-block">Fiche d'intervention</strong>
+                            <span class="fs-subhead tc-black-2 display-block">Ajoute le {{vm.data.date.ajout| date:"dd/MM à HH:mm"}} par {{vm.data.login.ajout}}</span>
+                        </div>
+                        <div style="float:right;width:40%;text-align:right">
+                            <strong ng-if="vm.data.status" class="fs-headline display-block" style="color:{{config.etats[vm.data.status].color}}">{{config.etats[vm.data.status].long_name}}</strong>
+                        </div>
+                    </div>
+                </div>
                 <br>
-                <h3>Fiche d'Artisan</h3>
+                <div class="card" style="padding:20px">
+                    <strong class="fs-headline display-block">Societé</strong>
+                    <div class="p+">
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <div class="select-style text-field">
+                                    <select ng-model="vm.data.formeJuridique" ng-options="fj.short_name as fj.long_name group by fj.type for fj in vm.config.formeJuridiqueHash()">
+                                    </select>
+                                    <label ng-class="{'selected' : vm.data.formeJuridique}">
+                                        Forme Juridique
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <lx-text-field label="Nom Société">
+                                    <input capitalize ng-model="vm.data.nomSociete">
+                                </lx-text-field>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <br>
-                <div class="form-group">
-                    <div class="col-sm-3">
-                        <lx-text-field label="Prénom Representant">
-                            <input capitalize type="text" ng-model="sst.representant.prenom">
-                        </lx-text-field>
-                    </div>
-                    <div class="col-sm-3">
-                        <lx-text-field label="Nom Representant">
-                            <input capitalize type="text" ng-model="sst.representant.nom">
-                        </lx-text-field>
-                    </div>
-                    <div class="col-sm-3">
-                        <lx-text-field label="Forme Juridique">
-                            <input capitalize type="text" ng-model="sst.formeJuridique">
-                        </lx-text-field>
-                    </div>
-                    <div class="col-sm-3">
-                        <lx-text-field label="Nom Société">
-                            <input capitalize type="text" ng-model="sst.nomSociete">
-                        </lx-text-field>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-sm-3">
-                        <lx-text-field label="Téléphone 1">
-                            <input capitalize type="text" ng-model="sst.telephone.tel1">
-                        </lx-text-field>
-                    </div>
-                    <div class="col-sm-3">
-                        <lx-text-field label="Téléphone 2">
-                            <input capitalize type="text" ng-model="sst.telephone.tel2">
-                        </lx-text-field>
-                    </div>
-                    <div class="col-sm-3">
-                        <lx-text-field label="Email">
-                            <input capitalize type="text" ng-model="sst.email">
-                        </lx-text-field>
-                    </div>
-                    <div class="col-sm-3">
-                        <lx-text-field label="Email">
-                            <input capitalize type="text" ng-model="sst.email">
-                        </lx-text-field>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-sm-6">
-                <map zoom="10" pan-control="false" style="height:350px" center="{{sst.address.lt}}, {{sst.address.lg}}">
-                            <marker  position="{{sst.address.lt}}, {{sst.address.lg}}" color="grey"></marker>
-                        </map>
+                <artisan-categorie model="vm.data"></artisan-categorie>
+                <br>
+                <div class="card" style="padding:20px">
+                    <strong class="fs-headline display-block">Representant</strong>
+                    <div class="p+">
+                        <div class="row">
+                            <div class="col-sm-2">
+                                <div class="select-style text-field">
+                                    <select ng-model="vm.data.representant.civilite" ng-options="civ.short_name as civ.long_name for civ in config.civilites">
+                                    </select>
+                                    <label ng-class="{'selected' : vm.data.representant.civilite}">Civilité</label>
+                                </div>
+                            </div>
+                            <div class="col-sm-5">
+                                <lx-text-field label="Prenom Representant">
+                                    <input capitalize ng-model="vm.data.representant.prenom">
+                                </lx-text-field>
+                            </div>
+                            <div class="col-sm-5">
+                                <lx-text-field label="Nom Representant">
+                                    <input capitalize ng-model="vm.data.representant.nom">
+                                </lx-text-field>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-5">
+                                <lx-text-field label="Email">
+                                    <input capitalize type="text" ng-model="vm.data.email">
+                                </lx-text-field>
+                            </div>
+                            <div class="col-sm-3">
+                                <lx-text-field label="Téléphone 1">
+                                    <input capitalize type="text" ng-model="vm.data.telephone.tel1">
+                                </lx-text-field>
+                            </div>
+                            <div class="col-sm-3">
+                                <lx-text-field label="Téléphone 2">
+                                    <input capitalize type="text" ng-model="vm.data.telephone.tel2">
+                                </lx-text-field>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </form>
+            </div>
+            <br>
+            <div class="card" style="padding:20px">
+                <div class="p+">
+                    <strong class="fs-headline display-block">Addresse</strong>
+                    <edison-map is-new="vm.isNew" height="big" data="vm.data" client="vm.data"></edison-map>
+                    <br>
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <lx-text-field label="Numero">
+                                <input capitalize type="text" ng-model="vm.data.address.n">
+                            </lx-text-field>
+                        </div>
+                        <div class="col-sm-4">
+                            <lx-text-field label="Addresse">
+                                <input capitalize type="text" ng-model="vm.data.address.r">
+                            </lx-text-field>
+                        </div>
+                        <div class="col-sm-2">
+                            <lx-text-field label="Code Postal">
+                                <input capitalize type="text" ng-model="vm.data.address.cp">
+                            </lx-text-field>
+                        </div>
+                        <div class="col-sm-4">
+                            <lx-text-field label="Ville">
+                                <input capitalize type="text" ng-model="vm.data.address.v">
+                            </lx-text-field>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="card" style="padding:20px">
+                <div class="p+">
+                    <strong class="fs-headline display-block">Pourcentages</strong>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <lx-text-field label="Déplacement">
+                                <input type="number" ng-model="vm.data.pourcentage.deplacement">
+                            </lx-text-field>
+                        </div>
+                        <div class="col-sm-3">
+                            <lx-text-field label="Main D'oeuvre">
+                                <input type="number" ng-model="vm.data.pourcentage.maindOeuvre">
+                            </lx-text-field>
+                        </div>
+                        <div class="col-sm-3">
+                            <lx-text-field label="Fourniture">
+                                <input type="number" ng-model="vm.data.pourcentage.fourniture">
+                            </lx-text-field>
+                        </div>
+                        <div class="col-sm-3">
+                            <lx-text-field label="Zone de Chalandise">
+                                <input type="number" ng-model="vm.data.zoneChalandise">
+                            </lx-text-field>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="fab" style="float: right;position: fixed;right: 70px;z-index: 999;top: 87%;">
+                <button ng-click="vm.saveArtisan({})" class="fab__primary btn--no-conflicts btn--xl btn--blue btn--fab" lx-ripple lx-tooltip="Enregistrer" tooltip-position="top">
+                    <i class="mdi" ng-class="vm.data.id ? 'mdi-camera-iris' : 'mdi-plus'"></i>
+                    <i class="mdi mdi-checkbox-marked-circle-outline"></i>
+                </button>
+                <div class="fab__actions fab__actions--left">
+                   
+                    <button  ng-click="vm.saveArtisan({contrat:true, signe:true})" class="btn--no-conflicts btn--l btn--black btn--fab" lx-ripple lx-tooltip="Contrat Signé" tooltip-position="top"><i class="fa fa-send"></i></button>
+                    <button ng-click="vm.saveArtisan({contrat:true})" class="btn--no-conflicts btn--l btn--black btn--fab" lx-ripple lx-tooltip="Envoyer Contrat" tooltip-position="top"><i class="fa fa-send-o"></i></button>
+                </div>
+            </div>
         </div>
     </div>
 </div>

@@ -7,7 +7,7 @@ angular.module('edison', ['browserify', 'ngMaterial', 'lumx', 'ngAnimate', 'xedi
     });
 
 
-angular.module('edison').controller('MainController', function(tabContainer, $scope, socket, config, $rootScope, $location, edisonAPI, taskList) {
+angular.module('edison').controller('MainController', function(tabContainer, $scope, socket, config, $rootScope, $location, edisonAPI, taskList, $window) {
     "use strict";
     edisonAPI.getUser().success(function(result) {
         $rootScope.user = result;
@@ -16,6 +16,7 @@ angular.module('edison').controller('MainController', function(tabContainer, $sc
     $scope.config = config;
     $rootScope.loadingData = true;
     $rootScope.$on('$routeChangeSuccess', function() {
+        $window.scrollTo(0, 0);
         $rootScope.loadingData = false;
     });
 
@@ -65,7 +66,7 @@ angular.module('edison').controller('MainController', function(tabContainer, $sc
         if (!$scope.tabsInitialized) {
             return initTabs($location.path(), $location.hash());
         }
-        if ($location.path() !== "/intervention" && $location.path() !== "/devis") {
+        if ($location.path() !== "/intervention" && $location.path() !== "/devis" && $location.path() !== "/artisan") {
             $scope.tabs.addTab($location.path(), {
                 hash: $location.hash()
             });
@@ -96,6 +97,13 @@ var getDevisList = function(edisonAPI) {
     });
 };
 
+var getArtisanList = function(edisonAPI) {
+    "use strict";
+    return edisonAPI.artisan.list({
+        cache: true
+    });
+};
+
 var getInterList = function(edisonAPI) {
     "use strict";
     return edisonAPI.intervention.list({
@@ -118,9 +126,17 @@ var getArtisan = function($route, $q, edisonAPI) {
             resolve({
                 data: {
                     telephone: {},
-                    pourcentage: {},
+                    pourcentage: {
+                        deplacement: 50,
+                        maindOeuvre: 30,
+                        fourniture: 30
+                    },
+                    zoneChalandise: 30,
                     add: {},
-                    representant: {},
+                    categories: [],
+                    representant: {
+                        civilite: 'M.'
+                    },
                 }
             });
         });
@@ -153,8 +169,10 @@ var getIntervention = function($route, $q, edisonAPI) {
                     coutFourniture: 0,
                     comments: [],
                     produits: [],
-                    tva: 20,
-                    client: {},
+                    tva: 10,
+                    client: {
+                        civilite: 'M.'
+                    },
                     reglementSurPlace: true,
                     date: {
                         ajout: Date.now(),
@@ -181,8 +199,10 @@ var getDevis = function($route, $q, edisonAPI) {
                 data: {
                     isDevis: true,
                     produits: [],
-                    tva: 20,
-                    client: {},
+                    tva: 10,
+                    client: {
+                        civilite: 'M.'
+                    },
                     date: {
                         ajout: Date.now(),
                     },
@@ -257,7 +277,7 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
         .when('/devis/list/:fltr', {
             templateUrl: "Pages/ListeDevis/listeDevis.html",
             controller: "ListeDevisController",
-            controllerAs:"vm",
+            controllerAs: "vm",
             resolve: {
                 interventions: getInterList,
                 devis: getDevisList,
@@ -278,13 +298,22 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
                 artisans: getArtisanList
             }
         })
-        .when('/artisan/:id', {
-            templateUrl: "Pages/Artisan/artisan.html",
-            controller: "ArtisanController",
+        .when('/artisan/list', {
+            templateUrl: "Pages/ListeArtisan/listeArtisan.html",
+            controller: "ListeArtisanController",
+            controllerAs: 'vm',
             resolve: {
-                artisan: getArtisan,
                 interventions: getInterList,
-                artisans: getArtisanList
+                artisan: getArtisanList,
+            }
+        })
+        .when('/artisan/list/:fltr', {
+            templateUrl: "Pages/ListeArtisan/listeArtisan.html",
+            controller: "ListeArtisanController",
+            controllerAs: "vm",
+            resolve: {
+                interventions: getInterList,
+                artisan: getArtisanList,
             }
         })
         .when('/artisan', {
@@ -292,12 +321,13 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
                 return '/artisan/' + Date.now();
             }
         })
-        .when('/artisan/:artisanID/recap', {
-            templateUrl: "Pages/ListeInterventions/listeInterventions.html",
-            controller: "InterventionsController",
+        .when('/artisan/:id', {
+            templateUrl: "Pages/Artisan/artisan.html",
+            controller: "ArtisanController",
+            controllerAs: "vm",
             resolve: {
-                interventionsStats: getInterventionStats,
                 interventions: getInterList,
+                artisanPrm: getArtisan,
                 artisans: getArtisanList
             }
         })
@@ -331,6 +361,9 @@ angular.module('edison').run(function(editableOptions) {
         }
     }
     $http.get("/Directives/dropdown-row.html", {
+        cache: $templateCache
+    });
+    $http.get("/Templates/artisan-categorie.html", {
         cache: $templateCache
     });
     $http.get("/Templates/info-client.html", {
