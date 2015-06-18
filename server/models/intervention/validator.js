@@ -28,15 +28,12 @@ module.exports = function(schema) {
         this.client.address.n = upper(this.client.address.n)
         this.client.address.r = upper(this.client.address.r)
         this.client.address.v = upper(this.client.address.v)
-        redis.del('interventionStats');
-        console.log("next")
-        next();
+        redis.del('interventionStats', next);
     });
 
     schema.post('save', function(doc) {
         if (!isWorker) {
             db.model('intervention').cacheActualise(doc);
-        console.log("next2")
 
           /*  if (doc.artisan.id)
                 db.model('artisan').findOne({
