@@ -25,7 +25,7 @@ module.exports = function(schema) {
                 console.log(inter)
                 return db.model('sms').send({
                     to: user.portable ||  '0633138868',
-                    text: "Message destiné à " + inter.artisan.nomSociete + "("+ inter.artisan.telephone.tel1 + ')\n' + text,
+                    text: "Message destiné à " + inter.artisan.nomSociete + "(" + inter.artisan.telephone.tel1 + ')\n' + text,
                     login: user.login,
                     origin: inter.id,
                     link: inter.artisan.id,
@@ -51,7 +51,7 @@ module.exports = function(schema) {
                 db.model('artisan').findOne({
                     id: inter.artisan.id
                 }).exec(function(err, artisan) {
-                    if (err || !artisan)
+                    if (err ||  !artisan)
                         return reject("Impossible de trouver l'artisan");
                     inter = inter.toObject();
                     inter.artisan = artisan;
@@ -61,7 +61,9 @@ module.exports = function(schema) {
                             db.model('intervention').getOSFile(inter).then(function(osFileBuffer) {
                                 mail.sendOS(inter, osFileBuffer, suppFile, req.session).then(function(mail) {
                                     sendSMS(req.body.sms, inter, req.session).then(function(data) {
-                                        save(inter, resolve, reject)
+                                        save(inter, function() {
+                                            artisan.save(resolve, reject);
+                                        }, reject)
                                     }, reject)
                                 }, reject)
                             }, reject)
