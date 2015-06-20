@@ -1,4 +1,4 @@
-angular.module('edison', ['browserify', 'ngMaterial', 'lumx', 'ngAnimate', 'xeditable', 'ngDialog', 'btford.socket-io', 'ngFileUpload', 'pickadate', 'ngRoute', 'ngResource', 'ngTable', 'ngMap'])
+angular.module('edison', ['browserify', 'ui.slimscroll', 'ngMaterial', 'lumx', 'ngAnimate', 'xeditable', 'ngDialog', 'btford.socket-io', 'ngFileUpload', 'pickadate', 'ngRoute', 'ngResource', 'ngTable', 'ngMap'])
     .config(function($mdThemingProvider) {
         "use strict";
         $mdThemingProvider.theme('default')
@@ -13,6 +13,7 @@ angular.module('edison').controller('MainController', function(tabContainer, $sc
         $rootScope.user = result;
         reloadStats();
     });
+    $scope.sidebarHeight = $("#main-menu-bg").height();
     $scope.config = config;
     $rootScope.loadingData = true;
     $rootScope.$on('$routeChangeSuccess', function() {

@@ -81,6 +81,7 @@ module.exports = function(db) {
                 },
                 etage: String,
                 code: String,
+                batiment: String,
                 lt: Number,
                 lg: Number,
             },

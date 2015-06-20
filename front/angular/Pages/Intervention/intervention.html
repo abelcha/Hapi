@@ -14,15 +14,15 @@
                     </div>
                 </div>
                 <br>
-                <info-client model="vm.data.client"></info-client>
+                <info-client ng-if="vm.data.client.address.v && vm.data.categorie" model="vm.data.client"></info-client>
                 <br>
                 <info-categorie model="vm.data.categorie" change="vm.searchArtisans(newCategorie)"></info-categorie>
                 <div class="row" style="margin:0">
                     <div class="col-sm-8" style="padding-left:0">
                         <div class="card">
                             <div class="p+">
-                                <strong class="fs-headline display-block">
-         <button ng-click="vm.data.categorie = undefined" style="font-weight:900;float:left" class="btn--no-conflicts btn--m {{config.categories[vm.data.categorie].color}} btn--flat" lx-ripple> {{config.categories[vm.data.categorie].long_name}}</button></strong>
+                                <span class="fs-headline display-block">
+         <button ng-click="vm.data.categorie = undefined" style="float:left" class="btn--no-conflicts btn--m {{config.categories[vm.data.categorie].color}} btn--flat" lx-ripple> {{config.categories[vm.data.categorie].long_name}}</button></span>
                                 <div class="fs-body-1 mt+" style="padding-top:10px">
                                     <edison-map is-new="vm.isNew" data="vm.data" client="vm.data.client" xmarkers="vm.nearestArtisans" address-change="vm.searchArtisans()" height="small"></edison-map>
                                 </div>
@@ -82,7 +82,7 @@
                                    <select ng-show="vm.data.sst" ng-model="vm.data.sst" ng-options="sst.id as sst.nomSociete for sst in vm.artisans">
                                         </select>
                                         <div ng-show="!vm.data.sst">Artisans</div></span>
-                                <div class="paragraph fs-body-1 mt+" style="height: 379px;overflow:scroll">
+                                <div class="paragraph fs-body-1 mt+" slimscroll="{height:379}" style="height: 379px;">
                                     <table class="table table-condensed" style="padding:0;color:black">
                                         <tbody>
                                             <tr ng-repeat="sst in vm.nearestArtisans" ng-class="sst.id == vm.data.sst ? 'success' : ''" ng-click="clickOnArtisanMarker(sst.distance, sst)">

@@ -25,12 +25,12 @@
                                 <a href="www.google.com">
                                     <td>{{::inter.id}}</td>
                                     <td>{{::inter.t}}</td>
-                                    <td><span style="width:80px" class="label {{::config.categories[inter.c].color}}">{{::inter.cx}}</span></td>
+                                    <td><span style="width:80px" class="label {{::config.categoriesHash()[inter.c].color}}">{{::config.categoriesHash()[inter.c].long_name}}</span></td>
                                     <td>{{::inter.n}}</td>
-                                    <td>{{::inter.di | date:"dd/MM/y"}}</td>
+                                    <td>{{::inter.di | relativeDate}}</td>
                                     <td>{{::inter.ad}}</td>
                                     <td>{{::inter.pa}}€</td>
-                                    <td><span style="width:90px" class="label {{::config.etats[inter.s].color}}"> {{::inter.sx}}</span></td>
+                                    <td><span style="width:90px" class="label {{::config.etatsHash()[inter.s].color}}"> {{::config.etatsHash()[inter.s].long_name}}</span></td>
                                 </a>
                             </tr>
                         </tbody>

@@ -7,8 +7,8 @@
             <p><strong>Nom:</strong> {{::data.client.civilite}} {{::data.client.prenom}} {{::data.client.nom}}</p>
             <p><strong>Addresse:</strong> {{::data.client.address.n}} {{::data.client.address.r}} {{::data.client.address.cp}}, {{::data.client.address.v}}</p>
             <p><strong>Description:</strong> {{::data.description}}</p>
-            <p><strong>Remarque:</strong> {{::data.remarque}}</p>
-            <p><strong>Prix:</strong> {{::data.prixAnnonce || 0}} € | {{::data.prixFinal || 0}} €</p>
+            {{}}
+            <p><strong>Prix:</strong> {{data.prixAnnonce || 0}} € | {{::data.prixFinal || 0}} €</p>
             <p>
                 <a href="/{{model}}/{{inter.id}}"> <span style="width:100px" class="label grey darken-3"> Fiche</span></a>
             </p>

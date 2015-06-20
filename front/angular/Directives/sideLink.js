@@ -20,19 +20,24 @@
              count: '@'
          },
          link: function(scope, element, attrs) {
+
+             var findTotal = function() {
+                 if (scope.login) {
+                     var t = _.find($rootScope.interventionsStats, function(e) {
+                         return e.login === scope.login;
+                     })
+                     if (t && t[scope.fltr]) {
+                         scope.total = t[scope.fltr].total;
+                     } else {
+                         scope.total = 0;
+                     }
+                 }
+             }
+             $rootScope.$watch('interventionsStats', findTotal)
              scope._model = scope.model || 'intervention';
              var filtersFactory = new FiltersFactory(scope._model);
              scope.exFltr = filtersFactory.getFilterByName(scope.fltr);
-             if (scope.login) {
-                 var t = _.find($rootScope.interventionsStats, function(e) {
-                     return e.login === scope.login;
-                 })
-                 if (t && t[scope.fltr]) {
-                     scope.total = t[scope.fltr].total;
-                 } else {
-                     scope.total = 0;
-                 }
-             }
+             findTotal();
              scope.url = scope.exFltr.url.length ? "/" + scope.exFltr.url : scope.exFltr.url;
              scope._login = scope.login ? ("#" + scope.login) : '';
          }
@@ -55,7 +60,7 @@
              title: '@',
          },
          link: function(scope, element, attrs) {
-            
+
          }
      };
  }]);
@@ -80,10 +85,9 @@
          restrict: 'E',
          templateUrl: '/Directives/side-bar.html',
          transclude: true,
-         scope: {
-
-         },
+         scope: {},
          link: function(scope, element, attrs) {
+             console.log("test")
              scope.sidebarSM = sidebarSM;
          }
      }
@@ -101,12 +105,14 @@
          scope: {
              title: '@',
              icon: '@',
-             isOpen: '@'
+             isOpen: '@',
+             openDefault: '&'
          },
          link: function(scope, element, attrs) {
+             scope.openDefault = scope.$eval(scope.openDefault)
+             scope.isOpen = scope.openDefault
              scope.toggleSidebar = function($event, $elem) {
                  var $ul = $(element).find('>ul')
-
                  if ($('#main-menu').width() > 200) {
                      if (scope.isOpen) {
                          $ul.velocity({

@@ -1,4 +1,4 @@
-angular.module('edison', ['browserify', 'ngMaterial', 'lumx', 'ngAnimate', 'xeditable', 'ngDialog', 'btford.socket-io', 'ngFileUpload', 'pickadate', 'ngRoute', 'ngResource', 'ngTable', 'ngMap'])
+angular.module('edison', ['browserify', 'ui.slimscroll', 'ngMaterial', 'lumx', 'ngAnimate', 'xeditable', 'ngDialog', 'btford.socket-io', 'ngFileUpload', 'pickadate', 'ngRoute', 'ngResource', 'ngTable', 'ngMap'])
     .config(function($mdThemingProvider) {
         "use strict";
         $mdThemingProvider.theme('default')
@@ -13,6 +13,7 @@ angular.module('edison').controller('MainController', function(tabContainer, $sc
         $rootScope.user = result;
         reloadStats();
     });
+    $scope.sidebarHeight = $("#main-menu-bg").height();
     $scope.config = config;
     $rootScope.loadingData = true;
     $rootScope.$on('$routeChangeSuccess', function() {
@@ -566,19 +567,24 @@ angular.module('edison').directive('select', function($interpolate) {
              count: '@'
          },
          link: function(scope, element, attrs) {
+
+             var findTotal = function() {
+                 if (scope.login) {
+                     var t = _.find($rootScope.interventionsStats, function(e) {
+                         return e.login === scope.login;
+                     })
+                     if (t && t[scope.fltr]) {
+                         scope.total = t[scope.fltr].total;
+                     } else {
+                         scope.total = 0;
+                     }
+                 }
+             }
+             $rootScope.$watch('interventionsStats', findTotal)
              scope._model = scope.model || 'intervention';
              var filtersFactory = new FiltersFactory(scope._model);
              scope.exFltr = filtersFactory.getFilterByName(scope.fltr);
-             if (scope.login) {
-                 var t = _.find($rootScope.interventionsStats, function(e) {
-                     return e.login === scope.login;
-                 })
-                 if (t && t[scope.fltr]) {
-                     scope.total = t[scope.fltr].total;
-                 } else {
-                     scope.total = 0;
-                 }
-             }
+             findTotal();
              scope.url = scope.exFltr.url.length ? "/" + scope.exFltr.url : scope.exFltr.url;
              scope._login = scope.login ? ("#" + scope.login) : '';
          }
@@ -601,7 +607,7 @@ angular.module('edison').directive('select', function($interpolate) {
              title: '@',
          },
          link: function(scope, element, attrs) {
-            
+
          }
      };
  }]);
@@ -626,10 +632,9 @@ angular.module('edison').directive('select', function($interpolate) {
          restrict: 'E',
          templateUrl: '/Directives/side-bar.html',
          transclude: true,
-         scope: {
-
-         },
+         scope: {},
          link: function(scope, element, attrs) {
+             console.log("test")
              scope.sidebarSM = sidebarSM;
          }
      }
@@ -647,12 +652,14 @@ angular.module('edison').directive('select', function($interpolate) {
          scope: {
              title: '@',
              icon: '@',
-             isOpen: '@'
+             isOpen: '@',
+             openDefault: '&'
          },
          link: function(scope, element, attrs) {
+             scope.openDefault = scope.$eval(scope.openDefault)
+             scope.isOpen = scope.openDefault
              scope.toggleSidebar = function($event, $elem) {
                  var $ul = $(element).find('>ul')
-
                  if ($('#main-menu').width() > 200) {
                      if (scope.isOpen) {
                          $ul.velocity({
@@ -810,7 +817,6 @@ angular.module('edison').factory('DataProvider', ['socket', '$rootScope', 'confi
         var _this = this;
         this.model = model;
         socket.on(this.model + 'ListChange', function(data) {
-            console.log(this.model + 'ListChange')
             _this.updateData(data);
 
         });
@@ -927,6 +933,7 @@ angular.module('edison').factory('Address', function() {
         this.lg = address.lg;
         this.code = address.code;
         this.etage = address.etage;
+        this.batiment = address.batiment;
     }
 
     Address.prototype.isLocalityAddress = function(place) {
@@ -3315,14 +3322,13 @@ var InterventionsController = function($timeout, tabContainer, FiltersFactory, C
 
 
     _this.rowRightClick = function($event, inter) {
-        _this.contextMenu.setPosition($event.pageX, $event.pageY)
-        _this.contextMenu.setData(inter);
-        _this.contextMenu.open();
         edisonAPI.intervention.get(inter.id, {
                 extend: true
             })
             .then(function(resp) {
                 _this.contextMenu.setData(resp.data);
+                _this.contextMenu.setPosition($event.pageX, $event.pageY)
+                _this.contextMenu.open();
             })
     }
 

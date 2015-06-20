@@ -55,14 +55,13 @@ var InterventionsController = function($timeout, tabContainer, FiltersFactory, C
 
 
     _this.rowRightClick = function($event, inter) {
-        _this.contextMenu.setPosition($event.pageX, $event.pageY)
-        _this.contextMenu.setData(inter);
-        _this.contextMenu.open();
         edisonAPI.intervention.get(inter.id, {
                 extend: true
             })
             .then(function(resp) {
                 _this.contextMenu.setData(resp.data);
+                _this.contextMenu.setPosition($event.pageX, $event.pageY)
+                _this.contextMenu.open();
             })
     }
 

@@ -80,6 +80,7 @@ app.post('/login', function(req, res) {
                 req.session.nom = user.nom;
                 req.session.prenom = user.prenom;
                 req.session.portable = user.portable;
+                req.session.service = user.service;
                 req.session.email = user.email;
                 req.session.pseudo = user.pseudo;
                 return res.redirect(req.body.url || '/');

@@ -32,12 +32,15 @@ gulp.task('scripts', function() {
 
 gulp.task('jsLibs', function() {
     console.log('hey')
-    jslibs = ['/jquery/dist/jquery.min.js',
+    jslibs = [
+        '/jquery/dist/jquery.min.js',
+        '/slimScroll/jquery.slimScroll.min.js',
         '/angular/angular.min.js',
         '/angular-route/angular-route.min.js',
         '/angular-resource/angular-resource.min.js',
         '/angular-animate/angular-animate.min.js',
         '/angular-aria/angular-aria.min.js',
+        '/angular-slimscroll/angular-slimscroll.js',
         '/ngDialog/js/ngDialog.min.js',
         '/angular-material/angular-material.js',
         '/socket.io/socket.io.js',
@@ -115,7 +118,7 @@ gulp.task('styles', function() {
         'front/assets/css/style.css',
         'front/assets/css/pages.min.css',
 
-        
+
         'front/bower_components/ng-table/dist/ng-table.css',
         'front/bower_components/angular-xeditable/xeditable.css',
         'front/bower_components/angular-material/angular-material.css',
@@ -145,7 +148,7 @@ gulp.task('styles', function() {
 gulp.task('watch', function() {
     gulp.watch(jssrc, ['scripts']);
     gulp.watch(jslibs, ['jsLibs']);
-    gulp.watch(['front/assets/css/*.css','front/bower_components/*/*.css','front/bower_components/*/*/*.css'], ['styles'])
+    gulp.watch(['front/assets/css/*.css', 'front/bower_components/*/*.css', 'front/bower_components/*/*/*.css'], ['styles'])
 });
 
 // Default Task

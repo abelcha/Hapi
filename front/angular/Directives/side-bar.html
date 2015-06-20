@@ -1,7 +1,6 @@
 <div id="main-menu" role="navigation">
-    ====>{{sidebarSM.display |json}}
     <div id="main-menu-inner">
-        <ul class="navigation" ng-transclude>
+        <ul  slimscroll="{height:900}" class="navigation" ng-transclude>
         </ul>
     </div>
     <ul ng-show="sidebarSM.display" id="mmc-ul" ng-class="{'mmc-dropdown-open-ul' : sidebarSM.display}" class="mmc-dropdown-delay animated fadeInLeft " style="top: 90.1909790039063px;">

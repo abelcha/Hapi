@@ -43,6 +43,7 @@ angular.module('edison').factory('Address', function() {
         this.lg = address.lg;
         this.code = address.code;
         this.etage = address.etage;
+        this.batiment = address.batiment;
     }
 
     Address.prototype.isLocalityAddress = function(place) {

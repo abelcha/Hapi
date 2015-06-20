@@ -36,10 +36,10 @@
             </div>
             <!-- / .navbar-inner -->
         </div>
-        <side-bar ng-if="user.login && interventionsStats">
-            <drop-down id="service-intervention" title="Service Intervention" icon="circle">
+        <side-bar ng-if="user.login && interventionsStats" >
+            <drop-down id="service-intervention" title="Service Intervention" icon="circle" open-default="user.service === 'INTERVENTION'">
                 <link fltr="i_all" icon="th-list" title="Toute les Interventions"></link>
-                <drop-down title="Mes Interventions" icon="calendar" is-open="true">
+                <drop-down title="Mes Interventions" icon="calendar" open-default="user.service === 'INTERVENTION'">
                     <link fltr="i_tall" icon="th-list" title="{{dateFormat}}" login="{{user.login}}"></link>
                     <link fltr="i_tenv" icon="th-list" login="{{user.login}}"></link>
                     <link fltr="i_apr" icon="th-list" login="{{user.login}}"></link>
@@ -95,7 +95,7 @@
                     <link fltr="d_ann" model="devis" icon="th-list" login="{{user.login}}"></link>
                 </drop-down>
             </drop-down>
-            <drop-down title="Service Partenariat" icon="circle">
+            <drop-down title="Service Partenariat" icon="circle" open-default="user.service === 'PARTENARIAT'">
                 <link fltr="a_all" icon="th-list" model="artisan" title="Tous les Artisans"></link>
                 <link fltr="a_arc" icon="th-list" model="artisan" title="Archivés"></link>
                 <link fltr="a_pot" icon="th-list" model="artisan" title="Potentiels"></link>
