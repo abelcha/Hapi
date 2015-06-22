@@ -4,6 +4,7 @@ angular.module('edison').factory('DataProvider', ['socket', '$rootScope', 'confi
         var _this = this;
         this.model = model;
         socket.on(this.model + 'ListChange', function(data) {
+            console.log('listchange')
             _this.updateData(data);
 
         });

@@ -1,5 +1,6 @@
-angular.module('edison').factory('fourniture', [function() {    
+angular.module('edison').factory('fourniture', [function() {
     "use strict";
+
     return {
         init: function(fourniture) {
             this.fourniture = fourniture;
@@ -26,8 +27,8 @@ angular.module('edison').factory('fourniture', [function() {
             }
         },
         add: function() {
-            console.log('add')
             this.fourniture.push({
+                bl: '0',
                 title: 'Fourniture',
                 fournisseur: 'ARTISAN',
                 quantite: 1,

@@ -1,7 +1,7 @@
 angular.module('edison')
-    .factory('Intervention', ['$location', '$window', 'LxNotificationService', 'dialog', 'edisonAPI', 'Devis', '$rootScope',
+    .factory('Intervention', ['$location', '$window', 'LxNotificationService', 'LxProgressService', 'dialog', 'edisonAPI', 'Devis', '$rootScope',
 
-        function($location, $window, LxNotificationService, dialog, edisonAPI, Devis, $rootScope) {
+        function($location, $window, LxNotificationService,LxProgressService, dialog, edisonAPI, Devis, $rootScope) {
             "use strict";
 
             var Intervention = function(data) {
@@ -142,7 +142,7 @@ angular.module('edison')
 
             Intervention.prototype.envoi = function(cb) {
                 var _this = this;
-                dialog.getFileAndText(_this, _this.files , function(text, file) {
+                dialog.getFileAndText(_this, _this.files, function(text, file) {
                     edisonAPI.intervention.envoi(_this.id, {
                         sms: text,
                         file: file
@@ -187,6 +187,39 @@ angular.module('edison')
                             cb(error.data);
                     })
             }
+            Intervention.prototype.fileUpload = function(file, cb) {
+                if (file) {
+                    LxProgressService.circular.show('#5fa2db', '#fileUploadProgress');
+                    edisonAPI.file.upload(file, {
+                        link: this.id || this.tmpID,
+                        model: 'intervention',
+                        type: 'fiche'
+                    }).success(function(resp) {
+                        LxProgressService.circular.hide();
+                        if (typeof cb === 'function')
+                            cb(null, resp);
+                    }).catch(function(err) {
+                        LxProgressService.circular.hide();
+                        if (typeof cb === 'function')
+                            cb(err);
+                    })
+                }
+            }
+
+            Intervention.prototype.editCB = function() {
+                var _this = this;
+                edisonAPI.intervention.getCB(this.id).success(function(resp) {
+                    _this.cb = resp;
+                }).catch(function(error) {
+                    LxNotificationService.error(error.data);
+                })
+            }
+            Intervention.prototype.reinitCB = function() {
+                this.cb = {
+                    number: 0
+                }
+            }
+
             return Intervention;
         }
     ]);

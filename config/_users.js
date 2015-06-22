@@ -69,7 +69,7 @@
      login: 'thomas_x',
      oldLogin: 'thomas',
      service: 'INTERVENTION',
-     root: true,
+     root: false,
      nom: 'xxx',
      pseudo: 'thomas',
      prenom: 'thomas',

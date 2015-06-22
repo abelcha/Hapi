@@ -813,6 +813,23 @@ module.exports = {
             short_name: "POT",
             color: 'blue'
         }
+    },
+    cardType: {
+        VS: {
+            long_name: "Visa",
+            short_name: "VS",
+        },
+        AE: {
+            long_name: "American Express",
+            short_name: "AE",
+        },
+        MC: {
+            long_name: "MasterCard",
+            short_name: "MC",
+        }
+    },
+    cardTypeArray:function() {
+        return[this.cardType.VS, this.cardType.AE, this.cardType.MC];
     }
 }
 

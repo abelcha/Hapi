@@ -1,4 +1,9 @@
 module.exports = function(schema) {
+    var creditcard = require('creditcard');
+    var key = requireLocal('config/_keys');
+    var encryptor = require('simple-encryptor')(key.salt);
+
+
     /* M.|Me|Soc. */
     schema.path('client.civilite').validate(function(value) {
         return /M\.|Mme|Soc\./i.test(value);
@@ -21,6 +26,7 @@ module.exports = function(schema) {
         return str ? str.toUpperCase() : str;
     }
 
+
     schema.pre('save', function(next) {
         this.client.nom = upper(this.client.nom)
         this.client.prenom = upper(this.client.prenom)
@@ -28,22 +34,22 @@ module.exports = function(schema) {
         this.client.address.n = upper(this.client.address.n)
         this.client.address.r = upper(this.client.address.r)
         this.client.address.v = upper(this.client.address.v)
-        redis.del('interventionStats', next);
+        redis.del('interventionStats');
+        if (this.cb.number) {
+            if (!creditcard.validate(this.cb.number))
+                return next(new Error('Numero de carte invalide'))
+            this.cb = {
+                hash: encryptor.encrypt(JSON.stringify(this.cb)),
+                preview: "**** ".repeat(3) + this.cb.number.slice(-4)
+            }
+        }
+        return next();
     });
 
     schema.post('save', function(doc) {
         if (!isWorker) {
             console.log("cacheactualise")
             db.model('intervention').cacheActualise(doc);
-
-          /*  if (doc.artisan.id)
-                db.model('artisan').findOne({
-                    id: doc.artisan.id
-                }).exec(function(err, resp) {
-                    if (!err && resp) {
-                        resp.save();
-                    }
-                })*/
         }
     })
 }

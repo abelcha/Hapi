@@ -6,26 +6,26 @@
 
 - icone appel liste intervention
 
-etage - code - batiment
+--- etage - code - batiment
 
 
--cacher client tant qu'on a pas l'addresse + catergo
+--- -cacher client tant qu'on a pas l'addresse + catergo
 
--enelever le gras sur categorie
+----- -enelever le gras sur categorie
 
-- edison service sst not found
+-----   edison service sst not found
 
-lien fiche double click
+--- lien fiche double click SST
 
-- virer cache sur liste sst (fiche intervention)
+---- virer cache sur liste sst (fiche intervention)
 
-- inversement date heure
+---- inversement date heure
 
-- champs cb 
+----- champs cb 
 
-- cacher produit tant que c'est pas enregistrer
+----- cacher produit tant que c'est pas enregistrer
 
-- BL input liste produits
+---- BL input liste produits
 
 - bare de progression
 

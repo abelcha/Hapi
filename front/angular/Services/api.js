@@ -56,6 +56,9 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
                     return result;
                 });
             },
+            getCB:function(id) {
+                return $http.get("/api/intervention/" + id + "/CB");
+            },
             save: function(params) {
                 return $http.post("/api/intervention", params);
             },

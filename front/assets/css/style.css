@@ -111,8 +111,8 @@ td[variable-length] {
     white-space: nowrap;
 }
 
-.select-style {
-    padding: 0;
+.select-style.text-field {
+    padding-top: 12px!important;
     margin: 0;
     top: 3px;
     border: 0px solid #ccc;
@@ -145,7 +145,7 @@ td[variable-length] {
 
 .select-style > label.selected {
     font-size: 9px;
-    top: 19px;
+    top: 0px!important;
 }
 
 .date-picker > label {
@@ -270,13 +270,13 @@ label.text-field__label,
 .table-striped>tbody>tr:nth-of-type(odd) {
     background-color: rgba(232, 232, 232, 0.75)!important;
 }
-@
+
 .text-field {
-    padding-top: 24px!important;
+    padding-top: 0px!important;
 }
 
 .text-field:not(.select-style)>label {
-    top: 0px!important;
+    top: -22px!important;
 }
 
 map.big-map {
@@ -285,4 +285,8 @@ map.big-map {
 
 #service-intervention>ul {
     margin-left: -19px;
+}
+
+.card.margin {
+    margin-bottom: 21px;
 }

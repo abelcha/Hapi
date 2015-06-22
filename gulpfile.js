@@ -58,7 +58,8 @@ gulp.task('jsLibs', function() {
         '/lumx/dist/lumx.js',
         '/ng-table/dist/ng-table.js',
         '/moment/min/moment.min.js',
-        '/moment/locale/fr.js'
+        '/moment/locale/fr.js',
+        '/angular-credit-cards/release/angular-credit-cards.js'
     ]
     jslibs = jslibs.map(function(e) {
         return 'front/bower_components' + e

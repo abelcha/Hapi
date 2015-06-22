@@ -44,7 +44,7 @@ module.exports = function(schema) {
             c: config.categories[e.categorie].order,
             n: e.client.civilite + ' ' + e.client.nom,
             a: e.artisan.nomSociete,
-            pa: e.prixAnnonce || undefined,
+            pa: e.prixAnnonce ||  undefined,
             da: d(e.date.ajout),
             di: d(e.date.intervention),
             ad: e.client.address.cp + ', ' + e.client.address.v
@@ -72,6 +72,10 @@ module.exports = function(schema) {
                     }
                     redis.set("interventionList", JSON.stringify(data), function() {
                         io.sockets.emit('interventionListChange', result);
+                        //sometimes it's too fast
+                        setTimeout(function() {
+                            io.sockets.emit('interventionListChange', result);
+                        }, 3000)
                         release();
                     });
                 }

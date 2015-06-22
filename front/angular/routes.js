@@ -33,7 +33,7 @@ angular.module('edison').controller('MainController', function(tabContainer, $sc
     };
 
     var reloadStats = function() {
-
+        console.log("reloadStats");
         edisonAPI.intervention.getStats()
             .success(function(result) {
                 $scope.userStats = _.find(result, function(e) {
@@ -46,6 +46,8 @@ angular.module('edison').controller('MainController', function(tabContainer, $sc
 
 
     $rootScope.$on('interventionListChange', reloadStats);
+    $rootScope.$on('devisListChange', reloadStats);
+    $rootScope.$on('artisanListChange', reloadStats);
 
     var initTabs = function(baseUrl, baseHash) {
         $scope.tabsInitialized = true;
@@ -221,32 +223,17 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
     "use strict";
     $routeProvider
         .when('/', {
-            resolve: {
-                interventions: getInterList,
-                artisans: getArtisanList
-            },
             redirectTo: '/intervention/list',
         })
         .when('/intervention/list', {
             templateUrl: "Pages/ListeInterventions/listeInterventions.html",
             controller: "InterventionsController",
             controllerAs: 'vm',
-            resolve: {
-                interventions: getInterList,
-                interventionsStats: getInterventionStats,
-                artisans: getArtisanList
-            }
         })
         .when('/intervention/list/:fltr', {
             templateUrl: "Pages/ListeInterventions/listeInterventions.html",
             controller: "InterventionsController",
             controllerAs: 'vm',
-            resolve: {
-                interventionsStats: getInterventionStats,
-                devis: getDevisList,
-                interventions: getInterList,
-                artisans: getArtisanList
-            }
         })
         .when('/intervention', {
             redirectTo: function(routeParams, path, params) {
@@ -270,19 +257,11 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
             templateUrl: "Pages/ListeDevis/listeDevis.html",
             controller: "ListeDevisController",
             controllerAs: 'vm',
-            resolve: {
-                interventions: getInterList,
-                devis: getDevisList,
-            }
         })
         .when('/devis/list/:fltr', {
             templateUrl: "Pages/ListeDevis/listeDevis.html",
             controller: "ListeDevisController",
             controllerAs: "vm",
-            resolve: {
-                interventions: getInterList,
-                devis: getDevisList,
-            }
         })
         .when('/devis', {
             redirectTo: function() {

@@ -3,7 +3,7 @@
         <canvas id="pie" class="chart chart-pie" data="data" labels="labels"></canvas>
         {{data}}
     </div> -->
-    <div class="shadow-box listeInterventions">
+    <div class="shadow-box listeInterventions" style="min-height: 700px;padding: 12px;">
         <table style="background:white;cursor:pointer" ng-table="vm.tableParams" class="table table-bordered table-hover table-hover table-striped" id="table-list" show-filter="true">
             <tbody id="tbody-list">
                 <tr data-id="{{inter.id}}" ng-repeat-start="inter in $data" ng-right-click="vm.rowRightClick($event, inter)" ng-click="vm.rowClick($event, inter, false)" ng-class="{success : vm.contextMenu.active && vm.contextMenu.data.id === inter.id}">

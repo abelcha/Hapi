@@ -1,4 +1,4 @@
-var InterventionCtrl = function($timeout, $rootScope, $scope, $location, $routeParams, dialog, fourniture, LxNotificationService, tabContainer, edisonAPI, Address, $q, mapAutocomplete, productsList, config, interventionPrm, artisans, Intervention, Map) {
+var InterventionCtrl = function($timeout, $rootScope, $scope, $location, $routeParams, dialog, fourniture, LxNotificationService, LxProgressService, tabContainer, edisonAPI, Address, $q, mapAutocomplete, productsList, config, interventionPrm, artisans, Intervention, Map) {
     "use strict";
 
     var _this = this;
@@ -97,7 +97,7 @@ var InterventionCtrl = function($timeout, $rootScope, $scope, $location, $routeP
     }
 
     $scope.callArtisan = function() {
-        intervention.callArtisan( function(err, resp) {
+        intervention.callArtisan(function(err, resp) {
             if (!err)
                 intervention.artisan.calls.unshift(resp)
         })
@@ -128,20 +128,12 @@ var InterventionCtrl = function($timeout, $rootScope, $scope, $location, $routeP
         $scope.commentText = "";
     }
 
-
     $scope.onFileUpload = function(file) {
-        if (file) {
-            edisonAPI.file.upload(file, {
-                link: intervention.id || intervention.tmpID,
-                model: 'intervention',
-                type: 'fiche'
-            }).success(function() {
-                $scope.fileUploadText = "";
-                $scope.loadFilesList();
-            })
-        }
+        intervention.fileUpload(file, function(err, resp) {
+            $scope.fileUploadText = "";
+            $scope.loadFilesList();
+        });
     }
-
 
     $scope.loadFilesList = function() {
         edisonAPI.intervention.getFiles(intervention.id || intervention.tmpID).then(function(result) {
@@ -195,7 +187,7 @@ var InterventionCtrl = function($timeout, $rootScope, $scope, $location, $routeP
         if (id_sst) {
             $q.all([
                 edisonAPI.artisan.get(id_sst, {
-                    cache: true
+                    cache: false
                 }),
                 edisonAPI.artisan.getStats(id_sst, {
                     cache: true
@@ -250,8 +242,6 @@ var InterventionCtrl = function($timeout, $rootScope, $scope, $location, $routeP
             intervention.absenceArtisan(_this.searchArtisans);
         }
     }
-
-
 }
 
 angular.module('edison').controller('InterventionController', InterventionCtrl);

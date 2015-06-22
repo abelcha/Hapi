@@ -11,6 +11,9 @@ module.exports = function(schema) {
             reject(str);
         }
     }
+
+
+
     schema.statics.save = function(req, res) {
         var updateInter = function(data) {
             return new Promise(function(resolve, reject) {

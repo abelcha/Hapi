@@ -141,8 +141,18 @@ module.exports = function(db) {
             ref: String,
             desc: String
         }],
+        cb: {
+            hash: String,
+            preview: String,
+            /* never clear*/
+            cardType: String,
+            number: String,
+            expMonth: Number,
+            expYear:Number,
+            cvc: Number,
+        },
         fourniture: [{
-            ref: String,
+            bl: String,
             pu: Number,
             quantite: Number,
             title: String,

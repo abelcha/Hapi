@@ -48,6 +48,9 @@ module.exports = function(schema) {
                     }
                     redis.set("devisList", JSON.stringify(data), function() {
                         io.sockets.emit('devisListChange', result);
+                        setTimeout(function() {
+                            io.sockets.emit('devisListChange', result);
+                        }, 3000)
                         release();
                     });
                 } else {

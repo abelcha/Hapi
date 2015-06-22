@@ -11,12 +11,14 @@
   "dependencies": {
     "MD5": "^1.2.1",
     "async": "^1.2.1",
+    "bcryptjs": "^2.1.0",
     "body-parser": "^1.13.0",
     "colors": "^1.1.0",
     "compression": "^1.5.0",
     "connect-redis-sessions": "^1.2.0",
     "cookie": "^0.1.3",
     "cookie-parser": "~1.3.3",
+    "creditcard": "^0.1.2",
     "cron-emitter": "^0.2.2",
     "cron-parser": "^0.6.2",
     "deep-diff": "^0.3.2",
@@ -44,6 +46,7 @@
     "request-promise": "^0.4.2",
     "rwlock": "^5.0.0",
     "sanitize-html": "^1.7.0",
+    "simple-encryptor": "^1.0.3",
     "socket.io": "^1.3.5",
     "uuid": "^2.0.1",
     "waitress": "^0.1.5"

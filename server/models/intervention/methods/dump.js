@@ -87,7 +87,7 @@
 
             if (d.cout_fourniture > 0)  {
                 rtn.fourniture.push({
-                    ref: "0",
+                    bl: "0",
                     title: "Inconnu",
                     fournisseur: d.fournisseur,
                     pu: d.cout_fourniture,
@@ -135,6 +135,9 @@
                 else {
                     rtn.status = 'ATT'
                 }
+            }
+            if (rtn.status === "INT" || rtn.status === "RGL" || rtn.status === 'PAY') {
+                rtn.date.verification = rtn.date.intervention;
             }
             /* FACTURE */
             rtn.reglementSurPlace = !d.fact;

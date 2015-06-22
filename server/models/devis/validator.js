@@ -23,8 +23,9 @@ module.exports = function(schema) {
 
     schema.post('save', function(doc) {
         if (!isWorker) {
-            db.model('devis').cacheActualise(doc);
-            db.model('intervention').stats().then();
+            redis.del('interventionStats', function() {
+                db.model('devis').cacheActualise(doc);
+            });
         }
     })
 
