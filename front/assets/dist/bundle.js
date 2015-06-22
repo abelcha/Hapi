@@ -351,7 +351,7 @@ FiltersFactory.prototype.list = {
             }
         },
         fn: function(inter) {
-            return inter.sav && inter.sav.length > 0;
+            return inter.litiges && inter.litiges.length > 0;
         }
     }, {
         short_name: 'i_litEnc',
@@ -455,7 +455,7 @@ module.exports = {
         title: "Envoyer",
         action: 'envoi',
         hide: function(inter) {
-            return inter.status == "APR" ||  inter.status === "ENV"
+            return inter.status != "APR" &&  inter.status !== "ANN"
         }
     }, {
         title: "Vérifier",
@@ -828,9 +828,20 @@ module.exports = {
             short_name: "MC",
         }
     },
-    cardTypeArray:function() {
-        return[this.cardType.VS, this.cardType.AE, this.cardType.MC];
-    }
+    cardTypeArray: function() {
+        return [this.cardType.VS, this.cardType.AE, this.cardType.MC];
+    },
+    artisanFiles: [
+        'contrat_2014',
+        'contrat',
+        'kbis',
+        'autofacturation',
+        'cni',
+        'assurance',
+        'rib',
+        'ursaff',
+        'autres'
+    ]
 }
 
 },{"lodash/collection/find":9}],5:[function(require,module,exports){

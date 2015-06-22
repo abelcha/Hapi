@@ -8,7 +8,6 @@ module.exports = function(schema) {
         .then(function(file) {
           var contentType = mime.lookup(file.extension);
           res.contentType(contentType);
-          console.log(file.data);
           res.send(file.data);
         }, reject)
     });

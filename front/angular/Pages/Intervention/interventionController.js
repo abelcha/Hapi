@@ -3,6 +3,7 @@ var InterventionCtrl = function($timeout, $rootScope, $scope, $location, $routeP
 
     var _this = this;
     _this.artisans = artisans.data;
+    console.log(_this.artisans)
     _this.config = config;
     _this.dialog = dialog;
     _this.autocomplete = mapAutocomplete;
@@ -180,6 +181,12 @@ var InterventionCtrl = function($timeout, $rootScope, $scope, $location, $routeP
     }
     _this.searchArtisans();
 
+    $scope.$watch(function() {
+        return intervention.client.civilite
+    }, function(newVal, oldVal) {
+        if (oldVal !== newVal)
+            intervention.tva = 20;
+    })
 
     $scope.$watch(function() {
         return intervention.sst;
@@ -235,6 +242,7 @@ var InterventionCtrl = function($timeout, $rootScope, $scope, $location, $routeP
             });
         }
     }
+
 
 
     $scope.sstAbsence = function(id) {

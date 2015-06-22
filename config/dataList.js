@@ -355,7 +355,18 @@ module.exports = {
             short_name: "MC",
         }
     },
-    cardTypeArray:function() {
-        return[this.cardType.VS, this.cardType.AE, this.cardType.MC];
-    }
+    cardTypeArray: function() {
+        return [this.cardType.VS, this.cardType.AE, this.cardType.MC];
+    },
+    artisanFiles: [
+        'contrat_2014',
+        'contrat',
+        'kbis',
+        'autofacturation',
+        'cni',
+        'assurance',
+        'rib',
+        'ursaff',
+        'autres'
+    ]
 }

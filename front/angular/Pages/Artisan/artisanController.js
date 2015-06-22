@@ -47,5 +47,14 @@ var ArtisanCtrl = function($rootScope, $location, $routeParams, LxNotificationSe
             }
         })
     }
+
+    _this.addComment = function() {
+        artisan.comments.push({
+            login: $rootScope.user.login,
+            text: _this.commentText,
+            date: new Date()
+        })
+        _this.commentText = "";
+    }
 }
 angular.module('edison').controller('ArtisanController', ArtisanCtrl);

@@ -33,14 +33,6 @@
                                 </lx-text-field>
                             </div>
                         </div>
-                    </div>
-                </div>
-                <br>
-                <artisan-categorie model="vm.data"></artisan-categorie>
-                <br>
-                <div class="card" style="padding:20px">
-                    <strong class="fs-headline display-block">Representant</strong>
-                    <div class="p+">
                         <div class="row">
                             <div class="col-sm-2">
                                 <div class="select-style text-field">
@@ -80,6 +72,8 @@
                     </div>
                 </div>
             </div>
+            <br>
+            <artisan-categorie model="vm.data"></artisan-categorie>
             <br>
             <div class="card" style="padding:20px">
                 <div class="p+">
@@ -138,14 +132,111 @@
                     </div>
                 </div>
             </div>
+            <br>
+            <div class="row" style="margin:0">
+                <div class="col-sm-6" style="padding-left:0">
+                    <div class="card" id="fileUpload">
+                        <div class="p+">
+                            <strong class="fs-headline display-block">Documents</strong>
+                            <span class="fs-subhead tc-black-2 display-block">Documents</span>
+                            <div id="fileUploadProgress"></div>
+                            <div class="data-table-container">
+                                <table class="data-table data-table--has-primary data-table--has-secondary">
+                                    <thead>
+                                        <tr>
+                                            <th style="font-weight:bold">Nom</th>
+                                            <th style="font-weight:bold">Info</th>
+                                            <th style="font-weight:bold">Voir</th>
+                                            <th style="font-weight:bold">Ajouté</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="products data-table__clickable-row" ng-repeat="file in vm.config.artisanFiles">
+                                            <td>
+                                                <span>{{file}}</span>
+                                            </td>
+                                            <td>
+                                                 <span class="display-block fs-body-1 tc-black-2" 
+                                                 ng-if="vm.data.document[file]">
+                                                 {{vm.data.document[file].date | date:"dd/MM/yy"}}
+                                                 {{vm.data.document[file].login}}</span>
+                                            </td>
+                                            <td>
+                                                 <button ng-if="vm.data.document[file]" class="btn--no-conflicts btn--m btn--green  btn--raised" lx-ripple>Voir</button>
+                                            </td>
+                                              <td>
+                                                 <button class="btn--no-conflicts btn--m btn--blue  btn--raised" lx-ripple>Upload</button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                           <!--  <ul class="list mt++" style="padding-bottom:20px;margin-left: 0px">
+                                <li class="list-row" style="cursor:pointer" ng-repeat="file in vm.config.artisanFiles">
+                                    <div class="list-row__content" ng-if="vm.data.document[file]">
+                                        <a target="_blank"> <span style="color:green" class="display-block">{{file}}</span></a>
+                                        <span class="display-block fs-body-1 tc-black-2">{{vm.data.document[file].date | date:"dd/MM/yy hh:ss"}} - {{vm.data.document[file].login}}</span>
+                                    </div>
+                                    <div class="list-row__content" ng-if="!vm.data.document[file]">
+                                        <a target="_blank"> <span class="display-block">{{file}}</span></a>
+                                    </div>
+                                </li>
+                            </ul> -->
+                        </div>
+                    </div>
+                    <!--  <div class="card__actions">
+                        <button ng-click="clickTrigger('.input-file__input')" class="btn--no-conflicts btn--m btn--blue  btn--raised" lx-ripple>Upload</button>
+                        <lx-file-input style="display:none" id="fileInput" label="Upload" value="fileUploadText" change="onFileUpload(e)"></lx-file-input>
+                    </div> -->
+                </div>
+                <div class="col-sm-6" style="padding-right:0">
+                    <div class="card margin">
+                        <div class="p+">
+                            <strong class="fs-headline display-block">Commentaires</strong>
+                            <span class="fs-subhead tc-black-2 display-block">Lorem Ipsum</span>
+                            <div class="paragraph fs-body-1 mt+" style="height:100%">
+                                <ul style="padding-bottom:20px;margin-left: 0px;">
+                                    <li class="list-row" ng-repeat="com in vm.data.comments | reverse">
+                                        <div class="list-row__content">
+                                            <span class="display-block">{{com.text}}</span>
+                                            <span class="display-block fs-body-1 tc-black-2">{{com.date  |  date:"dd/MM/yy"}} - {{com.login}}</span>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="card__actions">
+                            <input style="border: 0;width:100%" type="text" placeholder="Commentaire..." ng-model="vm.commentText" ng-enter="vm.addComment()">
+                        </div>
+                    </div>
+                </div>
+                <!--                 <div class="card margin" style="width:48%;float:right">
+                    <div class="p+" s>
+                        <strong class="fs-headline display-block">Commentaires</strong>
+                        <span class="fs-subhead tc-black-2 display-block">Lorem Ipsum</span>
+                        <div class="paragraph fs-body-1 mt+" style="height:230px;" slimscroll="{height:230}">
+                            <ul style="padding-bottom:20px;margin-left: 0px;">
+                                <li class="list-row" ng-repeat="com in vm.data.comments | reverse">
+                                    <div class="list-row__content">
+                                        <span class="display-block">{{com.text}}</span>
+                                        <span class="display-block fs-body-1 tc-black-2">{{com.date  |  date:"dd/MM/yy"}} - {{com.login}}</span>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="card__actions">
+                        <input style="border: 0;width:100%" type="text" placeholder="Commentaire..." ng-model="commentText" ng-enter="addComment()">
+                    </div>
+                </div> -->
+            </div>
             <div class="fab" style="float: right;position: fixed;right: 70px;z-index: 999;top: 87%;">
                 <button ng-click="vm.saveArtisan({})" class="fab__primary btn--no-conflicts btn--xl btn--blue btn--fab" lx-ripple lx-tooltip="Enregistrer" tooltip-position="top">
                     <i class="mdi" ng-class="vm.data.id ? 'mdi-camera-iris' : 'mdi-plus'"></i>
                     <i class="mdi mdi-checkbox-marked-circle-outline"></i>
                 </button>
                 <div class="fab__actions fab__actions--left">
-                   
-                    <button  ng-click="vm.saveArtisan({contrat:true, signe:true})" class="btn--no-conflicts btn--l btn--black btn--fab" lx-ripple lx-tooltip="Contrat Signé" tooltip-position="top"><i class="fa fa-send"></i></button>
+                    <button ng-click="vm.saveArtisan({contrat:true, signe:true})" class="btn--no-conflicts btn--l btn--black btn--fab" lx-ripple lx-tooltip="Contrat Signé" tooltip-position="top"><i class="fa fa-send"></i></button>
                     <button ng-click="vm.saveArtisan({contrat:true})" class="btn--no-conflicts btn--l btn--black btn--fab" lx-ripple lx-tooltip="Envoyer Contrat" tooltip-position="top"><i class="fa fa-send-o"></i></button>
                 </div>
             </div>

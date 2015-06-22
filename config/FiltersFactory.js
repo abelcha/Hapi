@@ -350,7 +350,7 @@ FiltersFactory.prototype.list = {
             }
         },
         fn: function(inter) {
-            return inter.sav && inter.sav.length > 0;
+            return inter.litiges && inter.litiges.length > 0;
         }
     }, {
         short_name: 'i_litEnc',

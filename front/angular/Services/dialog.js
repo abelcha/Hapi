@@ -112,11 +112,13 @@ angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', 'config', 
                         sms += data.client.telephone.tel2 ? "ou au " + data.client.telephone.tel2 : ""
                         return sms + ".\nEdison Services."
                     }
-                    $scope.xfiles = _.clone(files || []);
-                    $scope.xfiles.push({
-                        _id: 'devis',
-                        name: 'devis.pdf'
-                    })
+                    $scope.xfiles = _.clone(files ||  []);
+                    if (data.produits && data.produits.length)
+                        $scope.xfiles.push({
+                            _id: 'devis',
+                            name: 'devis.pdf'
+                        })
+                    console.log(files)
                     $scope.smsText = getSMS();
                     $scope.answer = function(cancel) {
                         $mdDialog.hide();

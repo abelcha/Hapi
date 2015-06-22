@@ -62,7 +62,7 @@ module.exports = {
         title: "Envoyer",
         action: 'envoi',
         hide: function(inter) {
-            return inter.status == "APR" ||  inter.status === "ENV"
+            return inter.status != "APR" &&  inter.status !== "ANN"
         }
     }, {
         title: "Vérifier",

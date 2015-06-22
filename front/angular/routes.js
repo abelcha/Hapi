@@ -33,7 +33,6 @@ angular.module('edison').controller('MainController', function(tabContainer, $sc
     };
 
     var reloadStats = function() {
-        console.log("reloadStats");
         edisonAPI.intervention.getStats()
             .success(function(result) {
                 $scope.userStats = _.find(result, function(e) {
@@ -282,19 +281,11 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
             templateUrl: "Pages/ListeArtisan/listeArtisan.html",
             controller: "ListeArtisanController",
             controllerAs: 'vm',
-            resolve: {
-                interventions: getInterList,
-                artisan: getArtisanList,
-            }
         })
         .when('/artisan/list/:fltr', {
             templateUrl: "Pages/ListeArtisan/listeArtisan.html",
             controller: "ListeArtisanController",
             controllerAs: "vm",
-            resolve: {
-                interventions: getInterList,
-                artisan: getArtisanList,
-            }
         })
         .when('/artisan', {
             redirectTo: function() {

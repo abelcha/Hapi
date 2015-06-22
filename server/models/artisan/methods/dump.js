@@ -58,6 +58,26 @@ module.exports = function(schema) {
                 rtn.categories.push(e.short_name);
             }
         })
+        rtn.document = {};
+        _.each(config.artisanFiles, function(file) {
+            if (d[file]) {
+                rtn.document[file] = {
+                    file: d[file],
+                    date: rtn.date.ajout,
+                    login: 'yohann_r'
+                }
+            }
+        })
+        rtn.comments = [];
+        _.each(d.coms, function(e) {
+            rtn.comments.push({
+                login:e.ajoute_par,
+                date:new Date(parseInt(e.t_stamp * 1000)),
+                text:e.comment
+            })
+        })
+        console.log(rtn.id, rtn.comments)
+
         return rtn;
     }
 

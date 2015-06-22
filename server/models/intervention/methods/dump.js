@@ -121,6 +121,10 @@
                 });
             }
 
+            if (rtn.status === "INT") {
+                rtn.date.verification = rtn.date.intervention || rtn.date.ajout;
+            }
+
             if (rtn.status === 'ENC') {
 
                 rtn.status = 'ENV';
@@ -136,9 +140,7 @@
                     rtn.status = 'ATT'
                 }
             }
-            if (rtn.status === "INT" || rtn.status === "RGL" || rtn.status === 'PAY') {
-                rtn.date.verification = rtn.date.intervention;
-            }
+
             /* FACTURE */
             rtn.reglementSurPlace = !d.fact;
 
@@ -157,6 +159,8 @@
             rtn.prixAnnonce = d.prix_ht_annonce;
             rtn.prixFinal = d.prix_ht_final;
 
+
+            //return null;
 
             if (d.fact === true) {
                 rtn.facture = {

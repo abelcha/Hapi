@@ -102,6 +102,47 @@ module.exports = function(db) {
             },
             tel2: String
         },
-        archive: Boolean
+        document: {
+            contrat: {
+                file: String,
+                date: Date,
+                login: String
+            },
+            kbis: {
+                file: String,
+                date: Date,
+                login: String
+            },
+            cni: {
+                file: String,
+                date: Date,
+                login: String
+            },
+            autre: {
+                file: String,
+                date: Date,
+                login: String
+            },
+            assurance: {
+                file: String,
+                date: Date,
+                login: String
+            },
+            rib: {
+                file: String,
+                date: Date,
+                login: String
+            },
+            ursaff: {
+                file: String,
+                date: Date,
+                login: String
+            },
+        },
+        comments: [{
+            login: String,
+            text: String,
+            date: Date
+        }],
     });
 }

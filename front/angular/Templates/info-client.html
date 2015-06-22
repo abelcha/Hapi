@@ -8,7 +8,7 @@
                     <div class="col-sm-2">
                         <div class="select-style text-field">
                             <select ng-model="client.civilite" ng-options="civ.short_name as civ.long_name for civ in config.civilites">
-                            </select>
+                            </select ng-change="civiliteChange()">
                             <label ng-class="{'selected' : client.civilite}">Civilité</label>
                         </div>
                     </div>

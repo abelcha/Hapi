@@ -72,8 +72,9 @@
         <span style="width: 110px;float: left;padding-bottom: 7px;">
                          <select class="form-control" ng-model="data.tva" ng-options="tva.short_name as tva.long_name for tva in config.tva">
                             </select></span>
-        <span style="float:right;width:25%">
-                             <button class="btn--no-conflicts btn--m btn--black btn--flat" lx-ripple> TOTAL HT : {{produits.total() | currency:''}} €  -  TTC : {{produits.total() * (data.tva / 100 + 1) | currency:''}} €</button>
+        <span style="float:right;width:30%">
+                             <button class="btn--no-conflicts btn--m btn--black btn--flat" lx-ripple>
+                             <h4 style="margin-top: 7px;"> TOTAL HT : {{produits.total() | currency:''}} €  -  TTC : {{produits.total() * (data.tva / 100 + 1) | currency:''}} €</h4> </button>
                         </span>
     </div>
 </div>
