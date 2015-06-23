@@ -33,9 +33,6 @@ var InterventionsController = function($timeout, tabContainer, FiltersFactory, C
             dataProvider.setData(resp);
         }
         dataProvider.applyFilter(currentFilter, _this.tab.hash, customFilter);
-        if (_this.recap) {
-            _this.recapData = dataProvider.filteredData
-        }
         var tableParameters = {
             page: 1, // show first page
             total: dataProvider.filteredData.length,

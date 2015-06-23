@@ -84,6 +84,9 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
             }
         },
         artisan: {
+            extendedStats:function(id) {
+                return $http.get('/api/artisan/' + id + "/extendedStats")
+            },
             save: function(params) {
                 return $http.post("/api/artisan", params);
             },

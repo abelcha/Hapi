@@ -388,44 +388,64 @@ angular.module('edison').directive('artisanRecap', function(edisonAPI, config, $
         replace: true,
         templateUrl: '/Directives/artisan-recap.html',
         scope: {
-            data: '=',
-            recap: "=",
+            id: "=",
         },
         link: function(scope, element, attrs) {
-            console.log('==>', scope.data);
-            var svg = dimple.newSvg("#chartContainer", 400, 200);
-            var myChart = new dimple.chart(svg, [{
-                Month:'Jan-11',
-                UnitSales:122,
-                Channel:"sweg"
+            console.log('-->', scope.id)
+            edisonAPI.artisan.extendedStats(scope.id).success(function(resp) {
+                var svg = dimple.newSvg("#chartContainer", 600, 200);
+                var myChart = new dimple.chart(svg, resp);
+                myChart.defaultColors = [
+                    new dimple.color("#4CAF50"),//RGL
+                    new dimple.color("#F44336"),//ANN
+                    new dimple.color("#FDD835"),//ATT
+                    new dimple.color("#F44336"),//ENV
+                    new dimple.color("#0091EA"),//PAY
+                    new dimple.color("black"),
+                ];
+                myChart.setBounds(60, 30, 380, 120)
+                var x = myChart.addCategoryAxis("x", "date");
+                x.addOrderRule("dt");
+                myChart.addMeasureAxis("y", "total");
+                myChart.addSeries("status", dimple.plot.bar);
+                myChart.addLegend(60, 10, 410, 20, "right");
+                myChart.draw();
+            })
 
-            },
-            {
-                Month:'Jan-11',
-                UnitSales:111,
-                Channel:"koo"
-
-            },
-            {
-                Month:'Jan-12',
-                UnitSales:112,
-                Channel:"sweg"
-            },
-            {
-                Channel:"koo",
-                Month:'Jan-12',
-                UnitSales:222,
-            }]);
-            myChart.setBounds(60, 30, 380, 120)
-            var x = myChart.addCategoryAxis("x", "Month");
-            x.addOrderRule("Date");
-            myChart.addMeasureAxis("y", "UnitSales");
-            myChart.addSeries("Channel", dimple.plot.bar);
-            myChart.addLegend(60, 10, 510, 20, "right");
-            myChart.draw();
         }
     };
 });
+
+var x = function() {
+
+    var svg = dimple.newSvg("#chartContainer", 400, 200);
+    var myChart = new dimple.chart(svg, [{
+        Month: 'Jan-11',
+        UnitSales: 122,
+        Channel: "sweg"
+
+    }, {
+        Month: 'Jan-11',
+        UnitSales: 111,
+        Channel: "koo"
+
+    }, {
+        Month: 'Jan-12',
+        UnitSales: 112,
+        Channel: "sweg"
+    }, {
+        Channel: "koo",
+        Month: 'Jan-12',
+        UnitSales: 222,
+    }]);
+    myChart.setBounds(60, 30, 380, 120)
+    var x = myChart.addCategoryAxis("x", "Month");
+    x.addOrderRule("Date");
+    myChart.addMeasureAxis("y", "UnitSales");
+    myChart.addSeries("Channel", dimple.plot.bar);
+    myChart.addLegend(60, 10, 510, 20, "right");
+    myChart.draw();
+}
 
  angular.module('edison').directive('box', [function() {
      "use strict";
@@ -1077,6 +1097,9 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
             }
         },
         artisan: {
+            extendedStats:function(id) {
+                return $http.get('/api/artisan/' + id + "/extendedStats")
+            },
             save: function(params) {
                 return $http.post("/api/artisan", params);
             },
@@ -3497,9 +3520,6 @@ var InterventionsController = function($timeout, tabContainer, FiltersFactory, C
             dataProvider.setData(resp);
         }
         dataProvider.applyFilter(currentFilter, _this.tab.hash, customFilter);
-        if (_this.recap) {
-            _this.recapData = dataProvider.filteredData
-        }
         var tableParameters = {
             page: 1, // show first page
             total: dataProvider.filteredData.length,
