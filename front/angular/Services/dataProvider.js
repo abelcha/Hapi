@@ -16,10 +16,6 @@ angular.module('edison').factory('DataProvider', ['socket', '$rootScope', 'confi
         this.data[this.model] = data;
     };
 
-    DataProvider.prototype.applyCustomFilter = function() {
-
-    }
-
 
     DataProvider.prototype.rowFilterFactory = function(filter, hash) {
         if (!filter && hash) {
@@ -39,12 +35,10 @@ angular.module('edison').factory('DataProvider', ['socket', '$rootScope', 'confi
         }
     }
 
-    DataProvider.prototype.applyFilter = function(filter, hash) {
-        console.time("interFilter")
+    DataProvider.prototype.applyFilter = function(filter, hash, customFilter) {
         this.filteredData = this.getData();
-        if (this.getData() && (filter || hash)) {
-            var filterFunction = this.rowFilterFactory(filter, hash)
-            this.filteredData = _.filter(this.getData(), filterFunction);
+        if (this.getData() && (filter || hash || customFilter)) {
+            this.filteredData = _.filter(this.getData(), customFilter || this.rowFilterFactory(filter, hash));
         }
         console.timeEnd("interFilter")
 

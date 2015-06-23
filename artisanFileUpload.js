@@ -60,8 +60,39 @@ app.use(require('connect-redis-sessions')({
     }
 }))
 
+var _ = require('lodash')
 
-db.model('document').find().exec(function(err, resp) {
+var glob = require("glob")
+
+var files = glob.sync("./artisanFiles/*")
+var path = require('path')
+var fs = require('fs.extra');
+var mkdirp = require('mkdirp')
+
+_.each(files, function(e, k) {
+    var x = glob.sync([e, '*'].join('/'));
+    _.each(x, function(z) {
+        /*        var f = {
+                    data: fs.readFileSync(z),
+                    extension: path.extname(),
+                    fileName: z
+                }*/
+        var split = z.split('_');
+        var id = parseInt(split[split.length - 1].split('.')[0]);
+        if (!_.isNaN(id)) {
+            mkdirp.sync('./V2/' + id);
+            //console.log(id, e.split('/')[e.split('/').length - 1], z);
+            var filePath = './V2/' + id + '/' + e.split('/')[e.split('/').length - 1] + path.extname(z)
+            console.log(z, filePath);
+            fs.copy(z, filePath, function(err) {
+                console.log('->', err)
+            })
+        }
+    })
+})
+//process.exit();
+/*db.model('document').find().exec(function(err, resp) {
     console.log(err, resp);
 process.exit();
 })
+*/

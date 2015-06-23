@@ -171,23 +171,9 @@
                                     </tbody>
                                 </table>
                             </div>
-                           <!--  <ul class="list mt++" style="padding-bottom:20px;margin-left: 0px">
-                                <li class="list-row" style="cursor:pointer" ng-repeat="file in vm.config.artisanFiles">
-                                    <div class="list-row__content" ng-if="vm.data.document[file]">
-                                        <a target="_blank"> <span style="color:green" class="display-block">{{file}}</span></a>
-                                        <span class="display-block fs-body-1 tc-black-2">{{vm.data.document[file].date | date:"dd/MM/yy hh:ss"}} - {{vm.data.document[file].login}}</span>
-                                    </div>
-                                    <div class="list-row__content" ng-if="!vm.data.document[file]">
-                                        <a target="_blank"> <span class="display-block">{{file}}</span></a>
-                                    </div>
-                                </li>
-                            </ul> -->
                         </div>
                     </div>
-                    <!--  <div class="card__actions">
-                        <button ng-click="clickTrigger('.input-file__input')" class="btn--no-conflicts btn--m btn--blue  btn--raised" lx-ripple>Upload</button>
-                        <lx-file-input style="display:none" id="fileInput" label="Upload" value="fileUploadText" change="onFileUpload(e)"></lx-file-input>
-                    </div> -->
+
                 </div>
                 <div class="col-sm-6" style="padding-right:0">
                     <div class="card margin">
@@ -210,25 +196,6 @@
                         </div>
                     </div>
                 </div>
-                <!--                 <div class="card margin" style="width:48%;float:right">
-                    <div class="p+" s>
-                        <strong class="fs-headline display-block">Commentaires</strong>
-                        <span class="fs-subhead tc-black-2 display-block">Lorem Ipsum</span>
-                        <div class="paragraph fs-body-1 mt+" style="height:230px;" slimscroll="{height:230}">
-                            <ul style="padding-bottom:20px;margin-left: 0px;">
-                                <li class="list-row" ng-repeat="com in vm.data.comments | reverse">
-                                    <div class="list-row__content">
-                                        <span class="display-block">{{com.text}}</span>
-                                        <span class="display-block fs-body-1 tc-black-2">{{com.date  |  date:"dd/MM/yy"}} - {{com.login}}</span>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="card__actions">
-                        <input style="border: 0;width:100%" type="text" placeholder="Commentaire..." ng-model="commentText" ng-enter="addComment()">
-                    </div>
-                </div> -->
             </div>
             <div class="fab" style="float: right;position: fixed;right: 70px;z-index: 999;top: 87%;">
                 <button ng-click="vm.saveArtisan({})" class="fab__primary btn--no-conflicts btn--xl btn--blue btn--fab" lx-ripple lx-tooltip="Enregistrer" tooltip-position="top">

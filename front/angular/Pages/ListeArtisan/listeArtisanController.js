@@ -7,7 +7,6 @@ var ArtisanController = function($timeout, tabContainer, LxProgressService, Filt
     }).success(function(resp) {
 
         _this.tab = tabContainer.getCurrentTab();
-        _this.recap = $routeParams.artisanID;
         var filtersFactory = new FiltersFactory('artisan')
         var currentFilter;
         if ($routeParams.fltr) {

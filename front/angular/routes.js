@@ -224,6 +224,11 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
         .when('/', {
             redirectTo: '/intervention/list',
         })
+        .when('/artisan/:sstID/recap', {
+            templateUrl: "Pages/ListeInterventions/listeInterventions.html",
+            controller: "InterventionsController",
+            controllerAs: 'vm',
+        })
         .when('/intervention/list', {
             templateUrl: "Pages/ListeInterventions/listeInterventions.html",
             controller: "InterventionsController",
@@ -332,6 +337,9 @@ angular.module('edison').run(function(editableOptions) {
         }
     }
     $http.get("/Directives/dropdown-row.html", {
+        cache: $templateCache
+    });
+      $http.get("/Directives/artisan-recap.html", {
         cache: $templateCache
     });
     $http.get("/Templates/artisan-categorie.html", {

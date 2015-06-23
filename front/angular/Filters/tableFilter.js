@@ -5,11 +5,13 @@ angular.module("edison").filter('tableFilter', ['config', function(config) {
         return _.deburr(str).toLowerCase();
     }
 
-    var compare = function(a, b) {
+    var compare = function(a, b, strictMode) {
         if (typeof a === "string") {
             return clean(a).includes(b);
-        } else {
+        } else if (!strictMode){
             return clean(String(a)).startsWith(b);
+        } else {
+            return a === parseInt(b);
         }
     }
     var compareCustom = function(key, data, input) {
@@ -22,15 +24,9 @@ angular.module("edison").filter('tableFilter', ['config', function(config) {
             return compare(cell, input);
         }
         return true;
-        /*        if (key === '_categorie') {
-                    console.log("yaycat")
-                    return 'Plomberie'
-                }
-                console.log(cellData);
-                return cellData*/
     }
 
-    return function(dataContainer, inputs, sec) {
+    return function(dataContainer, inputs, strictMode) {
         var rtn = [];
         console.time('fltr')
         inputs = _.mapValues(inputs, clean);
@@ -45,7 +41,7 @@ angular.module("edison").filter('tableFilter', ['config', function(config) {
                                 return false
                             }
                         } else {
-                            if (!compare(data[k], input)) {
+                            if (!compare(data[k], input, strictMode)) {
                                 psh = false;
                                 return false
                             }

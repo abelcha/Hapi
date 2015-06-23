@@ -70,7 +70,6 @@ module.exports = function(schema) {
     schema.statics.stats = function(req, res) {
         return new Promise(function(resolve, reject) {
             redis.get('interventionStats', function(err, resp) {
-                console.log('cache=>', !err && resp && !_.get(req, 'query.cache'))
                 if (!err && resp && !_.get(req, 'query.cache'))
                     return resolve(JSON.parse(resp))
                 var everydayOP = {

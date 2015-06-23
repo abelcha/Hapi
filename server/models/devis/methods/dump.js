@@ -47,6 +47,8 @@
             client.telephone = {};
             if (d.tel1)
                 client.telephone.tel1 = d.tel1.replace(/[^0-9]/g, '');
+            else 
+                client.telephone.tel1 = '0101010101'
             if (d.tel2)
                 client.telephone.tel2 = d.tel2.replace(/[^0-9]/g, '');
             /* COMMENTS */
