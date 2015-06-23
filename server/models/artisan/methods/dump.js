@@ -58,10 +58,12 @@ module.exports = function(schema) {
                 rtn.categories.push(e.short_name);
             }
         })
+        var path = require("path")
         rtn.document = {};
         _.each(config.artisanFiles, function(file) {
             if (d[file]) {
                 rtn.document[file] = {
+                    extension:path.extname(d[file]),
                     file: d[file],
                     date: rtn.date.ajout,
                     login: 'yohann_r'
@@ -76,8 +78,6 @@ module.exports = function(schema) {
                 text:e.comment
             })
         })
-        console.log(rtn.id, rtn.comments)
-
         return rtn;
     }
 

@@ -59,6 +59,8 @@ angular.module('edison')
                             cb(error.data)
                     });
             };
+
+
             Artisan.prototype.envoiContrat = function(cb) {
                 console.log("envoi")
                     /*  var _this = this;

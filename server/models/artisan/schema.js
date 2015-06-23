@@ -105,36 +105,43 @@ module.exports = function(db) {
         document: {
             contrat: {
                 file: String,
+                extension:String,
                 date: Date,
                 login: String
             },
             kbis: {
                 file: String,
+                extension:String,
                 date: Date,
                 login: String
             },
             cni: {
                 file: String,
+                extension:String,
                 date: Date,
                 login: String
             },
             autre: {
                 file: String,
+                extension:String,
                 date: Date,
                 login: String
             },
             assurance: {
                 file: String,
+                extension:String,
                 date: Date,
                 login: String
             },
             rib: {
                 file: String,
+                extension:String,
                 date: Date,
                 login: String
             },
             ursaff: {
                 file: String,
+                extension:String,
                 date: Date,
                 login: String
             },
