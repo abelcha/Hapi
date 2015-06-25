@@ -1,38 +1,32 @@
 var InterventionsController = function($timeout, tabContainer, FiltersFactory, ContextMenu, LxProgressService, edisonAPI, DataProvider, $routeParams, $location, $q, $rootScope, $filter, config, ngTableParams) {
     "use strict";
     var _this = this;
-
+    var currentFilter;
+    var dataProvider = new DataProvider('intervention');
+    var filtersFactory = new FiltersFactory('intervention')
+    var currentHash = $location.hash();
+    if ($routeParams.fltr) {
+        currentFilter = filtersFactory.getFilterByUrl($routeParams.fltr)
+    }
+    var title = currentFilter ? currentFilter.long_name : "Interventions";
     _this.recap = $routeParams.sstID ? parseInt($routeParams.sstID) : false;
 
+
     LxProgressService.circular.show('#5fa2db', '#globalProgress');
-    edisonAPI.intervention.list({
-        cache: true
-    }).success(function(resp) {
+    dataProvider.init(function(err, resp) {
         _this.tab = tabContainer.getCurrentTab();
-        var filtersFactory = new FiltersFactory('intervention')
-        var currentFilter;
-        if ($routeParams.fltr) {
-            currentFilter = filtersFactory.getFilterByUrl($routeParams.fltr)
-        }
-        var currentHash = $location.hash();
-        var title = currentFilter ? currentFilter.long_name : "Interventions";
         _this.tab.setTitle(title, currentHash);
         _this.tab.hash = currentHash;
         _this.config = config;
 
         if (_this.recap) {
-            var customFilter = function(inter) {
+            _this.customFilter = function(inter) {
                 return inter.ai === _this.recap;
             }
             _this.tab.setTitle('Recap ' + _this.recap)
         }
 
-        var dataProvider = new DataProvider('intervention');
-        if (!dataProvider.isInit()) {
-            console.log("not init")
-            dataProvider.setData(resp);
-        }
-        dataProvider.applyFilter(currentFilter, _this.tab.hash, customFilter);
+        dataProvider.applyFilter(currentFilter, _this.tab.hash, _this.customFilter);
         var tableParameters = {
             page: 1, // show first page
             total: dataProvider.filteredData.length,
@@ -55,13 +49,12 @@ var InterventionsController = function($timeout, tabContainer, FiltersFactory, C
             filterDelay: 100
         }
         _this.tableParams = new ngTableParams(tableParameters, tableSettings);
-        $('.listeInterventions').css('min-height', '0px')
         LxProgressService.circular.hide();
     })
 
     $rootScope.$on('interventionListChange', function() {
         console.log("reload")
-        dataProvider.applyFilter(currentFilter, _this.tab.hash, customFilter);
+        dataProvider.applyFilter(currentFilter, _this.tab.hash, _this.customFilter);
         _this.tableParams.reload();
     })
 

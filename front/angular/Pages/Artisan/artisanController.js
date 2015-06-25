@@ -25,11 +25,6 @@ var ArtisanCtrl = function($rootScope, $location, $routeParams, LxNotificationSe
         var artisan = tab.data;
     }
     _this.data = tab.data;
-    if (!_this.data.id) {
-        _this.data.login = {
-            ajout: $rootScope.user.login
-        }
-    }
     var closeTab = function() {
         $location.url("/artisan/list");
         tabContainer.remove(tab)

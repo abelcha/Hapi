@@ -57,7 +57,7 @@ module.exports = function(schema) {
                                     dt: month + (year * 100),
                                     date: [_.padLeft(month, 2, '0'), year % 2000].join('/'),
                                     total: 0,
-                                    status: 'ANN'
+                                    status: ["ANN", "ATT", "RGL"][n % 3]
                                 }
                                 rtn.push(res);
                             } else {

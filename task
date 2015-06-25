@@ -1,21 +1,18 @@
----- prix dans recap
----- 1) afficher sidebar / Service 
-1) litige / sav -- attention
+---- fixer prix dans recap
+---- afficher sidebar / Service 
+----  litige / sav -- attention
 
-- Code couleur
+- icon appel liste intervention
 
-- icone appel liste intervention
+---- etage - code - batiment
 
---- etage - code - batiment
+---- cacher client tant qu'on a pas l'addresse + catergo
 
+----- enlever le gras sur categorie
 
---- -cacher client tant qu'on a pas l'addresse + catergo
+----- edison service sst not found
 
------ -enelever le gras sur categorie
-
------   edison service sst not found
-
---- lien fiche double click SST
+- lien fiche double click SST
 
 ---- virer cache sur liste sst (fiche intervention)
 
@@ -39,15 +36,12 @@
 
 ----- virer devis quand pas il ny a pas de produit
 
------ verifier clique froit
+----- verifier clique droit
 
 ----- tva 20% societe
 
------ tva priw + gros
+----- tva prix + gros
 
 ----- virer cache total/montant
 
-Partenariat
-
-
-rassemnler block representant + societe
+----- rassemnler block representant + societe

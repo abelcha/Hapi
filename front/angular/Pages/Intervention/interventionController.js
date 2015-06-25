@@ -1,9 +1,7 @@
-var InterventionCtrl = function($timeout, $rootScope, $scope, $location, $routeParams, dialog, fourniture, LxNotificationService, LxProgressService, tabContainer, edisonAPI, Address, $q, mapAutocomplete, productsList, config, interventionPrm, artisans, Intervention, Map) {
+var InterventionCtrl = function($timeout, $rootScope, $scope, $location, $routeParams, dialog, fourniture, LxNotificationService, LxProgressService, tabContainer, edisonAPI, Address, $q, mapAutocomplete, productsList, config, interventionPrm, Intervention, Map) {
     "use strict";
 
     var _this = this;
-    _this.artisans = artisans.data;
-    console.log(_this.artisans)
     _this.config = config;
     _this.dialog = dialog;
     _this.autocomplete = mapAutocomplete;
@@ -29,13 +27,14 @@ var InterventionCtrl = function($timeout, $rootScope, $scope, $location, $routeP
         var intervention = tab.data;
     }
     if ($routeParams.d) {
-        _this.devisOrigine = parseInt($routeParams)
+        intervention.devisOrigine = parseInt($routeParams.d)
     }
     _this.data = tab.data;
+    /*console.log(intervention)
     if (!intervention.id)
         intervention.login = {
             ajout: $rootScope.user.login
-        }
+        }*/
 
     intervention.fourniture = intervention.fourniture || [];
     $scope.fourniture = fourniture.init(intervention.fourniture);

@@ -2,15 +2,15 @@
     <div class="row">
         <div class="col-sm-12 " style="height:100%">
             <div class="form-horizontal" style="overflow:hidden;height:100%" novalidate>
-                <info-client no-details="true" model="vm.data.client"></info-client>
+                <info-client ng-if="vm.data.categorie && vm.data.client.address.n" no-details="true" model="vm.data.client"></info-client>
                 <br>
                 <info-categorie model="vm.data.categorie" change="vm.searchArtisans(newCategorie)"></info-categorie>
                 <br>
                 <div class="row" style="margin:0">
                     <div class="card">
                         <div class="p+">
-                            <strong class="fs-headline display-block">
-         <button ng-click="vm.data.categorie = undefined" style="font-weight:900;float:left" class="btn--no-conflicts btn--m {{config.categories[vm.data.categorie].color}} btn--flat" lx-ripple> {{config.categories[vm.data.categorie].long_name}}</button></strong>
+                           
+         <button ng-click="vm.data.categorie = undefined" style="font-weight:900;float:left" class="btn--no-conflicts btn--m {{config.categories[vm.data.categorie].color}} btn--flat" lx-ripple> {{config.categories[vm.data.categorie].long_name}}</button>
                             <div class="fs-body-1 mt+" style="padding-top:10px">
                                 <edison-map is-new="vm.isNew" height="big" data="vm.data" client="vm.data.client" ></edison-map>
                             </div>

@@ -4,7 +4,10 @@ module.exports = {
         action: "ouvrirFiche"
     }, {
         title: 'Ouvrir Recap',
-        action: "ouvrirRecap"
+        action: "ouvrirRecap",
+        hide:function(artisan) {
+            return artisan.status !== 'POT';
+        }
     }, {
         title: "Archiver",
         action: 'archiver',

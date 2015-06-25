@@ -1,14 +1,7 @@
 var DevisController = function($timeout, tabContainer, FiltersFactory, ContextMenu, edisonAPI, DataProvider, $routeParams, $location, $q, $rootScope, $filter, config, ngTableParams, LxProgressService) {
     "use strict";
     var _this = this;
-
-    LxProgressService.circular.show('#5fa2db', '#globalProgress');
-    edisonAPI.devis.list({
-        cache: true
-    }).success(function(resp) {
-
-        _this.tab = tabContainer.getCurrentTab();
-        _this.recap = $routeParams.artisanID;
+        var dataProvider = new DataProvider('devis');
         var filtersFactory = new FiltersFactory('devis')
         var currentFilter;
         if ($routeParams.fltr) {
@@ -16,14 +9,15 @@ var DevisController = function($timeout, tabContainer, FiltersFactory, ContextMe
         }
         var currentHash = $location.hash();
         var title = currentFilter ? currentFilter.long_name : "Devis";
+
+    LxProgressService.circular.show('#5fa2db', '#globalProgress');
+    dataProvider.init(function(err, resp) {
+        _this.tab = tabContainer.getCurrentTab();
+        _this.recap = $routeParams.artisanID;
         _this.tab.setTitle(title, currentHash);
         _this.tab.hash = currentHash;
         _this.config = config;
         _this.moment = moment;
-        var dataProvider = new DataProvider('devis');
-        if (!dataProvider.isInit()) {
-            dataProvider.setData(resp);
-        }
         dataProvider.applyFilter(currentFilter, _this.tab.hash);
         var tableParameters = {
             page: 1, // show first page

@@ -7,8 +7,10 @@ angular.module('edison', ['browserify', 'ui.slimscroll', 'ngMaterial', 'lumx', '
     });
 
 
-angular.module('edison').controller('MainController', function(tabContainer, $scope, socket, config, $rootScope, $location, edisonAPI, taskList, $window) {
+angular.module('edison').controller('MainController', function(DataProvider, tabContainer, $scope, socket, config, $rootScope, $location, edisonAPI, taskList, $window) {
     "use strict";
+
+
     edisonAPI.getUser().success(function(result) {
         $rootScope.user = result;
         reloadStats();
@@ -44,20 +46,21 @@ angular.module('edison').controller('MainController', function(tabContainer, $sc
 
 
 
-    $rootScope.$on('interventionListChange', reloadStats);
-    $rootScope.$on('devisListChange', reloadStats);
-    $rootScope.$on('artisanListChange', reloadStats);
+    var interventionDataProvider = new DataProvider('intervention')
+    socket.on('interventionListChange', reloadStats);
+
+    var devisDataProvider = new DataProvider('devis')
+    socket.on('devisListChange', reloadStats);
+
+    var artisanDataProvider = new DataProvider('artisan')
+    socket.on('artisanListChange', reloadStats);
 
     var initTabs = function(baseUrl, baseHash) {
+        console.log("init tabs")
         $scope.tabsInitialized = true;
-        $scope.tabs.loadSessionTabs(baseUrl)
-            .then(function() {
-                $location.url(baseUrl);
-            }).catch(function() {
-                $scope.tabs.addTab(baseUrl, {
-                    hash: baseHash
-                });
-            });
+        $scope.tabs.addTab(baseUrl, {
+            hash: baseHash
+        });
         return 0;
     };
 
@@ -250,11 +253,7 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
             controller: "InterventionController",
             controllerAs: "vm",
             resolve: {
-                devis: getDevisList,
-                interventions: getInterList,
                 interventionPrm: getIntervention,
-                artisans: getArtisanList
-
             }
         })
         .when('/devis/list', {
@@ -277,9 +276,7 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
             controller: "DevisController",
             controllerAs: "vm",
             resolve: {
-                interventions: getInterList,
                 devisPrm: getDevis,
-                artisans: getArtisanList
             }
         })
         .when('/artisan/list', {
@@ -302,19 +299,12 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
             controller: "ArtisanController",
             controllerAs: "vm",
             resolve: {
-                interventions: getInterList,
                 artisanPrm: getArtisan,
-                artisans: getArtisanList
             }
         })
         .when('/dashboard', {
             controller: 'DashboardController',
             templateUrl: "Pages/Dashboard/dashboard.html",
-            resolve: {
-                interventions: getInterList,
-                artisans: getArtisanList
-
-            }
         })
         .otherwise({
             templateUrl: 'templates/Error404.html',
@@ -339,7 +329,7 @@ angular.module('edison').run(function(editableOptions) {
     $http.get("/Directives/dropdown-row.html", {
         cache: $templateCache
     });
-      $http.get("/Directives/artisan-recap.html", {
+    $http.get("/Directives/artisan-recap.html", {
         cache: $templateCache
     });
     $http.get("/Templates/artisan-categorie.html", {
@@ -1646,24 +1636,38 @@ angular.module('edison').factory('ContextMenu', ['$location', 'edisonAPI', '$win
 
 }]);
 
-angular.module('edison').factory('DataProvider', ['socket', '$rootScope', 'config', function(socket, $rootScope, config) {
+angular.module('edison').factory('DataProvider', ['edisonAPI', 'socket', '$rootScope', 'config', function(edisonAPI, socket, $rootScope, config) {
     "use strict";
     var DataProvider = function(model) {
         var _this = this;
         this.model = model;
-        socket.on(this.model + 'ListChange', function(data) {
-            console.log('listchange')
-            _this.updateData(data);
-
+        socket.on(model + 'ListChange', function(data) {
+            if (_this.getData()) {
+                _this.updateData(data);
+            } else {
+                console.log("ERROR NODATA")
+            }
         });
     }
-
     DataProvider.prototype.data = {}
 
     DataProvider.prototype.setData = function(data) {
         this.data[this.model] = data;
     };
 
+    DataProvider.prototype.init = function(cb) {
+        var _this = this;
+
+        if (_this.getData())
+            return cb(_this.getData());
+        edisonAPI[_this.model].list({
+            cache: true
+        }).success(function(resp) {
+            console.log(resp);
+            _this.setData(resp);
+            return cb(null, resp);
+        })
+    }
 
     DataProvider.prototype.rowFilterFactory = function(filter, hash) {
         if (!filter && hash) {
@@ -1708,6 +1712,7 @@ angular.module('edison').factory('DataProvider', ['socket', '$rootScope', 'confi
     }
 
     DataProvider.prototype.getData = function() {
+        console.log(this.model, this.data[this.model] ? this.data[this.model].length : 0)
         return this.data[this.model];
     }
 
@@ -2767,11 +2772,6 @@ var ArtisanCtrl = function($rootScope, $location, $routeParams, LxNotificationSe
         var artisan = tab.data;
     }
     _this.data = tab.data;
-    if (!_this.data.id) {
-        _this.data.login = {
-            ajout: $rootScope.user.login
-        }
-    }
     var closeTab = function() {
         $location.url("/artisan/list");
         tabContainer.remove(tab)
@@ -2919,11 +2919,6 @@ var DevisCtrl = function($scope, $rootScope, $location, $routeParams, LxNotifica
         var devis = tab.data;
     }
     _this.data = tab.data;
-    if (!_this.data.id) {
-        _this.data.login = {
-            ajout: $rootScope.user.login
-        }
-    }
     var closeTab = function() {
         $location.url("/devis/list");
         tabContainer.remove(tab)
@@ -3008,12 +3003,10 @@ angular.module('edison').controller('DevisController', DevisCtrl);
 
  }]);
 
-var InterventionCtrl = function($timeout, $rootScope, $scope, $location, $routeParams, dialog, fourniture, LxNotificationService, LxProgressService, tabContainer, edisonAPI, Address, $q, mapAutocomplete, productsList, config, interventionPrm, artisans, Intervention, Map) {
+var InterventionCtrl = function($timeout, $rootScope, $scope, $location, $routeParams, dialog, fourniture, LxNotificationService, LxProgressService, tabContainer, edisonAPI, Address, $q, mapAutocomplete, productsList, config, interventionPrm, Intervention, Map) {
     "use strict";
 
     var _this = this;
-    _this.artisans = artisans.data;
-    console.log(_this.artisans)
     _this.config = config;
     _this.dialog = dialog;
     _this.autocomplete = mapAutocomplete;
@@ -3039,13 +3032,14 @@ var InterventionCtrl = function($timeout, $rootScope, $scope, $location, $routeP
         var intervention = tab.data;
     }
     if ($routeParams.d) {
-        _this.devisOrigine = parseInt($routeParams)
+        intervention.devisOrigine = parseInt($routeParams.d)
     }
     _this.data = tab.data;
+    /*console.log(intervention)
     if (!intervention.id)
         intervention.login = {
             ajout: $rootScope.user.login
-        }
+        }*/
 
     intervention.fourniture = intervention.fourniture || [];
     $scope.fourniture = fourniture.init(intervention.fourniture);
@@ -3305,24 +3299,23 @@ angular.module('edison').controller('InterventionController', InterventionCtrl);
 var ArtisanController = function($timeout, tabContainer, LxProgressService, FiltersFactory, ContextMenu, edisonAPI, DataProvider, $routeParams, $location, $q, $rootScope, $filter, config, ngTableParams) {
     "use strict";
     var _this = this;
+    var dataProvider = new DataProvider('artisan');
+    var filtersFactory = new FiltersFactory('artisan')
+    var currentFilter;
+    if ($routeParams.fltr) {
+        currentFilter = filtersFactory.getFilterByUrl($routeParams.fltr)
+    }
+    var currentHash = $location.hash();
+    var title = currentFilter ? currentFilter.long_name : "Artisan";
+
     LxProgressService.circular.show('#5fa2db', '#globalProgress');
-    edisonAPI.artisan.list({
-        cache: true
-    }).success(function(resp) {
+    dataProvider.init(function(err, resp) {
 
         _this.tab = tabContainer.getCurrentTab();
-        var filtersFactory = new FiltersFactory('artisan')
-        var currentFilter;
-        if ($routeParams.fltr) {
-            currentFilter = filtersFactory.getFilterByUrl($routeParams.fltr)
-        }
-        var currentHash = $location.hash();
-        var title = currentFilter ? currentFilter.long_name : "Artisan";
         _this.tab.setTitle(title, currentHash);
         _this.tab.hash = currentHash;
         _this.config = config;
         _this.moment = moment;
-        var dataProvider = new DataProvider('artisan');
         if (!dataProvider.isInit()) {
             dataProvider.setData(resp);
         }
@@ -3362,11 +3355,10 @@ var ArtisanController = function($timeout, tabContainer, LxProgressService, Filt
 
     _this.rowRightClick = function($event, inter) {
         _this.contextMenu.setPosition($event.pageX, $event.pageY)
-        _this.contextMenu.setData(inter);
-        _this.contextMenu.open();
         edisonAPI.artisan.get(inter.id)
             .then(function(resp) {
                 _this.contextMenu.setData(resp.data);
+                _this.contextMenu.open();
             })
     }
 
@@ -3394,14 +3386,7 @@ angular.module('edison').controller('ListeArtisanController', ArtisanController)
 var DevisController = function($timeout, tabContainer, FiltersFactory, ContextMenu, edisonAPI, DataProvider, $routeParams, $location, $q, $rootScope, $filter, config, ngTableParams, LxProgressService) {
     "use strict";
     var _this = this;
-
-    LxProgressService.circular.show('#5fa2db', '#globalProgress');
-    edisonAPI.devis.list({
-        cache: true
-    }).success(function(resp) {
-
-        _this.tab = tabContainer.getCurrentTab();
-        _this.recap = $routeParams.artisanID;
+        var dataProvider = new DataProvider('devis');
         var filtersFactory = new FiltersFactory('devis')
         var currentFilter;
         if ($routeParams.fltr) {
@@ -3409,14 +3394,15 @@ var DevisController = function($timeout, tabContainer, FiltersFactory, ContextMe
         }
         var currentHash = $location.hash();
         var title = currentFilter ? currentFilter.long_name : "Devis";
+
+    LxProgressService.circular.show('#5fa2db', '#globalProgress');
+    dataProvider.init(function(err, resp) {
+        _this.tab = tabContainer.getCurrentTab();
+        _this.recap = $routeParams.artisanID;
         _this.tab.setTitle(title, currentHash);
         _this.tab.hash = currentHash;
         _this.config = config;
         _this.moment = moment;
-        var dataProvider = new DataProvider('devis');
-        if (!dataProvider.isInit()) {
-            dataProvider.setData(resp);
-        }
         dataProvider.applyFilter(currentFilter, _this.tab.hash);
         var tableParameters = {
             page: 1, // show first page
@@ -3490,38 +3476,32 @@ angular.module('edison').controller('statsController', function($scope) {
 var InterventionsController = function($timeout, tabContainer, FiltersFactory, ContextMenu, LxProgressService, edisonAPI, DataProvider, $routeParams, $location, $q, $rootScope, $filter, config, ngTableParams) {
     "use strict";
     var _this = this;
-
+    var currentFilter;
+    var dataProvider = new DataProvider('intervention');
+    var filtersFactory = new FiltersFactory('intervention')
+    var currentHash = $location.hash();
+    if ($routeParams.fltr) {
+        currentFilter = filtersFactory.getFilterByUrl($routeParams.fltr)
+    }
+    var title = currentFilter ? currentFilter.long_name : "Interventions";
     _this.recap = $routeParams.sstID ? parseInt($routeParams.sstID) : false;
 
+
     LxProgressService.circular.show('#5fa2db', '#globalProgress');
-    edisonAPI.intervention.list({
-        cache: true
-    }).success(function(resp) {
+    dataProvider.init(function(err, resp) {
         _this.tab = tabContainer.getCurrentTab();
-        var filtersFactory = new FiltersFactory('intervention')
-        var currentFilter;
-        if ($routeParams.fltr) {
-            currentFilter = filtersFactory.getFilterByUrl($routeParams.fltr)
-        }
-        var currentHash = $location.hash();
-        var title = currentFilter ? currentFilter.long_name : "Interventions";
         _this.tab.setTitle(title, currentHash);
         _this.tab.hash = currentHash;
         _this.config = config;
 
         if (_this.recap) {
-            var customFilter = function(inter) {
+            _this.customFilter = function(inter) {
                 return inter.ai === _this.recap;
             }
             _this.tab.setTitle('Recap ' + _this.recap)
         }
 
-        var dataProvider = new DataProvider('intervention');
-        if (!dataProvider.isInit()) {
-            console.log("not init")
-            dataProvider.setData(resp);
-        }
-        dataProvider.applyFilter(currentFilter, _this.tab.hash, customFilter);
+        dataProvider.applyFilter(currentFilter, _this.tab.hash, _this.customFilter);
         var tableParameters = {
             page: 1, // show first page
             total: dataProvider.filteredData.length,
@@ -3544,13 +3524,12 @@ var InterventionsController = function($timeout, tabContainer, FiltersFactory, C
             filterDelay: 100
         }
         _this.tableParams = new ngTableParams(tableParameters, tableSettings);
-        $('.listeInterventions').css('min-height', '0px')
         LxProgressService.circular.hide();
     })
 
     $rootScope.$on('interventionListChange', function() {
         console.log("reload")
-        dataProvider.applyFilter(currentFilter, _this.tab.hash, customFilter);
+        dataProvider.applyFilter(currentFilter, _this.tab.hash, _this.customFilter);
         _this.tableParams.reload();
     })
 

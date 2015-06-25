@@ -231,7 +231,7 @@
                         </div>
                     </div>
                 </div>
-                <produits ng-if="vm.data.id" data="vm.data"></produits>
+                <produits ng-if="vm.data.id || vm.data.devisOrigine" data="vm.data"></produits>
                 <div class="card margin">
                     <div class="p+">
                         <strong ng-click="displayFRN = !displayFRN" class="fs-headline display-block">Fourniture</strong>

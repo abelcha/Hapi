@@ -7,8 +7,10 @@ angular.module('edison', ['browserify', 'ui.slimscroll', 'ngMaterial', 'lumx', '
     });
 
 
-angular.module('edison').controller('MainController', function(tabContainer, $scope, socket, config, $rootScope, $location, edisonAPI, taskList, $window) {
+angular.module('edison').controller('MainController', function(DataProvider, tabContainer, $scope, socket, config, $rootScope, $location, edisonAPI, taskList, $window) {
     "use strict";
+
+
     edisonAPI.getUser().success(function(result) {
         $rootScope.user = result;
         reloadStats();
@@ -44,20 +46,21 @@ angular.module('edison').controller('MainController', function(tabContainer, $sc
 
 
 
-    $rootScope.$on('interventionListChange', reloadStats);
-    $rootScope.$on('devisListChange', reloadStats);
-    $rootScope.$on('artisanListChange', reloadStats);
+    var interventionDataProvider = new DataProvider('intervention')
+    socket.on('interventionListChange', reloadStats);
+
+    var devisDataProvider = new DataProvider('devis')
+    socket.on('devisListChange', reloadStats);
+
+    var artisanDataProvider = new DataProvider('artisan')
+    socket.on('artisanListChange', reloadStats);
 
     var initTabs = function(baseUrl, baseHash) {
+        console.log("init tabs")
         $scope.tabsInitialized = true;
-        $scope.tabs.loadSessionTabs(baseUrl)
-            .then(function() {
-                $location.url(baseUrl);
-            }).catch(function() {
-                $scope.tabs.addTab(baseUrl, {
-                    hash: baseHash
-                });
-            });
+        $scope.tabs.addTab(baseUrl, {
+            hash: baseHash
+        });
         return 0;
     };
 
@@ -250,11 +253,7 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
             controller: "InterventionController",
             controllerAs: "vm",
             resolve: {
-                devis: getDevisList,
-                interventions: getInterList,
                 interventionPrm: getIntervention,
-                artisans: getArtisanList
-
             }
         })
         .when('/devis/list', {
@@ -277,9 +276,7 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
             controller: "DevisController",
             controllerAs: "vm",
             resolve: {
-                interventions: getInterList,
                 devisPrm: getDevis,
-                artisans: getArtisanList
             }
         })
         .when('/artisan/list', {
@@ -302,19 +299,12 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
             controller: "ArtisanController",
             controllerAs: "vm",
             resolve: {
-                interventions: getInterList,
                 artisanPrm: getArtisan,
-                artisans: getArtisanList
             }
         })
         .when('/dashboard', {
             controller: 'DashboardController',
             templateUrl: "Pages/Dashboard/dashboard.html",
-            resolve: {
-                interventions: getInterList,
-                artisans: getArtisanList
-
-            }
         })
         .otherwise({
             templateUrl: 'templates/Error404.html',
@@ -339,7 +329,7 @@ angular.module('edison').run(function(editableOptions) {
     $http.get("/Directives/dropdown-row.html", {
         cache: $templateCache
     });
-      $http.get("/Directives/artisan-recap.html", {
+    $http.get("/Directives/artisan-recap.html", {
         cache: $templateCache
     });
     $http.get("/Templates/artisan-categorie.html", {

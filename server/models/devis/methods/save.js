@@ -23,6 +23,7 @@ module.exports = function(schema) {
                     for (k in data) {
                         doc[k] = data[k];
                     }
+                    doc.historique = [];
                     doc.save().then(resolve, dbError(reject));
                 }, dbError(reject))
             })

@@ -25,6 +25,7 @@
     "dropbox": "^0.10.3",
     "ejs": "^2.2.4",
     "express": "^4.12.3",
+    "fluentreports": "^0.1.2",
     "geocoder": "^0.2.2",
     "googlemaps": "^1.0.1",
     "html-entities": "^1.1.2",

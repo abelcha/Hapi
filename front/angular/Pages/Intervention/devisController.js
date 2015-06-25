@@ -25,11 +25,6 @@ var DevisCtrl = function($scope, $rootScope, $location, $routeParams, LxNotifica
         var devis = tab.data;
     }
     _this.data = tab.data;
-    if (!_this.data.id) {
-        _this.data.login = {
-            ajout: $rootScope.user.login
-        }
-    }
     var closeTab = function() {
         $location.url("/devis/list");
         tabContainer.remove(tab)

@@ -1,21 +1,35 @@
-angular.module('edison').factory('DataProvider', ['socket', '$rootScope', 'config', function(socket, $rootScope, config) {
+angular.module('edison').factory('DataProvider', ['edisonAPI', 'socket', '$rootScope', 'config', function(edisonAPI, socket, $rootScope, config) {
     "use strict";
     var DataProvider = function(model) {
         var _this = this;
         this.model = model;
-        socket.on(this.model + 'ListChange', function(data) {
-            console.log('listchange')
-            _this.updateData(data);
-
+        socket.on(model + 'ListChange', function(data) {
+            if (_this.getData()) {
+                _this.updateData(data);
+            } else {
+                console.log("ERROR NODATA")
+            }
         });
     }
-
     DataProvider.prototype.data = {}
 
     DataProvider.prototype.setData = function(data) {
         this.data[this.model] = data;
     };
 
+    DataProvider.prototype.init = function(cb) {
+        var _this = this;
+
+        if (_this.getData())
+            return cb(_this.getData());
+        edisonAPI[_this.model].list({
+            cache: true
+        }).success(function(resp) {
+            console.log(resp);
+            _this.setData(resp);
+            return cb(null, resp);
+        })
+    }
 
     DataProvider.prototype.rowFilterFactory = function(filter, hash) {
         if (!filter && hash) {
@@ -60,6 +74,7 @@ angular.module('edison').factory('DataProvider', ['socket', '$rootScope', 'confi
     }
 
     DataProvider.prototype.getData = function() {
+        console.log(this.model, this.data[this.model] ? this.data[this.model].length : 0)
         return this.data[this.model];
     }
 

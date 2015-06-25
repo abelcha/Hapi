@@ -1,24 +1,23 @@
 var ArtisanController = function($timeout, tabContainer, LxProgressService, FiltersFactory, ContextMenu, edisonAPI, DataProvider, $routeParams, $location, $q, $rootScope, $filter, config, ngTableParams) {
     "use strict";
     var _this = this;
+    var dataProvider = new DataProvider('artisan');
+    var filtersFactory = new FiltersFactory('artisan')
+    var currentFilter;
+    if ($routeParams.fltr) {
+        currentFilter = filtersFactory.getFilterByUrl($routeParams.fltr)
+    }
+    var currentHash = $location.hash();
+    var title = currentFilter ? currentFilter.long_name : "Artisan";
+
     LxProgressService.circular.show('#5fa2db', '#globalProgress');
-    edisonAPI.artisan.list({
-        cache: true
-    }).success(function(resp) {
+    dataProvider.init(function(err, resp) {
 
         _this.tab = tabContainer.getCurrentTab();
-        var filtersFactory = new FiltersFactory('artisan')
-        var currentFilter;
-        if ($routeParams.fltr) {
-            currentFilter = filtersFactory.getFilterByUrl($routeParams.fltr)
-        }
-        var currentHash = $location.hash();
-        var title = currentFilter ? currentFilter.long_name : "Artisan";
         _this.tab.setTitle(title, currentHash);
         _this.tab.hash = currentHash;
         _this.config = config;
         _this.moment = moment;
-        var dataProvider = new DataProvider('artisan');
         if (!dataProvider.isInit()) {
             dataProvider.setData(resp);
         }
@@ -58,11 +57,10 @@ var ArtisanController = function($timeout, tabContainer, LxProgressService, Filt
 
     _this.rowRightClick = function($event, inter) {
         _this.contextMenu.setPosition($event.pageX, $event.pageY)
-        _this.contextMenu.setData(inter);
-        _this.contextMenu.open();
         edisonAPI.artisan.get(inter.id)
             .then(function(resp) {
                 _this.contextMenu.setData(resp.data);
+                _this.contextMenu.open();
             })
     }
 
