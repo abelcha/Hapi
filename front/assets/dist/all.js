@@ -1059,7 +1059,7 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
                     return result;
                 });
             },
-            getCB:function(id) {
+            getCB: function(id) {
                 return $http.get("/api/intervention/" + id + "/CB");
             },
             save: function(params) {
@@ -1087,7 +1087,20 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
             }
         },
         artisan: {
-            extendedStats:function(id) {
+            upload: function(file, name, id) {
+                return Upload.upload({
+                    url: '/api/artisan/' + id + "/upload",
+                    fields: {
+                        name: name,
+                        id: id
+                    },
+                    file: file
+                })
+            },
+            reaStats: function() {
+                return $http.get('/api/artisan/reaStats')
+            },
+            extendedStats: function(id) {
                 return $http.get('/api/artisan/' + id + "/extendedStats")
             },
             save: function(params) {
@@ -1246,8 +1259,8 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
 }]);
 
 angular.module('edison')
-    .factory('Artisan', ['$window', '$rootScope', '$location', 'LxNotificationService', 'dialog', 'edisonAPI', 'textTemplate',
-        function($window, $rootScope, $location, LxNotificationService, dialog, edisonAPI, textTemplate) {
+    .factory('Artisan', ['$window', '$rootScope', '$location', 'LxNotificationService','LxProgressService', 'dialog', 'edisonAPI', 'textTemplate',
+        function($window, $rootScope, $location, LxNotificationService,LxProgressService, dialog, edisonAPI, textTemplate) {
             "use strict";
             var Artisan = function(data) {
                 if (!(this instanceof Artisan)) {
@@ -1307,6 +1320,23 @@ angular.module('edison')
                     });
             };
 
+            Artisan.prototype.upload = function(file, name, cb) {
+                var _this = this;
+                if (file) {
+                    LxProgressService.circular.show('#5fa2db', '#fileUploadProgress');
+                    edisonAPI.artisan.upload(file, name, _this.id)
+                        .success(function(resp) {
+                          _this.document = resp.document;
+                            LxProgressService.circular.hide();
+                            if (typeof cb === 'function')
+                                cb(null, resp);
+                        }).catch(function(err) {
+                            LxProgressService.circular.hide();
+                            if (typeof cb === 'function')
+                                cb(err);
+                        })
+                }
+            }
 
             Artisan.prototype.envoiContrat = function(cb) {
                 console.log("envoi")
@@ -1663,7 +1693,6 @@ angular.module('edison').factory('DataProvider', ['edisonAPI', 'socket', '$rootS
         edisonAPI[_this.model].list({
             cache: true
         }).success(function(resp) {
-            console.log(resp);
             _this.setData(resp);
             return cb(null, resp);
         })
@@ -2238,10 +2267,11 @@ angular.module('edison')
                     })
             }
             Intervention.prototype.fileUpload = function(file, cb) {
+                var _this = this;
                 if (file) {
                     LxProgressService.circular.show('#5fa2db', '#fileUploadProgress');
                     edisonAPI.file.upload(file, {
-                        link: this.id || this.tmpID,
+                        link: _this.id || _this.tmpID,
                         model: 'intervention',
                         type: 'fiche'
                     }).success(function(resp) {
@@ -2789,6 +2819,14 @@ var ArtisanCtrl = function($rootScope, $location, $routeParams, LxNotificationSe
             }
         })
     }
+    _this.onFileUpload = function(file, name) {
+        artisan.upload(file, name);
+    }
+
+    _this.clickTrigger = function(elem) {
+        angular.element("#file_" + elem + ">input").trigger('click');
+    }
+
 
     _this.addComment = function() {
         artisan.comments.push({

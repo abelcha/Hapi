@@ -188,10 +188,11 @@ angular.module('edison')
                     })
             }
             Intervention.prototype.fileUpload = function(file, cb) {
+                var _this = this;
                 if (file) {
                     LxProgressService.circular.show('#5fa2db', '#fileUploadProgress');
                     edisonAPI.file.upload(file, {
-                        link: this.id || this.tmpID,
+                        link: _this.id || _this.tmpID,
                         model: 'intervention',
                         type: 'fiche'
                     }).success(function(resp) {

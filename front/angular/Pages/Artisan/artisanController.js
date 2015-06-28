@@ -42,6 +42,14 @@ var ArtisanCtrl = function($rootScope, $location, $routeParams, LxNotificationSe
             }
         })
     }
+    _this.onFileUpload = function(file, name) {
+        artisan.upload(file, name);
+    }
+
+    _this.clickTrigger = function(elem) {
+        angular.element("#file_" + elem + ">input").trigger('click');
+    }
+
 
     _this.addComment = function() {
         artisan.comments.push({

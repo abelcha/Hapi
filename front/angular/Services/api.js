@@ -56,7 +56,7 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
                     return result;
                 });
             },
-            getCB:function(id) {
+            getCB: function(id) {
                 return $http.get("/api/intervention/" + id + "/CB");
             },
             save: function(params) {
@@ -84,7 +84,20 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
             }
         },
         artisan: {
-            extendedStats:function(id) {
+            upload: function(file, name, id) {
+                return Upload.upload({
+                    url: '/api/artisan/' + id + "/upload",
+                    fields: {
+                        name: name,
+                        id: id
+                    },
+                    file: file
+                })
+            },
+            reaStats: function() {
+                return $http.get('/api/artisan/reaStats')
+            },
+            extendedStats: function(id) {
                 return $http.get('/api/artisan/' + id + "/extendedStats")
             },
             save: function(params) {

@@ -108,6 +108,7 @@
             <div class="card" style="padding:20px">
                 <div class="p+">
                     <strong class="fs-headline display-block">Pourcentages</strong>
+                    <br>
                     <div class="row">
                         <div class="col-sm-3">
                             <lx-text-field label="Déplacement">
@@ -124,9 +125,20 @@
                                 <input type="number" ng-model="vm.data.pourcentage.fourniture">
                             </lx-text-field>
                         </div>
+                    </div>
+                    <br>
+                    <div class="row">
                         <div class="col-sm-3">
                             <lx-text-field label="Zone de Chalandise">
                                 <input type="number" ng-model="vm.data.zoneChalandise">
+                            </lx-text-field>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <lx-text-field label="Siret">
+                                <input type="text" ng-model="vm.data.siret">
                             </lx-text-field>
                         </div>
                     </div>
@@ -135,7 +147,7 @@
             <br>
             <div class="row" style="margin:0">
                 <div class="col-sm-6" style="padding-left:0">
-                    <div class="card" id="fileUpload">
+                    <div class="card" id="fileUpload" ng-if="vm.data.id">
                         <div class="p+">
                             <strong class="fs-headline display-block">Documents</strong>
                             <span class="fs-subhead tc-black-2 display-block">Documents</span>
@@ -166,7 +178,9 @@
                                                 </a>
                                             </td>
                                             <td>
-                                                <button class="btn--no-conflicts btn--m btn--blue  btn--raised" lx-ripple>Upload</button>
+                                              <!--   <button  class="btn--no-conflicts btn--m btn--blue  btn--raised" lx-ripple>Upload</button> -->
+                                                <lx-file-input style="display:none" id="file_{{file}}" label="Upload" value="fileUploadText" change="vm.onFileUpload(e, file)"></lx-file-input>
+                                                <button ng-click="vm.clickTrigger(file)" class="btn--no-conflicts btn--m btn--blue  btn--raised" lx-ripple>Upload</button>
                                             </td>
                                         </tr>
                                     </tbody>

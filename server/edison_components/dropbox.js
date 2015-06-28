@@ -56,10 +56,8 @@ Dropbox.prototype.move = function(from, to) {
 Dropbox.prototype.upload = function(params) {
     var _this = this;
     return new Promise(function(resolve, reject) {
-        if (!params.model || !params.data || !params.link || !params.extension)
-            reject("Invalid params");
         params._id = uuid.v4();
-        params.filename = _this.getFilename(params);
+        params.filename = params.filename || _this.getFilename(params);
         _this.client.writeFile(params.filename, params.data, function(error, stat) {
             if (error)
                 return reject(error);

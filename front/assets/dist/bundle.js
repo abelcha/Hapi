@@ -248,7 +248,7 @@ FiltersFactory.prototype.list = {
         match: {},
         stats: false,
         fn: function(inter) {
-            return this.fltr.att &&
+            return this.fltr.i_att &&
                 inter.reglementSurPlace === true;
 
         }
@@ -256,16 +256,18 @@ FiltersFactory.prototype.list = {
         short_name: 'i_sarl',
         long_name: 'SST à Relancer',
         url: 'relanceArtisan',
-        match: {
-            status: 'ATT',
-            reglementSurPlace: true,
-            'date.intervention': {
-                $lt: new Date(Date.now() - ms.weeks(2)),
+        match: function() {
+            return {
+                status: 'ATT',
+                reglementSurPlace: true,
+                'date.intervention': {
+                    $lt: new Date(Date.now() - ms.weeks(2)),
+                }
             }
         },
         stats: true,
         fn: function(inter) {
-            return this.fltr.atts &&
+            return this.fltr.i_atts &&
                 Date.now() > dateInter(inter) + ms.weeks(2);
         }
     }, {
@@ -275,7 +277,7 @@ FiltersFactory.prototype.list = {
         match: {},
         stats: false,
         fn: function(inter) {
-            return this.fltr.att &&
+            return this.fltr.i_att &&
                 inter.reglementSurPlace === false;
 
         }
@@ -283,30 +285,34 @@ FiltersFactory.prototype.list = {
         short_name: 'i_carl',
         long_name: 'Client à Relancer',
         url: 'relanceClient',
-        match: {
-            status: 'ATT',
-            reglementSurPlace: false,
-            'date.intervention': {
-                $lt: new Date(Date.now() - ms.weeks(2)),
+        match: function() {
+            return {
+                status: 'ATT',
+                reglementSurPlace: false,
+                'date.intervention': {
+                    $lt: new Date(Date.now() - ms.weeks(2)),
+                }
             }
         },
         fn: function(inter) {
-            return this.fltr.attc &&
+            return this.fltr.i_attc &&
                 Date.now() > dateInter(inter) + ms.weeks(3);
         }
     }, {
         short_name: 'i_fact',
         long_name: 'Facture à envoyer',
         url: 'factureaEnvoyer',
-        match: {
-            'date.intervention': {
-                $lt: new Date(Date.now() + ms.hours(1))
-            },
-            status: 'ENV',
-            reglementSurPlace: false
+        match: function() {
+            return {
+                'date.intervention': {
+                    $lt: new Date(Date.now() + ms.hours(1))
+                },
+                status: 'ENV',
+                reglementSurPlace: false
+            }
         },
         fn: function(inter) {
-            return this.fltr.avr &&
+            return this.fltr.i_avr &&
                 inter.reglementSurPlace === false;
             !inter.date.envoiFacture;
         }
@@ -844,7 +850,22 @@ module.exports = {
         'rib',
         'ursaff',
         'autres'
-    ]
+    ],
+    artisanOrigine: {
+        DEM: {
+            order: 0,
+            short_name: 'DEM',
+            long_name: "demarché"
+        },
+        CAND: {
+            order: 1,
+            short_name: 'CAND',
+            long_name: "Candidat"
+        }
+    },
+    artisanOrigineArray: function() {
+        return [this.artisanOrigine.DEM, this.artisanOrigine.CAND];
+    }
 }
 
 },{"lodash/collection/find":9}],5:[function(require,module,exports){

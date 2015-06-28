@@ -1,0 +1,70 @@
+Dropdown artisan:
+
+--- Date ajout absolu
+--- inter total
+--- inter en cours
+--- inter annule
+numero facturier
+..
+
+LISTE
+colonne
+xxx	nbr intervention en attente reglement sous-traitant
+	origin
+	contrat iconmplet
+
+
+afficher le numero dans popup appel
+confirmation pour achivage sst
+
+
+Contrat
+CNI - CONTRAT - KBIS
+
+Clique droit envoyer facturier
+!!WARNING dossier incompler / facturier envoyer moins d'un mois
+popup (checkbox facturier/deviseur)
+historique facturier
+bouton valider 
+bouton imprimer -> ouvre nouvelle fenetre lettre
+envoi mail
+bouton annuler
+
+historique mail 
+facturier / deviseur / relance contrat
+
+POPUP envoi contrat
+text mail + pieces jointes
+
+trier liste par date ajout
+
+enregistre la date
+(last send < 1 mois)
+
+
+FICHE
+visibilité addresse
+zone chalandise
+crlf pourcentage
+virer documents lors de l'ajout
+Block => categories lateral droite / map + petit
+bouton candidat / demarché
+
+FICHE INTERVENTION
+actif / potentiel
+Marker
+ - actif -> rouge
+ - potentiel -> bleu
+
+ - new -> N
+ - hot -> H
+ ..
+- candidat -> carré
+- demarché -> rond
+
+
+GLOBAL
+vire scroll map
+filtre adm
+
+

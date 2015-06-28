@@ -7,6 +7,7 @@ module.exports = function(db) {
             index: true
 
         },
+        origin:String,
         status: {
             type: String,
             default: 'POT'
@@ -105,43 +106,43 @@ module.exports = function(db) {
         document: {
             contrat: {
                 file: String,
-                extension:String,
+                extension: String,
                 date: Date,
                 login: String
             },
             kbis: {
                 file: String,
-                extension:String,
+                extension: String,
                 date: Date,
                 login: String
             },
             cni: {
                 file: String,
-                extension:String,
+                extension: String,
                 date: Date,
                 login: String
             },
             autre: {
                 file: String,
-                extension:String,
+                extension: String,
                 date: Date,
                 login: String
             },
             assurance: {
                 file: String,
-                extension:String,
+                extension: String,
                 date: Date,
                 login: String
             },
             rib: {
                 file: String,
-                extension:String,
+                extension: String,
                 date: Date,
                 login: String
             },
             ursaff: {
                 file: String,
-                extension:String,
+                extension: String,
                 date: Date,
                 login: String
             },
@@ -151,5 +152,33 @@ module.exports = function(db) {
             text: String,
             date: Date
         }],
+        historique: {
+            facturier: [{
+                date: {
+                    type: Date,
+                    default: Date.now
+                },
+                text: String,
+                login: String,
+            }],
+            deviseur: [{
+                date: {
+                    type: Date,
+                    default: Date.now
+                },
+                text: String,
+                login: String,
+            }],
+            contrat: [{
+                date: {
+                    type: Date,
+                    default: Date.now
+                },
+                text: String,
+                login: String,
+                signe: Boolean
+            }],
+        },
+        siret: String
     });
 }

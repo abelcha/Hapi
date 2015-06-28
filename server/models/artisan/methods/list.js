@@ -8,7 +8,7 @@ module.exports = function(schema) {
     var d = requireLocal('config/dates.js')
 
     var lock = new ReadWriteLock();
-        var _ = require('lodash')
+    var _ = require('lodash')
 
     var translate = function(e) {
         var fltr = FiltersFactory('artisan').filter(e);
@@ -19,19 +19,12 @@ module.exports = function(schema) {
             t: e.login.ajout,
             c: e.categories,
             id: e._id,
-            n:e.nomSociete,
-            r:e.representant.civilite + " " + e.representant.prenom + " " + e.representant.nom,
+            n: e.nomSociete,
+            r: e.representant.civilite + " " + e.representant.prenom + " " + e.representant.nom,
             s: e.status,
             cp: e.address.cp,
             v: e.address.v,
-            /*cx: config.categories[e.categorie].long_name,
-            n: e.client.civilite + " " + e.client.nom,
-            s: e.status,
-            sx: config.etatsDevis[e.status].long_name,
-            cp: e.client.address.cp,
-            ad: e.client.address.v,
-            ev: e.envois,
-            pa: e.prixAnnonce,*/
+            cnd: e.origin === 'CAND' ? 1 : undefined,
         };
     }
     schema.statics.translate = translate;

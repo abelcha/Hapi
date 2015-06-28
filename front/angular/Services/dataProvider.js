@@ -25,7 +25,6 @@ angular.module('edison').factory('DataProvider', ['edisonAPI', 'socket', '$rootS
         edisonAPI[_this.model].list({
             cache: true
         }).success(function(resp) {
-            console.log(resp);
             _this.setData(resp);
             return cb(null, resp);
         })

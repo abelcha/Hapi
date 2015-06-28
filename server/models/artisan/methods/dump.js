@@ -42,8 +42,38 @@ module.exports = function(schema) {
                 lt: d.lat,
                 lg: d.lng,
             },
+            origin: d.candidat_sst === void(0) || d.candidat_sst === "0" ? "DEM" : "CAND",
+            historique: {},
+            siret: d.siret || undefined,
             loc: [parseFloat(d.lat), parseFloat(d.lng)],
         };
+
+
+        if (d.num_facturier) {
+            rtn.historique.facturier = [{
+                text: d.num_facturier,
+                login: 'yohann_r'
+            }]
+        }
+        if (d.num_deviseur) {
+            rtn.historique.deviseur = [{
+                text: d.num_deviseur,
+                login: 'yohann_r'
+            }]
+        }
+        if (d.date_envoi_contrat) {
+            var months = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "aout", "septembre", "octobre", "novembre", "décembre"]
+            var x = d.date_envoi_contrat.split(' ');
+            rtn.historique.contrat = [{
+                date: new Date(parseInt(x[5]), months.indexOf(x[4]), parseInt(x[3])),
+                text: d.date_envoi_contrat,
+                login: 'yohann_r',
+                signe: true
+            }]
+        }
+
+
+
         var fj = _.find(config.formeJuridiqueHash(), function(e) {
             return e.long_name.toUpperCase() === d.forme_juridique;
             //       console.log(e.long_name.toUpperCase(), d.forme_juridique)
@@ -63,7 +93,7 @@ module.exports = function(schema) {
         _.each(config.artisanFiles, function(file) {
             if (d[file]) {
                 rtn.document[file] = {
-                    extension:path.extname(d[file]),
+                    extension: path.extname(d[file]),
                     file: d[file],
                     date: rtn.date.ajout,
                     login: 'yohann_r'
@@ -73,9 +103,9 @@ module.exports = function(schema) {
         rtn.comments = [];
         _.each(d.coms, function(e) {
             rtn.comments.push({
-                login:e.ajoute_par,
-                date:new Date(parseInt(e.t_stamp * 1000)),
-                text:e.comment
+                login: e.ajoute_par,
+                date: new Date(parseInt(e.t_stamp * 1000)),
+                text: e.comment
             })
         })
         return rtn;

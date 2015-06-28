@@ -57,8 +57,9 @@
 }
 
 .listeInterventions {
-    padding: 4px;
+    padding: 12px;
     padding-bottom: 21px;
+    min-height: 700px;
 }
 
 .shadow-box {
@@ -291,3 +292,4 @@ map.big-map {
 .card.margin {
     margin-bottom: 21px;
 }
+

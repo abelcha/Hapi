@@ -1,6 +1,6 @@
 angular.module('edison')
-    .factory('Artisan', ['$window', '$rootScope', '$location', 'LxNotificationService', 'dialog', 'edisonAPI', 'textTemplate',
-        function($window, $rootScope, $location, LxNotificationService, dialog, edisonAPI, textTemplate) {
+    .factory('Artisan', ['$window', '$rootScope', '$location', 'LxNotificationService','LxProgressService', 'dialog', 'edisonAPI', 'textTemplate',
+        function($window, $rootScope, $location, LxNotificationService,LxProgressService, dialog, edisonAPI, textTemplate) {
             "use strict";
             var Artisan = function(data) {
                 if (!(this instanceof Artisan)) {
@@ -60,6 +60,23 @@ angular.module('edison')
                     });
             };
 
+            Artisan.prototype.upload = function(file, name, cb) {
+                var _this = this;
+                if (file) {
+                    LxProgressService.circular.show('#5fa2db', '#fileUploadProgress');
+                    edisonAPI.artisan.upload(file, name, _this.id)
+                        .success(function(resp) {
+                          _this.document = resp.document;
+                            LxProgressService.circular.hide();
+                            if (typeof cb === 'function')
+                                cb(null, resp);
+                        }).catch(function(err) {
+                            LxProgressService.circular.hide();
+                            if (typeof cb === 'function')
+                                cb(err);
+                        })
+                }
+            }
 
             Artisan.prototype.envoiContrat = function(cb) {
                 console.log("envoi")
