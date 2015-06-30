@@ -86,6 +86,7 @@ angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', 'config', 
         sendContrat: function(options, cb) {
             $mdDialog.show({
                 controller: function DialogController($scope, $mdDialog) {
+                    options.signe = true;
                     $scope.options = options;
                     $scope.answer = function(cancel) {
                         $mdDialog.hide();

@@ -130,6 +130,7 @@ var getArtisan = function($route, $q, edisonAPI) {
         return $q(function(resolve) {
             resolve({
                 data: {
+                    origin:'DEM',
                     telephone: {},
                     pourcentage: {
                         deplacement: 50,

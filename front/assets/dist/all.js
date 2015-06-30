@@ -130,6 +130,7 @@ var getArtisan = function($route, $q, edisonAPI) {
         return $q(function(resolve) {
             resolve({
                 data: {
+                    origin:'DEM',
                     telephone: {},
                     pourcentage: {
                         deplacement: 50,
@@ -1917,6 +1918,7 @@ angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', 'config', 
         sendContrat: function(options, cb) {
             $mdDialog.show({
                 controller: function DialogController($scope, $mdDialog) {
+                    options.signe = true;
                     $scope.options = options;
                     $scope.answer = function(cancel) {
                         $mdDialog.hide();

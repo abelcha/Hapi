@@ -33,6 +33,7 @@ module.exports = function(schema) {
         findBefore: true,
         method: 'POST',
         fn: function(artisan, req, res) {
+            console.log(req.session.email)
             var text = req.body.text.replaceAll('\n', '<br>')
             return new Promise(function(resolve, reject) {
                 db.model('artisan').getContrat(artisan, false, req.body.signe).then(function(buffer) {

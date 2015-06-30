@@ -91,7 +91,7 @@ Mail.prototype.sendDevis = function(options, user) {
 
 Mail.prototype.sendContrat = function(artisan, buffer, email, text) {
     var _this = this;
-    console.log("==>", text)
+    console.log("==>", email, text)
     return new Promise(function(resolve, reject) {
         _this.renderTemplate('basic', {
             text: text

@@ -861,10 +861,12 @@ module.exports = {
         DEM: {
             order: 0,
             short_name: 'DEM',
+            color:'red',
             long_name: "demarché"
         },
         CAND: {
             order: 1,
+            color:'yellow',
             short_name: 'CAND',
             long_name: "Candidat"
         }
