@@ -414,6 +414,12 @@ module.exports = {
             return artisan.status !== 'ARC';
         }
     }, {
+        title: "Envoyer Contrat",
+        action: 'envoiContrat',
+        hide: function(artisan) {
+            return artisan.document && artisan.document.cni && artisan.document.kbis && artisan.document.contrat;
+        }
+    },{
         title: "Appeler",
         action: 'call',
     }],
@@ -941,8 +947,14 @@ module.exports = {
                 }
                 return text;
             }
+        },
+        artisan: {
+            envoiContrat: function(user) {
+                return "Bonjour M. " + this.representant.nom + ' ' + this.representant.prenom + '\n' +
+                    'voici le contrat\n' + user.prenom;
+            }
         }
-    }
+    },
 
 };
 

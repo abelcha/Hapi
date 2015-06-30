@@ -66,7 +66,13 @@ module.exports = {
                 }
                 return text;
             }
+        },
+        artisan: {
+            envoiContrat: function(user) {
+                return "Bonjour M. " + this.representant.nom + ' ' + this.representant.prenom + '\n' +
+                    'voici le contrat\n' + user.prenom;
+            }
         }
-    }
+    },
 
 };

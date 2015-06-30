@@ -73,7 +73,6 @@ angular.module('edison').factory('DataProvider', ['edisonAPI', 'socket', '$rootS
     }
 
     DataProvider.prototype.getData = function() {
-        console.log(this.model, this.data[this.model] ? this.data[this.model].length : 0)
         return this.data[this.model];
     }
 

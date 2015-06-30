@@ -36,7 +36,7 @@ var ArtisanCtrl = function($rootScope, $location, $routeParams, LxNotificationSe
             if (err) {
                 return false;
             } else if (options.contrat) {
-                artisan.envoiContrat.bind(resp)(options.signe, closeTab);
+                artisan.envoiContrat.bind(resp)(closeTab);
             } else {
                 closeTab();
             }

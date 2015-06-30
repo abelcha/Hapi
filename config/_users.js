@@ -86,8 +86,10 @@
      login: 'yohann_r',
      oldLogin: 'yohann',
      service: 'PARTENARIAT',
+     portable: '0637375945',
      root: true,
      nom: 'rhoum',
+     email:'yohann.rhoum@edison-services.fr',
      prenom: 'yohann',
      activated: true
  }]

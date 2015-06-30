@@ -83,6 +83,19 @@ angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', 'config', 
                 templateUrl: '/DialogTemplates/causeAnnulation.html',
             });
         },
+        sendContrat: function(options, cb) {
+            $mdDialog.show({
+                controller: function DialogController($scope, $mdDialog) {
+                    $scope.options = options;
+                    $scope.answer = function(cancel) {
+                        $mdDialog.hide();
+                        if (!cancel)
+                            return cb($scope.options);
+                    }
+                },
+                templateUrl: '/DialogTemplates/sendContrat.html',
+            });
+        },
         getText: function(options, cb) {
             $mdDialog.show({
                 controller: function DialogController($scope, $mdDialog) {

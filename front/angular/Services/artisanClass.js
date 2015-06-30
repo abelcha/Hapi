@@ -1,6 +1,6 @@
 angular.module('edison')
-    .factory('Artisan', ['$window', '$rootScope', '$location', 'LxNotificationService','LxProgressService', 'dialog', 'edisonAPI', 'textTemplate',
-        function($window, $rootScope, $location, LxNotificationService,LxProgressService, dialog, edisonAPI, textTemplate) {
+    .factory('Artisan', ['$window', '$rootScope', '$location', 'LxNotificationService', 'LxProgressService', 'dialog', 'edisonAPI', 'textTemplate',
+        function($window, $rootScope, $location, LxNotificationService, LxProgressService, dialog, edisonAPI, textTemplate) {
             "use strict";
             var Artisan = function(data) {
                 if (!(this instanceof Artisan)) {
@@ -26,6 +26,7 @@ angular.module('edison')
                 $window.open('callto:' + _this.telephone.tel1, '_self', false)
                 dialog.choiceText({
                     title: 'Nouvel Appel',
+                    subTitle: _this.telephone.tel1
                 }, function(response, text) {
                     edisonAPI.call.save({
                         date: now,
@@ -66,7 +67,7 @@ angular.module('edison')
                     LxProgressService.circular.show('#5fa2db', '#fileUploadProgress');
                     edisonAPI.artisan.upload(file, name, _this.id)
                         .success(function(resp) {
-                          _this.document = resp.document;
+                            _this.document = resp.document;
                             LxProgressService.circular.hide();
                             if (typeof cb === 'function')
                                 cb(null, resp);
@@ -79,32 +80,26 @@ angular.module('edison')
             }
 
             Artisan.prototype.envoiContrat = function(cb) {
-                console.log("envoi")
-                    /*  var _this = this;
-                      dialog.getText({
-                          title: "Texte envoi devis",
-                          text: textTemplate.mail.devis.envoi.bind(_this)($rootScope.user),
-                          width: "60%",
-                          height: "80%"
-                      }, function(text) {
-                          edisonAPI.devis.envoi(_this.id, {
-                              text: text,
-                              data: _this,
-                          }).success(function(resp) {
-                              var validationMessage = _.template("le devis {{id}} à été envoyé")(_this);
-                              LxNotificationService.success(validationMessage);
-                              if (typeof cb === 'function')
-                                  cb(null, resp);
-                          }).catch(function(err) {
-                              var validationMessage = _.template("L'envoi du devis {{id}} à échoué\n")(_this)
-                              if (err && err.data && typeof err.data === 'string')
-                                  validationMessage += ('\n(' + err.data + ')')
-                              LxNotificationService.error(validationMessage);
-                              if (typeof cb === 'function')
-                                  cb(err);
-                          })
-
-                      })*/
+                var _this = this;
+                dialog.sendContrat({
+                    title: "Texte envoi devis",
+                    text: textTemplate.mail.artisan.envoiContrat.bind(_this)($rootScope.user),
+                    width: "60%",
+                    height: "80%"
+                }, function(options) {
+                    edisonAPI.artisan.envoiContrat(_this.id, {
+                        text: options.text,
+                        signe: options.signe
+                    }).success(function(resp) {
+                        LxNotificationService.success("le contrat a été envoyé");
+                        if (typeof cb === 'function')
+                            cb(null, resp);
+                    }).catch(function(err) {
+                        LxNotificationService.error("L'envoi du contrat à échoué\n");
+                        if (typeof cb === 'function')
+                            cb(err);
+                    });
+                });
             }
 
             Artisan.prototype.ouvrirFiche = function() {

@@ -1,7 +1,7 @@
 angular.module('edison')
     .factory('Intervention', ['$location', '$window', 'LxNotificationService', 'LxProgressService', 'dialog', 'edisonAPI', 'Devis', '$rootScope',
 
-        function($location, $window, LxNotificationService,LxProgressService, dialog, edisonAPI, Devis, $rootScope) {
+        function($location, $window, LxNotificationService, LxProgressService, dialog, edisonAPI, Devis, $rootScope) {
             "use strict";
 
             var Intervention = function(data) {
@@ -73,13 +73,14 @@ angular.module('edison')
             Intervention.prototype.callClient = function(cb) {
                 var _this = this;
                 var now = Date.now();
-                $window.open('callto:' + _this.client.tel1, '_self', false)
+                $window.open('callto:' + _this.client.telephone.tel1, '_self', false)
                 dialog.choiceText({
+                    subTitle: _this.client.telephone.tel1,
                     title: 'Nouvel Appel Client',
                 }, function(response, text) {
                     edisonAPI.call.save({
                         date: now,
-                        to: _this.client.tel1,
+                        to: _this.client.telephone.tel1,
                         link: _this.id,
                         origin: _this.id || _this.tmpID || 0,
                         description: text,
@@ -98,6 +99,7 @@ angular.module('edison')
                 var now = Date.now();
                 $window.open('callto:' + _this.artisan.telephone.tel1, '_self', false)
                 dialog.choiceText({
+                    subTitle: _this.artisan.telephone.tel1,
                     title: 'Nouvel Appel',
                 }, function(response, text) {
                     edisonAPI.call.save({

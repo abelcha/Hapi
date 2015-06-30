@@ -84,6 +84,9 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
             }
         },
         artisan: {
+            envoiContrat:function(id, options) {
+                return $http.post("/api/artisan/" + id + '/sendContrat', options)
+            },
             upload: function(file, name, id) {
                 return Upload.upload({
                     url: '/api/artisan/' + id + "/upload",

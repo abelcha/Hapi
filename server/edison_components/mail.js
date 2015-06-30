@@ -89,6 +89,32 @@ Mail.prototype.sendDevis = function(options, user) {
     });
 }
 
+Mail.prototype.sendContrat = function(artisan, buffer, user, text) {
+    var _this = this;
+    console.log("==>", text)
+    return new Promise(function(resolve, reject) {
+        _this.renderTemplate('basic', {
+            text: text
+        }).then(function(textOS) {
+            _this.client.sendEmail({
+                From: "intervention@edison-services.fr",
+                To: "abel@chalier.me",
+                Subject: "Contrat de sous-traitance",
+                HtmlBody: textOS,
+                Attachments: [{
+                    Content: buffer.toString('base64'),
+                    Name: 'Contrat',
+                    ContentType: 'application/pdf'
+                }]
+            }, function(error, success) {
+                if (error)
+                    return reject(error);
+                return resolve(success)
+            })
+        })
+    });
+}
+
 Mail.prototype.sendOS = function(data, osFileBuffer, fileSupp, user) {
     var _this = this;
 
