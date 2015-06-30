@@ -1,8 +1,10 @@
 angular.module('edison').factory('DataProvider', ['edisonAPI', 'socket', '$rootScope', 'config', function(edisonAPI, socket, $rootScope, config) {
     "use strict";
-    var DataProvider = function(model) {
+    var DataProvider = function(model, hashModel) {
         var _this = this;
         this.model = model;
+        this.hashModel = hashModel || 't';
+        console.log(hashModel, this.hashModel)
         socket.on(model + 'ListChange', function(data) {
             if (_this.getData()) {
                 _this.updateData(data);
@@ -31,14 +33,18 @@ angular.module('edison').factory('DataProvider', ['edisonAPI', 'socket', '$rootS
     }
 
     DataProvider.prototype.rowFilterFactory = function(filter, hash) {
+        var _this = this;
+        console.log(this.hashModel)
         if (!filter && hash) {
             return function onlyLogin(inter) {
-                return inter.t === hash;
+                return inter[_this.hashModel] === hash;
             }
         }
         if (filter && hash) {
             return function loginAndFilter(inter) {
-                return inter.f && inter.f[filter.short_name] === 1 && inter.t === hash;
+               /* if (inter[_this.hashModel])
+                console.log(inter.f, _this.hashModel, inter[_this.hashModel], hash)*/
+                return inter.f && inter.f[filter.short_name] === 1 && inter[_this.hashModel] === hash;
             }
         }
         if (filter && !hash) {

@@ -20,6 +20,7 @@ module.exports = function(db) {
             verification: String,
             paiementCLI: String,
             paiementSST: String,
+            demarchage:String,
         },
         telepro: String,
         comments: [{
@@ -38,6 +39,7 @@ module.exports = function(db) {
             verification: Date,
             paiementCLI: Date,
             paiementSST: Date,
+            demarchage:Date
         },
         historique: [{
             date: Date,
@@ -178,6 +180,7 @@ module.exports = function(db) {
             type: Boolean,
             default: false
         },
+        demarchePar: String,
         devisOrigine: Number,
         fournisseur: String,
         coutFourniture: {

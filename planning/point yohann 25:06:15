@@ -10,11 +10,11 @@ numero facturier
 LISTE
 colonne
 xxx	nbr intervention en attente reglement sous-traitant
-	origin
+---	origin
 	contrat iconmplet
 
 
-afficher le numero dans popup appel
+--- afficher le numero dans popup appel
 confirmation pour achivage sst
 
 

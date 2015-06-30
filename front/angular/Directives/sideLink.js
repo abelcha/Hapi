@@ -4,7 +4,7 @@
          restrict: 'AE',
          replace: true,
          template: '<li>' +
-             '      <a href="/{{_model}}/list{{url}}{{_login}}" >' +
+             '      <a href="/{{_model}}/list{{url}}{{_hashModel}}{{_login}}" >' +
              '            <i ng-if="icon" class = "menu-icon fa fa-{{icon}}"> </i>' +
              '            <span class="mm-text">{{title || exFltr.long_name}}</span>' +
              '            <span ng-if="total !== void(0)"class="label label-success">{{total}}</span>' +
@@ -17,7 +17,8 @@
              icon: '@',
              title: '@',
              model: '@',
-             count: '@'
+             count: '@',
+             hashModel:'@'
          },
          link: function(scope, element, attrs) {
 
@@ -40,6 +41,7 @@
              findTotal();
              scope.url = scope.exFltr.url.length ? "/" + scope.exFltr.url : scope.exFltr.url;
              scope._login = scope.login ? ("#" + scope.login) : '';
+             scope._hashModel = scope.hashModel ? ("?hashModel=" + scope.hashModel) : '';
          }
      };
  }]);

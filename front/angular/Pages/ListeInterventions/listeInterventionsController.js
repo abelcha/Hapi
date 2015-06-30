@@ -2,12 +2,13 @@ var InterventionsController = function($timeout, tabContainer, FiltersFactory, C
     "use strict";
     var _this = this;
     var currentFilter;
-    var dataProvider = new DataProvider('intervention');
-    var filtersFactory = new FiltersFactory('intervention')
     var currentHash = $location.hash();
+    var dataProvider = new DataProvider('intervention', $routeParams.hashModel);
+    var filtersFactory = new FiltersFactory('intervention')
     if ($routeParams.fltr) {
         currentFilter = filtersFactory.getFilterByUrl($routeParams.fltr)
     }
+
     var title = currentFilter ? currentFilter.long_name : "Interventions";
     _this.recap = $routeParams.sstID ? parseInt($routeParams.sstID) : false;
 

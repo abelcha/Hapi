@@ -624,7 +624,7 @@ angular.module('edison').directive('select', function($interpolate) {
          restrict: 'AE',
          replace: true,
          template: '<li>' +
-             '      <a href="/{{_model}}/list{{url}}{{_login}}" >' +
+             '      <a href="/{{_model}}/list{{url}}{{_hashModel}}{{_login}}" >' +
              '            <i ng-if="icon" class = "menu-icon fa fa-{{icon}}"> </i>' +
              '            <span class="mm-text">{{title || exFltr.long_name}}</span>' +
              '            <span ng-if="total !== void(0)"class="label label-success">{{total}}</span>' +
@@ -637,7 +637,8 @@ angular.module('edison').directive('select', function($interpolate) {
              icon: '@',
              title: '@',
              model: '@',
-             count: '@'
+             count: '@',
+             hashModel:'@'
          },
          link: function(scope, element, attrs) {
 
@@ -660,6 +661,7 @@ angular.module('edison').directive('select', function($interpolate) {
              findTotal();
              scope.url = scope.exFltr.url.length ? "/" + scope.exFltr.url : scope.exFltr.url;
              scope._login = scope.login ? ("#" + scope.login) : '';
+             scope._hashModel = scope.hashModel ? ("?hashModel=" + scope.hashModel) : '';
          }
      };
  }]);
@@ -1043,6 +1045,12 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
                     url: '/api/intervention/stats'
                 })
             },
+            demarcher:function(id) {
+                return $http({
+                    method:'POST',
+                    url:'/api/intervention/' + id + '/demarcher'
+                })
+            },
             list: function(options) {
                 return $http({
                     method: 'GET',
@@ -1283,7 +1291,11 @@ angular.module('edison')
             Artisan.prototype.ouvrirRecap = function() {
                 $location.url("/artisan/" + this.id + '/recap');
             }
-
+            Artisan.prototype.facturierDeviseur = function() {
+                dialog.facturierDeviseur(this, function(facturier, deviseur) {
+                    console.log(facturier, deviseur)
+                })
+            }
             Artisan.prototype.call = function(cb) {
                 var _this = this;
                 var now = Date.now();
@@ -1667,9 +1679,11 @@ angular.module('edison').factory('ContextMenu', ['$location', 'edisonAPI', '$win
 
 angular.module('edison').factory('DataProvider', ['edisonAPI', 'socket', '$rootScope', 'config', function(edisonAPI, socket, $rootScope, config) {
     "use strict";
-    var DataProvider = function(model) {
+    var DataProvider = function(model, hashModel) {
         var _this = this;
         this.model = model;
+        this.hashModel = hashModel || 't';
+        console.log(hashModel, this.hashModel)
         socket.on(model + 'ListChange', function(data) {
             if (_this.getData()) {
                 _this.updateData(data);
@@ -1698,14 +1712,18 @@ angular.module('edison').factory('DataProvider', ['edisonAPI', 'socket', '$rootS
     }
 
     DataProvider.prototype.rowFilterFactory = function(filter, hash) {
+        var _this = this;
+        console.log(this.hashModel)
         if (!filter && hash) {
             return function onlyLogin(inter) {
-                return inter.t === hash;
+                return inter[_this.hashModel] === hash;
             }
         }
         if (filter && hash) {
             return function loginAndFilter(inter) {
-                return inter.f && inter.f[filter.short_name] === 1 && inter.t === hash;
+               /* if (inter[_this.hashModel])
+                console.log(inter.f, _this.hashModel, inter[_this.hashModel], hash)*/
+                return inter.f && inter.f[filter.short_name] === 1 && inter[_this.hashModel] === hash;
             }
         }
         if (filter && !hash) {
@@ -1834,6 +1852,21 @@ angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', 'config', 
     "use strict";
 
     return {
+        facturierDeviseur: function(artisan, cb) {
+            $mdDialog.show({
+                controller: function DialogController($scope, $mdDialog, config) {
+                    $scope.sst = artisan
+                    $scope.answer = function(cancel) {
+                        $mdDialog.hide();
+                        
+                        if (!cancel) {
+                            cb($scope.facturier, $scope.deviseur);
+                        }
+                    }
+                },
+                templateUrl: '/DialogTemplates/facturierDeviseur.html',
+            });
+        },
         envoiFacture: function(inter, cb) {
             $mdDialog.show({
                 controller: function DialogController($scope, $mdDialog) {
@@ -2110,6 +2143,14 @@ angular.module('edison')
             };
             Intervention.prototype.envoiDevis = function(cb) {
                 Devis().envoi.bind(this)(cb)
+            };
+
+            Intervention.prototype.demarcher = function(cb) {
+                edisonAPI.intervention.demarcher(this.id).success(function() {
+                    LxNotificationService.success("Vous demarchez l'intervention");
+                }).catch(function() {
+                    LxNotificationService.error("Une erreur est survenu");
+                })
             };
 
             Intervention.prototype.envoiFacture = function(cb) {
@@ -2789,12 +2830,14 @@ angular.module('edison').factory('user', function($window) {
 
  }]);
 
-var ArtisanCtrl = function($rootScope, $location, $routeParams, LxNotificationService, tabContainer, config, dialog, artisanPrm, Artisan) {
+var ArtisanCtrl = function($rootScope, $location, $routeParams, ContextMenu, LxNotificationService, tabContainer, config, dialog, artisanPrm, Artisan) {
     "use strict";
     var _this = this;
     _this.config = config;
     _this.dialog = dialog;
     _this.moment = moment;
+    _this.contextMenu = new ContextMenu('artisan')
+
     var tab = tabContainer.getCurrentTab();
     if (!tab.data) {
         var artisan = new Artisan(artisanPrm.data)
@@ -2821,9 +2864,7 @@ var ArtisanCtrl = function($rootScope, $location, $routeParams, LxNotificationSe
         tabContainer.remove(tab)
     }
     _this.saveArtisan = function(options) {
-        console.log("yey")
         artisan.save(function(err, resp) {
-            console.log(err, resp)
             if (err) {
                 return false;
             } else if (options.contrat) {
@@ -2840,7 +2881,19 @@ var ArtisanCtrl = function($rootScope, $location, $routeParams, LxNotificationSe
     _this.clickTrigger = function(elem) {
         angular.element("#file_" + elem + ">input").trigger('click');
     }
+    _this.rightClick = function($event) {
+        console.log('rightClick')
+        _this.contextMenu.setPosition($event.pageX, $event.pageY)
+        _this.contextMenu.setData(artisan);
+        _this.contextMenu.open();
+    }
 
+    _this.leftClick = function($event, inter) {
+        console.log('leftClick')
+
+        if (_this.contextMenu.active)
+            return _this.contextMenu.close();
+    }
 
     _this.addComment = function() {
         artisan.comments.push({
@@ -3529,12 +3582,13 @@ var InterventionsController = function($timeout, tabContainer, FiltersFactory, C
     "use strict";
     var _this = this;
     var currentFilter;
-    var dataProvider = new DataProvider('intervention');
-    var filtersFactory = new FiltersFactory('intervention')
     var currentHash = $location.hash();
+    var dataProvider = new DataProvider('intervention', $routeParams.hashModel);
+    var filtersFactory = new FiltersFactory('intervention')
     if ($routeParams.fltr) {
         currentFilter = filtersFactory.getFilterByUrl($routeParams.fltr)
     }
+
     var title = currentFilter ? currentFilter.long_name : "Interventions";
     _this.recap = $routeParams.sstID ? parseInt($routeParams.sstID) : false;
 

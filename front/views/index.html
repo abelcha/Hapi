@@ -36,7 +36,7 @@
             </div>
             <!-- / .navbar-inner -->
         </div>
-        <side-bar ng-if="user.login && interventionsStats" >
+        <side-bar ng-if="user.login && interventionsStats">
             <drop-down id="service-intervention" title="Service Intervention" icon="circle" open-default="user.service === 'INTERVENTION'">
                 <link fltr="i_all" icon="th-list" title="Toute les Interventions"></link>
                 <drop-down title="Mes Interventions" icon="calendar" open-default="user.service === 'INTERVENTION'">
@@ -79,7 +79,7 @@
                     <link fltr="i_fact" icon="th-list" login="{{user.login}}"></link>
                     <link fltr="i_carl" icon="th-list" login="{{user.login}}"></link>
                 </drop-down>
-                <drop-down icon="share" open-default="userStats.i_savEnc.total"  title="Mes S.A.V">
+                <drop-down icon="share" open-default="userStats.i_savEnc.total" title="Mes S.A.V">
                     <link fltr="i_sav" icon="th-list" login="{{user.login}}"></link>
                     <link fltr="i_savEnc" icon="th-list" login="{{user.login}}"></link>
                 </drop-down>
@@ -96,10 +96,21 @@
                 </drop-down>
             </drop-down>
             <drop-down title="Service Partenariat" icon="circle" open-default="user.service === 'PARTENARIAT'">
-                <link fltr="a_all" icon="th-list" model="artisan" title="Tous les Artisans"></link>
-                <link fltr="a_arc" icon="th-list" model="artisan" title="Archivés"></link>
-                <link fltr="a_pot" icon="th-list" model="artisan" title="Potentiels"></link>
-                <link fltr="a_act" icon="th-list" model="artisan" title="Actifs"></link>
+                <drop-down icon="truck" title="Artisans">
+                    <link fltr="a_all" icon="th-list" model="artisan" login='{{user.login}}' title="Mes Artisans"></link>
+                    <link fltr="a_all" icon="th-list" model="artisan" title="Tous les Artisans"></link>
+                    <!-- <link fltr="a_arc" icon="th-list" model="artisan" title="Archivés"></link>
+                    <link fltr="a_pot" icon="th-list" model="artisan" title="Potentiels"></link>
+                    <link fltr="a_act" icon="th-list" model="artisan" title="Actifs"></link> -->
+                    <li>
+                        <a href="/artisan"><i class="menu-icon fa fa-plus"></i><span class="mm-text">Nouvel Artisan</span></a>
+                    </li>
+                </drop-down>
+                <drop-down icon="phone" title="Démarchage">
+                    <link fltr="i_dem" icon="th-list" title="Inters à démarcher"></link>
+                    <link fltr="i_dem" icon="th-list" login="{{user.login}}" hash-model="dm" title="Mes Inters"></link>
+                    <link fltr="i_avr" icon="th-list" login="{{user.login}}" hash-model="dm" title="A Verifier"></link>
+                </drop-down>
             </drop-down>
             <br>
             <br>
@@ -109,36 +120,11 @@
             <li>
                 <a href="/devis"><i class="menu-icon fa fa-table"></i><span class="mm-text">Nouveau Devis</span></a>
             </li>
-            <li>
-                <a href="/artisan"><i class="menu-icon fa fa-truck"></i><span class="mm-text">Nouvel Artisan</span></a>
-            </li>
         </side-bar>
         <div class="page-header" style="background: #f4f4f4 url(/img/mooning.png);">
             <div id="content-wrapper">
-                <!--  <div class="row " ng-if="!recap">
-                    <div class="col-sm-2" style="height:200px" ng-repeat="telepro in interventionsStats | orderBy:'-tall.total' | limitTo:6">
-                        <div class="card">
-                            <div style="width:95%;margin-right:0" class="p+">
-                                {{telepro.login|loginify}}
-                                <br> Ajouté:&nbsp; <a href="/intervention/list/ajd#{{telepro.login}}">
-                                {{telepro.tall|total}} 
-                                <span class="hidden-xs hidden-sm hidden-md">({{telepro.tall|montant}})</span></a>
-                                <br> Envoyés: <a href="/intervention/list/envoyeAjd#{{telepro.login}}">
-                                {{telepro.tenv|total}} 
-                                <span class="hidden-xs hidden-sm hidden-md">({{telepro.tenv|montant}})</span></a>
-                                <br> A Prog:&nbsp; <a href="/intervention/list/aProgrammer#{{telepro.login}}">
-                                {{telepro.apr|total}} 
-                                <span class="hidden-xs hidden-sm hidden-md">({{telepro.apr|montant}})</span></a>
-                                <br> A Vérif: <a href="/intervention/list/aVerifier#{{telepro.login}}">
-                                {{telepro.avr|total}} 
-                                <span class="hidden-xs hidden-sm hidden-md">({{telepro.avr|montant}})</span></a>
-                            </div>
-                        </div>
-                    </div>
-                </div> -->
                 <div ng-view></div>
                 <div id="globalProgress" style="position:fixed;top: 50%;left: 57%;z-index: 12222;"></div>
-
             </div>
         </div>
         <div id="main-menu-bg"></div>
@@ -146,7 +132,7 @@
     <!-- / #main-wrapper -->
     <div ng-show="loadingData || true" class="animate-loading">
         <div class="spinner">
-<!--             <div class="double-bounce1"></div>
+            <!--             <div class="double-bounce1"></div>
             <div class="double-bounce2"></div> -->
         </div>
     </div>

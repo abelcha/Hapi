@@ -19,7 +19,11 @@ angular.module('edison')
             Artisan.prototype.ouvrirRecap = function() {
                 $location.url("/artisan/" + this.id + '/recap');
             }
-
+            Artisan.prototype.facturierDeviseur = function() {
+                dialog.facturierDeviseur(this, function(facturier, deviseur) {
+                    console.log(facturier, deviseur)
+                })
+            }
             Artisan.prototype.call = function(cb) {
                 var _this = this;
                 var now = Date.now();

@@ -39,6 +39,12 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
                     url: '/api/intervention/stats'
                 })
             },
+            demarcher:function(id) {
+                return $http({
+                    method:'POST',
+                    url:'/api/intervention/' + id + '/demarcher'
+                })
+            },
             list: function(options) {
                 return $http({
                     method: 'GET',

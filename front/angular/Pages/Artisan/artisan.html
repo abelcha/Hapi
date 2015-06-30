@@ -1,6 +1,6 @@
 <div class="container" style=" margin: auto;max-width: 1200px;">
     <div class="row">
-        <div class="col-sm-12 " style="height:100%">
+        <div class="col-sm-12 " style="height:100%" ng-click="vm.leftClick($event)" ng-right-click="vm.rightClick($event)">
             <div class="form-horizontal" style="overflow:hidden;height:100%" novalidate>
                 <div class="card" style="padding:20px">
                     <div class="p+">
@@ -222,6 +222,15 @@
                     <button ng-click="vm.saveArtisan({contrat:true})" class="btn--no-conflicts btn--l btn--black btn--fab" lx-ripple lx-tooltip="Envoyer Contrat" tooltip-position="top"><i class="fa fa-send-o"></i></button>
                 </div>
             </div>
+        </div>
+    </div>
+      <div class="dropdown-menu--no-conflicts dropdown-menu--right dropdown__menu--is-dropped" style=" width: auto; height: auto; opacity: 1;" ng-style="vm.contextMenu.style">
+        <div class="dropdown-menu__content ng-scope">
+            <ul class="ng-scope">
+                <li ng-repeat="item in vm.contextMenu.list" ng-click="vm.contextMenu.close();vm.contextMenu.click(item)">
+                    <a class="dropdown-link" tabindex="0">{{item.title}}</a>
+                </li>
+            </ul>
         </div>
     </div>
 </div>

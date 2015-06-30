@@ -5,7 +5,7 @@ module.exports = {
     }, {
         title: 'Ouvrir Recap',
         action: "ouvrirRecap",
-        hide:function(artisan) {
+        hide: function(artisan) {
             return artisan.status !== 'POT';
         }
     }, {
@@ -20,7 +20,10 @@ module.exports = {
         hide: function(artisan) {
             return artisan.document && artisan.document.cni && artisan.document.kbis && artisan.document.contrat;
         }
-    },{
+    }, {
+        title: "Facturier/deviseur",
+        action: 'facturierDeviseur',
+    }, {
         title: "Appeler",
         action: 'call',
     }],
@@ -83,5 +86,11 @@ module.exports = {
         title: "Annuler",
         action: 'annulation'
 
+    }, {
+        title: "Démarcher",
+        action: 'demarcher',
+        hide:function(inter) {
+            return !inter.aDemarcher || inter.login.demarchage;
+        }
     }]
 }

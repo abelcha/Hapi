@@ -1,9 +1,11 @@
-var ArtisanCtrl = function($rootScope, $location, $routeParams, LxNotificationService, tabContainer, config, dialog, artisanPrm, Artisan) {
+var ArtisanCtrl = function($rootScope, $location, $routeParams, ContextMenu, LxNotificationService, tabContainer, config, dialog, artisanPrm, Artisan) {
     "use strict";
     var _this = this;
     _this.config = config;
     _this.dialog = dialog;
     _this.moment = moment;
+    _this.contextMenu = new ContextMenu('artisan')
+
     var tab = tabContainer.getCurrentTab();
     if (!tab.data) {
         var artisan = new Artisan(artisanPrm.data)
@@ -30,9 +32,7 @@ var ArtisanCtrl = function($rootScope, $location, $routeParams, LxNotificationSe
         tabContainer.remove(tab)
     }
     _this.saveArtisan = function(options) {
-        console.log("yey")
         artisan.save(function(err, resp) {
-            console.log(err, resp)
             if (err) {
                 return false;
             } else if (options.contrat) {
@@ -49,7 +49,19 @@ var ArtisanCtrl = function($rootScope, $location, $routeParams, LxNotificationSe
     _this.clickTrigger = function(elem) {
         angular.element("#file_" + elem + ">input").trigger('click');
     }
+    _this.rightClick = function($event) {
+        console.log('rightClick')
+        _this.contextMenu.setPosition($event.pageX, $event.pageY)
+        _this.contextMenu.setData(artisan);
+        _this.contextMenu.open();
+    }
 
+    _this.leftClick = function($event, inter) {
+        console.log('leftClick')
+
+        if (_this.contextMenu.active)
+            return _this.contextMenu.close();
+    }
 
     _this.addComment = function() {
         artisan.comments.push({

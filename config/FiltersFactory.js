@@ -373,6 +373,21 @@ FiltersFactory.prototype.list = {
             return inter.litiges && inter.litiges.length > 0 &&
                 inter.litiges[inter.litiges.length - 1].regle === false
         }
+    }, {
+        short_name: 'i_dem',
+        long_name: 'Mes Inters',
+        url: 'aDemarcher',
+        match: {
+            aDemarcher: true,
+            status: {
+                $ne: 'ANN',
+                $ne: 'PAY',
+                $ne: 'RGL'
+            }
+        },
+        fn: function(inter) {
+            return inter.aDemarcher && inter.status !== "ANN" && inter.status !== "RGL";
+        }
     }]
 }
 

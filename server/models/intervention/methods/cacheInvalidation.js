@@ -24,7 +24,8 @@ module.exports = function(schema) {
         'artisan',
         'reglementSurPlace',
         'date.intervention',
-        'date.ajout'
+        'date.ajout',
+        "aDemarcher",
     ].join(' ');
 
 
@@ -47,7 +48,8 @@ module.exports = function(schema) {
             pa: e.prixAnnonce ||  undefined,
             da: d(e.date.ajout),
             di: d(e.date.intervention),
-            ad: e.client.address.cp + ', ' + e.client.address.v
+            ad: e.client.address.cp + ', ' + e.client.address.v,
+            dm: e.login.demarchage || undefined
         };
         var fltr = FiltersFactory("intervention").filter(e);
         if (!_.isEmpty(fltr)) {

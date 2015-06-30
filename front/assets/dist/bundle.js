@@ -374,6 +374,21 @@ FiltersFactory.prototype.list = {
             return inter.litiges && inter.litiges.length > 0 &&
                 inter.litiges[inter.litiges.length - 1].regle === false
         }
+    }, {
+        short_name: 'i_dem',
+        long_name: 'Mes Inters',
+        url: 'aDemarcher',
+        match: {
+            aDemarcher: true,
+            status: {
+                $ne: 'ANN',
+                $ne: 'PAY',
+                $ne: 'RGL'
+            }
+        },
+        fn: function(inter) {
+            return inter.aDemarcher && inter.status !== "ANN" && inter.status !== "RGL";
+        }
     }]
 }
 
@@ -404,7 +419,7 @@ module.exports = {
     }, {
         title: 'Ouvrir Recap',
         action: "ouvrirRecap",
-        hide:function(artisan) {
+        hide: function(artisan) {
             return artisan.status !== 'POT';
         }
     }, {
@@ -419,7 +434,10 @@ module.exports = {
         hide: function(artisan) {
             return artisan.document && artisan.document.cni && artisan.document.kbis && artisan.document.contrat;
         }
-    },{
+    }, {
+        title: "Facturier/deviseur",
+        action: 'facturierDeviseur',
+    }, {
         title: "Appeler",
         action: 'call',
     }],
@@ -482,6 +500,12 @@ module.exports = {
         title: "Annuler",
         action: 'annulation'
 
+    }, {
+        title: "Démarcher",
+        action: 'demarcher',
+        hide:function(inter) {
+            return !inter.aDemarcher || inter.login.demarchage;
+        }
     }]
 }
 

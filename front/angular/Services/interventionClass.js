@@ -21,6 +21,14 @@ angular.module('edison')
                 Devis().envoi.bind(this)(cb)
             };
 
+            Intervention.prototype.demarcher = function(cb) {
+                edisonAPI.intervention.demarcher(this.id).success(function() {
+                    LxNotificationService.success("Vous demarchez l'intervention");
+                }).catch(function() {
+                    LxNotificationService.error("Une erreur est survenu");
+                })
+            };
+
             Intervention.prototype.envoiFacture = function(cb) {
                 var _this = this;
                 dialog.envoiFacture(_this, function(text, acquitte, date) {
