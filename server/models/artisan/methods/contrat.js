@@ -36,7 +36,7 @@ module.exports = function(schema) {
             var text = req.body.text.replaceAll('\n', '<br>')
             return new Promise(function(resolve, reject) {
                 db.model('artisan').getContrat(artisan, false, req.body.signe).then(function(buffer) {
-                    mail.sendContrat(artisan, buffer, req.session.login, text).then(function() {
+                    mail.sendContrat(artisan, buffer, req.session.email, text).then(function() {
                         artisan.historique.contrat.push({
                             login: req.session.login,
                             signe: req.body.signe,

@@ -89,7 +89,7 @@ Mail.prototype.sendDevis = function(options, user) {
     });
 }
 
-Mail.prototype.sendContrat = function(artisan, buffer, user, text) {
+Mail.prototype.sendContrat = function(artisan, buffer, email, text) {
     var _this = this;
     console.log("==>", text)
     return new Promise(function(resolve, reject) {
@@ -98,7 +98,7 @@ Mail.prototype.sendContrat = function(artisan, buffer, user, text) {
         }).then(function(textOS) {
             _this.client.sendEmail({
                 From: "intervention@edison-services.fr",
-                To: "abel@chalier.me",
+                To: email || "abel@chalier.me",
                 Subject: "Contrat de sous-traitance",
                 HtmlBody: textOS,
                 Attachments: [{
