@@ -87,7 +87,7 @@ module.exports = {
         action: 'annulation'
 
     }, {
-        title: "Démarcher",
+        title: "Je prend !",
         action: 'demarcher',
         hide:function(inter) {
             return !inter.aDemarcher || inter.login.demarchage;
