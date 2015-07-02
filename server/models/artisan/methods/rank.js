@@ -32,7 +32,7 @@ module.exports = function(schema) {
                 coordinates: [parseFloat(options.lat), parseFloat(options.lng)]
             }, {
                 distanceMultiplier: 0.001,
-                maxDistance: (parseFloat(options.maxDistance) || 50) / 0.001
+                maxDistance: (parseFloat(options.maxDistance) || 100) / 0.001
             }).then(function(docs) {
                 resolve(_.chain(docs).filter(__filter.bind(options)).map(__map).take(options.limit || 50).value())
             }, reject)
