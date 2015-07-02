@@ -7,7 +7,7 @@ angular.module('edison', ['browserify', 'ui.slimscroll', 'ngMaterial', 'lumx', '
     });
 
 
-angular.module('edison').controller('MainController', function(DataProvider, tabContainer, $scope, socket, config, $rootScope, $location, edisonAPI, taskList, $window) {
+angular.module('edison').controller('MainController', function(DataProvider, tabContainer, $routeParams, $scope, socket, config, $rootScope, $location, edisonAPI, taskList, $window) {
     "use strict";
 
 
@@ -69,7 +69,7 @@ angular.module('edison').controller('MainController', function(DataProvider, tab
             return 0;
         }
         if (!$scope.tabsInitialized) {
-            return initTabs($location.path(), $location.hash());
+            return initTabs($location.path(), $location.hash(), _.get($location, '$$search.hashModel'));
         }
         if ($location.path() !== "/intervention" && $location.path() !== "/devis" && $location.path() !== "/artisan") {
             $scope.tabs.addTab($location.path(), {
@@ -709,7 +709,6 @@ angular.module('edison').directive('select', function($interpolate) {
          transclude: true,
          scope: {},
          link: function(scope, element, attrs) {
-             console.log("test")
              scope.sidebarSM = sidebarSM;
          }
      }
@@ -1683,7 +1682,6 @@ angular.module('edison').factory('DataProvider', ['edisonAPI', 'socket', '$rootS
         var _this = this;
         this.model = model;
         this.hashModel = hashModel || 't';
-        console.log(hashModel, this.hashModel)
         socket.on(model + 'ListChange', function(data) {
             if (_this.getData()) {
                 _this.updateData(data);
@@ -1713,7 +1711,6 @@ angular.module('edison').factory('DataProvider', ['edisonAPI', 'socket', '$rootS
 
     DataProvider.prototype.rowFilterFactory = function(filter, hash) {
         var _this = this;
-        console.log(this.hashModel)
         if (!filter && hash) {
             return function onlyLogin(inter) {
                 return inter[_this.hashModel] === hash;
@@ -2618,7 +2615,7 @@ angular.module('edison').factory('socket', function(socketFactory) {
 
 angular.module('edison').factory('tabContainer', ['$location', '$window', '$q', 'edisonAPI', function($location, $window, $q, edisonAPI) {
     "use strict";
-    var Tab = function(args, hash) {
+    var Tab = function(args, hash, hashModel) {
 
         if (typeof args === 'object') {
             //copy constructor
@@ -2626,6 +2623,7 @@ angular.module('edison').factory('tabContainer', ['$location', '$window', '$q', 
                 this[k] = e;
             })
         } else {
+            this.hashModel = hashModel;
             this.hash = hash
             this.url = args;
             this.title = '';
@@ -2798,12 +2796,6 @@ angular.module('edison').factory('user', function($window) {
     return $window.user;
 });
 
-angular.module('edison').controller('DashboardController', function(tabContainer, $scope) {
-    "use strict";
-    $scope.tab = tabContainer.getCurrentTab();
-    $scope.tab.setTitle('dashBoard')
-});
-
  angular.module('edison').directive('artisanCategorie', ['config', function(config) {
      "use strict";
      return {
@@ -2911,6 +2903,12 @@ var ArtisanCtrl = function($rootScope, $location, $routeParams, ContextMenu, LxN
     }
 }
 angular.module('edison').controller('ArtisanController', ArtisanCtrl);
+
+angular.module('edison').controller('DashboardController', function(tabContainer, $scope) {
+    "use strict";
+    $scope.tab = tabContainer.getCurrentTab();
+    $scope.tab.setTitle('dashBoard')
+});
 
 
  angular.module('edison').directive('edisonMap', ['$window', 'Map', 'mapAutocomplete', 'Address',
@@ -3595,6 +3593,7 @@ var InterventionsController = function($timeout, tabContainer, FiltersFactory, C
     LxProgressService.circular.show('#5fa2db', '#globalProgress');
     dataProvider.init(function(err, resp) {
         _this.tab = tabContainer.getCurrentTab();
+        dataProvider.hashModel = _this.tab.hashModel;
         _this.tab.setTitle(title, currentHash);
         _this.tab.hash = currentHash;
         _this.config = config;

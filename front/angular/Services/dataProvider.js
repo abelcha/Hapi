@@ -4,7 +4,6 @@ angular.module('edison').factory('DataProvider', ['edisonAPI', 'socket', '$rootS
         var _this = this;
         this.model = model;
         this.hashModel = hashModel || 't';
-        console.log(hashModel, this.hashModel)
         socket.on(model + 'ListChange', function(data) {
             if (_this.getData()) {
                 _this.updateData(data);
@@ -34,7 +33,6 @@ angular.module('edison').factory('DataProvider', ['edisonAPI', 'socket', '$rootS
 
     DataProvider.prototype.rowFilterFactory = function(filter, hash) {
         var _this = this;
-        console.log(this.hashModel)
         if (!filter && hash) {
             return function onlyLogin(inter) {
                 return inter[_this.hashModel] === hash;

@@ -387,7 +387,7 @@ FiltersFactory.prototype.list = {
     }, {
         short_name: 'i_adm',
         long_name: 'A DEMARCHER',
-        url: '__aDemarcher',
+        url: 'aDemarcher',
         match: {
             aDemarcher: true,
             status: 'APR'

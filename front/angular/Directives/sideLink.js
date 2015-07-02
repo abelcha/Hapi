@@ -89,7 +89,6 @@
          transclude: true,
          scope: {},
          link: function(scope, element, attrs) {
-             console.log("test")
              scope.sidebarSM = sidebarSM;
          }
      }
