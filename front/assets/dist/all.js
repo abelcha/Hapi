@@ -2798,6 +2798,12 @@ angular.module('edison').factory('user', function($window) {
     return $window.user;
 });
 
+angular.module('edison').controller('DashboardController', function(tabContainer, $scope) {
+    "use strict";
+    $scope.tab = tabContainer.getCurrentTab();
+    $scope.tab.setTitle('dashBoard')
+});
+
  angular.module('edison').directive('artisanCategorie', ['config', function(config) {
      "use strict";
      return {
@@ -2905,12 +2911,6 @@ var ArtisanCtrl = function($rootScope, $location, $routeParams, ContextMenu, LxN
     }
 }
 angular.module('edison').controller('ArtisanController', ArtisanCtrl);
-
-angular.module('edison').controller('DashboardController', function(tabContainer, $scope) {
-    "use strict";
-    $scope.tab = tabContainer.getCurrentTab();
-    $scope.tab.setTitle('dashBoard')
-});
 
 
  angular.module('edison').directive('edisonMap', ['$window', 'Map', 'mapAutocomplete', 'Address',

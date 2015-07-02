@@ -377,17 +377,23 @@ FiltersFactory.prototype.list = {
     }, {
         short_name: 'i_dem',
         long_name: 'A DEMARCHER',
-        url: 'aDemarcher',
+        url: 'aDemarcherArchive',
         match: {
             aDemarcher: true,
-            status: {
-                $ne: 'ANN',
-                $ne: 'PAY',
-                $ne: 'RGL'
-            }
         },
         fn: function(inter) {
-            return inter.aDemarcher && inter.status !== "ANN" && inter.status !== "RGL";
+            return inter.aDemarcher;
+        }
+    }, {
+        short_name: 'i_adm',
+        long_name: 'A DEMARCHER',
+        url: '__aDemarcher',
+        match: {
+            aDemarcher: true,
+            status: 'APR'
+        },
+        fn: function(inter) {
+            return inter.aDemarcher && inter.status === "APR";
         }
     }]
 }
@@ -448,13 +454,13 @@ module.exports = {
         title: "Annuler",
         action: 'annulation',
         hide: function(inter) {
-            return inter.statustatus !== 'ANN';
+            return inter.status !== 'ANN';
         }
     }, {
         title: "Envoyer",
         action: 'envoi',
         hide: function(inter) {
-            return inter.artisan
+            return inter.status !== "TRA" && inter.status !== 'ANN';
         }
     }, {
         title: "Transferer",
@@ -488,7 +494,7 @@ module.exports = {
         title: "Envoyer",
         action: 'envoi',
         hide: function(inter) {
-            return inter.status != "APR" &&  inter.status !== "ANN"
+            return (inter.status != "APR" &&  inter.status !== "ANN") || !inter.artisan
         }
     }, {
         title: "Vérifier",

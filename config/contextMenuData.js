@@ -34,13 +34,13 @@ module.exports = {
         title: "Annuler",
         action: 'annulation',
         hide: function(inter) {
-            return inter.statustatus !== 'ANN';
+            return inter.status !== 'ANN';
         }
     }, {
         title: "Envoyer",
         action: 'envoi',
         hide: function(inter) {
-            return inter.artisan
+            return inter.status !== "TRA" && inter.status !== 'ANN';
         }
     }, {
         title: "Transferer",
@@ -74,7 +74,7 @@ module.exports = {
         title: "Envoyer",
         action: 'envoi',
         hide: function(inter) {
-            return inter.status != "APR" &&  inter.status !== "ANN"
+            return (inter.status != "APR" &&  inter.status !== "ANN") || !inter.artisan
         }
     }, {
         title: "Vérifier",
