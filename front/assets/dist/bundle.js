@@ -395,14 +395,14 @@ FiltersFactory.prototype.list = {
         match: {
             aDemarcher: true,
             status: {
-                $in: ['APR', 'ENV']
+                $in: ['APR', 'ENV', 'AVR']
             },
             'login.demarchage': {
                 $exists: true
             }
         },
         fn: function(inter) {
-            return inter.aDemarcher && ['APR', 'ENV'].indexOf(inter.status) !== -1 && inter.login.demarchage;
+            return inter.aDemarcher && ['APR', 'ENV', 'AVR'].indexOf(inter.status) !== -1 && inter.login.demarchage;
         }
     }, {
         short_name: 'i_hist',
