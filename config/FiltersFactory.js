@@ -378,7 +378,6 @@ FiltersFactory.prototype.list = {
         long_name: 'A DEMARCHER',
         url: 'aDemarcherArchive',
         match: {
-
             aDemarcher: true,
         },
         fn: function(inter) {
@@ -396,7 +395,7 @@ FiltersFactory.prototype.list = {
             }
         },
         fn: function(inter) {
-            return inter.aDemarcher && inter.status === "APR";
+            return inter.aDemarcher && inter.status === "APR" && !login.demarchage;
         }
     }]
 }
