@@ -1,0 +1,29 @@
+AUTOFACTURE (attestation de paiement)
+- rc renvoyer l'autofacture
+
+SOLDE
+- RC modifier la balance
+- si balance != 0 deduction sur le maximum prochaine intervention, modifier la balance a la main
+- historique avoirs
+
+PAIEMENT (sst)
+
+REGLEMENT (client)
+
+status paiement SST
+-> rien
+-> validé
+-> payé
+-> debité
+
+status reglement client
+-> rien
+-> recu
+
+
+prix final 500€
+pourcentage sst 0%
+LISTE PAIEMENTS 
+-paiement de l'inter 500€
+-regul 100€
+-regul -100€

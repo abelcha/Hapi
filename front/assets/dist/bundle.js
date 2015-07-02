@@ -376,7 +376,7 @@ FiltersFactory.prototype.list = {
         }
     }, {
         short_name: 'i_dem',
-        long_name: 'Mes Inters',
+        long_name: 'A DEMARCHER',
         url: 'aDemarcher',
         match: {
             aDemarcher: true,

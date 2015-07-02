@@ -138,7 +138,7 @@ angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', 'config', 
                             moment(data.date.intervention).format("LLLL") + ". \n";
                         sms += data.prixAnnonce ? data.prixAnnonce + "€ HT. " : "Pas de prix annoncé. ";
                         sms += "\nMerci de prendre rdv avec le client au " + data.client.telephone.tel1;
-                        sms += data.client.telephone.tel2 ? "ou au " + data.client.telephone.tel2 : ""
+                        sms += data.client.telephone.tel2 ? " ou au " + data.client.telephone.tel2 : ""
                         return sms + ".\nEdison Services."
                     }
                     $scope.xfiles = _.clone(files ||  []);

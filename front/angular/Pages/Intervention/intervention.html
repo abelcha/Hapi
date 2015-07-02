@@ -77,19 +77,25 @@
                             <div class="p+" style='overflow:hidden;'>
                                 <strong class="fs-headline display-block">Artisans</strong>
                                 <span class="fs-subhead tc-black-2 display-block select-style-neutral">
-                                   <select ng-show="vm.data.sst" ng-model="vm.data.sst" ng-options="sst.id as sst.nomSociete for sst in vm.artisans">
-                                        </select>
-                                        <div ng-show="!vm.data.sst">Artisans</div></span>
-                                <div class="paragraph fs-body-1 mt+" slimscroll="{height:379}" style="height: 379px;">
-                                    <table class="table table-condensed" style="padding:0;color:black">
+                                <div  class="paragraph fs-body-1 mt+" slimscroll="{height:379}" style="height: 379px;">
+                                    <table ng-if="vm.nearestArtisans.length" class="table table-condensed" style="padding:0;color:black">
                                         <tbody>
-                                            <tr ng-repeat="sst in vm.nearestArtisans" ng-class="sst.id == vm.data.sst ? 'success' : ''" ng-click="clickOnArtisanMarker(sst.distance, sst)">
-                                                <td variable-length ng-class="{'red-text' : !sst.disponible}" style="text-align:left">{{sst.nomSociete}} <small class="text-blue">{{sst.noob ? 'new' : ''}}</small></td>
-                                                <td>7.3</td>
+                                         <tr><td colspan="12" style="text-align:center;border-top: 0px;"><h4 style="margin: 0;">Actifs</h4></td></tr>
+                                            <tr ng-repeat="sst in vm.nearestArtisans"  ng-if="sst.status == 'ACT'" ng-class="sst.id == vm.data.sst ? 'success' : ''" ng-click="clickOnArtisanMarker(sst.distance, sst)">
+                                                <td variable-length style="text-align:left">{{sst.nomSociete}} <small class="text-blue">{{sst.subStatus}}</small></td>
                                                 <td>{{sst.distance}} km</td>
                                             </tr>
+                                         <tr><td colspan="12" style="text-align:center;border-top: 0px;"><h4 style="margin: 0;">Potentiels</h4></td></tr>
+                                         <tr ng-repeat="sst in vm.nearestArtisans" ng-if="sst.status == 'POT'" ng-class="sst.id == vm.data.sst ? 'success' : ''" ng-click="clickOnArtisanMarker(sst.distance, sst)">
+                                                <td variable-length style="text-align:left">{{sst.nomSociete}} <small class="text-blue">{{sst.noob ? 'new' : ''}}</small></td>
+                                                <td>{{sst.distance}} km</td>
+                                            </tr>
+
                                         </tbody>
                                     </table>
+                                    <h3 ng-if="!vm.nearestArtisans">
+                                        AUCUNS ARTISAN
+                                    </h3>
                                 </div>
                             </div>
                             <div class="card__actions" style="text-align:center">
@@ -105,361 +111,360 @@
                     <div class="p+">
                         <strong class="fs-headline display-block">Informations Intervention</strong>
                         <span class="fs-subhead tc-black-2 display-block">Informations Intervention</span>
-                        <div class=" fs-body-1 mt+">
-                            <div class="form-group">
-                                <div class="col-sm-3">
-                                    <div class="text-field date-picker">
-                                        <label class="selected">Heure d'intervention</label>
-                                        <input type="text" pick-a-time="vm.data.date.intervention" />
-                                    </div>
-                                </div>
-                                <div class="col-sm-3 col-sm-offset-3">
-                                    <div class="text-field date-picker">
-                                        <label class="selected">Date d'intervention</label>
-                                        <input type="text" pick-a-date="vm.data.date.intervention" />
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-sm-5">
-                                    <md-input-container flex>
-                                        <label>Description Simplifiée</label>
-                                        <textarea ng-model="vm.data.description" columns="1" md-maxlength="150" capitalize></textarea>
-                                    </md-input-container>
-                                </div>
-                                <div class="col-sm-6 col-sm-offset-1">
-                                    <md-input-container flex>
-                                        <label>Remarques Supplémentaires</label>
-                                        <textarea ng-model="vm.data.remarque" columns="1" md-maxlength="150" capitalize></textarea>
-                                    </md-input-container>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-sm-3">
-                                    <lx-text-field label="Prix Annoncé">
-                                        <input eurofilter ng-model="vm.data.prixAnnonce">
-                                    </lx-text-field>
-                                </div>
-                                <div class="col-sm-3 col-sm-offset-3">
-                                    <md-checkbox ng-model="vm.data.reglementSurPlace" aria-label="Checkbox 1">
-                                        <div class="hidden-sm hidden-md">
-                                            Reglement Sur Place
-                                        </div>
-                                        <div class="hidden-lg hidden-xs ">
-                                            RSP
-                                        </div>
-                                    </md-checkbox>
-                                </div>
-                                <div class=" col-sm-2">
-                                    <div class="select-style text-field">
-                                        <select ng-model="vm.data.modeReglement" ng-options="mr.short_name as mr.long_name for mr in config.modeDeReglements">
-                                        </select>
-                                        <label ng-class="{'selected' : vm.data.modeReglement}">
-                                            <div class="hidden-sm hidden-md">
-                                                Mode de Reglement
+                                <div class=" fs-body-1 mt+">
+                                    <div class="form-group">
+                                        <div class="col-sm-3">
+                                            <div class="text-field date-picker">
+                                                <label class="selected">Heure d'intervention</label>
+                                                <input type="text" pick-a-time="vm.data.date.intervention" />
                                             </div>
-                                            <div class="hidden-lg hidden-xs ">
-                                                Mode Regl.
+                                        </div>
+                                        <div class="col-sm-3 col-sm-offset-3">
+                                            <div class="text-field date-picker">
+                                                <label class="selected">Date d'intervention</label>
+                                                <input type="text" pick-a-date="vm.data.date.intervention" />
                                             </div>
-                                        </label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-sm-5">
+                                            <md-input-container flex>
+                                                <label>Description Simplifiée</label>
+                                                <textarea ng-model="vm.data.description" columns="1" md-maxlength="150" capitalize></textarea>
+                                            </md-input-container>
+                                        </div>
+                                        <div class="col-sm-6 col-sm-offset-1">
+                                            <md-input-container flex>
+                                                <label>Remarques Supplémentaires</label>
+                                                <textarea ng-model="vm.data.remarque" columns="1" md-maxlength="150" capitalize></textarea>
+                                            </md-input-container>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-sm-3">
+                                            <lx-text-field label="Prix Annoncé">
+                                                <input eurofilter ng-model="vm.data.prixAnnonce">
+                                            </lx-text-field>
+                                        </div>
+                                        <div class="col-sm-3 col-sm-offset-3">
+                                            <md-checkbox ng-model="vm.data.reglementSurPlace" aria-label="Checkbox 1">
+                                                <div class="hidden-sm hidden-md">
+                                                    Reglement Sur Place
+                                                </div>
+                                                <div class="hidden-lg hidden-xs ">
+                                                    RSP
+                                                </div>
+                                            </md-checkbox>
+                                        </div>
+                                        <div class=" col-sm-2">
+                                            <div class="select-style text-field">
+                                                <select ng-model="vm.data.modeReglement" ng-options="mr.short_name as mr.long_name for mr in config.modeDeReglements">
+                                                </select>
+                                                <label ng-class="{'selected' : vm.data.modeReglement}">
+                                                    <div class="hidden-sm hidden-md">
+                                                        Mode de Reglement
+                                                    </div>
+                                                    <div class="hidden-lg hidden-xs ">
+                                                        Mode Regl.
+                                                    </div>
+                                                </label>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-                <credit-card model="vm.data" ng-if="vm.data.modeReglement === 'CB'"></credit-card>
-                <div flex-item ng-if="!vm.data.reglementSurPlace" class="card margin">
-                    <div class="p+">
-                        <strong class="fs-headline display-block">Facture</strong>
-                        <md-content class="autocomplete" style="width: 40%;margin-top: -22px;margin-left: 54%;float: left;" layout-padding layout="column" md-input-container flex>
-                            <md-autocomplete class="address-autocomplete" md-selected-item-change="vm.changeAddressFacture(selectedAddress)" md-selected-item="selectedAddress" md-search-text="searchText" md-items="item in vm.autocomplete.search(searchText)" md-item-text="item.description">
-                                <span md-highlight-text="searchText"> {{item.description}}</span>
-                            </md-autocomplete>
-                        </md-content>
-                        <span class="fs-subhead tc-black-2 display-block">Lorem Ipsum</span>
-                        <div class="paragraph fs-body-1 mt+">
-                            <div class="form-group" ng-if="!vm.data.reglementSurPlace">
-                                <div class="col-sm-2">
-                                    <div class="select-style text-field">
-                                        <select ng-model="vm.data.facture.payeur" ng-options="f.short_name as f.long_name for f in config.typePayeur">
-                                        </select>
-                                        <label ng-class="{'selected' : vm.data.facture.payeur}">Type payeur</label>
+                        <credit-card model="vm.data" ng-if="vm.data.modeReglement === 'CB'"></credit-card>
+                        <div flex-item ng-if="!vm.data.reglementSurPlace" class="card margin">
+                            <div class="p+">
+                                <strong class="fs-headline display-block">Facture</strong>
+                                <md-content class="autocomplete" style="width: 40%;margin-top: -22px;margin-left: 54%;float: left;" layout-padding layout="column" md-input-container flex>
+                                    <md-autocomplete class="address-autocomplete" md-selected-item-change="vm.changeAddressFacture(selectedAddress)" md-selected-item="selectedAddress" md-search-text="searchText" md-items="item in vm.autocomplete.search(searchText)" md-item-text="item.description">
+                                        <span md-highlight-text="searchText"> {{item.description}}</span>
+                                    </md-autocomplete>
+                                </md-content>
+                                <span class="fs-subhead tc-black-2 display-block">Lorem Ipsum</span>
+                                <div class="paragraph fs-body-1 mt+">
+                                    <div class="form-group" ng-if="!vm.data.reglementSurPlace">
+                                        <div class="col-sm-2">
+                                            <div class="select-style text-field">
+                                                <select ng-model="vm.data.facture.payeur" ng-options="f.short_name as f.long_name for f in config.typePayeur">
+                                                </select>
+                                                <label ng-class="{'selected' : vm.data.facture.payeur}">Type payeur</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <lx-text-field label="Prénom">
+                                                <input capitalize type="text" ng-model="vm.data.facture.prenom">
+                                            </lx-text-field>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <lx-text-field label="Nom">
+                                                <input capitalize type="text" ng-model="vm.data.facture.nom">
+                                            </lx-text-field>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <lx-text-field label="Téléphone">
+                                                <input capitalize type="text" ng-model="vm.data.facture.tel">
+                                            </lx-text-field>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <lx-text-field label="Email">
+                                                <input capitalize type="text" ng-model="vm.data.facture.email">
+                                            </lx-text-field>
+                                        </div>
+                                        <div class="col-sm-1">
+                                            <lx-text-field label="Numero">
+                                                <input capitalize type="text" ng-model="vm.data.facture.address.n">
+                                            </lx-text-field>
+                                        </div>
+                                        <div class="col-sm-5">
+                                            <lx-text-field label="Addresse">
+                                                <input capitalize type="text" ng-model="vm.data.facture.address.r">
+                                            </lx-text-field>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <lx-text-field label="Code Postal">
+                                                <input capitalize type="text" ng-model="vm.data.facture.address.cp">
+                                            </lx-text-field>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <lx-text-field label="Ville">
+                                                <input capitalize type="text" ng-model="vm.data.facture.address.v">
+                                            </lx-text-field>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-sm-2">
-                                    <lx-text-field label="Prénom">
-                                        <input capitalize type="text" ng-model="vm.data.facture.prenom">
-                                    </lx-text-field>
-                                </div>
-                                <div class="col-sm-2">
-                                    <lx-text-field label="Nom">
-                                        <input capitalize type="text" ng-model="vm.data.facture.nom">
-                                    </lx-text-field>
-                                </div>
-                                <div class="col-sm-2">
-                                    <lx-text-field label="Téléphone">
-                                        <input capitalize type="text" ng-model="vm.data.facture.tel">
-                                    </lx-text-field>
-                                </div>
-                                <div class="col-sm-4">
-                                    <lx-text-field label="Email">
-                                        <input capitalize type="text" ng-model="vm.data.facture.email">
-                                    </lx-text-field>
-                                </div>
-                                <div class="col-sm-1">
-                                    <lx-text-field label="Numero">
-                                        <input capitalize type="text" ng-model="vm.data.facture.address.n">
-                                    </lx-text-field>
-                                </div>
-                                <div class="col-sm-5">
-                                    <lx-text-field label="Addresse">
-                                        <input capitalize type="text" ng-model="vm.data.facture.address.r">
-                                    </lx-text-field>
-                                </div>
-                                <div class="col-sm-2">
-                                    <lx-text-field label="Code Postal">
-                                        <input capitalize type="text" ng-model="vm.data.facture.address.cp">
-                                    </lx-text-field>
-                                </div>
-                                <div class="col-sm-4">
-                                    <lx-text-field label="Ville">
-                                        <input capitalize type="text" ng-model="vm.data.facture.address.v">
-                                    </lx-text-field>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-                <produits ng-if="vm.data.id || vm.data.devisOrigine" data="vm.data"></produits>
-                <div class="card margin">
-                    <div class="p+">
-                        <strong ng-click="displayFRN = !displayFRN" class="fs-headline display-block">Fourniture</strong>
-                        <span class="fs-subhead tc-black-2 display-block">Fourniture</span>
-                        <div class="paragraph fs-body-1 mt+" ng-if="displayFRN || vm.data.fourniture.length">
-                            <div class="data-table-container">
-                                <table class="data-table data-table--has-primary data-table--has-secondary">
-                                    <thead>
-                                        <tr>
-                                            <th style="font-weight:bold">BL</th>
-                                            <th style="font-weight:bold">Désignation</th>
-                                            <th style="font-weight:bold">Q</th>
-                                            <th style="font-weight:bold">PU</th>
-                                            <th style="font-weight:bold">Montant</th>
-                                            <th style="font-weight:bold">Fournisseur</th>
-                                            <th style="font-weight:bold">Modif</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr class="products data-table__clickable-row" ng-repeat="p in vm.data.fourniture">
-                                            <td>
-                                                <span e-type="text" editable-text="p.bl">{{p.bl}}</span>
-                                            </td>
-                                            <td>
-                                                <span e-type="text" editable-text="p.title">{{p.title}}</span>
-                                            </td>
-                                            <td>
-                                                <span> 
+                        <produits ng-if="vm.data.id || vm.data.devisOrigine" data="vm.data"></produits>
+                        <div class="card margin">
+                            <div class="p+">
+                                <strong ng-click="displayFRN = !displayFRN" class="fs-headline display-block">Fourniture</strong>
+                                <span class="fs-subhead tc-black-2 display-block">Fourniture</span>
+                                <div class="paragraph fs-body-1 mt+" ng-if="displayFRN || vm.data.fourniture.length">
+                                    <div class="data-table-container">
+                                        <table class="data-table data-table--has-primary data-table--has-secondary">
+                                            <thead>
+                                                <tr>
+                                                    <th style="font-weight:bold">BL</th>
+                                                    <th style="font-weight:bold">Désignation</th>
+                                                    <th style="font-weight:bold">Q</th>
+                                                    <th style="font-weight:bold">PU</th>
+                                                    <th style="font-weight:bold">Montant</th>
+                                                    <th style="font-weight:bold">Fournisseur</th>
+                                                    <th style="font-weight:bold">Modif</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr class="products data-table__clickable-row" ng-repeat="p in vm.data.fourniture">
+                                                    <td>
+                                                        <span e-type="text" editable-text="p.bl">{{p.bl}}</span>
+                                                    </td>
+                                                    <td>
+                                                        <span e-type="text" editable-text="p.title">{{p.title}}</span>
+                                                    </td>
+                                                    <td>
+                                                        <span> 
                                                      <a e-type="number" e-step="1" editable-text="p.quantite">{{p.quantite}}</a>
                                                     </span>
-                                            </td>
-                                            <td>
-                                                <span>
+                                                    </td>
+                                                    <td>
+                                                        <span>
                                                  <a e-type="number" editable-text="p.pu" e-step="0.01">{{p.pu}} €</a>
                                                     </span>
-                                            </td>
-                                            <td>
-                                                <span>{{p.pu * p.quantite}} €</span>
-                                            </td>
-                                            <td style="padding-right: 10%;  width: 30%;">
-                                                <select class="form-control" ng-model="p.fournisseur" ng-options="frn.short_name as frn.short_name group by frn.type for frn in config.fournisseur ">
-                                                </select>
-                                            </td>
-                                            <td>
-                                                <lx-dropdown position="right" from-top>
-                                                    <button class="btn--no-conflicts btn--l btn--black btn--icon" lx-ripple lx-dropdown-toggle>
-                                                        <i class="mdi mdi-dots-vertical"></i>
-                                                    </button>
-                                                    <lx-dropdown-menu>
-                                                        <ul>
-                                                            <li><a ng-click="fourniture.moveDown($index)" class="dropdown-link">Descendre</a></li>
-                                                            <li><a ng-click="fourniture.moveTop($index)" class="dropdown-link">Monter</a></li>
-                                                            <li><a ng-click="fourniture.remove($index)" class="dropdown-link">Supprimer</a></li>
-                                                        </ul>
-                                                    </lx-dropdown-menu>
-                                                </lx-dropdown>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                                                    </td>
+                                                    <td>
+                                                        <span>{{p.pu * p.quantite}} €</span>
+                                                    </td>
+                                                    <td style="padding-right: 10%;  width: 30%;">
+                                                        <select class="form-control" ng-model="p.fournisseur" ng-options="frn.short_name as frn.short_name group by frn.type for frn in config.fournisseur ">
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <lx-dropdown position="right" from-top>
+                                                            <button class="btn--no-conflicts btn--l btn--black btn--icon" lx-ripple lx-dropdown-toggle>
+                                                                <i class="mdi mdi-dots-vertical"></i>
+                                                            </button>
+                                                            <lx-dropdown-menu>
+                                                                <ul>
+                                                                    <li><a ng-click="fourniture.moveDown($index)" class="dropdown-link">Descendre</a></li>
+                                                                    <li><a ng-click="fourniture.moveTop($index)" class="dropdown-link">Monter</a></li>
+                                                                    <li><a ng-click="fourniture.remove($index)" class="dropdown-link">Supprimer</a></li>
+                                                                </ul>
+                                                            </lx-dropdown-menu>
+                                                        </lx-dropdown>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="card__actions" ng-if="displayFRN || vm.data.fourniture.length">
-                        <span style="float:left;width:50%">
+                            <div class="card__actions" ng-if="displayFRN || vm.data.fourniture.length">
+                                <span style="float:left;width:50%">
                         <button class="btn--no-conflicts btn--m btn--black btn--flat" ng-click="fourniture.add()" lx-ripple>Ajout Fourniture</button>
                                                 </span>
-                        <span style="float:right;margin-right:6%">
+                                <span style="float:right;margin-right:6%">
                              <button class="btn--no-conflicts btn--m btn--black btn--flat" lx-ripple> TOTAL HT : {{fourniture.total() | currency:''}} €</button>
                         </span>
-                    </div>
-                </div>
-                <div class="row" style="margin:0">
-                    <div style="width:48%;float:left;" class="card" id="fileUpload">
-                        <div class="p+">
-                            <strong class="fs-headline display-block">Fichiers</strong>
-                            <span class="fs-subhead tc-black-2 display-block">Lorem Ipsum</span>
-                            <div class="paragraph fs-body-1 mt+" style="height: 216px;" slimscroll="{height:216}">
-                                <div>
-                                    <div id="fileUploadProgress"></div>
-                                    <ul class="list mt++" style="padding-bottom:20px;margin-left: 0px">
-                                        <li class="list-row" ng-repeat="file in vm.data.files | reverse">
-                                            <div class="list-row__content">
-                                                <a target="_blank" href="/api/document/{{file._id}}"> <span class="display-block">{{file.name || "Fichier" + $index}}</span></a>
-                                                <span class="display-block fs-body-1 tc-black-2">{{file.date | date:"dd/MM/yy"}} - {{file.type}} - {{file.login}}</span>
-                                            </div>
-                                        </li>
-                                    </ul>
+                            </div>
+                        </div>
+                        <div class="row" style="margin:0">
+                            <div style="width:48%;float:left;" class="card" id="fileUpload">
+                                <div class="p+">
+                                    <strong class="fs-headline display-block">Fichiers</strong>
+                                    <span class="fs-subhead tc-black-2 display-block">Lorem Ipsum</span>
+                                    <div class="paragraph fs-body-1 mt+" style="height: 216px;" slimscroll="{height:216}">
+                                        <div>
+                                            <div id="fileUploadProgress"></div>
+                                            <ul class="list mt++" style="padding-bottom:20px;margin-left: 0px">
+                                                <li class="list-row" ng-repeat="file in vm.data.files | reverse">
+                                                    <div class="list-row__content">
+                                                        <a target="_blank" href="/api/document/{{file._id}}"> <span class="display-block">{{file.name || "Fichier" + $index}}</span></a>
+                                                        <span class="display-block fs-body-1 tc-black-2">{{file.date | date:"dd/MM/yy"}} - {{file.type}} - {{file.login}}</span>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card__actions">
+                                    <button ng-click="clickTrigger('.input-file__input')" class="btn--no-conflicts btn--m btn--blue  btn--raised" lx-ripple>Upload</button>
+                                    <lx-file-input style="display:none" id="fileInput" label="Upload" value="fileUploadText" change="onFileUpload(e)"></lx-file-input>
+                                </div>
+                            </div>
+                            <div class="card margin" style="width:48%;float:right">
+                                <div class="p+" s>
+                                    <strong class="fs-headline display-block">Commentaires</strong>
+                                    <span class="fs-subhead tc-black-2 display-block">Lorem Ipsum</span>
+                                    <div class="paragraph fs-body-1 mt+" style="height:230px;" slimscroll="{height:230}">
+                                        <ul style="padding-bottom:20px;margin-left: 0px;">
+                                            <li class="list-row" ng-repeat="com in vm.data.comments | reverse">
+                                                <div class="list-row__content">
+                                                    <span class="display-block">{{com.text}}</span>
+                                                    <span class="display-block fs-body-1 tc-black-2">{{com.date  |  date:"dd/MM/yy"}} - {{com.login}}</span>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="card__actions">
+                                    <input style="border: 0;width:100%" type="text" placeholder="Commentaire..." ng-model="commentText" ng-enter="addComment()">
                                 </div>
                             </div>
                         </div>
-                        <div class="card__actions">
-                            <button ng-click="clickTrigger('.input-file__input')" class="btn--no-conflicts btn--m btn--blue  btn--raised" lx-ripple>Upload</button>
-                            <lx-file-input style="display:none" id="fileInput" label="Upload" value="fileUploadText" change="onFileUpload(e)"></lx-file-input>
-                        </div>
-                    </div>
-                    <div class="card margin" style="width:48%;float:right">
-                        <div class="p+" s>
-                            <strong class="fs-headline display-block">Commentaires</strong>
-                            <span class="fs-subhead tc-black-2 display-block">Lorem Ipsum</span>
-                            <div class="paragraph fs-body-1 mt+" style="height:230px;" slimscroll="{height:230}">
-                                <ul style="padding-bottom:20px;margin-left: 0px;">
-                                    <li class="list-row" ng-repeat="com in vm.data.comments | reverse">
-                                        <div class="list-row__content">
-                                            <span class="display-block">{{com.text}}</span>
-                                            <span class="display-block fs-body-1 tc-black-2">{{com.date  |  date:"dd/MM/yy"}} - {{com.login}}</span>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="card__actions">
-                            <input style="border: 0;width:100%" type="text" placeholder="Commentaire..." ng-model="commentText" ng-enter="addComment()">
-                        </div>
-                    </div>
-                </div>
-                <div class="card margin">
-                    <div class="p+">
-                        <strong ng-click="displayLIT = !displayLIT" class="fs-headline display-block">Litiges</strong>
-                        <span class="fs-subhead tc-black-2 display-block">Liste des litiges</span>
-                        <div class="paragraph fs-body-1 mt+" ng-if="displayLIT || vm.data.litiges.length">
-                            <div class="data-table-container">
-                                <table class="data-table data-table--has-primary data-table--has-secondary">
-                                    <thead>
-                                        <tr>
-                                            <th style="font-weight:bold">Ajouté Par</th>
-                                            <th style="font-weight:bold">Date</th>
-                                            <th style="font-weight:bold">Description</th>
-                                            <th style="font-weight:bold">Réglé</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr class="products data-table__clickable-row" ng-repeat="litige in vm.data.litiges">
-                                            <td>
-                                                <span>{{litige.login}}</span>
-                                            </td>
-                                            <td>
-                                                <span>{{litige.date |  date:"dd/MM/yy"}}</span>
-                                            </td>
-                                            <td>
-                                                <span style="white-space: pre;">{{litige.description}}</span>
-                                            </td>
-                                            <td>
-                                                <span> <md-checkbox style="padding-top: 0;" ng-model="litige.regle" >
+                        <div class="card margin">
+                            <div class="p+">
+                                <strong ng-click="displayLIT = !displayLIT" class="fs-headline display-block">Litiges</strong>
+                                <span class="fs-subhead tc-black-2 display-block">Liste des litiges</span>
+                                <div class="paragraph fs-body-1 mt+" ng-if="displayLIT || vm.data.litiges.length">
+                                    <div class="data-table-container">
+                                        <table class="data-table data-table--has-primary data-table--has-secondary">
+                                            <thead>
+                                                <tr>
+                                                    <th style="font-weight:bold">Ajouté Par</th>
+                                                    <th style="font-weight:bold">Date</th>
+                                                    <th style="font-weight:bold">Description</th>
+                                                    <th style="font-weight:bold">Réglé</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr class="products data-table__clickable-row" ng-repeat="litige in vm.data.litiges">
+                                                    <td>
+                                                        <span>{{litige.login}}</span>
+                                                    </td>
+                                                    <td>
+                                                        <span>{{litige.date |  date:"dd/MM/yy"}}</span>
+                                                    </td>
+                                                    <td>
+                                                        <span style="white-space: pre;">{{litige.description}}</span>
+                                                    </td>
+                                                    <td>
+                                                        <span> <md-checkbox style="padding-top: 0;" ng-model="litige.regle" >
                                    Réglé
                                 </md-checkbox></span>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card__actions" ng-if="displayLIT || vm.data.litiges.length">
+                                <button ng-click="addLitige();" class="btn--no-conflicts btn--m btn--red btn--flat" lx-ripple>Ajouter</button>
                             </div>
                         </div>
-                    </div>
-                    <div class="card__actions" ng-if="displayLIT || vm.data.litiges.length">
-                        <button ng-click="addLitige();" class="btn--no-conflicts btn--m btn--red btn--flat" lx-ripple>Ajouter</button>
-                    </div>
-                </div>
-                <div class="card margin" ng-if="vm.data.date.verification">
-                    <div class="p+">
-                        <strong ng-click="smoothTransition(displaySAV)" class="fs-headline display-block">S.A.V</strong>
-                        <span class="fs-subhead tc-black-2 display-block">Service Apres Ventes</span>
-                        <div id="SAV" ng-style="savStyle" class="paragraph fs-body-1 mt+">
-                            <div class="data-table-container" ng-show="vm.data.sav.length || displaySAV">
-                                <table class="data-table data-table--has-primary data-table--has-secondary">
-                                    <thead>
-                                        <tr>
-                                            <th style="font-weight:bold">Ajouté Par</th>
-                                            <th style="font-weight:bold">Date</th>
-                                            <th style="font-weight:bold">Description</th>
-                                            <th style="font-weight:bold">Artisan</th>
-                                            <th style="font-weight:bold">Status</th>
-                                            <th style="font-weight:bold">Modif</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr class="products data-table__clickable-row" ng-repeat="p in vm.data.sav" ng-init="p.sst = p.artisan.id || 0">
-                                            <td>
-                                                <span>{{p.login}}</span>
-                                            </td>
-                                            <td>
-                                                <span>{{p.date |  date:"dd/MM/yy"}}</span>
-                                            </td>
-                                            <td>
-                                                <span>{{p.description}}</span>
-                                            </td>
-                                            <td style="width:100px"><span><select ng-change="changeArtisan(p);" class="form-control" ng-model="p.sst" ng-options="sst.id as sst.n for sst in vm.artisans">
+                        <div class="card margin" ng-if="vm.data.date.verification">
+                            <div class="p+">
+                                <strong ng-click="smoothTransition(displaySAV)" class="fs-headline display-block">S.A.V</strong>
+                                <span class="fs-subhead tc-black-2 display-block">Service Apres Ventes</span>
+                                <div id="SAV" ng-style="savStyle" class="paragraph fs-body-1 mt+">
+                                    <div class="data-table-container" ng-show="vm.data.sav.length || displaySAV">
+                                        <table class="data-table data-table--has-primary data-table--has-secondary">
+                                            <thead>
+                                                <tr>
+                                                    <th style="font-weight:bold">Ajouté Par</th>
+                                                    <th style="font-weight:bold">Date</th>
+                                                    <th style="font-weight:bold">Description</th>
+                                                    <th style="font-weight:bold">Artisan</th>
+                                                    <th style="font-weight:bold">Status</th>
+                                                    <th style="font-weight:bold">Modif</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr class="products data-table__clickable-row" ng-repeat="p in vm.data.sav" ng-init="p.sst = p.artisan.id || 0">
+                                                    <td>
+                                                        <span>{{p.login}}</span>
+                                                    </td>
+                                                    <td>
+                                                        <span>{{p.date |  date:"dd/MM/yy"}}</span>
+                                                    </td>
+                                                    <td>
+                                                        <span>{{p.description}}</span>
+                                                    </td>
+                                                    <td style="width:100px"><span><select ng-change="changeArtisan(p);" class="form-control" ng-model="p.sst" ng-options="sst.id as sst.n for sst in vm.artisans">
                                         </select></span>
-                                            </td>
-                                            <td>
-                                                <span ng-if="p.status === 'ENV'" style="width:90px" class="label orange"> Envoyé</span>
-                                                <span ng-if="p.status === 'OK'" style="width:90px" class="label green"> OK</span>
-                                            </td>
-                                            <td>
-                                                <lx-dropdown position="right" from-top>
-                                                    <button class="btn--no-conflicts btn--l btn--black btn--icon" lx-ripple lx-dropdown-toggle>
-                                                        <i class="mdi mdi-dots-vertical"></i>
-                                                    </button>
-                                                    <lx-dropdown-menu>
-                                                        <ul>
-                                                            <li><a ng-click="p.status = 'ENV'" class="dropdown-link">Envoyer</a></li>
-                                                            <li><a ng-click="p.status = 'OK'" class="dropdown-link">Regler</a></li>
-                                                        </ul>
-                                                    </lx-dropdown-menu>
-                                                </lx-dropdown>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                                                    </td>
+                                                    <td>
+                                                        <span ng-if="p.status === 'ENV'" style="width:90px" class="label orange"> Envoyé</span>
+                                                        <span ng-if="p.status === 'OK'" style="width:90px" class="label green"> OK</span>
+                                                    </td>
+                                                    <td>
+                                                        <lx-dropdown position="right" from-top>
+                                                            <button class="btn--no-conflicts btn--l btn--black btn--icon" lx-ripple lx-dropdown-toggle>
+                                                                <i class="mdi mdi-dots-vertical"></i>
+                                                            </button>
+                                                            <lx-dropdown-menu>
+                                                                <ul>
+                                                                    <li><a ng-click="p.status = 'ENV'" class="dropdown-link">Envoyer</a></li>
+                                                                    <li><a ng-click="p.status = 'OK'" class="dropdown-link">Regler</a></li>
+                                                                </ul>
+                                                            </lx-dropdown-menu>
+                                                        </lx-dropdown>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card__actions" ng-if="vm.data.sav.length || displaySAV">
+                                <button ng-click="addSAV();" class="btn--no-conflicts btn--m btn--orange btn--flat" lx-ripple>Ajouter</button>
+                            </div>
+                        </div>
+                        <br>
+                        <br>
+                        <br>
+                        <div class="fab" style="float: right;position: fixed;right: 70px;z-index: 999;top: 87%;">
+                            <button ng-click="saveInter({})" class="fab__primary btn--no-conflicts btn--xl btn--blue btn--fab" lx-ripple lx-tooltip="Enregistrer" tooltip-position="top">
+                                <i class="mdi" ng-class="vm.data.id ? 'mdi-camera-iris' : 'mdi-plus'"></i>
+                                <i class="mdi mdi-checkbox-marked-circle-outline"></i>
+                            </button>
+                            <div class="fab__actions fab__actions--left">
+                                <button ng-show="vm.data.status === 'ENV'" ng-click="saveInter({verification:true})" class="btn--no-conflicts btn--l btn--black btn--fab" lx-ripple lx-tooltip="Verifier" tooltip-position="top"><i class="mdi mdi-check-all"></i></button>
+                                <button ng-if="vm.data.status" ng-click="saveInter({annulation:true})" class="btn--no-conflicts btn--l btn--black btn--fab" lx-ripple lx-tooltip="Annuler" tooltip-position="top"><i class="mdi mdi-close"></i></button>
+                                <button ng-if="!vm.data.status || vm.data.status === 'ANN' || vm.data.status === 'APR'" ng-click="saveInter({envoi:true})" class="btn--no-conflicts btn--l btn--black btn--fab" lx-ripple lx-tooltip="Envoyer" tooltip-position="top"><i class="mdi mdi-send"></i></button>
                             </div>
                         </div>
                     </div>
-                    <div class="card__actions" ng-if="vm.data.sav.length || displaySAV">
-                        <button ng-click="addSAV();" class="btn--no-conflicts btn--m btn--orange btn--flat" lx-ripple>Ajouter</button>
-                    </div>
-                </div>
-                <br>
-                <br>
-                <br>
-
-                <div class="fab" style="float: right;position: fixed;right: 70px;z-index: 999;top: 87%;">
-                    <button ng-click="saveInter({})" class="fab__primary btn--no-conflicts btn--xl btn--blue btn--fab" lx-ripple lx-tooltip="Enregistrer" tooltip-position="top">
-                        <i class="mdi" ng-class="vm.data.id ? 'mdi-camera-iris' : 'mdi-plus'"></i>
-                        <i class="mdi mdi-checkbox-marked-circle-outline"></i>
-                    </button>
-                    <div class="fab__actions fab__actions--left">
-                        <button ng-show="vm.data.status === 'ENV'" ng-click="saveInter({verification:true})" class="btn--no-conflicts btn--l btn--black btn--fab" lx-ripple lx-tooltip="Verifier" tooltip-position="top"><i class="mdi mdi-check-all"></i></button>
-                        <button ng-if="vm.data.status" ng-click="saveInter({annulation:true})" class="btn--no-conflicts btn--l btn--black btn--fab" lx-ripple lx-tooltip="Annuler" tooltip-position="top"><i class="mdi mdi-close"></i></button>
-                        <button ng-if="!vm.data.status || vm.data.status === 'ANN' || vm.data.status === 'APR'" ng-click="saveInter({envoi:true})" class="btn--no-conflicts btn--l btn--black btn--fab" lx-ripple lx-tooltip="Envoyer" tooltip-position="top"><i class="mdi mdi-send"></i></button>
-                    </div>
-                </div>
-            </div>

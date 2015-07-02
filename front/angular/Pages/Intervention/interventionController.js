@@ -134,7 +134,6 @@ var InterventionCtrl = function($timeout, $rootScope, $scope, $location, $routeP
             $scope.loadFilesList();
         });
     }
-
     $scope.loadFilesList = function() {
         edisonAPI.intervention.getFiles(intervention.id || intervention.tmpID).then(function(result) {
             intervention.files = result.data;

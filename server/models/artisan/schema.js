@@ -179,6 +179,7 @@ module.exports = function(db) {
                 signe: Boolean
             }],
         },
+        nbrIntervention:Number,
         siret: String
     });
 }
