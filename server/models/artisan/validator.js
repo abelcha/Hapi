@@ -32,7 +32,6 @@ module.exports = function(schema) {
     });
 
     schema.post('save', function(doc) {
-        console.log(doc.subStatus)
         if (!isWorker) {
             db.model('artisan').cacheActualise(doc);
             db.model('intervention').stats().then();

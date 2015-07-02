@@ -12,6 +12,7 @@ module.exports = function(db) {
             type: String,
             default: 'POT'
         },
+        subStatus:String,
         date: {
             ajout: {
                 type: Date,
