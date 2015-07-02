@@ -40,7 +40,7 @@ module.exports = {
         title: "Envoyer",
         action: 'envoi',
         hide: function(inter) {
-            return inter.statustatus !== "TRA" && inter.statustatus !== 'ANN';
+            return inter.artisan
         }
     }, {
         title: "Transferer",
