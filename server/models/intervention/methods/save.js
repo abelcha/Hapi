@@ -23,7 +23,8 @@ module.exports = function(schema) {
                     if (!doc)
                         reject("Intervention Inconnu");
                     for (k in data) {
-                        doc[k] = data[k];
+                        if (k !== 'status')
+                            doc[k] = data[k];
                     }
                     doc.save().then(resolve, dbError(reject));
                 }, dbError(reject))
