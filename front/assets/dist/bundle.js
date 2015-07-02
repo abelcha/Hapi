@@ -415,7 +415,7 @@ FiltersFactory.prototype.list = {
             }
         },
         fn: function(inter) {
-            return inter.aDemarcher && !inter.login.demarchage;
+            return inter.aDemarcher && inter.login.demarchage;
         }
     }]
 }
