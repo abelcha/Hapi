@@ -1,6 +1,6 @@
 angular.module('edison').factory('tabContainer', ['$location', '$window', '$q', 'edisonAPI', function($location, $window, $q, edisonAPI) {
     "use strict";
-    var Tab = function(args, hash, hashModel) {
+    var Tab = function(args, hash) {
 
         if (typeof args === 'object') {
             //copy constructor
@@ -8,7 +8,6 @@ angular.module('edison').factory('tabContainer', ['$location', '$window', '$q', 
                 this[k] = e;
             })
         } else {
-            this.hashModel = hashModel;
             this.hash = hash
             this.url = args;
             this.title = '';

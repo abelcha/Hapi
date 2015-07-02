@@ -7,7 +7,7 @@ angular.module('edison', ['browserify', 'ui.slimscroll', 'ngMaterial', 'lumx', '
     });
 
 
-angular.module('edison').controller('MainController', function(DataProvider, tabContainer, $routeParams, $scope, socket, config, $rootScope, $location, edisonAPI, taskList, $window) {
+angular.module('edison').controller('MainController', function(DataProvider, tabContainer, $scope, socket, config, $rootScope, $location, edisonAPI, taskList, $window) {
     "use strict";
 
 
@@ -69,7 +69,7 @@ angular.module('edison').controller('MainController', function(DataProvider, tab
             return 0;
         }
         if (!$scope.tabsInitialized) {
-            return initTabs($location.path(), $location.hash(), _.get($location, '$$search.hashModel'));
+            return initTabs($location.path(), $location.hash());
         }
         if ($location.path() !== "/intervention" && $location.path() !== "/devis" && $location.path() !== "/artisan") {
             $scope.tabs.addTab($location.path(), {

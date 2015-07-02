@@ -7,7 +7,7 @@ angular.module('edison', ['browserify', 'ui.slimscroll', 'ngMaterial', 'lumx', '
     });
 
 
-angular.module('edison').controller('MainController', function(DataProvider, tabContainer, $routeParams, $scope, socket, config, $rootScope, $location, edisonAPI, taskList, $window) {
+angular.module('edison').controller('MainController', function(DataProvider, tabContainer, $scope, socket, config, $rootScope, $location, edisonAPI, taskList, $window) {
     "use strict";
 
 
@@ -69,7 +69,7 @@ angular.module('edison').controller('MainController', function(DataProvider, tab
             return 0;
         }
         if (!$scope.tabsInitialized) {
-            return initTabs($location.path(), $location.hash(), _.get($location, '$$search.hashModel'));
+            return initTabs($location.path(), $location.hash());
         }
         if ($location.path() !== "/intervention" && $location.path() !== "/devis" && $location.path() !== "/artisan") {
             $scope.tabs.addTab($location.path(), {
@@ -2615,7 +2615,7 @@ angular.module('edison').factory('socket', function(socketFactory) {
 
 angular.module('edison').factory('tabContainer', ['$location', '$window', '$q', 'edisonAPI', function($location, $window, $q, edisonAPI) {
     "use strict";
-    var Tab = function(args, hash, hashModel) {
+    var Tab = function(args, hash) {
 
         if (typeof args === 'object') {
             //copy constructor
@@ -2623,7 +2623,6 @@ angular.module('edison').factory('tabContainer', ['$location', '$window', '$q', 
                 this[k] = e;
             })
         } else {
-            this.hashModel = hashModel;
             this.hash = hash
             this.url = args;
             this.title = '';
@@ -3593,7 +3592,6 @@ var InterventionsController = function($timeout, tabContainer, FiltersFactory, C
     LxProgressService.circular.show('#5fa2db', '#globalProgress');
     dataProvider.init(function(err, resp) {
         _this.tab = tabContainer.getCurrentTab();
-        dataProvider.hashModel = _this.tab.hashModel;
         _this.tab.setTitle(title, currentHash);
         _this.tab.hash = currentHash;
         _this.config = config;

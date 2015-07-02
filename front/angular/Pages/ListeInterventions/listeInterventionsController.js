@@ -16,7 +16,6 @@ var InterventionsController = function($timeout, tabContainer, FiltersFactory, C
     LxProgressService.circular.show('#5fa2db', '#globalProgress');
     dataProvider.init(function(err, resp) {
         _this.tab = tabContainer.getCurrentTab();
-        dataProvider.hashModel = _this.tab.hashModel;
         _this.tab.setTitle(title, currentHash);
         _this.tab.hash = currentHash;
         _this.config = config;
