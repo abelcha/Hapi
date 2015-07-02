@@ -373,17 +373,34 @@ module.exports = {
         DEM: {
             order: 0,
             short_name: 'DEM',
-            color:'red',
+            color: 'red',
             long_name: "demarché"
         },
         CAND: {
             order: 1,
-            color:'yellow',
+            color: 'yellow',
             short_name: 'CAND',
             long_name: "Candidat"
         }
     },
     artisanOrigineArray: function() {
         return [this.artisanOrigine.DEM, this.artisanOrigine.CAND];
+    },
+    artisanSubStatus: {
+        NEW: {
+            long_name: 'New',
+            short_name: 'NEW',
+            color: 'blue'
+        },
+        REG:{
+            long_name:'Régulier',
+            short_name:'REG',
+            color:'green'
+        },
+        HOT:{
+            long_name:'Hot',
+            short_name:'HOT',
+            color:'purple'
+        }
     }
 }

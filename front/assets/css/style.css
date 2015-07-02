@@ -116,7 +116,6 @@ td[variable-length] {
     padding-top: 12px!important;
     margin: 0;
     top: -9px;
-
     border: 0px solid #ccc;
     width: 100%;
     border-radius: 3px;
@@ -170,7 +169,7 @@ td[variable-length] {
 
 md-checkbox {
     margin: 0px!important;
-        padding-top: 11px;
+    padding-top: 11px;
 }
 
 md-checkbox:focus .md-label:not(:empty) {
@@ -293,3 +292,6 @@ map.big-map {
     margin-bottom: 21px;
 }
 
+small {
+    font-size: 75%!important;
+}

@@ -8,7 +8,7 @@ module.exports = function(schema) {
         	return "NEW";
         }
         if (this.nbrIntervention > 15) {
-        	return "REGULIER";
+        	return "REG";
         }
 
     })

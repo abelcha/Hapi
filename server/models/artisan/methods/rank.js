@@ -10,10 +10,11 @@ module.exports = function(schema) {
         return {
             id: d.id,
             nomSociete: d.nomSociete,
-            distance: doc.dis.toFixed(1),
+            distance: doc.dis.round(1),
             categories: d.categories,
             status: d.status,
             subStatus:d.subStatus,
+            zoneChalandise:d.zoneChalandise,
             address: {
                 lt: d.address.lt,
                 lg: d.address.lg,
@@ -38,6 +39,7 @@ module.exports = function(schema) {
         })
     }
     schema.statics.rank = function(req, res) {
+
         return this.rankArtisans(req.query)
     }
 
