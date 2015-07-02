@@ -375,28 +375,47 @@ FiltersFactory.prototype.list = {
                 inter.litiges[inter.litiges.length - 1].regle === false
         }
     }, {
-        short_name: 'i_dem',
-        long_name: 'A DEMARCHER',
-        url: 'aDemarcherArchive',
+        short_name: 'i_mar',
+        long_name: 'MARKET',
+        url: 'market',
         match: {
             aDemarcher: true,
-        },
-        fn: function(inter) {
-            return inter.aDemarcher;
-        }
-    }, {
-        short_name: 'i_adm',
-        long_name: 'A DEMARCHER',
-        url: 'aDemarcher',
-        match: {
-            aDemarcher: true,
-            status: 'APR',
+            status:'APR',
             'login.demarchage': {
                 $exists: false
             }
         },
         fn: function(inter) {
-            return inter.aDemarcher && inter.status === "APR" && !inter.login.demarchage;
+            return inter.aDemarcher && inter.status === 'APR' && !inter.login.demarchage;
+        }
+    }, {
+        short_name: 'i_pan',
+        long_name: 'PANIER',
+        url: 'panier',
+        match: {
+            aDemarcher: true,
+            status: {
+                $in: ['APR', 'ENV']
+            },
+            'login.demarchage': {
+                $exists: true
+            }
+        },
+        fn: function(inter) {
+            return inter.aDemarcher && ['APR', 'ENV'].indexOf(inter.status) !== -1 && inter.login.demarchage;
+        }
+    }, {
+        short_name: 'i_hist',
+        long_name: 'HISTORIQUE',
+        url: 'historique',
+        match: {
+            aDemarcher: true,
+            'login.demarchage': {
+                $exists: true
+            }
+        },
+        fn: function(inter) {
+            return inter.aDemarcher && !inter.login.demarchage;
         }
     }]
 }
