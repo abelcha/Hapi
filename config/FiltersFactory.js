@@ -395,7 +395,7 @@ FiltersFactory.prototype.list = {
             }
         },
         fn: function(inter) {
-            return inter.aDemarcher && inter.status === "APR" && !login.demarchage;
+            return inter.aDemarcher && inter.status === "APR" && !inter.login.demarchage;
         }
     }]
 }
