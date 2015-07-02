@@ -11,6 +11,7 @@ module.exports = function(db) {
             index: true,
             default: 'APR'
         },
+        subStatus:String,
         causeAnnulation: String,
         login: {
             ajout: String,
