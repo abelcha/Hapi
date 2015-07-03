@@ -391,6 +391,7 @@ FiltersFactory.prototype.list = {
         short_name: 'i_pan',
         long_name: 'PANIER',
         url: 'panier',
+        group:'$login.demarchage',
         match: {
             aDemarcher: true,
             status: {
@@ -407,6 +408,7 @@ FiltersFactory.prototype.list = {
         short_name: 'i_hist',
         long_name: 'HISTORIQUE',
         url: 'historique',
+        group:'$login.demarchage',
         match: {
             aDemarcher: true,
             'login.demarchage': {

@@ -640,27 +640,28 @@ angular.module('edison').directive('select', function($interpolate) {
              title: '@',
              model: '@',
              count: '@',
-             hashModel:'@'
+             hashModel: '@'
          },
          link: function(scope, element, attrs) {
-
              var findTotal = function() {
+                var total = 0;
                  if (scope.login) {
                      var t = _.find($rootScope.interventionsStats, function(e) {
                          return e.login === scope.login;
                      })
-                     if (t && t[scope.fltr]) {
-                         scope.total = t[scope.fltr].total;
-                     } else {
-                         scope.total = 0;
-                     }
+                     total += _.get(t, scope.fltr + '.total', 0);
+                 } else {
+                    _.each($rootScope.interventionsStats, function(t) {
+                        total +=  _.get(t, scope.fltr + '.total', 0);
+                    })
                  }
+                 return total;
              }
              $rootScope.$watch('interventionsStats', findTotal)
              scope._model = scope.model || 'intervention';
              var filtersFactory = new FiltersFactory(scope._model);
              scope.exFltr = filtersFactory.getFilterByName(scope.fltr);
-             findTotal();
+             scope.total = findTotal();
              scope.url = scope.exFltr.url.length ? "/" + scope.exFltr.url : scope.exFltr.url;
              scope._login = scope.login ? ("#" + scope.login) : '';
              scope._hashModel = scope.hashModel ? ("?hashModel=" + scope.hashModel) : '';

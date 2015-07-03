@@ -5,7 +5,7 @@ var _ = require("lodash")
 var FiltersFactory = requireLocal('config/FiltersFactory');
 
 module.exports = function(schema) {
-    var statusDistinctFactory = function(customMatch, model) {
+    var statusDistinctFactory = function(model, customMatch, customGroup) {
         var match = customMatch || {};
         return function(cb) {
             db.model(model ||  'intervention')
@@ -13,7 +13,7 @@ module.exports = function(schema) {
                 .match(match)
                 .group({
                     _id: {
-                        telepro: '$login.ajout'
+                        telepro: customGroup || '$login.ajout'
                     },
                     mnt: {
                         $sum: "$prixAnnonce"
@@ -62,7 +62,7 @@ module.exports = function(schema) {
         _.each(filters, function(e) {
             if (e.stats !== false && e.match) {
                 var match = typeof e.match === 'function' ? e.match() : e.match;
-                allFilters[e.short_name] = statusDistinctFactory(match, model);
+                allFilters[e.short_name] = statusDistinctFactory(model, match, e.group);
             }
         });
     }
@@ -71,21 +71,7 @@ module.exports = function(schema) {
         return new Promise(function(resolve, reject) {
             redis.get('interventionStats', function(err, resp) {
                 if (!err && resp && !_.get(req, 'query.cache'))
-                    return resolve(JSON.parse(resp))
-                var everydayOP = {
-                    todayTotal: statusDistinctFactory({
-                        'date.ajout': {
-                            $gt: edison.utils.date.today(true)
-                        }
-                    }),
-                    todayStatus: statusDistinctFactory({
-                        'date.ajout': {
-                            $gt: edison.utils.date.today(true)
-                        }
-                    }, {
-                        st: '$status'
-                    })
-                }
+                    return resolve(res.send(resp))
                 var allFilters = {};
                 mergeFilters(allFilters, 'intervention')
                 mergeFilters(allFilters, 'devis')
@@ -97,32 +83,19 @@ module.exports = function(schema) {
                         return _.groupBy(e, 'login')
                     })
                     var rtn = [];
-                    var sum = {
-                    }
+                    var sum = {}
                     users.forEach(function(user) {
-                        if (user.service === "INTERVENTION") {
-                            var telepro = {
-                                login: user.login,
-                            }
-                            _.each(result, function(fltr, key) {
-                                if (key.startsWith('i_') ||  key.startsWith('d_')) {
-                                    var tmp = cleanUp(key, telepro, result);
-                                    if (!sum[key])
-                                        sum[key] = {
-                                            total: 0,
-                                            montant: 0
-                                        };
-                                    sum[key].montant = Math.round((sum[key].montant + tmp.montant) * 100) / 100;
-                                    sum[key].total += tmp.total;
-                                }
-                            })
-                            if (telepro._id) {
-                                delete telepro._id;
-                            }
-                            rtn.push(telepro);
+                        var telepro = {
+                            login: user.login,
                         }
+                        _.each(result, function(fltr, key) {
+                            cleanUp(key, telepro, result);
+                        })
+                        if (telepro._id) {
+                            delete telepro._id;
+                        }
+                        rtn.push(telepro);
                     });
-                    rtn.push(sum);
                     resolve(rtn)
                     redis.set('interventionStats', JSON.stringify(rtn));
                 });
