@@ -3,15 +3,14 @@ angular.module('edison').factory('DataProvider', ['edisonAPI', 'socket', '$rootS
     var DataProvider = function(model, hashModel) {
         var _this = this;
         this.model = model;
-        this.hashModel = hashModel || 't';
-        socket.on(model + 'ListChange', function(data) {
-            if (_this.getData()) {
-                _this.updateData(data);
-            } else {
-                console.log("ERROR NODATA")
-            }
-        });
+        this.hashModel = hashModel || 't';
+            socket.on(model + 'ListChange', function(data) {
+                if (_this.getData()) {
+                    _this.updateData(data);
+                }
+            });
     }
+
     DataProvider.prototype.data = {}
 
     DataProvider.prototype.setData = function(data) {
@@ -40,8 +39,6 @@ angular.module('edison').factory('DataProvider', ['edisonAPI', 'socket', '$rootS
         }
         if (filter && hash) {
             return function loginAndFilter(inter) {
-               /* if (inter[_this.hashModel])
-                console.log(inter.f, _this.hashModel, inter[_this.hashModel], hash)*/
                 return inter.f && inter.f[filter.short_name] === 1 && inter[_this.hashModel] === hash;
             }
         }

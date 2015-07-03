@@ -25,22 +25,18 @@ var DevisCtrl = function($scope, $rootScope, $location, $routeParams, LxNotifica
         var devis = tab.data;
     }
     _this.data = tab.data;
-    var closeTab = function() {
-        $location.url("/devis/list");
-        tabContainer.remove(tab)
-    }
     _this.saveDevis = function(options) {
         devis.save(function(err, resp) {
             if (err) {
                 return false;
             } else if (options.envoi) {
-                devis.envoi.bind(resp)(closeTab);
+                devis.envoi.bind(resp)(tabContainer.close);
             } else if (options.annulation) {
-                devis.annulation(closeTab);
+                devis.annulation(tabContainer.close);
             } else if (options.transfert) {
                 devis.transfert()
             } else {
-                closeTab();
+                tabContainer.close(tab);
             }
         })
     }

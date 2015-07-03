@@ -27,18 +27,14 @@ var ArtisanCtrl = function($rootScope, $location, $routeParams, ContextMenu, LxN
         var artisan = tab.data;
     }
     _this.data = tab.data;
-    var closeTab = function() {
-        $location.url("/artisan/list");
-        tabContainer.remove(tab)
-    }
     _this.saveArtisan = function(options) {
         artisan.save(function(err, resp) {
             if (err) {
                 return false;
             } else if (options.contrat) {
-                artisan.envoiContrat.bind(resp)(closeTab);
+                artisan.envoiContrat.bind(resp)(tabContainer.close);
             } else {
-                closeTab();
+                tabContainer.close(tab);
             }
         })
     }

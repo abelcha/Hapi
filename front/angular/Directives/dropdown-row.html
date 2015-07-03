@@ -9,7 +9,7 @@
             <p><strong>Description:</strong> {{::data.description}}</p>
             <p><strong>Prix:</strong> {{data.prixAnnonce || 0}} € | {{::data.prixFinal || 0}} €</p>
             <p>
-                <a href="/{{model}}/{{inter.id}}"> <span style="width:100px" class="label grey darken-3"> Fiche</span></a>
+                <a href="/{{model}}/{{data.id}}"> <span style="width:100px" class="label grey darken-3"> Fiche</span></a>
             </p>
         </div>
         <div ng-if="artisan && artisan.id" class="col-sm-4 info-ext">

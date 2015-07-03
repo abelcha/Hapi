@@ -7,6 +7,7 @@ module.exports = function(schema) {
         fn: function(inter, req, res) {
             return new Promise(function(resolve, reject) {
                 inter.date.annulation = new Date;
+                inter.date.envoi = undefined;
                 inter.login.annulation = req.session.login;
                 inter.status = "ANN";
                 inter.causeAnnulation = req.body.causeAnnulation;

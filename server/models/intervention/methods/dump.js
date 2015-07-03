@@ -121,6 +121,10 @@
                 });
             }
 
+            if (rtn.status === 'INT' || rtn.status === 'ENC') {
+                rtn.date.envoi = rtn.date.ajout;
+            }
+
             if (rtn.status === "INT") {
                 rtn.date.verification = rtn.date.intervention || rtn.date.ajout;
             }

@@ -38,7 +38,7 @@
                         {{inter._etat}}</span>
                     </td>
                 </tr>
-                <tr ng-repeat-end ng-if="expendedRow && expendedRow === inter.id">
+                <tr ng-repeat-end ng-if="expendedRow && expendedRow === inter.id" ng-right-click="vm.rowRightClick($event, inter)">
                     <td colspan="42" style="background-color:white!important">
                         <dropdown-row row="inter" expendedRow="expendedRow"></dropdown-row>
                     </td>

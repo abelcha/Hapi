@@ -12,6 +12,7 @@ module.exports = function(schema) {
             nomSociete: d.nomSociete,
             distance: doc.dis.round(1),
             categories: d.categories,
+            ajout:d.date.ajout,
             status: d.status,
             subStatus:d.subStatus,
             zoneChalandise:d.zoneChalandise,

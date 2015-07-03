@@ -48,9 +48,10 @@ var ArtisanController = function($timeout, tabContainer, LxProgressService, Filt
     });
 
     $rootScope.$on('artisanListChange', function() {
-        console.log("yayay change")
-        dataProvider.applyFilter(currentFilter, _this.tab.hash);
-        _this.tableParams.reload();
+        if (_this.tab.fullUrl === tabContainer.getCurrentTab().fullUrl) {
+            dataProvider.applyFilter(currentFilter, _this.tab.hash);
+            _this.tableParams.reload();
+        }
     })
 
     _this.contextMenu = new ContextMenu('artisan')

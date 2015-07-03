@@ -27,7 +27,7 @@
                                 <div class="p+" ng-if="vm.data.artisan.id && vm.data.artisan.stats.total">
                                     <span class="fs-subhead tc-black-2 display-block">
                                     {{vm.data.artisan.nomSociete}} - M. {{vm.data.artisan.representant.nom}} {{vm.data.artisan.representant.prenom}}</span>
-                                    <div class="paragraph fs-body-1" style="height:85px;">
+                                    <div class="paragraph fs-body-1" style="height:90px;">
                                         <p style="width:49%;float:left">
                                             Distance: {{vm.data.artisan.stats.direction.distance}} ({{vm.data.artisan.stats.direction.duration}})
                                             <br> Interventions: {{vm.data.artisan.stats.total.total}} ({{vm.data.artisan.stats.total.montant}}€)
@@ -37,6 +37,7 @@
                                             <br>
                                         </p>
                                         <p style="width:49%;float:right">
+                                            Date d'ajout: {{vm.data.artisan.date.ajout| date:"dd/MM/yyyy"}}<br>
                                             <span ng-if="vm.data.artisan.disponible == false">
                                                     Indisponible jusqu'au {{vm.data.artisan.absence.end  | date:"dd/MM à HH:mm"}} ({{vm.data.artisan.absence.login}})
                                                 </span>
@@ -143,10 +144,15 @@
                                     <div class="form-group">
                                         <div class="col-sm-3">
                                             <lx-text-field label="Prix Annoncé">
+                                                <input eurofilter ng-model="vm.data.prixAnnonce" ng-disabled="vm.data.date.envoi">
+                                            </lx-text-field>
+                                        </div>
+                                         <div class="col-sm-3">
+                                            <lx-text-field label="Prix Final">
                                                 <input eurofilter ng-model="vm.data.prixAnnonce">
                                             </lx-text-field>
                                         </div>
-                                        <div class="col-sm-3 col-sm-offset-3">
+                                        <div class="col-sm-3">
                                             <md-checkbox ng-model="vm.data.reglementSurPlace" aria-label="Checkbox 1">
                                                 <div class="hidden-sm hidden-md">
                                                     Reglement Sur Place

@@ -1,6 +1,6 @@
 angular.module('edison').factory('tabContainer', ['$location', '$window', '$q', 'edisonAPI', function($location, $window, $q, edisonAPI) {
     "use strict";
-    var Tab = function(args, hash) {
+    var Tab = function(args, options, prevTab) {
 
         if (typeof args === 'object') {
             //copy constructor
@@ -8,16 +8,16 @@ angular.module('edison').factory('tabContainer', ['$location', '$window', '$q', 
                 this[k] = e;
             })
         } else {
-            this.hash = hash
+            this.prevTab = prevTab ||  {}
+            this.urlFilter = options.urlFilter
+            this.hash = options.hash
             this.url = args;
+            this.fullUrl = this.url + ['', $.param(this.urlFilter)].join(_.isEmpty(this.urlFilter) ? '' : '?') + (this.hash ? '#' + this.hash : '')
             this.title = '';
             this.position = null;
             this.deleted = false;
             this._timestamp = Date.now();
         }
-        this.fullUrl = this.url;
-        if (this.hash)
-            this.fullUrl += ("#" + this.hash)
     }
 
     Tab.prototype.setData = function(data) {
@@ -64,24 +64,28 @@ angular.module('edison').factory('tabContainer', ['$location', '$window', '$q', 
         this.selectedTab = (typeof tab === 'number' ? tab : tab.position);
     };
 
-    TabContainer.prototype.createTab = function(url, hash) {
-        var tab = new Tab(url, hash);
+    TabContainer.prototype.createTab = function(url, options) {
+        var tab = new Tab(url, options, this.getCurrentTab());
         tab.position = this._tabs.length;
         this._tabs.push(tab);
         return (tab);
     }
 
-    TabContainer.prototype.isOpen = function(url, hash) {
+    TabContainer.prototype.isOpen = function(url, options) {
         var index = _.findIndex(this._tabs, function(e) {
-            return ((!e.deleted && e.url === url && (!hash && !e.hash || hash == e.hash)));
+            return !e.deleted && e.url === url &&
+                (!options.hash && !e.hash || options.hash == e.hash) &&
+                _.isEqual(options.urlFilter, e.urlFilter)
         });
         return (index >= 0);
     };
 
-    TabContainer.prototype.getTab = function(url, hash) {
+    TabContainer.prototype.getTab = function(url, options) {
 
         return _.find(this._tabs, function(e) {
-            return ((!e.deleted && e.url === url && (!hash && !e.hash || hash == e.hash)));
+            return !e.deleted && e.url === url &&
+                (!options.hash && !e.hash || options.hash == e.hash) &&
+                _.isEqual(options.urlFilter, e.urlFilter)
         });
     };
 
@@ -102,6 +106,21 @@ angular.module('edison').factory('tabContainer', ['$location', '$window', '$q', 
         }
 
     };
+
+    TabContainer.prototype.close= function(tab) {
+        console.log("----", this.len())
+        if (this.len() > 1) {
+            console.log("multiple tabs")
+            if (this.remove(tab)) {
+                $location.url(tab.prevTab.fullUrl ||  '/intervention/list')
+            }
+        } else {
+            console.log("only tab")
+            $location.url(tab.prevTab.fullUrl ||  '/intervention/list');
+            this.noClose = true;
+            //this.remove(tab);
+        }
+    }
 
     TabContainer.prototype.remove = function(tab) {
         var newTabs = [];
@@ -134,11 +153,15 @@ angular.module('edison').factory('tabContainer', ['$location', '$window', '$q', 
     }
     TabContainer.prototype.addTab = function(url, options) {
         var tab;
-        if (!this.isOpen(url, options.hash ||  undefined)) {
-            tab = this.createTab(url, options.hash || undefined);
-        } else {
-            tab = this.getTab(url, options.hash || undefined)
+        if (this.noClose) {
+            tab = this._tabs[0]
         }
+        else if (this.noClose || this.isOpen(url, options)) {
+            tab = this.getTab(url, options)
+        } else {
+            tab = this.createTab(url, options);
+        }
+        this.noClose = false;
         if (!(options && options.setFocus === false)) {
             this.setFocus(tab)
         }

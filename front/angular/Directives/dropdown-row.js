@@ -28,7 +28,6 @@ angular.module('edison').directive('dropdownRow', ['edisonAPI', 'config', '$q', 
                     edisonAPI.intervention.get(scope.row.id),
                 ];
                 if (scope.row.ai) {
-                    console.log('yayai')
                     pAll.push(edisonAPI.artisan.get(scope.row.ai))
                     pAll.push(edisonAPI.artisan.getStats(scope.row.ai))
                 }
@@ -37,7 +36,6 @@ angular.module('edison').directive('dropdownRow', ['edisonAPI', 'config', '$q', 
                     scope.data = result[0].data;
                     scope.client = scope.data.client;
                     scope.address = scope.client.address;
-                    console.log('yayai')
                     if (scope.row.ai) {
                         scope.artisan = result[1].data;
                         scope.artisan.stats = result[2].data;

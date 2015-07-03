@@ -1,9 +1,13 @@
-angular.module('edison').factory('ContextMenu', ['$location', 'edisonAPI', '$window', 'dialog', 'Devis', 'Intervention', 'Artisan', 'contextMenuData', function($location, edisonAPI, $window, dialog, Devis, Intervention, Artisan, contextMenuData) {
+angular.module('edison').factory('ContextMenu', function($rootScope, $location, edisonAPI, $window, dialog, Devis, Intervention, Artisan, contextMenuData) {
     "use strict";
 
     var ContextMenu = function(model) {
+        var _this = this;
         this.model = model
         this.list = contextMenuData[model];
+        $rootScope.$on('closeContextMenu', function() {
+            return _this.active && _this.close();
+        })
     }
 
     ContextMenu.prototype.getData = function() {
@@ -24,7 +28,7 @@ angular.module('edison').factory('ContextMenu', ['$location', 'edisonAPI', '$win
         var _this = this;
         this.list.forEach(function(e) {
             e.hidden = e.hide && e.hide(_this.data);
-        })
+        });
         this.style.display = "block";
         this.active = true;
     }
@@ -59,4 +63,4 @@ angular.module('edison').factory('ContextMenu', ['$location', 'edisonAPI', '$win
 
     return ContextMenu
 
-}]);
+});

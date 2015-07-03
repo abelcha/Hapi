@@ -44,7 +44,9 @@ angular.module('edison').controller('MainController', function(DataProvider, tab
             });
     };
 
-
+    $rootScope.closeContextMenu = function() {
+        $rootScope.$broadcast('closeContextMenu');
+    }
 
     var interventionDataProvider = new DataProvider('intervention')
     socket.on('interventionListChange', reloadStats);
@@ -55,11 +57,13 @@ angular.module('edison').controller('MainController', function(DataProvider, tab
     var artisanDataProvider = new DataProvider('artisan')
     socket.on('artisanListChange', reloadStats);
 
-    var initTabs = function(baseUrl, baseHash) {
-        console.log("init tabs")
+
+
+    var initTabs = function(baseUrl, baseHash, urlFilter) {
         $scope.tabsInitialized = true;
         $scope.tabs.addTab(baseUrl, {
-            hash: baseHash
+            hash: baseHash,
+            urlFilter: urlFilter
         });
         return 0;
     };
@@ -69,11 +73,12 @@ angular.module('edison').controller('MainController', function(DataProvider, tab
             return 0;
         }
         if (!$scope.tabsInitialized) {
-            return initTabs($location.path(), $location.hash());
+            return initTabs($location.path(), $location.hash(), $location.$$search);
         }
         if ($location.path() !== "/intervention" && $location.path() !== "/devis" && $location.path() !== "/artisan") {
             $scope.tabs.addTab($location.path(), {
-                hash: $location.hash()
+                hash: $location.hash(),
+                urlFilter: $location.$$search
             });
         }
 
@@ -89,9 +94,7 @@ angular.module('edison').controller('MainController', function(DataProvider, tab
     $scope.tabIconClick = function($event, tab) {
         $event.preventDefault();
         $event.stopPropagation();
-        if ($scope.tabs.remove(tab)) {
-            $location.url($scope.tabs.getCurrentTab().url);
-        }
+        $scope.tabs.close(tab)
     };
 });
 
@@ -130,7 +133,7 @@ var getArtisan = function($route, $q, edisonAPI) {
         return $q(function(resolve) {
             resolve({
                 data: {
-                    origin:'DEM',
+                    origin: 'DEM',
                     telephone: {},
                     pourcentage: {
                         deplacement: 50,

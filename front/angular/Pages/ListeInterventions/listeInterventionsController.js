@@ -52,11 +52,11 @@ var InterventionsController = function($timeout, tabContainer, FiltersFactory, C
         _this.tableParams = new ngTableParams(tableParameters, tableSettings);
         LxProgressService.circular.hide();
     })
-
     $rootScope.$on('interventionListChange', function() {
-        console.log("reload")
-        dataProvider.applyFilter(currentFilter, _this.tab.hash, _this.customFilter);
-        _this.tableParams.reload();
+        if (_this.tab.fullUrl === tabContainer.getCurrentTab().fullUrl) {
+            dataProvider.applyFilter(currentFilter, _this.tab.hash, _this.customFilter);
+            _this.tableParams.reload();
+        }
     })
 
     _this.contextMenu = new ContextMenu('intervention')
