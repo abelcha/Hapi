@@ -7,7 +7,7 @@ angular.module('edison', ['browserify', 'ui.slimscroll', 'ngMaterial', 'lumx', '
     });
 
 
-angular.module('edison').controller('MainController', function(DataProvider, tabContainer, $scope, socket, config, $rootScope, $location, edisonAPI, taskList, $window) {
+angular.module('edison').controller('MainController', function($q, DataProvider, tabContainer, $scope, socket, config, $rootScope, $location, edisonAPI, taskList, $window) {
     "use strict";
 
 
@@ -34,12 +34,31 @@ angular.module('edison').controller('MainController', function(DataProvider, tab
         showMap: true
     };
 
+    $scope.searchBox = {
+        search: function(x) {
+            console.log(x);
+            var deferred = $q.defer();
+            if (x.length < 3)
+                return []
+             edisonAPI.searchText(x).success(function(resp) {
+                deferred.resolve(resp)
+                console.log(resp)
+             })
+            return deferred.promise;
+        },
+        change:function(x) {
+            console.log('---------', x)
+        }
+    }
+
     var reloadStats = function() {
+        console.log("yay reload stats")
         edisonAPI.intervention.getStats()
             .success(function(result) {
                 $scope.userStats = _.find(result, function(e) {
                     return e.login === $scope.user.login;
                 });
+                console.log(result);
                 $rootScope.interventionsStats = result;
             });
     };
@@ -657,7 +676,9 @@ angular.module('edison').directive('select', function($interpolate) {
                  }
                  return total;
              }
-             $rootScope.$watch('interventionsStats', findTotal)
+             $rootScope.$watch('interventionsStats', function() {
+                scope.total = findTotal();
+             })
              scope._model = scope.model || 'intervention';
              var filtersFactory = new FiltersFactory(scope._model);
              scope.exFltr = filtersFactory.getFilterByName(scope.fltr);
@@ -1041,16 +1062,17 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
         },
         intervention: {
             getStats: function() {
+                console.log("getStats")
                 return $http({
                     method: 'GET',
                     cache: false,
                     url: '/api/intervention/stats'
                 })
             },
-            demarcher:function(id) {
+            demarcher: function(id) {
                 return $http({
-                    method:'POST',
-                    url:'/api/intervention/' + id + '/demarcher'
+                    method: 'POST',
+                    url: '/api/intervention/' + id + '/demarcher'
                 })
             },
             list: function(options) {
@@ -1098,7 +1120,7 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
             }
         },
         artisan: {
-            envoiContrat:function(id, options) {
+            envoiContrat: function(id, options) {
                 return $http.post("/api/artisan/" + id + '/sendContrat', options)
             },
             upload: function(file, name, id) {
@@ -1269,6 +1291,12 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
                 url: "/api/whoAmI"
             });
         },
+        searchText: function(text) {
+            return $http({
+                method: 'GET',
+                url: ['api', 'search', text.replace('#', '_')].join('/')
+            })
+        }
     }
 }]);
 

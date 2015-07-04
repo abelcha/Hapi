@@ -24,6 +24,8 @@ module.exports = function(app) {
         }
     })
 
+    app.get('/api/search/:text', edison.search)
+
     var uniqueModel = function(model, method, req, res) {
         return new Promise(function(resolve, reject) {
             if (model[method].findBefore === void(0) || model[method].findBefore !== false) {

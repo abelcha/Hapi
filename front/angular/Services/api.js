@@ -33,16 +33,17 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
         },
         intervention: {
             getStats: function() {
+                console.log("getStats")
                 return $http({
                     method: 'GET',
                     cache: false,
                     url: '/api/intervention/stats'
                 })
             },
-            demarcher:function(id) {
+            demarcher: function(id) {
                 return $http({
-                    method:'POST',
-                    url:'/api/intervention/' + id + '/demarcher'
+                    method: 'POST',
+                    url: '/api/intervention/' + id + '/demarcher'
                 })
             },
             list: function(options) {
@@ -90,7 +91,7 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
             }
         },
         artisan: {
-            envoiContrat:function(id, options) {
+            envoiContrat: function(id, options) {
                 return $http.post("/api/artisan/" + id + '/sendContrat', options)
             },
             upload: function(file, name, id) {
@@ -261,5 +262,11 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
                 url: "/api/whoAmI"
             });
         },
+        searchText: function(text) {
+            return $http({
+                method: 'GET',
+                url: ['api', 'search', text.replace('#', '_')].join('/')
+            })
+        }
     }
 }]);

@@ -29,5 +29,6 @@ module.exports = {
     },
     mapGetStatic: function(req, res) {
         return edison.map.getStaticDirections(req, res);
-    }
+    },
+    
 }

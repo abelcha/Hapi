@@ -35,7 +35,9 @@
                  }
                  return total;
              }
-             $rootScope.$watch('interventionsStats', findTotal)
+             $rootScope.$watch('interventionsStats', function() {
+                scope.total = findTotal();
+             })
              scope._model = scope.model || 'intervention';
              var filtersFactory = new FiltersFactory(scope._model);
              scope.exFltr = filtersFactory.getFilterByName(scope.fltr);

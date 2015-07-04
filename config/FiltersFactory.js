@@ -86,6 +86,28 @@ FiltersFactory.prototype.list = {
             return artisan.status === "POT";
         }
     }, {
+        short_name: 'a_dos',
+        long_name: 'DossierIncomplet',
+        url: 'dossierIncomplet',
+        match: {
+            $or: [{
+                'document.cni.file': {
+                    $exists: false
+                }
+            }, {
+                'document.contrat.file': {
+                    $exists: true
+                }
+            }, {
+                'document.kbis.file': {
+                    $exists: true
+                }
+            }]
+        },
+        fn: function() {
+            return true;
+        }
+    }, {
         short_name: 'a_act',
         long_name: 'actifs',
         url: 'actif',
@@ -379,7 +401,7 @@ FiltersFactory.prototype.list = {
         url: 'market',
         match: {
             aDemarcher: true,
-            status:'APR',
+            status: 'APR',
             'login.demarchage': {
                 $exists: false
             }
@@ -391,7 +413,7 @@ FiltersFactory.prototype.list = {
         short_name: 'i_pan',
         long_name: 'PANIER',
         url: 'panier',
-        group:'$login.demarchage',
+        group: '$login.demarchage',
         match: {
             aDemarcher: true,
             status: {
@@ -408,7 +430,7 @@ FiltersFactory.prototype.list = {
         short_name: 'i_hist',
         long_name: 'HISTORIQUE',
         url: 'historique',
-        group:'$login.demarchage',
+        group: '$login.demarchage',
         match: {
             aDemarcher: true,
             'login.demarchage': {
