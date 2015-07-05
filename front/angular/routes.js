@@ -203,6 +203,9 @@ var getIntervention = function($route, $q, edisonAPI) {
                     client: {
                         civilite: 'M.'
                     },
+                    facture:{
+
+                    },
                     reglementSurPlace: true,
                     date: {
                         ajout: Date.now(),

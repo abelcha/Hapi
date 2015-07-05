@@ -37,7 +37,8 @@
                                             <br>
                                         </p>
                                         <p style="width:49%;float:right">
-                                            Date d'ajout: {{vm.data.artisan.date.ajout| date:"dd/MM/yyyy"}}<br>
+                                            Date d'ajout: {{vm.data.artisan.date.ajout| date:"dd/MM/yyyy"}}
+                                            <br>
                                             <span ng-if="vm.data.artisan.disponible == false">
                                                     Indisponible jusqu'au {{vm.data.artisan.absence.end  | date:"dd/MM à HH:mm"}} ({{vm.data.artisan.absence.login}})
                                                 </span>
@@ -147,7 +148,7 @@
                                                 <input eurofilter ng-model="vm.data.prixAnnonce" ng-disabled="vm.data.date.envoi">
                                             </lx-text-field>
                                         </div>
-                                         <div class="col-sm-3">
+                                        <div class="col-sm-3">
                                             <lx-text-field label="Prix Final" ng-if="vm.data.status === 'ENV'">
                                                 <input eurofilter ng-model="vm.data.prixFinal">
                                             </lx-text-field>
@@ -180,7 +181,6 @@
                                 </div>
                             </div>
                         </div>
-                        <credit-card model="vm.data" ng-if="vm.data.modeReglement === 'CB'"></credit-card>
                         <div flex-item ng-if="!vm.data.reglementSurPlace" class="card margin">
                             <div class="p+">
                                 <strong class="fs-headline display-block">Facture</strong>
@@ -192,57 +192,73 @@
                                 <span class="fs-subhead tc-black-2 display-block">Lorem Ipsum</span>
                                 <div class="paragraph fs-body-1 mt+">
                                     <div class="form-group" ng-if="!vm.data.reglementSurPlace">
-                                        <div class="col-sm-2">
-                                            <div class="select-style text-field">
-                                                <select ng-model="vm.data.facture.payeur" ng-options="f.short_name as f.long_name for f in config.typePayeur">
-                                                </select>
-                                                <label ng-class="{'selected' : vm.data.facture.payeur}">Type payeur</label>
+                                        <div class="row" style="margin: 0px 15px;">
+                                            <div class="col-sm-3">
+                                                <div class="select-style text-field">
+                                                    <select ng-model="vm.data.facture.payeur" ng-options="f.short_name as f.long_name for f in config.typePayeur">
+                                                    </select>
+                                                    <label ng-class="{'selected' : vm.data.facture.payeur}">Type payeur</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-3 col-sm-offset-1" ng-if="vm.data.facture.payeur === 'GRN'">
+                                                <div class="select-style text-field">
+                                                    <select ng-model="vm.data.facture.compte" ng-change="vm.changeGrandCompte()" ng-options="f.short_name as f.long_name for f in config.compteFacturation">
+                                                    </select>
+                                                    <label ng-class="{'selected' : vm.data.facture.compte}">Compte</label>
+                                                </div>
                                             </div>
                                         </div>
-                                        <div class="col-sm-2">
-                                            <lx-text-field label="Prénom">
-                                                <input capitalize type="text" ng-model="vm.data.facture.prenom">
-                                            </lx-text-field>
+                                        <div class="row" style="margin: 0px 15px;">
+                                            <div class="col-sm-4">
+                                                <lx-text-field label="Nom">
+                                                    <input capitalize type="text" ng-model="vm.data.facture.nom">
+                                                </lx-text-field>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <lx-text-field label="Prénom">
+                                                    <input capitalize type="text" ng-model="vm.data.facture.prenom">
+                                                </lx-text-field>
+                                            </div>
                                         </div>
-                                        <div class="col-sm-2">
-                                            <lx-text-field label="Nom">
-                                                <input capitalize type="text" ng-model="vm.data.facture.nom">
-                                            </lx-text-field>
+                                        <div class="row" style="margin: 0px 15px;">
+                                            <div class="col-sm-4">
+                                                <lx-text-field label="Téléphone">
+                                                    <input capitalize type="text" ng-model="vm.data.facture.tel">
+                                                </lx-text-field>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <lx-text-field label="Email">
+                                                    <input capitalize type="text" ng-model="vm.data.facture.email">
+                                                </lx-text-field>
+                                            </div>
                                         </div>
-                                        <div class="col-sm-2">
-                                            <lx-text-field label="Téléphone">
-                                                <input capitalize type="text" ng-model="vm.data.facture.tel">
-                                            </lx-text-field>
-                                        </div>
-                                        <div class="col-sm-4">
-                                            <lx-text-field label="Email">
-                                                <input capitalize type="text" ng-model="vm.data.facture.email">
-                                            </lx-text-field>
-                                        </div>
-                                        <div class="col-sm-1">
-                                            <lx-text-field label="Numero">
-                                                <input capitalize type="text" ng-model="vm.data.facture.address.n">
-                                            </lx-text-field>
-                                        </div>
-                                        <div class="col-sm-5">
-                                            <lx-text-field label="Addresse">
-                                                <input capitalize type="text" ng-model="vm.data.facture.address.r">
-                                            </lx-text-field>
-                                        </div>
-                                        <div class="col-sm-2">
-                                            <lx-text-field label="Code Postal">
-                                                <input capitalize type="text" ng-model="vm.data.facture.address.cp">
-                                            </lx-text-field>
-                                        </div>
-                                        <div class="col-sm-4">
-                                            <lx-text-field label="Ville">
-                                                <input capitalize type="text" ng-model="vm.data.facture.address.v">
-                                            </lx-text-field>
+                                        <div class="row" style="margin: 0px 15px;">
+                                            <div class="col-sm-1">
+                                                <lx-text-field label="Numero">
+                                                    <input capitalize type="text" ng-model="vm.data.facture.address.n">
+                                                </lx-text-field>
+                                            </div>
+                                            <div class="col-sm-5">
+                                                <lx-text-field label="Addresse">
+                                                    <input capitalize type="text" ng-model="vm.data.facture.address.r">
+                                                </lx-text-field>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <lx-text-field label="Code Postal">
+                                                    <input capitalize type="text" ng-model="vm.data.facture.address.cp">
+                                                </lx-text-field>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <lx-text-field label="Ville">
+                                                    <input capitalize type="text" ng-model="vm.data.facture.address.v">
+                                                </lx-text-field>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        <credit-card class="margin" model="vm.data" ng-if="vm.data.modeReglement === 'CB'"></credit-card>
                         <produits ng-if="vm.data.id || vm.data.devisOrigine" data="vm.data"></produits>
                         <div class="card margin">
                             <div class="p+">
