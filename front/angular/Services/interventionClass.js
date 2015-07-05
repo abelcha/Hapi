@@ -183,25 +183,44 @@ angular.module('edison')
                 });
             };
 
+
+            Intervention.prototype.envoiFactureVerif = function(cb) {
+                var _this = this;
+                if (!this.produits.length)
+                    return LxNotificationService.error("Veuillez renseigner les produits");
+                if (!this.prixFinal)
+                    return LxNotificationService.error("Veuillez renseigner le prix final");
+                Intervention(_this).envoiFacture(function() {
+                    Intervention(_this).verificationSimple(cb)
+                })
+            }
+
+            Intervention.prototype.verificationSimple = function(cb) {
+                var _this = this;
+                edisonAPI.intervention.verification(_this.id)
+                    .then(function(resp) {
+                        var validationMessage = _.template("L'intervention {{id}} est vérifié")(resp.data)
+                        LxNotificationService.success(validationMessage);
+                        if (typeof cb === 'function') {
+                            console.log("callback")
+                            cb(resp.data);
+                        }
+                    }).catch(function(error) {
+                        LxNotificationService.error(error.data);
+                        if (typeof cb === 'function')
+                            cb(error.data);
+                    })
+            }
+
             Intervention.prototype.verification = function(cb) {
                 var _this = this;
                 if (!_this.reglementSurPlace) {
-                   return Intervention(this).ouvrirFiche();
+                    return Intervention(this).ouvrirFiche();
                 }
                 dialog.verification(_this, function(inter) {
                     Intervention(inter).save(function(err, resp) {
                         if (!err) {
-                            edisonAPI.intervention.verification(_this.id)
-                                .then(function(resp) {
-                                    var validationMessage = _.template("L'intervention {{id}} est vérifié")(resp.data)
-                                    LxNotificationService.success(validationMessage);
-                                    if (typeof cb === 'function')
-                                        cb(resp.data);
-                                }).catch(function(error) {
-                                    LxNotificationService.error(error.data);
-                                    if (typeof cb === 'function')
-                                        cb(error.data);
-                                })
+                            return Intervention(this).verificationSimple(cb);
                         }
                     });
                 });

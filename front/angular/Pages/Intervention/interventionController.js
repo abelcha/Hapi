@@ -140,13 +140,17 @@ var InterventionCtrl = function($timeout, $rootScope, $scope, $location, $routeP
         intervention.save(function(err, resp) {
             if (err) {
                 return false;
+            } else if (options && options.envoiFacture && options.verification) {
+                intervention.envoiFactureVerif(function() {
+                    tabContainer.close(tab);
+                })
             } else if (options && options.envoi === true) {
                 resp.files = intervention.files;
                 intervention.envoi.bind(resp)(tabContainer.close);
             } else if (options && options.annulation) {
                 intervention.annulation(tabContainer.close);
             } else if (options && options.verification) {
-                intervention.verification(tabContainer.close);
+                intervention.verificationSimple(tabContainer.close);
             } else {
                 tabContainer.close(tab);
             }
