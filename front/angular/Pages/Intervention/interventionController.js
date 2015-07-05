@@ -45,6 +45,14 @@ var InterventionCtrl = function($timeout, $rootScope, $scope, $location, $routeP
         })
     }
 
+    $scope.calculPrixFinal = function() {
+        intervention.prixFinal = 0;
+        _.each(intervention.produits, function(e)  {
+            intervention.prixFinal += (e.pu * e.quantite)
+        })
+        intervention.prixFinal = Math.round(intervention.prixFinal * 100) / 100;
+    }
+
     $scope.addSAV = function() {
         dialog.getText({
             title: "Description du SAV",
