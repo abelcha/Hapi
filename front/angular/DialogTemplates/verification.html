@@ -1,5 +1,5 @@
 <md-dialog aria-label="Mango (Fruit)" style="  width: 1100px;height: 80%;">
-    <md-dialog-content class="sticky-container" style="height: 100%;background:#C4C4C4">
+    <md-dialog-content class="sticky-container" style="height: 100%;background:#C4C4C4;overflow:scroll">
         <div style="padding-left: 15px;padding-right: 15px;">
             <br>
             <div class="row" style="margin:0">
@@ -10,15 +10,39 @@
                                 <input eurofilter ng-model="data.prixAnnonce" ng-disabled="true">
                             </lx-text-field>
                         </div>
-                         <div class="col-sm-3" style="padding-left:0">
+                        <div class="col-sm-3" style="padding-left:0">
                             <lx-text-field label="Prix Final">
                                 <input eurofilter ng-model="data.prixFinal">
                             </lx-text-field>
                         </div>
+                        <div class="col-sm-3">
+                            <md-checkbox ng-model="data.reglementSurPlace" aria-label="Checkbox 1">
+                                <div class="hidden-sm hidden-md">
+                                    Reglement Sur Place
+                                </div>
+                                <div class="hidden-lg hidden-xs ">
+                                    RSP
+                                </div>
+                            </md-checkbox>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="select-style text-field">
+                                <select ng-model="data.modeReglement" ng-options="mr.short_name as mr.long_name for mr in config.modeDeReglements">
+                                </select>
+                                <label ng-class="{'selected' : data.modeReglement}">
+                                    <div class="hidden-sm hidden-md">
+                                        Mode de Reglement
+                                    </div>
+                                    <div class="hidden-lg hidden-xs ">
+                                        Mode Regl.
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <produits display="true" data="data"></produits>
+            <credit-card class="margin" model="data" ng-if="data.modeReglement === 'CB'"></credit-card>
             <info-fourniture data="data" display="true"></info-fourniture>
         </div>
     </md-dialog-content>

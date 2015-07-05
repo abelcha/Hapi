@@ -1890,6 +1890,7 @@ angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', 'config', 
             $mdDialog.show({
                 controller: function DialogController($scope, $mdDialog, config) {
                     $scope.data = inter
+                    $scope.config = config;
                     $scope.answer = function(cancel) {
                         $mdDialog.hide();
                         $scope.inter = inter;
@@ -2358,20 +2359,23 @@ angular.module('edison')
 
             Intervention.prototype.verification = function(cb) {
                 var _this = this;
-                dialog.verification(_this, function(resp) {
-                    console.log("--->", resp)
-                })
-/*                edisonAPI.intervention.verification(_this.id)
-                    .then(function(resp) {
-                        var validationMessage = _.template("L'intervention {{id}} est vérifié")(resp.data)
-                        LxNotificationService.success(validationMessage);
-                        if (typeof cb === 'function')
-                            cb(resp.data);
-                    }).catch(function(error) {
-                        LxNotificationService.error(error.data);
-                        if (typeof cb === 'function')
-                            cb(error.data);
-                    })*/
+                dialog.verification(_this, function(inter) {
+                    Intervention(inter).save(function(err, resp) {
+                        if (!err) {
+                            edisonAPI.intervention.verification(_this.id)
+                                .then(function(resp) {
+                                    var validationMessage = _.template("L'intervention {{id}} est vérifié")(resp.data)
+                                    LxNotificationService.success(validationMessage);
+                                    if (typeof cb === 'function')
+                                        cb(resp.data);
+                                }).catch(function(error) {
+                                    LxNotificationService.error(error.data);
+                                    if (typeof cb === 'function')
+                                        cb(error.data);
+                                })
+                        }
+                    });
+                });
             }
             Intervention.prototype.fileUpload = function(file, cb) {
                 var _this = this;
