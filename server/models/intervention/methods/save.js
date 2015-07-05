@@ -4,7 +4,6 @@ module.exports = function(schema) {
 
     function dbError(reject) {
         return function(err) {
-            console.log("post")
             var str = String(err).split('Path').join('Le champs');
             str = str.split('is required').join('est requis');
             str = str.split('ValidationError').join('Erreur');
@@ -18,11 +17,9 @@ module.exports = function(schema) {
     schema.statics.save = function(req, res) {
         var updateInter = function(data) {
             return new Promise(function(resolve, reject) {
-                console.log('findOne', data.id)
                 db.model('intervention').findOne({
                     id: data.id
                 }).then(function(doc) {
-                console.log('yayay')
 
                     if (data.artisan.id && data.artisan.id !== doc.artisan.id) {
                         doc.status = 'APR';
@@ -31,7 +28,6 @@ module.exports = function(schema) {
                         reject("Intervention Inconnu");
                     for (k in data) {
                         if (k !== 'status' && k !== '__v') {
-                            console.log(k)
                             doc[k] = data[k];
                         }
                     }

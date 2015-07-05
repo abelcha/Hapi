@@ -188,10 +188,16 @@ angular.module('edison')
                 var _this = this;
                 if (!this.produits.length)
                     return LxNotificationService.error("Veuillez renseigner les produits");
-                if (!this.prixFinal)
-                    return LxNotificationService.error("Veuillez renseigner le prix final");
-                Intervention(_this).envoiFacture(function() {
-                    Intervention(_this).verificationSimple(cb)
+                if (!this.prixFinal) {
+                    this.prixFinal = 0;
+                    _.each(_this.produits, function(e) {
+                        _this.prixFinal += (e.pu * e.quantite)
+                    })
+                    _this.prixFinal = Math.round(_this.prixFinal * 100) / 100;
+                }
+                console.log(_this.prixFinal)
+                _this.envoiFacture(function() {
+                    _this.verificationSimple(cb)
                 })
             }
 
@@ -202,7 +208,6 @@ angular.module('edison')
                         var validationMessage = _.template("L'intervention {{id}} est vérifié")(resp.data)
                         LxNotificationService.success(validationMessage);
                         if (typeof cb === 'function') {
-                            console.log("callback")
                             cb(resp.data);
                         }
                     }).catch(function(error) {

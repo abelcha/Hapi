@@ -914,59 +914,6 @@ angular.module('edison').filter('montant', function() {
 
 
 
- angular.module('edison').directive('infoFacture', ['config', 'mapAutocomplete',
-     function(config, mapAutocomplete) {
-         "use strict";
-         return {
-             restrict: 'E',
-             templateUrl: '/Templates/info-facture.html',
-             scope: {
-                 data: "=",
-             },
-             link: function(scope, element, attrs) {
-                 var model = scope.data;
-                 scope.config = config
-                 scope.autocomplete = mapAutocomplete;
-                 scope.changeAddressFacture = function(place) {
-                     mapAutocomplete.getPlaceAddress(place).then(function(addr) {
-                         scope.data.facture = scope.data.facture ||  {}
-                         scope.data.facture.address = addr;
-                     });
-                 }
-                 scope.changeGrandCompte = function() {
-                     // var x = _.clone(config.compteFacturation[scope.data.facture.compte])
-                     scope.data.facture = _.find(config.compteFacturation, {
-                         short_name: scope.data.facture.compte
-                     });
-                     scope.data.facture.payeur = "GRN";
-                 }
-             },
-         }
-
-     }
- ]);
-
-angular.module('edison').directive('infoFourniture', ['config', 'fourniture',
-    function(config, fourniture) {
-        "use strict";
-        return {
-            restrict: 'E',
-            templateUrl: '/Templates/info-fourniture.html',
-            scope: {
-                data: "=",
-                display: "="
-            },
-            link: function(scope, element, attrs) {
-                scope.config = config
-                scope.dsp = scope.display || false
-                scope.data.fourniture = scope.data.fourniture || [];
-                scope.fourniture = fourniture.init(scope.data.fourniture);
-            },
-        }
-
-    }
-]);
-
 angular.module('edison').factory('TabContainer', function($location, $window, $q, edisonAPI) {
     "use strict";
 
@@ -2419,10 +2366,16 @@ angular.module('edison')
                 var _this = this;
                 if (!this.produits.length)
                     return LxNotificationService.error("Veuillez renseigner les produits");
-                if (!this.prixFinal)
-                    return LxNotificationService.error("Veuillez renseigner le prix final");
-                Intervention(_this).envoiFacture(function() {
-                    Intervention(_this).verificationSimple(cb)
+                if (!this.prixFinal) {
+                    this.prixFinal = 0;
+                    _.each(_this.produits, function(e) {
+                        _this.prixFinal += (e.pu * e.quantite)
+                    })
+                    _this.prixFinal = Math.round(_this.prixFinal * 100) / 100;
+                }
+                console.log(_this.prixFinal)
+                _this.envoiFacture(function() {
+                    _this.verificationSimple(cb)
                 })
             }
 
@@ -2433,7 +2386,6 @@ angular.module('edison')
                         var validationMessage = _.template("L'intervention {{id}} est vérifié")(resp.data)
                         LxNotificationService.success(validationMessage);
                         if (typeof cb === 'function') {
-                            console.log("callback")
                             cb(resp.data);
                         }
                     }).catch(function(error) {
@@ -2955,6 +2907,59 @@ angular.module('edison').factory('user', function($window) {
     "use strict";
     return $window.user;
 });
+
+ angular.module('edison').directive('infoFacture', ['config', 'mapAutocomplete',
+     function(config, mapAutocomplete) {
+         "use strict";
+         return {
+             restrict: 'E',
+             templateUrl: '/Templates/info-facture.html',
+             scope: {
+                 data: "=",
+             },
+             link: function(scope, element, attrs) {
+                 var model = scope.data;
+                 scope.config = config
+                 scope.autocomplete = mapAutocomplete;
+                 scope.changeAddressFacture = function(place) {
+                     mapAutocomplete.getPlaceAddress(place).then(function(addr) {
+                         scope.data.facture = scope.data.facture ||  {}
+                         scope.data.facture.address = addr;
+                     });
+                 }
+                 scope.changeGrandCompte = function() {
+                     // var x = _.clone(config.compteFacturation[scope.data.facture.compte])
+                     scope.data.facture = _.find(config.compteFacturation, {
+                         short_name: scope.data.facture.compte
+                     });
+                     scope.data.facture.payeur = "GRN";
+                 }
+             },
+         }
+
+     }
+ ]);
+
+angular.module('edison').directive('infoFourniture', ['config', 'fourniture',
+    function(config, fourniture) {
+        "use strict";
+        return {
+            restrict: 'E',
+            templateUrl: '/Templates/info-fourniture.html',
+            scope: {
+                data: "=",
+                display: "="
+            },
+            link: function(scope, element, attrs) {
+                scope.config = config
+                scope.dsp = scope.display || false
+                scope.data.fourniture = scope.data.fourniture || [];
+                scope.fourniture = fourniture.init(scope.data.fourniture);
+            },
+        }
+
+    }
+]);
 
  angular.module('edison').directive('artisanCategorie', ['config', function(config) {
      "use strict";
