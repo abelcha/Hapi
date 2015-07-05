@@ -11,7 +11,8 @@
                  height: "@",
                  xmarkers: "=",
                  addressChange: '&',
-                 isNew: "="
+                 isNew: "=",
+                 firstAddress:"="
              },
              link: function(scope, element, attrs) {
                  scope._height = scope.height || 315;
@@ -37,6 +38,7 @@
                  }
 
                  scope.changeAddress = function(place) {
+                    scope.firstAddress = true;
                      mapAutocomplete.getPlaceAddress(place).then(function(addr) {
                          scope.map.setZoom(12);
                          scope.map.setCenter(addr)

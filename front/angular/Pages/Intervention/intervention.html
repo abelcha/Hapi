@@ -13,7 +13,7 @@
                         </div>
                     </div>
                 </div>
-                <info-client ng-if="vm.data.client.address.v && vm.data.categorie" model="vm.data.client"></info-client>
+                <info-client ng-if="firstAddress && vm.data.categorie" model="vm.data.client"></info-client>
                 <info-categorie model="vm.data.categorie" change="vm.searchArtisans(newCategorie)"></info-categorie>
                 <div class="row" style="margin:0">
                     <div class="col-sm-8" style="padding-left:0">
@@ -22,7 +22,7 @@
                                 <span class="fs-headline display-block">
          <button ng-click="vm.data.categorie = undefined" style="float:left" class="btn--no-conflicts btn--m {{config.categories[vm.data.categorie].color}} btn--flat" lx-ripple> {{config.categories[vm.data.categorie].long_name}}</button></span>
                                 <div class="fs-body-1 mt+" style="padding-top:10px">
-                                    <edison-map is-new="vm.isNew" data="vm.data" client="vm.data.client" xmarkers="vm.nearestArtisans" address-change="vm.searchArtisans()" height="small"></edison-map>
+                                    <edison-map  first-address="firstAddress" is-new="vm.isNew" data="vm.data" client="vm.data.client" xmarkers="vm.nearestArtisans" address-change="vm.searchArtisans()" height="small"></edison-map>
                                 </div>
                                 <div class="p+" ng-if="vm.data.artisan.id && vm.data.artisan.stats.total">
                                     <span class="fs-subhead tc-black-2 display-block">
