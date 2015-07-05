@@ -470,7 +470,7 @@
                             <div class="fab__actions fab__actions--left">
                                 <button ng-show="vm.data.status === 'ENV'" ng-click="saveInter({verification:true})" class="btn--no-conflicts btn--l btn--black btn--fab" lx-ripple lx-tooltip="Verifier" tooltip-position="top"><i class="mdi mdi-check-all"></i></button>
                                 <button ng-if="vm.data.status" ng-click="saveInter({annulation:true})" class="btn--no-conflicts btn--l btn--black btn--fab" lx-ripple lx-tooltip="Annuler" tooltip-position="top"><i class="mdi mdi-close"></i></button>
-                                <button ng-if="!vm.data.status || vm.data.status === 'ANN' || vm.data.status === 'APR'" ng-click="saveInter({envoi:true})" class="btn--no-conflicts btn--l btn--black btn--fab" lx-ripple lx-tooltip="Envoyer" tooltip-position="top"><i class="mdi mdi-send"></i></button>
+                                <button ng-if="!vm.data.status || vm.data.status === 'ANN' || vm.data.status === 'APR' || vm.data.status === 'ENV'" ng-click="saveInter({envoi:true})" class="btn--no-conflicts btn--l btn--black btn--fab" lx-ripple lx-tooltip="Envoyer" tooltip-position="top"><i class="mdi mdi-send"></i></button>
                             </div>
                         </div>
                     </div>
