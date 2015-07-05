@@ -211,9 +211,6 @@ module.exports = {
         short_name: 'PRO',
         long_name: 'Propriétaire'
     }, {
-        short_name: 'LOC',
-        long_name: 'Locataire'
-    }, {
         short_name: 'IMO',
         long_name: 'Agence Immobilière'
     }, {
