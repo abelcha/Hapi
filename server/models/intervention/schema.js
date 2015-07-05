@@ -163,8 +163,7 @@ module.exports = function(db) {
             fournisseur: String
         }],
         modeReglement: {
-            type: String,
-            required: true
+            type: String
         },
         prixAnnonce: {
             type: Number,
