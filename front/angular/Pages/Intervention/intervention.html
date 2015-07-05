@@ -184,15 +184,19 @@
                         <div flex-item ng-if="!vm.data.reglementSurPlace" class="card margin">
                             <div class="p+">
                                 <strong class="fs-headline display-block">Facture</strong>
+
                                 <md-content class="autocomplete" style="width: 40%;margin-top: -22px;margin-left: 54%;float: left;" layout-padding layout="column" md-input-container flex>
                                     <md-autocomplete class="address-autocomplete" md-selected-item-change="vm.changeAddressFacture(selectedAddress)" md-selected-item="selectedAddress" md-search-text="searchText" md-items="item in vm.autocomplete.search(searchText)" md-item-text="item.description">
                                         <span md-highlight-text="searchText"> {{item.description}}</span>
                                     </md-autocomplete>
                                 </md-content>
-                                <span class="fs-subhead tc-black-2 display-block">Lorem Ipsum</span>
+                                <span ng-if="vm.data.date.envoiFacture" class="fs-subhead tc-black-2 display-block">Envoyé le {{vm.data.date.envoiFacture|date:"dd/MM/yy 'à' HH'h'mm"}} </span>
+                                <span ng-if="!vm.data.date.envoiFacture" class="fs-subhead tc-black-2 display-block">
+                                    Facture à envoyer
+                                </span>
                                 <div class="paragraph fs-body-1 mt+">
                                     <div class="form-group" ng-if="!vm.data.reglementSurPlace">
-                                        <div class="row" style="margin: 0px 15px;">
+                                        <div class="row" style="margin: 1px 15px;">
                                             <div class="col-sm-3">
                                                 <div class="select-style text-field">
                                                     <select ng-model="vm.data.facture.payeur" ng-options="f.short_name as f.long_name for f in config.typePayeur">
@@ -208,7 +212,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="row" style="margin: 0px 15px;">
+                                        <div class="row" style="margin: 8px 15px;">
                                             <div class="col-sm-4">
                                                 <lx-text-field label="Nom">
                                                     <input capitalize type="text" ng-model="vm.data.facture.nom">
@@ -220,7 +224,7 @@
                                                 </lx-text-field>
                                             </div>
                                         </div>
-                                        <div class="row" style="margin: 1px 15px;">
+                                        <div class="row" style="margin: 8px 15px;">
                                             <div class="col-sm-4">
                                                 <lx-text-field label="Téléphone">
                                                     <input capitalize type="text" ng-model="vm.data.facture.tel">
@@ -232,7 +236,7 @@
                                                 </lx-text-field>
                                             </div>
                                         </div>
-                                        <div class="row" style="margin: 0px 15px;">
+                                        <div class="row" style="margin: 8px 15px;">
                                             <div class="col-sm-1">
                                                 <lx-text-field label="Numero">
                                                     <input capitalize type="text" ng-model="vm.data.facture.address.n">
@@ -259,7 +263,7 @@
                             </div>
                         </div>
                         <credit-card class="margin" model="vm.data" ng-if="vm.data.modeReglement === 'CB'"></credit-card>
-                        <produits ng-if="vm.data.id || vm.data.devisOrigine" data="vm.data"></produits>
+                        <produits ng-if="vm.data.id || vm.data.devisOrigine || !vm.data.reglementSurPlace" data="vm.data"></produits>
                         <div class="card margin">
                             <div class="p+">
                                 <strong ng-click="displayFRN = !displayFRN" class="fs-headline display-block">Fourniture</strong>
