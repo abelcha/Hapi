@@ -184,7 +184,7 @@
                         <info-facture ng-if="!vm.data.reglementSurPlace" data="vm.data"></info-facture>
                         <produits ng-if="vm.data.id || vm.data.devisOrigine" data="vm.data"></produits>
                         <credit-card class="margin" model="vm.data" ng-if="vm.data.modeReglement === 'CB'"></credit-card>
-                        <info-fourniture data="vm.data"></info-fourniture>
+                        <info-fourniture ng-if="data.id" data="vm.data"></info-fourniture>
 
 
                         <div class="row" style="margin:0">
@@ -231,7 +231,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="card margin">
+                        <div ng-if="data.id"class="card margin">
                             <div class="p+">
                                 <strong ng-click="displayLIT = !displayLIT" class="fs-headline display-block">Litiges</strong>
                                 <span class="fs-subhead tc-black-2 display-block">Liste des litiges</span>
