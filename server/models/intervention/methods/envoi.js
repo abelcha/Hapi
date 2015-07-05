@@ -34,8 +34,6 @@ module.exports = function(schema) {
             }
 
             return new Promise(function(resolve, reject) {
-                if (inter.status !== "APR" && inter.status !== "ANN" && inter.status !== "LIT")
-                    return reject("Annulez d'abords l'intervention avant de la réenvoyer")
                 if (!req.body.sms)
                     return reject("Pas de text SMS");
                 if (!inter.artisan ||  !inter.artisan.id)
