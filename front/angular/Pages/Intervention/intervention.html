@@ -148,8 +148,8 @@
                                             </lx-text-field>
                                         </div>
                                          <div class="col-sm-3">
-                                            <lx-text-field label="Prix Final">
-                                                <input eurofilter ng-model="vm.data.prixAnnonce">
+                                            <lx-text-field label="Prix Final" ng-if="vm.data.status === 'ENV'">
+                                                <input eurofilter ng-model="vm.data.prixFinal">
                                             </lx-text-field>
                                         </div>
                                         <div class="col-sm-3">
