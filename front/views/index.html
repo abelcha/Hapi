@@ -39,7 +39,7 @@
                     <link fltr="i_tall" icon="th-list" title="{{dateFormat}}" login="{{user.login}}"></link>
                     <link fltr="i_tenv" icon="th-list" login="{{user.login}}"></link>
                     <link fltr="i_apr" icon="th-list" color="primary" login="{{user.login}}"></link>
-                    <link fltr="i_avr" icon="th-list" login="{{user.login}}"></link>
+                    <link fltr="i_avr" icon="th-list" color="warning" login="{{user.login}}"></link>
                 </drop-down>
                 <drop-down ng-click="mcs=true" title="Mes Collegues" icon="sitemap">
                     <drop-down ng-if="mcs" title="{{telepro.login | loginify}}" ng-repeat="telepro in interventionsStats | orderBy:'-total'">
