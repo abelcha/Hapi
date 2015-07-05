@@ -21,6 +21,7 @@ module.exports = function(schema) {
         'client.address',
         'categorie',
         'prixAnnonce',
+        'prixFinal',
         'artisan',
         'reglementSurPlace',
         'date.intervention',
@@ -37,6 +38,9 @@ module.exports = function(schema) {
 
         if (e.id % 10 === 1)
             console.log(e.id)
+        if (e.id === 23573) {
+            console.log(e)
+        }
         var rtn = {
             t: e.login.ajout,
             id: e.id,
@@ -45,7 +49,7 @@ module.exports = function(schema) {
             c: config.categories[e.categorie].order,
             n: e.client.civilite + ' ' + e.client.nom,
             a: e.artisan.nomSociete,
-            pa: e.prixAnnonce ||  undefined,
+            pa: e.prixFinal || e.prixAnnonce,
             da: d(e.date.ajout),
             di: d(e.date.intervention),
             ad: e.client.address.cp + ', ' + e.client.address.v,
