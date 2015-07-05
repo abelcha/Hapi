@@ -862,6 +862,7 @@ angular.module("edison").filter('tableFilter', ['config', function(config) {
     return function(dataContainer, inputs, strictMode) {
         var rtn = [];
         console.time('fltr')
+        console.log(inputs)
         inputs = _.mapValues(inputs, clean);
         _.each(dataContainer, function(data) {
             if (data.id) {
@@ -3777,7 +3778,9 @@ var InterventionsController = function($timeout, tabContainer, FiltersFactory, C
             total: dataProvider.filteredData,
             getData: function($defer, params) {
                 var data = dataProvider.filteredData;
-                data = $filter('tableFilter')(data, params.filter());
+                if (!_.isEqual(params.filter(), _this.currentFilter))
+                    data = $filter('tableFilter')(data, params.filter());
+                _this.currentFilter = _.clone(params.filter());
                 params.total(data.length);
                 data = $filter('orderBy')(data, params.orderBy());
                 $defer.resolve(data.slice((params.page() - 1) * params.count(), params.page() * params.count()));
