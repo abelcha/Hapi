@@ -28,7 +28,7 @@ module.exports = function() {
 
     basePath = basePath + '/' + "event"
     getDirectories(basePath).forEach(function(model) {
-        if (model !==  "methods") {
+        if (model !== "methods") {
             var folder = basePath + '/' + model;
             var schema = require(folder + '/schema')(mongoose);
 

@@ -3,9 +3,8 @@ module.exports = function(req, res) {
     var async = require('async');
     var _ = require('lodash');
     var query = req.params.text;
-
+    console.log(query)
     var search = function(cb) {
-        console.log(query)
         if (_(query).startsWith('0')) {
 
             db.model('intervention').find({
@@ -18,7 +17,7 @@ module.exports = function(req, res) {
                         $regex: new RegExp('^' + query, 'i')
                     }
                 }]
-            }).then(function(resp) {
+            }).limit(20).then(function(resp) {
                 cb(null, resp.map(function(e) {
                     var tel = e.client.telephone;
                     var matchedTel = _(tel.tel1).startsWith(query) ? tel.tel1 : tel.tel2
@@ -30,23 +29,18 @@ module.exports = function(req, res) {
                 console.log(err)
             })
         } else if (query.match(/^\d+$/)) {
-            db.model('intervention').find({
-                $where: "/^" + query + ".*/.test(this.id)"
-            }).limit(5).then(function(resp) {
-                cb(null, resp.map(function(e) {
-                    return {
-                        description: e.id + ' - ' + e.client.civilite + ' ' + e.client.nom + ' - ' + e.client.address.cp + ' ' + e.client.address.v
-                    }
-
-                }))
-            })
-        } else if (query.startsWith('_')) {
-            db.model('intervention').findOne({id:parseInt(query.slice(1))}).then(function(e) {
+            db.model('intervention').findOne({
+                id: parseInt(query)
+            }).then(function(e) {
                 if (!e)
-                    cb(null, []);
+                    return cb(null, []);
                 cb(null, [{
                     description: e.id + ' - ' + e.client.civilite + ' ' + e.client.nom + ' - ' + e.client.address.cp + ' ' + e.client.address.v
                 }])
+            })
+        } else {
+            db.model('intervention').textSearch(query, function (err, resp) {
+                console.log(err, resp);
             })
         }
     }

@@ -1,6 +1,6 @@
 module.exports = function(db) {
 
-    return new db.Schema({
+    var schema =  new db.Schema({
         _id: Number,
         id: {
             type: Number,
@@ -11,7 +11,7 @@ module.exports = function(db) {
             index: true,
             default: 'APR'
         },
-        subStatus:String,
+        subStatus: String,
         causeAnnulation: String,
         login: {
             ajout: String,
@@ -21,7 +21,7 @@ module.exports = function(db) {
             verification: String,
             paiementCLI: String,
             paiementSST: String,
-            demarchage:String,
+            demarchage: String,
         },
         telepro: String,
         comments: [{
@@ -40,7 +40,7 @@ module.exports = function(db) {
             verification: Date,
             paiementCLI: Date,
             paiementSST: Date,
-            demarchage:Date
+            demarchage: Date
         },
         historique: [{
             date: Date,
@@ -151,7 +151,7 @@ module.exports = function(db) {
             cardType: String,
             number: String,
             expMonth: Number,
-            expYear:Number,
+            expYear: Number,
             cvc: Number,
         },
         fourniture: [{
@@ -193,4 +193,8 @@ module.exports = function(db) {
             default: 20
         }
     });
+    var textSearch = require('mongoose-text-search');
+    schema.plugin(textSearch);
+    schema.index({ 'client.nom': 'text' });
+    return schema
 }

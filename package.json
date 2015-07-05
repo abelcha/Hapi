@@ -38,6 +38,7 @@
     "minimist": "^1.1.1",
     "moment": "^2.10.3",
     "mongoose": "^4.0.6",
+    "mongoose-text-search": "0.0.2",
     "multer": "^0.1.8",
     "postmark": "^1.0.0",
     "pretty-error": "^1.1.2",
