@@ -36,7 +36,7 @@
                                                 </lx-text-field>
                                             </div>
                                             <div class="col-sm-4">
-                                                <lx-text-field label="Prénom">
+                                                <lx-text-field label="{{data.facture.payeur === 'SOC' ||  data.facture.payeur === 'GRN' ? 'Nom Representant' : 'Prénom'}}">
                                                     <input capitalize type="text" ng-model="data.facture.prenom">
                                                 </lx-text-field>
                                             </div>
