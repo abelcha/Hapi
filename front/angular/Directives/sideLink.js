@@ -7,7 +7,7 @@
              '      <a href="/{{_model}}/list{{url}}{{_hashModel}}{{_login}}" >' +
              '            <i ng-if="icon" class = "menu-icon fa fa-{{icon}}"> </i>' +
              '            <span class="mm-text">{{title || exFltr.long_name}}</span>' +
-             '            <span ng-if="total !== void(0)"class="label label-success">{{total}}</span>' +
+             '            <span ng-if="total !== void(0)"class="label label-{{color}}">{{total}}</span>' +
              '        </a>' +
              '      </li>',
          scope: {
@@ -18,6 +18,7 @@
              title: '@',
              model: '@',
              count: '@',
+             color:'@',
              hashModel: '@'
          },
          link: function(scope, element, attrs) {
@@ -38,6 +39,7 @@
              $rootScope.$watch('interventionsStats', function() {
                 scope.total = findTotal();
              })
+             scope.color = (scope.color || 'success')
              scope._model = scope.model || 'intervention';
              var filtersFactory = new FiltersFactory(scope._model);
              scope.exFltr = filtersFactory.getFilterByName(scope.fltr);
