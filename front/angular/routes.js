@@ -40,13 +40,13 @@ angular.module('edison').controller('MainController', function($q, DataProvider,
             var deferred = $q.defer();
             if (x.length < 3)
                 return []
-             edisonAPI.searchText(x).success(function(resp) {
+            edisonAPI.searchText(x).success(function(resp) {
                 deferred.resolve(resp)
                 console.log(resp)
-             })
+            })
             return deferred.promise;
         },
-        change:function(x) {
+        change: function(x) {
             $location.url(x.link)
             $scope.searchText = "";
             console.log('---------', x)
@@ -203,7 +203,7 @@ var getIntervention = function($route, $q, edisonAPI) {
                     client: {
                         civilite: 'M.'
                     },
-                    facture:{
+                    facture: {
 
                     },
                     reglementSurPlace: true,
@@ -225,8 +225,11 @@ var getIntervention = function($route, $q, edisonAPI) {
 var getDevis = function($route, $q, edisonAPI) {
     "use strict";
     var id = $route.current.params.id;
-    console.log($route.current)
-    if (id.length > 10) {
+    if ($route.current.params.i) {
+        return edisonAPI.intervention.get($route.current.params.i, {
+            transform: true
+        });
+    } else if (id.length > 10) {
         return $q(function(resolve) {
             resolve({
                 data: {
@@ -295,8 +298,9 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
             controllerAs: "vm",
         })
         .when('/devis', {
-            redirectTo: function() {
-                return '/devis/' + Date.now();
+            redirectTo: function(routeParams, path, params) {
+                var url = params.i ? "?i=" + params.i : "";
+                return '/devis/' + Date.now() + url;
             }
         })
         .when('/devis/:id', {

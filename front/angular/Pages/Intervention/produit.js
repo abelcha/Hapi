@@ -7,7 +7,8 @@
              scope: {
                  data: "=",
                  tva: '=',
-                 display: '@'
+                 display: '@',
+                 model:"@"
              },
              link: function(scope, element, attrs) {
                  var model = scope.data;

@@ -182,8 +182,8 @@
                             </div>
                         </div>
                         <info-facture ng-if="!vm.data.reglementSurPlace" data="vm.data"></info-facture>
-                        <credit-card class="margin" model="vm.data" ng-if="vm.data.modeReglement === 'CB'"></credit-card>
                         <produits ng-if="vm.data.id || vm.data.devisOrigine" data="vm.data"></produits>
+                        <credit-card class="margin" model="vm.data" ng-if="vm.data.modeReglement === 'CB'"></credit-card>
                         <info-fourniture data="vm.data"></info-fourniture>
 
 
