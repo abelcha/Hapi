@@ -39,7 +39,7 @@ module.exports = function(schema) {
         if (e.id % 10 === 1)
             console.log(e.id)
         if (e.id === 23573) {
-            console.log(e)
+            console.log(e.prixFinal || e.prixAnnonce)
         }
         var rtn = {
             t: e.login.ajout,
