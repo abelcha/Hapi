@@ -2,13 +2,28 @@ angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', 'config', 
     "use strict";
 
     return {
+        verification: function(inter, cb) {
+            $mdDialog.show({
+                controller: function DialogController($scope, $mdDialog, config) {
+                    $scope.data = inter
+                    $scope.answer = function(cancel) {
+                        $mdDialog.hide();
+                        $scope.inter = inter;
+                        if (!cancel) {
+                            cb(inter);
+                        }
+                    }
+                },
+                templateUrl: '/DialogTemplates/verification.html',
+            });
+        },
         facturierDeviseur: function(artisan, cb) {
             $mdDialog.show({
                 controller: function DialogController($scope, $mdDialog, config) {
                     $scope.sst = artisan
                     $scope.answer = function(cancel) {
                         $mdDialog.hide();
-                        
+
                         if (!cancel) {
                             cb($scope.facturier, $scope.deviseur);
                         }

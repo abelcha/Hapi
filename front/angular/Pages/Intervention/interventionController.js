@@ -36,22 +36,8 @@ var InterventionCtrl = function($timeout, $rootScope, $scope, $location, $routeP
             ajout: $rootScope.user.login
         }*/
 
-    intervention.fourniture = intervention.fourniture || [];
-    $scope.fourniture = fourniture.init(intervention.fourniture);
 
-    _this.changeAddressFacture = function(place) {
-        mapAutocomplete.getPlaceAddress(place).then(function(addr) {
-            intervention.facture = intervention.facture ||  {}
-            intervention.facture.address = addr;
-        });
-    }
-    _this.changeGrandCompte = function() {
-        // var x = _.clone(config.compteFacturation[intervention.facture.compte])
-        intervention.facture = _.find(config.compteFacturation, {
-            short_name: intervention.facture.compte
-        });
-        intervention.facture.payeur = "GRN";
-    }
+
 
     $scope.changeArtisan = function(sav) {
         sav.artisan = _.find(_this.artisans, function(e) {

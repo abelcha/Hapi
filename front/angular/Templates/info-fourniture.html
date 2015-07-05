@@ -1,0 +1,72 @@
+<div class="card margin">
+    <div class="p+">
+        <strong ng-click="dsp = !dsp" class="fs-headline display-block">Fourniture</strong>
+        <span class="fs-subhead tc-black-2 display-block">Fourniture</span>
+        <div class="paragraph fs-body-1 mt+" ng-if="dsp || data.fourniture.length">
+            <div class="data-table-container">
+                <table class="data-table data-table--has-primary data-table--has-secondary">
+                    <thead>
+                        <tr>
+                            <th style="font-weight:bold">BL</th>
+                            <th style="font-weight:bold">Désignation</th>
+                            <th style="font-weight:bold">Q</th>
+                            <th style="font-weight:bold">PU</th>
+                            <th style="font-weight:bold">Montant</th>
+                            <th style="font-weight:bold">Fournisseur</th>
+                            <th style="font-weight:bold">Modif</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="products data-table__clickable-row" ng-repeat="f in data.fourniture">
+                            <td>
+                                <span e-type="text" editable-text="f.bl">{{f.bl}}</span>
+                            </td>
+                            <td>
+                                <span e-type="text" editable-text="f.title">{{f.title}}</span>
+                            </td>
+                            <td>
+                                <span> 
+                                                     <a e-type="number" e-step="1" editable-text="f.quantite">{{f.quantite}}</a>
+                                                    </span>
+                            </td>
+                            <td>
+                                <span>
+                                                 <a e-type="number" editable-text="f.pu" e-step="0.01">{{f.pu}} €</a>
+                                                    </span>
+                            </td>
+                            <td>
+                                <span>{{f.pu * f.quantite}} €</span>
+                            </td>
+                            <td style="padding-right: 10%;  width: 30%;">
+                                <select class="form-control" ng-model="f.fournisseur" ng-options="frn.short_name as frn.short_name group by frn.type for frn in config.fournisseur ">
+                                </select>
+                            </td>
+                            <td>
+                                <lx-dropdown position="right" from-top>
+                                    <button class="btn--no-conflicts btn--l btn--black btn--icon" lx-ripple lx-dropdown-toggle>
+                                        <i class="mdi mdi-dots-vertical"></i>
+                                    </button>
+                                    <lx-dropdown-menu>
+                                        <ul>
+                                            <li><a ng-click="fourniture.moveDown($index)" class="dropdown-link">Descendre</a></li>
+                                            <li><a ng-click="fourniture.moveTop($index)" class="dropdown-link">Monter</a></li>
+                                            <li><a ng-click="fourniture.remove($index)" class="dropdown-link">Supprimer</a></li>
+                                        </ul>
+                                    </lx-dropdown-menu>
+                                </lx-dropdown>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="card__actions" ng-if="dsp || data.fourniture.length">
+        <span style="float:left;width:50%">
+                        <button class="btn--no-conflicts btn--m btn--black btn--flat" ng-click="fourniture.add()" lx-ripple>Ajout Fourniture</button>
+                                                </span>
+        <span style="float:right;margin-right:6%">
+                             <button class="btn--no-conflicts btn--m btn--black btn--flat" lx-ripple> TOTAL HT : {{fourniture.total() | currency:''}} €</button>
+                        </span>
+    </div>
+</div>

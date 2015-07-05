@@ -185,7 +185,10 @@ angular.module('edison')
 
             Intervention.prototype.verification = function(cb) {
                 var _this = this;
-                edisonAPI.intervention.verification(_this.id)
+                dialog.verification(_this, function(resp) {
+                    console.log("--->", resp)
+                })
+/*                edisonAPI.intervention.verification(_this.id)
                     .then(function(resp) {
                         var validationMessage = _.template("L'intervention {{id}} est vérifié")(resp.data)
                         LxNotificationService.success(validationMessage);
@@ -195,7 +198,7 @@ angular.module('edison')
                         LxNotificationService.error(error.data);
                         if (typeof cb === 'function')
                             cb(error.data);
-                    })
+                    })*/
             }
             Intervention.prototype.fileUpload = function(file, cb) {
                 var _this = this;

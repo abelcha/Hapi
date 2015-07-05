@@ -16,6 +16,10 @@
                  scope.config = config;
                  scope.produits = new productsList(model.produits);
 
+                 if (!scope.data.reglementSurPlace) {
+                    scope.display = true;
+                 }
+ 
                  scope.envoiFacture = function() {
                      model.envoiFacture(function(err, res) {
                          if (!err)
