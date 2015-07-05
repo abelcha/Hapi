@@ -373,8 +373,8 @@ FiltersFactory.prototype.list = {
         url: 'litiges',
         match: {
             litiges: {
-                $elemMatch:  {
-                    regle: false
+                $gt: {
+                    $size: 0
                 }
             }
         },
@@ -387,8 +387,8 @@ FiltersFactory.prototype.list = {
         url: 'litigesEnCours',
         match: {
             litiges: {
-                $gt: {
-                    $size: 0
+                $elemMatch:  {
+                    regle: false
                 }
             }
         },

@@ -1,6 +1,6 @@
 module.exports = function(db) {
 
-    var schema =  new db.Schema({
+    var schema = new db.Schema({
         _id: Number,
         id: {
             type: Number,
@@ -63,7 +63,9 @@ module.exports = function(db) {
                     type: String,
                     required: true
                 },
-                tel2: String
+                tel2: String,
+                tel3: String
+
             },
             address: {
                 n: {
@@ -91,7 +93,7 @@ module.exports = function(db) {
             location: [],
         },
         facture: {
-            compte:String,
+            compte: String,
             payeur: String,
             nom: String,
             prenom: String,
@@ -195,6 +197,8 @@ module.exports = function(db) {
     });
     var textSearch = require('mongoose-text-search');
     schema.plugin(textSearch);
-    schema.index({ 'client.nom': 'text' });
+    schema.index({
+        'client.nom': 'text'
+    });
     return schema
 }

@@ -6,6 +6,8 @@ module.exports = function(schema) {
         method:'POST',
         fn: function(inter, req, res) {
             return new Promise(function(resolve, reject) {
+                if (inter.modeReglement === 'CB' && !inter.cb.hash)
+                    return reject("Veuillez rentrer un numero de CB")
                 if (!inter.reglementSurPlace && !inter.date.envoiFacture)
                     return reject("Veuillez envoyer la facture avant de vérifier")
                 if (inter.date.verification)
