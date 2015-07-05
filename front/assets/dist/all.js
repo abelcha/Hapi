@@ -47,6 +47,8 @@ angular.module('edison').controller('MainController', function($q, DataProvider,
             return deferred.promise;
         },
         change:function(x) {
+            $location.url(x.link)
+            $scope.searchText = "";
             console.log('---------', x)
         }
     }
