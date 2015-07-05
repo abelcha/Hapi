@@ -186,7 +186,7 @@ angular.module('edison')
             Intervention.prototype.verification = function(cb) {
                 var _this = this;
                 if (!_this.reglementSurPlace) {
-                   return _this.ouvrirFiche();
+                   return Intervention(this).ouvrirFiche();
                 }
                 dialog.verification(_this, function(inter) {
                     Intervention(inter).save(function(err, resp) {
