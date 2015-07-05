@@ -20,11 +20,15 @@ module.exports = function(schema) {
                 db.model('intervention').findOne({
                     id: data.id
                 }).then(function(doc) {
+                    if (data.artisan.id && data.artisan.id !== doc.artisan.id) {
+                        doc.status = 'APR';
+                    }
                     if (!doc)
                         reject("Intervention Inconnu");
                     for (k in data) {
-                        if (k !== 'status')
+                        if (k !== 'status') {
                             doc[k] = data[k];
+                        }
                     }
                     doc.save().then(resolve, dbError(reject));
                 }, dbError(reject))
