@@ -57,6 +57,30 @@ module.exports = {
             color: 'deep-orange white-text'
         }
     },
+    paiementCLI: function(inter) {
+        return [{
+            icon: 'fa fa-circle-o',
+            color: 'orange'
+        }, {
+            icon: 'fa fa-check',
+            color: 'green'
+        }, {
+            icon: 'fa fa-warning',
+            color: 'red'
+        }][inter.pc]
+    },
+    paiementSST: function(inter) {
+        return [{
+            icon: 'fa fa-circle-o',
+            color: 'orange'
+        }, {
+            icon: 'fa fa-check',
+            color: 'green'
+        }, {
+            icon: 'fa fa-warning',
+            color: 'red'
+        }][inter.ps]
+    },
     categoriesHash: function() {
         return [this.categories.PL,
             this.categories.CH,
@@ -221,7 +245,7 @@ module.exports = {
             v: 'PARIS',
             cp: "75012"
         },
-        email:"test@test.fr"
+        email: "test@test.fr"
     }],
     civilites: [{
         short_name: 'M.',

@@ -36,10 +36,11 @@ module.exports = function(schema) {
             e.status = 'AVR';
         }
 
+        var fltr = FiltersFactory("intervention").filter(e);
         if (e.id % 10 === 1)
             console.log(e.id)
-        console.log(e.date, e.date.paiementSST ? 1 : undefined, e.date.paiementCLI ? 1 : undefined)
         var rtn = {
+            f: !_.isEmpty(fltr) ? fltr : undefined,
             t: e.login.ajout,
             id: e.id,
             ai: e.artisan.id,
@@ -50,15 +51,12 @@ module.exports = function(schema) {
             pa: e.prixFinal || e.prixAnnonce,
             da: d(e.date.ajout),
             di: d(e.date.intervention),
-            ps:e.date.paiementSST ? 1 : undefined,
-            pc:e.date.paiementCLI ? 1 : undefined,
+            ps: e.date.paiementSST ? 1 : 0,
+            pc: e.date.paiementCLI ? 1 : (fltr.i_sarl || fltr.i_carl ? 2 : 0),
             ad: e.client.address.cp + ', ' + e.client.address.v,
             dm: e.login.demarchage || undefined
         };
-        var fltr = FiltersFactory("intervention").filter(e);
-        if (!_.isEmpty(fltr)) {
-            rtn.f = fltr
-        }
+
         return rtn;
     }
     schema.statics.translate = translate;
@@ -77,7 +75,7 @@ module.exports = function(schema) {
                         data.unshift(result);
                     }
                     redis.set("interventionList", JSON.stringify(data), function() {
-                        result._date = Date.now() 
+                        result._date = Date.now()
                         io.sockets.emit('interventionListChange', result);
                         //sometimes it's too fast
                         setTimeout(function() {

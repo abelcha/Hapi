@@ -37,12 +37,12 @@
                         <span style="width:75px" class="label {{::vm.config.etatsHash()[inter.s].color}}"> 
                         {{inter._etat}}</span>
                     </td>
-                    <td data-title="'Paiement'" sortable="'ps'" filter="{ 'ps': 'text' }">
-                        <span style="width:40px" class="label {{inter.pc ? 'green' : 'orange'}}"> 
-                         <i ng-if="inter.ps || inter._status.short_name === 'VRF'" class="fa fa-{{inter.pc ? 'check' : 'circle-o'}}"></i>
+                    <td data-title="'Paiement'" sortable="'pc'" filter="{ 'ps': 'text' }">
+                        <span style="width:40px" class="label {{::config.paiementCLI(inter).color}}"> 
+                         <i ng-if="inter.pc || inter._status.short_name === 'VRF'" class="{{::config.paiementCLI(inter).icon}}"></i>
                          </span>
-                        <span style="width:40px" class="label {{inter.ps ? 'green' : 'orange'}}"> 
-                         <i ng-if="inter.ps || inter._status.short_name === 'VRF'" class="fa fa-{{inter.ps ? 'check' : 'circle-o'}}"></i>
+                        <span style="width:40px" class="label {{::config.paiementSST(inter).color}}"> 
+                         <i ng-if="inter.ps || inter._status.short_name === 'VRF'" class="{{::config.paiementSST(inter).icon}}"></i>
                        </span>
                     </td>
                 </tr>
