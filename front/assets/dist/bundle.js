@@ -218,14 +218,14 @@ FiltersFactory.prototype.list = {
         url: 'envoyeAjd',
         match: function() {
             return {
-                'status': 'ENV',
+                'status': 'ENC',
                 'date.ajout': {
                     $gt: today()
                 }
             }
         },
         fn: function(inter) {
-            return (inter.status === "ENV" ||  inter.status === "AVR") && inter.date.ajout > today();
+            return (inter.status === "ENC" ||  inter.status === "AVR") && inter.date.ajout > today();
         }
     }, {
         short_name: 'i_avr',
@@ -233,7 +233,7 @@ FiltersFactory.prototype.list = {
         url: 'aVerifier',
         match: function() {
             return {
-                status: 'ENV',
+                status: 'ENC',
                 'date.intervention': {
                     $lt: new Date(Date.now() + ms.hours(1))
                 }
@@ -241,7 +241,7 @@ FiltersFactory.prototype.list = {
         },
         fn: function(inter) {
             return inter.status === "AVR" ||
-                (inter.status === "ENV" && Date.now() > dateInter(inter));
+                (inter.status === "ENC" && Date.now() > dateInter(inter));
         }
     }, {
         short_name: 'i_apr',
@@ -254,34 +254,16 @@ FiltersFactory.prototype.list = {
             return inter.status === "APR";
         }
     }, {
-        short_name: 'i_att',
-        long_name: 'Paiement en attente',
-        url: 'paiementEnAttente',
-        match: {},
-        stats: false,
-        fn: function(inter) {
-            return inter.status === "ATT";
-
-        }
-    }, {
-        short_name: 'i_atts',
-        long_name: 'Paiement SST en attente',
-        url: 'paiementArtisanEnAttente',
-        match: {},
-        stats: false,
-        fn: function(inter) {
-            return this.fltr.i_att &&
-                inter.reglementSurPlace === true;
-
-        }
-    }, {
         short_name: 'i_sarl',
         long_name: 'SST à Relancer',
         url: 'relanceArtisan',
         match: function() {
             return {
-                status: 'ATT',
+                status: 'VRF',
                 reglementSurPlace: true,
+                'date.paiementCLI': {
+                    $exists: false
+                },
                 'date.intervention': {
                     $lt: new Date(Date.now() - ms.weeks(2)),
                 }
@@ -289,19 +271,8 @@ FiltersFactory.prototype.list = {
         },
         stats: true,
         fn: function(inter) {
-            return this.fltr.i_atts &&
-                Date.now() > dateInter(inter) + ms.weeks(2);
-        }
-    }, {
-        short_name: 'i_attc',
-        long_name: 'Paiement Client en attente',
-        url: 'paiementClientEnAttente',
-        match: {},
-        stats: false,
-        fn: function(inter) {
-            return this.fltr.i_att &&
-                inter.reglementSurPlace === false;
-
+            return inter.status === 'VRF' && inter.reglementSurPlace &&
+                !inter.date.paiementCLI && Date.now() > dateInter(inter) + ms.weeks(2);
         }
     }, {
         short_name: 'i_carl',
@@ -309,7 +280,10 @@ FiltersFactory.prototype.list = {
         url: 'relanceClient',
         match: function() {
             return {
-                status: 'ATT',
+                status: 'VRF',
+                'date.paiementCLI': {
+                    $exists: false
+                },
                 reglementSurPlace: false,
                 'date.intervention': {
                     $lt: new Date(Date.now() - ms.weeks(2)),
@@ -317,8 +291,8 @@ FiltersFactory.prototype.list = {
             }
         },
         fn: function(inter) {
-            return this.fltr.i_attc &&
-                Date.now() > dateInter(inter) + ms.weeks(3);
+            return inter.status === 'VRF' && !inter.reglementSurPlace &&
+                !inter.date.paiementCLI && Date.now() > dateInter(inter) + ms.weeks(2);
         }
     }, {
         short_name: 'i_fact',
@@ -329,7 +303,7 @@ FiltersFactory.prototype.list = {
                 'date.intervention': {
                     $lt: new Date(Date.now() + ms.hours(1))
                 },
-                status: 'ENV',
+                status: 'ENC',
                 reglementSurPlace: false
             }
         },
@@ -359,13 +333,13 @@ FiltersFactory.prototype.list = {
         match: {
             sav: {
                 $elemMatch:  {
-                    status: 'ENV'
+                    status: 'ENC'
                 }
             }
         },
         fn: function(inter) {
             return inter.sav && inter.sav.length > 0 &&
-                inter.sav[inter.sav.length - 1].status === "ENV"
+                inter.sav[inter.sav.length - 1].status === "ENC"
         }
     }, {
         short_name: 'i_lit',
@@ -418,14 +392,14 @@ FiltersFactory.prototype.list = {
         match: {
             aDemarcher: true,
             status: {
-                $in: ['APR', 'ENV', 'AVR']
+                $in: ['APR', 'ENC', 'AVR']
             },
             'login.demarchage': {
                 $exists: true
             }
         },
         fn: function(inter) {
-            return inter.aDemarcher && ['APR', 'ENV', 'AVR'].indexOf(inter.status) !== -1 && inter.login.demarchage;
+            return inter.aDemarcher && ['APR', 'ENC', 'AVR'].indexOf(inter.status) !== -1 && inter.login.demarchage;
         }
     }, {
         short_name: 'i_hist',
@@ -546,7 +520,7 @@ module.exports = {
         title: "Vérifier",
         action: 'verification',
         hide: function(inter) {
-            return inter.status !== "AVR" && inter.status !== 'ENV'
+            return inter.status !== "AVR" && inter.status !== 'ENC'
         }
     }, {
         title: "Annuler",
@@ -639,54 +613,40 @@ module.exports = {
         return x;
     },
     etats: {
-        ENV: {
+        ENC: {
             order: 0,
-            short_name: 'ENV',
-            long_name: 'Envoyé',
+            short_name: 'ENC',
+            long_name: 'En Cours',
             color: 'orange'
         },
-        RGL: {
+        VRF: {
             order: 1,
-            short_name: 'RGL',
-            long_name: 'Reglé',
+            short_name: 'VRF',
+            long_name: 'Vérifié',
             color: 'green'
         },
-        PAY: {
-            order: 2,
-            short_name: 'PAY',
-            long_name: 'Payé',
-            color: 'green accent-4'
-        },
-        ATT: {
-            order: 3,
-            short_name: 'ATT',
-            long_name: 'En Attente',
-            color: 'purple'
-        },
         APR: {
-            order: 4,
+            order: 2,
             short_name: 'APR',
             long_name: 'A Progr.',
             color: 'blue'
         },
         AVR: {
-            order: 5,
+            order: 3,
             short_name: 'AVR',
             long_name: 'A Vérifier',
             color: 'brown darken-3'
         },
         ANN: {
-            order: 6,
+            order: 4,
             short_name: 'ANN',
             long_name: 'Annuler',
             color: 'red'
         }
     },
     etatsHash: function() {
-        return [this.etats.ENV,
-            this.etats.RGL,
-            this.etats.PAY,
-            this.etats.ATT,
+        return [this.etats.ENC,
+            this.etats.VRF,
             this.etats.APR,
             this.etats.AVR,
             this.etats.ANN
@@ -703,7 +663,7 @@ module.exports = {
     },
     etatsDevis: {
         AEV: {
-            short_name: 'ENV',
+            short_name: 'ENC',
             long_name: 'A Envoyer',
             color: 'blue'
         },

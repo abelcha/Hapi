@@ -80,7 +80,7 @@ module.exports = {
         title: "Vérifier",
         action: 'verification',
         hide: function(inter) {
-            return inter.status !== "AVR" && inter.status !== 'ENV'
+            return inter.status !== "AVR" && inter.status !== 'ENC'
         }
     }, {
         title: "Annuler",

@@ -6,6 +6,7 @@ var _ = require("lodash")
 var ReadWriteLock = require('rwlock');
 var lock = new ReadWriteLock();
 var d = requireLocal('config/dates.js')
+var uuid = require('uuid')
 
 
 module.exports = function(schema) {
@@ -24,23 +25,20 @@ module.exports = function(schema) {
         'prixFinal',
         'artisan',
         'reglementSurPlace',
-        'date.intervention',
-        'date.ajout',
+        'date',
         "aDemarcher",
     ].join(' ');
 
 
 
     var translate = function(e) {
-        if (e.status === "ENV" && Date.now() > (new Date(e.date.intervention)).getTime()) {
+        if (e.status === "ENC" && Date.now() > (new Date(e.date.intervention)).getTime()) {
             e.status = 'AVR';
         }
 
         if (e.id % 10 === 1)
             console.log(e.id)
-        if (e.id === 23573) {
-            console.log(e.prixFinal || e.prixAnnonce)
-        }
+        console.log(e.date, e.date.paiementSST ? 1 : undefined, e.date.paiementCLI ? 1 : undefined)
         var rtn = {
             t: e.login.ajout,
             id: e.id,
@@ -52,6 +50,8 @@ module.exports = function(schema) {
             pa: e.prixFinal || e.prixAnnonce,
             da: d(e.date.ajout),
             di: d(e.date.intervention),
+            ps:e.date.paiementSST ? 1 : undefined,
+            pc:e.date.paiementCLI ? 1 : undefined,
             ad: e.client.address.cp + ', ' + e.client.address.v,
             dm: e.login.demarchage || undefined
         };
@@ -77,11 +77,12 @@ module.exports = function(schema) {
                         data.unshift(result);
                     }
                     redis.set("interventionList", JSON.stringify(data), function() {
+                        result._date = Date.now() 
                         io.sockets.emit('interventionListChange', result);
                         //sometimes it's too fast
                         setTimeout(function() {
                             io.sockets.emit('interventionListChange', result);
-                        }, 3000)
+                        }, 2500)
                         release();
                     });
                 }

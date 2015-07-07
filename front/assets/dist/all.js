@@ -36,31 +36,26 @@ angular.module('edison').controller('MainController', function($q, DataProvider,
 
     $scope.searchBox = {
         search: function(x) {
-            console.log(x);
             var deferred = $q.defer();
             if (x.length < 3)
                 return []
             edisonAPI.searchText(x).success(function(resp) {
                 deferred.resolve(resp)
-                console.log(resp)
             })
             return deferred.promise;
         },
         change: function(x) {
             $location.url(x.link)
             $scope.searchText = "";
-            console.log('---------', x)
         }
     }
 
     var reloadStats = function() {
-        console.log("yay reload stats")
         edisonAPI.intervention.getStats()
             .success(function(result) {
                 $scope.userStats = _.find(result, function(e) {
                     return e.login === $scope.user.login;
                 });
-                console.log(result);
                 $rootScope.interventionsStats = result;
             });
     };
@@ -378,122 +373,6 @@ angular.module('edison').run(function(editableOptions) {
     });
 })
 
-angular.module('edison').filter('crlf', function() {
-	"use strict";
-    return function(text) {
-        return text.split(/\n/g).join('<br>');
-    };
-});
-
-angular.module('edison').filter('loginify', function() {
-    "use strict";
-    return function(obj) {
-        if (!obj)
-            return "";
-        return obj.slice(0, 1).toUpperCase() + obj.slice(1, -2)
-    };
-});
-
-angular.module('edison').filter('relativeDate', function() {
-    "use strict";
-    return function(date, no) {
-        return moment((date + 1370000000) * 1000).fromNow(no).toString()
-    };
-});
-
-angular.module('edison').filter('reverse', function() {
-    "use strict";
-    return function(items) {
-        if (!items)
-            return [];
-        return items.slice().reverse();
-    };
-});
-
-angular.module("edison").filter('tableFilter', ['config', function(config) {
-    "use strict";
-
-    var clean = function(str) {
-        return _.deburr(str).toLowerCase();
-    }
-
-    var compare = function(a, b, strictMode) {
-        if (typeof a === "string") {
-            return clean(a).includes(b);
-        } else if (!strictMode){
-            return clean(String(a)).startsWith(b);
-        } else {
-            return a === parseInt(b);
-        }
-    }
-    var compareCustom = function(key, data, input) {
-        if (key === '_categorie') {
-            var cell = config.categoriesHash()[data.c].long_name;
-            return compare(cell, input);
-        }
-        if (key === '_etat') {
-            var cell = config.etatsHash()[data.s].long_name
-            return compare(cell, input);
-        }
-        return true;
-    }
-
-    return function(dataContainer, inputs, strictMode) {
-        var rtn = [];
-        console.time('fltr')
-        console.log(inputs)
-        inputs = _.mapValues(inputs, clean);
-        _.each(dataContainer, function(data) {
-            if (data.id) {
-                var psh = true;
-                _.each(inputs, function(input, k) {
-                    if (input && input.length > 0) {
-                        if (k.charAt(0) === '_') {
-                            if (!compareCustom(k, data, input)) {
-                                psh = false;
-                                return false
-                            }
-                        } else {
-                            if (!compare(data[k], input, strictMode)) {
-                                psh = false;
-                                return false
-                            }
-                        }
-                    }
-                });
-                if (psh === true) {
-                    rtn.push(data);
-                }
-            }
-        })
-        console.timeEnd('fltr')
-
-        return rtn;
-    }
-}]);
-
-angular.module('edison').filter('total', function() {
-    "use strict";
-    return function(obj) {
-        if (obj && obj.total) {
-        	return obj.total;
-        }
-        return "0";
-    };
-});
-
-angular.module('edison').filter('montant', function() {
-    "use strict";
-    return function(obj) {
-        if (obj && obj.montant) {
-        	return (obj.montant > 999 ? (obj.montant / 1000).toFixed(0) + 'k' : obj.montant.toFixed(0)) + '€';
-        }
-        return "0€";
-    };
-});
-
-
-
 angular.module('edison').directive('allowPattern', [allowPatternDirective]);
 
 function allowPatternDirective() {
@@ -534,7 +413,7 @@ angular.module('edison').directive('artisanRecap', function(edisonAPI, config, $
                 var svg = dimple.newSvg("#chartContainer", 600, 200);
                 var myChart = new dimple.chart(svg, resp);
                 myChart.defaultColors = [
-                    new dimple.color("#4CAF50"),//RGL
+                    new dimple.color("#4CAF50"),//VRF
                     new dimple.color("#F44336"),//ANN
                     new dimple.color("#FDD835"),//ATT
                     new dimple.color("#F44336"),//ENV
@@ -917,6 +796,121 @@ angular.module('edison').directive('select', function($interpolate) {
      };
  }]);
 
+angular.module('edison').filter('crlf', function() {
+	"use strict";
+    return function(text) {
+        return text.split(/\n/g).join('<br>');
+    };
+});
+
+angular.module('edison').filter('loginify', function() {
+    "use strict";
+    return function(obj) {
+        if (!obj)
+            return "";
+        return obj.slice(0, 1).toUpperCase() + obj.slice(1, -2)
+    };
+});
+
+angular.module('edison').filter('relativeDate', function() {
+    "use strict";
+    return function(date, no) {
+        return moment((date + 1370000000) * 1000).fromNow(no).toString()
+    };
+});
+
+angular.module('edison').filter('reverse', function() {
+    "use strict";
+    return function(items) {
+        if (!items)
+            return [];
+        return items.slice().reverse();
+    };
+});
+
+angular.module("edison").filter('tableFilter', ['config', function(config) {
+    "use strict";
+
+    var clean = function(str) {
+        return _.deburr(str).toLowerCase();
+    }
+
+    var compare = function(a, b, strictMode) {
+        if (typeof a === "string") {
+            return clean(a).includes(b);
+        } else if (!strictMode){
+            return clean(String(a)).startsWith(b);
+        } else {
+            return a === parseInt(b);
+        }
+    }
+    var compareCustom = function(key, data, input) {
+        if (key === '_categorie') {
+            var cell = config.categoriesHash()[data.c].long_name;
+            return compare(cell, input);
+        }
+        if (key === '_etat') {
+            var cell = config.etatsHash()[data.s].long_name
+            return compare(cell, input);
+        }
+        return true;
+    }
+
+    return function(dataContainer, inputs, strictMode) {
+        var rtn = [];
+        console.time('fltr')
+        inputs = _.mapValues(inputs, clean);
+        _.each(dataContainer, function(data) {
+            if (data.id) {
+                var psh = true;
+                _.each(inputs, function(input, k) {
+                    if (input && input.length > 0) {
+                        if (k.charAt(0) === '_') {
+                            if (!compareCustom(k, data, input)) {
+                                psh = false;
+                                return false
+                            }
+                        } else {
+                            if (!compare(data[k], input, strictMode)) {
+                                psh = false;
+                                return false
+                            }
+                        }
+                    }
+                });
+                if (psh === true) {
+                    rtn.push(data);
+                }
+            }
+        })
+        console.timeEnd('fltr')
+
+        return rtn;
+    }
+}]);
+
+angular.module('edison').filter('total', function() {
+    "use strict";
+    return function(obj) {
+        if (obj && obj.total) {
+        	return obj.total;
+        }
+        return "0";
+    };
+});
+
+angular.module('edison').filter('montant', function() {
+    "use strict";
+    return function(obj) {
+        if (obj && obj.montant) {
+        	return (obj.montant > 999 ? (obj.montant / 1000).toFixed(0) + 'k' : obj.montant.toFixed(0)) + '€';
+        }
+        return "0€";
+    };
+});
+
+
+
 angular.module('edison').factory('TabContainer', function($location, $window, $q, edisonAPI) {
     "use strict";
 
@@ -1074,7 +1068,6 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
         },
         intervention: {
             getStats: function() {
-                console.log("getStats")
                 return $http({
                     method: 'GET',
                     cache: false,
@@ -1427,235 +1420,6 @@ angular.module('edison')
         }
     ]);
 
-/*angular.module('edison').factory('config', [function() {
-    "use strict";
-    console.log(window.config)
-    var config = {};
-
-    config.civilites = [{
-        short_name: 'M.',
-        long_name: 'Monsieur'
-    }, {
-        short_name: 'Mme.',
-        long_name: 'Madame'
-    }, {
-        short_name: 'Soc.',
-        long_name: 'Société'
-    }];
-
-    config.civilitesTab = ['M.', 'Mme.', 'Soc.'];
-
-    config.categoriesKV = {
-        EL: {
-            s: 'EL',
-            o: 2,
-            n: 'Electricité',
-            c: 'yellow  accent-4 black-text'
-        },
-        PL: {
-            s: 'PL',
-            o: 0,
-            n: 'Plomberie',
-            c: 'blue white-text'
-        },
-        CH: {
-            s: 'CH',
-            o: 1,
-            n: 'Chauffage',
-            c: 'red white-text'
-        },
-        CL: {
-            s: 'CL',
-            o: 6,
-            n: 'Climatisation',
-            c: 'teal white-text'
-        },
-        SR: {
-            s: 'SR',
-            o: 3,
-            n: 'Serrurerie',
-            c: 'brown white-text'
-        },
-        VT: {
-            s: 'VT',
-            o: 4,
-            n: 'Vitrerie',
-            c: 'green white-text'
-        },
-        AS: {
-            s: 'AS',
-            o: 5,
-            n: 'Assainissement',
-            c: 'orange white-text'
-        },
-        PT: {
-            s: 'PT',
-            o: 7,
-            n: 'Peinture',
-            c: 'deep-orange white-text'
-        }
-    }
-    config.categoriesAKV = [{
-        s: 'PL',
-        o: 0,
-        n: 'Plomberie',
-        c: 'blue white-text'
-    }, {
-        s: 'CH',
-        o: 1,
-        n: 'Chauffage',
-        c: 'red white-text'
-    }, {
-        s: 'EL',
-        o: 2,
-        n: 'Electricité',
-        c: 'yellow  accent-4 black-text'
-    }, {
-        s: 'SR',
-        o: 3,
-        n: 'Serrurerie',
-        c: 'brown white-text'
-    }, {
-        s: 'VT',
-        o: 4,
-        n: 'Vitrerie',
-        c: 'green white-text'
-    }, {
-        s: 'AS',
-        o: 5,
-        n: 'Assainissement',
-        c: 'orange white-text'
-    }, {
-        s: 'CL',
-        o: 6,
-        n: 'Climatisation',
-        c: 'teal white-text'
-    }, {
-        s: 'PT',
-        o: 7,
-        n: 'Peinture',
-        c: 'deep-orange white-text'
-    }]
-    config.fournisseur = [{
-        short_name: 'ARTISAN',
-        type: 'Fourniture Artisan'
-    }, {
-        short_name: 'CEDEO',
-        type: 'Fourniture Edison'
-    }, {
-        short_name: 'BROSSETTE',
-        type: 'Fourniture Edison'
-    }, {
-        short_name: 'REXEL',
-        type: 'Fourniture Edison'
-    }, {
-        short_name: 'COAXEL',
-        type: 'Fourniture Edison'
-    }, {
-        short_name: 'YESSS ELECTRIQUE',
-        type: 'Fourniture Edison'
-    }, {
-        short_name: 'CGED',
-        type: 'Fourniture Edison'
-    }, {
-        short_name: 'COSTA',
-        type: 'Fourniture Edison'
-    }, {
-        short_name: 'FORUM DU BATIMENT',
-        type: 'Fourniture Edison'
-    }]
-
-
-    config.modeDeReglements = [{
-        short_name: 'CB',
-        long_name: 'Carte Bancaire'
-    }, {
-        short_name: 'CH',
-        long_name: 'Chèque'
-    }, {
-        short_name: 'CA',
-        long_name: 'Espèces'
-    }];
-
-    config.tva = [{
-        short_name: 10,
-        long_name: "TVA: 10%"
-    }, {
-        short_name: 20,
-        long_name: "TVA: 20%"
-    }];
-    config.typePayeur = [{
-        short_name: 'SOC',
-        long_name: 'Société'
-    }, {
-        short_name: 'PRO',
-        long_name: 'Propriétaire'
-    }, {
-        short_name: 'LOC',
-        long_name: 'Locataire'
-    }, {
-        short_name: 'IMO',
-        long_name: 'Agence Immobilière'
-    }, {
-        short_name: 'CUR',
-        long_name: 'Curatelle'
-    }, {
-        short_name: 'AUT',
-        long_name: 'Autre'
-    }];
-
-    config.etatsKV = {
-        ENV: {
-            n: 'Envoyé',
-            c: 'orange'
-        },
-        RGL: {
-            n: 'Reglé',
-            c: 'green'
-        },
-        PAY: {
-            n: 'Payé',
-            c: 'green accent-4'
-        },
-        ATT: {
-            n: 'Reglement En Attente',
-            c: 'purple'
-        },
-        ATTC: {
-            n: 'RC En Attente',
-            c: 'purple'
-        },
-        ATTS: {
-            n: 'RS En Attente',
-            c: 'pink darken-4'
-        },
-        APR: {
-            n: 'A Progr.',
-            c: 'blue'
-        },
-        AVR: {
-            n: 'A Vérifier',
-            c: 'brown darken-3'
-        },
-        ANN: {
-            n: 'Annuler',
-            c: 'red'
-        },
-        DEV: {
-            n: 'Devis',
-            c: 'light-blue'
-        },
-    }
-
-    config.status = function(inter) {
-        return {
-            intervention: config.etatsKV[inter.status]
-        }
-    }
-    return config;
-
-}]);
-*/
 angular.module('edison').factory('ContextMenu', function($rootScope, $location, edisonAPI, $window, dialog, Devis, Intervention, Artisan, contextMenuData) {
     "use strict";
 
@@ -1729,9 +1493,9 @@ angular.module('edison').factory('DataProvider', ['edisonAPI', 'socket', '$rootS
         var _this = this;
         this.model = model;
         this.hashModel = hashModel || 't';
-            socket.on(model + 'ListChange', function(data) {
+            socket.on(model + 'ListChange', function(newData) {
                 if (_this.getData()) {
-                    _this.updateData(data);
+                    _this.updateData(newData);
                 }
             });
     }
@@ -1794,7 +1558,7 @@ angular.module('edison').factory('DataProvider', ['edisonAPI', 'socket', '$rootS
             } else {
                 _this.getData()[index] = newRow;
             }
-            $rootScope.$broadcast(_this.model + 'ListChange');
+            $rootScope.$broadcast(_this.model + 'ListChange', newRow);
         }
     }
 
@@ -2369,7 +2133,6 @@ angular.module('edison')
                 var _this = this;
                 if (!this.produits.length)
                     return LxNotificationService.error("Veuillez renseigner les produits");
-                console.log('-->', _this.prixFinal)
                 _this.envoiFacture(function() {
                     _this.verificationSimple(cb)
                 })
@@ -2394,12 +2157,12 @@ angular.module('edison')
             Intervention.prototype.verification = function(cb) {
                 var _this = this;
                 if (!_this.reglementSurPlace) {
-                    return Intervention(this).ouvrirFiche();
+                    return Intervention(_this).ouvrirFiche();
                 }
                 dialog.verification(_this, function(inter) {
                     Intervention(inter).save(function(err, resp) {
                         if (!err) {
-                            return Intervention(this).verificationSimple(cb);
+                            return Intervention(resp).verificationSimple(cb);
                         }
                     });
                 });
@@ -3261,6 +3024,23 @@ angular.module('edison').controller('DevisController', DevisCtrl);
 
  }]);
 
+angular.module('edison').directive('infoCompta', ['config',
+    function(config, fourniture) {
+        "use strict";
+        return {
+            restrict: 'E',
+            templateUrl: '/Templates/info-compta.html',
+            scope: {
+                data: "=",
+            },
+            link: function(scope, element, attrs) {
+                scope.config = config
+            },
+        }
+
+    }
+]);
+
 var InterventionCtrl = function($timeout, $rootScope, $scope, $location, $routeParams, dialog, fourniture, LxNotificationService, LxProgressService, tabContainer, edisonAPI, Address, $q, mapAutocomplete, productsList, config, interventionPrm, Intervention, Map) {
     "use strict";
 
@@ -3795,11 +3575,13 @@ var InterventionsController = function($timeout, tabContainer, FiltersFactory, C
         _this.tableParams = new ngTableParams(tableParameters, tableSettings);
         LxProgressService.circular.hide();
     })
-    $rootScope.$on('interventionListChange', function() {
-        if (_this.tab.fullUrl === tabContainer.getCurrentTab().fullUrl) {
+    var lastChange = 0;
+    $rootScope.$on('interventionListChange', function(event, newData) {
+        if (_this.tab.fullUrl === tabContainer.getCurrentTab().fullUrl && newData._date > lastChange) {
             dataProvider.applyFilter(currentFilter, _this.tab.hash, _this.customFilter);
             _this.tableParams.reload();
         }
+        lastChange = newData._date;
     })
 
     _this.contextMenu = new ContextMenu('intervention')

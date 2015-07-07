@@ -14,7 +14,7 @@ angular.module('edison').directive('artisanRecap', function(edisonAPI, config, $
                 var svg = dimple.newSvg("#chartContainer", 600, 200);
                 var myChart = new dimple.chart(svg, resp);
                 myChart.defaultColors = [
-                    new dimple.color("#4CAF50"),//RGL
+                    new dimple.color("#4CAF50"),//VRF
                     new dimple.color("#F44336"),//ANN
                     new dimple.color("#FDD835"),//ATT
                     new dimple.color("#F44336"),//ENV

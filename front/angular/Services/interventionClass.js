@@ -188,7 +188,6 @@ angular.module('edison')
                 var _this = this;
                 if (!this.produits.length)
                     return LxNotificationService.error("Veuillez renseigner les produits");
-                console.log('-->', _this.prixFinal)
                 _this.envoiFacture(function() {
                     _this.verificationSimple(cb)
                 })
@@ -213,12 +212,12 @@ angular.module('edison')
             Intervention.prototype.verification = function(cb) {
                 var _this = this;
                 if (!_this.reglementSurPlace) {
-                    return Intervention(this).ouvrirFiche();
+                    return Intervention(_this).ouvrirFiche();
                 }
                 dialog.verification(_this, function(inter) {
                     Intervention(inter).save(function(err, resp) {
                         if (!err) {
-                            return Intervention(this).verificationSimple(cb);
+                            return Intervention(resp).verificationSimple(cb);
                         }
                     });
                 });

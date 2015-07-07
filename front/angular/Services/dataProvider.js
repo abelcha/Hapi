@@ -4,9 +4,9 @@ angular.module('edison').factory('DataProvider', ['edisonAPI', 'socket', '$rootS
         var _this = this;
         this.model = model;
         this.hashModel = hashModel || 't';
-            socket.on(model + 'ListChange', function(data) {
+            socket.on(model + 'ListChange', function(newData) {
                 if (_this.getData()) {
-                    _this.updateData(data);
+                    _this.updateData(newData);
                 }
             });
     }
@@ -69,7 +69,7 @@ angular.module('edison').factory('DataProvider', ['edisonAPI', 'socket', '$rootS
             } else {
                 _this.getData()[index] = newRow;
             }
-            $rootScope.$broadcast(_this.model + 'ListChange');
+            $rootScope.$broadcast(_this.model + 'ListChange', newRow);
         }
     }
 

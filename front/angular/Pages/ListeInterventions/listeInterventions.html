@@ -27,15 +27,23 @@
                     </td>
                     <td data-title="'Intervention'" sortable="'di'" filter="{ 'di': 'text' }">
                         <div ng-show="inter.di[0] != 1">
-                           {{::inter.di | relativeDate}}
+                            {{::inter.di | relativeDate}}
                         </div>
                     </td>
                     <td data-title="'Prix'" sortable="'pa'" filter="{ 'pa': 'text' }">
                         {{::(inter.pa | number:2) || 0}} €
                     </td>
-                    <td ng-init="inter._etat = vm.config.etatsHash()[inter.s].long_name" data-title="'Status'" sortable="'s'" filter="{ '_etat': 'text' }">
-                        <span style="width:90px" class="label {{::vm.config.etatsHash()[inter.s].color}}"> 
+                    <td ng-init="inter._status = vm.config.etatsHash()[inter.s];inter._etat = inter._status.long_name" data-title="'Status'" sortable="'s'" filter="{ '_etat': 'text' }">
+                        <span style="width:75px" class="label {{::vm.config.etatsHash()[inter.s].color}}"> 
                         {{inter._etat}}</span>
+                    </td>
+                    <td data-title="'Paiement'" sortable="'ps'" filter="{ 'ps': 'text' }">
+                        <span style="width:40px" class="label {{inter.pc ? 'green' : 'orange'}}"> 
+                         <i ng-if="inter.ps || inter._status.short_name === 'VRF'" class="fa fa-{{inter.pc ? 'check' : 'circle-o'}}"></i>
+                         </span>
+                        <span style="width:40px" class="label {{inter.ps ? 'green' : 'orange'}}"> 
+                         <i ng-if="inter.ps || inter._status.short_name === 'VRF'" class="fa fa-{{inter.ps ? 'check' : 'circle-o'}}"></i>
+                       </span>
                     </td>
                 </tr>
                 <tr ng-repeat-end ng-if="expendedRow && expendedRow === inter.id" ng-right-click="vm.rowRightClick($event, inter)">

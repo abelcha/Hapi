@@ -13,7 +13,7 @@
                         </div>
                     </div>
                 </div>
-                <info-client ng-if="firstAddress && vm.data.categorie" model="vm.data.client"></info-client>
+                <info-client ng-if="vm.data.client.address.r && vm.data.categorie" model="vm.data.client"></info-client>
                 <info-categorie model="vm.data.categorie" change="vm.searchArtisans(newCategorie)"></info-categorie>
                 <div class="row" style="margin:0">
                     <div class="col-sm-8" style="padding-left:0">
@@ -184,8 +184,8 @@
                         <info-facture ng-if="!vm.data.reglementSurPlace" data="vm.data"></info-facture>
                         <produits ng-if="vm.data.id || vm.data.devisOrigine" data="vm.data"></produits>
                         <credit-card class="margin" model="vm.data" ng-if="vm.data.modeReglement === 'CB'"></credit-card>
-                        <info-fourniture ng-if="data.id" data="vm.data"></info-fourniture>
-
+                        <info-fourniture ng-if="vm.data.id" data="vm.data"></info-fourniture>
+                        <info-compta data="vm.data"></info-compta>
 
                         <div class="row" style="margin:0">
                             <div style="width:48%;float:left;" class="card" id="fileUpload">
@@ -304,7 +304,7 @@
                                         </select></span>
                                                     </td>
                                                     <td>
-                                                        <span ng-if="p.status === 'ENV'" style="width:90px" class="label orange"> Envoyé</span>
+                                                        <span ng-if="p.status === 'ENC'" style="width:90px" class="label orange"> Envoyé</span>
                                                         <span ng-if="p.status === 'OK'" style="width:90px" class="label green"> OK</span>
                                                     </td>
                                                     <td>
@@ -314,7 +314,7 @@
                                                             </button>
                                                             <lx-dropdown-menu>
                                                                 <ul>
-                                                                    <li><a ng-click="p.status = 'ENV'" class="dropdown-link">Envoyer</a></li>
+                                                                    <li><a ng-click="p.status = 'ENC'" class="dropdown-link">Envoyer</a></li>
                                                                     <li><a ng-click="p.status = 'OK'" class="dropdown-link">Regler</a></li>
                                                                 </ul>
                                                             </lx-dropdown-menu>
@@ -339,10 +339,10 @@
                                 <i class="mdi mdi-checkbox-marked-circle-outline"></i>
                             </button>
                             <div class="fab__actions fab__actions--left">
-                                <button ng-show="vm.data.status === 'ENV'  && vm.data.reglementSurPlace" ng-click="saveInter({verification:true})" class="btn--no-conflicts btn--l btn--black btn--fab" lx-ripple lx-tooltip="Verifier" tooltip-position="top"><i class="mdi mdi-check"></i></button>
-                                 <button ng-show="vm.data.status === 'ENV' && !vm.data.reglementSurPlace" ng-click="calculPrixFinal();saveInter({verification:true, envoiFacture:true})" class="btn--no-conflicts btn--l btn--black btn--fab" lx-ripple lx-tooltip="Envoyer facture + vérifier" tooltip-position="top"><i class="mdi mdi-check-all"></i></button>
+                                <button ng-show="vm.data.status === 'ENC'  && vm.data.reglementSurPlace" ng-click="saveInter({verification:true})" class="btn--no-conflicts btn--l btn--black btn--fab" lx-ripple lx-tooltip="Verifier" tooltip-position="top"><i class="mdi mdi-check"></i></button>
+                                 <button ng-show="vm.data.status === 'ENC' && !vm.data.reglementSurPlace" ng-click="calculPrixFinal();saveInter({verification:true, envoiFacture:true})" class="btn--no-conflicts btn--l btn--black btn--fab" lx-ripple lx-tooltip="Envoyer facture + vérifier" tooltip-position="top"><i class="mdi mdi-check-all"></i></button>
                                 <button ng-if="vm.data.status" ng-click="saveInter({annulation:true})" class="btn--no-conflicts btn--l btn--black btn--fab" lx-ripple lx-tooltip="Annuler" tooltip-position="top"><i class="mdi mdi-close"></i></button>
-                                <button ng-if="!vm.data.status || vm.data.status === 'ANN' || vm.data.status === 'APR' || vm.data.status === 'ENV'" ng-click="saveInter({envoi:true})" class="btn--no-conflicts btn--l btn--black btn--fab" lx-ripple lx-tooltip="Envoyer" tooltip-position="top"><i class="mdi mdi-send"></i></button>
+                                <button ng-if="!vm.data.status || vm.data.status === 'ANN' || vm.data.status === 'APR' || vm.data.status === 'ENC'" ng-click="saveInter({envoi:true})" class="btn--no-conflicts btn--l btn--black btn--fab" lx-ripple lx-tooltip="Envoyer" tooltip-position="top"><i class="mdi mdi-send"></i></button>
                             </div>
                         </div>
                     </div>

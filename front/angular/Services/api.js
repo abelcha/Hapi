@@ -33,7 +33,6 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
         },
         intervention: {
             getStats: function() {
-                console.log("getStats")
                 return $http({
                     method: 'GET',
                     cache: false,

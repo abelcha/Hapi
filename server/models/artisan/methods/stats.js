@@ -53,15 +53,16 @@ module.exports = function(schema) {
                             status: 'ANN'
                         }),
                         paye: sumCount({
-                            status: {
-                                $in: ['PAY']
+                            status: 'VRF',
+                            'date.paiementSST': {
+                                $exists: true
                             }
                         }),
                         envoye: sumCount({
-                            status: 'ENV'
+                            status: 'ENC'
                         }),
                         impayeUrgent: sumCount({
-                            status: 'ATT',
+                            status: 'VRF',
                             reglementSurPlace: true,
                             'date.intervention': {
                                 $lte: lastMonth
@@ -71,13 +72,13 @@ module.exports = function(schema) {
                             }
                         }),
                         aVerifier: sumCount({
-                            status: 'ENV',
+                            status: 'ENC',
                             'date.intervention': {
                                 $lte: new Date()
                             },
                         }),
                         impaye: sumCount({
-                            status: 'ATT',
+                            status: 'VRF',
                             reglementSurPlace: true,
                             'date.paiementCLI': {
                                 $exists: false

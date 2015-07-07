@@ -36,31 +36,26 @@ angular.module('edison').controller('MainController', function($q, DataProvider,
 
     $scope.searchBox = {
         search: function(x) {
-            console.log(x);
             var deferred = $q.defer();
             if (x.length < 3)
                 return []
             edisonAPI.searchText(x).success(function(resp) {
                 deferred.resolve(resp)
-                console.log(resp)
             })
             return deferred.promise;
         },
         change: function(x) {
             $location.url(x.link)
             $scope.searchText = "";
-            console.log('---------', x)
         }
     }
 
     var reloadStats = function() {
-        console.log("yay reload stats")
         edisonAPI.intervention.getStats()
             .success(function(result) {
                 $scope.userStats = _.find(result, function(e) {
                     return e.login === $scope.user.login;
                 });
-                console.log(result);
                 $rootScope.interventionsStats = result;
             });
     };

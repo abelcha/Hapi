@@ -50,7 +50,7 @@ module.exports = function(schema) {
                         db.model('intervention').getOSFile(doc).then(function(osFileBuffer) {
                             mail.sendOS(doc, osFileBuffer, suppFile, req.session).then(function(mail) {
                                 sendSMS(req.body.sms, doc, req.session).then(function(data) {
-                                    inter.status = "ENV";
+                                    inter.status = "ENC";
                                     inter.date.envoi = new Date();
                                     inter.login.envoi = req.session.login;
                                     inter.save().then(resolve, reject);

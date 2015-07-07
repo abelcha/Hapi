@@ -75,54 +75,40 @@ module.exports = {
         return x;
     },
     etats: {
-        ENV: {
+        ENC: {
             order: 0,
-            short_name: 'ENV',
-            long_name: 'Envoyé',
+            short_name: 'ENC',
+            long_name: 'En Cours',
             color: 'orange'
         },
-        RGL: {
+        VRF: {
             order: 1,
-            short_name: 'RGL',
-            long_name: 'Reglé',
+            short_name: 'VRF',
+            long_name: 'Vérifié',
             color: 'green'
         },
-        PAY: {
-            order: 2,
-            short_name: 'PAY',
-            long_name: 'Payé',
-            color: 'green accent-4'
-        },
-        ATT: {
-            order: 3,
-            short_name: 'ATT',
-            long_name: 'En Attente',
-            color: 'purple'
-        },
         APR: {
-            order: 4,
+            order: 2,
             short_name: 'APR',
             long_name: 'A Progr.',
             color: 'blue'
         },
         AVR: {
-            order: 5,
+            order: 3,
             short_name: 'AVR',
             long_name: 'A Vérifier',
             color: 'brown darken-3'
         },
         ANN: {
-            order: 6,
+            order: 4,
             short_name: 'ANN',
             long_name: 'Annuler',
             color: 'red'
         }
     },
     etatsHash: function() {
-        return [this.etats.ENV,
-            this.etats.RGL,
-            this.etats.PAY,
-            this.etats.ATT,
+        return [this.etats.ENC,
+            this.etats.VRF,
             this.etats.APR,
             this.etats.AVR,
             this.etats.ANN
@@ -139,7 +125,7 @@ module.exports = {
     },
     etatsDevis: {
         AEV: {
-            short_name: 'ENV',
+            short_name: 'ENC',
             long_name: 'A Envoyer',
             color: 'blue'
         },

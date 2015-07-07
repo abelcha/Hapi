@@ -6,7 +6,7 @@ module.exports = function(schema) {
         method:'POST',
         fn: function(inter, req, res) {
             return new Promise(function(resolve, reject) {
-                if (inter.modeReglement === 'CB' && !inter.cb.hash)
+                if (inter.modeReglement === 'CB' && (inter.reglementSurPlace && !inter.cb.hash))
                     return reject("Veuillez rentrer un numero de CB")
                 if (!inter.reglementSurPlace && !inter.date.envoiFacture)
                     return reject("Veuillez envoyer la facture avant de vérifier")
@@ -16,7 +16,7 @@ module.exports = function(schema) {
                     return reject('Veuillez ajouté un prix final')
                 inter.date.verification = new Date;
                 inter.login.verification = req.session.login;
-                inter.status = "ATT";
+                inter.status = "VRF";
                 inter.save().then(resolve, reject)
             })
         }

@@ -131,18 +131,19 @@
 
             if (rtn.status === 'ENC') {
 
-                rtn.status = 'ENV';
+                rtn.status = 'ENC';
 
             }
 
             if (rtn.status === 'INT') {
-                if (date.paiementCLI)
+               rtn.status = 'VRF'
+               /* if (date.paiementCLI)
                     rtn.status = 'RGL';
                 else if (date.paiementSST)
                     rtn.status = 'PAY';
                 else {
                     rtn.status = 'ATT'
-                }
+                }*/
             }
 
             /* FACTURE */
