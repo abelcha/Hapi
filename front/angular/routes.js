@@ -307,7 +307,7 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
             }
         })
         .when('/artisan/contact', {
-            templateUrl: "Pages/ContactArtisan/ContactArtisan.html",
+            templateUrl: "Pages/ListeArtisan/ContactArtisan.html",
             controller: "ContactArtisanController",
             controllerAs: 'vm',
         })
