@@ -1,0 +1,86 @@
+<div>
+    <div class="shadow-box listeInterventions">
+        <div class="row" style="">
+            <br>
+            <div class="col-sm-4">
+                <input type="text" ng-model="vm.tableFilter" ng-change="vm.reloadData()" class="form-control">
+                <br>
+                <div style="height: 670px;overflow: scroll;" when-scroll-ends="vm.loadMore()">
+                    <ul class="list mt++">
+                        <li class="list-row list-row--has-separator" ng-repeat="artisan in vm.tableData | limitTo:vm.tableLimit | orderBy:'-da'" ng-right-click="vm.rowRightClick($event, artisan)" ng-click="vm.rowClick($event, artisan, false)" ng-class="{success : vm.contextMenu.active && vm.contextMenu.data.id === artisan.id, greyed : expendedRow === artisan.id}">
+                            <div class="list-row__content">
+                                <span><strong> {{artisan.n}}</strong> - {{artisan.r}}</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="dropdown-menu--no-conflicts dropdown-menu--right dropdown__menu--is-dropped" style=" width: auto; height: auto; opacity: 1;" ng-style="vm.contextMenu.style">
+                <div class="dropdown-menu__content ng-scope">
+                    <ul class="ng-scope">
+                        <li ng-repeat="item in vm.contextMenu.list" ng-click="vm.contextMenu.close();vm.contextMenu.click(item)">
+                            <a class="dropdown-link" tabindex="0">{{item.title}}</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-sm-8" style="height: 670px;overflow: scroll;" ng-right-click="vm.rowRightClick($event, vm.sst)">
+                <div style="cursor:default!important" >
+                    <md-content class="md-padding" ng-init="va = vm.sst">
+                        <md-tabs md-dynamic-height md-border-bottom>
+                            <md-tab label="Informations">
+                                <md-content class="md-padding">
+                                    <h1 class="md-display-2"><strong>{{vm.sst.nomSociete}}</strong> - {{vm.sst.representant.civilite}} {{vm.sst.representant.nom}} {{vm.sst.representant.prenom}}</h1>
+                                    <md-button style="float:right" class="md-raised md-primary">{{config.artisanOrigine[vm.sst.origin].long_name}}</md-button>
+                                    <md-button style="float:right" class="md-raised {{config.etatsArtisan[vm.sst.status].color}} white-text">{{config.etatsArtisan[vm.sst.status].long_name}}</md-button>
+                                    <br>
+                                    <div class="col-sm-6">
+                                        <a ng-href="mailto:{{vm.sst.email}}">{{vm.sst.email}}</a> -
+                                        <a ng-href="callto:{{vm.sst.telephone.tel1}}">{{vm.sst.telephone.tel1}}</a>
+                                        <a ng-href="callto:{{vm.sst.telephone.tel2}}">{{vm.sst.telephone.tel2}}</a>
+                                        <br>
+                                        <br> Categories
+                                        <p class="md-display-2" ng-repeat="c in vm.sst.categories"><span style="width:100px;margin-top:4px" class="label {{::config.categories[c].color}}">{{::config.categories[c].long_name}}</span></p>
+                                        <br>
+                                        <p class="md-display-2">Documents :
+                                            <a ng-repeat="(k, f) in vm.sst.document" ng-href="/api/artisan/59/openDocument?file={{k}}" target="_blank">
+                                                <br><span style="width:90px;margin-top:4px" class="label ">{{k}}</span></a>
+                                        </p>
+                                        <br>
+                                        <p class="md-display-2">Déplacement : <strong>{{vm.sst.pourcentage.deplacement}} %</strong></p>
+                                        <p class="md-display-2">Main d'oeuvre : <strong>{{vm.sst.pourcentage.maindOeuvre}} %</strong></p>
+                                        <p class="md-display-2">Fourniture : <strong>{{vm.sst.pourcentage.fourniture}} %</strong></p>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <br>
+                                        <h4 class="md-body-1">{{vm.sst.address.n}} {{vm.sst.address.r}}, <br>{{vm.sst.address.cp}} {{vm.sst.address.v}} </h4>
+                                        <br>
+                                        <img ng-src="{{vm.getStaticMap()}}" class="img-thumbnail" />
+                                    </div>
+                                </md-content>
+                            </md-tab>
+                            <md-tab label="récap">
+                                <md-content class="md-padding">
+                                    <h1 class="md-display-2">Tab Three</h1>
+                                    <p>Integer turpis erat, porttitor vitae mi faucibus, laoreet interdum tellus. Curabitur posuere molestie dictum. Morbi eget congue risus, quis rhoncus quam. Suspendisse vitae hendrerit erat, at posuere mi. Cras eu fermentum nunc. Sed id ante eu orci commodo volutpat non ac est. Praesent ligula diam, congue eu enim scelerisque, finibus commodo lectus.</p>
+                                </md-content>
+                            </md-tab>
+                            <md-tab label="Historique">
+                                <md-content class="md-padding">
+                                    <h1 class="md-display-2">Tab Three</h1>
+                                    <p>Integer turpis erat, porttitor vitae mi faucibus, laoreet interdum tellus. Curabitur posuere molestie dictum. Morbi eget congue risus, quis rhoncus quam. Suspendisse vitae hendrerit erat, at posuere mi. Cras eu fermentum nunc. Sed id ante eu orci commodo volutpat non ac est. Praesent ligula diam, congue eu enim scelerisque, finibus commodo lectus.</p>
+                                </md-content>
+                            </md-tab>
+                            <md-tab label="JSON Dump">
+                                <md-content class="md-padding">
+                                    <h1 class="md-display-2">DUMP</h1>
+                                    <pre>{{vm.sst|json}}</pre>
+                                </md-content>
+                            </md-tab>
+                        </md-tabs>
+                    </md-content>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
