@@ -54,6 +54,9 @@ angular.module('edison')
             Intervention.prototype.ouvrirFiche = function() {
                 $location.url('/intervention/' + this.id)
             }
+            Intervention.prototype.ouvrirFicheSST = function() {
+                $location.url('/artisan/' + this.artisan.id)
+            }
             Intervention.prototype.smsArtisan = function(cb) {
                 var _this = this;
                 dialog.getText({

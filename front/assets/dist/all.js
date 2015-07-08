@@ -306,6 +306,11 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
                 devisPrm: getDevis,
             }
         })
+        .when('/artisan/contact', {
+            templateUrl: "Pages/ContactArtisan/ContactArtisan.html",
+            controller: "ContactArtisanController",
+            controllerAs: 'vm',
+        })
         .when('/artisan/list', {
             templateUrl: "Pages/ListeArtisan/listeArtisan.html",
             controller: "ListeArtisanController",
@@ -372,6 +377,155 @@ angular.module('edison').run(function(editableOptions) {
         cache: $templateCache
     });
 })
+angular.module('edison').config(function($compileProvider){
+   $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|callto|mailto|file|tel):/);
+});
+
+angular.module("edison").filter('contactFilter', ['config', function(config) {
+    "use strict";
+
+    var clean = function(str) {
+        return _.deburr(str).toLowerCase();
+    }
+
+    var compare = function(a, b, strictMode) {
+        if (typeof a === "string") {
+            return clean(a).includes(b);
+        } else if (!strictMode) {
+            return clean(String(a)).startsWith(b);
+        } else {
+            return a === parseInt(b);
+        }
+    }
+    return function(dataContainer, input) {
+        var rtn = [];
+        input = clean(input);
+        _.each(dataContainer, function(data) {
+            if (!data.stringify)
+                data.stringify = clean(JSON.stringify(data))
+            if (!input || data.stringify.indexOf(input) >= 0) {
+                rtn.push(data);
+            } else {
+            }
+        })
+        return rtn;
+    }
+}]);
+
+angular.module('edison').filter('crlf', function() {
+	"use strict";
+    return function(text) {
+        return text.split(/\n/g).join('<br>');
+    };
+});
+
+angular.module('edison').filter('loginify', function() {
+    "use strict";
+    return function(obj) {
+        if (!obj)
+            return "";
+        return obj.slice(0, 1).toUpperCase() + obj.slice(1, -2)
+    };
+});
+
+angular.module('edison').filter('relativeDate', function() {
+    "use strict";
+    return function(date, no) {
+        return moment((date + 1370000000) * 1000).fromNow(no).toString()
+    };
+});
+
+angular.module('edison').filter('reverse', function() {
+    "use strict";
+    return function(items) {
+        if (!items)
+            return [];
+        return items.slice().reverse();
+    };
+});
+
+angular.module("edison").filter('tableFilter', ['config', function(config) {
+    "use strict";
+
+    var clean = function(str) {
+        return _.deburr(str).toLowerCase();
+    }
+
+    var compare = function(a, b, strictMode) {
+        if (typeof a === "string") {
+            return clean(a).includes(b);
+        } else if (!strictMode){
+            return clean(String(a)).startsWith(b);
+        } else {
+            return a === parseInt(b);
+        }
+    }
+    var compareCustom = function(key, data, input) {
+        if (key === '_categorie') {
+            var cell = config.categoriesHash()[data.c].long_name;
+            return compare(cell, input);
+        }
+        if (key === '_etat') {
+            var cell = config.etatsHash()[data.s].long_name
+            return compare(cell, input);
+        }
+        return true;
+    }
+
+    return function(dataContainer, inputs, strictMode) {
+        var rtn = [];
+        console.time('fltr')
+        inputs = _.mapValues(inputs, clean);
+        _.each(dataContainer, function(data) {
+            if (data.id) {
+                var psh = true;
+                _.each(inputs, function(input, k) {
+                    if (input && input.length > 0) {
+                        if (k.charAt(0) === '_') {
+                            if (!compareCustom(k, data, input)) {
+                                psh = false;
+                                return false
+                            }
+                        } else {
+                            if (!compare(data[k], input, strictMode)) {
+                                psh = false;
+                                return false
+                            }
+                        }
+                    }
+                });
+                if (psh === true) {
+                    rtn.push(data);
+                }
+            }
+        })
+        console.timeEnd('fltr')
+
+        return rtn;
+    }
+}]);
+
+angular.module('edison').filter('total', function() {
+    "use strict";
+    return function(obj) {
+        if (obj && obj.total) {
+        	return obj.total;
+        }
+        return "0";
+    };
+});
+
+angular.module('edison').filter('montant', function() {
+    "use strict";
+    return function(obj) {
+        if (obj && obj.montant) {
+        	return (obj.montant > 999 ? (obj.montant / 1000).toFixed(0) + 'k' : obj.montant.toFixed(0)) + '€';
+        }
+        return "0€";
+    };
+});
+
+
 
 angular.module('edison').directive('allowPattern', [allowPatternDirective]);
 
@@ -663,26 +817,29 @@ angular.module('edison').directive('select', function($interpolate) {
              title: '@',
              model: '@',
              count: '@',
-             color:'@',
+             noCounter:'@',
+             color: '@',
              hashModel: '@'
          },
          link: function(scope, element, attrs) {
              var findTotal = function() {
-                var total = 0;
+                 if (scope.noCounter)
+                     return undefined;
+                 var total = 0;
                  if (scope.login) {
                      var t = _.find($rootScope.interventionsStats, function(e) {
                          return e.login === scope.login;
                      })
                      total += _.get(t, scope.fltr + '.total', 0);
                  } else {
-                    _.each($rootScope.interventionsStats, function(t) {
-                        total +=  _.get(t, scope.fltr + '.total', 0);
-                    })
+                     _.each($rootScope.interventionsStats, function(t) {
+                         total += _.get(t, scope.fltr + '.total', 0);
+                     })
                  }
                  return total;
              }
              $rootScope.$watch('interventionsStats', function() {
-                scope.total = findTotal();
+                 scope.total = findTotal();
              })
              scope.color = (scope.color || 'success')
              scope._model = scope.model || 'intervention';
@@ -795,121 +952,6 @@ angular.module('edison').directive('select', function($interpolate) {
          }
      };
  }]);
-
-angular.module('edison').filter('crlf', function() {
-	"use strict";
-    return function(text) {
-        return text.split(/\n/g).join('<br>');
-    };
-});
-
-angular.module('edison').filter('loginify', function() {
-    "use strict";
-    return function(obj) {
-        if (!obj)
-            return "";
-        return obj.slice(0, 1).toUpperCase() + obj.slice(1, -2)
-    };
-});
-
-angular.module('edison').filter('relativeDate', function() {
-    "use strict";
-    return function(date, no) {
-        return moment((date + 1370000000) * 1000).fromNow(no).toString()
-    };
-});
-
-angular.module('edison').filter('reverse', function() {
-    "use strict";
-    return function(items) {
-        if (!items)
-            return [];
-        return items.slice().reverse();
-    };
-});
-
-angular.module("edison").filter('tableFilter', ['config', function(config) {
-    "use strict";
-
-    var clean = function(str) {
-        return _.deburr(str).toLowerCase();
-    }
-
-    var compare = function(a, b, strictMode) {
-        if (typeof a === "string") {
-            return clean(a).includes(b);
-        } else if (!strictMode){
-            return clean(String(a)).startsWith(b);
-        } else {
-            return a === parseInt(b);
-        }
-    }
-    var compareCustom = function(key, data, input) {
-        if (key === '_categorie') {
-            var cell = config.categoriesHash()[data.c].long_name;
-            return compare(cell, input);
-        }
-        if (key === '_etat') {
-            var cell = config.etatsHash()[data.s].long_name
-            return compare(cell, input);
-        }
-        return true;
-    }
-
-    return function(dataContainer, inputs, strictMode) {
-        var rtn = [];
-        console.time('fltr')
-        inputs = _.mapValues(inputs, clean);
-        _.each(dataContainer, function(data) {
-            if (data.id) {
-                var psh = true;
-                _.each(inputs, function(input, k) {
-                    if (input && input.length > 0) {
-                        if (k.charAt(0) === '_') {
-                            if (!compareCustom(k, data, input)) {
-                                psh = false;
-                                return false
-                            }
-                        } else {
-                            if (!compare(data[k], input, strictMode)) {
-                                psh = false;
-                                return false
-                            }
-                        }
-                    }
-                });
-                if (psh === true) {
-                    rtn.push(data);
-                }
-            }
-        })
-        console.timeEnd('fltr')
-
-        return rtn;
-    }
-}]);
-
-angular.module('edison').filter('total', function() {
-    "use strict";
-    return function(obj) {
-        if (obj && obj.total) {
-        	return obj.total;
-        }
-        return "0";
-    };
-});
-
-angular.module('edison').filter('montant', function() {
-    "use strict";
-    return function(obj) {
-        if (obj && obj.montant) {
-        	return (obj.montant > 999 ? (obj.montant / 1000).toFixed(0) + 'k' : obj.montant.toFixed(0)) + '€';
-        }
-        return "0€";
-    };
-});
-
-
 
 angular.module('edison').factory('TabContainer', function($location, $window, $q, edisonAPI) {
     "use strict";
@@ -1165,7 +1207,7 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
             get: function(id, options) {
                 return $http({
                     method: 'GET',
-                    cache: options && options.cache,
+                    cache: false,
                     url: '/api/artisan/' + id,
                     params: options || {}
                 }).success(function(result) {
@@ -2061,6 +2103,9 @@ angular.module('edison')
             Intervention.prototype.ouvrirFiche = function() {
                 $location.url('/intervention/' + this.id)
             }
+            Intervention.prototype.ouvrirFicheSST = function() {
+                $location.url('/artisan/' + this.artisan.id)
+            }
             Intervention.prototype.smsArtisan = function(cb) {
                 var _this = this;
                 dialog.getText({
@@ -2267,6 +2312,25 @@ angular.module('edison')
         }
     ]);
 
+ angular.module('edison').directive('whenScrollEnds', function() {
+        return {
+            restrict: "A",
+            link: function(scope, element, attrs) {
+                var visibleHeight = element.height();
+                var threshold = 100;
+
+                element.scroll(function() {
+                    var scrollableHeight = element.prop('scrollHeight');
+                    var hiddenContentHeight = scrollableHeight - visibleHeight;
+
+                    if (hiddenContentHeight - element.scrollTop() <= threshold) {
+                        // Scroll is almost at the bottom. Loading more rows
+                        scope.$apply(attrs.whenScrollEnds);
+                    }
+                });
+            }
+        };
+    });
 angular.module('edison').factory('Map', function() {
     "use strict";
 
@@ -2885,6 +2949,100 @@ var ArtisanCtrl = function($rootScope, $location, $routeParams, ContextMenu, LxN
     }
 }
 angular.module('edison').controller('ArtisanController', ArtisanCtrl);
+
+var ContactArtisanController = function($timeout, tabContainer, LxProgressService, FiltersFactory, ContextMenu, edisonAPI, DataProvider, $routeParams, $location, $q, $rootScope, $filter, config, ngTableParams) {
+    "use strict";
+    var _this = this;
+    _this.loadPanel = function(id) {
+        edisonAPI.artisan.get(id)
+            .then(function(resp) {
+                _this.sst = resp.data;
+            })
+    }
+
+    var dataProvider = new DataProvider('artisan');
+    var filtersFactory = new FiltersFactory('artisan')
+    var currentFilter;
+    if ($routeParams.fltr) {
+        currentFilter = filtersFactory.getFilterByUrl($routeParams.fltr)
+    }
+    var currentHash = $location.hash();
+    var title = currentFilter ? currentFilter.long_name : "Artisan";
+
+    LxProgressService.circular.show('#5fa2db', '#globalProgress');
+    dataProvider.init(function(err, resp) {
+
+        _this.tab = tabContainer.getCurrentTab();
+        _this.tab.setTitle(title, currentHash);
+        _this.tab.hash = currentHash;
+        _this.config = config;
+        _this.moment = moment;
+        if (!dataProvider.isInit()) {
+            dataProvider.setData(resp);
+        }
+
+        dataProvider.applyFilter(currentFilter, _this.tab.hash);
+        _this.tableFilter = "";
+        _this.tableLimit = 20;
+        $rootScope.expendedRow = 7
+        _this.loadPanel($rootScope.expendedRow)
+        _this.tableData = dataProvider.filteredData;
+        LxProgressService.circular.hide();
+    });
+    _this.getStaticMap = function(address) {
+        if (_this.sst && this.sst.address)
+          return "/api/mapGetStatic?width=500&height=600&precision=0&zoom=6&origin=" + _this.sst.address.lt + ", " +_this.sst.address.lg;
+    }
+
+    _this.reloadData = function() {
+        _this.tableData = $filter('contactFilter')(dataProvider.filteredData, _this.tableFilter);
+    }
+
+    _this.loadMore = function() {
+        _this.tableLimit += 10;
+    }
+
+    /*
+        $rootScope.$watch('tableilter', _this.reloadData);
+    */
+    $rootScope.$on('artisanListChange', function() {
+        if (_this.tab.fullUrl === tabContainer.getCurrentTab().fullUrl) {
+            dataProvider.applyFilter(currentFilter, _this.tab.hash);
+        }
+    })
+
+    _this.contextMenu = new ContextMenu('artisan')
+
+    _this.rowRightClick = function($event, inter) {
+        _this.contextMenu.setPosition($event.pageX, $event.pageY)
+        edisonAPI.artisan.get(inter.id)
+            .then(function(resp) {
+                _this.contextMenu.setData(resp.data);
+                _this.contextMenu.open();
+            })
+    }
+
+    _this.rowClick = function($event, inter) {
+        if (_this.contextMenu.active)
+            return _this.contextMenu.close();
+        if ($event.metaKey || $event.ctrlKey) {
+            tabContainer.addTab('/artisan/' + inter.id, {
+                title: ('#' + inter.id),
+                setFocus: false,
+                allowDuplicates: false
+            });
+        } else {
+            if ($rootScope.expendedRow === inter.id) {
+                return 0;
+            } else {
+                $rootScope.expendedRow = inter.id
+                return _this.loadPanel(inter.id)
+            }
+        }
+    }
+
+}
+angular.module('edison').controller('ContactArtisanController', ContactArtisanController);
 
 angular.module('edison').controller('DashboardController', function(tabContainer, $scope) {
     "use strict";

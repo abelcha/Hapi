@@ -52,6 +52,12 @@ module.exports = {
     intervention: [{
         title: 'Ouvrir Fiche',
         action: "ouvrirFiche"
+    },{
+        title: 'Ouvrir Fiche SST',
+        action: "ouvrirFicheSST",
+        hide:function(inter) {
+            return !inter.artisan || !inter.artisan.id
+        }
     }, {
         title: "Appeler l'artisan",
         action: 'callArtisan',

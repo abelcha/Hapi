@@ -18,26 +18,29 @@
              title: '@',
              model: '@',
              count: '@',
-             color:'@',
+             noCounter:'@',
+             color: '@',
              hashModel: '@'
          },
          link: function(scope, element, attrs) {
              var findTotal = function() {
-                var total = 0;
+                 if (scope.noCounter)
+                     return undefined;
+                 var total = 0;
                  if (scope.login) {
                      var t = _.find($rootScope.interventionsStats, function(e) {
                          return e.login === scope.login;
                      })
                      total += _.get(t, scope.fltr + '.total', 0);
                  } else {
-                    _.each($rootScope.interventionsStats, function(t) {
-                        total +=  _.get(t, scope.fltr + '.total', 0);
-                    })
+                     _.each($rootScope.interventionsStats, function(t) {
+                         total += _.get(t, scope.fltr + '.total', 0);
+                     })
                  }
                  return total;
              }
              $rootScope.$watch('interventionsStats', function() {
-                scope.total = findTotal();
+                 scope.total = findTotal();
              })
              scope.color = (scope.color || 'success')
              scope._model = scope.model || 'intervention';

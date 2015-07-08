@@ -306,6 +306,11 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
                 devisPrm: getDevis,
             }
         })
+        .when('/artisan/contact', {
+            templateUrl: "Pages/ContactArtisan/ContactArtisan.html",
+            controller: "ContactArtisanController",
+            controllerAs: 'vm',
+        })
         .when('/artisan/list', {
             templateUrl: "Pages/ListeArtisan/listeArtisan.html",
             controller: "ListeArtisanController",
@@ -372,3 +377,6 @@ angular.module('edison').run(function(editableOptions) {
         cache: $templateCache
     });
 })
+angular.module('edison').config(function($compileProvider){
+   $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|callto|mailto|file|tel):/);
+});

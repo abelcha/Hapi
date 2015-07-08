@@ -130,7 +130,7 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
             get: function(id, options) {
                 return $http({
                     method: 'GET',
-                    cache: options && options.cache,
+                    cache: false,
                     url: '/api/artisan/' + id,
                     params: options || {}
                 }).success(function(result) {

@@ -396,12 +396,14 @@ module.exports = {
     artisanOrigine: {
         DEM: {
             order: 0,
+            cls:"md-warn",
             short_name: 'DEM',
             color: 'red',
             long_name: "demarché"
         },
         CAND: {
             order: 1,
+            cls:"md-primary",
             color: 'yellow',
             short_name: 'CAND',
             long_name: "Candidat"

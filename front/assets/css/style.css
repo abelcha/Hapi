@@ -234,3 +234,6 @@ map.big-map {
 small {
     font-size: 75%!important;
 }
+.greyed{
+    background-color:#f9f9f9;
+}

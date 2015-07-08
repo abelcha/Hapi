@@ -20,7 +20,7 @@ module.exports = function(schema) {
             c: e.categories,
             id: e._id,
             n: e.nomSociete,
-            r: e.representant.civilite + " " + e.representant.prenom + " " + e.representant.nom,
+            r: e.representant.nom+ " " + e.representant.prenom,
             s: e.status,
             cp: e.address.cp,
             v: e.address.v,
