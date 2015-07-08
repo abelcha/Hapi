@@ -1,5 +1,5 @@
-angular.module('edison').directive('infoCompta', ['config',
-    function(config, fourniture) {
+angular.module('edison').directive('infoCompta', ['config','Compta',
+    function(config, Compta) {
         "use strict";
         return {
             restrict: 'E',
@@ -9,6 +9,10 @@ angular.module('edison').directive('infoCompta', ['config',
             },
             link: function(scope, element, attrs) {
                 scope.config = config
+                scope.compta = new Compta(scope.data)
+                scope.$watch('data', function() {
+                    scope.compta = new Compta(scope.data);
+                }, true)
             },
         }
 

@@ -309,8 +309,7 @@ FiltersFactory.prototype.list = {
         },
         fn: function(inter) {
             return this.fltr.i_avr &&
-                inter.reglementSurPlace === false;
-            !inter.date.envoiFacture;
+                inter.reglementSurPlace === false
         }
     }, {
         short_name: 'i_sav',
