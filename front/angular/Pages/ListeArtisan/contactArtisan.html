@@ -2,7 +2,7 @@
     <div class="shadow-box listeInterventions">
         <div class="row" style="">
             <br>
-            <div class="col-sm-4 contactSize" ng-if="selectedIndex !== 1">
+            <div class="col-sm-4 contactSize" ng-if="selectedIndex !== 1 && !vm.recap">
                 <input type="text" ng-model="vm.tableFilter" ng-change="vm.reloadData()" class="form-control">
                 <br>
                 <div when-scroll-ends="vm.loadMore()">
@@ -15,7 +15,7 @@
                     </ul>
                 </div>
             </div>
-            <div class="selectedIndex === 1 ? 'col-sm-8' : 'col-sm-12'" ng-right-click="vm.rowRightClick($event, vm.sst)">
+            <div class="selectedIndex === 1 && !recap ? 'col-sm-8' : 'col-sm-12'" ng-right-click="vm.rowRightClick($event, vm.sst)">
                 <div style="cursor:default!important">
                     <md-content class="md-padding" ng-init="va = vm.sst" style="margin: 10px;">
                         <md-tabs md-selected="selectedIndex" md-dynamic-height md-border-bottom>
@@ -58,8 +58,17 @@
                             </md-tab>
                             <md-tab label="Historique">
                                 <md-content class="md-padding">
-                                    <h1 class="md-display-2">Tab Three</h1>
-                                    <p>Integer turpis erat, porttitor vitae mi faucibus, laoreet interdum tellus. Curabitur posuere molestie dictum. Morbi eget congue risus, quis rhoncus quam. Suspendisse vitae hendrerit erat, at posuere mi. Cras eu fermentum nunc. Sed id ante eu orci commodo volutpat non ac est. Praesent ligula diam, congue eu enim scelerisque, finibus commodo lectus.</p>
+                                    <h1 class="md-display-2">Historique</h1>
+                                    <div class="paragraph fs-body-1 mt+" style="height:100%">
+                                        <ul style="padding-bottom:20px;margin-left: 0px;">
+                                            <li class="list-row" ng-repeat="com in vm.sst.comments | reverse">
+                                                <div class="list-row__content">
+                                                    <span class="display-block">{{com.text}}</span>
+                                                    <span class="display-block fs-body-1 tc-black-2">{{com.date  |  date:"dd/MM/yy"}} - {{com.login}}</span>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
                                 </md-content>
                             </md-tab>
                             <md-tab label="Stats">

@@ -253,11 +253,6 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
         .when('/', {
             redirectTo: '/intervention/list',
         })
-        .when('/artisan/:sstID/recap', {
-            templateUrl: "Pages/ListeInterventions/listeInterventions.html",
-            controller: "InterventionsController",
-            controllerAs: 'vm',
-        })
         .when('/intervention/list', {
             templateUrl: "Pages/ListeInterventions/listeInterventions.html",
             controller: "InterventionsController",
@@ -307,6 +302,11 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
             }
         })
         .when('/artisan/contact', {
+            templateUrl: "Pages/ListeArtisan/contactArtisan.html",
+            controller: "ContactArtisanController",
+            controllerAs: 'vm',
+        })
+        .when('/artisan/:id/recap', {
             templateUrl: "Pages/ListeArtisan/contactArtisan.html",
             controller: "ContactArtisanController",
             controllerAs: 'vm',
@@ -377,6 +377,6 @@ angular.module('edison').run(function(editableOptions) {
         cache: $templateCache
     });
 })
-angular.module('edison').config(function($compileProvider){
-   $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|callto|mailto|file|tel):/);
+angular.module('edison').config(function($compileProvider) {
+    $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|callto|mailto|file|tel):/);
 });

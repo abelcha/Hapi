@@ -32,7 +32,8 @@ var ContactArtisanController = function($timeout, tabContainer, LxProgressServic
         dataProvider.applyFilter(currentFilter, _this.tab.hash);
         _this.tableFilter = "";
         _this.tableLimit = 20;
-        $rootScope.expendedRow = 45
+        $rootScope.expendedRow = $routeParams.id || 45
+        _this.recap = $routeParams.id
         _this.loadPanel($rootScope.expendedRow)
         _this.tableData = dataProvider.filteredData;
         LxProgressService.circular.hide();
