@@ -91,12 +91,13 @@ angular.module('edison').directive('listeIntervention', function(tabContainer, F
                 }
             }
             scope.$watch('id', function(current, prev) {
-                if (scope.tableParams && current && current !== prev) {
+                if (current && current !== prev) {
                     scope.customFilter = function(inter) {
                         return inter.ai === current;
                     }
                     dataProvider.applyFilter(currentFilter, undefined, scope.customFilter);
-                    scope.tableParams.reload();
+                    if (scope.tableParams)
+                        scope.tableParams.reload();
 
                 }
             })
