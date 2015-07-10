@@ -657,7 +657,7 @@ angular.module('edison').directive('select', function($interpolate) {
          restrict: 'AE',
          replace: true,
          template: '<li>' +
-             '      <a href="/{{_model}}/list{{url}}{{_hashModel}}{{_login}}" >' +
+             '      <a href="{{fullUrl}}" >' +
              '            <i ng-if="icon" class = "menu-icon fa fa-{{icon}}"> </i>' +
              '            <span class="mm-text">{{title || exFltr.long_name}}</span>' +
              '            <span ng-if="total !== void(0)"class="label label-{{color}}">{{total}}</span>' +
@@ -669,9 +669,10 @@ angular.module('edison').directive('select', function($interpolate) {
              today: '@',
              icon: '@',
              title: '@',
+             url: '@',
              model: '@',
              count: '@',
-             noCounter:'@',
+             noCounter: '@',
              color: '@',
              hashModel: '@'
          },
@@ -700,9 +701,10 @@ angular.module('edison').directive('select', function($interpolate) {
              var filtersFactory = new FiltersFactory(scope._model);
              scope.exFltr = filtersFactory.getFilterByName(scope.fltr);
              scope.total = findTotal();
-             scope.url = scope.exFltr.url.length ? "/" + scope.exFltr.url : scope.exFltr.url;
+             scope._url = scope.exFltr.url.length ? "/" + scope.exFltr.url : scope.exFltr.url;
              scope._login = scope.login ? ("#" + scope.login) : '';
              scope._hashModel = scope.hashModel ? ("?hashModel=" + scope.hashModel) : '';
+             scope.fullUrl = scope.url || ('/' + scope._model + '/list' + scope._url + scope._hashModel + scope._login)
          }
      };
  }]);
@@ -2870,7 +2872,6 @@ angular.module('edison').directive('listeIntervention', function(tabContainer, F
             scope.recap = $routeParams.sstID ? parseInt($routeParams.sstID) : false;
 
 
-            LxProgressService.circular.show('#5fa2db', '#globalProgress');
             dataProvider.init(function(err, resp) {
                 scope.config = config;
 
@@ -2903,7 +2904,6 @@ angular.module('edison').directive('listeIntervention', function(tabContainer, F
                     filterDelay: 100
                 }
                 scope.tableParams = new ngTableParams(tableParameters, tableSettings);
-                LxProgressService.circular.hide();
             })
             var lastChange = 0;
             $rootScope.$on('interventionListChange', function(event, newData) {
@@ -2927,7 +2927,6 @@ angular.module('edison').directive('listeIntervention', function(tabContainer, F
                         scope.contextMenu.open();
                     })
             }
-            scope.expendedRow = 12322312
             scope.rowClick = function($event, inter) {
                 console.log("rowclick", $event, inter)
                 if (scope.contextMenu.active)
@@ -2947,11 +2946,13 @@ angular.module('edison').directive('listeIntervention', function(tabContainer, F
                 }
             }
             scope.$watch('id', function(current, prev) {
-                if (current && current !== prev) {
+                if (scope.tableParams && current && current !== prev) {
                     scope.customFilter = function(inter) {
                         return inter.ai === current;
                     }
                     dataProvider.applyFilter(currentFilter, undefined, scope.customFilter);
+                    scope.tableParams.reload();
+
                 }
             })
 

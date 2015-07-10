@@ -4,7 +4,7 @@
          restrict: 'AE',
          replace: true,
          template: '<li>' +
-             '      <a href="/{{_model}}/list{{url}}{{_hashModel}}{{_login}}" >' +
+             '      <a href="{{fullUrl}}" >' +
              '            <i ng-if="icon" class = "menu-icon fa fa-{{icon}}"> </i>' +
              '            <span class="mm-text">{{title || exFltr.long_name}}</span>' +
              '            <span ng-if="total !== void(0)"class="label label-{{color}}">{{total}}</span>' +
@@ -16,9 +16,10 @@
              today: '@',
              icon: '@',
              title: '@',
+             url: '@',
              model: '@',
              count: '@',
-             noCounter:'@',
+             noCounter: '@',
              color: '@',
              hashModel: '@'
          },
@@ -47,9 +48,10 @@
              var filtersFactory = new FiltersFactory(scope._model);
              scope.exFltr = filtersFactory.getFilterByName(scope.fltr);
              scope.total = findTotal();
-             scope.url = scope.exFltr.url.length ? "/" + scope.exFltr.url : scope.exFltr.url;
+             scope._url = scope.exFltr.url.length ? "/" + scope.exFltr.url : scope.exFltr.url;
              scope._login = scope.login ? ("#" + scope.login) : '';
              scope._hashModel = scope.hashModel ? ("?hashModel=" + scope.hashModel) : '';
+             scope.fullUrl = scope.url || ('/' + scope._model + '/list' + scope._url + scope._hashModel + scope._login)
          }
      };
  }]);

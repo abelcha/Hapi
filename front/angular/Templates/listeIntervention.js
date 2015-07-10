@@ -17,7 +17,6 @@ angular.module('edison').directive('listeIntervention', function(tabContainer, F
             scope.recap = $routeParams.sstID ? parseInt($routeParams.sstID) : false;
 
 
-            LxProgressService.circular.show('#5fa2db', '#globalProgress');
             dataProvider.init(function(err, resp) {
                 scope.config = config;
 
@@ -50,7 +49,6 @@ angular.module('edison').directive('listeIntervention', function(tabContainer, F
                     filterDelay: 100
                 }
                 scope.tableParams = new ngTableParams(tableParameters, tableSettings);
-                LxProgressService.circular.hide();
             })
             var lastChange = 0;
             $rootScope.$on('interventionListChange', function(event, newData) {
@@ -74,7 +72,6 @@ angular.module('edison').directive('listeIntervention', function(tabContainer, F
                         scope.contextMenu.open();
                     })
             }
-            scope.expendedRow = 12322312
             scope.rowClick = function($event, inter) {
                 console.log("rowclick", $event, inter)
                 if (scope.contextMenu.active)
@@ -94,11 +91,13 @@ angular.module('edison').directive('listeIntervention', function(tabContainer, F
                 }
             }
             scope.$watch('id', function(current, prev) {
-                if (current && current !== prev) {
+                if (scope.tableParams && current && current !== prev) {
                     scope.customFilter = function(inter) {
                         return inter.ai === current;
                     }
                     dataProvider.applyFilter(currentFilter, undefined, scope.customFilter);
+                    scope.tableParams.reload();
+
                 }
             })
 
