@@ -7,9 +7,9 @@
                 <br>
                 <div when-scroll-ends="vm.loadMore()">
                     <ul class="list mt++">
-                        <li class="list-row list-row--has-separator" ng-repeat="artisan in vm.tableData | limitTo:vm.tableLimit | orderBy:'-da'" ng-right-click="vm.rowRightClick($event, artisan)" ng-click="vm.rowClick($event, artisan, false)" ng-class="{success : vm.contextMenu.active && vm.contextMenu.data.id === artisan.id, greyed : expendedRow === artisan.id}">
+                        <li class="list-row list-row--has-separator" ng-repeat="artisan in vm.tableData | orderBy:'-da' | limitTo:vm.tableLimit " ng-right-click="vm.rowRightClick($event, artisan)" ng-click="vm.rowClick($event, artisan, false)" ng-class="{success : vm.contextMenu.active && vm.contextMenu.data.id === artisan.id, greyed : expendedRow === artisan.id}">
                             <div class="list-row__content">
-                                <span><strong> {{artisan.n}}</strong> - {{artisan.r}}</span>
+                                <span><strong> {{artisan.da | relativeDate}} {{artisan.n}}</strong> - {{artisan.r}}</span>
                             </div>
                         </li>
                     </ul>
@@ -17,9 +17,8 @@
             </div>
             <div class="selectedIndex === 1 ? 'col-sm-8' : 'col-sm-12'" ng-right-click="vm.rowRightClick($event, vm.sst)">
                 <div style="cursor:default!important">
-                    <md-content  class="md-padding" ng-init="va = vm.sst" style="margin: 10px;">
+                    <md-content class="md-padding" ng-init="va = vm.sst" style="margin: 10px;">
                         <md-tabs md-selected="selectedIndex" md-dynamic-height md-border-bottom>
-                          
                             <md-tab label="Informations">
                                 <md-content class="md-padding">
                                     <h1 class="md-display-2"><strong>{{vm.sst.nomSociete}}</strong> - {{vm.sst.representant.civilite}} {{vm.sst.representant.nom}} {{vm.sst.representant.prenom}}</h1>
@@ -51,7 +50,7 @@
                                     </div>
                                 </md-content>
                             </md-tab>
-                              <md-tab label="Interventions">
+                            <md-tab label="Interventions">
                                 <md-content class="md-padding">
                                     <h1 class="md-display-2">Liste des Interventions</h1>
                                     <liste-intervention id="vm.sst.id"></liste-intervention>
@@ -61,6 +60,12 @@
                                 <md-content class="md-padding">
                                     <h1 class="md-display-2">Tab Three</h1>
                                     <p>Integer turpis erat, porttitor vitae mi faucibus, laoreet interdum tellus. Curabitur posuere molestie dictum. Morbi eget congue risus, quis rhoncus quam. Suspendisse vitae hendrerit erat, at posuere mi. Cras eu fermentum nunc. Sed id ante eu orci commodo volutpat non ac est. Praesent ligula diam, congue eu enim scelerisque, finibus commodo lectus.</p>
+                                </md-content>
+                            </md-tab>
+                            <md-tab label="Stats">
+                                <md-content class="md-padding">
+                                    <h1 class="md-display-2">Stats</h1>
+                                    <artisan-recap id="vm.sst.id"></artisan-recap>
                                 </md-content>
                             </md-tab>
                             <md-tab label="JSON Dump">
