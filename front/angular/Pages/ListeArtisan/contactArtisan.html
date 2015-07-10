@@ -2,10 +2,10 @@
     <div class="shadow-box listeInterventions">
         <div class="row" style="">
             <br>
-            <div class="col-sm-4">
+            <div class="col-sm-4 contactSize" ng-if="selectedIndex !== 1">
                 <input type="text" ng-model="vm.tableFilter" ng-change="vm.reloadData()" class="form-control">
                 <br>
-                <div style="height: 670px;overflow: scroll;" when-scroll-ends="vm.loadMore()">
+                <div when-scroll-ends="vm.loadMore()">
                     <ul class="list mt++">
                         <li class="list-row list-row--has-separator" ng-repeat="artisan in vm.tableData | limitTo:vm.tableLimit | orderBy:'-da'" ng-right-click="vm.rowRightClick($event, artisan)" ng-click="vm.rowClick($event, artisan, false)" ng-class="{success : vm.contextMenu.active && vm.contextMenu.data.id === artisan.id, greyed : expendedRow === artisan.id}">
                             <div class="list-row__content">
@@ -15,25 +15,11 @@
                     </ul>
                 </div>
             </div>
-            <div class="dropdown-menu--no-conflicts dropdown-menu--right dropdown__menu--is-dropped" style=" width: auto; height: auto; opacity: 1;" ng-style="vm.contextMenu.style">
-                <div class="dropdown-menu__content ng-scope">
-                    <ul class="ng-scope">
-                        <li ng-repeat="item in vm.contextMenu.list" ng-click="vm.contextMenu.close();vm.contextMenu.click(item)">
-                            <a class="dropdown-link" tabindex="0">{{item.title}}</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <div class="col-sm-8" style="height: 670px;overflow: scroll;" ng-right-click="vm.rowRightClick($event, vm.sst)">
+            <div class="selectedIndex === 1 ? 'col-sm-8' : 'col-sm-12'" ng-right-click="vm.rowRightClick($event, vm.sst)">
                 <div style="cursor:default!important">
-                    <md-content class="md-padding" ng-init="va = vm.sst">
-                        <md-tabs md-dynamic-height md-border-bottom>
-                            <md-tab label="récap">
-                                <md-content class="md-padding">
-                                    <h1 class="md-display-2">Tab Three</h1>
-                                    <p>Integer turpis erat, porttitor vitae mi faucibus, laoreet interdum tellus. Curabitur posuere molestie dictum. Morbi eget congue risus, quis rhoncus quam. Suspendisse vitae hendrerit erat, at posuere mi. Cras eu fermentum nunc. Sed id ante eu orci commodo volutpat non ac est. Praesent ligula diam, congue eu enim scelerisque, finibus commodo lectus.</p>
-                                </md-content>
-                            </md-tab>
+                    <md-content  class="md-padding" ng-init="va = vm.sst" style="margin: 10px;">
+                        <md-tabs md-selected="selectedIndex" md-dynamic-height md-border-bottom>
+                          
                             <md-tab label="Informations">
                                 <md-content class="md-padding">
                                     <h1 class="md-display-2"><strong>{{vm.sst.nomSociete}}</strong> - {{vm.sst.representant.civilite}} {{vm.sst.representant.nom}} {{vm.sst.representant.prenom}}</h1>
@@ -65,6 +51,12 @@
                                     </div>
                                 </md-content>
                             </md-tab>
+                              <md-tab label="Interventions">
+                                <md-content class="md-padding">
+                                    <h1 class="md-display-2">Liste des Interventions</h1>
+                                    <liste-intervention id="vm.sst.id"></liste-intervention>
+                                </md-content>
+                            </md-tab>
                             <md-tab label="Historique">
                                 <md-content class="md-padding">
                                     <h1 class="md-display-2">Tab Three</h1>
@@ -79,6 +71,15 @@
                             </md-tab>
                         </md-tabs>
                     </md-content>
+                </div>
+            </div>
+            <div class="dropdown-menu--no-conflicts dropdown-menu--right dropdown__menu--is-dropped" style=" width: auto; height: auto; opacity: 1;" ng-style="vm.contextMenu.style">
+                <div class="dropdown-menu__content ng-scope">
+                    <ul class="ng-scope">
+                        <li ng-repeat="item in vm.contextMenu.list" ng-click="vm.contextMenu.close();vm.contextMenu.click(item)">
+                            <a class="dropdown-link" tabindex="0">{{item.title}}</a>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>

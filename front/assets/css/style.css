@@ -237,3 +237,7 @@ small {
 .greyed{
     background-color:#f9f9f9;
 }
+
+.contactSize.col-sm-4>div{
+    height: 670px;overflow: scroll;
+}

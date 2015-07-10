@@ -1,0 +1,57 @@
+<div>
+    <div class="shadow-box listeInterventions">
+        <table style="background:white;cursor:pointer" ng-table="tableParams" class="table table-bordered table-hover table-hover table-striped" id="table-list" show-filter="true">
+            <tbody id="tbody-list">
+                <tr data-id="{{inter.id}}" ng-repeat-start="inter in $data" ng-right-click="rowRightClick($event, inter)" ng-click="rowClick($event, inter, false)" ng-class="{success : contextMenu.active && contextMenu.data.id === inter.id}">
+                    <td data-title="'Os'" sortable="'id'" filter="{ 'id': 'text' }">
+                        <strong>{{inter.id}}</strong>
+                    </td>
+                    <td data-title="'Télépro'" sortable="'t'" filter="{ 't': 'text' }">
+                        {{::inter.t}}
+                    </td>
+                    <td ng-init="inter._categorie = config.categoriesHash()[inter.c].long_name" data-title="'Cat.'" sortable="'c'" filter="{ '_categorie': 'text' }">
+                        <span style="width:80px" class="label {{::config.categoriesHash()[inter.c].color}}">{{::inter._categorie}}</span>
+                    </td>
+                    <td data-title="'Ajout'" sortable="'da'" filter="{ 'da': 'text' }">
+                        {{::inter.da | relativeDate:true}}
+                    </td>
+                    <td variable-length data-title="'Client'" sortable="'n'" filter="{ 'n': 'text' }">
+                        {{::inter.n}}
+                    </td>
+                    <td variable-length data-title="'Ville'" sortable="'ad'" filter="{ 'ad': 'text' }">
+                        {{::inter.ad}}
+                    </td>
+                    <td variable-length class="variable-length one-liner" data-title="'Artisan'" sortable="'a'" filter="{ 'a': 'text' }">
+                        <strong>{{::inter.a}}</strong>
+                    </td>
+                    <td data-title="'Intervention'" sortable="'di'" filter="{ 'di': 'text' }">
+                        <div ng-show="inter.di[0] != 1">
+                            {{::inter.di | relativeDate}}
+                        </div>
+                    </td>
+                    <td data-title="'Prix'" sortable="'pa'" filter="{ 'pa': 'text' }">
+                        {{::(inter.pa | number:2) || 0}} €
+                    </td>
+                    <td ng-init="inter._status = config.etatsHash()[inter.s];inter._etat = inter._status.long_name" data-title="'Status'" sortable="'s'" filter="{ '_etat': 'text' }">
+                        <span style="width:75px" class="label {{::config.etatsHash()[inter.s].color}}"> 
+                        {{inter._etat}}</span>
+                    </td>
+                    <td data-title="'Paiement'" sortable="'pc'" filter="{ 'ps': 'text' }">
+                        <span style="width:40px" class="label {{::config.paiementCLI(inter).color}}"> 
+                         <i ng-if="inter.pc || inter._status.short_name === 'VRF'" class="{{::config.paiementCLI(inter).icon}}"></i>
+                         </span>
+                        <span style="width:40px" class="label {{::config.paiementSST(inter).color}}"> 
+                         <i ng-if="inter.ps || inter._status.short_name === 'VRF'" class="{{::config.paiementSST(inter).icon}}"></i>
+                       </span>
+
+                    </td>
+                </tr>
+                <tr ng-repeat-end ng-if="expendedRow && expendedRow === inter.id" ng-right-click="rowRightClick($event, inter)">
+                    <td colspan="42" style="background-color:white!important">
+                        <dropdown-row row="inter" expendedRow="expendedRow"></dropdown-row>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

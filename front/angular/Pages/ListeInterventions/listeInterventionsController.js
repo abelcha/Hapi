@@ -1,4 +1,4 @@
-var InterventionsController = function($timeout, tabContainer, FiltersFactory, ContextMenu, LxProgressService, edisonAPI, DataProvider, $routeParams, $location, $q, $rootScope, $filter, config, ngTableParams) {
+var InterventionsController = function(tabContainer, FiltersFactory, ContextMenu, LxProgressService, edisonAPI, DataProvider, $routeParams, $location, $rootScope, $filter, config, ngTableParams) {
     "use strict";
     var _this = this;
     var currentFilter;
@@ -94,6 +94,5 @@ var InterventionsController = function($timeout, tabContainer, FiltersFactory, C
             }
         }
     }
-
 }
 angular.module('edison').controller('InterventionsController', InterventionsController);
