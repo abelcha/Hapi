@@ -11,13 +11,19 @@ angular.module('edison').factory('Compta', function() {
         _this.prixHT = inter.prixFinal || 0
         _this.montantHT = _this.prixHT - _this.fourniture.total
         //_this.prixTTC = _this.round(_this.applyCoeff(_this.montantHT, _this.tva));
-        _this._prixDeplacement = _this.prixDeplacement()
-        _this.montantDeplacement = _this.applyCoeff(_this.prixDeplacement(), _this.pourcentage.deplacement);
-        _this._prixMaindOeuvre = _this.prixMaindOeuvre();
-        _this.montantMaindOeuvre = _this.applyCoeff(_this.prixMaindOeuvre(), _this.pourcentage.maindOeuvre);
-        _this.prixFourniture = _this.fourniture.artisan
+        _this.baseDeplacement = _this.prixDeplacement()
+        _this.remunerationDeplacement = _this.applyCoeff(_this.baseDeplacement, _this.pourcentage.deplacement);
+        _this.baseMaindOeuvre = _this.prixMaindOeuvre();
+        _this.remunerationMaindOeuvre = _this.applyCoeff(_this.baseMaindOeuvre, _this.pourcentage.maindOeuvre);
+        _this.venteFourniture = _this.prixHT - (_this.baseDeplacement + _this.baseMaindOeuvre);
+        _this.coutFourniture = _this.fourniture.total;
+        _this.baseMargeFourniture = _this.venteFourniture - _this.coutFourniture;
+        _this.remunerationMargeFourniture = _this.applyCoeff(_this.baseMargeFourniture, _this.pourcentage.fourniture);
+        _this.remboursementFourniture = _this.fourniture.artisan;
+        _this.montantTotal = _this.remunerationDeplacement + _this.remunerationMargeFourniture + _this.remunerationMaindOeuvre + _this.remboursementFourniture;
+      /*  _this.prixFourniture = _this.fourniture.artisan
         _this.montantFourniture = _this.applyCoeff(_this.fourniture.artisan, _this.pourcentage.fourniture);
-        _this.montantTotal = _this.round(_this.montantDeplacement + _this.montantMaindOeuvre + _this.montantFourniture + _this.montantFourniture )
+        _this.montantTotal = _this.round(_this.montantDeplacement + _this.montantMaindOeuvre + _this.montantFourniture)*/
     }
 
 
@@ -39,8 +45,10 @@ angular.module('edison').factory('Compta', function() {
         prixMaindOeuvre: function() {
             if (this.montantHT <= 65) {
                 return 0;
-            } else {
+            } else if (this.montant <= 65){
                 return this.montantHT - 65;
+            } else {
+                return 65;
             }
         },
         getFourniture: function(inter) {
