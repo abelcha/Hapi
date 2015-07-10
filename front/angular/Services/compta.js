@@ -21,9 +21,6 @@ angular.module('edison').factory('Compta', function() {
         _this.remunerationMargeFourniture = _this.applyCoeff(_this.baseMargeFourniture, _this.pourcentage.fourniture);
         _this.remboursementFourniture = _this.fourniture.artisan;
         _this.montantTotal = _this.remunerationDeplacement + _this.remunerationMargeFourniture + _this.remunerationMaindOeuvre + _this.remboursementFourniture;
-      /*  _this.prixFourniture = _this.fourniture.artisan
-        _this.montantFourniture = _this.applyCoeff(_this.fourniture.artisan, _this.pourcentage.fourniture);
-        _this.montantTotal = _this.round(_this.montantDeplacement + _this.montantMaindOeuvre + _this.montantFourniture)*/
     }
 
 
