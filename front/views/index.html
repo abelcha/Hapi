@@ -25,7 +25,14 @@
                 <!-- / .navbar-header -->
                 <div id="main-navbar-collapse" class="collapse navbar-collapse main-navbar-collapse">
                     <!--  -->
-                    <md-autocomplete style="width: 392px;float: right;margin-top: 3px;margin-right: 75px;" md-selected-item-change="searchBox.change(selectedItem)" md-selected-item="selectedItem" md-search-text="searchText" md-items="item in searchBox.search(searchText)" md-item-text="item.description"> <span md-highlight-text="searchText"> {{item.description}}</span>
+                    <md-autocomplete 
+                    style="width: 392px;float: right;margin-top: 3px;margin-right: 75px;" 
+                    md-search-text-change="null"
+                    md-selected-item-change="searchBox.change(selectedItem)" 
+                    md-selected-item="selectedItem" 
+                    md-search-text="searchText" 
+                    md-items="item in searchBox.search(searchText)" 
+                    md-item-text="item.description"> <span md-highlight-text="searchText"> {{item.description}}</span>
                     </md-autocomplete>
                 </div>
                 <!-- / #main-navbar-collapse -->
@@ -36,7 +43,7 @@
             <drop-down id="service-intervention" title="Service Intervention" icon="circle" open-default="user.service === 'INTERVENTION'">
                 <link fltr="i_all" icon="th-list" title="Toute les Interventions"></link>
                 <drop-down title="Mes Interventions" icon="calendar" open-default="user.service === 'INTERVENTION'">
-                    <link fltr="i_tall" icon="th-list"  color="default" title="{{dateFormat}}" login="{{user.login}}"></link>
+                    <link fltr="i_tall" icon="th-list" color="primary" title="{{dateFormat}}" login="{{user.login}}"></link>
                     <link fltr="i_tenv" icon="th-list" login="{{user.login}}"></link>
                     <link fltr="i_apr" icon="th-list" color="primary" login="{{user.login}}"></link>
                     <link fltr="i_avr" icon="th-list" color="warning" login="{{user.login}}"></link>
@@ -119,13 +126,11 @@
             </li>
         </side-bar>
         <div class="page-header" style="background: #f4f4f4 url(/img/mooning.png);">
-            <div style="height: 45px;background: white;position: fixed;width: 86%;margin-top: 45px;z-index: 999;box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.39);">
-                <md-tabs md-selected="tabs.selectedTab" md-border-bottom style="  margin-left: 6px;">
-                    <a ng-repeat="tab in tabs._tabs" href="{{tab.fullUrl}}" ng-class="{'deleted' : tab.deleted}">
-                        <md-tab style="padding-right:8px">
-                            <md-tab-label ng-click="checkTitle(tab)">{{tab.title || "•••"}} <span ng-if="tab.hash" style="color:black;font-size:8px">{{tab.hash|loginify}}</span> <i ng-click="tabIconClick($event, tab)" class="fa fa-remove"></i></md-tab-label>
-                        </md-tab>
-                    </a>
+            <div class="menu-tabs">
+                <md-tabs md-selected="tabs.selectedTab" style=" margin-left: 6px;">
+                    <md-tab ng-repeat="tab in tabs._tabs" style="padding-right:8px" >
+                        <md-tab-label><a href="{{tab.fullUrl}}">{{tab.title || "•••"}} </a><span ng-if="tab.hash" style="color:black;font-size:8px">{{tab.hash|loginify}}</span> <i ng-click="tabIconClick($event, tab)" class="fa fa-remove"></i></md-tab-label>
+                    </md-tab>
                 </md-tabs>
             </div>
             <div id="content-wrapper">

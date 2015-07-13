@@ -21,12 +21,49 @@
                         <md-tabs md-selected="selectedIndex" md-dynamic-height md-border-bottom>
                             <md-tab label="Informations">
                                 <md-content class="md-padding">
-                                    <h1 class="md-display-2"><strong>{{vm.sst.nomSociete}}</strong> - {{vm.sst.representant.civilite}} {{vm.sst.representant.nom}} {{vm.sst.representant.prenom}}</h1>
+                                    <!--                                     <h1 class="md-display-2">
+                                    <md-display-1>{{vm.sst.nomSociete}}</md-display-1>
+
+                                     - {{vm.sst.representant.civilite}} {{vm.sst.representant.nom}} {{vm.sst.representant.prenom}}</h1>
                                     <md-button style="float:right" class="md-raised md-primary">{{config.artisanOrigine[vm.sst.origin].long_name}}</md-button>
                                     <md-button style="float:right" class="md-raised {{config.etatsArtisan[vm.sst.status].color}} white-text">{{config.etatsArtisan[vm.sst.status].long_name}}</md-button>
-                                    <br>
+                                    <br> -->
                                     <div class="col-sm-6" style="height:580px">
-                                        <a ng-href="mailto:{{vm.sst.email}}">{{vm.sst.email}}</a> -
+                                        <span class="fs-display-1 display-block">{{vm.sst.nomSociete}}</span><span class="fs-headline display-block"><i>{{vm.sst.representant.civilite}} {{vm.sst.representant.nom}} {{vm.sst.representant.prenom}}</i></span>
+                                        <!-- <span class="fs-subhead display-block">{{config.formeJuridique[vm.sst.formeJuridique].long_name}}</span> -->
+                                        <br>
+                                        <a ng-href="callto:{{vm.sst.telephone.tel1}}"><span class="fs-headline">{{vm.sst.telephone.tel1}}</span></a>
+                                        <a ng-if="vm.sst.telephone.tel2" ng-href="callto:{{vm.sst.telephone.tel1}}"><span class="fs-headline "> - {{vm.sst.telephone.tel2}}</span></a>
+                                        <br>
+                                        <br>
+                                        <a style="color:black" ng-href="mailto:{{vm.sst.email}}"><span class="fs-title ">{{vm.sst.email}}</span></a>
+                                        <br>
+                                        <br>
+                                        <div class="row">
+                                            <div class="col-sm-3">
+                                                <span class="display-block fs-body-1">Categories</span>
+                                                <span ng-repeat="c in vm.sst.categories" style="width:100px;margin-top:4px" class="label {{::config.categories[c].color}} display-block fs-body-1">{{::config.categories[c].long_name}}</span>
+                                            </div>
+                                            <div class="col-sm-3">
+                                                <span class="display-block fs-body-1">Documents</span>
+                                                <a ng-repeat="(k, f) in vm.sst.document" ng-href="/api/artisan/59/openDocument?file={{k}}" target="_blank">
+                                                    <span style="width:90px;margin-top:4px" class="label display-block fs-body-1 grey darken-3">{{k}}</span></a>
+                                            </div>
+                                        </div>
+                                        <!-- <br><br>
+                                        <span class="fs-display-1 display-block">Tarifs</span>
+
+                                        <br> -->
+                                        <!-- <span class="fs-display-3 display-block">Regular 56sp</span>
+                                        <span class="fs-display-2 display-block">Regular 45sp</span>
+                                        <span class="fs-display-1 display-block">Regular 34sp</span>
+                                        <span class="fs-headline display-block">Regular 24sp</span>
+                                        <span class="fs-title display-block">Medium 20sp</span>
+                                        <span class="fs-subhead display-block">Regular 16sp (Device), Regular 15sp (Desktop)</span>
+                                        <span class="fs-body-2 display-block">Medium 14sp (Device), Medium 13sp (Desktop)</span>
+                                        <span class="fs-body-1 display-block">Regular 14sp (Device), Regular 13sp (Desktop)</span>
+                                        <span class="fs-caption display-block">Regular 12sp</span> -->
+                                        <!--  <a ng-href="mailto:{{vm.sst.email}}">{{vm.sst.email}}</a> -
                                         <a ng-href="callto:{{vm.sst.telephone.tel1}}">{{vm.sst.telephone.tel1}}</a>
                                         <a ng-href="callto:{{vm.sst.telephone.tel2}}">{{vm.sst.telephone.tel2}}</a>
                                         <br>
@@ -40,20 +77,22 @@
                                         <br>
                                         <p class="md-display-2">Déplacement : <strong>{{vm.sst.pourcentage.deplacement}} %</strong></p>
                                         <p class="md-display-2">Main d'oeuvre : <strong>{{vm.sst.pourcentage.maindOeuvre}} %</strong></p>
-                                        <p class="md-display-2">Fourniture : <strong>{{vm.sst.pourcentage.fourniture}} %</strong></p>
+                                        <p class="md-display-2">Fourniture : <strong>{{vm.sst.pourcentage.fourniture}} %</strong></p> -->
                                     </div>
                                     <div class="col-sm-6">
+                                        <span class="fs-title display-block">Ajouté le {{vm.sst.date.ajout|date:"dd/MM/yy"}} par {{vm.sst.login.ajout}}</span>
+
                                         <br>
-                                        <h4 class="md-body-1">{{vm.sst.address.n}} {{vm.sst.address.r}}, <br>{{vm.sst.address.cp}} {{vm.sst.address.v}} </h4>
-                                        <br>
+                                        <span class="fs-subhead display-block">{{vm.sst.address.n}} {{vm.sst.address.r}}, {{vm.sst.address.cp}} {{vm.sst.address.v}}</span>
                                         <img ng-src="{{vm.getStaticMap()}}" class="img-thumbnail" />
+                                        <span class="fs-subhead display-block"><i>Déplacement : </i>{{vm.sst.pourcentage.deplacement}} % <i>Main D'oeuvre: </i>{{vm.sst.pourcentage.maindOeuvre}} % <i>Fourniture:</i> {{vm.sst.pourcentage.fourniture}} %</span>
                                     </div>
                                 </md-content>
                             </md-tab>
                             <md-tab label="Interventions">
                                 <md-content class="md-padding">
                                     <h1 class="md-display-2">Liste des Interventions</h1>
-                                    <liste-intervention id="vm.sst.id"></liste-intervention>
+                                    <liste-intervention ng-if="selectedIndex === 1" id="vm.sst.id"></liste-intervention>
                                 </md-content>
                             </md-tab>
                             <md-tab label="Historique">

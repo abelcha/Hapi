@@ -1,4 +1,4 @@
-angular.module('edison', ['browserify', 'ui.slimscroll', 'ngMaterial', 'lumx', 'ngAnimate', 'xeditable', 'ngDialog', 'btford.socket-io', 'ngFileUpload', 'pickadate', 'ngRoute', 'ngResource', 'ngTable', 'ngMap'])
+angular.module('edison', ['browserify', 'ui.slimscroll', 'ngMaterial', 'lumx', 'ngAnimate', 'xeditable', 'btford.socket-io', 'ngFileUpload', 'pickadate', 'ngRoute', 'ngResource', 'ngTable', 'ngMap'])
     .config(function($mdThemingProvider) {
         "use strict";
         $mdThemingProvider.theme('default')
@@ -59,6 +59,10 @@ angular.module('edison').controller('MainController', function($q, DataProvider,
                 $rootScope.interventionsStats = result;
             });
     };
+
+    $rootScope.openTab = function(tab) {
+        console.log('-->', tab);
+    }
 
     $rootScope.closeContextMenu = function() {
         $rootScope.$broadcast('closeContextMenu');
@@ -417,31 +421,23 @@ angular.module('edison').directive('artisanRecap', function(edisonAPI, config, $
         },
         link: function(scope, element, attrs) {
             var reload = function() {
-                $("#chartContainer").html("")
+                $("#chartContainer").empty()
                 edisonAPI.artisan.extendedStats(scope.id).success(function(resp) {
                     var svg = dimple.newSvg("#chartContainer", 600, 200);
                     var myChart = new dimple.chart(svg, resp);
-                    myChart.defaultColors = [
-                        new dimple.color("#4CAF50"), //VRF
-                        new dimple.color("#F44336"), //ANN
-                        new dimple.color("#FDD835"), //ATT
-                        new dimple.color("#F44336"), //ENV
-                        new dimple.color("#0091EA"), //PAY
-                        new dimple.color("black"),
-                    ];
                     myChart.setBounds(60, 30, 380, 120)
                     var x = myChart.addCategoryAxis("x", "date");
                     x.addOrderRule("dt");
                     myChart.addMeasureAxis("y", "total");
                     myChart.addSeries("status", dimple.plot.bar);
                     myChart.addLegend(60, 10, 410, 20, "right");
-                    console.log(myChart)
                     myChart.assignColor("ANN", "#F44336");
                     myChart.assignColor("ENC", "#FDD835");
                     myChart.assignColor("VRF", "#4CAF50");
                     myChart.draw();
                 })
             }
+            reload()
             scope.$watch('id', function(current, prev) {
                 if (current && prev !== current)
                     reload();
@@ -502,7 +498,8 @@ angular.module('edison').directive('dropdownRow', ['edisonAPI', 'config', '$q', 
             row: '=',
         },
         link: function(scope, element, attrs) {
-            scope.model = scope.model || "intervention"
+            scope._model = scope.model || "intervention"
+            console.log('-->', scope._model)
             scope.expendedStyle = {
                 height: 0,
                 overflow: 'hidden'
@@ -515,7 +512,7 @@ angular.module('edison').directive('dropdownRow', ['edisonAPI', 'config', '$q', 
                 }, 200);
             }, 50)
 
-            if (scope.model === "intervention") {
+            if (scope._model === "intervention") {
                 var pAll = [
                     edisonAPI.intervention.get(scope.row.id),
                 ];
@@ -536,7 +533,7 @@ angular.module('edison').directive('dropdownRow', ['edisonAPI', 'config', '$q', 
                         scope.data.ca = config.getCauseAnnulation(scope.data.causeAnnulation)
                 }
 
-            } else if (scope.model === "devis") {
+            } else if (scope._model === "devis") {
                 var pAll = [
                     edisonAPI.devis.get(scope.row.id),
                 ]
@@ -548,7 +545,7 @@ angular.module('edison').directive('dropdownRow', ['edisonAPI', 'config', '$q', 
                     if (scope.data.status === 'ANN')
                         scope.data.ca = config.getCauseAnnulation(scope.data.causeAnnulation)
                 }
-            } else if (scope.model === 'artisan') {
+            } else if (scope._model === 'artisan') {
                 pAll = [
                     edisonAPI.artisan.get(scope.row.id),
                     edisonAPI.artisan.getStats(scope.row.id)
@@ -637,7 +634,7 @@ angular.module('edison').directive('select', function($interpolate) {
              '      <a href="{{fullUrl}}" >' +
              '            <i ng-if="icon" class = "menu-icon fa fa-{{icon}}"> </i>' +
              '            <span class="mm-text">{{title || exFltr.long_name}}</span>' +
-             '            <span ng-if="total !== void(0)"class="label label-{{color}}">{{total}}</span>' +
+             '            <span ng-if="total !== void(0)"class="label label-{{_color}}">{{total}}</span>' +
              '        </a>' +
              '      </li>',
          scope: {
@@ -673,7 +670,7 @@ angular.module('edison').directive('select', function($interpolate) {
              $rootScope.$watch('interventionsStats', function() {
                  scope.total = findTotal();
              })
-             scope.color = (scope.color || 'success')
+             scope._color = (scope.color || 'success')
              scope._model = scope.model || 'intervention';
              var filtersFactory = new FiltersFactory(scope._model);
              scope.exFltr = filtersFactory.getFilterByName(scope.fltr);
@@ -751,21 +748,21 @@ angular.module('edison').directive('select', function($interpolate) {
          },
          link: function(scope, element, attrs) {
              scope.openDefault = scope.$eval(scope.openDefault)
-             scope.isOpen = scope.openDefault
+             scope.isopen = scope.openDefault
              scope.toggleSidebar = function($event, $elem) {
                  var $ul = $(element).find('>ul')
                  if ($('#main-menu').width() > 200) {
-                     if (scope.isOpen) {
+                     if (scope.isopen) {
                          $ul.velocity({
                              height: 0
                          }, 200, function() {
                              scope.$apply(function() {
-                                 scope.isOpen = false;
+                                 scope.isopen = false;
                              })
                          });
                      } else {
                          $ul.css('height', '100%')
-                         scope.isOpen = true
+                         scope.isopen = true
                      }
                  } else {
 
@@ -1528,8 +1525,8 @@ angular.module('edison').factory('ContextMenu', function($rootScope, $location, 
     }
 
     ContextMenu.prototype.setPosition = function(x, y) {
-        this.style.left = (x - $('#main-menu-inner').width());
-        this.style.top = y;
+        this.style.left = (x - $('#main-menu-inner').width()) - 4;
+        this.style.top = y - 48;
     }
 
     ContextMenu.prototype.active = false;
@@ -2853,7 +2850,7 @@ angular.module('edison').directive('listeIntervention', function(tabContainer, F
                 scope.config = config;
 
                 scope.customFilter = function(inter) {
-                    return inter.ai === 7 //scope.artisan;
+                    return inter.ai === scope.id;
                 }
 
                 dataProvider.applyFilter(currentFilter, undefined, scope.customFilter);
@@ -2905,7 +2902,6 @@ angular.module('edison').directive('listeIntervention', function(tabContainer, F
                     })
             }
             scope.rowClick = function($event, inter) {
-                console.log("rowclick", $event, inter)
                 if (scope.contextMenu.active)
                     return scope.contextMenu.close();
                 if ($event.metaKey || $event.ctrlKey) {
@@ -2938,6 +2934,101 @@ angular.module('edison').directive('listeIntervention', function(tabContainer, F
     }
 
 });
+
+var ContactArtisanController = function($timeout, tabContainer, LxProgressService, FiltersFactory, ContextMenu, edisonAPI, DataProvider, $routeParams, $location, $q, $rootScope, $filter, config, ngTableParams) {
+    "use strict";
+    var _this = this;
+    _this.loadPanel = function(id) {
+        edisonAPI.artisan.get(id)
+            .then(function(resp) {
+                _this.sst = resp.data;
+            })
+    }
+
+    var dataProvider = new DataProvider('artisan');
+    var filtersFactory = new FiltersFactory('artisan')
+    var currentFilter;
+    if ($routeParams.fltr) {
+        currentFilter = filtersFactory.getFilterByUrl($routeParams.fltr)
+    }
+    var currentHash = $location.hash();
+    var title = currentFilter ? currentFilter.long_name : "Artisan";
+
+    LxProgressService.circular.show('#5fa2db', '#globalProgress');
+    dataProvider.init(function(err, resp) {
+
+        _this.tab = tabContainer.getCurrentTab();
+        _this.tab.setTitle(title, currentHash);
+        _this.tab.hash = currentHash;
+        _this.config = config;
+        _this.moment = moment;
+        if (!dataProvider.isInit()) {
+            dataProvider.setData(resp);
+        }
+
+        dataProvider.applyFilter(currentFilter, _this.tab.hash);
+        _this.tableFilter = "";
+        _this.tableLimit = 20;
+        $rootScope.expendedRow = $routeParams.id || 45
+        _this.recap = $routeParams.id
+        _this.loadPanel($rootScope.expendedRow)
+        _this.tableData = dataProvider.filteredData;
+        LxProgressService.circular.hide();
+    });
+    _this.getStaticMap = function(address) {
+        if (_this.sst && this.sst.address)
+          return "/api/mapGetStatic?width=500&height=400&precision=0&zoom=6&origin=" + _this.sst.address.lt + ", " +_this.sst.address.lg;
+    }
+
+    _this.reloadData = function() {
+        _this.tableData = $filter('contactFilter')(dataProvider.filteredData, _this.tableFilter);
+    }
+
+    _this.loadMore = function() {
+        _this.tableLimit += 10;
+    }
+
+    /*
+        $rootScope.$watch('tableilter', _this.reloadData);
+    */
+    $rootScope.$on('artisanListChange', function() {
+        if (_this.tab.fullUrl === tabContainer.getCurrentTab().fullUrl) {
+            dataProvider.applyFilter(currentFilter, _this.tab.hash);
+        }
+    })
+
+    _this.contextMenu = new ContextMenu('artisan')
+
+    _this.rowRightClick = function($event, inter) {
+        _this.contextMenu.setPosition($event.pageX, $event.pageY)
+        edisonAPI.artisan.get(inter.id)
+            .then(function(resp) {
+                _this.contextMenu.setData(resp.data);
+                _this.contextMenu.open();
+            })
+    }
+
+    _this.rowClick = function($event, inter) {
+        if (_this.contextMenu.active)
+            return _this.contextMenu.close();
+        if ($event.metaKey || $event.ctrlKey) {
+            tabContainer.addTab('/artisan/' + inter.id, {
+                title: ('#' + inter.id),
+                setFocus: false,
+                allowDuplicates: false
+            });
+        } else {
+            if ($rootScope.expendedRow === inter.id) {
+                return 0;
+            } else {
+                $rootScope.expendedRow = inter.id
+                return _this.loadPanel(inter.id)
+            }
+        }
+    }
+
+}
+angular.module('edison').controller('ContactArtisanController', ContactArtisanController);
 
  angular.module('edison').directive('artisanCategorie', ['config', function(config) {
      "use strict";
@@ -3042,101 +3133,6 @@ var ArtisanCtrl = function($rootScope, $location, $routeParams, ContextMenu, LxN
     }
 }
 angular.module('edison').controller('ArtisanController', ArtisanCtrl);
-
-var ContactArtisanController = function($timeout, tabContainer, LxProgressService, FiltersFactory, ContextMenu, edisonAPI, DataProvider, $routeParams, $location, $q, $rootScope, $filter, config, ngTableParams) {
-    "use strict";
-    var _this = this;
-    _this.loadPanel = function(id) {
-        edisonAPI.artisan.get(id)
-            .then(function(resp) {
-                _this.sst = resp.data;
-            })
-    }
-
-    var dataProvider = new DataProvider('artisan');
-    var filtersFactory = new FiltersFactory('artisan')
-    var currentFilter;
-    if ($routeParams.fltr) {
-        currentFilter = filtersFactory.getFilterByUrl($routeParams.fltr)
-    }
-    var currentHash = $location.hash();
-    var title = currentFilter ? currentFilter.long_name : "Artisan";
-
-    LxProgressService.circular.show('#5fa2db', '#globalProgress');
-    dataProvider.init(function(err, resp) {
-
-        _this.tab = tabContainer.getCurrentTab();
-        _this.tab.setTitle(title, currentHash);
-        _this.tab.hash = currentHash;
-        _this.config = config;
-        _this.moment = moment;
-        if (!dataProvider.isInit()) {
-            dataProvider.setData(resp);
-        }
-
-        dataProvider.applyFilter(currentFilter, _this.tab.hash);
-        _this.tableFilter = "";
-        _this.tableLimit = 20;
-        $rootScope.expendedRow = $routeParams.id || 45
-        _this.recap = $routeParams.id
-        _this.loadPanel($rootScope.expendedRow)
-        _this.tableData = dataProvider.filteredData;
-        LxProgressService.circular.hide();
-    });
-    _this.getStaticMap = function(address) {
-        if (_this.sst && this.sst.address)
-          return "/api/mapGetStatic?width=500&height=400&precision=0&zoom=6&origin=" + _this.sst.address.lt + ", " +_this.sst.address.lg;
-    }
-
-    _this.reloadData = function() {
-        _this.tableData = $filter('contactFilter')(dataProvider.filteredData, _this.tableFilter);
-    }
-
-    _this.loadMore = function() {
-        _this.tableLimit += 10;
-    }
-
-    /*
-        $rootScope.$watch('tableilter', _this.reloadData);
-    */
-    $rootScope.$on('artisanListChange', function() {
-        if (_this.tab.fullUrl === tabContainer.getCurrentTab().fullUrl) {
-            dataProvider.applyFilter(currentFilter, _this.tab.hash);
-        }
-    })
-
-    _this.contextMenu = new ContextMenu('artisan')
-
-    _this.rowRightClick = function($event, inter) {
-        _this.contextMenu.setPosition($event.pageX, $event.pageY)
-        edisonAPI.artisan.get(inter.id)
-            .then(function(resp) {
-                _this.contextMenu.setData(resp.data);
-                _this.contextMenu.open();
-            })
-    }
-
-    _this.rowClick = function($event, inter) {
-        if (_this.contextMenu.active)
-            return _this.contextMenu.close();
-        if ($event.metaKey || $event.ctrlKey) {
-            tabContainer.addTab('/artisan/' + inter.id, {
-                title: ('#' + inter.id),
-                setFocus: false,
-                allowDuplicates: false
-            });
-        } else {
-            if ($rootScope.expendedRow === inter.id) {
-                return 0;
-            } else {
-                $rootScope.expendedRow = inter.id
-                return _this.loadPanel(inter.id)
-            }
-        }
-    }
-
-}
-angular.module('edison').controller('ContactArtisanController', ContactArtisanController);
 
 angular.module('edison').controller('DashboardController', function(tabContainer, $scope) {
     "use strict";

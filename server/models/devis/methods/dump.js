@@ -45,7 +45,8 @@
             };
 
             client.telephone = {};
-            if (d.tel1)
+            console.log(d.id, d.tel1)
+            if (d.tel1 && d.tel1.length)
                 client.telephone.tel1 = d.tel1.replace(/[^0-9]/g, '');
             else 
                 client.telephone.tel1 = '0101010101'

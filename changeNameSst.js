@@ -7,6 +7,6 @@ var _ = require('lodash');
 db.model('artisan').find().exec(function(err, docs) {
     console.log('id;prenom;nom;nom societe;\n')
     _.each(docs, function(doc) {
-        console.log([doc.id, doc.nomSociete, doc.representant.prenom, doc.representant.nom].join(';') + '');
+        console.log([doc.id, doc.nomSociete, doc.representant.prenom, doc.representant.nom, doc.status === 'ARC' ? 'archivé' : ''].join(';') + '');
     })
 })

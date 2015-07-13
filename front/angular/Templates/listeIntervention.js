@@ -21,7 +21,7 @@ angular.module('edison').directive('listeIntervention', function(tabContainer, F
                 scope.config = config;
 
                 scope.customFilter = function(inter) {
-                    return inter.ai === 7 //scope.artisan;
+                    return inter.ai === scope.id;
                 }
 
                 dataProvider.applyFilter(currentFilter, undefined, scope.customFilter);
@@ -73,7 +73,6 @@ angular.module('edison').directive('listeIntervention', function(tabContainer, F
                     })
             }
             scope.rowClick = function($event, inter) {
-                console.log("rowclick", $event, inter)
                 if (scope.contextMenu.active)
                     return scope.contextMenu.close();
                 if ($event.metaKey || $event.ctrlKey) {

@@ -31,41 +31,36 @@ gulp.task('scripts', function() {
 });
 
 gulp.task('jsLibs', function() {
-    console.log('hey')
     jslibs = [
-        '/jquery/dist/jquery.min.js',
-        '/slimScroll/jquery.slimScroll.min.js',
-        '/angular/angular.min.js',
-        '/angular-route/angular-route.min.js',
-        '/angular-resource/angular-resource.min.js',
-        '/angular-animate/angular-animate.min.js',
-        '/angular-aria/angular-aria.min.js',
-        '/angular-slimscroll/angular-slimscroll.js',
-        '/ngDialog/js/ngDialog.min.js',
-        '/angular-material/angular-material.js',
-        '/socket.io/socket.io.js',
-        '/angular-socket-io/socket.min.js',
-        '/ngmap/build/scripts/ng-map.js',
-        '/ng-file-upload/ng-file-upload.min.js',
-        '/pickadate/lib/compressed/picker.js',
-        '/lodash/lodash.min.js',
-        '/angular-xeditable/xeditable.min.js',
-        '/pickadate/lib/compressed/picker.date.js',
-        '/pickadate/lib/compressed/picker.time.js',
-        '/pickadate/lib/compressed/translations/fr_FR.js',
-        '/ng-pickadate/ng-pickadate.js',
-        '/velocity/velocity.js',
-        '/lumx/dist/lumx.js',
-        '/ng-table/dist/ng-table.js',
-        '/moment/min/moment.min.js',
-        '/moment/locale/fr.js',
-        '/angular-credit-cards/release/angular-credit-cards.js',
-        '/d3/d3.min.js',
-        '/dimple/dist/dimple.latest.min.js'
+
+        'bower_components/jquery/dist/jquery.min.js',
+        'bower_components/slimScroll/jquery.slimScroll.min.js',
+        'bower_components/angular/angular.min.js',
+        'bower_components/angular-route/angular-route.min.js',
+        'bower_components/angular-resource/angular-resource.min.js',
+        'bower_components/angular-animate/angular-animate.min.js',
+        'bower_components/angular-aria/angular-aria.min.js',
+        'bower_components/angular-slimscroll/angular-slimscroll.js',
+        'bower_components/angular-material/angular-material.js',
+        'bower_components/socket.io/socket.io.js',
+        'bower_components/angular-socket-io/socket.min.js',
+        'bower_components/ngmap/build/scripts/ng-map.js',
+        'bower_components/ng-file-upload/ng-file-upload.min.js',
+        'bower_components/pickadate/lib/compressed/picker.js',
+        'bower_components/lodash/lodash.min.js',
+        'bower_components/angular-xeditable/dist/js/xeditable.min.js',
+        'bower_components/pickadate/lib/compressed/picker.date.js',
+        'bower_components/pickadate/lib/compressed/picker.time.js',
+        'bower_components/pickadate/lib/compressed/translations/fr_FR.js',
+        'bower_components/ng-pickadate/ng-pickadate.js',
+        'bower_components/velocity/velocity.js',
+        'bower_components/lumx/dist/lumx.js',
+        'bower_components/ng-table/dist/ng-table.js',
+        'bower_components/moment/min/moment.min.js',
+        'bower_components/moment/locale/fr.js',
+        'bower_components/d3/d3.min.js',
+        'bower_components/dimple/dist/dimple.latest.min.js',
     ]
-    jslibs = jslibs.map(function(e) {
-        return 'front/bower_components' + e
-    })
     return gulp.src(jslibs)
         //.pipe(minify({mangle:false}))
         // .pipe(jshint('.jshintrc'))
@@ -113,8 +108,7 @@ b.on('log', gutil.log); // output build logs to terminal
 
 gulp.task('styles', function() {
     var libs = [
-        'front/bower_components/font-awesome/css/font-awesome.min.css',
-        'front/bower_components/bootstrap/dist/css/bootstrap.min.css',
+        'front/assets/css/material-color.css',
         'front/assets/css/pixel-admin.min.css',
         'front/assets/css/themes.min.css',
         'front/assets/css/loaders.css',
@@ -122,18 +116,16 @@ gulp.task('styles', function() {
         'front/assets/css/pages.min.css',
 
 
-        'front/bower_components/ng-table/dist/ng-table.css',
-        'front/bower_components/angular-xeditable/xeditable.css',
-        'front/bower_components/angular-material/angular-material.css',
-        'front/bower_components/angular-loading-bar/build/loading-bar.min.css',
-        'front/assets/css/material-color.css',
-        'front/bower_components/pickadate/lib/compressed/themes/classic.css',
-        'front/bower_components/pickadate/lib/compressed/themes/classic.date.css',
-        'front/bower_components/pickadate/lib/compressed/themes/classic.time.css',
-        'front/bower_components/ngDialog/css/ngDialog.min.css',
-        'front/bower_components/ngDialog/css/ngDialog-theme-default.min.css',
-        'front/bower_components/lumx/dist/lumx.css',
-        'front/bower_components/mdi/css/materialdesignicons.css'
+        'bower_components/font-awesome/css/font-awesome.min.css',
+        'bower_components/bootstrap/dist/css/bootstrap.css',
+        'bower_components/ng-table/dist/ng-table.css',
+        'bower_components/angular-xeditable/dist/css/xeditable.css',
+        'bower_components/angular-material/angular-material.css',
+        'bower_components/pickadate/lib/compressed/themes/classic.css',
+        'bower_components/pickadate/lib/compressed/themes/classic.date.css',
+        'bower_components/pickadate/lib/compressed/themes/classic.time.css',
+        'bower_components/lumx/dist/lumx.css',
+        'bower_components/mdi/css/materialdesignicons.css',
     ]
     return gulp.src(libs)
         //.pipe(minify({mangle:false}))

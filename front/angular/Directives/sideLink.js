@@ -7,7 +7,7 @@
              '      <a href="{{fullUrl}}" >' +
              '            <i ng-if="icon" class = "menu-icon fa fa-{{icon}}"> </i>' +
              '            <span class="mm-text">{{title || exFltr.long_name}}</span>' +
-             '            <span ng-if="total !== void(0)"class="label label-{{color}}">{{total}}</span>' +
+             '            <span ng-if="total !== void(0)"class="label label-{{_color}}">{{total}}</span>' +
              '        </a>' +
              '      </li>',
          scope: {
@@ -43,7 +43,7 @@
              $rootScope.$watch('interventionsStats', function() {
                  scope.total = findTotal();
              })
-             scope.color = (scope.color || 'success')
+             scope._color = (scope.color || 'success')
              scope._model = scope.model || 'intervention';
              var filtersFactory = new FiltersFactory(scope._model);
              scope.exFltr = filtersFactory.getFilterByName(scope.fltr);
@@ -121,21 +121,21 @@
          },
          link: function(scope, element, attrs) {
              scope.openDefault = scope.$eval(scope.openDefault)
-             scope.isOpen = scope.openDefault
+             scope.isopen = scope.openDefault
              scope.toggleSidebar = function($event, $elem) {
                  var $ul = $(element).find('>ul')
                  if ($('#main-menu').width() > 200) {
-                     if (scope.isOpen) {
+                     if (scope.isopen) {
                          $ul.velocity({
                              height: 0
                          }, 200, function() {
                              scope.$apply(function() {
-                                 scope.isOpen = false;
+                                 scope.isopen = false;
                              })
                          });
                      } else {
                          $ul.css('height', '100%')
-                         scope.isOpen = true
+                         scope.isopen = true
                      }
                  } else {
 

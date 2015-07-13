@@ -33,15 +33,15 @@
                         {{::(inter.pa | number:2) || 0}} €
                     </td>
                     <td ng-init="inter._status = vm.config.etatsHash()[inter.s];inter._etat = inter._status.long_name" data-title="'Status'" sortable="'s'" filter="{ '_etat': 'text' }">
-                        <span style="width:75px" class="label {{::vm.config.etatsHash()[inter.s].color}}"> 
+                        <span style="width:75px" class="label {{::vm.config.etatsHash()[inter.s].color}} display-block"> 
                         {{inter._etat}}</span>
                     </td>
-                    <td data-title="'Paiement'" sortable="'pc'" filter="{ 'ps': 'text' }">
-                        <span style="width:40px" class="label {{::config.paiementCLI(inter).color}}"> 
-                         <i ng-if="inter.pc || inter._status.short_name === 'VRF'" class="{{::config.paiementCLI(inter).icon}}"></i>
+                    <td data-title="'Pmnt'" sortable="'pc'" filter="{ 'ps': 'text' }">
+                        <span ng-if="inter.pc || inter.ps || inter._status.short_name === 'VRF'"  style="width:40px" class="label {{::config.paiementCLI(inter).color}}"> 
+                         <i class="{{::config.paiementCLI(inter).icon}}"></i>
                          </span>
-                        <span style="width:40px" class="label {{::config.paiementSST(inter).color}}"> 
-                         <i ng-if="inter.ps || inter._status.short_name === 'VRF'" class="{{::config.paiementSST(inter).icon}}"></i>
+                        <span ng-if="inter.pc || inter.ps || inter._status.short_name === 'VRF'"  style="width:40px;margin-left:3px" class="label {{::config.paiementSST(inter).color}}"> 
+                         <i class="{{::config.paiementSST(inter).icon}}"></i>
                        </span>
                     </td>
                 </tr>

@@ -22,7 +22,7 @@
                                 <span class="fs-headline display-block">
          <button ng-click="vm.data.categorie = undefined" style="float:left" class="btn--no-conflicts btn--m {{config.categories[vm.data.categorie].color}} btn--flat" lx-ripple> {{config.categories[vm.data.categorie].long_name}}</button></span>
                                 <div class="fs-body-1 mt+" style="padding-top:10px">
-                                    <edison-map  first-address="firstAddress" is-new="vm.isNew" data="vm.data" client="vm.data.client" xmarkers="vm.nearestArtisans" address-change="vm.searchArtisans()" height="small"></edison-map>
+                                    <edison-map first-address="firstAddress" is-new="vm.isNew" data="vm.data" client="vm.data.client" xmarkers="vm.nearestArtisans" address-change="vm.searchArtisans()" height="small"></edison-map>
                                 </div>
                                 <div class="p+" ng-if="vm.data.artisan.id && vm.data.artisan.stats.total">
                                     <span class="fs-subhead tc-black-2 display-block">
@@ -185,8 +185,7 @@
                         <produits ng-if="vm.data.id || vm.data.devisOrigine" data="vm.data"></produits>
                         <credit-card class="margin" model="vm.data" ng-if="vm.data.modeReglement === 'CB'"></credit-card>
                         <info-fourniture ng-if="vm.data.id" data="vm.data"></info-fourniture>
-                        <info-compta ng-id="vm.data.id" data="vm.data"></info-compta>
-
+                        <info-compta ng-if="vm.data.status === 'VRF'" data="vm.data"></info-compta>
                         <div class="row" style="margin:0">
                             <div style="width:48%;float:left;" class="card" id="fileUpload">
                                 <div class="p+">
@@ -231,7 +230,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div ng-if="vm.data.id"class="card margin">
+                        <div ng-if="vm.data.id" class="card margin">
                             <div class="p+">
                                 <strong ng-click="displayLIT = !displayLIT" class="fs-headline display-block">Litiges</strong>
                                 <span class="fs-subhead tc-black-2 display-block">Liste des litiges</span>
@@ -333,16 +332,36 @@
                         <br>
                         <br>
                         <br>
-                        <div class="fab" style="float: right;position: fixed;right: 70px;z-index: 999;top: 87%;">
+                        <div class="fab" style="position: fixed;right: 70px;z-index: 999;top: 87%;">
+                            <button ng-click="saveInter({})" class="fab__primary btn--no-conflicts btn--xl btn--blue btn--fab" lx-ripple lx-tooltip="Enregistrer" tooltip-position="top">
+                                <i class="fa fa-cloud-upload"></i>
+                            </button>
+                            <div class="fab__actions fab__actions--left">
+                                <button ng-show="vm.data.status === 'ENC'  && vm.data.reglementSurPlace" ng-click="saveInter({verification:true})" class="btn--no-conflicts btn--l btn--black btn--fab" lx-ripple lx-tooltip="Verifier" tooltip-position="top"><i class="mdi mdi-check"></i></button>
+                                 <button ng-show="vm.data.status === 'ENC' && !vm.data.reglementSurPlace" ng-click="calculPrixFinal();saveInter({verification:true, envoiFacture:true})" class="btn--no-conflicts btn--l btn--black btn--fab" lx-ripple lx-tooltip="Envoyer facture + vérifier" tooltip-position="top"><i class="mdi mdi-check-all"></i></button>
+                                <button ng-if="vm.data.status" ng-click="saveInter({annulation:true})" class="btn--no-conflicts btn--l btn--black btn--fab" lx-ripple lx-tooltip="Annuler" tooltip-position="top"><i class="fa fa-ban"></i></button>
+                                <button ng-if="!vm.data.status || vm.data.status === 'ANN' || vm.data.status === 'APR' || vm.data.status === 'ENC'" ng-click="saveInter({envoi:true})" class="btn--no-conflicts btn--l btn--black btn--fab" lx-ripple lx-tooltip="Envoyer" tooltip-position="top"><i class="fa fa-send"></i></button>
+                              <!--   <button class="btn--no-conflicts btn--l btn--black btn--fab" lx-ripple lx-tooltip="Lorem Ipsum" tooltip-position="top"><i class="mdi mdi-delete"></i></button>
+                                <button class="btn--no-conflicts btn--l btn--black btn--fab" lx-ripple lx-tooltip="Lorem Ipsum" tooltip-position="top"><i class="mdi mdi-package"></i></button>
+                                <button class="btn--no-conflicts btn--l btn--black btn--fab" lx-ripple lx-tooltip="Lorem Ipsum" tooltip-position="top"><i class="mdi mdi-pencil"></i></button> -->
+                            </div>
+                        </div>
+                        <!--                         <div class="fab" style="float: right;position: fixed;right: 70px;z-index: 999;top: 87%;">
                             <button ng-click="saveInter({})" class="fab__primary btn--no-conflicts btn--xl btn--blue btn--fab" lx-ripple lx-tooltip="Enregistrer" tooltip-position="top">
                                 <i class="mdi" ng-class="vm.data.id ? 'mdi-camera-iris' : 'mdi-plus'"></i>
                                 <i class="mdi mdi-checkbox-marked-circle-outline"></i>
                             </button>
                             <div class="fab__actions fab__actions--left">
                                 <button ng-show="vm.data.status === 'ENC'  && vm.data.reglementSurPlace" ng-click="saveInter({verification:true})" class="btn--no-conflicts btn--l btn--black btn--fab" lx-ripple lx-tooltip="Verifier" tooltip-position="top"><i class="mdi mdi-check"></i></button>
-                                 <button ng-show="vm.data.status === 'ENC' && !vm.data.reglementSurPlace" ng-click="calculPrixFinal();saveInter({verification:true, envoiFacture:true})" class="btn--no-conflicts btn--l btn--black btn--fab" lx-ripple lx-tooltip="Envoyer facture + vérifier" tooltip-position="top"><i class="mdi mdi-check-all"></i></button>
+                                <button ng-show="vm.data.status === 'ENC' && !vm.data.reglementSurPlace" ng-click="calculPrixFinal();saveInter({verification:true, envoiFacture:true})" class="btn--no-conflicts btn--l btn--black btn--fab" lx-ripple lx-tooltip="Envoyer facture + vérifier" tooltip-position="top"><i class="mdi mdi-check-all"></i></button>
                                 <button ng-if="vm.data.status" ng-click="saveInter({annulation:true})" class="btn--no-conflicts btn--l btn--black btn--fab" lx-ripple lx-tooltip="Annuler" tooltip-position="top"><i class="mdi mdi-close"></i></button>
                                 <button ng-if="!vm.data.status || vm.data.status === 'ANN' || vm.data.status === 'APR' || vm.data.status === 'ENC'" ng-click="saveInter({envoi:true})" class="btn--no-conflicts btn--l btn--black btn--fab" lx-ripple lx-tooltip="Envoyer" tooltip-position="top"><i class="mdi mdi-send"></i></button>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

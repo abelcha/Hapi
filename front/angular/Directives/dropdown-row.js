@@ -10,7 +10,8 @@ angular.module('edison').directive('dropdownRow', ['edisonAPI', 'config', '$q', 
             row: '=',
         },
         link: function(scope, element, attrs) {
-            scope.model = scope.model || "intervention"
+            scope._model = scope.model || "intervention"
+            console.log('-->', scope._model)
             scope.expendedStyle = {
                 height: 0,
                 overflow: 'hidden'
@@ -23,7 +24,7 @@ angular.module('edison').directive('dropdownRow', ['edisonAPI', 'config', '$q', 
                 }, 200);
             }, 50)
 
-            if (scope.model === "intervention") {
+            if (scope._model === "intervention") {
                 var pAll = [
                     edisonAPI.intervention.get(scope.row.id),
                 ];
@@ -44,7 +45,7 @@ angular.module('edison').directive('dropdownRow', ['edisonAPI', 'config', '$q', 
                         scope.data.ca = config.getCauseAnnulation(scope.data.causeAnnulation)
                 }
 
-            } else if (scope.model === "devis") {
+            } else if (scope._model === "devis") {
                 var pAll = [
                     edisonAPI.devis.get(scope.row.id),
                 ]
@@ -56,7 +57,7 @@ angular.module('edison').directive('dropdownRow', ['edisonAPI', 'config', '$q', 
                     if (scope.data.status === 'ANN')
                         scope.data.ca = config.getCauseAnnulation(scope.data.causeAnnulation)
                 }
-            } else if (scope.model === 'artisan') {
+            } else if (scope._model === 'artisan') {
                 pAll = [
                     edisonAPI.artisan.get(scope.row.id),
                     edisonAPI.artisan.getStats(scope.row.id)

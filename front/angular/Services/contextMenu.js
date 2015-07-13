@@ -18,8 +18,8 @@ angular.module('edison').factory('ContextMenu', function($rootScope, $location, 
     }
 
     ContextMenu.prototype.setPosition = function(x, y) {
-        this.style.left = (x - $('#main-menu-inner').width());
-        this.style.top = y;
+        this.style.left = (x - $('#main-menu-inner').width()) - 4;
+        this.style.top = y - 48;
     }
 
     ContextMenu.prototype.active = false;

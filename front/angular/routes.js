@@ -1,4 +1,4 @@
-angular.module('edison', ['browserify', 'ui.slimscroll', 'ngMaterial', 'lumx', 'ngAnimate', 'xeditable', 'ngDialog', 'btford.socket-io', 'ngFileUpload', 'pickadate', 'ngRoute', 'ngResource', 'ngTable', 'ngMap'])
+angular.module('edison', ['browserify', 'ui.slimscroll', 'ngMaterial', 'lumx', 'ngAnimate', 'xeditable', 'btford.socket-io', 'ngFileUpload', 'pickadate', 'ngRoute', 'ngResource', 'ngTable', 'ngMap'])
     .config(function($mdThemingProvider) {
         "use strict";
         $mdThemingProvider.theme('default')
@@ -59,6 +59,10 @@ angular.module('edison').controller('MainController', function($q, DataProvider,
                 $rootScope.interventionsStats = result;
             });
     };
+
+    $rootScope.openTab = function(tab) {
+        console.log('-->', tab);
+    }
 
     $rootScope.closeContextMenu = function() {
         $rootScope.$broadcast('closeContextMenu');

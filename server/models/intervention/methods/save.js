@@ -21,7 +21,7 @@ module.exports = function(schema) {
                     id: data.id
                 }).then(function(doc) {
 
-                    if (data.artisan.id && data.artisan.id !== doc.artisan.id) {
+                    if (data.artisan && data.artisan.id && data.artisan.id !== doc.artisan.id) {
                         doc.status = 'APR';
                     }
                     if (!doc)
@@ -82,6 +82,9 @@ module.exports = function(schema) {
 
         var data = req.body
         return new Promise(function(resolve, reject) {
+            console.log('-->', data, typeof data);
+            if (!data)
+                reject('Invalid data')
             var saveData = data.id ? updateInter(data) : createInter(data);
             saveData.then(function(doc) {
                 resolve(doc);

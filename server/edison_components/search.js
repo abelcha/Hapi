@@ -3,7 +3,6 @@ module.exports = function(req, res) {
     var async = require('async');
     var _ = require('lodash');
     var query = req.params.text;
-    console.log(query)
     var search = function(cb) {
         if (_(query).startsWith('0')) {
 
@@ -55,7 +54,6 @@ module.exports = function(req, res) {
             })
         }
     }
-    console.time('here')
     async.parallel({
         intervention: search.bind({
             model: 'intervention'
