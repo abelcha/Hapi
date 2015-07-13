@@ -3085,7 +3085,7 @@ var ContactArtisanController = function($timeout, tabContainer, LxProgressServic
     });
     _this.getStaticMap = function(address) {
         if (_this.sst && this.sst.address)
-          return "/api/mapGetStatic?width=500&height=600&precision=0&zoom=6&origin=" + _this.sst.address.lt + ", " +_this.sst.address.lg;
+          return "/api/mapGetStatic?width=500&height=400&precision=0&zoom=6&origin=" + _this.sst.address.lt + ", " +_this.sst.address.lg;
     }
 
     _this.reloadData = function() {
