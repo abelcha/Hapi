@@ -544,8 +544,8 @@ module.exports = {
         title: 'Ouvrir Fiche',
         action: "ouvrirFiche"
     },{
-        title: 'Ouvrir Fiche SST',
-        action: "ouvrirFicheSST",
+        title: 'Ouvrir Recap SST',
+        action: "ouvrirRecapSST",
         hide:function(inter) {
             return !inter.artisan || !inter.artisan.id
         }
