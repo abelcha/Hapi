@@ -9,7 +9,7 @@
                     <ul class="list mt++">
                         <li class="list-row list-row--has-separator" ng-repeat="artisan in vm.tableData | orderBy:'-da' | limitTo:vm.tableLimit " ng-right-click="vm.rowRightClick($event, artisan)" ng-click="vm.rowClick($event, artisan, false)" ng-class="{success : vm.contextMenu.active && vm.contextMenu.data.id === artisan.id, greyed : expendedRow === artisan.id}">
                             <div class="list-row__content">
-                                <span><strong> {{artisan.da | relativeDate}} {{artisan.n}}</strong> - {{artisan.r}}</span>
+                                <span><strong>{{artisan.n}}</strong> - {{artisan.r}}</span>
                             </div>
                         </li>
                     </ul>
