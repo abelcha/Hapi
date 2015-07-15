@@ -98,6 +98,7 @@ module.exports = function(db) {
             nom: String,
             prenom: String,
             tel: String,
+            tel2:String,
             email: String,
             address: {
                 n: String,
