@@ -144,23 +144,27 @@ var InterventionCtrl = function($timeout, $rootScope, $scope, $location, $routeP
     }
     $scope.loadFilesList();
 
+    var closeTab = function() {
+        tabContainer.close(tab);
+    }
+
     $scope.saveInter = function(options) {
         intervention.save(function(err, resp) {
             if (err) {
                 return false;
             } else if (options && options.envoiFacture && options.verification) {
                 intervention.envoiFactureVerif(function() {
-                    tabContainer.close(tab);
+                    closeTab()
                 })
             } else if (options && options.envoi === true) {
                 resp.files = intervention.files;
-                intervention.envoi.bind(resp)(tabContainer.close);
+                intervention.envoi.bind(resp)(closeTab);
             } else if (options && options.annulation) {
-                intervention.annulation(tabContainer.close);
+                intervention.annulation(closeTab);
             } else if (options && options.verification) {
-                intervention.verificationSimple(tabContainer.close);
+                intervention.verificationSimple(closeTab);
             } else {
-                tabContainer.close(tab);
+                closeTab()
             }
         })
 

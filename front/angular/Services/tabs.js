@@ -104,7 +104,6 @@ angular.module('edison').factory('tabContainer', ['$location', '$window', '$q', 
             if (this._tabs[i].deleted === false)
                 return (this._tabs[i]);
         }
-
     };
 
     TabContainer.prototype.close= function(tab) {
