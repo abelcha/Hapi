@@ -57,6 +57,12 @@
                                 </lx-dropdown>
                             </td>
                         </tr>
+                        <tr class="products data-table__clickable-row">
+                            <td colspan="4"></td>
+                            <td colspan="2"><strong>TOTAL TTC : {{produits.total() * (data.tva / 100 + 1) | currency:''}} €
+                                <br> TOTAL HT : {{produits.total() | currency:''}} €</strong>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -71,12 +77,8 @@
                         <button ng-if="model !== 'DEVIS'" class="btn--no-conflicts btn--m btn--black btn--flat" lx-ripple>
                         <a href="/devis?i={{data.id}}">Créer Devis</a></button>
                          </span>
-        <span style="width: 110px;float: left;padding-bottom: 7px;">
+        <span style="width: 130px;float: right;padding-bottom: 7px;">
                          <select class="form-control" ng-model="data.tva" ng-options="tva.short_name as tva.long_name for tva in config.tva">
                             </select></span>
-        <span style="float:right;width:30%">
-                             <button class="btn--no-conflicts btn--m btn--black btn--flat" lx-ripple>
-                             <h4 style="margin-top: 7px;"> TOTAL HT : {{produits.total() | currency:''}} €  -  TTC : {{produits.total() * (data.tva / 100 + 1) | currency:''}} €</h4> </button>
-                        </span>
     </div>
 </div>
