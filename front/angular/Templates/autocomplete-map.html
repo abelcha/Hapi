@@ -8,6 +8,7 @@
         </md-autocomplete>
     </md-content>
     <br>
+    
     <div ng-if="!map.display && height === 'small'" style="height:315px;width:100%;overflow:hidden;">
         <img id="static-map" style="width:100%;top: -9999px;bottom: -9999px;left: -9999px;right: -9999px;margin: auto;" ng-click="map.show()" ng-src="{{getStaticMap()}}" />
     </div>

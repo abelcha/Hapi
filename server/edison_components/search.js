@@ -59,8 +59,6 @@ module.exports = function(req, res) {
             model: 'intervention'
         }),
     }, function(err, result) {
-        console.log(result)
         res.json(result.intervention)
-        console.timeEnd('here')
     })
 }
