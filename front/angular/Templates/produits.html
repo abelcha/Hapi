@@ -73,8 +73,8 @@
                           <button ng-click="produits.add({quantite: 1,ref: 'AUT001',title: 'Autre',desc: '',pu: 0})" class="btn--no-conflicts btn--m btn--black btn--flat" lx-ripple>Ajouter</button>
                         <button ng-click="produits.previsualise(data)" class="btn--no-conflicts btn--m btn--black btn--flat" lx-ripple>Prévisualiser</button>
                         <button ng-if="model === 'DEVIS'"class="btn--no-conflicts btn--m btn--orange btn--flat" ng-click="envoiDevis();" lx-ripple>Envoyer Devis</button>
-                        <button ng-if="model !== 'DEVIS'" class="btn--no-conflicts btn--m btn--blue btn--flat" ng-click="envoiFacture();" lx-ripple>Envoyer Facture</button>
-                        <button ng-if="model !== 'DEVIS'" class="btn--no-conflicts btn--m btn--black btn--flat" lx-ripple>
+                        <button ng-if="model !== 'DEVIS' && data.date.verification" class="btn--no-conflicts btn--m btn--blue btn--flat" ng-click="envoiFacture();" lx-ripple>Facture Acquité</button>
+                        <button ng-if="model !== 'DEVIS' && data.id" class="btn--no-conflicts btn--m btn--black btn--flat" lx-ripple>
                         <a href="/devis?i={{data.id}}">Créer Devis</a></button>
                          </span>
         <span style="width: 130px;float: right;padding-bottom: 7px;">
