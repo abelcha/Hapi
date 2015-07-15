@@ -2,11 +2,7 @@
     <div class="p+">
         <strong ng-click="display = !display" class="fs-headline display-block">Produits</strong><a ng-if="data.devisOrigine" href="/devis/{{data.devisOrigine}}">Devis Original</a>
         <md-content class="autocomplete" style="width: 40%;margin-top: -22px;margin-left: 54%;float: left;" layout-padding layout="column" md-input-container flex>
-            <md-autocomplete 
-            ng-if="data.produits.length || display" 
-                    md-search-text-change="null"
-
-            md-autoselect md-selected-item-change="produits.add(selectedProduct)" md-selected-item="selectedProduct" md-search-text="produits.searchText" md-items="item in produits.search(produits.searchText)" md-item-text="item.title" placeholder="Entrer un produit">
+            <md-autocomplete ng-if="data.produits.length || display" md-search-text-change="null" md-autoselect md-selected-item-change="produits.add(selectedProduct)" md-selected-item="selectedProduct" md-search-text="produits.searchText" md-items="item in produits.search(produits.searchText)" md-item-text="item.title" placeholder="Entrer un produit">
                 <span md-highlight-text="produits.searchText"> 
                 {{item.ref}} -  {{item.title}} - {{item.pu}}€</span>
             </md-autocomplete>
@@ -68,6 +64,7 @@
     </div>
     <div class="card__actions" ng-if="data.produits.length || display">
         <span style="float:left;width:50%">
+                          <button ng-click="produits.add({quantite: 1,ref: 'AUT001',title: 'Autre',desc: '',pu: 0})" class="btn--no-conflicts btn--m btn--black btn--flat" lx-ripple>Ajouter</button>
                         <button ng-click="produits.previsualise(data)" class="btn--no-conflicts btn--m btn--black btn--flat" lx-ripple>Prévisualiser</button>
                         <button ng-if="model === 'DEVIS'"class="btn--no-conflicts btn--m btn--orange btn--flat" ng-click="envoiDevis();" lx-ripple>Envoyer Devis</button>
                         <button ng-if="model !== 'DEVIS'" class="btn--no-conflicts btn--m btn--blue btn--flat" ng-click="envoiFacture();" lx-ripple>Envoyer Facture</button>

@@ -59,10 +59,8 @@ module.exports = function(schema) {
         return new Promise(function(resolve, reject) {
             redis.get('artisanList', function(err, reply) {
                 if (!err && reply && !_.get(req, 'query.cache')) { // we just want to refresh the cache 
-                    console.log("cached")
                     return res.send(reply)
                 } else {
-                    console.log("nocache")
                     db.model('artisan')
                         .find()
                         .then(function(docs) {

@@ -28,7 +28,6 @@ module.exports = function(app) {
 
     var uniqueModel = function(model, method, req, res) {
         return new Promise(function(resolve, reject) {
-            console.log("here")
             if (model[method].findBefore === void(0) || model[method].findBefore !== false) {
                 var idIsNumber = model.schema.paths._id.instance === 'Number'
                 model.findOne({

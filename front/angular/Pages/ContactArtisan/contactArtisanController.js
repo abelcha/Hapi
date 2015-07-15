@@ -36,6 +36,9 @@ var ContactArtisanController = function($scope, $timeout, tabContainer, LxProgre
         _this.tableLimit = 20;
         $rootScope.expendedRow = $routeParams.id || 45
         _this.recap = $routeParams.id
+        // if (_this.recap) {
+        //     $scope.selectedIndex = 1;
+        // }
         _this.loadPanel($rootScope.expendedRow)
         _this.tableData = dataProvider.filteredData;
         LxProgressService.circular.hide();
