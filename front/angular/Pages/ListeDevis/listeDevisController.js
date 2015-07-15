@@ -54,6 +54,8 @@ var DevisController = function($timeout, tabContainer, FiltersFactory, ContextMe
     _this.contextMenu = new ContextMenu('devis')
 
     _this.rowRightClick = function($event, inter) {
+        console.log('yay');
+        
         _this.contextMenu.setPosition($event.pageX, $event.pageY)
         _this.contextMenu.setData(inter);
         _this.contextMenu.open();

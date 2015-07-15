@@ -1,11 +1,11 @@
-var ContactArtisanController = function($timeout, tabContainer, LxProgressService, FiltersFactory, ContextMenu, edisonAPI, DataProvider, $routeParams, $location, $q, $rootScope, $filter, config, ngTableParams) {
+var ContactArtisanController = function($scope, $timeout, tabContainer, LxProgressService, FiltersFactory, ContextMenu, edisonAPI, DataProvider, $routeParams, $location, $q, $rootScope, $filter, config, ngTableParams) {
     "use strict";
     var _this = this;
     _this.loadPanel = function(id) {
         edisonAPI.artisan.get(id)
             .then(function(resp) {
                 _this.sst = resp.data;
-        _this.tab.setTitle('@' + _this.sst.nomSociete.slice(0, 10));
+                _this.tab.setTitle('@' + _this.sst.nomSociete.slice(0, 10));
 
             })
     }
@@ -42,7 +42,7 @@ var ContactArtisanController = function($timeout, tabContainer, LxProgressServic
     });
     _this.getStaticMap = function(address) {
         if (_this.sst && this.sst.address)
-          return "/api/mapGetStatic?width=500&height=400&precision=0&zoom=6&origin=" + _this.sst.address.lt + ", " +_this.sst.address.lg;
+            return "/api/mapGetStatic?width=500&height=400&precision=0&zoom=6&origin=" + _this.sst.address.lt + ", " + _this.sst.address.lg;
     }
 
     _this.reloadData = function() {
@@ -91,6 +91,15 @@ var ContactArtisanController = function($timeout, tabContainer, LxProgressServic
             }
         }
     }
+
+    $scope.$watch('selectedIndex', function(current, prev) {
+        if (current !== void(0) && prev !== current)  {
+            $('md-tabs-content-wrapper').hide()
+            $timeout(function() {
+                $('md-tabs-content-wrapper').show()
+            }, 500)
+        }
+    })
 
 }
 angular.module('edison').controller('ContactArtisanController', ContactArtisanController);

@@ -21,16 +21,8 @@
                         <md-tabs md-selected="selectedIndex" md-dynamic-height md-border-bottom>
                             <md-tab label="Informations">
                                 <md-content class="md-padding">
-                                    <!--                                     <h1 class="md-display-2">
-                                    <md-display-1>{{vm.sst.nomSociete}}</md-display-1>
-
-                                     - {{vm.sst.representant.civilite}} {{vm.sst.representant.nom}} {{vm.sst.representant.prenom}}</h1>
-                                    <md-button style="float:right" class="md-raised md-primary">{{config.artisanOrigine[vm.sst.origin].long_name}}</md-button>
-                                    <md-button style="float:right" class="md-raised {{config.etatsArtisan[vm.sst.status].color}} white-text">{{config.etatsArtisan[vm.sst.status].long_name}}</md-button>
-                                    <br> -->
                                     <div class="col-sm-6" style="height:580px">
                                         <span class="fs-display-1 display-block">{{vm.sst.nomSociete}}</span><span class="fs-headline display-block"><i>{{vm.sst.representant.civilite}} {{vm.sst.representant.nom}} {{vm.sst.representant.prenom}}</i></span>
-                                        <!-- <span class="fs-subhead display-block">{{config.formeJuridique[vm.sst.formeJuridique].long_name}}</span> -->
                                         <br>
                                         <a ng-href="callto:{{vm.sst.telephone.tel1}}"><span class="fs-headline">{{vm.sst.telephone.tel1}}</span></a>
                                         <a ng-if="vm.sst.telephone.tel2" ng-href="callto:{{vm.sst.telephone.tel1}}"><span class="fs-headline "> - {{vm.sst.telephone.tel2}}</span></a>
@@ -89,13 +81,13 @@
                                     </div>
                                 </md-content>
                             </md-tab>
-                            <md-tab label="Interventions">
+                            <md-tab label="Interventions" data-position="0">
                                 <md-content class="md-padding">
                                     <h1 class="md-display-2">Liste des Interventions</h1>
                                     <liste-intervention ng-if="selectedIndex === 1" id="vm.sst.id"></liste-intervention>
                                 </md-content>
                             </md-tab>
-                            <md-tab label="Historique">
+                            <md-tab label="Historique" data-position="1">
                                 <md-content class="md-padding">
                                     <h1 class="md-display-2">Historique</h1>
                                     <div class="paragraph fs-body-1 mt+" style="height:100%">
@@ -110,13 +102,13 @@
                                     </div>
                                 </md-content>
                             </md-tab>
-                            <md-tab label="Stats">
+                            <md-tab label="Stats" data-position="2">
                                 <md-content class="md-padding">
                                     <h1 class="md-display-2">Stats</h1>
                                     <artisan-recap id="vm.sst.id"></artisan-recap>
                                 </md-content>
                             </md-tab>
-                            <md-tab label="JSON Dump">
+                            <md-tab label="JSON Dump" data-position="3">
                                 <md-content class="md-padding">
                                     <h1 class="md-display-2">DUMP</h1>
                                     <pre>{{vm.sst|json}}</pre>

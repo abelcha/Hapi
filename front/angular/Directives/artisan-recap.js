@@ -11,7 +11,6 @@ angular.module('edison').directive('artisanRecap', function(edisonAPI, config, $
         link: function(scope, element, attrs) {
             var reload = function() {
               //  $("#chartContainer").empty()
-                if (myChart)
                     edisonAPI.artisan.extendedStats(scope.id).success(function(resp) {
                         var svg;
                         if (!svg)
