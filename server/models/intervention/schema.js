@@ -195,10 +195,5 @@ module.exports = function(db) {
             default: 20
         }
     });
-    var textSearch = require('mongoose-text-search');
-    schema.plugin(textSearch);
-    schema.index({
-        'client.nom': 'text'
-    });
     return schema
 }
