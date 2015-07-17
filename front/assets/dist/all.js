@@ -7,7 +7,7 @@ angular.module('edison', ['browserify', 'ui.slimscroll', 'ngMaterial', 'lumx', '
     });
 
 
-angular.module('edison').controller('MainController', function($q, DataProvider, tabContainer, $scope, socket, config, $rootScope, $location, edisonAPI, taskList, $window) {
+angular.module('edison').controller('MainController', function($timeout, $q, DataProvider, tabContainer, $scope, socket, config, $rootScope, $location, edisonAPI, taskList, $window) {
     "use strict";
 
 
@@ -34,17 +34,33 @@ angular.module('edison').controller('MainController', function($q, DataProvider,
         showMap: true
     };
 
+    $timeout(function() {
+        $('input[type="search"]').on('keyup', function(e, w) {
+            if (e.which == 13) {
+                if ($('ul.md-autocomplete-suggestions>li').length) {
+                    $location.url('/search/' + $(this).val())
+                    $(this).val("")
+                    $(this).blur()
+                }
+            }
+        });
+    }, 400)
     $scope.searchBox = {
         search: function(x) {
+            console.log('-->', x)
             var deferred = $q.defer();
             if (x.length < 3)
                 return []
-            edisonAPI.searchText(x).success(function(resp) {
+            edisonAPI.searchText(x, {
+                limit: 10,
+                flat: true
+            }).success(function(resp) {
                 deferred.resolve(resp)
             })
             return deferred.promise;
         },
         change: function(x) {
+            console.log('change')
             $location.url(x.link)
             $scope.searchText = "";
         }
@@ -89,6 +105,10 @@ angular.module('edison').controller('MainController', function($q, DataProvider,
     };
 
     $scope.$on("$locationChangeStart", function(event) {
+        if ($rootScope.preventRouteChange) {
+            $rootScope.preventRouteChange = false;
+            return false;
+        }
         if ($location.path() === "/") {
             return 0;
         }
@@ -309,6 +329,7 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
             templateUrl: "Pages/ListeArtisan/contactArtisan.html",
             controller: "ContactArtisanController",
             controllerAs: 'vm',
+            reloadOnSearch: false
         })
         .when('/artisan/:id/recap', {
             templateUrl: "Pages/ListeArtisan/contactArtisan.html",
@@ -341,6 +362,11 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
         .when('/dashboard', {
             controller: 'DashboardController',
             templateUrl: "Pages/Dashboard/dashboard.html",
+        })
+        .when('/search/:query', {
+            templateUrl: "Pages/Search/search.html",
+            controller: "SearchController",
+            controllerAs: "vm",
         })
         .otherwise({
             templateUrl: 'templates/Error404.html',
@@ -1317,10 +1343,11 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
                 url: "/api/whoAmI"
             });
         },
-        searchText: function(text) {
+        searchText: function(text, options) {
             return $http({
                 method: 'GET',
-                url: ['api', 'search', text.replace('#', '_')].join('/')
+                params: options,
+                url: ['api', 'search', text].join('/')
             })
         }
     }
@@ -1518,6 +1545,11 @@ angular.module('edison').factory('ContextMenu', function($rootScope, $location, 
         $rootScope.$on('closeContextMenu', function() {
             return _this.active && _this.close();
         })
+        this.style = {
+            left: 0,
+            top: 0,
+            display: "none"
+        }
     }
 
     ContextMenu.prototype.getData = function() {
@@ -1565,11 +1597,6 @@ angular.module('edison').factory('ContextMenu', function($rootScope, $location, 
         }
     }
 
-    ContextMenu.prototype.style = {
-        left: 0,
-        top: 0,
-        display: "none"
-    }
 
     return ContextMenu
 
@@ -2663,6 +2690,13 @@ angular.module('edison').factory('tabContainer', ['$location', '$window', '$q', 
         });
     };
 
+    TabContainer.prototype.getTabSimple = function(url, options) {
+
+        return _.find(this._tabs, function(e) {
+            return !e.deleted && e.url.split('/')[1] === url.split('/')[1]
+        });
+    };
+
     TabContainer.prototype.len = function() {
         var size = 0;
 
@@ -2681,7 +2715,6 @@ angular.module('edison').factory('tabContainer', ['$location', '$window', '$q', 
     };
 
     TabContainer.prototype.close= function(tab) {
-        console.log("----", this.len())
         if (this.len() > 1) {
             console.log("multiple tabs")
             if (this.remove(tab)) {
@@ -2728,6 +2761,9 @@ angular.module('edison').factory('tabContainer', ['$location', '$window', '$q', 
         var tab;
         if (this.noClose) {
             tab = this._tabs[0]
+        }
+        else if ((_.startsWith(url, '/search')  || _.startsWith(url, '/artisan/contact')) && this.getTabSimple(url)) {
+            tab = this.getTabSimple(url);
         }
         else if (this.noClose || this.isOpen(url, options)) {
             tab = this.getTab(url, options)
@@ -2899,7 +2935,7 @@ angular.module('edison').directive('listeIntervention', function(tabContainer, F
                     })
                     .then(function(resp) {
                         scope.contextMenu.setData(resp.data);
-                        scope.contextMenu.setPosition($event.pageX, $event.pageY)
+                        scope.contextMenu.setPosition($event.pageX - 40, $event.pageY)
                         scope.contextMenu.open();
                     })
             }
@@ -3078,10 +3114,10 @@ var ContactArtisanController = function($scope, $timeout, tabContainer, LxProgre
         _this.tableFilter = "";
         _this.tableLimit = 20;
         $rootScope.expendedRow = $routeParams.id || 45
-        _this.recap = $routeParams.id
-        // if (_this.recap) {
-        //     $scope.selectedIndex = 1;
-        // }
+        _this.recap = $location.url().includes('recap') ? $routeParams.id : undefined
+            // if (_this.recap) {
+            //     $scope.selectedIndex = 1;
+            // }
         _this.loadPanel($rootScope.expendedRow)
         _this.tableData = dataProvider.filteredData;
         LxProgressService.circular.hide();
@@ -3111,6 +3147,7 @@ var ContactArtisanController = function($scope, $timeout, tabContainer, LxProgre
     _this.contextMenu = new ContextMenu('artisan')
 
     _this.rowRightClick = function($event, inter) {
+        console.log('contactclick')
         _this.contextMenu.setPosition($event.pageX, $event.pageY)
         edisonAPI.artisan.get(inter.id)
             .then(function(resp) {
@@ -3133,7 +3170,8 @@ var ContactArtisanController = function($scope, $timeout, tabContainer, LxProgre
                 return 0;
             } else {
                 $rootScope.expendedRow = inter.id
-                return _this.loadPanel(inter.id)
+                _this.loadPanel(inter.id)
+                $location.search('id', inter.id);
             }
         }
     }
@@ -3958,5 +3996,19 @@ var InterventionsController = function(tabContainer, FiltersFactory, ContextMenu
     }
 }
 angular.module('edison').controller('InterventionsController', InterventionsController);
+
+var SearchController = function(edisonAPI, tabContainer, $routeParams, $location) {
+    var tab = tabContainer.getCurrentTab();
+    tab.setTitle('Search')
+    var _this = this;
+    edisonAPI.searchText($routeParams.query).success(function(resp) {
+    	_this.data = resp
+    })
+    _this.openLink = function(link) {
+    	$location.url(link)
+    }
+}
+
+angular.module('edison').controller('SearchController', SearchController);
 
 //# sourceMappingURL=all.js.map

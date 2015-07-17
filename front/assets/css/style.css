@@ -277,3 +277,6 @@ li>a:focus {
 md-tab-item[aria-selected="true"] {
     background-color: rgba(177, 177, 177, 0.10);
 }
+ul.md-autocomplete-suggestions{
+    z-index:1000;
+}

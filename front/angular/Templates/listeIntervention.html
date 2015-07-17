@@ -37,10 +37,10 @@
                         {{inter._etat}}</span>
                     </td>
                     <td data-title="'Pmnt'" sortable="'pc'" filter="{ 'ps': 'text' }">
-                            <span ng-if="inter.pc || inter.ps || inter._status.short_name === 'VRF'" style="width:40px" class="label {{::config.paiementCLI(inter).color}}"> 
+                        <span ng-if="inter.pc || inter.ps || inter._status.short_name === 'VRF'" style="width:40px" class="label {{::config.paiementCLI(inter).color}}"> 
                          <i class="{{::config.paiementCLI(inter).icon}}"></i>
                          </span>
-                            <span ng-if="inter.pc || inter.ps || inter._status.short_name === 'VRF'" style="width:40px;margin-left:3px" class="label {{::config.paiementSST(inter).color}}"> 
+                        <span ng-if="inter.pc || inter.ps || inter._status.short_name === 'VRF'" style="width:40px;margin-left:3px" class="label {{::config.paiementSST(inter).color}}"> 
                          <i class="{{::config.paiementSST(inter).icon}}"></i>
                        </span>
                     </td>
@@ -52,5 +52,14 @@
                 </tr>
             </tbody>
         </table>
+    </div>
+    <div class="dropdown-menu--no-conflicts dropdown-menu--right dropdown__menu--is-dropped" style="margin-top: -215px;width: auto; height: auto; opacity: 1;" ng-style="contextMenu.style">
+        <div class="dropdown-menu__content ng-scope">
+            <ul class="ng-scope">
+                <li ng-hide="item.hidden" ng-repeat="item in contextMenu.list" ng-click="contextMenu.close();contextMenu.click(item)">
+                    <a class="dropdown-link" tabindex="0">{{item.title}}</a>
+                </li>
+            </ul>
+        </div>
     </div>
 </div>

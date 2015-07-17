@@ -82,7 +82,6 @@ module.exports = function(schema) {
 
         var data = req.body
         return new Promise(function(resolve, reject) {
-            console.log('-->', data, typeof data);
             if (!data)
                 reject('Invalid data')
             var saveData = data.id ? updateInter(data) : createInter(data);

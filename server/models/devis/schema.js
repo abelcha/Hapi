@@ -51,7 +51,8 @@ module.exports = function(db) {
                     type: String,
                     required: true
                 },
-                tel2: String
+                tel2: String,
+                tel3: String
             },
             address: {
                 n: {

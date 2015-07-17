@@ -89,6 +89,13 @@ angular.module('edison').factory('tabContainer', ['$location', '$window', '$q', 
         });
     };
 
+    TabContainer.prototype.getTabSimple = function(url, options) {
+
+        return _.find(this._tabs, function(e) {
+            return !e.deleted && e.url.split('/')[1] === url.split('/')[1]
+        });
+    };
+
     TabContainer.prototype.len = function() {
         var size = 0;
 
@@ -107,7 +114,6 @@ angular.module('edison').factory('tabContainer', ['$location', '$window', '$q', 
     };
 
     TabContainer.prototype.close= function(tab) {
-        console.log("----", this.len())
         if (this.len() > 1) {
             console.log("multiple tabs")
             if (this.remove(tab)) {
@@ -154,6 +160,9 @@ angular.module('edison').factory('tabContainer', ['$location', '$window', '$q', 
         var tab;
         if (this.noClose) {
             tab = this._tabs[0]
+        }
+        else if ((_.startsWith(url, '/search')  || _.startsWith(url, '/artisan/contact')) && this.getTabSimple(url)) {
+            tab = this.getTabSimple(url);
         }
         else if (this.noClose || this.isOpen(url, options)) {
             tab = this.getTab(url, options)

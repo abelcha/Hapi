@@ -261,10 +261,11 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
                 url: "/api/whoAmI"
             });
         },
-        searchText: function(text) {
+        searchText: function(text, options) {
             return $http({
                 method: 'GET',
-                url: ['api', 'search', text.replace('#', '_')].join('/')
+                params: options,
+                url: ['api', 'search', text].join('/')
             })
         }
     }

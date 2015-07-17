@@ -1,0 +1,58 @@
+<div>
+    <div class="shadow-box listeInterventions">
+        <div class="row" style="margin:20px">
+            <div class="col-sm-4">
+                <div class="mt++">
+                    <span class="fs-title display-block mb">Interventions</span>
+                    <div class="divider divider--dark"></div>
+                    <ul class="list mt++">
+                        <li class="list-row list-row--has-separator" ng-click="vm.openLink(result.link)" ng-repeat="result in vm.data" 
+                        ng-if="result.match[0] === 'i'">
+                            <div class="list-row__primary">
+                                <i class="icon icon--l icon--green icon--circled mdi mdi-file"></i>
+                            </div>
+                            <div class="list-row__content">
+                                <span class="display-block">{{result.description}}</span>
+                                <span class="display-block fs-body-1 tc-black-2">{{result.match}}</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="mt++">
+                    <span class="fs-title display-block mb">Artisans</span>
+                    <div class="divider divider--dark"></div>
+                    <ul class="list mt++">
+                        <li class="list-row list-row--has-separator" ng-click="vm.openLink(result.link)" ng-repeat="result in vm.data" ng-if="result.match[0] === 'a'">
+                            <div class="list-row__primary">
+                                <i class="icon icon--l icon--brown icon--circled mdi mdi-map-marker"></i>
+                            </div>
+                            <div class="list-row__content">
+                                <span class="display-block">{{result.description}}</span>
+                                <span class="display-block fs-body-1 tc-black-2">{{result.match}}</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="mt++">
+                    <span class="fs-title display-block mb">Devis</span>
+                    <div class="divider divider--dark"></div>
+                    <ul class="list mt++">
+                        <li class="list-row list-row--has-separator" ng-click="vm.openLink(result.link)" ng-repeat="result in vm.data" ng-if="result.match[0] === 'd'">
+                            <div class="list-row__primary">
+                                <i class="icon icon--l icon--blue icon--circled mdi mdi-file-document"></i>
+                            </div>
+                            <div class="list-row__content">
+                                <span class="display-block">{{result.description}}</span>
+                                <span class="display-block fs-body-1 tc-black-2">{{result.match}}</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

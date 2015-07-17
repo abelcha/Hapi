@@ -3,7 +3,7 @@ module.exports = function(schema) {
         var geocoder = require('geocoder');
         var request = require('request');
         return new Promise(function(resolve, reject) {
-            db.model('devis').find({
+            db.model(req.query.model || 'devis').find({
                 'client.address.lt': 0,
                 'client.address.lg': 0,
                 'client.address.r': {

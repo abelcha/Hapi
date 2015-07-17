@@ -129,7 +129,7 @@ app.use(function(req, res, next) {
 
 //if (!env_prod) {
 app.use(function(err, req, res, next) {
-    console.log("--<,", err);
+    console.log("-->", err);
     res.status(err.status || 500);
     res.json(String(err));
 });

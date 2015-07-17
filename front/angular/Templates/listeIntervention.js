@@ -68,7 +68,7 @@ angular.module('edison').directive('listeIntervention', function(tabContainer, F
                     })
                     .then(function(resp) {
                         scope.contextMenu.setData(resp.data);
-                        scope.contextMenu.setPosition($event.pageX, $event.pageY)
+                        scope.contextMenu.setPosition($event.pageX - 40, $event.pageY)
                         scope.contextMenu.open();
                     })
             }

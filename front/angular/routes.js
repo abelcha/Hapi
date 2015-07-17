@@ -7,7 +7,7 @@ angular.module('edison', ['browserify', 'ui.slimscroll', 'ngMaterial', 'lumx', '
     });
 
 
-angular.module('edison').controller('MainController', function($q, DataProvider, tabContainer, $scope, socket, config, $rootScope, $location, edisonAPI, taskList, $window) {
+angular.module('edison').controller('MainController', function($timeout, $q, DataProvider, tabContainer, $scope, socket, config, $rootScope, $location, edisonAPI, taskList, $window) {
     "use strict";
 
 
@@ -34,17 +34,33 @@ angular.module('edison').controller('MainController', function($q, DataProvider,
         showMap: true
     };
 
+    $timeout(function() {
+        $('input[type="search"]').on('keyup', function(e, w) {
+            if (e.which == 13) {
+                if ($('ul.md-autocomplete-suggestions>li').length) {
+                    $location.url('/search/' + $(this).val())
+                    $(this).val("")
+                    $(this).blur()
+                }
+            }
+        });
+    }, 400)
     $scope.searchBox = {
         search: function(x) {
+            console.log('-->', x)
             var deferred = $q.defer();
             if (x.length < 3)
                 return []
-            edisonAPI.searchText(x).success(function(resp) {
+            edisonAPI.searchText(x, {
+                limit: 10,
+                flat: true
+            }).success(function(resp) {
                 deferred.resolve(resp)
             })
             return deferred.promise;
         },
         change: function(x) {
+            console.log('change')
             $location.url(x.link)
             $scope.searchText = "";
         }
@@ -89,6 +105,10 @@ angular.module('edison').controller('MainController', function($q, DataProvider,
     };
 
     $scope.$on("$locationChangeStart", function(event) {
+        if ($rootScope.preventRouteChange) {
+            $rootScope.preventRouteChange = false;
+            return false;
+        }
         if ($location.path() === "/") {
             return 0;
         }
@@ -309,6 +329,7 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
             templateUrl: "Pages/ListeArtisan/contactArtisan.html",
             controller: "ContactArtisanController",
             controllerAs: 'vm',
+            reloadOnSearch: false
         })
         .when('/artisan/:id/recap', {
             templateUrl: "Pages/ListeArtisan/contactArtisan.html",
@@ -341,6 +362,11 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
         .when('/dashboard', {
             controller: 'DashboardController',
             templateUrl: "Pages/Dashboard/dashboard.html",
+        })
+        .when('/search/:query', {
+            templateUrl: "Pages/Search/search.html",
+            controller: "SearchController",
+            controllerAs: "vm",
         })
         .otherwise({
             templateUrl: 'templates/Error404.html',

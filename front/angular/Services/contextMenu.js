@@ -8,6 +8,11 @@ angular.module('edison').factory('ContextMenu', function($rootScope, $location, 
         $rootScope.$on('closeContextMenu', function() {
             return _this.active && _this.close();
         })
+        this.style = {
+            left: 0,
+            top: 0,
+            display: "none"
+        }
     }
 
     ContextMenu.prototype.getData = function() {
@@ -55,11 +60,6 @@ angular.module('edison').factory('ContextMenu', function($rootScope, $location, 
         }
     }
 
-    ContextMenu.prototype.style = {
-        left: 0,
-        top: 0,
-        display: "none"
-    }
 
     return ContextMenu
 

@@ -35,10 +35,10 @@ var ContactArtisanController = function($scope, $timeout, tabContainer, LxProgre
         _this.tableFilter = "";
         _this.tableLimit = 20;
         $rootScope.expendedRow = $routeParams.id || 45
-        _this.recap = $routeParams.id
-        // if (_this.recap) {
-        //     $scope.selectedIndex = 1;
-        // }
+        _this.recap = $location.url().includes('recap') ? $routeParams.id : undefined
+            // if (_this.recap) {
+            //     $scope.selectedIndex = 1;
+            // }
         _this.loadPanel($rootScope.expendedRow)
         _this.tableData = dataProvider.filteredData;
         LxProgressService.circular.hide();
@@ -68,6 +68,7 @@ var ContactArtisanController = function($scope, $timeout, tabContainer, LxProgre
     _this.contextMenu = new ContextMenu('artisan')
 
     _this.rowRightClick = function($event, inter) {
+        console.log('contactclick')
         _this.contextMenu.setPosition($event.pageX, $event.pageY)
         edisonAPI.artisan.get(inter.id)
             .then(function(resp) {
@@ -90,7 +91,8 @@ var ContactArtisanController = function($scope, $timeout, tabContainer, LxProgre
                 return 0;
             } else {
                 $rootScope.expendedRow = inter.id
-                return _this.loadPanel(inter.id)
+                _this.loadPanel(inter.id)
+                $location.search('id', inter.id);
             }
         }
     }

@@ -25,14 +25,7 @@
                 <!-- / .navbar-header -->
                 <div id="main-navbar-collapse" class="collapse navbar-collapse main-navbar-collapse">
                     <!--  -->
-                    <md-autocomplete 
-                    style="width: 392px;float: right;margin-top: 3px;margin-right: 75px;" 
-                    md-search-text-change="null"
-                    md-selected-item-change="searchBox.change(selectedItem)" 
-                    md-selected-item="selectedItem" 
-                    md-search-text="searchText" 
-                    md-items="item in searchBox.search(searchText)" 
-                    md-item-text="item.description"> <span md-highlight-text="searchText"> {{item.description}}</span>
+                    <md-autocomplete style="width: 592px;float: right;margin-top: 3px;margin-right: 75px;" md-search-text-change="null" md-selected-item-change="searchBox.change(selectedItem)" md-selected-item="selectedItem" md-search-text="searchText" md-autoselect='false' md-items="item in searchBox.search(searchText)" placeholder="Recherche..." md-item-text="item.description"> <span md-highlight-text="searchText"> {{item.description}}</span>
                     </md-autocomplete>
                 </div>
                 <!-- / #main-navbar-collapse -->
@@ -128,7 +121,7 @@
         <div class="page-header" style="background: #f4f4f4 url(/img/mooning.png);">
             <div class="menu-tabs">
                 <md-tabs md-selected="tabs.selectedTab" style=" margin-left: 6px;">
-                    <md-tab ng-repeat="tab in tabs._tabs" style="padding-right:8px" >
+                    <md-tab ng-repeat="tab in tabs._tabs" style="padding-right:8px">
                         <md-tab-label><a href="{{tab.fullUrl}}">{{tab.title || "•••"}} </a><span ng-if="tab.hash" style="color:black;font-size:8px">{{tab.hash|loginify}}</span> <i ng-click="tabIconClick($event, tab)" class="fa fa-remove"></i></md-tab-label>
                     </md-tab>
                 </md-tabs>
