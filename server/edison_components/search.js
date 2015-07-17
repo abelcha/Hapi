@@ -82,8 +82,9 @@ module.exports = function(req, res) {
         }),
 
         artisanNom: createFilter({
-            pre:'@',
+            pre: '@',
             model: 'artisan',
+            link:'/recap',
             query: {
                 $or: [{
                     'representant.nom': rgx
@@ -95,8 +96,9 @@ module.exports = function(req, res) {
 
         }),
         artisanVille: createFilter({
-            pre:'@',
+            pre: '@',
             model: 'artisan',
+            link:'/recap',
             query: {
                 'address.v': rgx
             },
@@ -104,8 +106,9 @@ module.exports = function(req, res) {
 
         }),
         artisanCP: createFilter({
-            pre:'@',
+            pre: '@',
             model: 'artisan',
+            link:'/recap',
             query: {
                 'address.cp': rgx
             },
@@ -113,8 +116,9 @@ module.exports = function(req, res) {
 
         }),
         artisanTelephone: createFilter({
-            pre:'@',
-            model: "artisan",
+            pre: '@',
+            model: 'artisan',
+            link:'/recap',
             query: {
                 $or: [{
                     'telephone.tel1': rgx
@@ -128,7 +132,7 @@ module.exports = function(req, res) {
                 artisan.telMatch = t.tel1.startsWith(query) ? t.tel1 : t.tel2.startsWith(query) ? t.tel2 : t.tel3;
                 return {
                     link: '/artisanvention/' + artisan.id,
-                    description: _.template("{{id}} ({{address.telMatch}}) - {{nomSociete}} - {{address.cp}} {{address.v}} ")(artisan)
+                    description: _.template("@{{id}} ({{address.telMatch}}) - {{nomSociete}} - {{address.cp}} {{address.v}} ")(artisan)
                 }
             }
         }),

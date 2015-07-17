@@ -33,7 +33,6 @@ angular.module('edison').controller('MainController', function($timeout, $q, Dat
     $rootScope.options = {
         showMap: true
     };
-
     $timeout(function() {
         $('input[type="search"]').on('keyup', function(e, w) {
             if (e.which == 13) {

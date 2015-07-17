@@ -33,7 +33,6 @@ angular.module('edison').controller('MainController', function($timeout, $q, Dat
     $rootScope.options = {
         showMap: true
     };
-
     $timeout(function() {
         $('input[type="search"]').on('keyup', function(e, w) {
             if (e.which == 13) {
@@ -3414,7 +3413,7 @@ angular.module('edison').directive('infoCompta', ['config','Compta',
     }
 ]);
 
-var InterventionCtrl = function($timeout, $rootScope, $scope, $location, $routeParams, dialog, fourniture, LxNotificationService, LxProgressService, tabContainer, edisonAPI, Address, $q, mapAutocomplete, productsList, config, interventionPrm, Intervention, Map) {
+var InterventionCtrl = function($window, $timeout, $rootScope, $scope, $location, $routeParams, dialog, fourniture, LxNotificationService, LxProgressService, tabContainer, edisonAPI, Address, $q, mapAutocomplete, productsList, config, interventionPrm, Intervention, Map) {
     "use strict";
 
     var _this = this;
@@ -3997,15 +3996,17 @@ var InterventionsController = function(tabContainer, FiltersFactory, ContextMenu
 }
 angular.module('edison').controller('InterventionsController', InterventionsController);
 
-var SearchController = function(edisonAPI, tabContainer, $routeParams, $location) {
+var SearchController = function(edisonAPI, tabContainer, $routeParams, $location, LxProgressService) {
     var tab = tabContainer.getCurrentTab();
     tab.setTitle('Search')
     var _this = this;
+    LxProgressService.circular.show('#5fa2db', '#globalProgress');
     edisonAPI.searchText($routeParams.query).success(function(resp) {
-    	_this.data = resp
+        LxProgressService.circular.hide()
+        _this.data = resp
     })
     _this.openLink = function(link) {
-    	$location.url(link)
+        $location.url(link)
     }
 }
 

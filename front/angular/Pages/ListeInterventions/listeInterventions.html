@@ -30,7 +30,7 @@
                         </div>
                     </td>
                     <td data-title="'Prix'" sortable="'pa'" filter="{ 'pa': 'text' }">
-                        {{::(inter.pa | number:2) || 0}} €
+                       <strong> {{::(inter.pa | number:2) || 0}} €</strong>
                     </td>
                     <td ng-init="inter._status = vm.config.etatsHash()[inter.s];inter._etat = inter._status.long_name" data-title="'Status'" sortable="'s'" filter="{ '_etat': 'text' }">
                         <span style="width:75px" class="label {{::vm.config.etatsHash()[inter.s].color}} display-block"> 

@@ -255,7 +255,7 @@ FiltersFactory.prototype.list = {
         }
     }, {
         short_name: 'i_sarl',
-        long_name: 'SST à Relancer',
+        long_name: 'Relance sous-traitant',
         url: 'relanceArtisan',
         match: function() {
             return {

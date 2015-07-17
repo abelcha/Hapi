@@ -49,7 +49,7 @@ td {
 }
 
 td[variable-length] {
-    text-align: center;
+    text-align: left;
     width: auto;
     padding: 0;
     max-width: 0;

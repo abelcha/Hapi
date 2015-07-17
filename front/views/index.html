@@ -76,12 +76,12 @@
                     <link fltr="i_carl" icon="th-list" login="{{user.login}}"></link>
                 </drop-down>
                 <drop-down icon="share" open-default="userStats.i_savEnc.total" title="Mes S.A.V">
-                    <link fltr="i_sav" icon="th-list" login="{{user.login}}"></link>
-                    <link fltr="i_savEnc" icon="th-list" login="{{user.login}}"></link>
+                    <link fltr="i_sav" icon="th-list" login="{{user.login}}" color="primary"></link>
+                    <link fltr="i_savEnc" icon="th-list" login="{{user.login}}" color="danger"></link>
                 </drop-down>
                 <drop-down icon="bolt" open-default="userStats.i_litEnc.total" title="Mes Litiges">
                     <link fltr="i_lit" icon="th-list" login="{{user.login}}"></link>
-                    <link fltr="i_litEnc" icon="th-list" login="{{user.login}}"></link>
+                    <link fltr="i_litEnc" icon="th-list" login="{{user.login}}" title="Litiges en cours" color="danger"></link>
                 </drop-down>
                 <drop-down icon="hospital-o" title="Mes Devis">
                     <link fltr="d_all" model="devis" icon="th-list" login="{{user.login}}"></link>
