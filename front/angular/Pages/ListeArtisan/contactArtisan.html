@@ -15,12 +15,12 @@
                     </ul>
                 </div>
             </div>
-            <div class="selectedIndex === 1 && !recap ? 'col-sm-8' : 'col-sm-12'" ng-right-click="vm.rowRightClick($event, vm.sst)">
+            <div class="selectedIndex === 1 && !recap ? 'col-sm-8' : 'col-sm-12'" >
                 <div style="cursor:default!important">
                     <md-content class="md-padding" ng-init="va = vm.sst" style="margin: 10px;">
                         <md-tabs md-selected="selectedIndex" md-dynamic-height md-border-bottom>
-                            <md-tab label="Informations">
-                                <md-content class="md-padding">
+                            <md-tab label="Informations" >
+                                <md-content class="md-padding" ng-right-click="vm.rowRightClick($event, vm.sst)">
                                     <div class="col-sm-6" style="height:580px">
                                         <span class="fs-display-1 display-block">{{vm.sst.nomSociete}}</span><span class="fs-headline display-block"><i>{{vm.sst.representant.civilite}} {{vm.sst.representant.nom}} {{vm.sst.representant.prenom}}</i></span>
                                         <br>
@@ -118,7 +118,7 @@
                     </md-content>
                 </div>
             </div>
-            <div class="dropdown-menu--no-conflicts dropdown-menu--right dropdown__menu--is-dropped" style=" width: auto; height: auto; opacity: 1;" ng-style="vm.contextMenu.style">
+            <div class="dropdown-menu--no-conflicts dropdown-menu--right dropdown__menu--is-dropped" style="width: auto; height: auto; opacity: 1;" ng-style="vm.contextMenu.style">
                 <div class="dropdown-menu__content ng-scope">
                     <ul class="ng-scope">
                         <li ng-repeat="item in vm.contextMenu.list" ng-click="vm.contextMenu.close();vm.contextMenu.click(item)">

@@ -24,6 +24,7 @@ module.exports = function(schema) {
             s: e.status,
             cp: e.address.cp,
             v: e.address.v,
+            x:e.telephone.tel1,
             cnd: e.origin === 'CAND' ? 1 : undefined,
         };
     }

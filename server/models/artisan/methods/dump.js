@@ -2,6 +2,8 @@ var request = require('request');
 var key = requireLocal('config/_keys');
 var _ = require('lodash')
 var config = requireLocal('config/dataList');
+var users = requireLocal('config/_users');
+
 
 module.exports = function(schema) {
 
@@ -12,9 +14,9 @@ module.exports = function(schema) {
             id: d.id,
             nomSociete: d.nom_societe,
             categories: [],
-            email: d.email,
+            email: d.email || "test@test.me",
             login: {
-                ajout: d.ajoute_par || "yohann_r"
+                ajout: _.get(getUser(d.ajoute_par), 'login') || "yohann_r"
             },
             date: {
                 ajout: d.date_ajout ? (d.date_ajout * 1000) : Date.now()
@@ -128,6 +130,12 @@ module.exports = function(schema) {
             }
         });
 
+    }
+
+    var getUser = function(oldLogin) {
+        return _.find(users, function(e) {
+            return e.oldLogin === oldLogin;
+        })
     }
 
     var execDump = function(limit) {
