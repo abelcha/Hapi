@@ -1,6 +1,17 @@
 angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', function($http, $location, Upload) {
     "use strict";
     return {
+        compta: {
+            lpa: function() {
+                return $http({
+                    method: 'GET',
+                    cache: false,
+                    url: '/api/intervention/lpa',
+                }).success(function(result) {
+                    return result;
+                });
+            }
+        },
         devis: {
             get: function(id, options) {
                 return $http({

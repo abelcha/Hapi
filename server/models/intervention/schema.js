@@ -215,6 +215,7 @@ module.exports = function(db) {
                 },
                 montantFinal: Number,
                 prixFinal: Number,
+                numeroCheque:String
             }]
         }
     });

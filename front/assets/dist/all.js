@@ -1,4 +1,4 @@
-angular.module('edison', ['browserify', 'ui.slimscroll', 'ngMaterial', 'lumx', 'ngAnimate', 'xeditable', 'btford.socket-io', 'ngFileUpload', 'pickadate', 'ngRoute', 'ngResource', 'ngTable', 'ngMap'])
+angular.module('edison', ['browserify', 'ui.slimscroll', 'ngMdIcons', 'ngMaterial', 'lumx', 'ngAnimate', 'xeditable', 'btford.socket-io', 'ngFileUpload', 'pickadate', 'ngRoute', 'ngResource', 'ngTable', 'ngMap'])
     .config(function($mdThemingProvider) {
         "use strict";
         $mdThemingProvider.theme('default')
@@ -365,6 +365,11 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
         .when('/search/:query', {
             templateUrl: "Pages/Search/search.html",
             controller: "SearchController",
+            controllerAs: "vm",
+        })
+        .when('/compta/lpa', {
+            templateUrl: "Pages/LPA/LPA.html",
+            controller: "LpaController",
             controllerAs: "vm",
         })
         .otherwise({
@@ -1104,6 +1109,17 @@ angular.module('edison').factory('Address', function() {
 angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', function($http, $location, Upload) {
     "use strict";
     return {
+        compta: {
+            lpa: function() {
+                return $http({
+                    method: 'GET',
+                    cache: false,
+                    url: '/api/intervention/lpa',
+                }).success(function(result) {
+                    return result;
+                });
+            }
+        },
         devis: {
             get: function(id, options) {
                 return $http({
@@ -1495,13 +1511,11 @@ angular.module('edison').factory('Compta', function() {
     var Compta = function(inter) {
         var _this = this
 
-
-        _this.tva = inter.tva;
+        //if (_.get(inter, 'compta.pa'))
         _this.pourcentage = inter.artisan.pourcentage;
         _this.fourniture = this.getFourniture(inter);
         _this.prixHT = inter.prixFinal || 0
         _this.montantHT = _this.prixHT - _this.fourniture.total
-        //_this.prixTTC = _this.round(_this.applyCoeff(_this.montantHT, _this.tva));
         _this.baseDeplacement = _this.prixDeplacement()
         _this.remunerationDeplacement = _this.applyCoeff(_this.baseDeplacement, _this.pourcentage.deplacement);
         _this.baseMaindOeuvre = _this.prixMaindOeuvre();
@@ -3741,6 +3755,31 @@ angular.module('edison').controller('InterventionController', InterventionCtrl);
 
      }
  ]);
+
+var LpaController = function(tabContainer, edisonAPI, $scope) {
+    "use strict";
+    var _this = this
+    var tab = tabContainer.getCurrentTab();
+    tab.setTitle('LPA')
+    edisonAPI.compta.lpa().then(function(result) {
+        _this.result = result.data
+    }, console.log)
+
+    var reloadNumeroCheque = function(debutCheque) {
+    	_.each(_this.result, function(e) {
+    		if (e.toFlush) {
+    			e.numeroCheque = debutCheque++
+    		}
+    	})
+    }
+
+    $scope.$watch('debutCheque', function(current) {
+        console.log(current)
+    })
+}
+
+
+angular.module('edison').controller('LpaController', LpaController);
 
 var ArtisanController = function($timeout, tabContainer, LxProgressService, FiltersFactory, ContextMenu, edisonAPI, DataProvider, $routeParams, $location, $q, $rootScope, $filter, config, ngTableParams) {
     "use strict";

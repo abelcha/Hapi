@@ -4,13 +4,11 @@ angular.module('edison').factory('Compta', function() {
     var Compta = function(inter) {
         var _this = this
 
-
-        _this.tva = inter.tva;
+        //if (_.get(inter, 'compta.pa'))
         _this.pourcentage = inter.artisan.pourcentage;
         _this.fourniture = this.getFourniture(inter);
         _this.prixHT = inter.prixFinal || 0
         _this.montantHT = _this.prixHT - _this.fourniture.total
-        //_this.prixTTC = _this.round(_this.applyCoeff(_this.montantHT, _this.tva));
         _this.baseDeplacement = _this.prixDeplacement()
         _this.remunerationDeplacement = _this.applyCoeff(_this.baseDeplacement, _this.pourcentage.deplacement);
         _this.baseMaindOeuvre = _this.prixMaindOeuvre();

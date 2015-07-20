@@ -1,4 +1,4 @@
-angular.module('edison', ['browserify', 'ui.slimscroll', 'ngMaterial', 'lumx', 'ngAnimate', 'xeditable', 'btford.socket-io', 'ngFileUpload', 'pickadate', 'ngRoute', 'ngResource', 'ngTable', 'ngMap'])
+angular.module('edison', ['browserify', 'ui.slimscroll', 'ngMdIcons', 'ngMaterial', 'lumx', 'ngAnimate', 'xeditable', 'btford.socket-io', 'ngFileUpload', 'pickadate', 'ngRoute', 'ngResource', 'ngTable', 'ngMap'])
     .config(function($mdThemingProvider) {
         "use strict";
         $mdThemingProvider.theme('default')
@@ -365,6 +365,11 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
         .when('/search/:query', {
             templateUrl: "Pages/Search/search.html",
             controller: "SearchController",
+            controllerAs: "vm",
+        })
+        .when('/compta/lpa', {
+            templateUrl: "Pages/LPA/LPA.html",
+            controller: "LpaController",
             controllerAs: "vm",
         })
         .otherwise({

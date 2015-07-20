@@ -188,8 +188,6 @@
                 rtn.prixFinal = d.comptaPrixFinal;
                 rtn.compta = {
                     paiement: {
-                        tva: rtn.tva,
-
                         pourcentage: {
                             deplacement: d.pDeplacement,
                             maindOeuvre: d.pMaindOeuvre,
@@ -200,6 +198,11 @@
                         flushed: rtn.date.paiementSST,
                         prixFinal: d.comptaPrixFinal,
                         montantFinal: d.comptaMontantFinal,
+                        pourcentage: {
+                            deplacement: d.pDeplacement,
+                            maindOeuvre: d.pMaindOeuvre,
+                            fourniture: d.pFourniture
+                        },
                         numeroCheque: d.numeroCheque,
                     }]
                 }

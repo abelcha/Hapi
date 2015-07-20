@@ -1,0 +1,15 @@
+<div class="container" style=" margin: auto;max-width: 1200px;">
+    <div class="row">
+        <div class="card margin" style="height:800px;padding:20px;overflow:scroll">
+        <input type="number" ng-model="debutCheque" class="form-control" style="width:200px" placeholder="Debut">
+            <md-list>
+                <md-subheader class="md-no-sticky">Liste Paiements en Attentes</md-subheader>
+                <md-list-item ng-repeat="r in vm.result">
+                    <md-checkbox ng-model="r.toFlush"></md-checkbox>
+                   <span style="width:4%"></span> <span style="width:10%">{{r.id}}</span> <span style="width:30%">{{r.artisan.nomSociete}}</span><span style="width:25%">{{r.prixFinal}} €</span>
+                   <span ><input type="number" ng-model="r.numeroCheque" class="form-control"></span>
+                </md-list-item>
+            </md-list>
+        </div>
+    </div>
+</div>

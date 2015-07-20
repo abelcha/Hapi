@@ -1,12 +1,12 @@
 <div class="card margin">
     <div class="p+">
-        <strong ng-click="dsp = !dsp" class="fs-headline display-block">Comptabilité</strong>
+        <strong ng-click="dsp = !dsp" class="fs-headline display-block">Paiement/Reglement </strong>
         <br>
         <h4>Client</h4>
         <div class="paragraph fs-body-1 mt+">
             <div class="row">
                 <div class="col-sm-3">
-                    <lx-text-field label="Prix Final HT" >
+                    <lx-text-field label="Prix Final HT">
                         <input ng-model="data.prixFinal" type="number">
                     </lx-text-field>
                     <!--   <span ng-bind="round(data.prixFinal * ((data.tva / 100) + 1))"></span>-->
@@ -24,9 +24,6 @@
                     </lx-text-field>
                 </div>
                 <div class="col-sm-3">
-                    <span ng-bind="round(data.prixFinal * ((data.tva / 100) + 1))"></span>
-                </div>
-                <div class="col-sm-3">
                     <lx-text-field label="Main D'oeuvre">
                         <input type="number" ng-model="data.artisan.pourcentage.maindOeuvre">
                     </lx-text-field>
@@ -38,8 +35,15 @@
                 </div>
             </div>
             <br>
-            <h4>Simulation</h4>
-            <pre><h4>{{compta|json}}</h4></pre>
+            <div class="switch" style="float:right;margin-right:30px">
+                <input type="checkbox" id="switch1" ng-model="data.compta.paiement.ready" class="switch__input">
+                <label for="switch1" class="switch__label">Ready</label>
+            </div>
+            <br>
+            <h4 ng-click="displaySimulation = !displaySimulation"> > Simulation</h4>
+            <pre ng-if="displaySimulation"><h4>{{compta|json}}</h4></pre>
+            <h4 ng-click="displayHistorique = !displayHistorique"> > Historique Flush ({{data.compta.historique.length}})</h4>
+            <pre ng-if="displayHistorique"><h4>{{data.compta.historique|json}}</h4></pre>
         </div>
     </div>
     <!--  <div class="card__actions" ng-if="dsp || data.fourniture.length">

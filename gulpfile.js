@@ -60,6 +60,8 @@ gulp.task('jsLibs', function() {
         'bower_components/moment/locale/fr.js',
         'bower_components/d3/d3.min.js',
         'bower_components/dimple/dist/dimple.latest.min.js',
+        'bower_components/angular-material-icons/angular-material-icons.js',
+
     ]
     return gulp.src(jslibs)
         //.pipe(minify({mangle:false}))
@@ -126,6 +128,8 @@ gulp.task('styles', function() {
         'bower_components/pickadate/lib/compressed/themes/classic.time.css',
         'bower_components/lumx/dist/lumx.css',
         'bower_components/mdi/css/materialdesignicons.css',
+        'bower_components/angular-material-icons/angular-material-icons.min.css',
+
     ]
     return gulp.src(libs)
         //.pipe(minify({mangle:false}))
