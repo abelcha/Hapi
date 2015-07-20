@@ -1,5 +1,5 @@
 <div class="container" style=" margin: auto;max-width: 1200px;">
-    <div class="row">
+    <div class="row" ng-right-click="vm.rowRightClick($event)">
         <div class="col-sm-12 " style="height:100%">
             <div class="form-horizontal" style="overflow:hidden;height:100%" novalidate>
                 <div class="card margin" style="padding:20px">
@@ -343,13 +343,21 @@
                                 <button ng-show="vm.data.status === 'ENC'  && vm.data.reglementSurPlace" ng-click="saveInter({verification:true})" class="btn--no-conflicts btn--l btn--black btn--fab" lx-ripple lx-tooltip="Verifier" tooltip-position="top"><i class="mdi mdi-check"></i></button>
                                 <button ng-show="vm.data.status === 'ENC' && !vm.data.reglementSurPlace" ng-click="calculPrixFinal();saveInter({verification:true, envoiFacture:true})" class="btn--no-conflicts btn--l btn--black btn--fab" lx-ripple lx-tooltip="Envoyer facture + vérifier" tooltip-position="top"><i class="mdi mdi-check-all"></i></button>
                                 <button ng-if="vm.data.status" ng-click="saveInter({annulation:true})" class="btn--no-conflicts btn--l btn--black btn--fab" lx-ripple lx-tooltip="Annuler" tooltip-position="top"><i class="fa fa-ban"></i></button>
-                                
                             </div>
                         </div>
                     </div>
                     </span>
                 </div>
             </div>
+        </div>
+    </div>
+    <div class="dropdown-menu--no-conflicts dropdown-menu--right dropdown__menu--is-dropped" style=" width: auto; height: auto; opacity: 1;" ng-style="vm.contextMenu.style">
+        <div class="dropdown-menu__content ng-scope">
+            <ul class="ng-scope">
+                <li ng-repeat="item in vm.contextMenu.list" ng-hide="item.hidden" ng-click="vm.contextMenu.close();vm.contextMenu.click(item)">
+                    <a class="dropdown-link" tabindex="{{$index}}">{{item.title}}</a>
+                </li>
+            </ul>
         </div>
     </div>
 </div>

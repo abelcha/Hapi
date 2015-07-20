@@ -56,6 +56,28 @@
      };
  }]);
 
+ angular.module('edison').directive('simpleLink', ['FiltersFactory', '$rootScope', function(FiltersFactory, $rootScope) {
+     "use strict";
+     return {
+         restrict: 'AE',
+         replace: true,
+         template: '<li>' +
+             '      <a href="{{url}}" >' +
+             '            <i ng-if="icon" class = "menu-icon fa fa-{{icon}}"> </i>' +
+             '            <span class="mm-text">{{title}}</span>' +
+             '        </a>' +
+             '      </li>',
+         scope: {
+             icon: '@',
+             title: '@',
+             url: '@',
+         },
+         link: function(scope, element, attrs) {
+         }
+     };
+ }]);
+
+
  angular.module('edison').directive('linkSeparator', [function() {
      "use strict";
      return {

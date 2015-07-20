@@ -106,7 +106,6 @@ module.exports = function(db) {
                 v: String,
                 cp: String,
             },
-            tva: Number
         },
         sav: [{
             status: String,
@@ -195,7 +194,29 @@ module.exports = function(db) {
             type: Number,
             default: 20
         },
-        searchText: String,
+        compta: {
+            paiement: {
+                pourcentage: {
+                    deplacement: Number,
+                    maindOeuvre: Number,
+                    fourniture: Number
+                },
+                ready: {
+                    type: Boolean,
+                    default: false
+                }
+            },
+            historique: [{
+                flushed: Date,
+                pourcentage: {
+                    deplacement: Number,
+                    maindOeuvre: Number,
+                    fourniture: Number
+                },
+                montantFinal: Number,
+                prixFinal: Number,
+            }]
+        }
     });
     return schema
 }

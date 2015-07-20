@@ -15,11 +15,11 @@
                     </ul>
                 </div>
             </div>
-            <div class="selectedIndex === 1 && !recap ? 'col-sm-8' : 'col-sm-12'" >
+            <div class="selectedIndex === 1 && !recap ? 'col-sm-8' : 'col-sm-12'">
                 <div style="cursor:default!important">
                     <md-content class="md-padding" ng-init="va = vm.sst" style="margin: 10px;">
                         <md-tabs md-selected="selectedIndex" md-dynamic-height md-border-bottom>
-                            <md-tab label="Informations" >
+                            <md-tab label="Informations">
                                 <md-content class="md-padding" ng-right-click="vm.rowRightClick($event, vm.sst)">
                                     <div class="col-sm-6" style="height:580px">
                                         <span class="fs-display-1 display-block">{{vm.sst.nomSociete}}</span><span class="fs-headline display-block"><i>{{vm.sst.representant.civilite}} {{vm.sst.representant.nom}} {{vm.sst.representant.prenom}}</i></span>
@@ -72,8 +72,11 @@
                                         <p class="md-display-2">Fourniture : <strong>{{vm.sst.pourcentage.fourniture}} %</strong></p> -->
                                     </div>
                                     <div class="col-sm-6">
-                                        <span class="fs-title display-block">Ajouté le {{vm.sst.date.ajout|date:"dd/MM/yy"}} par {{vm.sst.login.ajout}}</span>
+                                        <span style="width:90px;margin-top:4px" class="label fs-body-2 {{config.etatsArtisan[vm.sst.status].color}}">{{config.etatsArtisan[vm.sst.status].long_name}}</span>
+                                        <span style="width:90px;margin-top:4px" class="label fs-body-2 {{config.artisanOrigine[vm.sst.origin].color}}">{{config.artisanOrigine[vm.sst.origin].long_name}}</span>
+                                        <span style="width:90px;margin-top:4px" class="label fs-body-1  {{config.artisanSubStatus[vm.sst.subStatus].color}} accent-2">{{config.artisanSubStatus[vm.sst.subStatus].long_name}}</span>
 
+                                        <span class="fs-title display-block">Ajouté le {{vm.sst.date.ajout|date:"dd/MM/yy"}} par {{vm.sst.login.ajout}}</span>
                                         <br>
                                         <span class="fs-subhead display-block">{{vm.sst.address.n}} {{vm.sst.address.r}}, {{vm.sst.address.cp}} {{vm.sst.address.v}}</span>
                                         <img ng-src="{{vm.getStaticMap()}}" class="img-thumbnail" />

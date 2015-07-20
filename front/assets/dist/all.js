@@ -711,6 +711,28 @@ angular.module('edison').directive('select', function($interpolate) {
      };
  }]);
 
+ angular.module('edison').directive('simpleLink', ['FiltersFactory', '$rootScope', function(FiltersFactory, $rootScope) {
+     "use strict";
+     return {
+         restrict: 'AE',
+         replace: true,
+         template: '<li>' +
+             '      <a href="{{url}}" >' +
+             '            <i ng-if="icon" class = "menu-icon fa fa-{{icon}}"> </i>' +
+             '            <span class="mm-text">{{title}}</span>' +
+             '        </a>' +
+             '      </li>',
+         scope: {
+             icon: '@',
+             title: '@',
+             url: '@',
+         },
+         link: function(scope, element, attrs) {
+         }
+     };
+ }]);
+
+
  angular.module('edison').directive('linkSeparator', [function() {
      "use strict";
      return {
@@ -3413,7 +3435,7 @@ angular.module('edison').directive('infoCompta', ['config','Compta',
     }
 ]);
 
-var InterventionCtrl = function($window, $timeout, $rootScope, $scope, $location, $routeParams, dialog, fourniture, LxNotificationService, LxProgressService, tabContainer, edisonAPI, Address, $q, mapAutocomplete, productsList, config, interventionPrm, Intervention, Map) {
+var InterventionCtrl = function(ContextMenu, $window, $timeout, $rootScope, $scope, $location, $routeParams, dialog, fourniture, LxNotificationService, LxProgressService, tabContainer, edisonAPI, Address, $q, mapAutocomplete, productsList, config, interventionPrm, Intervention, Map) {
     "use strict";
 
     var _this = this;
@@ -3451,7 +3473,12 @@ var InterventionCtrl = function($window, $timeout, $rootScope, $scope, $location
             ajout: $rootScope.user.login
         }*/
 
-
+    _this.contextMenu = new ContextMenu('intervention')
+    _this.contextMenu.setData(intervention);
+    _this.rowRightClick = function($event, inter) {
+        _this.contextMenu.setPosition($event.pageX, $event.pageY)
+        _this.contextMenu.open();
+    }
 
 
     $scope.changeArtisan = function(sav) {

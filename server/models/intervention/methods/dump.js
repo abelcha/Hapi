@@ -71,7 +71,7 @@
                 });
             }
             var rtn = {
-                tva: 20,
+                tva: d.tva_facture  || 20,
                 aDemarcher: d.A_DEMARCHE,
                 id: d.id,
                 _id: d.id,
@@ -136,14 +136,14 @@
             }
 
             if (rtn.status === 'INT') {
-               rtn.status = 'VRF'
-               /* if (date.paiementCLI)
-                    rtn.status = 'RGL';
-                else if (date.paiementSST)
-                    rtn.status = 'PAY';
-                else {
-                    rtn.status = 'ATT'
-                }*/
+                rtn.status = 'VRF'
+                    /* if (date.paiementCLI)
+                         rtn.status = 'RGL';
+                     else if (date.paiementSST)
+                         rtn.status = 'PAY';
+                     else {
+                         rtn.status = 'ATT'
+                     }*/
             }
 
             /* FACTURE */
@@ -165,11 +165,8 @@
             rtn.prixFinal = d.prix_ht_final;
 
 
-            //return null;
-
             if (d.fact === true) {
                 rtn.facture = {
-                    tva: d.tva_facture,
                     payeur: d.type_facture,
                     email: d.mail_facture,
                     nom: d.nom_facture,
@@ -182,6 +179,52 @@
                         cp: d.code_postal_facture
                     },
                 }
+            }
+            //cout_fourniture_ht -> total fourniture
+            //fourniture_avancee -> avance par le sst
+            //return null;
+            if (d.comptaPrixFinal) {
+                rtn.tva = d.comptaTVA;
+                rtn.prixFinal = d.comptaPrixFinal;
+                rtn.compta = {
+                    paiement: {
+                        tva: rtn.tva,
+
+                        pourcentage: {
+                            deplacement: d.pDeplacement,
+                            maindOeuvre: d.pMaindOeuvre,
+                            fourniture: d.pFourniture
+                        },
+                    },
+                    historique: [{
+                        flushed: rtn.date.paiementSST,
+                        prixFinal: d.comptaPrixFinal,
+                        montantFinal: d.comptaMontantFinal,
+                        numeroCheque: d.numeroCheque,
+                    }]
+                }
+            }
+
+            var fournitureArtisan = parseFloat(d.comptaFournitureArtisan)
+            var fournitureEdison = parseFloat(d.comptaTotalFourniture) - fournitureArtisan
+            rtn.fourniture = [];
+            if (fournitureArtisan) {
+                rtn.fourniture.push({
+                    bl: "0",
+                    title: "Inconnu",
+                    fournisseur: d.fournisseur,
+                    pu: fournitureArtisan,
+                    quantite: 1
+                })
+            }
+            if (fournitureEdison) {
+                rtn.fourniture.push({
+                    bl: "0",
+                    title: "Inconnu",
+                    fournisseur: d.fournisseur,
+                    pu: fournitureEdison,
+                    quantite: 1
+                })
             }
             return rtn;
         }
@@ -226,7 +269,7 @@
                         addInDB(data, 0, function(err) {
                             if (err)
                                 return reject(err);
-                            db.model('intervention').cacheReload();
+                            // db.model('intervention').cacheReload();
                             return resolve({
                                 status: 'OK',
                                 time: (Date.now() - t) / 1000

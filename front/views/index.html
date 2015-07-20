@@ -109,6 +109,10 @@
                     <link fltr="i_sarl" icon="th-list" login="{{user.login}}" hash-model="dm" title="Relances cheques"></link>
                 </drop-down>
             </drop-down>
+            <drop-down title="Service Comptabilité" icon="circle" open-default="user.service === 'COMPTABILITE'">
+            <simple-link icon="credit-card" title="Liste Paiements Att." url="/compta/lpa"></simple-link>
+            <simple-link icon="database" title="Archives" url="/compta/archives"></simple-link>
+            </drop-down>
             <br>
             <br>
             <li>
@@ -127,7 +131,7 @@
                 </md-tabs>
             </div>
             <div id="content-wrapper">
-                <div ng-view style="margin-top: 36px;">
+                <div ng-view style="margin-top: 16px;">
                 </div>
                 <div id="globalProgress" style="position:fixed;top: 50%;left: 57%;z-index: 12222;"></div>
             </div>

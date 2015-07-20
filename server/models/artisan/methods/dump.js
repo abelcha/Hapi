@@ -31,9 +31,9 @@ module.exports = function(schema) {
                 civilite: d.civilite ||  "M."
             },
             pourcentage: {
-                deplacement: d.pourcentage_deplacement,
-                maindOeuvre: d.pourcentage_main_d_oeuvre,
-                fourniture: d.pourcentage_fourniture
+                deplacement: d.pDeplacement,
+                maindOeuvre: d.pMaindOeuvre,
+                fourniture: d.pFourniture
             },
             zoneChalandise: d.zone_chalandise ? d.zone_chalandise.slice(0, -2) : 30,
             address: {
