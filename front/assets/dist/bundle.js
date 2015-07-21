@@ -792,6 +792,13 @@ module.exports = {
         short_name: 'FORUM DU BATIMENT',
         type: 'Fourniture Edison'
     }],
+        modePaiement: [{
+        short_name: 'VIR',
+        long_name: 'Virement'
+    }, {
+        short_name: 'CHQ',
+        long_name: 'Chèque'
+    }],
     modeDeReglements: [{
         short_name: 'CB',
         long_name: 'Carte Bancaire'
@@ -804,9 +811,11 @@ module.exports = {
     }],
     tva: [{
         short_name: 10,
+        value: 0.1,
         long_name: "TVA: 10%"
     }, {
         short_name: 20,
+        value: 0.2,
         long_name: "TVA: 20%"
     }],
     typePayeur: [{

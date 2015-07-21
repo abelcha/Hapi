@@ -11,7 +11,6 @@
          },
          link: function(scope, element, attrs) {
              scope.config = config;
-             console.log(scope.noDetails)
              scope.searchPhone = function(tel) {
                  if (tel.length > 2) {
                      edisonAPI.searchPhone(tel)

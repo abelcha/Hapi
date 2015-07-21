@@ -195,7 +195,27 @@ module.exports = function(db) {
             default: 20
         },
         compta: {
+            reglement: {
+                date: Date,
+                recu: {
+                    type: Boolean,
+                    default: false
+                },
+                montant: {
+                    type: Number,
+                    default: 0
+                },
+                regulation: {
+                    type: Number,
+                    default: 0
+                }
+            },
             paiement: {
+                mode: {
+                    type: String,
+                    default: 'CHQ'
+                },
+                base: Number,
                 pourcentage: {
                     deplacement: Number,
                     maindOeuvre: Number,
@@ -206,16 +226,22 @@ module.exports = function(db) {
                     default: false
                 }
             },
+            info: {
+                facture: Boolean, // facture de l'intervention (si reglemenet est sur place)
+                attestationTva: Boolean, // attestation de tva (si tva=10%)
+                devis: Boolean, // devis (> 150)
+                fourniture: Boolean // bon cout de fourniture
+            },
             historique: [{
-                flushed: Date,
+                date: Date,
                 pourcentage: {
                     deplacement: Number,
                     maindOeuvre: Number,
                     fourniture: Number
                 },
+                basePaiement: Number,
                 montantFinal: Number,
-                prixFinal: Number,
-                numeroCheque:String
+                numeroCheque: String
             }]
         }
     });

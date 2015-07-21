@@ -39,6 +39,7 @@ module.exports = function(schema) {
         var fltr = FiltersFactory("intervention").filter(e);
         if (e.id % 10 === 1)
             console.log(e.id)
+        console.log(e.compta)
         var rtn = {
             f: !_.isEmpty(fltr) ? fltr : undefined,
             t: e.login.ajout,
@@ -51,7 +52,7 @@ module.exports = function(schema) {
             pa: e.prixFinal || e.prixAnnonce,
             da: d(e.date.ajout),
             di: d(e.date.intervention),
-            ps: e.date.paiementSST ? 1 : 0,
+            ps: _.get(e, 'compta.historique[0].flushed') ? 2 : e.date.paiementSST ? 1 : 0,
             pc: e.date.paiementCLI ? 1 : (fltr.i_sarl || fltr.i_carl ? 2 : 0),
             ad: e.client.address.cp + ', ' + e.client.address.v,
             dm: e.login.demarchage || undefined

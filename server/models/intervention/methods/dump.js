@@ -183,6 +183,7 @@
             //cout_fourniture_ht -> total fourniture
             //fourniture_avancee -> avance par le sst
             //return null;
+            rtn.compta = {}
             if (d.comptaPrixFinal) {
                 rtn.tva = d.comptaTVA;
                 rtn.prixFinal = d.comptaPrixFinal;
@@ -206,6 +207,9 @@
                         numeroCheque: d.numeroCheque,
                     }]
                 }
+            }
+            if (rtn.date.paiementCLI) {
+                rtn.compta.reglementClient = true
             }
 
             var fournitureArtisan = parseFloat(d.comptaFournitureArtisan)
@@ -261,7 +265,6 @@
             return new Promise(function(resolve, reject) {
                 var inters = [];
                 var t = Date.now();
-                console.log("==>", limit)
                 db.model('intervention').remove({
                     id: {
                         $gt: limit

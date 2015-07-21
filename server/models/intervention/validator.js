@@ -2,7 +2,7 @@ module.exports = function(schema) {
     var creditcard = require('creditcard');
     var key = requireLocal('config/_keys');
     var encryptor = require('simple-encryptor')(key.salt);
-
+    var _ = require('lodash')
 
     /* M.|Me|Soc. */
     schema.path('client.civilite').validate(function(value) {
@@ -34,7 +34,14 @@ module.exports = function(schema) {
         this.client.address.n = upper(this.client.address.n)
         this.client.address.r = upper(this.client.address.r)
         this.client.address.v = upper(this.client.address.v)
-        redis.del('interventionStats');
+
+/*        if (_.get(this, 'compta.paiement.ready')) {
+            this.date.paiementSST = new Date();
+        }
+        if (_.get(this, 'compta.reglementClient')) {
+            this.date.paiementCLI = new Date();
+        }
+*/
         if (this.cb.number) {
             if (!creditcard.validate(this.cb.number))
                 return next(new Error('Numero de carte invalide'))
@@ -44,6 +51,7 @@ module.exports = function(schema) {
             }
         }
         return next();
+
     });
 
     schema.post('save', function(doc) {
@@ -57,6 +65,7 @@ module.exports = function(schema) {
                 })
             }
             db.model('intervention').cacheActualise(doc);
+            redis.del('interventionStats');
         }
     })
 }

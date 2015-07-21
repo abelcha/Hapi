@@ -20,7 +20,6 @@ module.exports = function(schema) {
                 db.model('intervention').findOne({
                     id: data.id
                 }).then(function(doc) {
-
                     if (data.artisan && data.artisan.id && data.artisan.id !== doc.artisan.id) {
                         doc.status = 'APR';
                     }

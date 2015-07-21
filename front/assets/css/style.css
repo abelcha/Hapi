@@ -277,6 +277,15 @@ li>a:focus {
 md-tab-item[aria-selected="true"] {
     background-color: rgba(177, 177, 177, 0.10);
 }
-ul.md-autocomplete-suggestions{
-    z-index:1000;
+
+ul.md-autocomplete-suggestions {
+    z-index: 1000;
+}
+
+.switch__input:checked+.switch__label.switch_red:before {
+    background-color:#ef9a9a;
+}
+.switch__input:checked+.switch__label.switch_red:after {
+/*     background-color: #009688;*/
+      background-color: #f44336;
 }

@@ -15,7 +15,7 @@
                 </div>
                 <info-client ng-if="vm.data.client.address && vm.data.categorie" model="vm.data.client"></info-client>
                 <info-categorie model="vm.data.categorie" change="vm.searchArtisans(newCategorie)"></info-categorie>
-                <div class="row" style="margin:0">
+                <div class="row" style="margin:0" ng-if="aze">
                     <div class="col-sm-8" style="padding-left:0">
                         <div class="card margin">
                             <div class="p+">
