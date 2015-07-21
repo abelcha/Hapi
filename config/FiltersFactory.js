@@ -253,6 +253,35 @@ FiltersFactory.prototype.list = {
             return inter.status === "APR";
         }
     }, {
+        short_name: 'i_pay',
+        long_name: 'Payés',
+        url: 'paye',
+        stats: false,
+        fn: function(inter) {
+            return inter.compta.paiement.effectue
+        }
+    }, {
+        short_name: 'i_rgl',
+        long_name: 'Réglé',
+        url: 'regle',
+        stats: false,
+        fn: function(inter) {
+            return inter.compta.reglement.recu
+        }
+    },{
+        short_name: 'i_vrf',
+        long_name: 'Verifié',
+        url: 'verifie',
+        match: function() {
+            return {
+                status: 'VRF',
+            }
+        },
+        stats: true,
+        fn: function(inter) {
+            return inter.status === 'VRF'
+        }
+    }, {
         short_name: 'i_sarl',
         long_name: 'Relance sous-traitant',
         url: 'relanceArtisan',
@@ -260,9 +289,7 @@ FiltersFactory.prototype.list = {
             return {
                 status: 'VRF',
                 reglementSurPlace: true,
-                'date.paiementCLI': {
-                    $exists: false
-                },
+                'compta.reglement.recu': false,
                 'date.intervention': {
                     $lt: new Date(Date.now() - ms.weeks(2)),
                 }
@@ -271,7 +298,7 @@ FiltersFactory.prototype.list = {
         stats: true,
         fn: function(inter) {
             return inter.status === 'VRF' && inter.reglementSurPlace &&
-                !inter.date.paiementCLI && Date.now() > dateInter(inter) + ms.weeks(2);
+                !inter.compta.reglement.recu && Date.now() > dateInter(inter) + ms.weeks(2);
         }
     }, {
         short_name: 'i_carl',
@@ -280,9 +307,7 @@ FiltersFactory.prototype.list = {
         match: function() {
             return {
                 status: 'VRF',
-                'date.paiementCLI': {
-                    $exists: false
-                },
+                'compta.reglement.recu': false,
                 reglementSurPlace: false,
                 'date.intervention': {
                     $lt: new Date(Date.now() - ms.weeks(2)),
@@ -291,7 +316,7 @@ FiltersFactory.prototype.list = {
         },
         fn: function(inter) {
             return inter.status === 'VRF' && !inter.reglementSurPlace &&
-                !inter.date.paiementCLI && Date.now() > dateInter(inter) + ms.weeks(2);
+                !inter.compta.reglement.recu && Date.now() > dateInter(inter) + ms.weeks(2);
         }
     }, {
         short_name: 'i_fact',

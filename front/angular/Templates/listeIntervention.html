@@ -36,14 +36,17 @@
                         <span style="width:75px" class="label {{::config.etatsHash()[inter.s].color}} display-block"> 
                         {{inter._etat}}</span>
                     </td>
-                    <td data-title="'Pmnt'" sortable="'pc'" filter="{ 'ps': 'text' }">
+                    <td data-title="'R. Client'" sortable="'rc'" filter="{ 'rc': 'text' }">
+                    {{inter.rc}}
+                    </td>
+                    <!--                     <td data-title="'Pmnt'" sortable="'pc'" filter="{ 'ps': 'text' }">
                         <span ng-if="inter.pc || inter.ps || inter._status.short_name === 'VRF'" style="width:40px" class="label {{::config.paiementCLI(inter).color}}"> 
                          <i class="{{::config.paiementCLI(inter).icon}}"></i>
                          </span>
                         <span ng-if="inter.pc || inter.ps || inter._status.short_name === 'VRF'" style="width:40px;margin-left:3px" class="label {{::config.paiementSST(inter).color}}"> 
                          <i class="{{::config.paiementSST(inter).icon}}"></i>
                        </span>
-                    </td>
+                    </td> -->
                 </tr>
                 <tr ng-repeat-end ng-if="expendedRow && expendedRow === inter.id" ng-right-click="rowRightClick($event, inter)">
                     <td colspan="42" style="background-color:white!important">

@@ -15,7 +15,7 @@ module.exports = function(schema) {
         '-_id',
         'id',
         'login',
-        "sav",
+        'sav',
         'status',
         'client.civilite',
         'client.nom',
@@ -26,10 +26,34 @@ module.exports = function(schema) {
         'artisan',
         'reglementSurPlace',
         'date',
+        'compta',
         "aDemarcher",
     ].join(' ');
 
 
+    var getReglementClient = function(e, fltr) {
+        if (fltr.i_rgl) {
+            return 1;
+        } else if (fltr.i_vrf) {
+            if (e.reglementSurPlace) {
+                return fltr.i_sarl ? 2 : 3
+            } else {
+                return fltr.i_carl ? 4 : 5
+            }
+        } else {
+            return 0
+        }
+    }
+
+    var getPaiementArtisan = function(e, fltr) {
+        if (fltr.i_pay) {
+            return 1;
+        } else if (fltr.i_rgl) {
+            return 2
+        } else {
+            return 0
+        }
+    }
 
     var translate = function(e) {
         if (e.status === "ENC" && Date.now() > (new Date(e.date.intervention)).getTime()) {
@@ -39,7 +63,6 @@ module.exports = function(schema) {
         var fltr = FiltersFactory("intervention").filter(e);
         if (e.id % 10 === 1)
             console.log(e.id)
-        console.log(e.compta)
         var rtn = {
             f: !_.isEmpty(fltr) ? fltr : undefined,
             t: e.login.ajout,
@@ -52,8 +75,8 @@ module.exports = function(schema) {
             pa: e.prixFinal || e.prixAnnonce,
             da: d(e.date.ajout),
             di: d(e.date.intervention),
-            ps: _.get(e, 'compta.historique[0].flushed') ? 2 : e.date.paiementSST ? 1 : 0,
-            pc: e.date.paiementCLI ? 1 : (fltr.i_sarl || fltr.i_carl ? 2 : 0),
+            rc: getReglementClient(e, fltr) ||  undefined,
+            ps: getPaiementArtisan(e, fltr) ||  undefined,
             ad: e.client.address.cp + ', ' + e.client.address.v,
             dm: e.login.demarchage || undefined
         };

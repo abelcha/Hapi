@@ -30,19 +30,22 @@
                         </div>
                     </td>
                     <td data-title="'Prix'" sortable="'pa'" filter="{ 'pa': 'text' }">
-                       <strong> {{::(inter.pa | number:2) || 0}} €</strong>
+                        <strong> {{::(inter.pa | number:2) || 0}} €</strong>
                     </td>
                     <td ng-init="inter._status = vm.config.etatsHash()[inter.s];inter._etat = inter._status.long_name" data-title="'Status'" sortable="'s'" filter="{ '_etat': 'text' }">
-                        <span style="width:75px" class="label {{::vm.config.etatsHash()[inter.s].color}} display-block"> 
+                        <span style="width:70px" class="label {{::vm.config.etatsHash()[inter.s].color}} display-block"> 
                         {{inter._etat}}</span>
                     </td>
-                    <td data-title="'Pmnt'" sortable="'pc'" filter="{ 'ps': 'text' }">
-                        <span ng-if="inter.pc || inter.ps || inter._status.short_name === 'VRF'"  style="width:40px" class="label {{::config.paiementCLI(inter).color}}"> 
-                         <i class="{{::config.paiementCLI(inter).icon}}"></i>
-                         </span>
-                        <span ng-if="inter.pc || inter.ps || inter._status.short_name === 'VRF'"  style="width:40px;margin-left:3px" class="label {{::config.paiementSST(inter).color}}"> 
-                         <i class="{{::config.paiementSST(inter).icon}}"></i>
-                       </span>
+                    <td data-title="'rCli'" sortable="'rc'" filter="{ 'rc': 'select' }" filter-data="config.reglementClient">
+                        <span ng-if="inter.rc" style="width:30px" class="label display-block {{vm.config.reglementClient[inter.rc].color}}">
+                        <i class="fa fa-{{vm.config.reglementClient[inter.rc].icon}}"></i>
+                    </span>
+                    </td>
+                    <td data-title="'rSST'" sortable="'ps'" filter="{ 'ps': 'select' }" filter-data="config.paiementArtisan">
+                        <span ng-if="inter.ps" style="width:30px" class="label display-block {{vm.config.paiementArtisan[inter.ps].color}}">
+                        <i class="fa fa-{{vm.config.paiementArtisan[inter.ps].icon}}"></i>
+                    </span>
+                        {{inter.ps}}
                     </td>
                 </tr>
                 <tr ng-repeat-end ng-if="expendedRow && expendedRow === inter.id" ng-right-click="vm.rowRightClick($event, inter)">

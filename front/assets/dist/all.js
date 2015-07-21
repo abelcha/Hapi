@@ -931,6 +931,7 @@ angular.module("edison").filter('tableFilter', ['config', function(config) {
 
     return function(dataContainer, inputs, strictMode) {
         var rtn = [];
+        console.log(inputs)
         console.time('fltr')
         inputs = _.mapValues(inputs, clean);
         _.each(dataContainer, function(data) {
@@ -3994,7 +3995,7 @@ angular.module('edison').controller('statsController', function($scope) {
     $scope.data = [300, 500, 100];
 });
 
-var InterventionsController = function(tabContainer, FiltersFactory, ContextMenu, LxProgressService, edisonAPI, DataProvider, $routeParams, $location, $rootScope, $filter, config, ngTableParams) {
+var InterventionsController = function($q, tabContainer, FiltersFactory, ContextMenu, LxProgressService, edisonAPI, DataProvider, $routeParams, $location, $rootScope, $filter, config, ngTableParams) {
     "use strict";
     var _this = this;
     var currentFilter;

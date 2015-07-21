@@ -221,6 +221,14 @@ module.exports = function(db) {
                     maindOeuvre: Number,
                     fourniture: Number
                 },
+                dette: {
+                    type: Boolean,
+                    default: true
+                },
+                effectue: {
+                    type: Boolean,
+                    default: false
+                },
                 ready: {
                     type: Boolean,
                     default: false

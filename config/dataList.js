@@ -57,30 +57,73 @@ module.exports = {
             color: 'deep-orange white-text'
         }
     },
-    paiementCLI: function(inter) {
-        return [{
-            icon: 'fa fa-circle-o',
-            color: 'orange'
-        }, {
-            icon: 'fa fa-check',
-            color: 'green'
-        }, {
-            icon: 'fa fa-warning',
-            color: 'red'
-        }][inter.pc]
-    },
-    paiementSST: function(inter) {
-        return [{
-            icon: 'fa fa-circle-o',
-            color: 'orange'
-        }, {
-            icon: 'fa fa-check',
-            color: 'green'
-        }, {
-            icon: 'fa fa-warning',
-            color: 'red'
-        }][inter.ps]
-    },
+    paiementArtisan: [{
+        title: '',
+        id: ''
+    }, {
+        title: 'Payé',
+        color:'green',
+        icon:'check',
+        id: 1
+    }, {
+        title: 'A Payé',
+        color:'orange',
+        icon:'refresh fa-spin',
+        id: 2
+    }],
+    reglementClient: [{
+        title: '',
+        id: ''
+    }, {
+        title: 'Réglé',
+        id: 1,
+        color: "green",
+        icon: 'check'
+    }, {
+        id: 2,
+        title: 'Sst Att.',
+        color: 'red',
+        icon: 'truck'
+    }, {
+        id: 3,
+        title: 'Sst Att.',
+        color: 'orange',
+        icon: 'truck'
+    }, {
+        id: 4,
+        title: 'Cli. Att.',
+        color: 'red',
+        icon: 'user'
+    }, {
+        id: 5,
+        title: 'Cli. Att.dd',
+        color: 'orange',
+        icon: 'user'
+    }],
+    /*    paiementCLI: function(inter) {
+            return [{
+                icon: 'fa fa-circle-o',
+                color: 'orange'
+            }, {
+                icon: 'fa fa-check',
+                color: 'green'
+            }, {
+                icon: 'fa fa-warning',
+                color: 'red'
+            }][inter.pc]
+        },
+        paiementSST: function(inter) {
+            return [{
+                icon: 'fa fa-circle-o',
+                color: 'orange'
+            }, {
+                icon: 'fa fa-check',
+                color: 'green'
+            }, {
+                icon: 'fa fa-warning',
+                color: 'red'
+            }][inter.ps]
+        },*/
     categoriesHash: function() {
         return [this.categories.PL,
             this.categories.CH,
@@ -197,7 +240,7 @@ module.exports = {
         short_name: 'FORUM DU BATIMENT',
         type: 'Fourniture Edison'
     }],
-        modePaiement: [{
+    modePaiement: [{
         short_name: 'VIR',
         long_name: 'Virement'
     }, {

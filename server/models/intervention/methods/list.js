@@ -28,7 +28,7 @@ module.exports = function(schema) {
             if (!reloadCache)  {
                 redis.get('interventionList', function(err, reply) {
                     if (!err && reply) { 
-                        res.send(reply)
+                        res.json(JSON.parse(reply))
                     } else {
                         return getCache(resolve, reject);
                     }

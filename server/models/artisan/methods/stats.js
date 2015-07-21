@@ -54,9 +54,7 @@ module.exports = function(schema) {
                         }),
                         paye: sumCount({
                             status: 'VRF',
-                            'date.paiementSST': {
-                                $exists: true
-                            }
+                            'compta.paiement.effectue': true
                         }),
                         envoye: sumCount({
                             status: 'ENC'
@@ -67,9 +65,7 @@ module.exports = function(schema) {
                             'date.intervention': {
                                 $lte: lastMonth
                             },
-                            'date.paiementCLI': {
-                                $exists: false
-                            }
+                            'compta.reglement.recu': false,
                         }),
                         aVerifier: sumCount({
                             status: 'ENC',
@@ -80,14 +76,10 @@ module.exports = function(schema) {
                         impaye: sumCount({
                             status: 'VRF',
                             reglementSurPlace: true,
-                            'date.paiementCLI': {
-                                $exists: false
-                            }
+                            'compta.reglement.recu': false,
                         }),
                         paye: sumCount({
-                            'date.paiementCLI': {
-                                $exists: true
-                            }
+                            'compta.reglement.recu': true,
                         })
                     },
                     function(err, results) {

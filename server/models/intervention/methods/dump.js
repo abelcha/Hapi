@@ -20,18 +20,12 @@
 
         var translateModel = function(d) {
 
-
             /* DATES */
             var date = {};
 
             addProp(date, toDate(d.t_stamp), 'ajout');
             addProp(date, toDate(d.t_stamp_intervention), 'intervention');
 
-            if (d.date_paiement_client)
-                addProp(date, toDate(d.date_paiement_client), 'paiementCLI');
-
-            if (d.date_paiement_sst)
-                addProp(date, toDate(d.date_paiement_sst), 'paiementSST');
 
             if (d.date_edition_facture)
                 addProp(date, toDate(d.date_edition_facture), 'verification')
@@ -137,13 +131,6 @@
 
             if (rtn.status === 'INT') {
                 rtn.status = 'VRF'
-                    /* if (date.paiementCLI)
-                         rtn.status = 'RGL';
-                     else if (date.paiementSST)
-                         rtn.status = 'PAY';
-                     else {
-                         rtn.status = 'ATT'
-                     }*/
             }
 
             /* FACTURE */
@@ -184,20 +171,26 @@
             //fourniture_avancee -> avance par le sst
             //return null;
             rtn.compta = {}
+                //paiement effectue
             if (d.comptaPrixFinal) {
                 rtn.tva = d.comptaTVA;
                 rtn.prixFinal = d.comptaPrixFinal;
                 rtn.compta = {
                     paiement: {
+                        dette: Boolean(d.etat_reglement),
+                        ready: Boolean(d.numeroCheque == ""),
+                        effectue: Boolean(d.numeroCheque != ""),
                         pourcentage: {
                             deplacement: d.pDeplacement,
                             maindOeuvre: d.pMaindOeuvre,
                             fourniture: d.pFourniture
-                        },
+                        }
                     },
-                    historique: [{
-                        flushed: rtn.date.paiementSST,
-                        prixFinal: d.comptaPrixFinal,
+                }
+                if (rtn.compta.paiement.effectue) {
+                    rtn.compta.paiement.historique = [{
+                        date: toDate(d.date_paiement_sst),
+                        basePaiement: d.comptaPrixFinal,
                         montantFinal: d.comptaMontantFinal,
                         pourcentage: {
                             deplacement: d.pDeplacement,
@@ -208,8 +201,14 @@
                     }]
                 }
             }
-            if (rtn.date.paiementCLI) {
-                rtn.compta.reglementClient = true
+
+            if (d.date_paiement_client) {
+                rtn.compta.reglement = {
+                    date: toDate(d.date_paiement_client),
+                    recu: true,
+                    montant: rtn.prixFinal,
+
+                }
             }
 
             var fournitureArtisan = parseFloat(d.comptaFournitureArtisan)
