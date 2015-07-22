@@ -177,9 +177,12 @@
                 rtn.prixFinal = d.comptaPrixFinal;
                 rtn.compta = {
                     paiement: {
-                        dette: Boolean(d.etat_reglement),
-                        ready: Boolean(d.numeroCheque == ""),
-                        effectue: Boolean(d.numeroCheque != ""),
+                        mode: d.pVirement == "0" ? "CHQ" : "VIR",
+                        base: d.comptaPrixFinal,
+                        montant: d.comptaMontantFinal,
+                        dette: d.etat_reglement === "DETTE",
+                        ready: true,//Boolean(d.numeroCheque == ""),
+                        effectue: false,//Boolean(d.numeroCheque != ""),
                         pourcentage: {
                             deplacement: d.pDeplacement,
                             maindOeuvre: d.pMaindOeuvre,
@@ -188,10 +191,10 @@
                     },
                 }
                 if (rtn.compta.paiement.effectue) {
-                    rtn.compta.paiement.historique = [{
+                    rtn.compta.historique = [{
                         date: toDate(d.date_paiement_sst),
-                        basePaiement: d.comptaPrixFinal,
-                        montantFinal: d.comptaMontantFinal,
+                        base: d.comptaPrixFinal,
+                        montant: d.comptaMontantFinal,
                         pourcentage: {
                             deplacement: d.pDeplacement,
                             maindOeuvre: d.pMaindOeuvre,

@@ -11,6 +11,8 @@ angular.module('edison').directive('infoCompta', ['config', 'Compta',
                 scope.config = config
                 var reglement = scope.data.compta.reglement
                 var paiement = scope.data.compta.paiement
+                if (!paiement.mode)
+                    paiement.mode = _.get(scope.data.artisan, 'document.rib.file') ? "VIR" : "CHQ"
                 scope.compta = new Compta(scope.data)
                 scope.$watch('data', function(current) {
                     scope.compta = new Compta(current);
@@ -26,7 +28,8 @@ angular.module('edison').directive('infoCompta', ['config', 'Compta',
                         var montant = reglement.montantTTC || 0
                         var coeff = 100 * (100 / (100 + scope.data.tva));
                         reglement.montant = Compta().applyCoeff(reglement.montantTTC, coeff)
-                        paiement.base = reglement.montant - reglement.avoir
+                        paiement.base = _.round(reglement.montant - reglement.avoir, 2)
+                        paiement.montant = scope.compta.montantTotal
                     }
                 });
             },

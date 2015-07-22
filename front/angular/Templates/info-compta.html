@@ -17,7 +17,7 @@
                             <input ng-model="reglement.montant" type="number" disabled="true">
                         </lx-text-field>
                     </div>
-                    <div class="col-sm-2 col-sm-offset-2">
+                    <div class="col-sm-2 col-sm-offset-2" ng-if="data.compta.historique">
                         <lx-text-field label="Avoir">
                             <input ng-model="reglement.avoir" type="number">
                         </lx-text-field>

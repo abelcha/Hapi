@@ -205,7 +205,7 @@ module.exports = function(db) {
                     type: Number,
                     default: 0
                 },
-                regulation: {
+                avoir: {
                     type: Number,
                     default: 0
                 }
@@ -216,6 +216,7 @@ module.exports = function(db) {
                     default: 'CHQ'
                 },
                 base: Number,
+                montant: Number,
                 pourcentage: {
                     deplacement: Number,
                     maindOeuvre: Number,
@@ -247,8 +248,8 @@ module.exports = function(db) {
                     maindOeuvre: Number,
                     fourniture: Number
                 },
-                basePaiement: Number,
-                montantFinal: Number,
+                base: Number,
+                montant: Number,
                 numeroCheque: String
             }]
         }

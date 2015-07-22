@@ -31,13 +31,13 @@ module.exports = function(schema) {
                 civilite: d.civilite ||  "M."
             },
             pourcentage: {
-                deplacement: d.pDeplacement,
-                maindOeuvre: d.pMaindOeuvre,
-                fourniture: d.pFourniture
+                deplacement: d.pourcentage_deplacement || 30,
+                maindOeuvre: d.pourcentage_main_d_oeuvre || 30,
+                fourniture: d.pourcentage_fourniture || 30
             },
             zoneChalandise: d.zone_chalandise ? d.zone_chalandise.slice(0, -2) : 30,
             address: {
-                n: d.numero,
+                n: d.numero || "1",
                 r: d.adresse,
                 v: d.ville,
                 cp: d.code_postal,
@@ -49,7 +49,6 @@ module.exports = function(schema) {
             siret: d.siret || undefined,
             loc: [parseFloat(d.lat), parseFloat(d.lng)],
         };
-
 
         if (d.num_facturier) {
             rtn.historique.facturier = [{

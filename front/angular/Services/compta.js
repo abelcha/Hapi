@@ -9,6 +9,9 @@ angular.module('edison').factory('Compta', function() {
             _this.inter = function() {
                 return inter;
             }
+            if (!inter.tva) {
+                inter.tva = 20
+            }
             var reglement = inter.compta.reglement
             var paiement = inter.compta.paiement
             if (!_.get(inter, 'compta.paiement.pourcentage.deplacement')) {
@@ -37,11 +40,8 @@ angular.module('edison').factory('Compta', function() {
 
     Compta.prototype = {
         inter: {},
-        round: function(number) {
-            return Math.floor(number * 100) / 100
-        },
         applyCoeff: function(number, Coeff) {
-            return this.round(number * (Coeff / 100));
+            return _.round(number * (Coeff / 100), 2);
         },
         prixDeplacement: function() {
             if (this.montantHT <= 65) {
@@ -67,8 +67,8 @@ angular.module('edison').factory('Compta', function() {
                 total: 0
             };
             _.each(inter.fourniture, function(e) {
-                fourniture[e.fournisseur === 'ARTISAN' ? 'artisan' : 'edison'] += _this.round(e.pu * e.quantite);
-                fourniture.total += _this.round(e.pu * e.quantite);
+                fourniture[e.fournisseur === 'ARTISAN' ? 'artisan' : 'edison'] += _.round(e.pu * e.quantite, 2);
+                fourniture.total += _.round(e.pu * e.quantite, 2);
             })
             return fourniture;
         },

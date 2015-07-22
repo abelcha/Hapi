@@ -1,15 +1,54 @@
 <div class="container" style=" margin: auto;max-width: 1200px;">
     <div class="row">
         <div class="card margin" style="height:800px;padding:20px;overflow:scroll">
-        <input type="number" ng-model="debutCheque" class="form-control" style="width:200px" placeholder="Debut">
-            <md-list>
+            <!-- 
+        <input type="number" ng-model="debutCheque" class="form-control" style="width:200px" placeholder="Debut"> -->
+            <!--             <md-list>
                 <md-subheader class="md-no-sticky">Liste Paiements en Attentes</md-subheader>
                 <md-list-item ng-repeat="r in vm.result">
                     <md-checkbox ng-model="r.toFlush"></md-checkbox>
                    <span style="width:4%"></span> <span style="width:10%">{{r.id}}</span> <span style="width:30%">{{r.artisan.nomSociete}}</span><span style="width:25%">{{r.prixFinal}} €</span>
                    <span ><input type="number" ng-model="r.numeroCheque" class="form-control"></span>
                 </md-list-item>
-            </md-list>
+            </md-list> -->
+            <md-content>
+                <md-list>
+                    <md-subheader ng-repeat-start="artisan in vm.result" class="md-no-sticky">{{artisan[0].artisan.nomSociete}}</md-subheader>
+                    <md-list-item class="md-3-line" ng-repeat="item in artisan">
+                        <div class="md-list-item-text">
+                            <h3>{{ item.id }} - {{ item.compta.paiement.montant }} €</h3>
+                            <md-checkbox class="md-secondary" ng-model="topping.wanted"></md-checkbox>
+                        </div>
+                    </md-list-item>
+                    <md-divider ng-repeat-end></md-divider>
+                    <!-- <md-subheader class="md-no-sticky">2 line item</md-subheader>
+                    <md-list-item class="md-2-line">
+                        <img ng-src="{{todos[0].face}}?20" class="md-avatar" alt="{{todos[0].who}}" />
+                        <div class="md-list-item-text">
+                            <h3>{{ todos[0].who }}</h3>
+                            <p>Secondary text</p>
+                        </div>
+                    </md-list-item>
+                    <md-divider></md-divider>
+                    <md-subheader class="md-no-sticky">3 line item, long paragraph (see on mobile)</md-subheader>
+                    <md-list-item class="md-3-line">
+                        <img ng-src="{{todos[0].face}}?25" class="md-avatar" alt="{{todos[0].who}}" />
+                        <div class="md-list-item-text">
+                            <h3>{{ todos[0].who }}</h3>
+                            <p>Secondary line text Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam massa quam.</p>
+                        </div>
+                    </md-list-item>
+                    <md-divider></md-divider>
+                    <md-subheader class="md-no-sticky">md-offset class</md-subheader>
+                    <md-list-item class="md-2-line" ng-repeat="phone in phones">
+                        <md-icon md-svg-icon="communication:phone" ng-if="$index === 0"></md-icon>
+                        <div class="md-list-item-text" ng-class="{'md-offset': $index != 0 }">
+                            <h3> {{ phone.number }} </h3>
+                            <p> {{ phone.type }} </p>
+                        </div>
+                    </md-list-item> -->
+                </md-list>
+            </md-content>
         </div>
     </div>
 </div>

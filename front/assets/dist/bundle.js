@@ -701,7 +701,7 @@ module.exports = {
         icon: 'check'
     }, {
         id: 2,
-        title: 'Sst Att.',
+        title: 'Sst Att. Urgent',
         color: 'red',
         icon: 'truck'
     }, {
@@ -711,12 +711,12 @@ module.exports = {
         icon: 'truck'
     }, {
         id: 4,
-        title: 'Cli. Att.',
+        title: 'Cli. Att. Urgent',
         color: 'red',
         icon: 'user'
     }, {
         id: 5,
-        title: 'Cli. Att.dd',
+        title: 'Cli. Att.',
         color: 'orange',
         icon: 'user'
     }],
