@@ -181,8 +181,8 @@
                         base: d.comptaPrixFinal,
                         montant: d.comptaMontantFinal,
                         dette: d.etat_reglement === "DETTE",
-                        ready: true,//Boolean(d.numeroCheque == ""),
-                        effectue: false,//Boolean(d.numeroCheque != ""),
+                        ready: Boolean(d.numeroCheque == ""),
+                        effectue: Boolean(d.numeroCheque != ""),
                         pourcentage: {
                             deplacement: d.pDeplacement,
                             maindOeuvre: d.pMaindOeuvre,
