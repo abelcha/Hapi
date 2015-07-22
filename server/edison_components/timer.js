@@ -28,13 +28,13 @@ var Timer = module.exports = function() {
             name: 'db',
             model: 'intervention',
             method: 'workerDump',
-            arg: 21000
+            arg: 23000
         }).then(function() {
             edison.worker.createJob({
                 name: 'db',
                 model: 'devis',
                 method: 'workerDump',
-                arg: 21000
+                arg: 23000
             })
         })
     })

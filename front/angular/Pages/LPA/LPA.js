@@ -14,7 +14,13 @@ var LpaController = function(tabContainer, edisonAPI, $scope) {
     		}
     	})
     }
-
+    _this.checkArtisan = function(sst) {
+        console.log(sst)
+        sst.checked = !sst.checked
+        _.each(sst.list, function(e) {
+            e.checked = sst.checked;
+        })
+    }
     $scope.$watch('debutCheque', function(current) {
         console.log(current)
     })

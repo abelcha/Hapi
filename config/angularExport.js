@@ -13,3 +13,6 @@ angular.module('browserify', [])
     .factory('FiltersFactory', [function() {
         return require('./FiltersFactory');
     }])
+    .factory('Paiement', [function() {
+        return require('./Paiement');
+    }])

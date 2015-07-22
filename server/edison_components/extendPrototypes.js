@@ -7,4 +7,8 @@ module.exports = function() {
     	var pow = Math.pow(10, number);
     	return Math.round(this * pow) /  pow;
     }
+    Number.prototype.safeAdd = function(number) {
+    	console.log(this, number, (this + number).round())
+    	return (this + number).round()
+    }
 }

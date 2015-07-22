@@ -17,7 +17,7 @@
                             <input ng-model="reglement.montant" type="number" disabled="true">
                         </lx-text-field>
                     </div>
-                    <div class="col-sm-2 col-sm-offset-2" ng-if="data.compta.historique">
+                    <div class="col-sm-2 col-sm-offset-2" ng-if="data.compta.historique.length">
                         <lx-text-field label="Avoir">
                             <input ng-model="reglement.avoir" type="number">
                         </lx-text-field>
@@ -77,11 +77,12 @@
                 <div class="row">
                     <div class="col-sm-3 col-sm-offset-9">
                         <div class="switch" style="float:right;margin-right:30px">
-                            <input type="checkbox" id="switch3" ng-model="lol" class="switch__input">
+                            <input type="checkbox" id="switch3" ng-model="paiement.dette" class="switch__input">
                             <label for="switch3" class="switch__label switch_red">_Dette</label>
                         </div>
                     </div>
                 </div>
+                <h2 ng-if="paiement.montant">Montant payé : {{paiement.montant}} €</h2>
                 <br>
                 <h4 ng-click="displaySimulation = !displaySimulation"> > Simulation</h4>
                 <pre ng-if="displaySimulation"><h4>{{compta|json}}</h4></pre>

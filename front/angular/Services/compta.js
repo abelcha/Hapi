@@ -9,17 +9,14 @@ angular.module('edison').factory('Compta', function() {
             _this.inter = function() {
                 return inter;
             }
-            if (!inter.tva) {
-                inter.tva = 20
-            }
             var reglement = inter.compta.reglement
             var paiement = inter.compta.paiement
             if (!_.get(inter, 'compta.paiement.pourcentage.deplacement')) {
                 paiement.pourcentage = _.clone(inter.artisan.pourcentage)
             }
-            reglement.montant = _.get(inter, 'compta.reglement.montant', 0);
-            reglement.avoir = _.get(inter, 'compta.reglement.avoir', 0)
 
+            reglement.montant = _.get(inter, 'compta.reglement.montant', 0);
+            reglement.avoir = _.get(inter, 'compta.reglement.avoir', 0);
             _this.pourcentage = inter.compta.paiement.pourcentage;
             _this.fourniture = this.getFourniture(inter);
             _this.prixHT = inter.compta.paiement.base

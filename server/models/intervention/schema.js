@@ -218,19 +218,30 @@ module.exports = function(db) {
                 base: Number,
                 montant: Number,
                 pourcentage: {
-                    deplacement: Number,
-                    maindOeuvre: Number,
-                    fourniture: Number
+                    deplacement: {
+                        type: Number,
+                        default: 50
+                    },
+                    maindOeuvre: {
+                        type: Number,
+                        default: 30
+                    },
+                    fourniture: {
+                        type: Number,
+                        default: 30
+                    }
                 },
                 dette: {
                     type: Boolean,
                     default: true
                 },
                 effectue: {
+                    index: true,
                     type: Boolean,
                     default: false
                 },
                 ready: {
+                    index: true,
                     type: Boolean,
                     default: false
                 }
@@ -244,9 +255,18 @@ module.exports = function(db) {
             historique: [{
                 date: Date,
                 pourcentage: {
-                    deplacement: Number,
-                    maindOeuvre: Number,
-                    fourniture: Number
+                    deplacement: {
+                        type: Number,
+                        default: 50
+                    },
+                    maindOeuvre: {
+                        type: Number,
+                        default: 30
+                    },
+                    fourniture: {
+                        type: Number,
+                        default: 30
+                    }
                 },
                 base: Number,
                 montant: Number,

@@ -1517,17 +1517,14 @@ angular.module('edison').factory('Compta', function() {
             _this.inter = function() {
                 return inter;
             }
-            if (!inter.tva) {
-                inter.tva = 20
-            }
             var reglement = inter.compta.reglement
             var paiement = inter.compta.paiement
             if (!_.get(inter, 'compta.paiement.pourcentage.deplacement')) {
                 paiement.pourcentage = _.clone(inter.artisan.pourcentage)
             }
-            reglement.montant = _.get(inter, 'compta.reglement.montant', 0);
-            reglement.avoir = _.get(inter, 'compta.reglement.avoir', 0)
 
+            reglement.montant = _.get(inter, 'compta.reglement.montant', 0);
+            reglement.avoir = _.get(inter, 'compta.reglement.avoir', 0);
             _this.pourcentage = inter.compta.paiement.pourcentage;
             _this.fourniture = this.getFourniture(inter);
             _this.prixHT = inter.compta.paiement.base
@@ -3444,8 +3441,8 @@ angular.module('edison').controller('DevisController', DevisCtrl);
 
  }]);
 
-angular.module('edison').directive('infoCompta', ['config', 'Compta',
-    function(config, Compta) {
+angular.module('edison').directive('infoCompta', ['config', 'Paiement',
+    function(config, Paiement) {
         "use strict";
         return {
             restrict: 'E',
@@ -3457,27 +3454,42 @@ angular.module('edison').directive('infoCompta', ['config', 'Compta',
                 scope.config = config
                 var reglement = scope.data.compta.reglement
                 var paiement = scope.data.compta.paiement
-                if (!paiement.mode)
+                if (!scope.data.tva) {
+                    scope.data.tva = 20
+                }
+                if (!paiement.mode) {
                     paiement.mode = _.get(scope.data.artisan, 'document.rib.file') ? "VIR" : "CHQ"
-                scope.compta = new Compta(scope.data)
-                scope.$watch('data', function(current) {
-                    scope.compta = new Compta(current);
-                }, true)
+                }
 
+
+                scope.compta = new Paiement(scope.data)
                 reglement.montantTTC = scope.compta.getMontantTTC()
-                console.log(reglement.montant, reglement.montantTTC)
+
                 scope.$watchGroup(['data.compta.reglement.montantTTC',
                     'data.compta.reglement.avoir',
-                    'data.tva'
+                ], function() {
+                    console.log('montantTTC')
+                    var montant = reglement.montantTTC || 0
+                    var coeff = 100 * (100 / (100 + scope.data.tva));
+                    reglement.montant = Paiement().applyCoeff(reglement.montantTTC, coeff)
+                    paiement.base = _.round(reglement.montant - (reglement.avoir ||  0), 2)
+                    paiement.montant = scope.compta.montantTotal
+                })
+
+                scope.$watchGroup(['data.compta.reglement.montant',
+                    'data.compta.paiement.base',
+                    'data.tva',
+                    'data.compta.paiement.pourcentage.deplacement',
+                    'data.compta.paiement.pourcentage.fourniture',
+                    'data.compta.paiement.pourcentage.maindOeuvre'
                 ], function(newValues, oldValues, scope) {
-                    if (!_.isEqual(newValues, oldValues))  {
-                        var montant = reglement.montantTTC || 0
-                        var coeff = 100 * (100 / (100 + scope.data.tva));
-                        reglement.montant = Compta().applyCoeff(reglement.montantTTC, coeff)
-                        paiement.base = _.round(reglement.montant - reglement.avoir, 2)
+                    console.log("change")
+                    if (!_.isEqual(newValues, oldValues)) {
+                        console.log("notequal")
+                        scope.compta = new Paiement(scope.data)
                         paiement.montant = scope.compta.montantTotal
                     }
-                });
+                }, true);
             },
         }
 
@@ -3807,7 +3819,13 @@ var LpaController = function(tabContainer, edisonAPI, $scope) {
     		}
     	})
     }
-
+    _this.checkArtisan = function(sst) {
+        console.log(sst)
+        sst.checked = !sst.checked
+        _.each(sst.list, function(e) {
+            e.checked = sst.checked;
+        })
+    }
     $scope.$watch('debutCheque', function(current) {
         console.log(current)
     })
