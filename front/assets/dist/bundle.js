@@ -768,13 +768,13 @@ module.exports = {
         id: ''
     }, {
         title: 'Payé',
-        color:'green',
-        icon:'check',
+        color: 'green',
+        icon: 'check',
         id: 1
     }, {
         title: 'A Payé',
-        color:'orange',
-        icon:'refresh fa-spin',
+        color: 'orange',
+        icon: 'refresh fa-spin',
         id: 2
     }],
     reglementClient: [{
@@ -944,6 +944,9 @@ module.exports = {
         type: 'Fourniture Edison'
     }, {
         short_name: 'FORUM DU BATIMENT',
+        type: 'Fourniture Edison'
+    }, {
+        short_name: 'EDISON',
         type: 'Fourniture Edison'
     }],
     modePaiement: [{

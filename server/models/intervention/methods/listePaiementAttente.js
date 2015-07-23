@@ -15,17 +15,16 @@ module.exports = function(schema) {
         return new Promise(function(resolve, reject) {
             db.model('intervention').find({
                     'compta.paiement.ready': true,
-                    'compta.paiement.dette':false
+                    'compta.paiement.dette': false
                 })
-                .select('id compta.historique compta.paiement.mode compta.paiement.montant compta.paiement.base artisan')
+                .select('id compta.historique compta.paiement.mode compta.paiement.montant compta.paiement.base artisan compta.paiement.mode')
                 .exec(function(err, docs) {
                     docs = JSON.parse(JSON.stringify(docs))
-                    var rtn = _.groupBy(docs, 'artisan.id')
-                    rtn = _.mapValues(rtn, function(e) {
+                    var rtn = _(docs).groupBy('artisan.id').values().map(function(e) {
                         return {
                             list: e
                         }
-                    })
+                    }).value()
                     _.each(rtn, function(sst) {
                         sst.nomSociete = sst.list[0].artisan.nomSociete
                         sst.id = sst.list[0].artisan.id
@@ -42,13 +41,14 @@ module.exports = function(schema) {
                                 legacy: getPreviousMontant(e),
                                 balance: _.round(e.compta.paiement.montant - getPreviousMontant(e))
                             }
-                            e.type = e.montant.legacy !== 0 ? ( e.montant.balance > 0 ? 'AVOIR' : 'COMPL' ) :'FACT'
+                            e.mode = e.compta.paiement.mode
+                            e.type = e.montant.balance !== 0 ? (e.montant.balance > 0 ? 'COMPLEMENT' : 'AVOIR') : 'AUTO-FACT'
                             total.base = _.round(total.base + e.montant.base);
                             total.montant = _.round(total.montant + e.montant.total);
                             total.legacy = _.round(total.legacy + e.montant.legacy);
                             total.balance = _.round(total.balance + e.montant.balance);
                             delete e.artisan
-                                // delete e.compta
+                            delete e.compta
                         })
                         sst.total = total;
                     })

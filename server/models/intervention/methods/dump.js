@@ -181,8 +181,8 @@
                         base: d.comptaPrixFinal,
                         montant: d.comptaMontantFinal,
                         dette: d.etat_reglement === "DETTE",
-                        ready: true,//Boolean(d.numeroCheque == ""),
-                        effectue: false,//Boolean(d.numeroCheque != ""),
+                        ready: Boolean(d.numeroCheque == ""),
+                        effectue: Boolean(d.numeroCheque != ""),
                         pourcentage: {
                             deplacement: d.pDeplacement,
                             maindOeuvre: d.pMaindOeuvre,
@@ -221,12 +221,15 @@
                 rtn.fourniture.push({
                     bl: "0",
                     title: "Inconnu",
-                    fournisseur: d.fournisseur,
+                    fournisseur: "ARTISAN",
                     pu: fournitureArtisan,
                     quantite: 1
                 })
             }
             if (fournitureEdison) {
+                console.log('-->', d.fournisseur)
+                if (!d.fournisseur || d.fournisseur == "ARTISAN")
+                    d.fournisseur = "EDISON";
                 rtn.fourniture.push({
                     bl: "0",
                     title: "Inconnu",

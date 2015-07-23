@@ -13,18 +13,19 @@ var LpaController = function(tabContainer, edisonAPI, $rootScope, LxProgressServ
     }
     if (!$rootScope.lpa)
         loadData()
-    var reloadNumeroCheque = function(debutCheque) {
-        _.each(_this.result, function(e) {
-            if (e.toFlush) {
-                e.numeroCheque = debutCheque++
-            }
-        })
-    }
     _this.checkArtisan = function(sst) {
         sst.checked = !sst.checked
         _.each(sst.list, function(e) {
             e.checked = sst.checked;
         })
+    }
+    _this.updateNumeroCheque = function(index) {
+        var base = $rootScope.lpa[index].numeroCheque;
+        if (base) {
+            for (var i = index; i < $rootScope.lpa.length; i++) {
+                $rootScope.lpa[i].numeroCheque = ++base
+            };
+        }
     }
 }
 

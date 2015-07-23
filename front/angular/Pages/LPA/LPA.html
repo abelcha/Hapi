@@ -1,24 +1,27 @@
-<div class="container">
-    <div class="row">
-        <div class="card" style="height:100%;padding:20px;overflow:scroll">
+<div style="margin-top: -15px;">
+    <div class="card" style="height:730px;width:100%">
+        <div style="height:90%;padding:20px;overflow:scroll">
             <table class="table table-condensed  table-hover table-bordered">
 
                 <body>
                     <tr ng-repeat-start="artisan in lpa">
-                        <td variable-length>
-                            <h2><a style="color:black" href="/artisan/{{artisan.id}}/recap">{{artisan.nomSociete}}</a></h2></td>
+                        <td colspan="1" variable-length>
+                            <h2><a style="color:black" href="/artisan/{{artisan.id}}/recap">{{artisan.id}} - {{artisan.nomSociete}}</a></h2></td>
+                        <td><input colspan="3"  type="text" class="form-control" ng-model="artisan.numeroCheque" ng-change="vm.updateNumeroCheque($index, artisan.id)"></td>
                     </tr>
                     <tr>
-                        <td>Numero OS</td>
-                        <td>Type</td>
-                        <td>Base</td>
-                        <td>Montant</td>
-                        <td>Legacy</td>
-                        <td>Balance</td>
-                        <td>Payer</td>
+                        <td><i>Numero OS</i></td>
+                        <td variable-length><i>Type</i></td>
+                        <td variable-length><i>Mode</i></td>
+                        <td variable-length><i>Base</i></td>
+                        <td variable-length><i>Montant</i></td>
+                        <td variable-length><i>Legacy</i></td>
+                        <td variable-length><i>Balance</i></td>
+                        <td variable-length><i>Payer</i></td>
                     </tr>
                     <tr ng-repeat="item in artisan.list" ng-click="item.checked = !item.checked">
-                        <td><a style="color:black" href="/intervention/{{item.id}}">{{ item.id }}</a></td>
+                        <td ><a style="color:black" href="/intervention/{{item.id}}">{{ item.id }}</a></td>
+                        <td>{{ item.mode }}</td>
                         <td>{{ item.type }}</td>
                         <td>{{ item.montant.base}} €</td>
                         <td>{{ item.montant.total}} €</td>
@@ -30,7 +33,7 @@
                         </td>
                     </tr>
                     <tr ng-click="vm.checkArtisan(artisan)">
-                        <td colspan="2"><strong>Somme</strong></td>
+                        <td colspan="3"><strong>Somme</strong></td>
                         <td><strong>{{artisan.total.base}} €</strong></td>
                         <td><strong>{{artisan.total.montant}} €</strong></td>
                         <td><strong>{{artisan.total.legacy}} €</strong></td>
@@ -45,6 +48,8 @@
                     </tr>
                 </body>
             </table>
+        </div>
+        <div style="margin-top: 19px;">
             <md-button class="md-raised">Imprimer Documents</md-button>
             <md-button class="md-raised">Upload Scan</md-button>
             <md-button class="md-raised md-warn">FLUSH</md-button>
