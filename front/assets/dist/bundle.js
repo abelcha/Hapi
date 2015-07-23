@@ -517,8 +517,8 @@ module.exports = FiltersFactory;
              total: 0
          };
          _each(inter.fourniture, function(e) {
-             fourniture[e.fournisseur === 'ARTISAN' ? 'artisan' : 'edison'] += _round(e.pu * e.quantite, 2);
-             fourniture.total += _round(e.pu * e.quantite, 2);
+             fourniture[e.fournisseur === 'ARTISAN' ? 'artisan' : 'edison'] += (e.pu * e.quantite);
+             fourniture.total += e.pu * e.quantite, 2;
          })
          return fourniture;
      },

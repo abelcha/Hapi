@@ -13,7 +13,7 @@ module.exports = function(schema) {
                 'compta.paiement.effectue': true,
                 'compta.paiement.ready': false,
             }).select('compta artisan tva id fourniture')
-            .limit(req.query.limit || undefined).sort('-id').then(function(docs) {
+            .limit(req.query.limit || undefined).then(function(docs) {
                 _.each(docs, function(e) {
                     if (e.compta.historique.length) {
                         var paiement = new Paiement(e);
