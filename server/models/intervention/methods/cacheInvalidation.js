@@ -7,7 +7,6 @@ var ReadWriteLock = require('rwlock');
 var lock = new ReadWriteLock();
 var d = requireLocal('config/dates.js')
 var uuid = require('uuid')
-
 module.exports = function(schema) {
 
     var selectedFields = [
@@ -115,7 +114,6 @@ module.exports = function(schema) {
                 var result = [];
                 for (var i = 0; i < docs.length - 1; i++) {
                     result[i] = translate(docs[i])
-                    console.log('-->', i);
                 };
                 redis.set("interventionList", JSON.stringify(result), function() {
                     resolve(result);
