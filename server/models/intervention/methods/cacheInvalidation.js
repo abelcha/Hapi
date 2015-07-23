@@ -114,7 +114,10 @@ module.exports = function(schema) {
     schema.statics.cacheReload = function() {
         return new Promise(function(resolve, reject) {
             db.model('intervention').find().sort('-id').select(selectedFields).then(function(docs) {
-                var result = docs.map(translate)
+                var result = [];docs.map(translate)
+                for (var i = 0; i < docs.length - 1; i++) {
+                    docs[i] = translate(docs[i])
+                };
                 redis.set("interventionList", JSON.stringify(result), function() {
                     resolve(result);
                 })
