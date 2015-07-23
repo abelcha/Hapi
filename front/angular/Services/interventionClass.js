@@ -203,12 +203,10 @@ angular.module('edison')
                         var validationMessage = _.template("L'intervention {{id}} est vérifié")(resp.data)
                         LxNotificationService.success(validationMessage);
                         if (typeof cb === 'function') {
-                            cb(resp.data);
+                            cb(null, resp.data);
                         }
                     }).catch(function(error) {
                         LxNotificationService.error(error.data);
-                        if (typeof cb === 'function')
-                            cb(error.data);
                     })
             }
 

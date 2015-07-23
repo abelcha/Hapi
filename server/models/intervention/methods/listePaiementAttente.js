@@ -52,7 +52,6 @@ module.exports = function(schema) {
                         })
                         sst.total = total;
                     })
-                    console.log(JSON.stringify(rtn, undefined, 1))
                     resolve(rtn)
                 })
         })

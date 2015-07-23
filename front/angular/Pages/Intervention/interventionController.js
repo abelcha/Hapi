@@ -30,11 +30,6 @@ var InterventionCtrl = function(ContextMenu, $window, $timeout, $rootScope, $sco
         intervention.devisOrigine = parseInt($routeParams.d)
     }
     _this.data = tab.data;
-    /*console.log(intervention)
-    if (!intervention.id)
-        intervention.login = {
-            ajout: $rootScope.user.login
-        }*/
 
     _this.contextMenu = new ContextMenu('intervention')
     _this.contextMenu.setData(intervention);

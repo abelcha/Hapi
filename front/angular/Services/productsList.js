@@ -83,6 +83,7 @@ angular.module('edison').factory('productsList', ['dialog', 'openPost', function
 
     var Produit = function(produits) {
         this.produits = produits;
+        this.lastCall = _.now()
     }
     Produit.prototype = {
         remove: function(index) {
@@ -110,6 +111,9 @@ angular.module('edison').factory('productsList', ['dialog', 'openPost', function
             })
         },
         add: function(prod) {
+            if (this.lastCall + 100 > _.now())
+                return 0
+            this.lastCall = _.now()
             this.searchText = '';
             this.produits.push(prod);
         },

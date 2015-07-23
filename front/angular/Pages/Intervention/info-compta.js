@@ -18,7 +18,6 @@ angular.module('edison').directive('infoCompta', ['config', 'Paiement',
                     paiement.mode = _.get(scope.data.artisan, 'document.rib.file') ? "VIR" : "CHQ"
                 }
 
-
                 scope.compta = new Paiement(scope.data)
                 reglement.montantTTC = scope.compta.getMontantTTC()
 
