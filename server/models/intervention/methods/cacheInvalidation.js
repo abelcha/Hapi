@@ -114,7 +114,7 @@ module.exports = function(schema) {
             db.model('intervention').find().sort('-id').select(selectedFields).then(function(docs) {
                 var result = [];
                 for (var i = 0; i < docs.length - 1; i++) {
-                    docs[i] = translate(docs[i])
+                    result[i] = translate(docs[i])
                     console.log('-->', i);
                 };
                 redis.set("interventionList", JSON.stringify(result), function() {
