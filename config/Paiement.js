@@ -34,7 +34,7 @@
          _this.baseMargeFourniture = _this.venteFourniture - _this.coutFourniture;
          _this.remunerationMargeFourniture = _this.applyCoeff(_this.baseMargeFourniture, _this.pourcentage.fourniture);
          _this.remboursementFourniture = _this.fourniture.artisan;
-         _this.montantTotal = _this.remunerationDeplacement + _this.remunerationMargeFourniture + _this.remunerationMaindOeuvre + _this.remboursementFourniture;
+         _this.montantTotal = _round(_this.remunerationDeplacement + _this.remunerationMargeFourniture + _this.remunerationMaindOeuvre + _this.remboursementFourniture, 2);
      }
  }
 
@@ -76,8 +76,7 @@
          return fourniture;
      },
      getMontantTTC: function() {
-        console.log('---->', this.inter().compta.paiement.montant)
-         return this.applyCoeff(this.inter().compta.paiement.montant, 100 + this.inter().tva)
+         return this.applyCoeff(this.inter().compta.reglement.montant, 100 + this.inter().tva)
      }
  }
  module.exports = Paiement
