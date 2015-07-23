@@ -26,7 +26,8 @@ module.exports = function(schema) {
                     }
                 })
                 console.log('total =>', i)
-                resolve(rtn)
+                res.set('Content-Type', 'application/octet-stream');
+                res.send(rtn)
             })
         });
     }

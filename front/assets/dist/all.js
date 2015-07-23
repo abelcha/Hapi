@@ -3128,12 +3128,6 @@ var ArtisanCtrl = function($rootScope, $location, $routeParams, ContextMenu, LxN
 }
 angular.module('edison').controller('ArtisanController', ArtisanCtrl);
 
-angular.module('edison').controller('DashboardController', function(tabContainer, $scope) {
-    "use strict";
-    $scope.tab = tabContainer.getCurrentTab();
-    $scope.tab.setTitle('dashBoard')
-});
-
 var ContactArtisanController = function($scope, $timeout, tabContainer, LxProgressService, FiltersFactory, ContextMenu, edisonAPI, DataProvider, $routeParams, $location, $q, $rootScope, $filter, config, ngTableParams) {
     "use strict";
     var _this = this;
@@ -3244,6 +3238,12 @@ var ContactArtisanController = function($scope, $timeout, tabContainer, LxProgre
 
 }
 angular.module('edison').controller('ContactArtisanController', ContactArtisanController);
+
+angular.module('edison').controller('DashboardController', function(tabContainer, $scope) {
+    "use strict";
+    $scope.tab = tabContainer.getCurrentTab();
+    $scope.tab.setTitle('dashBoard')
+});
 
 
  angular.module('edison').directive('edisonMap', ['$window', 'Map', 'mapAutocomplete', 'Address',
