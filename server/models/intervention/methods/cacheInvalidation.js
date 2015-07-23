@@ -60,8 +60,6 @@ module.exports = function(schema) {
         }
 
         var fltr = filtersFactory.filter(e);
-        if (e.id % 10 === 1)
-            console.log(e.id)
         var rtn = {
             f: !_.isEmpty(fltr) ? _.clone(fltr) : undefined,
             t: e.login.ajout,
@@ -114,9 +112,10 @@ module.exports = function(schema) {
     schema.statics.cacheReload = function() {
         return new Promise(function(resolve, reject) {
             db.model('intervention').find().sort('-id').select(selectedFields).then(function(docs) {
-                var result = [];docs.map(translate)
+                var result = [];
                 for (var i = 0; i < docs.length - 1; i++) {
                     docs[i] = translate(docs[i])
+                    console.log('-->', i);
                 };
                 redis.set("interventionList", JSON.stringify(result), function() {
                     resolve(result);
