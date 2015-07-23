@@ -27,6 +27,7 @@ module.exports = function(schema) {
                     }
                 })
                 console.log('total =>', i)
+                res.setHeader('Content-disposition', 'attachment; filename=diff.csv');
                 res.set('Content-Type', 'application/octet-stream');
                 res.send(rtn)
             })
