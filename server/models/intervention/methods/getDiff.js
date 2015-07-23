@@ -12,13 +12,14 @@ module.exports = function(schema) {
             db.model('intervention').find({
                 'compta.paiement.effectue': true,
                 'compta.paiement.ready': false,
-            }).limit(req.query.limit || undefined).sort('-id').then(function(docs) {
+            }).select('compta.paiement id compta.historique')
+            .limit(req.query.limit || undefined).sort('-id').then(function(docs) {
                 _.each(docs, function(e) {
                     if (e.compta.historique.length) {
                         var paiement = new Paiement(e);
                         var diff = (e.compta.historique[0].montant - paiement.montantTotal).round()
                         if (Math.abs(diff) > 0.1) {
-                            var x = ([e.id, e.compta.historique[0].montant, paiement.montantTotal.round(), diff].join(';').replaceAll('.', ','))
+                            var x = ([e.id, e.compta.historique[0].montant, paiement.montantTotal.round(), diff, e.compta.paiement.pourcentage.deplacement].join(';').replaceAll('.', ','))
                             rtn += x + "\n";
                                 ++i;
                         }
