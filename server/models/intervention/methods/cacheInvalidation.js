@@ -1,13 +1,12 @@
 'use strict';
 var config = requireLocal('config/dataList')
 var async = require("async");
-var FiltersFactory = requireLocal('config/FiltersFactory');
+var filtersFactory = requireLocal('config/FiltersFactory')("intervention")
 var _ = require("lodash")
 var ReadWriteLock = require('rwlock');
 var lock = new ReadWriteLock();
 var d = requireLocal('config/dates.js')
 var uuid = require('uuid')
-
 
 module.exports = function(schema) {
 
@@ -60,7 +59,7 @@ module.exports = function(schema) {
             e.status = 'AVR';
         }
 
-        var fltr = FiltersFactory("intervention").filter(e);
+        var fltr = filtersFactory.filter(e);
         if (e.id % 10 === 1)
             console.log(e.id)
         var rtn = {
@@ -80,7 +79,6 @@ module.exports = function(schema) {
             ad: e.client.address.cp + ', ' + e.client.address.v,
             dm: e.login.demarchage || undefined
         };
-        delete fltr
         return rtn;
     }
     schema.statics.translate = translate;
