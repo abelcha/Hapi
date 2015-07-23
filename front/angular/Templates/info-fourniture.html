@@ -38,7 +38,7 @@
                                 <span>{{f.pu * f.quantite}} €</span>
                             </td>
                             <td style="padding-right: 10%;  width: 30%;">
-                                <select class="form-control" ng-model="f.fournisseur" ng-options="frn.short_name as frn.short_name group by frn.type for frn in config.fournisseur ">
+                                <select style="width: 170px;" class="form-control" ng-model="f.fournisseur" ng-options="frn.short_name as frn.short_name group by frn.type for frn in config.fournisseur ">
                                 </select>
                             </td>
                             <td>
