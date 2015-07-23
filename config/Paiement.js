@@ -57,9 +57,9 @@
          if (this.montantHT <= 65) {
              return 0;
          } else if (this.montant <= 65) {
-             return this.montantHT - 65;
+             return this.montantHT - 85;
          } else {
-             return 65;
+             return 85;
          }
      },
      getFourniture: function(inter) {

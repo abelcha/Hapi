@@ -12,7 +12,7 @@ module.exports = function(schema) {
             db.model('intervention').find({
                 'compta.paiement.effectue': true,
                 'compta.paiement.ready': false,
-            }).select('compta.paiement id compta.historique')
+            }).select('compta artisan tva id fourniture')
             .limit(req.query.limit || undefined).sort('-id').then(function(docs) {
                 _.each(docs, function(e) {
                     if (e.compta.historique.length) {
