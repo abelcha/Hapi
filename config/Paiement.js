@@ -76,7 +76,8 @@
          return fourniture;
      },
      getMontantTTC: function() {
-         return this.applyCoeff(this.inter().compta.reglement.montant, 100 + this.inter().tva)
+        console.log('---->', this.inter().compta.paiement.montant)
+         return this.applyCoeff(this.inter().compta.paiement.montant, 100 + this.inter().tva)
      }
  }
  module.exports = Paiement
