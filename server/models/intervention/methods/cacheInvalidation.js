@@ -64,7 +64,7 @@ module.exports = function(schema) {
         if (e.id % 10 === 1)
             console.log(e.id)
         var rtn = {
-            f: !_.isEmpty(fltr) ? fltr : undefined,
+            f: !_.isEmpty(fltr) ? _.clone(fltr) : undefined,
             t: e.login.ajout,
             id: e.id,
             ai: e.artisan.id,
@@ -80,7 +80,7 @@ module.exports = function(schema) {
             ad: e.client.address.cp + ', ' + e.client.address.v,
             dm: e.login.demarchage || undefined
         };
-
+        delete fltr
         return rtn;
     }
     schema.statics.translate = translate;
