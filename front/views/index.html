@@ -41,6 +41,13 @@
                     <link fltr="i_apr" icon="th-list" color="primary" login="{{user.login}}"></link>
                     <link fltr="i_avr" icon="th-list" color="warning" login="{{user.login}}"></link>
                 </drop-down>
+                <link fltr="d_all" model="devis" icon="th-list" title="Toute les Devis" color="default"></link>
+                <drop-down icon="hospital-o" title="Mes Devis"  open-default="user.service === 'INTERVENTION'">
+                    <link fltr="d_tall" model="devis" title="{{dateFormat}}" color="success" icon="th-list" login="{{user.login}}"></link>
+                    <link fltr="d_aev" model="devis" icon="th-list" color="danger" login="{{user.login}}"></link>
+                    <link fltr="d_att" model="devis" icon="th-list" color="warning" login="{{user.login}}"></link>
+                    <link fltr="d_ann" model="devis" icon="th-list" color="default" login="{{user.login}}"></link>
+                </drop-down>
                 <drop-down ng-click="mcs=true" title="Mes Collegues" icon="sitemap">
                     <drop-down ng-if="mcs" title="{{telepro.login | loginify}}" ng-repeat="telepro in interventionsStats | orderBy:'-total'">
                         <link-separator title="Mes Interventions" icon="calendar"></link-separator>
@@ -83,13 +90,6 @@
                     <link fltr="i_lit" icon="th-list" login="{{user.login}}"></link>
                     <link fltr="i_litEnc" icon="th-list" login="{{user.login}}" title="Litiges en cours" color="danger"></link>
                 </drop-down>
-                <drop-down icon="hospital-o" title="Mes Devis">
-                    <link fltr="d_all" model="devis" icon="th-list" login="{{user.login}}"></link>
-                    <link fltr="d_tall" model="devis" icon="th-list" login="{{user.login}}"></link>
-                    <link fltr="d_att" model="devis" icon="th-list" login="{{user.login}}"></link>
-                    <link fltr="d_aev" model="devis" icon="th-list" login="{{user.login}}"></link>
-                    <link fltr="d_ann" model="devis" icon="th-list" login="{{user.login}}"></link>
-                </drop-down>
             </drop-down>
             <drop-down title="Service Partenariat" icon="circle" open-default="user.service === 'PARTENARIAT'">
                 <drop-down icon="truck" title="Artisans">
@@ -110,8 +110,8 @@
                 </drop-down>
             </drop-down>
             <drop-down title="Service Comptabilité" icon="circle" open-default="user.service === 'COMPTABILITE'">
-            <simple-link icon="credit-card" title="Liste Paiements Att." url="/compta/lpa"></simple-link>
-            <simple-link icon="database" title="Archives" url="/compta/archives"></simple-link>
+                <simple-link icon="credit-card" title="Liste Paiements Att." url="/compta/lpa"></simple-link>
+                <simple-link icon="database" title="Archives" url="/compta/archives"></simple-link>
             </drop-down>
             <br>
             <br>
