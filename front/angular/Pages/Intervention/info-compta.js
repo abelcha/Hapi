@@ -27,9 +27,16 @@ angular.module('edison').directive('infoCompta', ['config', 'Paiement',
                     console.log('montantTTC')
                     var montant = reglement.montantTTC || 0
                     var coeff = 100 * (100 / (100 + scope.data.tva));
-                    reglement.montant = Paiement().applyCoeff(reglement.montantTTC, coeff)
-                    paiement.base = _.round(reglement.montant - (reglement.avoir ||  0), 2)
-                    paiement.montant = scope.compta.montantTotal
+                    if (!scope.data.compta.paiement.base) {
+                        console.log('nobase')
+                        reglement.montant = Paiement().applyCoeff(reglement.montantTTC, coeff)
+                        paiement.base = _.round(reglement.montant - (reglement.avoir ||  0), 2)
+                    } else {
+                        console.log('yesbase')
+                        reglement.montant = Paiement().applyCoeff(reglement.montantTTC, coeff)
+                        paiement.base = _.round(reglement.montant - (reglement.avoir ||  0), 2)
+
+                    }
                 })
 
                 scope.$watchGroup(['data.compta.reglement.montant',
@@ -39,9 +46,8 @@ angular.module('edison').directive('infoCompta', ['config', 'Paiement',
                     'data.compta.paiement.pourcentage.fourniture',
                     'data.compta.paiement.pourcentage.maindOeuvre'
                 ], function(newValues, oldValues, scope) {
-                    console.log("change")
                     if (!_.isEqual(newValues, oldValues)) {
-                        console.log("notequal")
+                    console.log('here')
                         scope.compta = new Paiement(scope.data)
                         paiement.montant = scope.compta.montantTotal
                     }

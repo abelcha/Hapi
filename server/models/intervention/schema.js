@@ -233,7 +233,7 @@ module.exports = function(db) {
                 },
                 dette: {
                     type: Boolean,
-                    default: true
+                    default: false
                 },
                 effectue: {
                     index: true,
