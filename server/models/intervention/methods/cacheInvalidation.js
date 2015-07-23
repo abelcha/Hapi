@@ -79,6 +79,7 @@ module.exports = function(schema) {
             ad: e.client.address.cp + ', ' + e.client.address.v,
             dm: e.login.demarchage || undefined
         };
+        fltr = null;
         return rtn;
     }
     schema.statics.translate = translate;
