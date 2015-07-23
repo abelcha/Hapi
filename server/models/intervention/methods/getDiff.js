@@ -23,6 +23,7 @@ module.exports = function(schema) {
                             rtn += x + "\n";
                                 ++i;
                         }
+                        paiement = null;
                     }
                 })
                 console.log('total =>', i)
