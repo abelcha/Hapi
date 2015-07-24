@@ -48,7 +48,7 @@ FiltersFactory.prototype.filter = function(inter) {
     var _this = this;
     this.fltr = {};
     _each(_this.list[_this.model], function(e, k) {
-        if (!e.noCache && e.fn && typeof e.fn === 'function' && e.fn.bind(_this)(inter)) {
+        if (!e.noCache && e.fn && typeof e.fn === 'function' && e.fn(inter)) {
             _this.fltr[e.short_name] = 1;
         }
     })
@@ -269,7 +269,7 @@ FiltersFactory.prototype.list = {
         fn: function(inter) {
             return inter.compta.reglement.recu
         }
-    },{
+    }, {
         short_name: 'i_vrf',
         long_name: 'Verifié',
         url: 'verifie',
@@ -333,7 +333,8 @@ FiltersFactory.prototype.list = {
             }
         },
         fn: function(inter) {
-            return this.fltr.i_avr &&
+            return inter.status === "AVR" ||
+                (inter.status === "ENC" && Date.now() > dateInter(inter)) &&
                 inter.reglementSurPlace === false
         }
     }, {

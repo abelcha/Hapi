@@ -227,7 +227,6 @@
                 })
             }
             if (fournitureEdison) {
-                console.log('-->', d.fournisseur)
                 if (!d.fournisseur || d.fournisseur == "ARTISAN")
                     d.fournisseur = "EDISON";
                 rtn.fourniture.push({

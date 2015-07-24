@@ -1,12 +1,6 @@
 'use strict';
-var config = requireLocal('config/dataList')
-var async = require("async");
-var filtersFactory = requireLocal('config/FiltersFactory')("intervention")
+
 var _ = require("lodash")
-var ReadWriteLock = require('rwlock');
-var lock = new ReadWriteLock();
-var d = requireLocal('config/dates.js')
-var uuid = require('uuid')
 module.exports = function(schema) {
 
     var selectedFields = [
@@ -54,10 +48,14 @@ module.exports = function(schema) {
     }
 
     var translate = function(e) {
+        var config = requireLocal('config/dataList')
+        var filtersFactory = requireLocal('config/FiltersFactory')("intervention")
+        var d = requireLocal('config/dates.js')
+
+        console.log(e.id)
         if (e.status === "ENC" && Date.now() > (new Date(e.date.intervention)).getTime()) {
             e.status = 'AVR';
         }
-
         var fltr = filtersFactory.filter(e);
         var rtn = {
             f: !_.isEmpty(fltr) ? _.clone(fltr) : undefined,
@@ -110,10 +108,13 @@ module.exports = function(schema) {
 
     schema.statics.cacheReload = function() {
         return new Promise(function(resolve, reject) {
+            console.log('cachereload')
             db.model('intervention').find().sort('-id').select(selectedFields).then(function(docs) {
+                console.log('yay memory')
                 var result = [];
                 for (var i = 0; i < docs.length - 1; i++) {
                     result[i] = translate(docs[i])
+                        //console.log('-->', i);
                 };
                 redis.set("interventionList", JSON.stringify(result), function() {
                     resolve(result);
