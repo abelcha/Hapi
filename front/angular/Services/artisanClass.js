@@ -28,7 +28,7 @@ angular.module('edison')
                 var _this = this;
                 var now = Date.now();
                 $window.open('callto:' + _this.telephone.tel1, '_self', false)
-                dialog.choiceText({
+/*                dialog.choiceText({
                     title: 'Nouvel Appel',
                     subTitle: _this.telephone.tel1
                 }, function(response, text) {
@@ -46,7 +46,7 @@ angular.module('edison')
                         if (typeof cb === 'function')
                             cb(err);
                     })
-                })
+                })*/
             };
 
             Artisan.prototype.save = function(cb) {

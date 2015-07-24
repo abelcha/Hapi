@@ -68,10 +68,11 @@ var InterventionsController = function($q, tabContainer, FiltersFactory, Context
 
     _this.rowRightClick = function($event, inter) {
         edisonAPI.intervention.get(inter.id, {
-                extend: true
+                extended: true
             })
             .then(function(resp) {
                 _this.contextMenu.setData(resp.data);
+                console.log(resp.data)
                 _this.contextMenu.setPosition($event.pageX, $event.pageY)
                 _this.contextMenu.open();
             })

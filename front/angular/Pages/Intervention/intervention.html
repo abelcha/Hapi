@@ -30,21 +30,13 @@
                                     <div class="paragraph fs-body-1" style="height:90px;">
                                         <p style="width:49%;float:left">
                                             Distance: {{vm.data.artisan.stats.direction.distance}} ({{vm.data.artisan.stats.direction.duration}})
-                                            <br> Interventions: {{vm.data.artisan.stats.total.total}} ({{vm.data.artisan.stats.total.montant}}€)
-                                            <br> Annulés: {{vm.data.artisan.stats.annule.total}} ({{vm.data.artisan.stats.annule.montant}}€)
-                                            <br> Envoyé: {{vm.data.artisan.stats.envoye.total}} ({{vm.data.artisan.stats.envoye.montant}}€)
-                                            <br> Payés: {{vm.data.artisan.stats.paye.total}} ({{vm.data.artisan.stats.paye.montant}}€)
-                                            <br>
+                                            <br> Dernière Intervention: {{vm.data.artisan.stats._lastInter.relative}} ({{vm.data.artisan.stats._lastInter.id}})
+                                            <br> Interventions en cours: {{vm.data.artisan.stats.envoye.total}}
+                                            <br> Montant des en cours: {{vm.data.artisan.stats.envoye.montant}}€
+                                            <br> Facturier/Deviseur: {{vm.data.artisan.stats.facturier || "Aucuns"}}
                                         </p>
                                         <p style="width:49%;float:right">
                                             Date d'ajout: {{vm.data.artisan.date.ajout| date:"dd/MM/yyyy"}}
-                                            <br>
-                                            <span ng-if="vm.data.artisan.disponible == false">
-                                                    Indisponible jusqu'au {{vm.data.artisan.absence.end  | date:"dd/MM à HH:mm"}} ({{vm.data.artisan.absence.login}})
-                                                </span>
-                                            <span ng-if="vm.data.artisan.disponible == true">
-                                            Disponible
-                                                </span>
                                             <br>
                                             <span ng-if="vm.data.artisan.calls.length > 0" ng-click="vm.dialog.callsList(vm.data.artisan)">
                                                Dernier Appel le {{vm.data.artisan.calls[0].date | date:"dd/MM à HH:mm" }}  ({{vm.data.artisan.calls[0].login}})
@@ -72,7 +64,7 @@
                                 <a href="/artisan/{{vm.data.artisan.id}}">
                                     <button class="btn--no-conflicts btn--m btn--purple btn--flat" lx-ripple>Fiche</button>
                                 </a>
-                                <button style="float:right" ng-click="sstAbsence(vm.data.artisan.id)" class="btn--no-conflicts btn--m btn--red btn--flat" lx-ripple>Absence</button>
+                                <button style="float:right" class="btn--no-conflicts btn--m btn--red btn--flat" lx-ripple>Signalement</button>
                             </div>
                         </div>
                     </div>
@@ -156,14 +148,17 @@
                                             </lx-text-field>
                                         </div>
                                         <div class="col-sm-3">
-                                            <md-checkbox ng-model="vm.data.reglementSurPlace" aria-label="Checkbox 1">
+                                            <md-switch class="md-primary" md-no-ink aria-label="Switch No Ink" ng-model="vm.data.reglementSurPlace">
+                                                Reglement Sur Place
+                                            </md-switch>
+                                        <!--     <md-checkbox ng-model="vm.data.reglementSurPlace" aria-label="Checkbox 1">
                                                 <div class="hidden-sm hidden-md">
                                                     Reglement Sur Place
                                                 </div>
                                                 <div class="hidden-lg hidden-xs ">
                                                     RSP
                                                 </div>
-                                            </md-checkbox>
+                                            </md-checkbox> -->
                                         </div>
                                         <div class=" col-sm-2">
                                             <div class="select-style text-field">
@@ -192,7 +187,6 @@
                             <div style="width:48%;float:left;" class="card" id="fileUpload">
                                 <div class="p+">
                                     <strong class="fs-headline display-block">Fichiers</strong>
-                                    <span class="fs-subhead tc-black-2 display-block">Lorem Ipsum</span>
                                     <div class="paragraph fs-body-1 mt+" style="height: 216px;" slimscroll="{height:216}">
                                         <div>
                                             <div id="fileUploadProgress"></div>
@@ -215,8 +209,7 @@
                             <div class="card margin" style="width:48%;float:right">
                                 <div class="p+" s>
                                     <strong class="fs-headline display-block">Commentaires</strong>
-                                    <span class="fs-subhead tc-black-2 display-block">Lorem Ipsum</span>
-                                    <div class="paragraph fs-body-1 mt+" style="height:230px;" slimscroll="{height:230}">
+                                    <div class="paragraph fs-body-1 mt+" style="height:216px;" slimscroll="{height:216}">
                                         <ul style="padding-bottom:20px;margin-left: 0px;">
                                             <li class="list-row" ng-repeat="com in vm.data.comments | reverse">
                                                 <div class="list-row__content">
@@ -227,8 +220,8 @@
                                         </ul>
                                     </div>
                                 </div>
-                                <div class="card__actions">
-                                    <input style="border: 0;width:100%" type="text" placeholder="Commentaire..." ng-model="commentText" ng-enter="addComment()">
+                                <div class="card__actions" style="height: 53px;">
+                                    <input style="border: 0;width:100%;height: 100%;" type="text" placeholder="Commentaire..." ng-model="commentText" ng-enter="addComment()">
                                 </div>
                             </div>
                         </div>
@@ -339,10 +332,10 @@
                                 <i class="fa fa-cloud-upload"></i>
                             </button>
                             <div class="fab__actions fab__actions--left">
+                                <button ng-if="vm.data.status" ng-click="saveInter({annulation:true})" class="btn--no-conflicts btn--l btn--black btn--fab" lx-ripple lx-tooltip="Annuler" tooltip-position="top"><i class="fa fa-ban"></i></button>
                                 <button ng-if="!vm.data.status || vm.data.status === 'ANN' || vm.data.status === 'APR' || vm.data.status === 'ENC'" ng-click="saveInter({envoi:true})" class="btn--no-conflicts btn--l btn--black btn--fab" lx-ripple lx-tooltip="Envoyer" tooltip-position="top"><i class="fa fa-send"></i></button>
                                 <button ng-show="vm.data.status === 'ENC'  && vm.data.reglementSurPlace" ng-click="saveInter({verification:true})" class="btn--no-conflicts btn--l btn--black btn--fab" lx-ripple lx-tooltip="Verifier" tooltip-position="top"><i class="mdi mdi-check"></i></button>
                                 <button ng-show="vm.data.status === 'ENC' && !vm.data.reglementSurPlace" ng-click="calculPrixFinal();saveInter({verification:true, envoiFacture:true})" class="btn--no-conflicts btn--l btn--black btn--fab" lx-ripple lx-tooltip="Envoyer facture + vérifier" tooltip-position="top"><i class="mdi mdi-check-all"></i></button>
-                                <button ng-if="vm.data.status" ng-click="saveInter({annulation:true})" class="btn--no-conflicts btn--l btn--black btn--fab" lx-ripple lx-tooltip="Annuler" tooltip-position="top"><i class="fa fa-ban"></i></button>
                             </div>
                         </div>
                     </div>

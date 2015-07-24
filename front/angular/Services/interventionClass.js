@@ -1,7 +1,5 @@
 angular.module('edison')
-    .factory('Intervention', ['$location', '$window', 'LxNotificationService', 'LxProgressService', 'dialog', 'edisonAPI', 'Devis', '$rootScope',
-
-        function($location, $window, LxNotificationService, LxProgressService, dialog, edisonAPI, Devis, $rootScope) {
+    .factory('Intervention', function($location, $window, LxNotificationService, LxProgressService, dialog, edisonAPI, Devis, $rootScope, textTemplate) {
             "use strict";
 
             var Intervention = function(data) {
@@ -59,10 +57,8 @@ angular.module('edison')
             }
             Intervention.prototype.smsArtisan = function(cb) {
                 var _this = this;
-                dialog.getText({
-                    title: "Texte du SMS",
-                    text: "\nEdison Service"
-                }, function(text) {
+                var text = textTemplate.sms.intervention.demande.bind(_this)($rootScope.user)
+                dialog.getFileAndText(_this, text, [], function(text) {
                     edisonAPI.sms.send({
                         link: _this.artisan.id,
                         origin: _this.id || _this.tmpID,
@@ -155,7 +151,8 @@ angular.module('edison')
 
             Intervention.prototype.envoi = function(cb) {
                 var _this = this;
-                dialog.getFileAndText(_this, _this.files, function(text, file) {
+                var defaultText = textTemplate.sms.intervention.envoi.bind(_this)($rootScope.user);
+                dialog.getFileAndText(_this, defaultText, _this.files, function(text, file) {
                     edisonAPI.intervention.envoi(_this.id, {
                         sms: text,
                         file: file
@@ -259,4 +256,4 @@ angular.module('edison')
 
             return Intervention;
         }
-    ]);
+    );

@@ -132,7 +132,10 @@ module.exports = function(db) {
             required: true
         },
         artisan: {
-            id: Number,
+            id: {
+                type: Number,
+                ref: 'artisan'
+            },
             nomSociete: String
         },
         description: {

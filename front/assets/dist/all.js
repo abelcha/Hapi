@@ -2,7 +2,7 @@ angular.module('edison', ['browserify', 'ui.slimscroll', 'ngMdIcons', 'ngMateria
     .config(function($mdThemingProvider) {
         "use strict";
         $mdThemingProvider.theme('default')
-            .primaryPalette('green')
+            .primaryPalette('indigo')
             .accentPalette('blue-grey');
     });
 
@@ -1410,7 +1410,7 @@ angular.module('edison')
                 var _this = this;
                 var now = Date.now();
                 $window.open('callto:' + _this.telephone.tel1, '_self', false)
-                dialog.choiceText({
+/*                dialog.choiceText({
                     title: 'Nouvel Appel',
                     subTitle: _this.telephone.tel1
                 }, function(response, text) {
@@ -1428,7 +1428,7 @@ angular.module('edison')
                         if (typeof cb === 'function')
                             cb(err);
                     })
-                })
+                })*/
             };
 
             Artisan.prototype.save = function(cb) {
@@ -1949,30 +1949,17 @@ angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', 'config', 
                 templateUrl: '/DialogTemplates/text.html',
             });
         },
-        getFileAndText: function(data, files, cb) {
+        getFileAndText: function(data, text, files, cb) {
             $mdDialog.show({
                 controller: function DialogController($scope, $mdDialog) {
 
-                    var getSMS = function() {
-                        var sms = data.id ? "OS " + data.id + ". \n" : "";
-                        sms += "Intervention chez " + data.client.civilite + " " +
-                            data.client.prenom + " " + data.client.nom + " au " +
-                            data.client.address.n + " " + data.client.address.r + " " +
-                            data.client.address.cp + ", " + data.client.address.v + " le " +
-                            moment(data.date.intervention).format("LLLL") + ". \n";
-                        sms += data.prixAnnonce ? data.prixAnnonce + "€ HT. " : "Pas de prix annoncé. ";
-                        sms += "\nMerci de prendre rdv avec le client au " + data.client.telephone.tel1;
-                        sms += data.client.telephone.tel2 ? " ou au " + data.client.telephone.tel2 : ""
-                        return sms + ".\nEdison Services."
-                    }
                     $scope.xfiles = _.clone(files ||  []);
                     if (data.produits && data.produits.length)
                         $scope.xfiles.push({
                             _id: 'devis',
                             name: 'devis.pdf'
                         })
-                    console.log(files)
-                    $scope.smsText = getSMS();
+                    $scope.smsText = text;
                     $scope.answer = function(cancel) {
                         $mdDialog.hide();
                         if (cancel === false) {
@@ -2097,9 +2084,7 @@ angular.module('edison').factory('fourniture', [function() {
 }]);
 
 angular.module('edison')
-    .factory('Intervention', ['$location', '$window', 'LxNotificationService', 'LxProgressService', 'dialog', 'edisonAPI', 'Devis', '$rootScope',
-
-        function($location, $window, LxNotificationService, LxProgressService, dialog, edisonAPI, Devis, $rootScope) {
+    .factory('Intervention', function($location, $window, LxNotificationService, LxProgressService, dialog, edisonAPI, Devis, $rootScope, textTemplate) {
             "use strict";
 
             var Intervention = function(data) {
@@ -2157,10 +2142,8 @@ angular.module('edison')
             }
             Intervention.prototype.smsArtisan = function(cb) {
                 var _this = this;
-                dialog.getText({
-                    title: "Texte du SMS",
-                    text: "\nEdison Service"
-                }, function(text) {
+                var text = textTemplate.sms.intervention.demande.bind(_this)($rootScope.user)
+                dialog.getFileAndText(_this, text, [], function(text) {
                     edisonAPI.sms.send({
                         link: _this.artisan.id,
                         origin: _this.id || _this.tmpID,
@@ -2253,7 +2236,8 @@ angular.module('edison')
 
             Intervention.prototype.envoi = function(cb) {
                 var _this = this;
-                dialog.getFileAndText(_this, _this.files, function(text, file) {
+                var defaultText = textTemplate.sms.intervention.envoi.bind(_this)($rootScope.user);
+                dialog.getFileAndText(_this, defaultText, _this.files, function(text, file) {
                     edisonAPI.intervention.envoi(_this.id, {
                         sms: text,
                         file: file
@@ -2357,7 +2341,7 @@ angular.module('edison')
 
             return Intervention;
         }
-    ]);
+    );
 
  angular.module('edison').directive('whenScrollEnds', function() {
         return {
@@ -3249,7 +3233,7 @@ angular.module('edison').controller('DashboardController', function(tabContainer
                  xmarkers: "=",
                  addressChange: '&',
                  isNew: "=",
-                 firstAddress:"="
+                 firstAddress: "="
              },
              link: function(scope, element, attrs) {
                  scope._height = scope.height || 315;
@@ -3275,7 +3259,7 @@ angular.module('edison').controller('DashboardController', function(tabContainer
                  }
 
                  scope.changeAddress = function(place) {
-                    scope.firstAddress = true;
+                     scope.firstAddress = true;
                      mapAutocomplete.getPlaceAddress(place).then(function(addr) {
                          scope.map.setZoom(12);
                          scope.map.setCenter(addr)
@@ -3287,6 +3271,8 @@ angular.module('edison').controller('DashboardController', function(tabContainer
                  }
 
                  scope.getStaticMap = function() {
+                     if (!_.get(scope, 'data.artisan.address.lt'))
+                         return 0
                      var q = "?width=" + Math.round($window.outerWidth * (scope.height === "small" ? 0.8 : 1.2));
                      if (scope.client && scope.client.address && scope.client.address.latLng)
                          q += ("&origin=" + scope.client.address.latLng);
@@ -4072,10 +4058,11 @@ var InterventionsController = function($q, tabContainer, FiltersFactory, Context
 
     _this.rowRightClick = function($event, inter) {
         edisonAPI.intervention.get(inter.id, {
-                extend: true
+                extended: true
             })
             .then(function(resp) {
                 _this.contextMenu.setData(resp.data);
+                console.log(resp.data)
                 _this.contextMenu.setPosition($event.pageX, $event.pageY)
                 _this.contextMenu.open();
             })

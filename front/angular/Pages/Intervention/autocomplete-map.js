@@ -12,7 +12,7 @@
                  xmarkers: "=",
                  addressChange: '&',
                  isNew: "=",
-                 firstAddress:"="
+                 firstAddress: "="
              },
              link: function(scope, element, attrs) {
                  scope._height = scope.height || 315;
@@ -38,7 +38,7 @@
                  }
 
                  scope.changeAddress = function(place) {
-                    scope.firstAddress = true;
+                     scope.firstAddress = true;
                      mapAutocomplete.getPlaceAddress(place).then(function(addr) {
                          scope.map.setZoom(12);
                          scope.map.setCenter(addr)
@@ -50,6 +50,8 @@
                  }
 
                  scope.getStaticMap = function() {
+                     if (!_.get(scope, 'data.artisan.address.lt'))
+                         return 0
                      var q = "?width=" + Math.round($window.outerWidth * (scope.height === "small" ? 0.8 : 1.2));
                      if (scope.client && scope.client.address && scope.client.address.latLng)
                          q += ("&origin=" + scope.client.address.latLng);

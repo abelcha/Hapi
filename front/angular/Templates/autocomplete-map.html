@@ -19,12 +19,12 @@
         <directions ng-if="data.artisan" travel-mode="DRIVING" origin="{{data.artisan.address.lt}}, {{data.artisan.address.lg}}" destination="{{client.address.latLng}}">
         </directions>
         <marker ng-if="client.address.lt" position="{{client.address.lt}}, {{client.address.lg}}" color="grey"></marker>
-        <marker ng-repeat="sst in xmarkers" on-click="clickOnArtisanMarker(sst)" position="{{sst.address.lt}}, {{sst.address.lg}}" color="red"></marker>
+        <marker ng-repeat="sst in xmarkers" title="{{sst.nomSociete}}" on-click="clickOnArtisanMarker(sst)" position="{{sst.address.lt}}, {{sst.address.lg}}" color="red"></marker>
     </map>
      <map ng-if="map.display && height === 'big'" zoom="{{map.zoom}}" pan-control="false" style="height:400px" center="{{map.center.latLng}}">
         <directions ng-if="data.artisan" travel-mode="DRIVING" origin="{{data.artisan.address.lt}}, {{data.artisan.address.lg}}" destination="{{client.address.latLng}}">
         </directions>
         <marker ng-if="client.address.lt" position="{{client.address.lt}}, {{client.address.lg}}" color="grey"></marker>
-        <marker ng-repeat="sst in xmarkers" on-click="clickOnArtisanMarker(sst)" position="{{sst.address.lt}}, {{sst.address.lg}}" color="{{sst.status === 'POT' ? 'blue' : 'red'}}"></marker>
+        <marker ng-repeat="sst in xmarkers" title="{{sst.nomSociete}}" on-click="clickOnArtisanMarker(sst)" position="{{sst.address.lt}}, {{sst.address.lg}}" color="{{sst.status === 'POT' ? 'blue' : 'red'}}"></marker>
     </map>
 </div>

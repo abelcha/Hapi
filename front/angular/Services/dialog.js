@@ -141,30 +141,17 @@ angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', 'config', 
                 templateUrl: '/DialogTemplates/text.html',
             });
         },
-        getFileAndText: function(data, files, cb) {
+        getFileAndText: function(data, text, files, cb) {
             $mdDialog.show({
                 controller: function DialogController($scope, $mdDialog) {
 
-                    var getSMS = function() {
-                        var sms = data.id ? "OS " + data.id + ". \n" : "";
-                        sms += "Intervention chez " + data.client.civilite + " " +
-                            data.client.prenom + " " + data.client.nom + " au " +
-                            data.client.address.n + " " + data.client.address.r + " " +
-                            data.client.address.cp + ", " + data.client.address.v + " le " +
-                            moment(data.date.intervention).format("LLLL") + ". \n";
-                        sms += data.prixAnnonce ? data.prixAnnonce + "€ HT. " : "Pas de prix annoncé. ";
-                        sms += "\nMerci de prendre rdv avec le client au " + data.client.telephone.tel1;
-                        sms += data.client.telephone.tel2 ? " ou au " + data.client.telephone.tel2 : ""
-                        return sms + ".\nEdison Services."
-                    }
                     $scope.xfiles = _.clone(files ||  []);
                     if (data.produits && data.produits.length)
                         $scope.xfiles.push({
                             _id: 'devis',
                             name: 'devis.pdf'
                         })
-                    console.log(files)
-                    $scope.smsText = getSMS();
+                    $scope.smsText = text;
                     $scope.answer = function(cancel) {
                         $mdDialog.hide();
                         if (cancel === false) {

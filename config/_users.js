@@ -17,7 +17,7 @@
      root: true,
      nom: 'boukris',
      prenom: 'benjamin',
-     pseudo: 'arnaud',
+     pseudo: 'Arnaud',
      activated: true
 
  }, {
@@ -27,7 +27,7 @@
      root: false,
      nom: 'xxx',
      prenom: 'harald',
-     pseudo: 'fabien',
+     pseudo: 'Fabien',
      activated: false
  }, {
      login: 'jeremie_r',
@@ -44,7 +44,7 @@
      service: 'INTERVENTION',
      root: false,
      nom: 'clement',
-     pseudo: 'laurent',
+     pseudo: 'Laurent',
      prenom: 'xxx',
      activated: false
  }, {
@@ -54,7 +54,7 @@
      root: false,
      nom: 'guillot',
      prenom: 'taieb',
-     pseudo: 'éric',
+     pseudo: 'Eric',
      activated: false
  }, {
      login: 'eliran_t',

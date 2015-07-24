@@ -2,7 +2,7 @@ angular.module('edison', ['browserify', 'ui.slimscroll', 'ngMdIcons', 'ngMateria
     .config(function($mdThemingProvider) {
         "use strict";
         $mdThemingProvider.theme('default')
-            .primaryPalette('green')
+            .primaryPalette('indigo')
             .accentPalette('blue-grey');
     });
 

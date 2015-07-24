@@ -1211,6 +1211,32 @@ module.exports = function(d) {
 }
 },{}],8:[function(require,module,exports){
 module.exports = {
+    sms: {
+        intervention: {
+            envoi: function(user) {
+                var sms = this.id ? "OS " + this.id + ". \n" : "";
+                sms += "Intervention chez " + this.client.civilite + " " +
+                    this.client.prenom + " " + this.client.nom + " au " +
+                    this.client.address.n + " " + this.client.address.r + " " +
+                    this.client.address.cp + ", " + this.client.address.v + " le " +
+                    moment(this.date.intervention).format("LLLL") + ". \n";
+                sms += this.prixAnnonce ? this.prixAnnonce + "€ HT. " : "Pas de prix annoncé. ";
+                sms += "\nMerci de prendre rdv avec le client au " + this.client.telephone.tel1;
+                sms += this.client.telephone.tel2 ? " ou au " + this.client.telephone.tel2 : ""
+                sms += '\nM.' + user.pseudo + " (0132123212)";
+                return sms + ".\nEdison Services."
+            },
+            demande: function(user) {
+                console.log(this.artisan)
+                return "Bonjour M. " + this.artisan.representant.nom + ", nous cherchons a vous joindre pour une intervention de vitrerie à faire aujourd'hui.\n" +
+                    "Pourriez-vous vous rendre disponible ?\n" +
+                    "Merci de nous contacter au plus vite au 09.72.42.30.00.\n" +
+                    "Merci d'avance pour votre réponse.\n" +
+                    "\nM." + user.pseudo + " (0132123212)\n" +
+                    "Edison Services"
+            }
+        }
+    },
     mail: {
         devis: {
             envoi: function(user) {
