@@ -540,6 +540,7 @@ angular.module('edison').directive('dropdownRow', function(edisonAPI, config, $q
             };
             scope.expendedReady = false;
             scope.data = {};
+            scope.config = config
             $timeout(function() {
                 $("#expended").velocity({
                     height: 205,
@@ -547,25 +548,14 @@ angular.module('edison').directive('dropdownRow', function(edisonAPI, config, $q
             }, 50)
 
             if (scope._model === "intervention") {
-                var pAll = [
-                    edisonAPI.intervention.get(scope.row.id),
-                ];
-                if (scope.row.ai) {
-                    pAll.push(edisonAPI.artisan.get(scope.row.ai))
-                    pAll.push(edisonAPI.artisan.getStats(scope.row.ai))
-                }
-
-                var pThen = function(result) {
-                    scope.data = result[0].data;
+                edisonAPI.intervention.get(scope.row.id, {
+                    extended: true
+                }).then(function(result) {
+                    scope.data = result.data;
                     scope.client = scope.data.client;
                     scope.address = scope.client.address;
-                    if (scope.row.ai) {
-                        scope.artisan = result[1].data;
-                        scope.artisan.stats = result[2].data;
-                    }
-                    if (scope.data.status === 'ANN')
-                        scope.data.ca = config.getCauseAnnulation(scope.data.causeAnnulation)
-                }
+
+                })
 
             } else if (scope._model === "devis") {
                 var pAll = [
@@ -576,8 +566,6 @@ angular.module('edison').directive('dropdownRow', function(edisonAPI, config, $q
                     scope.client = scope.data.client;
                     scope.address = scope.client.address;
                     scope.data.flagship = _.max(scope.data.produits, 'pu');
-                    if (scope.data.status === 'ANN')
-                        scope.data.ca = config.getCauseAnnulation(scope.data.causeAnnulation)
                 }
             } else if (scope._model === 'artisan') {
                 pAll = [

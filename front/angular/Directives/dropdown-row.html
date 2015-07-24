@@ -5,24 +5,23 @@
             <p><strong>Addresse:</strong> {{::client.address.n}} {{::client.address.r}}, {{::client.address.cp}} {{::client.address.v}}</p>
             <p><strong>Description:</strong> {{::data.description}}</p>
             <p><strong>Prix Annoncé: </strong> {{data.prixAnnonce || 0}} €</p>
-            <p><strong>Prix Final: </strong> {{data.prixFinal || 0}} €</p>
-            <p><strong>{{data.reglementSurPlace ? 'Reglement sur place' : 'Reglement par facture'}}</strong></p>
-            <p>
-                <a href="/{{_model}}/{{data.id}}"> <span style="width:100px" class="label grey darken-3"> Fiche</span></a>
-            </p>
+            <p ng-if="data.prixFinal"><strong>Prix Final: </strong> {{data.prixFinal || 0}} €</p>
+            <p><strong>Reglement: </strong>{{data.reglementSurPlace ? 'Sur place' : 'Par facture'}} - {{data.modeReglement}}</p>
             <p ng-if="data.ca"><strong>Annulation:</strong> {{::data.ca.long_name}}</p>
         </div>
         <div ng-if="_model === 'intervention'" class="col-sm-4 info-ext">
-            <div>
-                <p>Ajouté le {{data.date.ajout | date:'dd/MM/yy à HH:mm'}} par {{data.login.ajout}}</p>
-                <p ng-if="data.date.envoi">Envoyé le {{data.date.envoi | date:'dd/MM/yy à HH:mm'}} par {{data.login.envoi}}</p>
-                <p ng-if="data.date.verification">Envoyé le {{data.date.verification | date:'dd/MM/yy à HH:mm'}} par {{data.login.verification}}</p>
-                <p ng-if="data.date.annulation">Annulé le {{data.date.annulation | date:'dd/MM/yy à HH:mm'}} par {{data.login.annulation}}</p>
+            <div style="min-height: 147px;padding-top:3px">
+                <p ng-if="data.devisOrigine.id">Devis <a href="/devis/{{data.devisOrigine.id}}">{{data.devisOrigine.id}}</a> ajouté le {{data.devisOrigine.date.ajout | date:"dd/MM/yy à HH'h'mm"}} par {{data.devisOrigine.login.ajout}}</p>
+
+                <p>Ajouté le {{data.date.ajout | date:"dd/MM/yy à HH'h'mm"}} par {{data.login.ajout}}</p>
+                <p ng-if="data.date.envoi">Verifié le {{data.date.envoi | date:"dd/MM/yy à HH'h'mm"}} par {{data.login.envoi}}</p>
+                <p ng-if="data.date.verification">Envoyé le {{data.date.verification | date:"dd/MM/yy à HH'h'mm"}} par {{data.login.verification}}</p>
+                <p ng-if="data.date.annulation">Annulé le {{data.date.annulation | date:"dd/MM/yy à HH'h'mm"}} par {{data.login.annulation}} <i ng-if="data.causeAnnulation">({{::config.getCauseAnnulation(data.causeAnnulation).long_name}})</i></p>
+            </div>
                 <p>
                     <md-button ng-if="data.date.envoi" ng-click="Intervention(data).verification()" class="md-raised md-primary">Vérifier</md-button>
                     <md-button ng-click="Intervention(data).annulation()" class="md-raised md-warn">Annuler</md-button>
                 </p>
-            </div>
         </div>
         <div ng-if="_model === 'devis'" class="col-sm-4 info-ext">
             <div>

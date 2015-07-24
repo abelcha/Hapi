@@ -17,18 +17,12 @@ module.exports = function(db) {
             ajout: String,
             envoi: String,
             envoiFacture: String,
-            intervention: String,
+            annulation: String,
             verification: String,
             paiementCLI: String,
             paiementSST: String,
             demarchage: String,
         },
-        telepro: String,
-        comments: [{
-            login: String,
-            text: String,
-            date: Date
-        }],
         date: {
             envoi: Date,
             ajout: {
@@ -38,10 +32,16 @@ module.exports = function(db) {
             envoiFacture: Date,
             intervention: Date,
             verification: Date,
+            annulation: Date,
             paiementCLI: Date,
             paiementSST: Date,
             demarchage: Date
         },
+        comments: [{
+            login: String,
+            text: String,
+            date: Date
+        }],
         historique: [{
             date: Date,
             login: String,

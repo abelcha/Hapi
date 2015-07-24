@@ -1,5 +1,7 @@
 'use strict';
 
+var ReadWriteLock = require('rwlock');
+var lock = new ReadWriteLock();
 var _ = require("lodash")
 module.exports = function(schema) {
 
@@ -47,12 +49,11 @@ module.exports = function(schema) {
         }
     }
 
-    var translate = function(e) {
+    var translate = schema.statics.cachify = function(e) {
         var config = requireLocal('config/dataList')
         var filtersFactory = requireLocal('config/FiltersFactory')("intervention")
         var d = requireLocal('config/dates.js')
 
-        console.log(e.id)
         if (e.status === "ENC" && Date.now() > (new Date(e.date.intervention)).getTime()) {
             e.status = 'AVR';
         }
@@ -94,11 +95,13 @@ module.exports = function(schema) {
                     }
                     redis.set("interventionList", JSON.stringify(data), function() {
                         result._date = Date.now()
-                        io.sockets.emit('interventionListChange', result);
-                        //sometimes it's too fast
-                        setTimeout(function() {
+                        if (!isWorker) {
                             io.sockets.emit('interventionListChange', result);
-                        }, 2500)
+                            //sometimes it's too fast
+                            setTimeout(function() {
+                                io.sockets.emit('interventionListChange', result);
+                            }, 2500)
+                        }
                         release();
                     });
                 }

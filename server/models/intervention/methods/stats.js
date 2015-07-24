@@ -71,7 +71,7 @@ module.exports = function(schema) {
         return new Promise(function(resolve, reject) {
             redis.get('interventionStats', function(err, resp) {
                 if (!err && resp && !_.get(req, 'query.cache'))
-                    return resolve(res.send(resp))
+                    return resolve(resp)
                 var allFilters = {};
                 mergeFilters(allFilters, 'intervention')
                 mergeFilters(allFilters, 'devis')

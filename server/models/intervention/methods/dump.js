@@ -5,6 +5,7 @@
     var sanitizeHtml = require('sanitize-html');
     var Entities = require('html-entities').XmlEntities;
     var _ = require('lodash');
+    var async = require('async')
     var entities = new Entities();
 
     module.exports = function(schema) {
@@ -143,7 +144,7 @@
                 var tmp = _.find(config.causeAnnulation, function(e) {
                     return e.oldId === d.id_annulation
                 })
-                rtn.cause_annulation = tmp ? tmp.short_name : undefined
+                rtn.causeAnnulation = tmp ? tmp.short_name : undefined
             }
             rtn.categorie = d.categorie;
             rtn.description = d.description || "PAS DE DESCRIPTION";
@@ -174,6 +175,11 @@
                         cp: d.code_postal_facture
                     },
                 }
+            }
+
+            if (rtn.status == "ANN") {
+                rtn.login.annulation = rtn.login.ajout
+                rtn.date.annulation = rtn.date.ajout
             }
             //cout_fourniture_ht -> total fourniture
             //fourniture_avancee -> avance par le sst
@@ -249,28 +255,23 @@
         }
 
 
-
-        var addInDB = function(data, i, cb) {
-            if (i >= data.length - 1)
-                return cb(null)
-            var inter = db.model('intervention')(translateModel(data[i]));
-            if (i % 100 == 0)
-                console.log(((i / data.length) * 100).toFixed(2) + '%', inter.id);
-            inter.save(function(err) {
-                if (err) {
-                    return cb({
-                        id: inter.id,
-                        err: err
-                    });
-                } else {
-                    addInDB(data, i + 1, cb);
-                }
-            });
-        }
         var getUser = function(oldLogin) {
             return _.find(users, function(e) {
                 return e.oldLogin === oldLogin;
             })
+        }
+
+        var lol = function(data, cache, i, cb) {
+            if (i % 100 == 0)
+                console.log(_.round(i / data.length * 100, 2), "%")
+            if (i === data.length - 1)
+                return cb(cache)
+            var z = translateModel(data[i]);
+            db.model('intervention')(z).save().then(function(resp) {
+                var x = db.model('intervention').cachify(resp)
+                cache.push(x)
+                return lol(data, cache, i + 1, cb)
+            });
         }
 
         var execDump = function(limit) {
@@ -284,15 +285,13 @@
                 }, function() {
                     request(key.alvin.url + "/dumpIntervention.php?limit=" + limit + "&key=" + key.alvin.pass, function(err, rest, body) {
                         var data = JSON.parse(body);
-                        addInDB(data, 0, function(err) {
-                            if (err)
-                                return reject(err);
-                            // db.model('intervention').cacheReload();
-                            return resolve({
-                                status: 'OK',
-                                time: (Date.now() - t) / 1000
-                            });
-                        });
+                        var cache = [];
+                        lol(data, cache, 0, function(cache) {
+                            console.log('STOP')
+                            redis.set("interventionList", JSON.stringify(cache), function() {
+                                resolve('ok')
+                            })
+                        })
                     });
                 });
             });

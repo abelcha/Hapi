@@ -5,9 +5,9 @@ module.exports = function(schema) {
     var FiltersFactory = requireLocal('config/FiltersFactory')
     var config = requireLocal('config/dataList');
     var ReadWriteLock = require('rwlock');
+    var lock = new ReadWriteLock();
     var d = requireLocal('config/dates.js')
 
-    var lock = new ReadWriteLock();
     var _ = require('lodash')
 
     var translate = function(e) {
