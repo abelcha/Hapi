@@ -653,25 +653,34 @@ module.exports = {
         }
     }],
     intervention: [{
-        title: 'Ouvrir Fiche',
-        action: "ouvrirFiche"
-    },{
-        title: 'Ouvrir Recap SST',
-        action: "ouvrirRecapSST",
-        hide:function(inter) {
-            return !inter.artisan || !inter.artisan.id
+        title: 'Fiche Client',
+        action: "ouvrirFiche",
+        style: {
+            fontWeight: 'bold'
         }
     }, {
-        title: "Appeler l'artisan",
-        action: 'callArtisan',
-        hide: function(inter) {
-            return !inter.artisan || !inter.artisan.id
-        }
-    }, {
-        title: "Appeler le client",
+        title: "Appel Client",
         action: 'callClient',
+        style: {
+            fontWeight: 'bold'
+        },
         hide: function(inter) {
             return false
+        }
+    }, {
+        title: 'Recap Artisan',
+        action: "ouvrirRecapSST",
+        hide: function(inter) {
+            return !inter.artisan || !inter.artisan.id
+        }
+    }, {
+        title: "Appel l'artisan",
+        action: 'callArtisan',
+        style: {
+            fontWeight: 'bold'
+        },
+        hide: function(inter) {
+            return !inter.artisan || !inter.artisan.id
         }
     }, {
         title: "SMS artisan",
@@ -685,7 +694,7 @@ module.exports = {
         hide: function(inter) {
             return (inter.status != "APR" &&  inter.status !== "ANN") || !inter.artisan
         }
-    }, {
+    },/* {
         title: "Vérifier",
         action: 'verification',
         hide: function(inter) {
@@ -695,10 +704,10 @@ module.exports = {
         title: "Annuler",
         action: 'annulation'
 
-    }, {
+    }, */{
         title: "Je prend !",
         action: 'demarcher',
-        hide:function(inter) {
+        hide: function(inter) {
             return !inter.aDemarcher || inter.login.demarchage;
         }
     }]
@@ -1022,9 +1031,11 @@ module.exports = {
     causeAnnulation: [{
         type: "client",
         short_name: "PB_RES",
+        oldId: '2',
         long_name: "Le problème est résolu"
     }, {
         type: "client",
+        oldId: '1',
         short_name: "PX_TP_CHR",
         long_name: "Le prix est trop cher"
     }, {
@@ -1034,9 +1045,11 @@ module.exports = {
     }, {
         type: "sous-traitant",
         short_name: "SST_P_DSP",
+        oldId: '4',
         long_name: "Le sous-traitant n'est pas disponible"
     }, {
         type: "sous-traitant",
+        oldId: '3',
         short_name: "SST_REP_PS",
         long_name: "Le sous-traitant ne répond pas"
     }, {
@@ -1050,6 +1063,7 @@ module.exports = {
     }, {
         type: "partenariat",
         short_name: "PS_SST",
+        oldId:'5',
         long_name: "Il n'y a pas de sst dans la zone"
     }, {
         type: "partenariat",

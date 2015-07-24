@@ -59,7 +59,7 @@
         <div class="dropdown-menu__content ng-scope">
             <ul class="ng-scope">
                 <li ng-repeat="item in vm.contextMenu.list" ng-hide="item.hidden" ng-click="vm.contextMenu.close();vm.contextMenu.click(item)">
-                    <a class="dropdown-link" tabindex="{{$index}}">{{item.title}}</a>
+                    <a class="dropdown-link" ng-style="item.style" tabindex="{{$index}}">{{item.title}}</a>
                 </li>
             </ul>
         </div>

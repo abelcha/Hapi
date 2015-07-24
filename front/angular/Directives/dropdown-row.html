@@ -1,39 +1,27 @@
 <div id="expended" ng-style="expendedStyle">
     <div class="row">
         <div class="col-sm-4 info-ext" ng-if="_model === 'intervention' || _model === 'devis'">
-            <h4>Client</h4>
-            <p><strong>{{data.reglementSurPlace ? 'Reglement sur place' : 'FACTURE'}}</strong></p>
-            <p ng-if="data.ca"><strong>Annulation:</strong> {{::data.ca.long_name}}</p>
             <p><strong>Nom:</strong> {{::client.civilite}} {{::client.prenom}} {{::client.nom}}</p>
-            <p><strong>Addresse:</strong> {{::client.address.n}} {{::client.address.r}} {{::client.address.cp}}, {{::client.address.v}}</p>
+            <p><strong>Addresse:</strong> {{::client.address.n}} {{::client.address.r}}, {{::client.address.cp}} {{::client.address.v}}</p>
             <p><strong>Description:</strong> {{::data.description}}</p>
-            <p><strong>Prix:</strong> {{data.prixAnnonce || 0}} € | {{::data.prixFinal || 0}} €</p>
+            <p><strong>Prix Annoncé: </strong> {{data.prixAnnonce || 0}} €</p>
+            <p><strong>Prix Final: </strong> {{data.prixFinal || 0}} €</p>
+            <p><strong>{{data.reglementSurPlace ? 'Reglement sur place' : 'Reglement par facture'}}</strong></p>
             <p>
                 <a href="/{{_model}}/{{data.id}}"> <span style="width:100px" class="label grey darken-3"> Fiche</span></a>
             </p>
+            <p ng-if="data.ca"><strong>Annulation:</strong> {{::data.ca.long_name}}</p>
         </div>
-        <div ng-if="artisan && artisan.id" class="col-sm-4 info-ext">
+        <div ng-if="_model === 'intervention'" class="col-sm-4 info-ext">
             <div>
-                <h4>Artisan</h4>
-                <br>
+                <p>Ajouté le {{data.date.ajout | date:'dd/MM/yy à HH:mm'}} par {{data.login.ajout}}</p>
+                <p ng-if="data.date.envoi">Envoyé le {{data.date.envoi | date:'dd/MM/yy à HH:mm'}} par {{data.login.envoi}}</p>
+                <p ng-if="data.date.verification">Envoyé le {{data.date.verification | date:'dd/MM/yy à HH:mm'}} par {{data.login.verification}}</p>
+                <p ng-if="data.date.annulation">Annulé le {{data.date.annulation | date:'dd/MM/yy à HH:mm'}} par {{data.login.annulation}}</p>
                 <p>
-                    {{::artisan.nomSociete}} - M. {{::artisan.representant.nom}}
+                    <md-button ng-if="data.date.envoi" ng-click="Intervention(data).verification()" class="md-raised md-primary">Vérifier</md-button>
+                    <md-button ng-click="Intervention(data).annulation()" class="md-raised md-warn">Annuler</md-button>
                 </p>
-                <p>
-                    Interventions: {{::artisan.stats.total.total || 0}} ({{artisan.stats.total.montant || 0}} €)
-                </p>
-                <p>
-                    Interventions payé: {{::artisan.stats.paye.total || 0}} ({{artisan.stats.paye.montant || 0}} €)
-                </p>
-                <p>
-                    Interventions annulé: {{::artisan.stats.annule.total || 0}} ({{artisan.stats.annule.montant || 0}} €)
-                </p>
-                <p>
-                    Reglement en attente: {{::artisan.stats.impaye.total || 0}} ({{artisan.stats.impaye.montant || 0}} €)
-                </p>
-                <p>
-                    <a href="/artisan/{{artisan.id}}"> <span style="width:100px" class="label grey darken-3"> Fiche</span></a>
-                    <a href="/artisan/{{artisan.id}}/recap"><span style="width:100px" class="label grey darken-3"> Recap'</span></p></a>
             </div>
         </div>
         <div ng-if="_model === 'devis'" class="col-sm-4 info-ext">

@@ -184,7 +184,10 @@ module.exports = function(db) {
             default: false
         },
         demarchePar: String,
-        devisOrigine: Number,
+        devisOrigine: {
+            type: Number,
+            ref: 'devis'
+        },
         fournisseur: String,
         coutFourniture: {
             type: Number,

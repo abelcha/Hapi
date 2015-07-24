@@ -1,5 +1,6 @@
     var key = requireLocal('config/_keys');
     var users = requireLocal('config/_users');
+    var config = requireLocal('config/dataList');
     var request = require("request");
     var sanitizeHtml = require('sanitize-html');
     var Entities = require('html-entities').XmlEntities;
@@ -117,6 +118,7 @@
 
             if (rtn.status === 'INT' || rtn.status === 'ENC') {
                 rtn.date.envoi = rtn.date.ajout;
+                rtn.login.envoi = rtn.login.ajout
             }
 
             if (rtn.status === "INT") {
@@ -137,6 +139,12 @@
             rtn.reglementSurPlace = !d.fact;
 
             /* INFO */
+            if (d.id_annulation) {
+                var tmp = _.find(config.causeAnnulation, function(e) {
+                    return e.oldId === d.id_annulation
+                })
+                rtn.cause_annulation = tmp ? tmp.short_name : undefined
+            }
             rtn.categorie = d.categorie;
             rtn.description = d.description || "PAS DE DESCRIPTION";
             rtn.remarque = d.remarque || "PAS DE REMARQUES";

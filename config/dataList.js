@@ -315,9 +315,11 @@ module.exports = {
     causeAnnulation: [{
         type: "client",
         short_name: "PB_RES",
+        oldId: '2',
         long_name: "Le problème est résolu"
     }, {
         type: "client",
+        oldId: '1',
         short_name: "PX_TP_CHR",
         long_name: "Le prix est trop cher"
     }, {
@@ -327,9 +329,11 @@ module.exports = {
     }, {
         type: "sous-traitant",
         short_name: "SST_P_DSP",
+        oldId: '4',
         long_name: "Le sous-traitant n'est pas disponible"
     }, {
         type: "sous-traitant",
+        oldId: '3',
         short_name: "SST_REP_PS",
         long_name: "Le sous-traitant ne répond pas"
     }, {
@@ -343,6 +347,7 @@ module.exports = {
     }, {
         type: "partenariat",
         short_name: "PS_SST",
+        oldId:'5',
         long_name: "Il n'y a pas de sst dans la zone"
     }, {
         type: "partenariat",

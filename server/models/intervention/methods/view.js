@@ -17,26 +17,26 @@ module.exports = function(schema) {
                             resolve(docs)
                         });
                 }
-                db.model('intervention').findOne({
+                var promise = db.model('intervention').findOne({
                     id: id
-                }).then(function(doc)  {
-
+                })
+                if (req.query.devis ||  req.query.extended) {
+                    promise = promise.populate('devisOrigine')
+                }
+                if (req.query.artisan ||  req.query.extended) {
+                    promise = promise.populate('artisan.id')
+                }
+                promise.then(function(doc)  {
                     if (doc === null)
                         return reject('not found')
+
                     rtn = doc.toObject();
-                    rtn.etat = doc.etat;
-                    if (req.query.extend && doc.artisan.id) {
-                        db.model('artisan').findOne({
-                            id: doc.artisan.id
-                        }).then(function(sst) {
-                            rtn.artisan = sst;
-                            resolve(rtn);
-                        })
-                    } else {
-                        return resolve(rtn);
+                    if (typeof doc.artisan.id == "object") {
+                        rtn.artisan = doc.artisan.id;
                     }
-                }, reject)
+                    resolve(rtn);
+                });
             }
-        });
+        })
     }
 }

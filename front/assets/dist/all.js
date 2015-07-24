@@ -2,7 +2,7 @@ angular.module('edison', ['browserify', 'ui.slimscroll', 'ngMdIcons', 'ngMateria
     .config(function($mdThemingProvider) {
         "use strict";
         $mdThemingProvider.theme('default')
-            .primaryPalette('indigo')
+            .primaryPalette('green')
             .accentPalette('blue-grey');
     });
 
@@ -519,7 +519,7 @@ angular.module('edison').directive('creditcard', function() {
     };
 });
 
-angular.module('edison').directive('dropdownRow', ['edisonAPI', 'config', '$q', '$timeout', function(edisonAPI, config, $q, $timeout) {
+angular.module('edison').directive('dropdownRow', function(edisonAPI, config, $q, $timeout, Intervention) {
     "use strict";
 
     return {
@@ -531,6 +531,7 @@ angular.module('edison').directive('dropdownRow', ['edisonAPI', 'config', '$q', 
             row: '=',
         },
         link: function(scope, element, attrs) {
+            scope.Intervention = Intervention
             scope._model = scope.model || "intervention"
             console.log('-->', scope._model)
             scope.expendedStyle = {
@@ -600,7 +601,7 @@ angular.module('edison').directive('dropdownRow', ['edisonAPI', 'config', '$q', 
 
         }
     };
-}]);
+});
 
 angular.module('edison').directive('ngEnter', function () {
     "use strict";

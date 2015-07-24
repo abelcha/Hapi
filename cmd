@@ -20,10 +20,10 @@ q = dict()
 for i in range(1, len(args)):
 	x = (args[i].split("="))
 	q[x[0]] = x[1]	
+print(args[0], options, q)
 if (options.cache):
-	q['cache'] = "true"
+	q['cache'] = True
 q['x'] = "true"
-print(args[0], options)
 res = requests.get(baseUrl + args[0], params=q)
 print(res)
 print(res.text)

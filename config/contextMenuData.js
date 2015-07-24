@@ -50,25 +50,34 @@ module.exports = {
         }
     }],
     intervention: [{
-        title: 'Ouvrir Fiche',
-        action: "ouvrirFiche"
-    },{
-        title: 'Ouvrir Recap SST',
-        action: "ouvrirRecapSST",
-        hide:function(inter) {
-            return !inter.artisan || !inter.artisan.id
+        title: 'Fiche Client',
+        action: "ouvrirFiche",
+        style: {
+            fontWeight: 'bold'
         }
     }, {
-        title: "Appeler l'artisan",
-        action: 'callArtisan',
-        hide: function(inter) {
-            return !inter.artisan || !inter.artisan.id
-        }
-    }, {
-        title: "Appeler le client",
+        title: "Appel Client",
         action: 'callClient',
+        style: {
+            fontWeight: 'bold'
+        },
         hide: function(inter) {
             return false
+        }
+    }, {
+        title: 'Recap Artisan',
+        action: "ouvrirRecapSST",
+        hide: function(inter) {
+            return !inter.artisan || !inter.artisan.id
+        }
+    }, {
+        title: "Appel l'artisan",
+        action: 'callArtisan',
+        style: {
+            fontWeight: 'bold'
+        },
+        hide: function(inter) {
+            return !inter.artisan || !inter.artisan.id
         }
     }, {
         title: "SMS artisan",
@@ -82,7 +91,7 @@ module.exports = {
         hide: function(inter) {
             return (inter.status != "APR" &&  inter.status !== "ANN") || !inter.artisan
         }
-    }, {
+    },/* {
         title: "Vérifier",
         action: 'verification',
         hide: function(inter) {
@@ -92,10 +101,10 @@ module.exports = {
         title: "Annuler",
         action: 'annulation'
 
-    }, {
+    }, */{
         title: "Je prend !",
         action: 'demarcher',
-        hide:function(inter) {
+        hide: function(inter) {
             return !inter.aDemarcher || inter.login.demarchage;
         }
     }]
