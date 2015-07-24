@@ -1,14 +1,12 @@
-<md-dialog aria-label="Mango (Fruit)" style="  width: 34%;height: 60%;">
+<md-dialog aria-label="Mango (Fruit)" style="  width: 200px;height: 500px;">
     <md-dialog-content class="sticky-container" style="height: 100%">
         <md-subheader class="md-sticky-no-effect">Envoyer l'intervention</md-subheader>
         <div style="padding:15px">
                 <select ng-if="xfiles && xfiles.length" style="width:40%" class="form-control"  ng-model="addedFile" ng-options="f._id as f.name for f in xfiles" >
                 </select>
             <br>
-            <md-input-container flex>
                 <label>SMS OS</label>
-                <textarea ng-model="smsText" columns="1" md-maxlength="250"></textarea>
-            </md-input-container>
+                <textarea ng-model="smsText" columns="1" ></textarea>
         </div>
     </md-dialog-content>
     <div class="md-actions" layout="row">
