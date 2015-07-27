@@ -34,6 +34,9 @@ io.on('connection', function(socket) {
 
 });
 
+
+app.get('/api/client/:id/telephone', edison.axialis.get)
+
 app.use(require("multer")({
     inMemory: true,
     onFileUploadStart: function(file, req, res) {
@@ -58,6 +61,7 @@ app.use(require('connect-redis-sessions')({
         maxAge: 1000 * 60 * 60 * 12
     }
 }))
+
 
 
 
@@ -89,6 +93,8 @@ app.post('/login', function(req, res) {
             return res.redirect((req.body.url || '/') + '#failure');
         })
 });
+
+
 
 app.get("/ping", function(req, res)  {
     res.json({
