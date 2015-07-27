@@ -26,7 +26,7 @@ module.exports = {
             rtn.telephone_client = telephone
             res.json(rtn);
         }
-        if (req.query.key !== '79dl5hSkApZF9p407307T0AVmPV4W7sD') {
+        if (req.query.api_key !== '79dl5hSkApZF9p407307T0AVmPV4W7sD') {
         	return res.sendStatus(401)
         }
         if (!req.params.id.match(/^\d+$/)) {
