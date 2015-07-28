@@ -42,6 +42,7 @@ module.exports = function(schema) {
                                 balance: _.round(e.compta.paiement.montant - getPreviousMontant(e))
                             }
                             e.mode = e.compta.paiement.mode
+                            console.log(e)
                             e.type = e.montant.balance !== 0 ? (e.montant.balance > 0 ? 'COMPLEMENT' : 'AVOIR') : 'AUTO-FACT'
                             total.base = _.round(total.base + e.montant.base);
                             total.montant = _.round(total.montant + e.montant.total);
