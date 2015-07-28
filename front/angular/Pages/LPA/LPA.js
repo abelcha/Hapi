@@ -1,21 +1,26 @@
-var LpaController = function(tabContainer, edisonAPI, $rootScope, LxProgressService) {
+var LpaController = function(tabContainer, edisonAPI, $rootScope, LxProgressService, FlushList) {
     "use strict";
     var _this = this
     var tab = tabContainer.getCurrentTab();
     tab.setTitle('LPA')
-    var loadData = function() {
-        $rootScope.lpa = undefined
+    _this.loadData = function(prevChecked) {
         LxProgressService.circular.show('#5fa2db', '#globalProgress');
         edisonAPI.compta.lpa().then(function(result) {
+            _.each(result.data, function(sst) {
+                sst.nomSociete = sst.list[0].artisan.nomSociete
+                sst.id = sst.list[0].artisan.id
+                sst.list = new FlushList(sst.list, prevChecked);
+                _this.reloadList(sst)
+            })
             $rootScope.lpa = result.data
             LxProgressService.circular.hide()
         })
     }
     if (!$rootScope.lpa)
-        loadData()
+        _this.loadData()
     _this.checkArtisan = function(sst) {
         sst.checked = !sst.checked
-        _.each(sst.list, function(e) {
+        _.each(sst.list.getList(), function(e) {
             e.checked = sst.checked;
         })
     }
@@ -26,6 +31,35 @@ var LpaController = function(tabContainer, edisonAPI, $rootScope, LxProgressServ
                 $rootScope.lpa[i].numeroCheque = ++base
             };
         }
+    }
+    _this.flush = function() {
+        var rtn = [];
+        _.each($rootScope.lpa, function(sst) {
+            _.each(sst.list.getList(), function(e) {
+                if (e.checked) {
+                    e.numeroCheque = sst.numeroCheque
+                    rtn.push(e);
+                }
+            })
+        })
+        console.log('-->', rtn)
+        edisonAPI.compta.flush(rtn).then(function(resp) {
+            console.log(resp);
+        })
+    }
+    _this.reloadList = function(artisan) {
+        artisan.total = artisan.list.getTotal()
+    }
+    _this.reloadLPA = function() {
+        var rtn = [];
+        _.each($rootScope.lpa, function(sst) {
+            _.each(sst.list.getList(), function(e) {
+                if (e.checked) {
+                    rtn.push(e.id);
+                }
+            })
+        })
+        _this.loadData(rtn)
     }
 }
 

@@ -20,11 +20,11 @@ module.exports = function(schema) {
             c: e.categories,
             id: e._id,
             n: e.nomSociete,
-            r: e.representant.nom+ " " + e.representant.prenom,
+            r: e.representant.nom + " " + e.representant.prenom,
             s: e.status,
             cp: e.address.cp,
             v: e.address.v,
-            x:e.telephone.tel1,
+            x: e.telephone.tel1,
             cnd: e.origin === 'CAND' ? 1 : undefined,
         };
     }

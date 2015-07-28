@@ -209,6 +209,7 @@
                         date: toDate(d.date_paiement_sst),
                         base: d.comptaPrixFinal,
                         montant: d.comptaMontantFinal,
+                        payed: d.comptaMontantFinal,
                         pourcentage: {
                             deplacement: d.pDeplacement,
                             maindOeuvre: d.pMaindOeuvre,

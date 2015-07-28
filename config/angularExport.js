@@ -16,3 +16,6 @@ angular.module('browserify', [])
     .factory('Paiement', [function() {
         return require('./Paiement');
     }])
+    .factory('FlushList', [function() {
+        return require('./FlushList');
+    }])

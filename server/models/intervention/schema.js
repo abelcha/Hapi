@@ -260,6 +260,10 @@ module.exports = function(db) {
             },
             historique: [{
                 date: Date,
+                _type: {
+                    type: String,
+                    default: 'AUTO-FACT'
+                },
                 pourcentage: {
                     deplacement: {
                         type: Number,
@@ -276,6 +280,7 @@ module.exports = function(db) {
                 },
                 base: Number,
                 montant: Number,
+                payed: Number,
                 numeroCheque: String
             }]
         }

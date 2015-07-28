@@ -372,6 +372,11 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
             controller: "LpaController",
             controllerAs: "vm",
         })
+        .when('/compta/avoirs', {
+            templateUrl: "Pages/Avoirs/avoirs.html",
+            controller: "avoirsController",
+            controllerAs: "vm",
+        })
         .otherwise({
             templateUrl: 'templates/Error404.html',
         });

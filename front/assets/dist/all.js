@@ -372,6 +372,11 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
             controller: "LpaController",
             controllerAs: "vm",
         })
+        .when('/compta/avoirs', {
+            templateUrl: "Pages/Avoirs/avoirs.html",
+            controller: "avoirsController",
+            controllerAs: "vm",
+        })
         .otherwise({
             templateUrl: 'templates/Error404.html',
         });
@@ -1155,6 +1160,9 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
                 }).success(function(result) {
                     return result;
                 });
+            },
+            flush: function(data) {
+                return $http.post('/api/intervention/flush', data);
             }
         },
         devis: {
@@ -3148,6 +3156,26 @@ var ArtisanCtrl = function($rootScope, $location, $routeParams, ContextMenu, LxN
 }
 angular.module('edison').controller('ArtisanController', ArtisanCtrl);
 
+var AvoirsController = function(tabContainer, edisonAPI, $rootScope, LxProgressService, FlushList) {
+    "use strict";
+    var _this = this
+    var tab = tabContainer.getCurrentTab();
+    tab.setTitle('LPA')
+    _this.loadData = function(prevChecked) {
+        LxProgressService.circular.show('#5fa2db', '#globalProgress');
+        edisonAPI.compta.avoirs().then(function(result) {
+           console.log(result)
+            $rootScope.lpa = result.data
+            LxProgressService.circular.hide()
+        })
+    }
+    if (!$rootScope.lpa)
+        _this.loadData()
+}
+
+
+angular.module('edison').controller('avoirsController', AvoirsController);
+
 var ContactArtisanController = function($scope, $timeout, tabContainer, LxProgressService, FiltersFactory, ContextMenu, edisonAPI, DataProvider, $routeParams, $location, $q, $rootScope, $filter, config, ngTableParams) {
     "use strict";
     var _this = this;
@@ -3272,40 +3300,6 @@ var DashboardController = function(edisonAPI, tabContainer, $routeParams, $locat
 
 angular.module('edison').controller('DashboardController', DashboardController);
 
-
-var LpaController = function(tabContainer, edisonAPI, $rootScope, LxProgressService) {
-    "use strict";
-    var _this = this
-    var tab = tabContainer.getCurrentTab();
-    tab.setTitle('LPA')
-    var loadData = function() {
-        $rootScope.lpa = undefined
-        LxProgressService.circular.show('#5fa2db', '#globalProgress');
-        edisonAPI.compta.lpa().then(function(result) {
-            $rootScope.lpa = result.data
-            LxProgressService.circular.hide()
-        })
-    }
-    if (!$rootScope.lpa)
-        loadData()
-    _this.checkArtisan = function(sst) {
-        sst.checked = !sst.checked
-        _.each(sst.list, function(e) {
-            e.checked = sst.checked;
-        })
-    }
-    _this.updateNumeroCheque = function(index) {
-        var base = $rootScope.lpa[index].numeroCheque;
-        if (base) {
-            for (var i = index; i < $rootScope.lpa.length; i++) {
-                $rootScope.lpa[i].numeroCheque = ++base
-            };
-        }
-    }
-}
-
-
-angular.module('edison').controller('LpaController', LpaController);
 
 
  angular.module('edison').directive('edisonMap', ['$window', 'Map', 'mapAutocomplete', 'Address',
@@ -3526,18 +3520,18 @@ angular.module('edison').directive('infoCompta', ['config', 'Paiement',
                 if (!paiement.mode) {
                     paiement.mode = _.get(scope.data.artisan, 'document.rib.file') ? "VIR" : "CHQ"
                 }
-                console.log("xxx", paiement.montant)
                 scope.compta = new Paiement(scope.data)
                 reglement.montantTTC = scope.compta.getMontantTTC()
 
                 scope.$watchGroup(['data.compta.reglement.montantTTC',
                     'data.compta.reglement.avoir',
                 ], function() {
-                    console.log('montantTTC', reglement.montantTTC)
                     var montant = reglement.montantTTC || 0
                     var coeff = 100 * (100 / (100 + scope.data.tva));
                     reglement.montant = Paiement().applyCoeff(reglement.montantTTC, coeff)
-                    paiement.base = _.round(reglement.montant - (reglement.avoir ||  0), 2)
+                    if (!paiement.base) {
+                        paiement.base = _.round(reglement.montant - (reglement.avoir ||  0), 2)
+                    }
                 })
 
                 scope.$watchGroup(['data.compta.reglement.montant',
@@ -3861,6 +3855,74 @@ angular.module('edison').controller('InterventionController', InterventionCtrl);
 
      }
  ]);
+
+var LpaController = function(tabContainer, edisonAPI, $rootScope, LxProgressService, FlushList) {
+    "use strict";
+    var _this = this
+    var tab = tabContainer.getCurrentTab();
+    tab.setTitle('LPA')
+    _this.loadData = function(prevChecked) {
+        LxProgressService.circular.show('#5fa2db', '#globalProgress');
+        edisonAPI.compta.lpa().then(function(result) {
+            _.each(result.data, function(sst) {
+                sst.nomSociete = sst.list[0].artisan.nomSociete
+                sst.id = sst.list[0].artisan.id
+                sst.list = new FlushList(sst.list, prevChecked);
+                _this.reloadList(sst)
+            })
+            $rootScope.lpa = result.data
+            LxProgressService.circular.hide()
+        })
+    }
+    if (!$rootScope.lpa)
+        _this.loadData()
+    _this.checkArtisan = function(sst) {
+        sst.checked = !sst.checked
+        _.each(sst.list.getList(), function(e) {
+            e.checked = sst.checked;
+        })
+    }
+    _this.updateNumeroCheque = function(index) {
+        var base = $rootScope.lpa[index].numeroCheque;
+        if (base) {
+            for (var i = index; i < $rootScope.lpa.length; i++) {
+                $rootScope.lpa[i].numeroCheque = ++base
+            };
+        }
+    }
+    _this.flush = function() {
+        var rtn = [];
+        _.each($rootScope.lpa, function(sst) {
+            _.each(sst.list.getList(), function(e) {
+                if (e.checked) {
+                    e.numeroCheque = sst.numeroCheque
+                    rtn.push(e);
+                }
+            })
+        })
+        console.log('-->', rtn)
+        edisonAPI.compta.flush(rtn).then(function(resp) {
+            console.log(resp);
+        })
+    }
+    _this.reloadList = function(artisan) {
+        artisan.total = artisan.list.getTotal()
+    }
+    _this.reloadLPA = function() {
+        var rtn = [];
+        _.each($rootScope.lpa, function(sst) {
+            _.each(sst.list.getList(), function(e) {
+                if (e.checked) {
+                    rtn.push(e.id);
+                }
+            })
+        })
+        _this.loadData(rtn)
+    }
+}
+
+
+angular.module('edison').controller('LpaController', LpaController);
 
 var ArtisanController = function($timeout, tabContainer, LxProgressService, FiltersFactory, ContextMenu, edisonAPI, DataProvider, $routeParams, $location, $q, $rootScope, $filter, config, ngTableParams) {
     "use strict";

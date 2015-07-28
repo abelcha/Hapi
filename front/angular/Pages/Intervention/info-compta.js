@@ -17,18 +17,18 @@ angular.module('edison').directive('infoCompta', ['config', 'Paiement',
                 if (!paiement.mode) {
                     paiement.mode = _.get(scope.data.artisan, 'document.rib.file') ? "VIR" : "CHQ"
                 }
-                console.log("xxx", paiement.montant)
                 scope.compta = new Paiement(scope.data)
                 reglement.montantTTC = scope.compta.getMontantTTC()
 
                 scope.$watchGroup(['data.compta.reglement.montantTTC',
                     'data.compta.reglement.avoir',
                 ], function() {
-                    console.log('montantTTC', reglement.montantTTC)
                     var montant = reglement.montantTTC || 0
                     var coeff = 100 * (100 / (100 + scope.data.tva));
                     reglement.montant = Paiement().applyCoeff(reglement.montantTTC, coeff)
-                    paiement.base = _.round(reglement.montant - (reglement.avoir ||  0), 2)
+                    if (!paiement.base) {
+                        paiement.base = _.round(reglement.montant - (reglement.avoir ||  0), 2)
+                    }
                 })
 
                 scope.$watchGroup(['data.compta.reglement.montant',

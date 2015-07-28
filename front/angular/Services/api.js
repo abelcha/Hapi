@@ -10,6 +10,9 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
                 }).success(function(result) {
                     return result;
                 });
+            },
+            flush: function(data) {
+                return $http.post('/api/intervention/flush', data);
             }
         },
         devis: {
