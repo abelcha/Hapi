@@ -1,6 +1,5 @@
 module.exports = function(schema) {
     var _ = require('lodash')
-    var FlushList = requireLocal('config/flushList')
 
 
     schema.statics.getFlushList = function(query) {
