@@ -67,7 +67,7 @@
                 });
             }
             var rtn = {
-                tva: d.tva_facture  || 20,
+                tva: d.tva_facture  || 10,
                 aDemarcher: d.A_DEMARCHE,
                 id: d.id,
                 _id: d.id,
@@ -187,16 +187,16 @@
             rtn.compta = {}
                 //paiement effectue
             if (d.comptaPrixFinal) {
-                rtn.tva = d.comptaTVA;
                 rtn.prixFinal = d.comptaPrixFinal;
                 rtn.compta = {
                     paiement: {
+                        tva:d.comptaTVA || 0,
                         mode: d.pVirement == "0" ? "CHQ" : "VIR",
                         base: d.comptaPrixFinal,
                         montant: d.comptaMontantFinal,
                         dette: d.etat_reglement === "DETTE",
-                        ready: rtn.id > 24000 || Boolean(d.numeroCheque == ""),
-                        effectue: rtn.id <= 24000 && Boolean(d.numeroCheque != ""),
+                        ready: rtn.id > 24000,
+                        effectue: rtn.id <= 24000,
                         pourcentage: {
                             deplacement: d.pDeplacement,
                             maindOeuvre: d.pMaindOeuvre,
@@ -206,16 +206,18 @@
                 }
                 if (rtn.compta.paiement.effectue) {
                     rtn.compta.historique = [{
+                        tva:d.comptaTVA || 0,
                         date: toDate(d.date_paiement_sst),
                         base: d.comptaPrixFinal,
                         montant: d.comptaMontantFinal,
                         payed: d.comptaMontantFinal,
+                        mode: rtn.compta.paiement.mode,
                         pourcentage: {
                             deplacement: d.pDeplacement,
                             maindOeuvre: d.pMaindOeuvre,
                             fourniture: d.pFourniture
                         },
-                        numeroCheque: d.numeroCheque,
+                        numeroCheque: d.comptaNumeroCheque || undefined,
                     }]
                 }
             }

@@ -12,7 +12,7 @@ angular.module('edison').directive('infoCompta', ['config', 'Paiement',
                 var reglement = scope.data.compta.reglement
                 var paiement = scope.data.compta.paiement
                 if (!scope.data.tva) {
-                    scope.data.tva = 20
+                    scope.data.tva = (scope.data.client.civilite == 'Soc.' ? 20 : 10)
                 }
                 if (!paiement.mode) {
                     paiement.mode = _.get(scope.data.artisan, 'document.rib.file') ? "VIR" : "CHQ"
@@ -22,7 +22,9 @@ angular.module('edison').directive('infoCompta', ['config', 'Paiement',
 
                 scope.$watchGroup(['data.compta.reglement.montantTTC',
                     'data.compta.reglement.avoir',
-                ], function() {
+                ], function(current, prev) {
+                    console.log(current, prev, _.isEqual(current, prev))
+                    console.log('yay', reglement.avoir)
                     var montant = reglement.montantTTC || 0
                     var coeff = 100 * (100 / (100 + scope.data.tva));
                     reglement.montant = Paiement().applyCoeff(reglement.montantTTC, coeff)
@@ -39,7 +41,6 @@ angular.module('edison').directive('infoCompta', ['config', 'Paiement',
                     'data.compta.paiement.pourcentage.maindOeuvre'
                 ], function(newValues, oldValues, scope) {
                     if (!_.isEqual(newValues, oldValues)) {
-                        console.log('here')
                         scope.compta = new Paiement(scope.data)
                         paiement.montant = scope.compta.montantTotal
                     }

@@ -1,9 +1,10 @@
-var LpaController = function(tabContainer, edisonAPI, $rootScope, LxProgressService, FlushList) {
+var LpaController = function(tabContainer, edisonAPI, $rootScope, LxProgressService, LxNotificationService, FlushList) {
     "use strict";
     var _this = this
     var tab = tabContainer.getCurrentTab();
     tab.setTitle('LPA')
     _this.loadData = function(prevChecked) {
+        console.log('reload')
         LxProgressService.circular.show('#5fa2db', '#globalProgress');
         edisonAPI.compta.lpa().then(function(result) {
             _.each(result.data, function(sst) {
@@ -12,6 +13,7 @@ var LpaController = function(tabContainer, edisonAPI, $rootScope, LxProgressServ
                 sst.list = new FlushList(sst.list, prevChecked);
                 _this.reloadList(sst)
             })
+            console.log($rootScope.lpa, result.data)
             $rootScope.lpa = result.data
             LxProgressService.circular.hide()
         })
@@ -42,9 +44,11 @@ var LpaController = function(tabContainer, edisonAPI, $rootScope, LxProgressServ
                 }
             })
         })
-        console.log('-->', rtn)
         edisonAPI.compta.flush(rtn).then(function(resp) {
-            console.log(resp);
+            LxNotificationService.success(resp.data);
+            _this.reloadLPA()
+        }).catch(function(err) {
+            LxNotificationService.error(err.data);
         })
     }
     _this.reloadList = function(artisan) {

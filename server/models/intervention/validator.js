@@ -35,7 +35,7 @@ module.exports = function(schema) {
                 this.client.address.r = upper(this.client.address.r)
                 this.client.address.v = upper(this.client.address.v)*/
 
-
+            this.sst = this.artisan.id
         if (this.cb.number) {
             if (!creditcard.validate(this.cb.number))
                 return next(new Error('Numero de carte invalide'))

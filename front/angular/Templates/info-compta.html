@@ -17,19 +17,28 @@
                             <input ng-model="reglement.montant" type="number" disabled="true">
                         </lx-text-field>
                     </div>
-                    <div class="col-sm-2 col-sm-offset-2" ng-if="data.compta.historique.length">
+                    <div class="switch" style="float:right;margin-right:30px">
+                        <input type="checkbox" id="switch2" ng-model="reglement.recu" class="switch__input">
+                        <label for="switch2" class="switch__label">Encaissé</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-2" ng-if="reglement.recu">
                         <lx-text-field label="Avoir">
-                            <input ng-model="reglement.avoir" type="number">
+                            <input min="0" ng-model="reglement.avoir.montant" type="number">
                         </lx-text-field>
                         <!--   <span ng-bind="round(data.prixFinal * ((data.tva / 100) + 1))"></span>-->
+                    </div>
+                    <div ng-if="reglement.avoir._type" class="switch" style="float:right;margin-right:30px">
+                        <input type="checkbox" id="flav" ng-model="reglement.avoir.ready" class="switch__input">
+                        <label for="flav" class="switch__label">Flush</label>
+                    </div>
+                    <div ng-if="reglement.avoir.montant > 0" class="col-sm-2">
+                        <select class="form-control" ng-model="reglement.avoir._type" ng-options="ta.short_name as ta.long_name for ta in config.typeAvoir"></select>
                     </div>
                 </div>
             </div>
             <br>
-            <div class="switch" style="float:right;margin-right:30px">
-                <input type="checkbox" id="switch2" ng-model="reglement.recu" class="switch__input">
-                <label for="switch2" class="switch__label">Valider</label>
-            </div>
             <br>
         </div>
     </div>
@@ -46,6 +55,9 @@
                     </div>
                     <div class="col-sm-3">
                         <select class="form-control" ng-model="data.compta.paiement.mode" ng-options="modePaiement.short_name as modePaiement.long_name for modePaiement in config.modePaiement"></select>
+                    </div>
+                    <div class="col-sm-2">
+                        <select class="form-control" ng-model="paiement.tva" ng-options="tva.short_name as tva.long_name for tva in config.tvaSST"></select>
                     </div>
                 </div>
                 <br>
@@ -68,7 +80,7 @@
                     <div class="col-sm-3">
                         <div class="switch" style="float:right;margin-right:30px">
                             <input type="checkbox" id="switch1" ng-model="paiement.ready" class="switch__input">
-                            <label for="switch1" class="switch__label">Valider</label>
+                            <label for="switch1" class="switch__label">Flush</label>
                             <span class="switch__help"></span>
                         </div>
                     </div>
@@ -78,7 +90,7 @@
                     <div class="col-sm-3 col-sm-offset-9">
                         <div class="switch" style="float:right;margin-right:30px">
                             <input type="checkbox" id="switch3" ng-model="paiement.dette" class="switch__input">
-                            <label for="switch3" class="switch__label switch_red">_Dette</label>
+                            <label for="switch3" class="switch__label switch_red">Dette</label>
                         </div>
                     </div>
                 </div>

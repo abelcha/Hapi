@@ -13,6 +13,9 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
             },
             flush: function(data) {
                 return $http.post('/api/intervention/flush', data);
+            },
+            archives: function() {
+                return $http.get('/api/intervention/archive');
             }
         },
         devis: {

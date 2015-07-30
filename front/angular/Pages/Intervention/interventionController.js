@@ -188,8 +188,9 @@ var InterventionCtrl = function(Signalement, ContextMenu, $window, $timeout, $ro
     $scope.$watch(function() {
         return intervention.client.civilite
     }, function(newVal, oldVal) {
-        if (oldVal !== newVal)
-            intervention.tva = 20;
+        if (oldVal !== newVal) {
+            intervention.tva = (newVal == 'Soc.' ? 20 : 10);
+        }
     })
 
     $scope.$watch(function() {

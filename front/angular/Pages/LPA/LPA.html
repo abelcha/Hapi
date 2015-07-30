@@ -21,7 +21,7 @@
                         <td variable-length><i>Payer</i></td>
                     </tr>
                     <tr ng-repeat="item in artisan.list.getList()" ng-click="item.checked = !item.checked;vm.reloadList(artisan)">
-                        <td ><a style="color:black" href="/intervention/{{item.id}}">{{ item.id }}</a></td>
+                        <td ng-click="item.checked = !item.checked;"><a style="color:black" href="/intervention/{{item.id}}">{{ item.id }}</a></td>
                         <td>{{ item.mode }}</td>
                         <td>{{ item.type }}</td>
                         <td>{{ item.montant.base}} €</td>

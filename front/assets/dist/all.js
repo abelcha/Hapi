@@ -377,6 +377,11 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
             controller: "avoirsController",
             controllerAs: "vm",
         })
+        .when('/compta/archives', {
+            templateUrl: "Pages/Archives/archives.html",
+            controller: "archivesController",
+            controllerAs: "vm",
+        })
         .otherwise({
             templateUrl: 'templates/Error404.html',
         });
@@ -419,6 +424,153 @@ angular.module('edison').run(function(editableOptions) {
 angular.module('edison').config(function($compileProvider) {
     $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|callto|mailto|file|tel):/);
 });
+
+angular.module("edison").filter('contactFilter', ['config', function(config) {
+    "use strict";
+
+    var clean = function(str) {
+        return _.deburr(str).toLowerCase();
+    }
+
+    var compare = function(a, b, strictMode) {
+        if (typeof a === "string") {
+            return clean(a).includes(b);
+        } else if (!strictMode) {
+            return clean(String(a)).startsWith(b);
+        } else {
+            return a === parseInt(b);
+        }
+    }
+    return function(dataContainer, input) {
+        var rtn = [];
+        input = clean(input);
+        _.each(dataContainer, function(data) {
+            if (!data.stringify)
+                data.stringify = clean(JSON.stringify(data))
+            if (!input || data.stringify.indexOf(input) >= 0) {
+                rtn.push(data);
+            } else {
+            }
+        })
+        return rtn;
+    }
+}]);
+
+angular.module('edison').filter('crlf', function() {
+	"use strict";
+    return function(text) {
+        return text.split(/\n/g).join('<br>');
+    };
+});
+
+angular.module('edison').filter('loginify', function() {
+    "use strict";
+    return function(obj) {
+        if (!obj)
+            return "";
+        return obj.slice(0, 1).toUpperCase() + obj.slice(1, -2)
+    };
+});
+
+angular.module('edison').filter('relativeDate', function() {
+    "use strict";
+    return function(date, no) {
+        return moment((date + 1370000000) * 1000).fromNow(no).toString()
+    };
+});
+
+angular.module('edison').filter('reverse', function() {
+    "use strict";
+    return function(items) {
+        if (!items)
+            return [];
+        return items.slice().reverse();
+    };
+});
+
+angular.module("edison").filter('tableFilter', ['config', function(config) {
+    "use strict";
+
+    var clean = function(str) {
+        return _.deburr(str).toLowerCase();
+    }
+
+    var compare = function(a, b, strictMode) {
+        if (typeof a === "string") {
+            return clean(a).includes(b);
+        } else if (!strictMode){
+            return clean(String(a)).startsWith(b);
+        } else {
+            return a === parseInt(b);
+        }
+    }
+    var compareCustom = function(key, data, input) {
+        if (key === '_categorie') {
+            var cell = config.categoriesHash()[data.c].long_name;
+            return compare(cell, input);
+        }
+        if (key === '_etat') {
+            var cell = config.etatsHash()[data.s].long_name
+            return compare(cell, input);
+        }
+        return true;
+    }
+
+    return function(dataContainer, inputs, strictMode) {
+        var rtn = [];
+        console.log(inputs)
+        console.time('fltr')
+        inputs = _.mapValues(inputs, clean);
+        _.each(dataContainer, function(data) {
+            if (data.id) {
+                var psh = true;
+                _.each(inputs, function(input, k) {
+                    if (input && input.length > 0) {
+                        if (k.charAt(0) === '_') {
+                            if (!compareCustom(k, data, input)) {
+                                psh = false;
+                                return false
+                            }
+                        } else {
+                            if (!compare(data[k], input, strictMode)) {
+                                psh = false;
+                                return false
+                            }
+                        }
+                    }
+                });
+                if (psh === true) {
+                    rtn.push(data);
+                }
+            }
+        })
+        console.timeEnd('fltr')
+
+        return rtn;
+    }
+}]);
+
+angular.module('edison').filter('total', function() {
+    "use strict";
+    return function(obj) {
+        if (obj && obj.total) {
+        	return obj.total;
+        }
+        return "0";
+    };
+});
+
+angular.module('edison').filter('montant', function() {
+    "use strict";
+    return function(obj) {
+        if (obj && obj.montant) {
+        	return (obj.montant > 999 ? (obj.montant / 1000).toFixed(0) + 'k' : obj.montant.toFixed(0)) + '€';
+        }
+        return "0€";
+    };
+});
+
+
 
 angular.module('edison').directive('allowPattern', [allowPatternDirective]);
 
@@ -832,153 +984,6 @@ angular.module('edison').directive('select', function($interpolate) {
      };
  }]);
 
-angular.module("edison").filter('contactFilter', ['config', function(config) {
-    "use strict";
-
-    var clean = function(str) {
-        return _.deburr(str).toLowerCase();
-    }
-
-    var compare = function(a, b, strictMode) {
-        if (typeof a === "string") {
-            return clean(a).includes(b);
-        } else if (!strictMode) {
-            return clean(String(a)).startsWith(b);
-        } else {
-            return a === parseInt(b);
-        }
-    }
-    return function(dataContainer, input) {
-        var rtn = [];
-        input = clean(input);
-        _.each(dataContainer, function(data) {
-            if (!data.stringify)
-                data.stringify = clean(JSON.stringify(data))
-            if (!input || data.stringify.indexOf(input) >= 0) {
-                rtn.push(data);
-            } else {
-            }
-        })
-        return rtn;
-    }
-}]);
-
-angular.module('edison').filter('crlf', function() {
-	"use strict";
-    return function(text) {
-        return text.split(/\n/g).join('<br>');
-    };
-});
-
-angular.module('edison').filter('loginify', function() {
-    "use strict";
-    return function(obj) {
-        if (!obj)
-            return "";
-        return obj.slice(0, 1).toUpperCase() + obj.slice(1, -2)
-    };
-});
-
-angular.module('edison').filter('relativeDate', function() {
-    "use strict";
-    return function(date, no) {
-        return moment((date + 1370000000) * 1000).fromNow(no).toString()
-    };
-});
-
-angular.module('edison').filter('reverse', function() {
-    "use strict";
-    return function(items) {
-        if (!items)
-            return [];
-        return items.slice().reverse();
-    };
-});
-
-angular.module("edison").filter('tableFilter', ['config', function(config) {
-    "use strict";
-
-    var clean = function(str) {
-        return _.deburr(str).toLowerCase();
-    }
-
-    var compare = function(a, b, strictMode) {
-        if (typeof a === "string") {
-            return clean(a).includes(b);
-        } else if (!strictMode){
-            return clean(String(a)).startsWith(b);
-        } else {
-            return a === parseInt(b);
-        }
-    }
-    var compareCustom = function(key, data, input) {
-        if (key === '_categorie') {
-            var cell = config.categoriesHash()[data.c].long_name;
-            return compare(cell, input);
-        }
-        if (key === '_etat') {
-            var cell = config.etatsHash()[data.s].long_name
-            return compare(cell, input);
-        }
-        return true;
-    }
-
-    return function(dataContainer, inputs, strictMode) {
-        var rtn = [];
-        console.log(inputs)
-        console.time('fltr')
-        inputs = _.mapValues(inputs, clean);
-        _.each(dataContainer, function(data) {
-            if (data.id) {
-                var psh = true;
-                _.each(inputs, function(input, k) {
-                    if (input && input.length > 0) {
-                        if (k.charAt(0) === '_') {
-                            if (!compareCustom(k, data, input)) {
-                                psh = false;
-                                return false
-                            }
-                        } else {
-                            if (!compare(data[k], input, strictMode)) {
-                                psh = false;
-                                return false
-                            }
-                        }
-                    }
-                });
-                if (psh === true) {
-                    rtn.push(data);
-                }
-            }
-        })
-        console.timeEnd('fltr')
-
-        return rtn;
-    }
-}]);
-
-angular.module('edison').filter('total', function() {
-    "use strict";
-    return function(obj) {
-        if (obj && obj.total) {
-        	return obj.total;
-        }
-        return "0";
-    };
-});
-
-angular.module('edison').filter('montant', function() {
-    "use strict";
-    return function(obj) {
-        if (obj && obj.montant) {
-        	return (obj.montant > 999 ? (obj.montant / 1000).toFixed(0) + 'k' : obj.montant.toFixed(0)) + '€';
-        }
-        return "0€";
-    };
-});
-
-
-
 angular.module('edison').factory('Signalement', function() {
     "use strict";
 
@@ -1163,6 +1168,9 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
             },
             flush: function(data) {
                 return $http.post('/api/intervention/flush', data);
+            },
+            archives: function() {
+                return $http.get('/api/intervention/archive');
             }
         },
         devis: {
@@ -3052,6 +3060,23 @@ angular.module('edison').directive('listeIntervention', function(tabContainer, F
 
 });
 
+var ArchivesController = function(edisonAPI, tabContainer, $routeParams, $location, LxProgressService) {
+    var tab = tabContainer.getCurrentTab();
+    tab.setTitle('archives')
+    var _this = this;
+    LxProgressService.circular.show('#5fa2db', '#globalProgress');
+    edisonAPI.compta.archives().success(function(resp) {
+        LxProgressService.circular.hide()
+        _this.data = resp
+    })
+    _this.moment = moment;
+    _this.openLink = function(link) {
+        $location.url(link)
+    }
+}
+
+angular.module('edison').controller('archivesController', ArchivesController);
+
  angular.module('edison').directive('artisanCategorie', ['config', function(config) {
      "use strict";
      return {
@@ -3515,7 +3540,7 @@ angular.module('edison').directive('infoCompta', ['config', 'Paiement',
                 var reglement = scope.data.compta.reglement
                 var paiement = scope.data.compta.paiement
                 if (!scope.data.tva) {
-                    scope.data.tva = 20
+                    scope.data.tva = (scope.data.client.civilite == 'Soc.' ? 20 : 10)
                 }
                 if (!paiement.mode) {
                     paiement.mode = _.get(scope.data.artisan, 'document.rib.file') ? "VIR" : "CHQ"
@@ -3525,7 +3550,9 @@ angular.module('edison').directive('infoCompta', ['config', 'Paiement',
 
                 scope.$watchGroup(['data.compta.reglement.montantTTC',
                     'data.compta.reglement.avoir',
-                ], function() {
+                ], function(current, prev) {
+                    console.log(current, prev, _.isEqual(current, prev))
+                    console.log('yay', reglement.avoir)
                     var montant = reglement.montantTTC || 0
                     var coeff = 100 * (100 / (100 + scope.data.tva));
                     reglement.montant = Paiement().applyCoeff(reglement.montantTTC, coeff)
@@ -3542,7 +3569,6 @@ angular.module('edison').directive('infoCompta', ['config', 'Paiement',
                     'data.compta.paiement.pourcentage.maindOeuvre'
                 ], function(newValues, oldValues, scope) {
                     if (!_.isEqual(newValues, oldValues)) {
-                        console.log('here')
                         scope.compta = new Paiement(scope.data)
                         paiement.montant = scope.compta.montantTotal
                     }
@@ -3743,8 +3769,9 @@ var InterventionCtrl = function(Signalement, ContextMenu, $window, $timeout, $ro
     $scope.$watch(function() {
         return intervention.client.civilite
     }, function(newVal, oldVal) {
-        if (oldVal !== newVal)
-            intervention.tva = 20;
+        if (oldVal !== newVal) {
+            intervention.tva = (newVal == 'Soc.' ? 20 : 10);
+        }
     })
 
     $scope.$watch(function() {
@@ -3856,12 +3883,13 @@ angular.module('edison').controller('InterventionController', InterventionCtrl);
      }
  ]);
 
-var LpaController = function(tabContainer, edisonAPI, $rootScope, LxProgressService, FlushList) {
+var LpaController = function(tabContainer, edisonAPI, $rootScope, LxProgressService, LxNotificationService, FlushList) {
     "use strict";
     var _this = this
     var tab = tabContainer.getCurrentTab();
     tab.setTitle('LPA')
     _this.loadData = function(prevChecked) {
+        console.log('reload')
         LxProgressService.circular.show('#5fa2db', '#globalProgress');
         edisonAPI.compta.lpa().then(function(result) {
             _.each(result.data, function(sst) {
@@ -3870,6 +3898,7 @@ var LpaController = function(tabContainer, edisonAPI, $rootScope, LxProgressServ
                 sst.list = new FlushList(sst.list, prevChecked);
                 _this.reloadList(sst)
             })
+            console.log($rootScope.lpa, result.data)
             $rootScope.lpa = result.data
             LxProgressService.circular.hide()
         })
@@ -3900,9 +3929,11 @@ var LpaController = function(tabContainer, edisonAPI, $rootScope, LxProgressServ
                 }
             })
         })
-        console.log('-->', rtn)
         edisonAPI.compta.flush(rtn).then(function(resp) {
-            console.log(resp);
+            LxNotificationService.success(resp.data);
+            _this.reloadLPA()
+        }).catch(function(err) {
+            LxNotificationService.error(err.data);
         })
     }
     _this.reloadList = function(artisan) {

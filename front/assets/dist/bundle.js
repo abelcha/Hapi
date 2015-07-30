@@ -796,6 +796,7 @@ module.exports = {
 module.exports = {
     categories: {
         PL: {
+            id_compta: 2,
             suffix: 'de',
             short_name: 'PL',
             long_name: 'Plomberie',
@@ -803,6 +804,7 @@ module.exports = {
             color: 'blue white-text'
         },
         CH: {
+            id_compta: 3,
             suffix: 'de',
             short_name: 'CH',
             long_name: 'Chauffage',
@@ -810,6 +812,7 @@ module.exports = {
             color: 'red white-text'
         },
         EL: {
+            id_compta: 1,
             suffix: "d'",
             short_name: 'EL',
             long_name: 'Électricité',
@@ -817,6 +820,7 @@ module.exports = {
             color: 'yellow  accent-4 black-text'
         },
         SR: {
+            id_compta: 5,
             suffix: 'de',
             short_name: 'SR',
             long_name: 'Serrurerie',
@@ -824,6 +828,7 @@ module.exports = {
             color: 'brown white-text'
         },
         VT: {
+            id_compta: 4,
             suffix: 'de',
             short_name: 'VT',
             long_name: 'Vitrerie',
@@ -831,6 +836,7 @@ module.exports = {
             color: 'green white-text'
         },
         AS: {
+            id_compta: 7,
             suffix: 'de',
             short_name: 'AS',
             long_name: 'Assainissement',
@@ -838,6 +844,7 @@ module.exports = {
             color: 'orange white-text'
         },
         CL: {
+            id_compta: 6,
             suffix: 'de',
             short_name: 'CL',
             long_name: 'Climatisation',
@@ -845,6 +852,7 @@ module.exports = {
             color: 'teal white-text'
         },
         PT: {
+            id_compta: 9,
             suffix: 'de',
             short_name: 'PT',
             long_name: 'Peinture',
@@ -1064,6 +1072,15 @@ module.exports = {
         value: 0.2,
         long_name: "TVA: 20%"
     }],
+    tvaSST: [{
+        short_name: 0,
+        value: 0,
+        long_name: "PAS DE TVA"
+    }, {
+        short_name: 20,
+        value: 0.2,
+        long_name: "TVA: 20%"
+    }],
     typePayeur: [{
         short_name: 'SOC',
         long_name: 'Société'
@@ -1142,7 +1159,7 @@ module.exports = {
     }, {
         type: "partenariat",
         short_name: "PS_SST",
-        oldId:'5',
+        oldId: '5',
         long_name: "Il n'y a pas de sst dans la zone"
     }, {
         type: "partenariat",
@@ -1265,6 +1282,16 @@ module.exports = {
     artisanOrigineArray: function() {
         return [this.artisanOrigine.DEM, this.artisanOrigine.CAND];
     },
+    typeAvoir: [{
+        short_name: 'ERR_FACT',
+        long_name: 'Erreur de facturation'
+    }, {
+        short_name: 'REM_COM',
+        long_name: 'Remise Commercial'
+    }, {
+        short_name: 'TROP_PERCU',
+        long_name: 'Trop Percu'
+    }],
     artisanSubStatus: {
         NEW: {
             long_name: 'New',

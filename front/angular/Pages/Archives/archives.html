@@ -1,0 +1,34 @@
+<div>
+    <div class="shadow-box listeInterventions">
+        <div class="data-table-container">
+            <header class="data-table-header">
+                <div class="data-table-header__label">
+                    <span class="fs-title">Archives Paiements</span>
+                </div>
+            </header>
+            <table class="table">
+                <!--                 <thead>
+                    <tr class="data-table__selectable-row">
+                        <th></th>
+                        <th>Dessert (100g serving)</th>
+                        <th>Calories</th>
+                        <th>Fat (g)</th>
+                        <th class="data-table__sortable-cell data-table__sortable-cell--desc">Carbs (g)</th>
+                        <th>Protein (g)</th>
+                        <th>Sodium (mg)</th>
+                        <th>
+                            <i class="mdi mdi-comment-text"></i>
+                            <span>Comments</span>
+                        </th>
+                    </tr>
+                </thead> -->
+                <tbody>
+                    <tr ng-repeat="remise in vm.data|orderBy:'-timestamp'">
+                        <td>{{vm.moment(remise.timestamp).format('llll')}}</td>
+                        <td><a target="_blank" href="/api/intervention/ecritureSST?d={{remise.timestamp}}" >Voir Ecriture SST</a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

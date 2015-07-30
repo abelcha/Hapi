@@ -8,9 +8,10 @@ module.exports = function(schema) {
             var date = new Date();
             _.each(req.body, function(e) {
                 db.model('intervention').findOne({
-                    id: e.id
-                }).exec(function(err, doc) {
-
+                    id: e.id,
+                    'compta.paiement.ready': true,
+                    'compta.paiement.dette': false
+                }).then(function(doc) {
                     var hist = {
                         date: date,
                         pourcentage: doc.compta.paiement.pourcentage,
@@ -24,9 +25,11 @@ module.exports = function(schema) {
                     doc.compta.paiement.effectue = true
                     doc.compta.historique.push(hist)
                     doc.save();
+                }, function(err) {
+                    reject(err);
                 })
             })
-            resolve('ok')
+            resolve(req.body.length + ' élément ont été flushé')
         })
     }
 

@@ -13,10 +13,7 @@ module.exports = function(schema) {
                 console.log(docs)
                 resolve('ok')
             })
-
-
         })
-
     }
 
 }

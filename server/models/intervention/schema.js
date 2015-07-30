@@ -120,6 +120,10 @@ module.exports = function(db) {
             },
             date: Date,
         }],
+        sst: {
+            type: Number,
+            ref: 'artisan'
+        },
         litiges: [{
             status: String,
             description: String,
@@ -212,14 +216,22 @@ module.exports = function(db) {
                     default: 0
                 },
                 avoir: {
-                    type: Number,
-                    default: 0
+                    _type: String,
+                    montant: Number,
+                    ready: {
+                        type: Boolean,
+                        default: false
+                    }
                 }
             },
             paiement: {
                 mode: {
                     type: String,
                     default: 'CHQ'
+                },
+                tva: {
+                    type: Number,
+                    default: 0
                 },
                 base: Number,
                 montant: Number,
@@ -259,6 +271,10 @@ module.exports = function(db) {
                 fourniture: Boolean // bon cout de fourniture
             },
             historique: [{
+                tva:  {
+                    type: Number,
+                    default: 0
+                },
                 date: Date,
                 _type: {
                     type: String,
@@ -278,6 +294,7 @@ module.exports = function(db) {
                         default: 30
                     }
                 },
+                mode: String,
                 base: Number,
                 montant: Number,
                 payed: Number,

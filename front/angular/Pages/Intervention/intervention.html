@@ -72,16 +72,14 @@
                                         <ul>
                                             <li ng-repeat="sign in vm.signalement.list.intervention">
                                                 <a class="dropdown-link dropdown-link--is-large">
-                                                  <i class="mdi mdi-cloud"></i>
-
+                                                    <i class="mdi mdi-cloud"></i>
                                                     <span>{{sign.name}}</span>
                                                 </a>
                                             </li>
                                             <li class="dropdown-divider"></li>
                                             <li ng-repeat="sign in vm.signalement.list.partenariat">
                                                 <a class="dropdown-link dropdown-link--is-large">
-                                                  <i class="mdi mdi-account"></i>
-
+                                                    <i class="mdi mdi-account"></i>
                                                     <span>{{sign.name}}</span>
                                                 </a>
                                             </li>
@@ -89,8 +87,7 @@
                                             </li>
                                             <li ng-repeat="sign in vm.signalement.list.compta">
                                                 <a class="dropdown-link dropdown-link--is-large">
-                                                  <i class="mdi mdi-coin"></i>
-
+                                                    <i class="mdi mdi-coin"></i>
                                                     <span>{{sign.name}}</span>
                                                 </a>
                                             </li>
@@ -346,8 +343,9 @@
                                                     <td>
                                                         <span>{{p.description}}</span>
                                                     </td>
-                                                    <td style="width:100px"><span><select ng-change="changeArtisan(p);" class="form-control" ng-model="p.sst" ng-options="sst.id as sst.n for sst in vm.artisans">
-                                        </select></span>
+                                                    <td style="width:100px"><span>
+                                                    <select ng-change="changeArtisan(p);" class="form-control" ng-model="p.sst" ng-options="sst.id as sst.n for sst in vm.artisans"></select>
+                                        </span>
                                                     </td>
                                                     <td>
                                                         <span ng-if="p.status === 'ENC'" style="width:90px" class="label orange"> Envoyé</span>
