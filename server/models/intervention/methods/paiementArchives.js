@@ -155,11 +155,13 @@ module.exports = function(schema) {
             getList({
                 'compta.paiement.historique': {
                     $elemMatch: {
-                        date: date
+                        dateFlush: date
                     }
                 }
             }).then(function(docs) {
-                //console.log(docs)
+                if (!docs.length) {
+                    return reject('aucunes interventions')
+                }
                 async.each(docs[0].list, ecriture.bind({
                     dump: function(tab) {
                         var x = tab.join(';');

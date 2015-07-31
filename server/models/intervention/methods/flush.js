@@ -5,7 +5,7 @@ module.exports = function(schema) {
     schema.statics.flush = function(req, res) {
         var _this = this;
         return new Promise(function(resolve, reject) {
-            var date = new Date();
+            var date = (new Date()).setMilliseconds(0)
             _.each(req.body, function(e) {
                 db.model('intervention').findOne({
                     id: e.id,
@@ -19,6 +19,7 @@ module.exports = function(schema) {
                         loginFlush: req.session.login,
                         pourcentage: doc.compta.paiement.pourcentage,
                         _type: e.type,
+                        mode: doc.compta.paiement.mode,
                         numeroCheque: e.numeroCheque,
                         montant: e.montant.total,
                         base: e.montant.base,
