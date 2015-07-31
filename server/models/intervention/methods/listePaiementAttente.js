@@ -6,7 +6,7 @@ module.exports = function(schema) {
         return new Promise(function(resolve, reject) {
 
             db.model('intervention').find(query)
-                .select('id compta.historique compta.paiement.mode compta.paiement.montant compta.paiement.base artisan compta.paiement.mode')
+                .select('id compta.paiement artisan compta.paiement.mode')
                 .exec(function(err, docs) {
                     docs = JSON.parse(JSON.stringify(docs))
                     var rtn = _(docs).groupBy('artisan.id').values().map(function(e) {

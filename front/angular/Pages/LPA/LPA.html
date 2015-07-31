@@ -11,6 +11,7 @@
                     </tr>
                     <tr>
                         <td><i>Numero OS</i></td>
+                        <td variable-length><i>Ajout</i></td>
                         <td variable-length><i>Mode</i></td>
                         <td variable-length><i>Type</i></td>
                         <td variable-length><i>Base</i></td>
@@ -22,6 +23,7 @@
                     </tr>
                     <tr ng-repeat="item in artisan.list.getList()" ng-click="item.checked = !item.checked;vm.reloadList(artisan)">
                         <td ng-click="item.checked = !item.checked;"><a style="color:black" href="/intervention/{{item.id}}">{{ item.id }}</a></td>
+                        <td>{{ item.login}} ({{item.date|date:"dd/MM/yy à H'h'mm"}})</td>
                         <td>{{ item.mode }}</td>
                         <td>{{ item.type }}</td>
                         <td>{{ item.montant.base}} €</td>
@@ -36,6 +38,7 @@
                     </tr>
                     <tr ng-click="vm.checkArtisan(artisan);vm.reloadList(artisan)">
                         <td colspan="3"><strong>Somme</strong></td>
+                        <td></td>
                         <td><strong>{{artisan.total.base}} €</strong></td>
                         <td><strong>{{artisan.total.montant}} €</strong></td>
                         <td><strong>{{artisan.total.legacy}} €</strong></td>

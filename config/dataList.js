@@ -497,6 +497,12 @@ module.exports = {
         short_name: 'TROP_PERCU',
         long_name: 'Trop Percu'
     }],
+    avoir: function(short_name) {
+        var _find = require('lodash/collection/find');
+        return _find(this.typeAvoir, function(e) {
+            return e.short_name === short_name
+        })
+    },
     artisanSubStatus: {
         NEW: {
             long_name: 'New',

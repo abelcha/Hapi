@@ -39,6 +39,8 @@
                 </div>
             </div>
             <br>
+            <h4 ng-click="regdisplayHistorique = !regdisplayHistorique"> > Historique ({{reglement.historique.length}})</h4>
+            <pre ng-if="regdisplayHistorique"><h4>{{reglement.historique|json}}</h4></pre>
             <br>
         </div>
     </div>
@@ -98,8 +100,8 @@
                 <br>
                 <h4 ng-click="displaySimulation = !displaySimulation"> > Simulation</h4>
                 <pre ng-if="displaySimulation"><h4>{{compta|json}}</h4></pre>
-                <h4 ng-click="displayHistorique = !displayHistorique"> > Historique Flush ({{data.compta.historique.length}})</h4>
-                <pre ng-if="displayHistorique"><h4>{{data.compta.historique|json}}</h4></pre>
+                <h4 ng-click="displayHistorique = !displayHistorique"> > Historique Flush ({{data.compta.paiement.historique.length}})</h4>
+                <pre ng-if="displayHistorique"><h4>{{data.compta.paiement.historique|json}}</h4></pre>
             </div>
         </div>
     </div>

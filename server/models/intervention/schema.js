@@ -222,7 +222,21 @@ module.exports = function(db) {
                         type: Boolean,
                         default: false
                     }
-                }
+                },
+                historique: [{
+                    _type: {
+                        type: String,
+                        default: 'ENCAISSEMENT'
+                    },
+                    _typeAvoir: String,
+                    NumeroCheque: String,
+                    montant: Number,
+                    login: String,
+                    date: {
+                        type: Date,
+                        default: Date.now
+                    },
+                }]
             },
             paiement: {
                 mode: {
@@ -262,7 +276,51 @@ module.exports = function(db) {
                     index: true,
                     type: Boolean,
                     default: false
-                }
+                },
+                date: Date,
+                login: {
+                    type: String,
+                    default: 'vincent_q'
+                },
+                historique: [{
+                    tva:  {
+                        type: Number,
+                        default: 0
+                    },
+                    dateAjout: Date,
+                    dateFlush: Date,
+                    loginAjout: {
+                        type: String,
+                        default: 'vincent_q'
+                    },
+                    loginFlush: {
+                        type: String,
+                        default: 'vincent_q'
+                    },
+                    _type: {
+                        type: String,
+                        default: 'AUTO-FACT'
+                    },
+                    pourcentage: {
+                        deplacement: {
+                            type: Number,
+                            default: 50
+                        },
+                        maindOeuvre: {
+                            type: Number,
+                            default: 30
+                        },
+                        fourniture: {
+                            type: Number,
+                            default: 30
+                        }
+                    },
+                    mode: String,
+                    base: Number,
+                    montant: Number,
+                    payed: Number,
+                    numeroCheque: String
+                }]
             },
             info: {
                 facture: Boolean, // facture de l'intervention (si reglemenet est sur place)
@@ -270,36 +328,6 @@ module.exports = function(db) {
                 devis: Boolean, // devis (> 150)
                 fourniture: Boolean // bon cout de fourniture
             },
-            historique: [{
-                tva:  {
-                    type: Number,
-                    default: 0
-                },
-                date: Date,
-                _type: {
-                    type: String,
-                    default: 'AUTO-FACT'
-                },
-                pourcentage: {
-                    deplacement: {
-                        type: Number,
-                        default: 50
-                    },
-                    maindOeuvre: {
-                        type: Number,
-                        default: 30
-                    },
-                    fourniture: {
-                        type: Number,
-                        default: 30
-                    }
-                },
-                mode: String,
-                base: Number,
-                montant: Number,
-                payed: Number,
-                numeroCheque: String
-            }]
         }
     });
     return schema

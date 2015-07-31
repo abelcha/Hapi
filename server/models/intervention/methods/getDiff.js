@@ -15,11 +15,11 @@ module.exports = function(schema) {
             }).select('compta artisan tva id fourniture')
             .limit(req.query.limit || undefined).then(function(docs) {
                 _.each(docs, function(e) {
-                    if (e.compta.historique.length) {
+                    if (e.compta.paiement.historique.length) {
                         var paiement = new Paiement(e);
-                        var diff = (e.compta.historique[0].montant - paiement.montantTotal).round()
+                        var diff = (e.compta.paiement.historique[0].montant - paiement.montantTotal).round()
                         if (Math.abs(diff) > 0.1) {
-                            var x = ([e.id, e.compta.historique[0].montant, paiement.montantTotal.round(), diff, e.compta.paiement.pourcentage.deplacement].join(';').replaceAll('.', ','))
+                            var x = ([e.id, e.compta.paiement.historique[0].montant, paiement.montantTotal.round(), diff, e.compta.paiement.pourcentage.deplacement].join(';').replaceAll('.', ','))
                             rtn += x + "\n";
                                 ++i;
                         }

@@ -13,7 +13,10 @@ module.exports = function(schema) {
                     'compta.paiement.dette': false
                 }).then(function(doc) {
                     var hist = {
-                        date: date,
+                        dateAjout: doc.compta.paiement.date,
+                        loginAjout: doc.compta.paiement.login,
+                        dateFlush: date,
+                        loginFlush: req.session.login,
                         pourcentage: doc.compta.paiement.pourcentage,
                         _type: e.type,
                         numeroCheque: e.numeroCheque,
@@ -23,7 +26,7 @@ module.exports = function(schema) {
                     }
                     doc.compta.paiement.ready = (hist.payed != hist.montant);
                     doc.compta.paiement.effectue = true
-                    doc.compta.historique.push(hist)
+                    doc.compta.paiement.historique.push(hist)
                     doc.save();
                 }, function(err) {
                     reject(err);

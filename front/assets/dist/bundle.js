@@ -462,7 +462,14 @@ module.exports = FiltersFactory;
                 balance: _round(e.compta.paiement.montant - _this.getPreviousMontant(e), 2),
                 final: _round(e.compta.paiement.montant - _this.getPreviousMontant(e), 2),
             }
+            if (e.compta.paiement.tva) {
+                var tva = (e.compta.paiement.tva + 100) / 100
+                rtn.montant.balance = _round(rtn.montant.balance * tva, 2)
+                rtn.montant.legacy = _round(rtn.montant.legacy * tva, 2)
+            }
             rtn.id = e.id
+            rtn.date = e.compta.paiement.date;
+            rtn.login = e.compta.paiement.login
             rtn.checked = _includes(prevChecked, rtn.id)
             rtn.mode = e.compta.paiement.mode
             rtn.type = rtn.montant.legacy !== 0 ? (rtn.montant.balance > 0 ? 'COMPLEMENT' : 'AVOIR') : 'AUTO-FACT'
@@ -472,9 +479,9 @@ module.exports = FiltersFactory;
         this.__list = list
     }
     FlushList.prototype.getPreviousMontant = function(inter) {
-        if (!inter.compta.historique.length)
+        if (!inter.compta.paiement.historique.length)
             return 0
-        return inter.compta.historique[inter.compta.historique.length - 1].payed
+        return inter.compta.paiement.historique[inter.compta.paiement.historique.length - 1].payed
     }
 
 
@@ -499,7 +506,7 @@ module.exports = FiltersFactory;
                 total.balance = _round(total.balance + rtn.montant.balance, 2);
                 if (total.balance + rtn.montant.balance < 0) {
                     if (total.final == 0) {
-                    	rtn.montant.final = 0;
+                        rtn.montant.final = 0;
                     } else {
                         rtn.montant.final = _round(rtn.montant.balance - total.balance, 2);
                         if (rtn.montant.final < rtn.montant.balance) {
@@ -1292,6 +1299,12 @@ module.exports = {
         short_name: 'TROP_PERCU',
         long_name: 'Trop Percu'
     }],
+    avoir: function(short_name) {
+        var _find = require('lodash/collection/find');
+        return _find(this.typeAvoir, function(e) {
+            return e.short_name === short_name
+        })
+    },
     artisanSubStatus: {
         NEW: {
             long_name: 'New',

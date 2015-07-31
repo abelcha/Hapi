@@ -8,7 +8,7 @@ module.exports = function(schema) {
             db.model('intervention')
                 .aggregate()
                 .match(match ||  {})
-                .unwind("compta.historique")
+                .unwind("compta.paiement.historique")
                 .project({
                     'compta': true,
                     'artisan': true,
@@ -16,7 +16,7 @@ module.exports = function(schema) {
                     'categorie': true
                 })
                 .exec(function(err, docs) {
-                    var x = _.groupBy(docs, 'compta.historique.date')
+                    var x = _.groupBy(docs, 'compta.paiement.historique.dateFlush')
                     x = _(x).map(function(e, k) {
                             return {
                                 date: k,
@@ -36,8 +36,8 @@ module.exports = function(schema) {
 
     var ecriture = function(sst, callback) {
         var _this = this;
-        var montantTotal = _.sum(sst, 'compta.historique.montant');
-        var dateFormat = moment(new Date(sst[0].compta.historique.date)).format('L');
+        var montantTotal = _.sum(sst, 'compta.paiement.historique.montant');
+        var dateFormat = moment(new Date(sst[0].compta.paiement.historique.dateFlush)).format('L');
         var BQ1, BQ2
         db.model('artisan').findOne({
             id: sst[0].artisan.id
@@ -46,12 +46,12 @@ module.exports = function(schema) {
         }).exec(function(err, artisan) {
             var formeJuridique = _.get(artisan, 'formeJuridique', 'SARL');
             _.each(sst, function(e, k) {
-                if (e.compta.historique._type == 'AUTO-FACT') {
+                if (e.compta.paiement.historique._type == 'AUTO-FACT') {
 
                     var padIdSST = _.padLeft(e.artisan.id, 5, '0')
                     var padIdOS = _.padLeft(e.id, 6, '0')
-                    var libelle = e.compta.historique.mode + (e.compta.historique.numeroCheque || '') + ' ' + e.artisan.nomSociete
-                    var montant = e.compta.historique.montant
+                    var libelle = e.compta.paiement.historique.mode + (e.compta.paiement.historique.numeroCheque || '') + ' ' + e.artisan.nomSociete
+                    var montant = e.compta.paiement.historique.montant
                     var numeroCompteAchat = '604' + _.padLeft(config.categories[e.categorie].id_compta, 5, '0')
                     var libelleAC = ['TRAVAUX', _.deburr(config.categories[e.categorie].long_name.toUpperCase()), e.artisan.nomSociete].join(' ')
                         // console.log(libelleAC)
@@ -87,7 +87,7 @@ module.exports = function(schema) {
                     ]
                     _this.dump(AC1)
                     if (formeJuridique !== 'AUT') {
-                        if (e.compta.historique.tva) {
+                        if (e.compta.paiement.historique.tva) {
                             var AC2a = [
                                 'AC2a',
                                 dateFormat,
@@ -95,7 +95,7 @@ module.exports = function(schema) {
                                 '',
                                 'ST' + padIdOS,
                                 libelleAC,
-                                format(montant * (e.compta.historique.tva / 100)),
+                                format(montant * (e.compta.paiement.historique.tva / 100)),
                                 ''
                             ]
                             _this.dump(AC2a)
@@ -136,7 +136,7 @@ module.exports = function(schema) {
                     'ST' + padIdOS,
                     libelleAC,
                     '',
-                    format(montant + (montant * (e.compta.historique.tva / 100)))
+                    format(montant + (montant * (e.compta.paiement.historique.tva / 100)))
                 ]
                 _this.dump(AC3);
             })
@@ -153,7 +153,7 @@ module.exports = function(schema) {
                 return reject('pas de date')
             var date = new Date(parseInt(req.query.d));
             getList({
-                'compta.historique': {
+                'compta.paiement.historique': {
                     $elemMatch: {
                         date: date
                     }

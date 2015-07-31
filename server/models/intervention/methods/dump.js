@@ -186,11 +186,12 @@
             //return null;
             rtn.compta = {}
                 //paiement effectue
+
             if (d.comptaPrixFinal) {
                 rtn.prixFinal = d.comptaPrixFinal;
                 rtn.compta = {
                     paiement: {
-                        tva:d.comptaTVA || 0,
+                        tva: d.comptaTVA || 0,
                         mode: d.pVirement == "0" ? "CHQ" : "VIR",
                         base: d.comptaPrixFinal,
                         montant: d.comptaMontantFinal,
@@ -201,24 +202,24 @@
                             deplacement: d.pDeplacement,
                             maindOeuvre: d.pMaindOeuvre,
                             fourniture: d.pFourniture
-                        }
-                    },
-                }
-                if (rtn.compta.paiement.effectue) {
-                    rtn.compta.historique = [{
-                        tva:d.comptaTVA || 0,
-                        date: toDate(d.date_paiement_sst),
-                        base: d.comptaPrixFinal,
-                        montant: d.comptaMontantFinal,
-                        payed: d.comptaMontantFinal,
-                        mode: rtn.compta.paiement.mode,
-                        pourcentage: {
-                            deplacement: d.pDeplacement,
-                            maindOeuvre: d.pMaindOeuvre,
-                            fourniture: d.pFourniture
                         },
-                        numeroCheque: d.comptaNumeroCheque || undefined,
-                    }]
+                        date: toDate(d.date_paiement_sst),
+                        historique: rtn.id > 24000 ? [] : [{
+                            tva: d.comptaTVA || 0,
+                            dateFlush: toDate(d.date_paiement_sst),
+                            dateAjout: toDate(d.date_paiement_sst),
+                            base: d.comptaPrixFinal,
+                            montant: d.comptaMontantFinal,
+                            payed: d.comptaMontantFinal,
+                            mode: (d.pVirement == "0" ? "CHQ" : "VIR"),
+                            pourcentage: {
+                                deplacement: d.pDeplacement,
+                                maindOeuvre: d.pMaindOeuvre,
+                                fourniture: d.pFourniture
+                            },
+                            numeroCheque: d.comptaNumeroCheque ||  undefined,
+                        }]
+                    },
                 }
             }
 

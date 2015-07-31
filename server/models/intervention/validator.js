@@ -27,15 +27,12 @@ module.exports = function(schema) {
     }
 
 
-    schema.pre('save', function(next) {
-        /*        this.client.nom = upper(this.client.nom)
-                this.client.prenom = upper(this.client.prenom)
-                this.client.email = upper(this.client.email)
-                this.client.address.n = upper(this.client.address.n)
-                this.client.address.r = upper(this.client.address.r)
-                this.client.address.v = upper(this.client.address.v)*/
+    schema.pre('save', function(next, b, c) {
+        if (isWorker) {
+            return next();
+        }
 
-            this.sst = this.artisan.id
+        this.sst = this.artisan.id
         if (this.cb.number) {
             if (!creditcard.validate(this.cb.number))
                 return next(new Error('Numero de carte invalide'))
@@ -44,7 +41,7 @@ module.exports = function(schema) {
                 preview: "**** ".repeat(3) + this.cb.number.slice(-4)
             }
         }
-        return next();
+        next();
 
     });
 

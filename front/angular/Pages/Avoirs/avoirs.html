@@ -1,62 +1,28 @@
 <div style="margin-top: -15px;">
     <div class="card" style="height:730px;width:100%">
         <div style="height:90%;padding:20px;overflow:scroll">
-            <!-- <table class="table table-condensed  table-hover table-bordered">
+            <table class="table table-condensed  table-hover table-bordered">
 
                 <body>
-                    <tr ng-repeat-start="artisan in lpa">
-                        <td colspan="1" variable-length>
-                            <h2><a style="color:black" href="/artisan/{{artisan.id}}/recap">{{artisan.id}} - {{artisan.nomSociete}}</a></h2></td>
-                        <td><input colspan="3"  type="text" class="form-control" ng-model="artisan.numeroCheque" ng-change="vm.updateNumeroCheque($index, artisan.id)"></td>
-                    </tr>
-                    <tr>
-                        <td><i>Numero OS</i></td>
-                        <td variable-length><i>Mode</i></td>
-                        <td variable-length><i>Type</i></td>
-                        <td variable-length><i>Base</i></td>
-                        <td variable-length><i>Montant</i></td>
-                        <td variable-length><i>Legacy</i></td>
-                        <td variable-length><i>Balance</i></td>
-                        <td variable-length><i>Final</i></td>
-                        <td variable-length><i>Payer</i></td>
-                    </tr>
-                    <tr ng-repeat="item in artisan.list.getList()" ng-click="item.checked = !item.checked;vm.reloadList(artisan)">
-                        <td ><a style="color:black" href="/intervention/{{item.id}}">{{ item.id }}</a></td>
-                        <td>{{ item.mode }}</td>
-                        <td>{{ item.type }}</td>
-                        <td>{{ item.montant.base}} €</td>
-                        <td>{{ item.montant.total}} €</td>
-                        <td>{{ item.montant.legacy ? (item.montant.legacy + ' €') : "" }}</td>
-                        <td>{{ item.montant.balance }} €</td>
-                        <td>{{ item.montant.final }} €</td>
-                        <td>
-                            <md-checkbox aria-label="dsq" style="padding: 0px;" ng-checked="item.checked">
+                    <tr ng-repeat="av in avoirs" ng-click="av.checked = !av.checked;">
+                        <td><a href="/intervention/{{av.id}}">{{av.id}}</td>
+                        <td>{{av.client.civilite}} {{av.client.nom}}</td>
+                        <td>{{av.compta.reglement.montant}} € </td>
+                        <td>{{config.avoir(av.compta.reglement.avoir._type).long_name}}</td>
+                        <td>{{av.compta.reglement.avoir.montant}} € </td>
+                         <td>
+                            <md-checkbox aria-label="dsq" style="padding: 0px;" ng-checked="av.checked">
                             </md-checkbox>
                         </td>
-                    </tr>
-                    <tr ng-click="vm.checkArtisan(artisan);vm.reloadList(artisan)">
-                        <td colspan="3"><strong>Somme</strong></td>
-                        <td><strong>{{artisan.total.base}} €</strong></td>
-                        <td><strong>{{artisan.total.montant}} €</strong></td>
-                        <td><strong>{{artisan.total.legacy}} €</strong></td>
-                        <td><strong>{{artisan.total.balance}} €</strong></td>
-                        <td><strong>{{artisan.total.final}} €</strong></td>
-                        <td>
-                            <md-checkbox aria-label="dsq" style="padding: 0px;" ng-checked="artisan.checked">
-                            </md-checkbox>
-                        </td>
-                    </tr>
-                    <tr ng-repeat-end>
-                        <td colspan="51"> <span style="color:white">-</span> </td>
                     </tr>
                 </body>
-            </table> -->
+            </table>
         </div>
         <div style="margin-top: 19px;">
             <md-button class="md-raised">Imprimer Documents</md-button>
             <md-button class="md-raised">Upload Scan</md-button>
             <md-button class="md-raised md-warn" ng-click="vm.flush()">FLUSH</md-button>
-            <md-button class="md-raised md-primary" ng-click="vm.reloadLPA()">Reload</md-button>
+            <md-button class="md-raised md-primary" ng-click="vm.reloadAvoir()">Reload</md-button>
         </div>
     </div>
 </div>

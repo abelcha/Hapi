@@ -1,6 +1,7 @@
 module.exports = function(schema) {
     var ReadWriteLock = require('rwlock');
     var lock = new ReadWriteLock();
+    var _ = require('lodash')
 
     function dbError(reject) {
         return function(err) {
@@ -12,8 +13,6 @@ module.exports = function(schema) {
         }
     }
 
-
-
     schema.statics.save = function(req, res) {
         var updateInter = function(data) {
             return new Promise(function(resolve, reject) {
@@ -22,6 +21,17 @@ module.exports = function(schema) {
                 }).then(function(doc) {
                     if (data.artisan && data.artisan.id && data.artisan.id !== doc.artisan.id) {
                         doc.status = 'APR';
+                    }
+                    if (data.compta.reglement.recu && !doc.compta.reglement.recu) {
+                        data.compta.reglement.historique.push({
+                            login: req.session.login,
+                            montant: data.compta.reglement.avoir.montant,
+                        })
+                    }
+                    if (data.compta.paiement.ready && !doc.compta.paiement.ready) {
+                        console.log('yayaya')
+                        data.compta.paiement.login = req.session.login
+                        data.compta.paiement.date = Date.now()
                     }
                     if (!doc)
                         reject("Intervention Inconnu");
