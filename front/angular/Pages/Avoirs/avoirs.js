@@ -2,7 +2,7 @@ var AvoirsController = function(tabContainer, edisonAPI, $rootScope, LxProgressS
     "use strict";
     var _this = this
     var tab = tabContainer.getCurrentTab();
-    tab.setTitle('LPA')
+    tab.setTitle('Avoirs')
     _this.loadData = function(prevChecked) {
         LxProgressService.circular.show('#5fa2db', '#globalProgress');
         edisonAPI.compta.avoirs().then(function(result) {

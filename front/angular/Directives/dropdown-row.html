@@ -14,8 +14,8 @@
                 <p ng-if="data.devisOrigine.id">Devis <a href="/devis/{{data.devisOrigine.id}}">{{data.devisOrigine.id}}</a> ajouté le {{data.devisOrigine.date.ajout | date:"dd/MM/yy à HH'h'mm"}} par {{data.devisOrigine.login.ajout}}</p>
 
                 <p>Ajouté le {{data.date.ajout | date:"dd/MM/yy à HH'h'mm"}} par {{data.login.ajout}}</p>
-                <p ng-if="data.date.envoi">Verifié le {{data.date.envoi | date:"dd/MM/yy à HH'h'mm"}} par {{data.login.envoi}}</p>
-                <p ng-if="data.date.verification">Envoyé le {{data.date.verification | date:"dd/MM/yy à HH'h'mm"}} par {{data.login.verification}}</p>
+                <p ng-if="data.date.envoi">Envoyé le {{data.date.envoi | date:"dd/MM/yy à HH'h'mm"}} par {{data.login.envoi}}</p>
+                <p ng-if="data.date.verification">Verifié le {{data.date.verification | date:"dd/MM/yy à HH'h'mm"}} par {{data.login.verification}}</p>
                 <p ng-if="data.date.annulation">Annulé le {{data.date.annulation | date:"dd/MM/yy à HH'h'mm"}} par {{data.login.annulation}} <i ng-if="data.causeAnnulation">({{::config.getCauseAnnulation(data.causeAnnulation).long_name}})</i></p>
             </div>
                 <p>
