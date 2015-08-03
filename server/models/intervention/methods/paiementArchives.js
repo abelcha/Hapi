@@ -46,102 +46,109 @@ module.exports = function(schema) {
         }).exec(function(err, artisan) {
             var formeJuridique = _.get(artisan, 'formeJuridique', 'SARL');
             _.each(sst, function(e, k) {
-                if (e.compta.paiement.historique._type == 'AUTO-FACT') {
-
-                    var padIdSST = _.padLeft(e.artisan.id, 5, '0')
-                    var padIdOS = _.padLeft(e.id, 6, '0')
-                    var libelle = e.compta.paiement.historique.mode + (e.compta.paiement.historique.numeroCheque || '') + ' ' + e.artisan.nomSociete
-                    var montant = e.compta.paiement.historique.montant
-                    var numeroCompteAchat = '604' + _.padLeft(config.categories[e.categorie].id_compta, 5, '0')
-                    var libelleAC = ['TRAVAUX', _.deburr(config.categories[e.categorie].long_name.toUpperCase()), e.artisan.nomSociete].join(' ')
-                        // console.log(libelleAC)
-                    BQ1 = [
-                        'BQ1',
-                        dateFormat,
-                        '40100000',
-                        '401' + padIdSST,
-                        padIdSST,
-                        libelle,
-                        format(montantTotal),
-                        ''
-                    ]
-                    BQ2 = [
-                        'BQ2',
-                        dateFormat,
-                        '51210000',
-                        '',
-                        padIdSST,
-                        libelle,
-                        '',
-                        format(montantTotal),
-                    ]
-                    var AC1 = [
-                        'AC1',
-                        dateFormat,
-                        numeroCompteAchat,
-                        '',
-                        'ST' + padIdOS,
-                        libelleAC,
-                        format(montant),
-                        '',
-                    ]
-                    _this.dump(AC1)
-                    if (formeJuridique !== 'AUT') {
-                        if (e.compta.paiement.historique.tva) {
-                            var AC2a = [
-                                'AC2a',
-                                dateFormat,
-                                '44566200',
-                                '',
-                                'ST' + padIdOS,
-                                libelleAC,
-                                format(montant * (e.compta.paiement.historique.tva / 100)),
-                                ''
-                            ]
-                            _this.dump(AC2a)
-                        } else {
-
-                            var AC2b = [
-                                'AC2b',
-                                dateFormat,
-                                '44566300',
-                                '',
-                                'ST' + padIdOS,
-                                libelleAC,
-                                format(montant * 20 / 100),
-                                '',
-                            ]
-                            var AC2c = [
-                                'AC2c',
-                                dateFormat,
-                                '44521000',
-                                '',
-                                'ST' + padIdOS,
-                                libelleAC,
-                                '',
-                                format(montant * 20 / 100)
-
-                            ]
-                            _this.dump(AC2b)
-                            _this.dump(AC2c)
-
-                        }
-                    }
-                    var AC3 = [
-                        'AC3',
-                        dateFormat,
-                        '40100000',
-                        '401' + padIdSST,
-                        'ST' + padIdOS,
-                        libelleAC,
-                        '',
-                        format(montant + (montant * (e.compta.paiement.historique.tva / 100)))
-                    ]
-                    _this.dump(AC3);
-                } else if (e.compta.paiement.historique._type == 'AVOIR') {
-                    var AC1 = [
-                    ]
+                var padIdSST = _.padLeft(e.artisan.id, 5, '0')
+                var padIdOS = _.padLeft(e.id, 6, '0')
+                var libelle = e.compta.paiement.historique.mode + (e.compta.paiement.historique.numeroCheque || '') + ' ' + e.artisan.nomSociete
+                var montant = Math.abs(e.compta.paiement.historique.final);
+                var numeroCompteAchat = '604' + _.padLeft(config.categories[e.categorie].id_compta, 5, '0')
+                var libelleAC = ['TRAVAUX', _.deburr(config.categories[e.categorie].long_name.toUpperCase()), e.artisan.nomSociete].join(' ')
+                    // console.log(libelleAC)
+                BQ1 = [
+                    'BQ1',
+                    dateFormat,
+                    '40100000',
+                    '401' + padIdSST,
+                    padIdSST,
+                    libelle,
+                    format(montantTotal),
+                    ''
+                ]
+                BQ2 = [
+                    'BQ2',
+                    dateFormat,
+                    '51210000',
+                    '',
+                    padIdSST,
+                    libelle,
+                    '',
+                    format(montantTotal),
+                ]
+                var AC1 = [
+                    'AC1',
+                    dateFormat,
+                    numeroCompteAchat,
+                    '',
+                    'ST' + padIdOS,
+                    libelleAC,
+                    format(montant),
+                    '',
+                ]
+                if (e.compta.paiement.historique._type == 'AVOIR') {
+                    AC1.swap(6, 7);
                 }
+                _this.dump(AC1)
+                if (formeJuridique !== 'AUT') {
+                    if (e.compta.paiement.historique.tva) {
+                        var AC2a = [
+                            'AC2a',
+                            dateFormat,
+                            '44566200',
+                            '',
+                            'ST' + padIdOS,
+                            libelleAC,
+                            format(montant * (e.compta.paiement.historique.tva / 100)),
+                            ''
+                        ]
+                        if (e.compta.paiement.historique._type == 'AVOIR') {
+                            AC2a.swap(6, 7);
+                        }
+                        _this.dump(AC2a)
+                    } else {
+
+                        var AC2b = [
+                            'AC2b',
+                            dateFormat,
+                            '44566300',
+                            '',
+                            'ST' + padIdOS,
+                            libelleAC,
+                            format(montant * 20 / 100),
+                            '',
+                        ]
+                        var AC2c = [
+                            'AC2c',
+                            dateFormat,
+                            '44521000',
+                            '',
+                            'ST' + padIdOS,
+                            libelleAC,
+                            '',
+                            format(montant * 20 / 100)
+
+                        ]
+                        if (e.compta.paiement.historique._type == 'AVOIR') {
+                            AC2b.swap(6, 7);
+                            AC2c.swap(6, 7);
+                        }
+                        _this.dump(AC2b)
+                        _this.dump(AC2c)
+
+                    }
+                }
+                var AC3 = [
+                    'AC3',
+                    dateFormat,
+                    '40100000',
+                    '401' + padIdSST,
+                    'ST' + padIdOS,
+                    libelleAC,
+                    '',
+                    format(montant + (montant * (e.compta.paiement.historique.tva / 100)))
+                ]
+                if (e.compta.paiement.historique._type == 'AVOIR') {
+                    AC3.swap(6, 7);
+                }
+                _this.dump(AC3);
             })
             _this.dump(BQ1);
             _this.dump(BQ2)
