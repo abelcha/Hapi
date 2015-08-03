@@ -41,7 +41,7 @@
         return this.__list
     }
 
-    FlushList.prototype.getTotal = function() {
+    FlushList.prototype.getTotal = function(dirtyReload) {
         var total = {
             base: 0,
             montant: 0,
@@ -51,7 +51,7 @@
         };
         var list = _(this.getList()).sortBy('montant.balance').reverse().value();
         _each(list, function(rtn) {
-            if (rtn.checked) {
+            if (rtn.checked && (!dirtyReload || (dirtyReload && rtn.montant.balance >= 0))) {
                 total.base = _round(total.base + rtn.montant.base);
                 total.montant = _round(total.montant + rtn.montant.total, 2);
                 total.legacy = _round(total.legacy + rtn.montant.legacy, 2);

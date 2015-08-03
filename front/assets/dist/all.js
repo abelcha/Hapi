@@ -3958,6 +3958,8 @@ var LpaController = function(tabContainer, edisonAPI, $rootScope, LxProgressServ
     }
     _this.reloadList = function(artisan) {
         artisan.total = artisan.list.getTotal()
+        artisan.total = artisan.list.getTotal(true)
+        artisan.total = artisan.list.getTotal()
     }
     _this.reloadLPA = function() {
         var rtn = [];

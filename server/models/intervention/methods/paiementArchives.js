@@ -138,6 +138,9 @@ module.exports = function(schema) {
                         format(montant + (montant * (e.compta.paiement.historique.tva / 100)))
                     ]
                     _this.dump(AC3);
+                } else if (e.compta.paiement.historique._type == 'AVOIR') {
+                    var AC1 = [
+                    ]
                 }
             })
             _this.dump(BQ1);
