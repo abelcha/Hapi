@@ -191,12 +191,11 @@
                 rtn.prixFinal = d.comptaPrixFinal;
                 rtn.compta = {
                     paiement: {
-                        date:toDate(d.date_paiement_sst),
+                        date: toDate(d.date_paiement_sst),
                         tva: d.comptaTVA || 0,
                         mode: d.pVirement == "0" ? "CHQ" : "VIR",
                         base: d.comptaPrixFinal,
                         montant: d.comptaMontantFinal,
-                        final: d.comptaMontantFinal,
                         dette: d.etat_reglement === "DETTE",
                         ready: rtn.id > 24000,
                         effectue: rtn.id <= 24000,
@@ -210,6 +209,7 @@
                             dateFlush: toDate(d.date_paiement_sst),
                             dateAjout: toDate(d.date_paiement_sst),
                             base: d.comptaPrixFinal,
+                            final: d.comptaMontantFinal,
                             montant: d.comptaMontantFinal,
                             payed: d.comptaMontantFinal,
                             mode: (d.pVirement == "0" ? "CHQ" : "VIR"),

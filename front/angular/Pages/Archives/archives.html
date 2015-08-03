@@ -26,6 +26,7 @@
                     <tr ng-repeat="remise in vm.data|orderBy:'-timestamp'">
                         <td>{{vm.moment(remise.timestamp).format('llll')}}</td>
                         <td><a target="_blank" href="/api/intervention/ecritureSST?d={{remise.timestamp}}" >Voir Ecriture SST</a></td>
+                        <td><a target="_blank" href="/api/intervention/ecritureSST?d={{remise.timestamp}}&download=true" download >Telecharger Ecriture SST</a></td>
                     </tr>
                 </tbody>
             </table>

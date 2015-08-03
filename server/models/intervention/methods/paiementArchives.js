@@ -3,6 +3,7 @@ module.exports = function(schema) {
     var _ = require('lodash')
     var async = require('async')
     var moment = require('moment')
+    var csv = require('express-csv')
     var getList = function(match) {
         return new Promise(function(resolve, reject) {
             db.model('intervention')
@@ -172,16 +173,22 @@ module.exports = function(schema) {
                 if (!docs.length) {
                     return reject('aucunes interventions')
                 }
+                var rtn = []
                 async.each(docs[0].list, ecriture.bind({
                     dump: function(tab) {
-                        var x = tab.join(';');
-                        console.log(x)
-                        res.write(x + '\n');
+                        rtn.push(tab);
                     }
                 }), function(err) {
                     if (err)
                         resolve(err);
-                    res.end();
+                    if (req.query.download) {
+                        res.csv(rtn)
+                    } else {
+                        resolve(rtn)
+                    }
+                    //res.contentType = "text/csv"
+                    // res.setHeader("Content-Disposition", "attachment; filename=\"ecriture.csv\"");
+                    // res.send(rtn)
                 });
             }, function(err) {
                 console.log('-->', err)
