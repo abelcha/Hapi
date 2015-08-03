@@ -319,6 +319,7 @@ module.exports = function(db) {
                     base: Number,
                     montant: Number,
                     payed: Number,
+                    final: Number,
                     numeroCheque: String
                 }]
             },

@@ -196,6 +196,7 @@
                         mode: d.pVirement == "0" ? "CHQ" : "VIR",
                         base: d.comptaPrixFinal,
                         montant: d.comptaMontantFinal,
+                        final: d.comptaMontantFinal,
                         dette: d.etat_reglement === "DETTE",
                         ready: rtn.id > 24000,
                         effectue: rtn.id <= 24000,

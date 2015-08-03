@@ -22,6 +22,7 @@ module.exports = function(schema) {
                         mode: doc.compta.paiement.mode,
                         numeroCheque: e.numeroCheque,
                         montant: e.montant.total,
+                        final: e.montant.final,
                         base: e.montant.base,
                         payed: _.round(e.montant.total - (e.montant.balance - e.montant.final), 2)
                     }
