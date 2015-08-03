@@ -108,30 +108,6 @@ module.exports = {
         color: 'orange',
         icon: 'user'
     }],
-    /*    paiementCLI: function(inter) {
-            return [{
-                icon: 'fa fa-circle-o',
-                color: 'orange'
-            }, {
-                icon: 'fa fa-check',
-                color: 'green'
-            }, {
-                icon: 'fa fa-warning',
-                color: 'red'
-            }][inter.pc]
-        },
-        paiementSST: function(inter) {
-            return [{
-                icon: 'fa fa-circle-o',
-                color: 'orange'
-            }, {
-                icon: 'fa fa-check',
-                color: 'green'
-            }, {
-                icon: 'fa fa-warning',
-                color: 'red'
-            }][inter.ps]
-        },*/
     categoriesHash: function() {
         return [this.categories.PL,
             this.categories.CH,
@@ -142,6 +118,20 @@ module.exports = {
             this.categories.CL,
             this.categories.PT
         ]
+    },
+    libellePaiement:{
+        'AUTO-FACT':{
+            long_name:'auto-facture',
+            short_name:'STF'
+        },
+        'AVOIR':{
+            long_name:'avoir',
+            short_name:'STA'
+        },
+        'COMPLEMENT':{
+            long_name:'complement',
+            short_name:'STC'
+        }
     },
     categoriesArray: function() {
         var x = [];

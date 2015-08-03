@@ -47,13 +47,15 @@ module.exports = function(schema) {
         }).exec(function(err, artisan) {
             var formeJuridique = _.get(artisan, 'formeJuridique', 'SARL');
             _.each(sst, function(e, k) {
+                var paiement = e.compta.paiement.historique
                 var padIdSST = _.padLeft(e.artisan.id, 5, '0')
                 var padIdOS = _.padLeft(e.id, 6, '0')
-                var libelle = e.compta.paiement.historique.mode + (e.compta.paiement.historique.numeroCheque || '') + ' ' + e.artisan.nomSociete
-                var montant = Math.abs(e.compta.paiement.historique.final);
+                var libelle = paiement.mode + (paiement.numeroCheque || '') + ' ' + e.artisan.nomSociete
+                var montant = Math.abs(paiement.final);
                 var numeroCompteAchat = '604' + _.padLeft(config.categories[e.categorie].id_compta, 5, '0')
                 var libelleAC = ['TRAVAUX', _.deburr(config.categories[e.categorie].long_name.toUpperCase()), e.artisan.nomSociete].join(' ')
-                    // console.log(libelleAC)
+                var libelleNumeroFacture = config.libellePaiement[paiement._type].short_name;
+
                 BQ1 = [
                     'BQ1',
                     dateFormat,
@@ -79,28 +81,28 @@ module.exports = function(schema) {
                     dateFormat,
                     numeroCompteAchat,
                     '',
-                    'ST' + padIdOS,
+                    libelleNumeroFacture + padIdOS,
                     libelleAC,
                     format(montant),
                     '',
                 ]
-                if (e.compta.paiement.historique._type == 'AVOIR') {
+                if (paiement._type == 'AVOIR') {
                     AC1.swap(6, 7);
                 }
                 _this.dump(AC1)
                 if (formeJuridique !== 'AUT') {
-                    if (e.compta.paiement.historique.tva) {
+                    if (paiement.tva) {
                         var AC2a = [
                             'AC2a',
                             dateFormat,
                             '44566200',
                             '',
-                            'ST' + padIdOS,
+                            libelleNumeroFacture + padIdOS,
                             libelleAC,
-                            format(montant * (e.compta.paiement.historique.tva / 100)),
+                            format(montant * (paiement.tva / 100)),
                             ''
                         ]
-                        if (e.compta.paiement.historique._type == 'AVOIR') {
+                        if (paiement._type == 'AVOIR') {
                             AC2a.swap(6, 7);
                         }
                         _this.dump(AC2a)
@@ -111,7 +113,7 @@ module.exports = function(schema) {
                             dateFormat,
                             '44566300',
                             '',
-                            'ST' + padIdOS,
+                            libelleNumeroFacture + padIdOS,
                             libelleAC,
                             format(montant * 20 / 100),
                             '',
@@ -121,13 +123,13 @@ module.exports = function(schema) {
                             dateFormat,
                             '44521000',
                             '',
-                            'ST' + padIdOS,
+                            libelleNumeroFacture + padIdOS,
                             libelleAC,
                             '',
                             format(montant * 20 / 100)
 
                         ]
-                        if (e.compta.paiement.historique._type == 'AVOIR') {
+                        if (paiement._type == 'AVOIR') {
                             AC2b.swap(6, 7);
                             AC2c.swap(6, 7);
                         }
@@ -141,12 +143,12 @@ module.exports = function(schema) {
                     dateFormat,
                     '40100000',
                     '401' + padIdSST,
-                    'ST' + padIdOS,
+                    libelleNumeroFacture + padIdOS,
                     libelleAC,
                     '',
-                    format(montant + (montant * (e.compta.paiement.historique.tva / 100)))
+                    format(montant + (montant * (paiement.tva / 100)))
                 ]
-                if (e.compta.paiement.historique._type == 'AVOIR') {
+                if (paiement._type == 'AVOIR') {
                     AC3.swap(6, 7);
                 }
                 _this.dump(AC3);
