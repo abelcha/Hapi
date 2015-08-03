@@ -127,18 +127,18 @@ module.exports = function(schema) {
 
                         }
                     }
+                    var AC3 = [
+                        'AC3',
+                        dateFormat,
+                        '40100000',
+                        '401' + padIdSST,
+                        'ST' + padIdOS,
+                        libelleAC,
+                        '',
+                        format(montant + (montant * (e.compta.paiement.historique.tva / 100)))
+                    ]
+                    _this.dump(AC3);
                 }
-                var AC3 = [
-                    'AC3',
-                    dateFormat,
-                    '40100000',
-                    '401' + padIdSST,
-                    'ST' + padIdOS,
-                    libelleAC,
-                    '',
-                    format(montant + (montant * (e.compta.paiement.historique.tva / 100)))
-                ]
-                _this.dump(AC3);
             })
             _this.dump(BQ1);
             _this.dump(BQ2)
