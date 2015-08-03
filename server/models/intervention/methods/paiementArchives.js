@@ -36,7 +36,7 @@ module.exports = function(schema) {
 
     var ecriture = function(sst, callback) {
         var _this = this;
-        var montantTotal = _.sum(sst, 'compta.paiement.historique.montant');
+        var montantTotal = _.sum(sst, 'compta.paiement.historique.final');
         var dateFormat = moment(new Date(sst[0].compta.paiement.historique.dateFlush)).format('L');
         var BQ1, BQ2
         db.model('artisan').findOne({
