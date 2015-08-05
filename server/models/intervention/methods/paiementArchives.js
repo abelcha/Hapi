@@ -209,9 +209,48 @@ module.exports = function(schema) {
             db.model('intervention').find({
                 'compta.reglement.recu': true,
                 'compta.reglement.date': zz
-            }, {}).limit(20).then(function(docs) {
-
-                resolve(docs)
+            }).limit(20).then(function(docs) {
+                var rtn = [];
+                 _.each(docs, function(e) {
+                    var reg = e.compta.paiement;
+                    var dateFormat = moment(new Date(e.date.intervention)).format('L');
+                    var libelleVT = ['VENTE', e.client.civilite.replaceAll('.', ''), e.client.nom].join(' ');
+                    var VT1 = [
+                        'VT1',
+                        dateFormat,
+                        _.padRight('4110' + e.tva, 8, '0'),
+                        _.padLeft(e.id, 6, '0'),
+                        'F' + _.padLeft(e.id, 6, '0'),
+                        libelleVT,
+                        _.round(e.compta.reglement.montant * (1 + (e.tva / 100)), 2)
+                    ]
+                    var VT2 = [
+                        'VT2',
+                        dateFormat, ['7040', e.tva, '0', config.categories[e.categorie].id_compta].join(''),
+                        '',
+                        'F' + _.padLeft(e.id, 6, '0'),
+                        libelleVT,
+                        '',
+                        e.compta.reglement.montant
+                    ]
+                    var VT3 = [
+                        'VT3',
+                        dateFormat, ['445870', _.padLeft(e.tva, 2, '0')].join(''),
+                        '',
+                        'F' + _.padLeft(e.id, 6, '0'),
+                        libelleVT,
+                        '',
+                        _.round(e.compta.reglement.montant * (e.tva / 100), 2)
+                    ]
+                    rtn.push(VT1)
+                    rtn.push(VT2)
+                    rtn.push(VT3)
+                });
+                if (req.query.download) {
+                    res.csv(rtn)
+                } else {
+                    resolve(rtn)
+                }
             })
         })
     };
@@ -248,6 +287,7 @@ module.exports = function(schema) {
                 })
 
             .exec(function(err, docs) {
+
                 console.log(err, docs);
                 resolve(docs)
             })

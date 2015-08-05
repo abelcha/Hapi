@@ -921,18 +921,18 @@ module.exports = {
             this.categories.PT
         ]
     },
-    libellePaiement:{
-        'AUTO-FACT':{
-            long_name:'auto-facture',
-            short_name:'STF'
+    libellePaiement: {
+        'AUTO-FACT': {
+            long_name: 'auto-facture',
+            short_name: 'STF'
         },
-        'AVOIR':{
-            long_name:'avoir',
-            short_name:'STA'
+        'AVOIR': {
+            long_name: 'avoir',
+            short_name: 'STA'
         },
-        'COMPLEMENT':{
-            long_name:'complement',
-            short_name:'STC'
+        'COMPLEMENT': {
+            long_name: 'complement',
+            short_name: 'STC'
         }
     },
     categoriesArray: function() {
@@ -1068,6 +1068,10 @@ module.exports = {
         short_name: 20,
         value: 0.2,
         long_name: "TVA: 20%"
+    }, {
+        short_name: 0,
+        value: 0.0,
+        long_name: "TVA: 0%"
     }],
     tvaSST: [{
         short_name: 0,

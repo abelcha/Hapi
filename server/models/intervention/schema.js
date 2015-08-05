@@ -331,7 +331,9 @@ module.exports = function(db) {
                 facture: Boolean, // facture de l'intervention (si reglemenet est sur place)
                 attestationTva: Boolean, // attestation de tva (si tva=10%)
                 devis: Boolean, // devis (> 150)
-                fourniture: Boolean // bon cout de fourniture
+                pasDeFourniture: Boolean, // bon cout de fourniture
+                fournitureErrone: Boolean,
+                
             },
         }
     });
