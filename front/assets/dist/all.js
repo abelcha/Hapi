@@ -377,9 +377,14 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
             controller: "avoirsController",
             controllerAs: "vm",
         })
-        .when('/compta/archives', {
+        .when('/compta/archivesPaiement', {
             templateUrl: "Pages/Archives/archives.html",
-            controller: "archivesController",
+            controller: "archivesPaiementController",
+            controllerAs: "vm",
+        })
+          .when('/compta/archivesReglement', {
+            templateUrl: "Pages/Archives/archives.html",
+            controller: "archivesReglementController",
             controllerAs: "vm",
         })
         .otherwise({
@@ -1169,8 +1174,11 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
             flush: function(data) {
                 return $http.post('/api/intervention/flush', data);
             },
-            archives: function() {
-                return $http.get('/api/intervention/archive');
+            archivesPaiement: function() {
+                return $http.get('/api/intervention/archivePaiement');
+            },
+            archivesReglement: function() {
+                return $http.get('/api/intervention/archiveReglement');
             },
             avoirs: function() {
                 return $http.get('/api/intervention/avoirs')
@@ -1178,6 +1186,7 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
             flushAvoirs: function(data) {
                 return $http.post('/api/intervention/flushAvoirs', data);
             },
+
         },
         devis: {
             get: function(id, options) {
@@ -1268,6 +1277,9 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
             }
         },
         artisan: {
+            getCompteTiers: function(id_sst) {
+                return $http.get(['/api/artisan', id_sst, 'compteTiers'].join('/'));
+            },
             envoiContrat: function(id, options) {
                 return $http.post("/api/artisan/" + id + '/sendContrat', options)
             },
@@ -3066,12 +3078,14 @@ angular.module('edison').directive('listeIntervention', function(tabContainer, F
 
 });
 
-var ArchivesController = function(edisonAPI, tabContainer, $routeParams, $location, LxProgressService) {
+var archiveReglementController = function(edisonAPI, tabContainer, $routeParams, $location, LxProgressService) {
+
     var tab = tabContainer.getCurrentTab();
-    tab.setTitle('archives')
     var _this = this;
+    _this.title = 'Archives Reglements'
+    tab.setTitle('archives RGL')
     LxProgressService.circular.show('#5fa2db', '#globalProgress');
-    edisonAPI.compta.archives().success(function(resp) {
+    edisonAPI.compta.archivesReglement().success(function(resp) {
         LxProgressService.circular.hide()
         _this.data = resp
     })
@@ -3081,7 +3095,26 @@ var ArchivesController = function(edisonAPI, tabContainer, $routeParams, $locati
     }
 }
 
-angular.module('edison').controller('archivesController', ArchivesController);
+angular.module('edison').controller('archivesReglementController', archiveReglementController);
+
+var archivesPaiementController = function(edisonAPI, tabContainer, $routeParams, $location, LxProgressService) {
+    var _this = this;
+    var tab = tabContainer.getCurrentTab();
+    _this.type = 'paiement'
+    _this.title = 'Archives Paiements'
+    tab.setTitle('archives PAY')
+    LxProgressService.circular.show('#5fa2db', '#globalProgress');
+    edisonAPI.compta.archivesPaiement().success(function(resp) {
+        LxProgressService.circular.hide()
+        _this.data = resp
+    })
+    _this.moment = moment;
+    _this.openLink = function(link) {
+        $location.url(link)
+    }
+}
+
+angular.module('edison').controller('archivesPaiementController', archivesPaiementController);
 
  angular.module('edison').directive('artisanCategorie', ['config', function(config) {
      "use strict";
@@ -3212,7 +3245,7 @@ var AvoirsController = function(tabContainer, edisonAPI, $rootScope, LxProgressS
         })
         edisonAPI.compta.flushAvoirs(list).then(function(resp) {
             LxNotificationService.success(resp.data);
-            _this.reloadLPA()
+            _this.reloadAvoir()
         }).catch(function(err) {
             LxNotificationService.error(err.data);
         })
@@ -3322,6 +3355,15 @@ var ContactArtisanController = function($scope, $timeout, tabContainer, LxProgre
         }
     }
 
+
+    $scope.$watchCollection('[selectedIndex, expendedRow]', function(current, prev) {
+        if (prev[1] && $scope.selectedIndex == 4) {
+            $scope.compteTiers = undefined
+            edisonAPI.artisan.getCompteTiers($rootScope.expendedRow).success(function(resp) {
+                $scope.compteTiers = resp;
+            })
+        }
+    })
     $scope.$watch('selectedIndex', function(current, prev) {
         if (current !== void(0) && prev !== current)  {
             $('md-tabs-content-wrapper').hide()
@@ -3977,6 +4019,94 @@ var LpaController = function(tabContainer, edisonAPI, $rootScope, LxProgressServ
 
 angular.module('edison').controller('LpaController', LpaController);
 
+var DevisController = function($timeout, tabContainer, FiltersFactory, ContextMenu, edisonAPI, DataProvider, $routeParams, $location, $q, $rootScope, $filter, config, ngTableParams, LxProgressService) {
+    "use strict";
+    var _this = this;
+    var dataProvider = new DataProvider('devis');
+    var filtersFactory = new FiltersFactory('devis')
+    var currentFilter;
+    if ($routeParams.fltr) {
+        currentFilter = filtersFactory.getFilterByUrl($routeParams.fltr)
+    }
+    var currentHash = $location.hash();
+    var title = currentFilter ? currentFilter.long_name : "Devis";
+
+    LxProgressService.circular.show('#5fa2db', '#globalProgress');
+    dataProvider.init(function(err, resp) {
+        _this.tab = tabContainer.getCurrentTab();
+        _this.recap = $routeParams.artisanID;
+        _this.tab.setTitle(title, currentHash);
+        _this.tab.hash = currentHash;
+        _this.config = config;
+        _this.moment = moment;
+        dataProvider.applyFilter(currentFilter, _this.tab.hash);
+        var tableParameters = {
+            page: 1, // show first page
+            total: dataProvider.filteredData.length,
+            filter: {},
+            sorting: {
+                id: 'desc'
+            },
+            count: 100 // count per page
+        };
+        var tableSettings = {
+            //groupBy:$rootScope.config.selectedGrouping,
+            total: dataProvider.filteredData,
+            getData: function($defer, params) {
+                var data = dataProvider.filteredData;
+                data = $filter('tableFilter')(data, params.filter());
+                params.total(data.length);
+                data = $filter('orderBy')(data, params.orderBy());
+                $defer.resolve(data.slice((params.page() - 1) * params.count(), params.page() * params.count()));
+            },
+            filterDelay: 100
+        }
+        _this.tableParams = new ngTableParams(tableParameters, tableSettings);
+        LxProgressService.circular.hide();
+    });
+
+    $rootScope.$on('devisListChange', function() {
+        if (_this.tab.fullUrl === tabContainer.getCurrentTab().fullUrl) {
+            dataProvider.applyFilter(currentFilter, _this.tab.hash);
+            _this.tableParams.reload();
+        }
+    })
+
+    _this.contextMenu = new ContextMenu('devis')
+
+    _this.rowRightClick = function($event, inter) {
+        console.log('yay');
+        
+        _this.contextMenu.setPosition($event.pageX, $event.pageY)
+        _this.contextMenu.setData(inter);
+        _this.contextMenu.open();
+        edisonAPI.devis.get(inter.id)
+            .then(function(resp) {
+                _this.contextMenu.setData(resp.data);
+            })
+    }
+
+    _this.rowClick = function($event, inter) {
+        if (_this.contextMenu.active)
+            return _this.contextMenu.close();
+        if ($event.metaKey || $event.ctrlKey) {
+            tabContainer.addTab('/devis/' + inter.id, {
+                title: ('#' + inter.id),
+                setFocus: false,
+                allowDuplicates: false
+            });
+        } else {
+            if ($rootScope.expendedRow === inter.id) {
+                $rootScope.expendedRow = undefined;
+            } else {
+                $rootScope.expendedRow = inter.id
+            }
+        }
+    }
+
+}
+angular.module('edison').controller('ListeDevisController', DevisController);
+
 var ArtisanController = function($timeout, tabContainer, LxProgressService, FiltersFactory, ContextMenu, edisonAPI, DataProvider, $routeParams, $location, $q, $rootScope, $filter, config, ngTableParams) {
     "use strict";
     var _this = this;
@@ -4065,93 +4195,21 @@ var ArtisanController = function($timeout, tabContainer, LxProgressService, Filt
 }
 angular.module('edison').controller('ListeArtisanController', ArtisanController);
 
-var DevisController = function($timeout, tabContainer, FiltersFactory, ContextMenu, edisonAPI, DataProvider, $routeParams, $location, $q, $rootScope, $filter, config, ngTableParams, LxProgressService) {
-    "use strict";
+var SearchController = function(edisonAPI, tabContainer, $routeParams, $location, LxProgressService) {
+    var tab = tabContainer.getCurrentTab();
+    tab.setTitle('Search')
     var _this = this;
-    var dataProvider = new DataProvider('devis');
-    var filtersFactory = new FiltersFactory('devis')
-    var currentFilter;
-    if ($routeParams.fltr) {
-        currentFilter = filtersFactory.getFilterByUrl($routeParams.fltr)
-    }
-    var currentHash = $location.hash();
-    var title = currentFilter ? currentFilter.long_name : "Devis";
-
     LxProgressService.circular.show('#5fa2db', '#globalProgress');
-    dataProvider.init(function(err, resp) {
-        _this.tab = tabContainer.getCurrentTab();
-        _this.recap = $routeParams.artisanID;
-        _this.tab.setTitle(title, currentHash);
-        _this.tab.hash = currentHash;
-        _this.config = config;
-        _this.moment = moment;
-        dataProvider.applyFilter(currentFilter, _this.tab.hash);
-        var tableParameters = {
-            page: 1, // show first page
-            total: dataProvider.filteredData.length,
-            filter: {},
-            sorting: {
-                id: 'desc'
-            },
-            count: 100 // count per page
-        };
-        var tableSettings = {
-            //groupBy:$rootScope.config.selectedGrouping,
-            total: dataProvider.filteredData,
-            getData: function($defer, params) {
-                var data = dataProvider.filteredData;
-                data = $filter('tableFilter')(data, params.filter());
-                params.total(data.length);
-                data = $filter('orderBy')(data, params.orderBy());
-                $defer.resolve(data.slice((params.page() - 1) * params.count(), params.page() * params.count()));
-            },
-            filterDelay: 100
-        }
-        _this.tableParams = new ngTableParams(tableParameters, tableSettings);
-        LxProgressService.circular.hide();
-    });
-
-    $rootScope.$on('devisListChange', function() {
-        if (_this.tab.fullUrl === tabContainer.getCurrentTab().fullUrl) {
-            dataProvider.applyFilter(currentFilter, _this.tab.hash);
-            _this.tableParams.reload();
-        }
+    edisonAPI.searchText($routeParams.query).success(function(resp) {
+        LxProgressService.circular.hide()
+        _this.data = resp
     })
-
-    _this.contextMenu = new ContextMenu('devis')
-
-    _this.rowRightClick = function($event, inter) {
-        console.log('yay');
-        
-        _this.contextMenu.setPosition($event.pageX, $event.pageY)
-        _this.contextMenu.setData(inter);
-        _this.contextMenu.open();
-        edisonAPI.devis.get(inter.id)
-            .then(function(resp) {
-                _this.contextMenu.setData(resp.data);
-            })
+    _this.openLink = function(link) {
+        $location.url(link)
     }
-
-    _this.rowClick = function($event, inter) {
-        if (_this.contextMenu.active)
-            return _this.contextMenu.close();
-        if ($event.metaKey || $event.ctrlKey) {
-            tabContainer.addTab('/devis/' + inter.id, {
-                title: ('#' + inter.id),
-                setFocus: false,
-                allowDuplicates: false
-            });
-        } else {
-            if ($rootScope.expendedRow === inter.id) {
-                $rootScope.expendedRow = undefined;
-            } else {
-                $rootScope.expendedRow = inter.id
-            }
-        }
-    }
-
 }
-angular.module('edison').controller('ListeDevisController', DevisController);
+
+angular.module('edison').controller('SearchController', SearchController);
 
 angular.module('edison').controller('statsController', function($scope) {
     "use strict";
@@ -4258,21 +4316,5 @@ var InterventionsController = function($q, tabContainer, FiltersFactory, Context
     }
 }
 angular.module('edison').controller('InterventionsController', InterventionsController);
-
-var SearchController = function(edisonAPI, tabContainer, $routeParams, $location, LxProgressService) {
-    var tab = tabContainer.getCurrentTab();
-    tab.setTitle('Search')
-    var _this = this;
-    LxProgressService.circular.show('#5fa2db', '#globalProgress');
-    edisonAPI.searchText($routeParams.query).success(function(resp) {
-        LxProgressService.circular.hide()
-        _this.data = resp
-    })
-    _this.openLink = function(link) {
-        $location.url(link)
-    }
-}
-
-angular.module('edison').controller('SearchController', SearchController);
 
 //# sourceMappingURL=all.js.map

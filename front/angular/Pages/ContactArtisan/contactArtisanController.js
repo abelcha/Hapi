@@ -97,6 +97,15 @@ var ContactArtisanController = function($scope, $timeout, tabContainer, LxProgre
         }
     }
 
+
+    $scope.$watchCollection('[selectedIndex, expendedRow]', function(current, prev) {
+        if (prev[1] && $scope.selectedIndex == 4) {
+            $scope.compteTiers = undefined
+            edisonAPI.artisan.getCompteTiers($rootScope.expendedRow).success(function(resp) {
+                $scope.compteTiers = resp;
+            })
+        }
+    })
     $scope.$watch('selectedIndex', function(current, prev) {
         if (current !== void(0) && prev !== current)  {
             $('md-tabs-content-wrapper').hide()

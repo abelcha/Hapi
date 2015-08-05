@@ -17,8 +17,7 @@ module.exports = function(schema) {
                         numeroCheque: e.numeroCheque,
                         montant: e.compta.reglement.avoir.montant,
                     }
-                    doc.compta.reglement.avoir.ready = false;
-                    doc.compta.reglement.avoir.montant = 0;
+                    doc.compta.reglement.avoir.effectue = true;
                     doc.compta.reglement.historique.push(hist)
                     doc.save();
                 }, function(err) {
@@ -36,7 +35,10 @@ module.exports = function(schema) {
                     /*     'compta.reglement.avoir.montant': {
                              $gt: 0
                          },*/
-                    'compta.reglement.avoir.ready': true
+                    'compta.reglement.avoir.montant': {
+                        $gt: 0
+                    },
+                    'compta.reglement.avoir.effectue': false
                 })
                 .then(function(docs) {
                     resolve(docs)

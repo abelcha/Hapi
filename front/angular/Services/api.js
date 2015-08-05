@@ -14,8 +14,11 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
             flush: function(data) {
                 return $http.post('/api/intervention/flush', data);
             },
-            archives: function() {
-                return $http.get('/api/intervention/archive');
+            archivesPaiement: function() {
+                return $http.get('/api/intervention/archivePaiement');
+            },
+            archivesReglement: function() {
+                return $http.get('/api/intervention/archiveReglement');
             },
             avoirs: function() {
                 return $http.get('/api/intervention/avoirs')
@@ -23,6 +26,7 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
             flushAvoirs: function(data) {
                 return $http.post('/api/intervention/flushAvoirs', data);
             },
+
         },
         devis: {
             get: function(id, options) {
@@ -113,6 +117,9 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
             }
         },
         artisan: {
+            getCompteTiers: function(id_sst) {
+                return $http.get(['/api/artisan', id_sst, 'compteTiers'].join('/'));
+            },
             envoiContrat: function(id, options) {
                 return $http.post("/api/artisan/" + id + '/sendContrat', options)
             },

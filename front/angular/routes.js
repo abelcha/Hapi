@@ -377,9 +377,14 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
             controller: "avoirsController",
             controllerAs: "vm",
         })
-        .when('/compta/archives', {
+        .when('/compta/archivesPaiement', {
             templateUrl: "Pages/Archives/archives.html",
-            controller: "archivesController",
+            controller: "archivesPaiementController",
+            controllerAs: "vm",
+        })
+          .when('/compta/archivesReglement', {
+            templateUrl: "Pages/Archives/archives.html",
+            controller: "archivesReglementController",
             controllerAs: "vm",
         })
         .otherwise({

@@ -27,9 +27,13 @@ module.exports = function(schema) {
                             login: req.session.login,
                             montant: data.compta.reglement.avoir.montant,
                         })
+                        if (!data.compta.reglement.date) {
+                            data.compta.reglement.date = Date.now()
+                            data.compta.reglement.login = req.session.login
+                        }
+
                     }
                     if (data.compta.paiement.ready && !doc.compta.paiement.ready) {
-                        console.log('yayaya')
                         data.compta.paiement.login = req.session.login
                         data.compta.paiement.date = Date.now()
                     }

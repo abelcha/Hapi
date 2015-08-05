@@ -188,9 +188,6 @@ module.exports = function(schema) {
                     } else {
                         resolve(rtn)
                     }
-                    //res.contentType = "text/csv"
-                    // res.setHeader("Content-Disposition", "attachment; filename=\"ecriture.csv\"");
-                    // res.send(rtn)
                 });
             }, function(err) {
                 console.log('-->', err)
@@ -199,11 +196,81 @@ module.exports = function(schema) {
         })
     }
 
-    schema.statics.archive = function(req, res) {
+    schema.statics.ecritureReglements = function(req, res) {
+        var getMonthRange = function(m, y) {
+            var date = new Date(y, m);
+            return {
+                $gte: new Date(date.getFullYear(), date.getMonth(), 1),
+                $lt: new Date(date.getFullYear(), date.getMonth() + 1, 0)
+            }
+        }
+        return new Promise(function(resolve, reject) {
+            var zz = getMonthRange(req.query.m, req.query.y)
+            db.model('intervention').find({
+                'compta.reglement.recu': true,
+                'compta.reglement.date': zz
+            }, {}).limit(20).then(function(docs) {
+
+                resolve(docs)
+            })
+        })
+    };
+
+    schema.statics.archivePaiement = function(req, res) {
         var _this = this;
         return getList({
             'compta.paiement.effectue': true,
         });
     }
 
+    schema.statics.archiveReglement = function(req, res) {
+        var _this = this;
+        console.log('hey')
+        return new Promise(function(resolve, reject) {
+            db.model('intervention')
+                .aggregate()
+                .match({
+                    'compta.reglement.recu': true
+                })
+                .group({
+                    _id: {
+                        yr: {
+                            $year: '$compta.reglement.date',
+
+                        },
+                        mth: {
+                            $month: '$compta.reglement.date',
+                        }
+                    },
+                    date: {
+                        $first: '$compta.reglement.date'
+                    }
+                })
+
+            .exec(function(err, docs) {
+                console.log(err, docs);
+                resolve(docs)
+            })
+        })
+    }
+
+
+
 }
+
+/*            db.model('intervention')
+                .aggregate()
+                .match({
+                    'compta.reglement.recu': true,
+                })
+                .project({
+                    'compta.reglement.date': true,
+                })
+                .limit(1000)
+                .exec(function(err, docs) {
+                    var x = _.groupBy(docs, function(e) {
+                        var date = (new Date(e.compta.reglement.date))
+                        e.timestamp = date.getTime()
+                        return date.getMonth() + 1 + '/' + date.getFullYear()
+                    })
+                    resolve(x)*/

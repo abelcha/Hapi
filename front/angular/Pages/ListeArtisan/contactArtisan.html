@@ -42,40 +42,11 @@
                                                     <span style="width:90px;margin-top:4px" class="label display-block fs-body-1 grey darken-3">{{k}}</span></a>
                                             </div>
                                         </div>
-                                        <!-- <br><br>
-                                        <span class="fs-display-1 display-block">Tarifs</span>
-
-                                        <br> -->
-                                        <!-- <span class="fs-display-3 display-block">Regular 56sp</span>
-                                        <span class="fs-display-2 display-block">Regular 45sp</span>
-                                        <span class="fs-display-1 display-block">Regular 34sp</span>
-                                        <span class="fs-headline display-block">Regular 24sp</span>
-                                        <span class="fs-title display-block">Medium 20sp</span>
-                                        <span class="fs-subhead display-block">Regular 16sp (Device), Regular 15sp (Desktop)</span>
-                                        <span class="fs-body-2 display-block">Medium 14sp (Device), Medium 13sp (Desktop)</span>
-                                        <span class="fs-body-1 display-block">Regular 14sp (Device), Regular 13sp (Desktop)</span>
-                                        <span class="fs-caption display-block">Regular 12sp</span> -->
-                                        <!--  <a ng-href="mailto:{{vm.sst.email}}">{{vm.sst.email}}</a> -
-                                        <a ng-href="callto:{{vm.sst.telephone.tel1}}">{{vm.sst.telephone.tel1}}</a>
-                                        <a ng-href="callto:{{vm.sst.telephone.tel2}}">{{vm.sst.telephone.tel2}}</a>
-                                        <br>
-                                        <br> Categories
-                                        <p class="md-display-2" ng-repeat="c in vm.sst.categories"><span style="width:100px;margin-top:4px" class="label {{::config.categories[c].color}}">{{::config.categories[c].long_name}}</span></p>
-                                        <br>
-                                        <p class="md-display-2">Documents :
-                                            <a ng-repeat="(k, f) in vm.sst.document" ng-href="/api/artisan/59/openDocument?file={{k}}" target="_blank">
-                                                <br><span style="width:90px;margin-top:4px" class="label ">{{k}}</span></a>
-                                        </p>
-                                        <br>
-                                        <p class="md-display-2">Déplacement : <strong>{{vm.sst.pourcentage.deplacement}} %</strong></p>
-                                        <p class="md-display-2">Main d'oeuvre : <strong>{{vm.sst.pourcentage.maindOeuvre}} %</strong></p>
-                                        <p class="md-display-2">Fourniture : <strong>{{vm.sst.pourcentage.fourniture}} %</strong></p> -->
                                     </div>
                                     <div class="col-sm-6">
                                         <span style="width:90px;margin-top:4px" class="label fs-body-2 {{config.etatsArtisan[vm.sst.status].color}}">{{config.etatsArtisan[vm.sst.status].long_name}}</span>
                                         <span style="width:90px;margin-top:4px" class="label fs-body-2 {{config.artisanOrigine[vm.sst.origin].color}}">{{config.artisanOrigine[vm.sst.origin].long_name}}</span>
                                         <span style="width:90px;margin-top:4px" class="label fs-body-1  {{config.artisanSubStatus[vm.sst.subStatus].color}} accent-2">{{config.artisanSubStatus[vm.sst.subStatus].long_name}}</span>
-
                                         <span class="fs-title display-block">Ajouté le {{vm.sst.date.ajout|date:"dd/MM/yy"}} par {{vm.sst.login.ajout}}</span>
                                         <br>
                                         <span class="fs-subhead display-block">{{vm.sst.address.n}} {{vm.sst.address.r}}, {{vm.sst.address.cp}} {{vm.sst.address.v}}</span>
@@ -109,6 +80,28 @@
                                 <md-content class="md-padding">
                                     <h1 class="md-display-2">Stats</h1>
                                     <artisan-recap id="vm.sst.id"></artisan-recap>
+                                </md-content>
+                            </md-tab>
+                            <md-tab label="Paiements">
+                                <md-content class="md-padding">
+                                    <table class="table" ng-repeat="p in compteTiers|orderBy:'-timestamp'">
+                                        <tr>
+                                            <td>{{p.timestamp|date:"dd/MM/yy à H'h'mm"}}</td>
+                                        </tr>
+                                        <tr ng-repeat="x in p.list">
+                                            <td>
+                                                {{x._id}}
+                                            </td>
+                                            <td>{{x.compta.paiement.historique.mode}}</td>
+                                            <td>
+                                                {{x.compta.paiement.historique.montant}} €
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2"></td>
+                                            <td><strong>{{p.total}} €</strong></td>
+                                        </tr>
+                                    </table>
                                 </md-content>
                             </md-tab>
                             <md-tab label="JSON Dump" data-position="3">

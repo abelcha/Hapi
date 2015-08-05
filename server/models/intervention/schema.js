@@ -207,6 +207,10 @@ module.exports = function(db) {
         compta: {
             reglement: {
                 date: Date,
+                login: {
+                    type: String,
+                    default: 'vincent_q'
+                },
                 recu: {
                     type: Boolean,
                     default: false
@@ -218,7 +222,7 @@ module.exports = function(db) {
                 avoir: {
                     _type: String,
                     montant: Number,
-                    ready: {
+                    effectue: {
                         type: Boolean,
                         default: false
                     }

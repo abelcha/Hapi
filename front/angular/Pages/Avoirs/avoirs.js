@@ -23,7 +23,7 @@ var AvoirsController = function(tabContainer, edisonAPI, $rootScope, LxProgressS
         })
         edisonAPI.compta.flushAvoirs(list).then(function(resp) {
             LxNotificationService.success(resp.data);
-            _this.reloadLPA()
+            _this.reloadAvoir()
         }).catch(function(err) {
             LxNotificationService.error(err.data);
         })
