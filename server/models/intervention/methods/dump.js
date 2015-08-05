@@ -229,7 +229,10 @@
                     date: toDate(d.date_paiement_client),
                     recu: true,
                     montant: rtn.prixFinal,
-
+                    historique: [{
+                        date: toDate(d.date_paiement_client),
+                        montant: rtn.prixFinal,
+                    }]
                 }
             }
 

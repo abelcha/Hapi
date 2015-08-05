@@ -245,6 +245,12 @@ module.exports = function(schema) {
                     rtn.push(VT1)
                     rtn.push(VT2)
                     rtn.push(VT3)
+                    console.log(VT1.join(' | '))
+                    console.log(VT2.join(' | '))
+                    console.log(VT3.join(' | '))
+                    if (e.compta.reglement.avoir) {
+                        rtn.push('lol')
+                    }
                 });
                 if (req.query.download) {
                     res.csv(rtn)

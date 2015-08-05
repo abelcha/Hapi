@@ -233,9 +233,11 @@ module.exports = function(db) {
                         default: 'ENCAISSEMENT'
                     },
                     _typeAvoir: String,
-                    NumeroCheque: String,
                     montant: Number,
-                    login: String,
+                    login: {
+                        type: String,
+                        default: 'vincent_q'
+                    },
                     date: {
                         type: Date,
                         default: Date.now
@@ -333,7 +335,7 @@ module.exports = function(db) {
                 devis: Boolean, // devis (> 150)
                 pasDeFourniture: Boolean, // bon cout de fourniture
                 fournitureErrone: Boolean,
-                
+
             },
         }
     });
