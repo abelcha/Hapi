@@ -205,42 +205,57 @@ module.exports = function(schema) {
             }
         }
         return new Promise(function(resolve, reject) {
-            var zz = getMonthRange(req.query.m, req.query.y)
+            var zz = getMonthRange(req.query.m - 1, req.query.y)
+
             db.model('intervention').find({
                 'compta.reglement.recu': true,
                 'compta.reglement.date': zz
             }).then(function(docs) {
                 var rtn = [];
-                 _.each(docs, function(e) {
-                    var reg = e.compta.paiement;
+                _.each(docs, function(e) {
+                    var R = e.compta.paiement;
+                    var montant = {
+                        HT: e.compta.reglement.montant,
+                        TTC: _.round(R.montant * (1 + (e.tva / 100)), 2),
+                        TVA: _.round(R.montant * (e.tva / 100), 2)
+                    }
+                    var compte = {
+                        VT1: _.padRight('4110' + e.tva, 8, '0'),
+                        VT2: ['7040', e.tva, '0', config.categories[e.categorie].id_compta].join(''),
+                        VT3: ['445870', _.padLeft(e.tva, 2, '0')].join('')
+                    }
+                    var OS = _.padLeft(e.id, 6, '0');
+                    var FOS = 'F' + OS
                     var dateFormat = moment(new Date(e.date.intervention)).format('L');
                     var libelleVT = ['VENTE', e.client.civilite.replaceAll('.', ''), e.client.nom].join(' ');
                     var VT1 = [
                         'VT1',
                         dateFormat,
-                        _.padRight('4110' + e.tva, 8, '0'),
-                        _.padLeft(e.id, 6, '0'),
-                        'F' + _.padLeft(e.id, 6, '0'),
+                        compte.VT1,
+                        OS,
+                        FOS,
                         libelleVT,
-                        _.round(e.compta.reglement.montant * (1 + (e.tva / 100)), 2)
+                        montant.TTC
                     ]
                     var VT2 = [
                         'VT2',
-                        dateFormat, ['7040', e.tva, '0', config.categories[e.categorie].id_compta].join(''),
+                        dateFormat,
+                        compte.VT2,
                         '',
-                        'F' + _.padLeft(e.id, 6, '0'),
+                        FOS,
                         libelleVT,
                         '',
-                        e.compta.reglement.montant
+                        montant.HT
                     ]
                     var VT3 = [
                         'VT3',
-                        dateFormat, ['445870', _.padLeft(e.tva, 2, '0')].join(''),
+                        dateFormat,
+                        compte.VT3,
                         '',
-                        'F' + _.padLeft(e.id, 6, '0'),
+                        FOS,
                         libelleVT,
                         '',
-                        _.round(e.compta.reglement.montant * (e.tva / 100), 2)
+                        montant.TVA
                     ]
                     rtn.push(VT1)
                     rtn.push(VT2)
@@ -248,8 +263,8 @@ module.exports = function(schema) {
                     console.log(VT1.join(' | '))
                     console.log(VT2.join(' | '))
                     console.log(VT3.join(' | '))
-                    if (e.compta.reglement.avoir) {
-                        rtn.push('lol')
+                    if (R.avoir) {
+
                     }
                 });
                 if (req.query.download) {
