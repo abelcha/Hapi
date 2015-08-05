@@ -41,7 +41,7 @@
             <div class="row">
                 <div class="col-sm-3" ng-if="data.reglementSurPlace">
                     <md-checkbox  ng-model="data.compta.info.facture" aria-label="_" class="md-warn">
-                        Facture envoyé
+                        Facture non conforme
                     </md-checkbox>
                 </div>
                 <div class="col-sm-3" ng-if="paiement.tva == 10">
@@ -51,7 +51,7 @@
                 </div>
                 <div class="col-sm-3" ng-if="data.devis.length > 0">
                     <md-checkbox ng-model="data.compta.info.devis" aria-label="_" class="md-warn">
-                       Devis Inclus
+                       Devis non conforme
                     </md-checkbox>
                 </div>
                 <div class="col-sm-3" ng-if="data.fourniture.length > 0">
