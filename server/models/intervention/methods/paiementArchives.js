@@ -209,7 +209,7 @@ module.exports = function(schema) {
             db.model('intervention').find({
                 'compta.reglement.recu': true,
                 'compta.reglement.date': zz
-            }).limit(20).then(function(docs) {
+            }).then(function(docs) {
                 var rtn = [];
                  _.each(docs, function(e) {
                     var reg = e.compta.paiement;
