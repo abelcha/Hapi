@@ -18,6 +18,7 @@ module.exports = function(schema) {
                         montant: e.compta.reglement.avoir.montant,
                     }
                     doc.compta.reglement.avoir.effectue = true;
+                    doc.compta.reglement.avoir.date = date;
                     doc.compta.reglement.historique.push(hist)
                     doc.save();
                 }, function(err) {

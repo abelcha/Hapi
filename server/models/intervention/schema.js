@@ -225,7 +225,8 @@ module.exports = function(db) {
                     effectue: {
                         type: Boolean,
                         default: false
-                    }
+                    },
+                    date: Date
                 },
                 historique: [{
                     _type: {
@@ -337,7 +338,13 @@ module.exports = function(db) {
                 fournitureErrone: Boolean,
 
             },
-        }
+        },
+        files: [{
+            name: String,
+            mimeType: String,
+            origin: String, //SCAN, UPLOAD, AUTO
+
+        }]
     });
     return schema
 }

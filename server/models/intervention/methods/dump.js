@@ -158,7 +158,7 @@
 
             rtn.modeReglement = d.mode_reglement;
             rtn.prixAnnonce = d.prix_ht_annonce;
-            rtn.prixFinal = d.prix_ht_final;
+            rtn.prixFinal = d.comptaPrixFinal || d.prix_ht_final || d.prix_ht_annonce || 0;
 
 
             if (d.fact === true) {
@@ -186,9 +186,7 @@
             //return null;
             rtn.compta = {}
                 //paiement effectue
-
             if (d.comptaPrixFinal) {
-                rtn.prixFinal = d.comptaPrixFinal;
                 rtn.compta = {
                     paiement: {
                         date: toDate(d.date_paiement_sst),
@@ -197,14 +195,14 @@
                         base: d.comptaPrixFinal,
                         montant: d.comptaMontantFinal,
                         dette: d.etat_reglement === "DETTE",
-                        ready: rtn.id > 24000,
-                        effectue: rtn.id <= 24000,
+                        ready: rtn.id > 25000,
+                        effectue: rtn.id <= 25000,
                         pourcentage: {
                             deplacement: d.pDeplacement,
                             maindOeuvre: d.pMaindOeuvre,
                             fourniture: d.pFourniture
                         },
-                        historique: rtn.id > 24000 ? [] : [{
+                        historique: rtn.id > 25000 ? [] : [{
                             tva: d.comptaTVA || 0,
                             dateFlush: toDate(d.date_paiement_sst),
                             dateAjout: toDate(d.date_paiement_sst),

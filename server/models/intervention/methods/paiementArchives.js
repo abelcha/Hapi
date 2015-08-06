@@ -185,8 +185,10 @@ module.exports = function(schema) {
                         resolve(err);
                     if (req.query.download) {
                         res.csv(rtn)
-                    } else {
+                    } else if (req.query.json) {
                         resolve(rtn)
+                    } else {
+                        res.send(tableify(rtn))
                     }
                 });
             }, function(err) {
@@ -196,24 +198,38 @@ module.exports = function(schema) {
         })
     }
 
+    var tableify = function(rtn) {
+        var row = _.map(rtn, function(e) {
+            return '<td>' + e.join('</td><td>') + '</td>';
+        })
+        var css = '<style> table, td, th {padding: 1px 10px;border: 1px solid black;}</style>'
+        return (css + '<table><tr>' + row.join('</tr><tr>') + '</tr></table')
+    }
+
     schema.statics.ecritureReglements = function(req, res) {
         var getMonthRange = function(m, y) {
             var date = new Date(y, m);
             return {
-                $gte: new Date(date.getFullYear(), date.getMonth(), 1),
+                $gte: new Date(date.getFullYear(), date.getMonth(), 1, -1),
                 $lt: new Date(date.getFullYear(), date.getMonth() + 1, 0)
             }
         }
         return new Promise(function(resolve, reject) {
-            var zz = getMonthRange(req.query.m - 1, req.query.y)
+            var dateRange = getMonthRange(req.query.m - 1, req.query.y)
 
             db.model('intervention').find({
                 'compta.reglement.recu': true,
-                'compta.reglement.date': zz
+                $or: [{
+                    'compta.reglement.date': dateRange
+                }, {
+                    'compta.reglement.avoir.date': dateRange,
+                    'compta.reglement.avoir.effectue': true,
+                }],
             }).then(function(docs) {
                 var rtn = [];
                 _.each(docs, function(e) {
-                    var R = e.compta.paiement;
+                    var R = e.compta.reglement;
+                    var P = e.compta.paiement;
                     var montant = {
                         HT: e.compta.reglement.montant,
                         TTC: _.round(R.montant * (1 + (e.tva / 100)), 2),
@@ -222,58 +238,55 @@ module.exports = function(schema) {
                     var compte = {
                         VT1: _.padRight('4110' + e.tva, 8, '0'),
                         VT2: ['7040', e.tva, '0', config.categories[e.categorie].id_compta].join(''),
-                        VT3: ['445870', _.padLeft(e.tva, 2, '0')].join('')
+                        VT3: ['445870', _.padLeft(e.tva, 2, '0')].join(''),
+                        BQA2: '51210000'
                     }
-                    var OS = _.padLeft(e.id, 6, '0');
-                    var FOS = 'F' + OS
-                    var dateFormat = moment(new Date(e.date.intervention)).format('L');
-                    var libelleVT = ['VENTE', e.client.civilite.replaceAll('.', ''), e.client.nom].join(' ');
-                    var VT1 = [
-                        'VT1',
-                        dateFormat,
-                        compte.VT1,
-                        OS,
-                        FOS,
-                        libelleVT,
-                        montant.TTC
-                    ]
-                    var VT2 = [
-                        'VT2',
-                        dateFormat,
-                        compte.VT2,
-                        '',
-                        FOS,
-                        libelleVT,
-                        '',
-                        montant.HT
-                    ]
-                    var VT3 = [
-                        'VT3',
-                        dateFormat,
-                        compte.VT3,
-                        '',
-                        FOS,
-                        libelleVT,
-                        '',
-                        montant.TVA
-                    ]
-                    rtn.push(VT1)
-                    rtn.push(VT2)
-                    rtn.push(VT3)
-                    console.log(VT1.join(' | '))
-                    console.log(VT2.join(' | '))
-                    console.log(VT3.join(' | '))
-                    if (R.avoir) {
 
+                    var OS = _.padLeft(e.id, 6, '0');
+                    var FOS = 'F' + OS;
+                    var AOS = 'A' + OS;
+                    var CLTOS = 'CLT' + OS;
+                    var dateFormat = moment(new Date(e.date.intervention)).format('L');
+                    if (moment(R.date).isBetween(dateRange.$gte, dateRange.$lt)) {
+                        var libelleVT = ['VENTE', e.client.civilite.replaceAll('.', ''), e.client.nom].join(' ');
+                        var libelleAV = ['AVOIR', e.client.civilite.replaceAll('.', ''), e.client.nom].join(' ');
+                        var VT1 = ['VT1', dateFormat, compte.VT1, CLTOS, FOS, libelleVT, montant.TTC]
+                        var VT2 = ['VT2', dateFormat, compte.VT2, '', FOS, libelleVT, '', montant.HT]
+                        var VT3 = ['VT3', dateFormat, compte.VT3, '', FOS, libelleVT, '', montant.TVA]
+                        rtn.push(VT1, VT2, VT3)
+                    }
+                    if (R.avoir.effectue && moment(R.avoir.date).isBetween(dateRange.$gte, dateRange.$lt)) {
+                        var montantAvoir = {
+                            HT: R.avoir.montant,
+                            TTC: _.round(R.avoir.montant * (1 + (e.tva / 100)), 2),
+                            TVA: _.round(R.avoir.montant * (e.tva / 100), 2)
+                        };
+                        if (R.avoir._type === 'REM_COM') {
+                            var compteVTA2 = '70900000'
+                        } else if (R.avoir._type === 'ERR_FACT') {
+                            var comptaVTA2 = compte.VT2;
+                        }
+                        if (R.avoir._type === 'TROP_PERCU') {
+                            var dateAvoir = moment(new Date(R.avoir.date)).format('L');
+                            var VTA1 = ['VTA1', dateAvoir, compte.VT1, CLTOS, AOS, libelleAV, '', montantAvoir.TTC]
+                            var VTA2 = ['VTA2', dateAvoir, compte.VT2, '', AOS, libelleAV, montantAvoir.HT, '']
+                            var VTA3 = ['VTA3', dateAvoir, compte.VT3, '', AOS, libelleAV, montantAvoir.TVA, '']
+                            rtn.push(VTA1, VTA2, VTA3)
+                        }
+                        var BQA1 = ['BQA1', dateAvoir, compte.VT1, CLTOS, 'numero cheque', libelleAV, montantAvoir.TTC, '']
+                        var BQA2 = ['BQA2', dateAvoir, compte.BQA2, '', 'numero cheque', '', libelleAV, '', montantAvoir.TTC]
                     }
                 });
+
                 if (req.query.download) {
                     res.csv(rtn)
-                } else {
+                } else if (req.query.json) {
                     resolve(rtn)
+                } else {
+                    res.send(tableify(rtn))
                 }
-            })
-        })
+            });
+        });
     };
 
     schema.statics.archivePaiement = function(req, res) {

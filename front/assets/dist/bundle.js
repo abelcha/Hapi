@@ -1285,7 +1285,7 @@ module.exports = {
     },
     typeAvoir: [{
         short_name: 'ERR_FACT',
-        long_name: 'Erreur de facturation'
+        long_name: 'Erreur de facturation',
     }, {
         short_name: 'REM_COM',
         long_name: 'Remise Commercial'
