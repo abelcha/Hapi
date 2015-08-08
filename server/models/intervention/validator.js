@@ -28,11 +28,11 @@ module.exports = function(schema) {
 
 
     schema.pre('save', function(next, b, c) {
+        this.sst = this.artisan.id
         if (isWorker) {
             return next();
         }
 
-        this.sst = this.artisan.id
         if (this.cb.number) {
             if (!creditcard.validate(this.cb.number))
                 return next(new Error('Numero de carte invalide'))

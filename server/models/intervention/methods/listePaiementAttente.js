@@ -6,15 +6,22 @@ module.exports = function(schema) {
         return new Promise(function(resolve, reject) {
 
             db.model('intervention').find(query)
-                .select('id compta.paiement artisan compta.paiement.mode')
+                .populate('sst')
+                .select('id client description compta.paiement date.intervention sst artisan fourniture')
                 .exec(function(err, docs) {
-                    docs = JSON.parse(JSON.stringify(docs))
-                    var rtn = _(docs).groupBy('artisan.id').values().map(function(e) {
+                    docs = _.clone(docs)
+                    var rtn = _(docs).groupBy('sst.id').values().map(function(e) {
                         return {
-                            list: e
+                            address: e[0].sst.address,
+                            nomSociete: e[0].sst.nomSociete,
+                            id: e[0].sst.id,
+                            representant: e[0].sst.representant,
+                            list: _.map(e, function(z) {
+                                z.sst = undefined
+                                return z;
+                            })
                         }
                     }).value()
-
                     resolve(rtn)
                 })
         });

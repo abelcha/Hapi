@@ -20,6 +20,7 @@
                 rtn.montant.legacy = _round(rtn.montant.legacy * tva, 2)
             }
             rtn.id = e.id
+            rtn.description = e.description;
             rtn.date = e.compta.paiement.date;
             rtn.login = e.compta.paiement.login
             rtn.checked = _includes(prevChecked, rtn.id)

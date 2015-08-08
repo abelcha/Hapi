@@ -246,10 +246,7 @@ module.exports = function(db) {
                 }]
             },
             paiement: {
-                mode: {
-                    type: String,
-                    default: 'CHQ'
-                },
+                mode: String,
                 tva: {
                     type: Number,
                     default: 0

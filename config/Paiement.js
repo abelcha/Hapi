@@ -11,10 +11,8 @@
          _this.inter = function() {
              return inter;
          }
-         if (!inter.tva) {
-             inter.tva = 20
-         }
-         var reglement = inter.compta.reglement
+
+         var reglement = inter.compta.reglement || {}
          var paiement = inter.compta.paiement
          if (!_get(inter, 'compta.paiement.pourcentage.deplacement')) {
              paiement.pourcentage = _clone(inter.artisan.pourcentage)
@@ -23,18 +21,20 @@
          reglement.avoir = _get(inter, 'compta.reglement.avoir', 0)
          _this.pourcentage = inter.compta.paiement.pourcentage;
          _this.fourniture = this.getFourniture(inter);
-         _this.prixHT = inter.compta.paiement.base
-         _this.montantHT = _this.prixHT - _this.fourniture.total
+         _this.base = inter.compta.paiement.base
+         _this.montantHT = _this.base - _this.fourniture.total
          _this.baseDeplacement = _this.prixDeplacement()
          _this.remunerationDeplacement = _this.applyCoeff(_this.baseDeplacement, _this.pourcentage.deplacement);
          _this.baseMaindOeuvre = _this.prixMaindOeuvre();
          _this.remunerationMaindOeuvre = _this.applyCoeff(_this.baseMaindOeuvre, _this.pourcentage.maindOeuvre);
-         _this.venteFourniture = _this.prixHT - (_this.baseDeplacement + _this.baseMaindOeuvre);
+         _this.venteFourniture = _this.base - (_this.baseDeplacement + _this.baseMaindOeuvre);
          _this.coutFourniture = _this.fourniture.total;
          _this.baseMargeFourniture = _this.venteFourniture - _this.coutFourniture;
          _this.remunerationMargeFourniture = _this.applyCoeff(_this.baseMargeFourniture, _this.pourcentage.fourniture);
          _this.remboursementFourniture = _this.fourniture.artisan;
          _this.montantTotal = _round(_this.remunerationDeplacement + _this.remunerationMargeFourniture + _this.remunerationMaindOeuvre + _this.remboursementFourniture, 2);
+         _this.montantTotalTVA = _round(_this.montantTotal * (paiement.tva / 100), 2);
+        _this.montantTotalTTC = _round(_this.montantTotal + _this.montantTotalTVA, 2);
      }
  }
 

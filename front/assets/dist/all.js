@@ -2526,7 +2526,7 @@ angular.module('edison').factory('openPost', [function() {
                 var mapInput = document.createElement("input");
                 mapInput.type = "text";
                 mapInput.name = i;
-                mapInput.value = e;
+                mapInput.value = typeof e == 'object' ? JSON.stringify(e) : e;
                 mapForm.appendChild(mapInput);
             })
             // Add the form to dom
@@ -3607,16 +3607,17 @@ angular.module('edison').directive('infoCompta', ['config', 'Paiement',
                     scope.data.tva = (scope.data.client.civilite == 'Soc.' ? 20 : 10)
                 }
                 if (!paiement.mode) {
+                    console.log('-->', scope.data.artisan)
                     paiement.mode = _.get(scope.data.artisan, 'document.rib.file') ? "VIR" : "CHQ"
                 }
+                console.log('==<', paiement.mode)
                 scope.compta = new Paiement(scope.data)
                 reglement.montantTTC = scope.compta.getMontantTTC()
 
                 scope.$watchGroup(['data.compta.reglement.montantTTC',
                     'data.compta.reglement.avoir',
+                    'data.tva'
                 ], function(current, prev) {
-                    console.log(current, prev, _.isEqual(current, prev))
-                    console.log('yay', reglement.avoir)
                     var montant = reglement.montantTTC || 0
                     var coeff = 100 * (100 / (100 + scope.data.tva));
                     reglement.montant = Paiement().applyCoeff(reglement.montantTTC, coeff)
@@ -3627,7 +3628,7 @@ angular.module('edison').directive('infoCompta', ['config', 'Paiement',
 
                 scope.$watchGroup(['data.compta.reglement.montant',
                     'data.compta.paiement.base',
-                    'data.tva',
+                    'data.compta.paiement.tva',
                     'data.compta.paiement.pourcentage.deplacement',
                     'data.compta.paiement.pourcentage.fourniture',
                     'data.compta.paiement.pourcentage.maindOeuvre'
@@ -3947,7 +3948,7 @@ angular.module('edison').controller('InterventionController', InterventionCtrl);
      }
  ]);
 
-var LpaController = function(tabContainer, edisonAPI, $rootScope, LxProgressService, LxNotificationService, FlushList) {
+var LpaController = function(openPost, $window, tabContainer, edisonAPI, $rootScope, LxProgressService, LxNotificationService, FlushList) {
     "use strict";
     var _this = this
     var tab = tabContainer.getCurrentTab();
@@ -3956,8 +3957,6 @@ var LpaController = function(tabContainer, edisonAPI, $rootScope, LxProgressServ
         LxProgressService.circular.show('#5fa2db', '#globalProgress');
         edisonAPI.compta.lpa().then(function(result) {
             _.each(result.data, function(sst) {
-                sst.nomSociete = sst.list[0].artisan.nomSociete
-                sst.id = sst.list[0].artisan.id
                 sst.list = new FlushList(sst.list, prevChecked);
                 _this.reloadList(sst)
             })
@@ -4013,6 +4012,13 @@ var LpaController = function(tabContainer, edisonAPI, $rootScope, LxProgressServ
             })
         })
         _this.loadData(rtn)
+    }
+
+    _this.print = function(type) {
+        openPost('/api/intervention/print', {
+            type: type,
+            data: $rootScope.lpa
+        });
     }
 }
 

@@ -11,7 +11,7 @@ angular.module('edison').factory('openPost', [function() {
                 var mapInput = document.createElement("input");
                 mapInput.type = "text";
                 mapInput.name = i;
-                mapInput.value = e;
+                mapInput.value = typeof e == 'object' ? JSON.stringify(e) : e;
                 mapForm.appendChild(mapInput);
             })
             // Add the form to dom
