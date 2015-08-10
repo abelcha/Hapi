@@ -27,6 +27,7 @@ redis.keys("kue*", function(err, re) {
     });
 });
 
+
 var jobs = kue.createQueue({
     prefix: 'kue',
     redis: envProd ? {
