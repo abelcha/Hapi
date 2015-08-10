@@ -29,8 +29,10 @@
             addProp(date, toDate(d.t_stamp_intervention), 'intervention');
 
 
-            if (d.date_edition_facture)
+            if (d.date_edition_facture) {
                 addProp(date, toDate(d.date_edition_facture), 'verification')
+                addProp(date, toDate(d.date_edition_facture), 'envoiFacture')
+            }
 
             /* CLIENT */
             var client = {
@@ -54,7 +56,7 @@
                 client.telephone.tel1 = d.tel1.replace(/[^0-9]/g, '');
             if (d.tel2)
                 client.telephone.tel2 = d.tel2.replace(/[^0-9]/g, '');
-
+                client.telephone.origine = d.numero_origine
             /* COMMENTS */
             var user = getUser(d.ajoute_par)
             user = user ? user.login : d.ajoute_par;
@@ -73,7 +75,8 @@
                 _id: d.id,
                 fourniture: [],
                 login: {
-                    ajout: user
+                    ajout: user,
+                    envoiFacture: d.facture_editee_par ||  undefined
                 },
                 comments: comments,
                 status: d.etat_intervention,
@@ -90,6 +93,7 @@
                     quantite: 1
                 })
             }
+
             if (d.devis && d.id > 13740) {
                 rtn.devisOrigine = d.id;
                 var devis = JSON.parse(d.devis.split('<br>').join(""));
@@ -163,6 +167,7 @@
 
             if (d.fact === true) {
                 rtn.facture = {
+                    relance: d.relance_facture,
                     payeur: d.type_facture,
                     email: d.mail_facture,
                     nom: d.nom_facture,
@@ -274,8 +279,8 @@
                 return cb(cache)
             var z = translateModel(data[i]);
             db.model('intervention')(z).save().then(function(resp) {
-                var x = db.model('intervention').cachify(resp)
-                cache.push(x)
+                //var x = db.model('intervention').cachify(resp)
+                //cache.push(x)
                 return lol(data, cache, i + 1, cb)
             });
         }
@@ -294,9 +299,10 @@
                         var cache = [];
                         lol(data, cache, 0, function(cache) {
                             console.log('STOP')
-                            redis.set("interventionList", JSON.stringify(cache), function() {
+                            resolve('ok')
+                            /*redis.set("interventionList", JSON.stringify(cache), function() {
                                 resolve('ok')
-                            })
+                            })*/
                         })
                     });
                 });

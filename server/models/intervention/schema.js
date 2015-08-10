@@ -64,7 +64,8 @@ module.exports = function(db) {
                     required: true
                 },
                 tel2: String,
-                tel3: String
+                tel3: String,
+                origine: String
 
             },
             address: {
@@ -93,6 +94,7 @@ module.exports = function(db) {
             location: [],
         },
         facture: {
+            relance: String,
             compte: String,
             payeur: String,
             nom: String,

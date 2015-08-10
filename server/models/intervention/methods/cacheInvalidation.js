@@ -3,6 +3,8 @@
 var ReadWriteLock = require('rwlock');
 var lock = new ReadWriteLock();
 var _ = require("lodash")
+var filtersFactory = requireLocal('config/FiltersFactory')("intervention")
+
 module.exports = function(schema) {
 
     var selectedFields = [
@@ -20,7 +22,8 @@ module.exports = function(schema) {
         'artisan',
         'reglementSurPlace',
         'date',
-        'compta',
+        'compta.reglement.recu',
+        'compta.paiement.effectue',
         "aDemarcher",
     ].join(' ');
 
@@ -51,13 +54,15 @@ module.exports = function(schema) {
 
     var translate = schema.statics.cachify = function(e) {
         var config = requireLocal('config/dataList')
-        var filtersFactory = requireLocal('config/FiltersFactory')("intervention")
         var d = requireLocal('config/dates.js')
-
+        console.log(e.id)
         if (e.status === "ENC" && Date.now() > (new Date(e.date.intervention)).getTime()) {
             e.status = 'AVR';
         }
-        var fltr = filtersFactory.filter(e);
+        var fltr = {}
+        if (e.id > 15000) {
+            fltr = filtersFactory.filter(e);
+        }
         var rtn = {
             f: !_.isEmpty(fltr) ? _.clone(fltr) : undefined,
             t: e.login.ajout,
@@ -107,6 +112,30 @@ module.exports = function(schema) {
                 }
             });
         });
+    }
+
+
+    schema.statics.filterReload = function(req, res) {
+        return new Promise(function(resolve) {
+            db.model('intervention').find().sort('-id').select(selectedFields).then(function(docs) {
+                console.log('docs')
+                redis.get("interventionList", function(err, reply) {
+                    console.log('redis')
+                    if (!err && reply) {
+                        var data = JSON.parse(reply);
+                        _.each(data, function(e) {
+                            var inter = _.find(docs, 'id', e.id)
+                            console.log(e.id)
+                            if (inter) {
+                                var fltr = filtersFactory.filter(inter);
+                                e.fltr = !_.isEmpty(fltr) ? _.clone(fltr) : undefined;
+                            }
+                        })
+                        redis.set("interventionList", JSON.stringify(data), resolve);
+                    }
+                });
+            });
+        })
     }
 
     schema.statics.cacheReload = function() {

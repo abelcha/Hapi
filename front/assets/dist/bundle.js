@@ -947,30 +947,35 @@ module.exports = {
             order: 0,
             short_name: 'ENC',
             long_name: 'En Cours',
+            old_name:'EN COURS',
             color: 'orange'
         },
         VRF: {
             order: 1,
             short_name: 'VRF',
             long_name: 'Vérifié',
+            old_name:'INTERVENU',
             color: 'green'
         },
         APR: {
             order: 2,
             short_name: 'APR',
             long_name: 'A Progr.',
+            old_name:'A PROGRAMMER',
             color: 'blue'
         },
         AVR: {
             order: 3,
             short_name: 'AVR',
             long_name: 'A Vérifier',
+            old_name:'EN COURS',
             color: 'brown darken-3'
         },
         ANN: {
             order: 4,
             short_name: 'ANN',
             long_name: 'Annuler',
+            old_name:'ANNULE',
             color: 'red'
         }
     },
@@ -1053,13 +1058,16 @@ module.exports = {
     }],
     modeDeReglements: [{
         short_name: 'CB',
-        long_name: 'Carte Bancaire'
+        long_name: 'Carte Bancaire',
+        old_name: 'cb'
     }, {
         short_name: 'CH',
-        long_name: 'Chèque'
+        long_name: 'Chèque',
+        old_name: 'cheque'
     }, {
         short_name: 'CA',
-        long_name: 'Espèces'
+        long_name: 'Espèces',
+        old_name: 'especes'
     }],
     tva: [{
         short_name: 10,
