@@ -20,6 +20,7 @@ if (envProd) {
     var redisUrl = url.parse(process.env.REDIS_URL);
 }
 
+
 redis.keys("kue*", function(err, re) {
     re.forEach(function(k) {
         redis.del(k);
