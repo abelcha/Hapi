@@ -21,6 +21,7 @@ if (envProd) {
 }
 
 
+
 redis.keys("kue*", function(err, re) {
     re.forEach(function(k) {
         redis.del(k);
