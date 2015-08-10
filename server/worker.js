@@ -17,7 +17,7 @@ global.sms = new edison.mobyt(key.mobyt.login,key.mobyt.pass);
 global.isWorker = true;
 
 if (envProd) {
-    var redisUrl = url.parse(process.env.REDIS_URL);
+    var redisUrl = url.parse(process.env.REDISTOGO_URL);
 }
 
 
