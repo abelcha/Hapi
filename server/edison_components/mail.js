@@ -83,7 +83,7 @@ Mail.prototype.sendContrat = function(artisan, buffer, email, text) {
         }).then(function(textOS) {
             _this.client.sendEmail({
                 From: "intervention@edison-services.fr",
-                To: email || "abel@chalier.me",
+                To: email ||  "abel@chalier.me",
                 Subject: "Contrat de sous-traitance",
                 HtmlBody: textOS,
                 Attachments: [{
@@ -100,41 +100,25 @@ Mail.prototype.sendContrat = function(artisan, buffer, email, text) {
     });
 }
 
-Mail.prototype.getAttachements = function(data, osFileBuffer, fileSupp) {
-    var attachements = [];
-    attachements.push({
-        Content: osFileBuffer.toString('base64'),
-        Name: "OS n°" + data.id + ".pdf",
-        ContentType: "application/pdf"
-    });
-    if (fileSupp !== null) {
-        attachements.push({
-            Content: fileSupp.data.toString('base64'),
-            Name: fileSupp.name,
-            ContentType: fileSupp.mimeType
-        });
-    }
-    return attachements;
-}
-
-Mail.prototype.sendOS = function(data, osFileBuffer, fileSupp, user) {
-    var _this = this;
-
+Mail.prototype.send = function(options) {
+    /*    {
+            From: "intervention@edison-services.fr",
+            To: destination || "abel@chalier.me",
+            Subject: title,
+            HtmlBody: body,
+            Attachments: files
+        }*/
+        var _this = this;
     return new Promise(function(resolve, reject) {
-        _this.renderTemplate('os', data).then(function(textOS) {
-            _this.client.sendEmail({
-                From: "intervention@edison-services.fr",
-                To: user.email || "abel@chalier.me",
-                Subject: "Ordre de service d'intervention No " + data.id,
-                HtmlBody: textOS,
-                Attachments: _this.getAttachements(data, osFileBuffer, fileSupp)
-            }, function(error, success) {
-                if (error)
-                    return reject(error);
-                console.log(error, success);
-                return resolve(success)
-            })
-        }, reject);
-    });
+
+        _this.client.sendEmail(options, function(err, success) {
+
+            console.log(err, success);
+            if (err)
+                return reject(err);
+            return resolve(success)
+        })
+    })
+
 };
 module.exports = Mail;

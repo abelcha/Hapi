@@ -1,17 +1,13 @@
 module.exports = function(app) {
-    var onSuccess = function(res) {
-        return function(result) {
-            if (res.headersSent === false)
-                return res.status(200).send(result);
-        }
+    var success = function(result) {
+        if (this.headersSent === false)
+            return this.status(200).send(result);
     }
 
-    var onFailure = function(res) {
-        return function(err) {
-            if (res.headersSent === false) {
-                console.log(err.stack || JSON.stringify(err, undefined, 1))
-                res.status(400).send(JSON.stringify(err, undefined, 1));
-            }
+    var die = function(err) {
+        if (this.headersSent === false) {
+            console.log(err.stack || JSON.stringify(err, undefined, 1))
+            this.status(400).send(JSON.stringify(err, undefined, 1));
         }
     }
 
@@ -28,20 +24,26 @@ module.exports = function(app) {
 
     var uniqueModel = function(model, method, req, res) {
         return new Promise(function(resolve, reject) {
-            if (model[method].findBefore === void(0) || model[method].findBefore !== false) {
-                var idIsNumber = model.schema.paths._id.instance === 'Number'
-                model.findOne({
-                    _id: idIsNumber ? (parseInt(req.params.id) || 0) : req.params.id
-                }).then(function(data) {
-                    if (!data)
-                        reject("Document Not Found");
-                    model[method].fn(data, req, res)
-                        .then(resolve, reject);
-                }, reject)
-            } else {
-                model[method].fn(req.params.id, req, res)
-                    .then(resolve, reject);
+            var idIsNumber = model.schema.paths._id.instance === 'Number'
+            var id = idIsNumber ? (parseInt(req.params.id) || 0) : req.params.id;
+            var promise = Promise.resolve(id)
+
+            if (model[method].findBefore === true) {
+                promise = model.findOne({
+                    _id: id
+                });
+            } 
+            if (model[method].populateArtisan === true) {
+                promise = promise.populate('sst');
             }
+            promise.then(function(data) {
+                if (!data)
+                    reject("Document Not Found");
+                var promise = model[method].fn(data, req, res);
+                if (promise && promise.then && typeof promise.then === 'function')
+                    promise.then(resolve, reject)
+            }, reject)
+
         })
     }
 
@@ -54,7 +56,7 @@ module.exports = function(app) {
         if (typeof model[method] === "undefined")
             return next();
         if (model[method].unique === true && model[method].method === req.method) {
-            uniqueModel(model, method, req, res).then(onSuccess(res), onFailure(res));
+            uniqueModel(model, method, req, res).then(success.bind(res), die.bind(res));
         } else {
             next();
         }
@@ -66,7 +68,7 @@ module.exports = function(app) {
         if (!model ||  typeof model[method] !== "function" || model[method].length !== 2) {
             return next();
         }
-        model[method](req, res).then(onSuccess(res), onFailure(res))
+        model[method](req, res).then(success.bind(res), die.bind(res))
     });
 
     app.all('/api/:model/:method', function(req, res, next) {
@@ -75,7 +77,7 @@ module.exports = function(app) {
         if (!model ||  typeof model[method] !== "function" || model[method].length !== 2) {
             return next();
         }
-        model[method](req, res).then(onSuccess(res), onFailure(res))
+        model[method](req, res).then(success.bind(res), die.bind(res))
     });
 
     app.all('/api/:model/:id', function(req, res, next) {
@@ -85,7 +87,7 @@ module.exports = function(app) {
         if (!model || !id)
             return next();
         id = id.match(/^[0-9]+$/i) ? parseInt(id) : id;
-        model.view(id, req, res).then(onSuccess(res), onFailure(res));
+        model.view(id, req, res).then(success.bind(res), die.bind(res));
     });
 
     app.get('/api/map/:method', function(req, res) {

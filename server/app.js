@@ -6,6 +6,10 @@ var port = (process.env.PORT || 8080);
 var path = require('path');
 require('pretty-error').start();
 
+express.response.pdf = function(obj, headers, status) {
+  this.header('Content-Type', 'application/pdf');
+  return this.send(obj, headers, status);
+};
 
 global.requireLocal = function(pth) {
     return require(process.cwd() + '/' + pth)

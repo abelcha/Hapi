@@ -146,15 +146,11 @@ angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', 'config', 
                 controller: function DialogController($scope, $mdDialog) {
 
                     $scope.xfiles = _.clone(files ||  []);
-                    if (data.produits && data.produits.length)
-                        $scope.xfiles.push({
-                            _id: 'devis',
-                            name: 'devis.pdf'
-                        })
                     $scope.smsText = text;
                     $scope.answer = function(cancel) {
                         $mdDialog.hide();
                         if (cancel === false) {
+                            console.log('-->', $scope.addedFile)
                             return cb($scope.smsText, $scope.addedFile);
                         }
                     }

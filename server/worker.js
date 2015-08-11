@@ -11,7 +11,12 @@ global.envDev = process.env.NODE_ENV === "developement";
 var dep = require(process.cwd() + '/server/loadDependencies');
 global.edison = dep.loadDir(process.cwd() + "/server/edison_components");
 global.redis = edison.redis();
+try {
 global.db = edison.db();
+    
+} catch(e) {
+    console.log("err")
+}
 var key = requireLocal('config/_keys');
 global.sms = new edison.mobyt(key.mobyt.login,key.mobyt.pass);
 global.isWorker = true;

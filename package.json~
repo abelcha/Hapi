@@ -28,7 +28,7 @@
     "express": "^4.13.3",
     "express-csv": "^0.6.0",
     "geocoder": "^0.2.2",
-    "html-entities": "^1.1.0",
+    "html-entities": "^1.1.2",
     "html-pdf": "^1.2.2",
     "htmlencode": "0.0.4",
     "jshint-stylish": "^2.0.1",

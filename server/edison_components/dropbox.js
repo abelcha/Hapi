@@ -1,6 +1,6 @@
 var uuid = require('uuid');
 var key = requireLocal('config/_keys');
-
+var _ = require('lodash')
 var Dropbox = function() {
     var DropboxAPI = require("dropbox")
     this.client = new DropboxAPI.Client({
@@ -31,8 +31,9 @@ Dropbox.prototype.download = function(file_id) {
             }, function(error, data) {
                 if (error)
                     return reject(error);
-                doc.data = data;
-                return resolve(doc);
+                var rtn = doc.toObject();
+                rtn.data = data;
+                return resolve(rtn);
             });
         }, reject)
     })

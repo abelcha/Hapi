@@ -758,7 +758,7 @@ module.exports = {
         title: 'Recap Artisan',
         action: "ouvrirRecapSST",
         hide: function(inter) {
-            return !inter.artisan || !inter.artisan.id
+            return !inter.artisan && !inter.artisan.id
         }
     }, {
         title: "Appel l'artisan",
@@ -767,20 +767,20 @@ module.exports = {
             fontWeight: 'bold'
         },
         hide: function(inter) {
-            return !inter.artisan || !inter.artisan.id
+            return !inter.artisan && !inter.artisan.id
         }
     }, {
         title: "SMS artisan",
         action: 'smsArtisan',
         hide: function(inter) {
-            return !inter.artisan || !inter.artisan.id
+            return !inter.artisan && !inter.artisan.id
         }
     }, {
         title: "Envoyer",
         action: 'envoi',
         hide: function(inter) {
             console.log(inter)
-            return inter.status == "VRF"  || !inter.artisan.id
+            return inter.status == "VRF"  || (!inter.artisan && !inter.artisan.id)
         }
     }, /*{
         title: "Vérifier",
@@ -1346,7 +1346,7 @@ module.exports = {
                 sms += this.prixAnnonce ? this.prixAnnonce + "€ HT. " : "Pas de prix annoncé. ";
                 sms += "\nMerci de prendre rdv avec le client au " + this.client.telephone.tel1;
                 sms += this.client.telephone.tel2 ? " ou au " + this.client.telephone.tel2 : ""
-                sms += '\nM.' + user.pseudo + " (0132123212)";
+                sms += '\nM.' + (user.pseudo ||  " Arnaud") + " (0132123212)";
                 return sms + ".\nEdison Services."
             },
             demande: function(user) {
@@ -1355,12 +1355,52 @@ module.exports = {
                     "Pourriez-vous vous rendre disponible ?\n" +
                     "Merci de nous contacter au plus vite au 09.72.42.30.00.\n" +
                     "Merci d'avance pour votre réponse.\n" +
-                    "\nM." + user.pseudo + " (0132123212)\n" +
+                    "\nM." + (user.pseudo ||  " Arnaud") + " (0132123212)\n" +
                     "Edison Services"
             }
         }
     },
     mail: {
+        intervention: {
+            os: function(_, inter, user, fileSupp) {
+
+                return "A l'attention de l’entreprise {{sst.nomSociete}}\n" +
+                    "\n" +
+                    "Monsieur {{sst.representant.nom}},\n" +
+                    "Suite à notre conversation téléphonique,\n" +
+                    "Nous vous prions de bien vouloir intervenir pour une intervention de {{categorie}} auprès de notre client :\n" +
+                    "\n" +
+                    "OS n°{{id}}\n" +
+                    "<strong>{{client.nom}} {{client.prenom}}\n" +
+                    "Tél. {{client.telephone.tel1}}\n" +
+                    "{{client.address.n}} {{client.address.r}}\n" +
+                    "{{client.address.cp}} {{client.address.v}}</strong>\n" +
+                    "L' intervention a été prévu pour le : <strong>{{datePlain}}</strong> \n" +
+                    
+                    "Vous devez dès réception de cet ordre de service, prendre contact immédiatement avec le client afin de confirmer la date et l'horaire de l’intervention.\n" +
+                    "\n" +
+                    "Les coordonnées et la description de l'intervention sont détaillées dans l'ordre de service que vous trouverez en pièce jointe. \n" +
+                    "<% if (devisOrigine) {%> <strong>Vous trouverez également le devis accepté et signé par notre client</strong> <%}%>" +
+                    "\n" +
+                    "Vous trouverez ci-joint :\n" +
+                    " • Ordre de service d’intervention n°{{id}}\n" +
+                    " • Un devis et une facture vierge à remplir obligatoirement sur place\n" +
+                    " • Manuel à suivre pour la réalisation des devis et factures\n" +
+                    " • Une description étape par étape de notre mode de fonctionnement\n" +
+                    "<strong>" + 
+                    "<% if (devisOrigine) {%> • Le devis n°{{devisOrigine}} accepté <%}%>\n" +
+                    "<% if (fileSupp) {%> • PJ supplémentaire <%}%>\n" +
+                    "</strong>" + 
+                    "\n" +
+                    "\n" +
+                    "\n" +
+                    "Vous pouvez joindre à tout moment le <strong>Service Intervention</strong> de Edison Services par téléphone au : <strong>09.72.42.30.00</strong>\n" +
+                    "\n"+
+                    "L’équipe <strong>Edison Services</strong>\n"
+               
+
+            }
+        },
         devis: {
             envoi: function(user) {
                 var config = require('./dataList.js')
@@ -1378,7 +1418,7 @@ module.exports = {
                     "Merci de revenir vers moi pour me tenir au courant de la suite que vous donnerez à ce devis.\n\n" +
                     "Je reste à votre disposition pour toutes les demandes de renseignement\n\n" +
                     "Cordialement, \n\n" +
-                    pseudo +
+                    (user.pseudo ||  " Arnaud") +
                     "\n<strong>Ligne direct : 09.72.42.30.00</strong>\n";
 
                 if (this.historique && this.historique.length === 1) {
@@ -1402,7 +1442,7 @@ module.exports = {
                         "Nous interviendrons dans les plus brefs délais.\n\n" +
                         "Je reste à votre entière disposition pour toutes les demandes de renseignement et les remarques que vous pourriez avoir.\n\n" +
                         "Cordialement, \n\n" +
-                        pseudo +
+                        (user.pseudo ||  " Arnaud") +
                         "\n<strong>Ligne direct : 09.72.42.30.00</strong>\n"
                 } else if (_.find(this.produits, function(e) {
                         return _.startsWith(e.ref, "BAL");
@@ -1414,7 +1454,7 @@ module.exports = {
                         "Sachez par ailleurs, que votre installation sera éligible aux règles de notre assurance RC PRO et notre assurance décennale.\n" +
                         "Dès votre accord, nous interviendrons rapidement.\n\n" +
                         "Meilleures salutations,\n\n" +
-                        pseudo +
+                        (user.pseudo ||  " Arnaud") +
                         "\n<strong>Ligne direct : 09.72.42.30.00</strong>\n\n";
                 } else {
                     var text = intro +
@@ -1423,7 +1463,7 @@ module.exports = {
                         "Je reste à votre entière disposition pour tous renseignements complémentaires ou remarques que vous pourriez avoir (technique/prix). \n\n" +
                         "Merci de me tenir au courant de la suite que vous donnerez à ce devis. \n\n" +
                         "Cordialement, \n\n" +
-                        pseudo + "\n<strong>Ligne direct : 09.72.42.30.00</strong>\n\n";
+                        (user.pseudo ||  " Arnaud") + "\n<strong>Ligne direct : 09.72.42.30.00</strong>\n\n";
                 }
                 return text;
             }
@@ -1572,9 +1612,9 @@ var baseIndexOf = require('../internal/baseIndexOf'),
 var nativeMax = Math.max;
 
 /**
- * Checks if `value` is in `collection` using
+ * Checks if `target` is in `collection` using
  * [`SameValueZero`](http://ecma-international.org/ecma-262/6.0/#sec-samevaluezero)
- * for equality comparisons. If `fromIndex` is negative, it is used as the offset
+ * for equality comparisons. If `fromIndex` is negative, it's used as the offset
  * from the end of `collection`.
  *
  * @static
@@ -3266,10 +3306,10 @@ var baseClone = require('../internal/baseClone'),
 
 /**
  * Creates a clone of `value`. If `isDeep` is `true` nested objects are cloned,
- * otherwise they are assigned by reference. If `customizer` is provided it is
+ * otherwise they are assigned by reference. If `customizer` is provided it's
  * invoked to produce the cloned values. If `customizer` returns `undefined`
  * cloning is handled by the method instead. The `customizer` is bound to
- * `thisArg` and invoked with two argument; (value [, index|key, object]).
+ * `thisArg` and invoked with up to three argument; (value [, index|key, object]).
  *
  * **Note:** This method is loosely based on the
  * [structured clone algorithm](http://www.w3.org/TR/html5/infrastructure.html#internal-structured-cloning-algorithm).
@@ -3325,7 +3365,7 @@ function clone(value, isDeep, customizer, thisArg) {
     isDeep = false;
   }
   return typeof customizer == 'function'
-    ? baseClone(value, isDeep, bindCallback(customizer, thisArg, 1))
+    ? baseClone(value, isDeep, bindCallback(customizer, thisArg, 3))
     : baseClone(value, isDeep);
 }
 
@@ -3443,7 +3483,7 @@ var objToString = objectProto.toString;
 function isFunction(value) {
   // The use of `Object#toString` avoids issues with the `typeof` operator
   // in older versions of Chrome and Safari which return 'function' for regexes
-  // and Safari 8 equivalents which return 'object' for typed array constructors.
+  // and Safari 8 which returns 'object' for typed array constructors.
   return isObject(value) && objToString.call(value) == funcTag;
 }
 
@@ -3698,7 +3738,7 @@ var baseGet = require('../internal/baseGet'),
  * // => 'default'
  */
 function get(object, path, defaultValue) {
-  var result = object == null ? undefined : baseGet(object, toPath(path), path + '');
+  var result = object == null ? undefined : baseGet(object, toPath(path), (path + ''));
   return result === undefined ? defaultValue : result;
 }
 

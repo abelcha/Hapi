@@ -1,8 +1,10 @@
 <md-dialog aria-label="Mango (Fruit)" style="  width: 260px;height: 500px;">
     <md-dialog-content class="sticky-container" style="height: 100%">
         <div style="padding:15px;height:70%">
-                <select ng-if="xfiles && xfiles.length" style="width:100%" class="form-control"  ng-model="addedFile" ng-options="f._id as f.name for f in xfiles" >
+                <select ng-show="xfiles && xfiles.length" style="width:100%" class="form-control"  ng-model="addedFile" ng-options="f._id as f.name for f in xfiles" >
                 </select>
+                <br>
+                <pre ng-if="addedFile">{{addedFile}}</pre>
             <br>
                 <textarea style="height:100%" class="form-control" ng-model="smsText" columns="1" ></textarea>
         </div>

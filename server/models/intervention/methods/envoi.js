@@ -1,81 +1,144 @@
 module.exports = function(schema) {
+    var _ = require('lodash')
     var PDF = require('edsx-mail');
+    var mime = require('mime')
+    var moment = require('moment');
+    var template = requireLocal('config/textTemplate');
     schema.statics.os = {
         unique: true,
         findBefore: true,
         method: 'GET',
+        populateArtisan: true,
         fn: function(inter, req, res) {
-            try {
-            var pdf = PDF('intervention', inter).getOS(function(err, buff) {
-                res.contentType('application/pdf');
-                res.send(buff)
+            return new Promise(function(resolve, reject) {
+                var pdf = PDF('intervention', inter).getOS(function(err, buff) {
+                    if (req && res) {
+                        // res.contentType('application/pdf');
+                        res.pdf(buff)
+                    }
+                    resolve({
+                        data: buff,
+                        extension: '.pdf',
+                        name: 'OS n°' + inter.id
+                    })
+                })
             })
-            } catch(e) {
-                console.log('-->', e.stack)
-            }
         }
     }
+
+    var getFileOS = schema.statics.os.fn;
+
+    var sendSMS = function(text, inter, user) {
+        return db.model('sms').send({
+            to: user.portable ||  '0633138868',
+            text: "Message destiné à " + inter.sst.nomSociete + "(" + inter.sst.telephone.tel1 + ')\n' + text,
+            login: user.login,
+            origin: inter.id,
+            link: inter.sst.id,
+            type: 'OS'
+        })
+
+    }
+
+    var envoi = function(inter, login) {
+        inter.status = "ENC";
+        inter.date.envoi = new Date();
+        inter.login.envoi = login;
+        return inter.save()
+    }
+
+    var getStaticFile = function(req, res) {
+        var fs = require('fs');
+        var file = this
+        return new Promise(function(resolve, reject) {
+            var path = [process.cwd(), 'front', 'assets', 'pdf', (file || 'manuelV1') + '.pdf'].join('/')
+            fs.readFile(path, function(err, buffer) {
+                if (err)
+                    return reject(err);
+                if (req && res) {
+                    return res.pdf(buffer)
+                }
+                return resolve({
+                    data: buffer,
+                    name: String(file),
+                    extension: '.pdf'
+                });
+            })
+        })
+    }
+
+    schema.statics.manuel = getStaticFile.bind('manuelV1')
+    schema.statics.notice = getStaticFile.bind('noticeV1')
 
     schema.statics.envoi = {
         unique: true,
         findBefore: true,
+        populateArtisan: true,
         method: 'POST',
         fn: function(inter, req, res) {
+            //return res.send('ok')
+            var _this = this;
 
-            var getSuppFile = function(file_id) {
-                if (file_id === 'devis') {
-                    return db.model('intervention').getDevisFile({
+            return new Promise(function(resolve, reject) {
+
+                console.time('envoi')
+                if (!inter ||  !inter.sst)
+                    return reject('pas de SST')
+                if (!req.body.sms)
+                    return reject("Impossible de trouver l'artisan");
+                var filesPromises = [
+                    getFileOS(inter),
+                    getStaticFile.bind('manuelV1')(),
+                    getStaticFile.bind('noticeV1')()
+                ]
+                if (inter.devisOrigine) {
+                    filesPromises.push(db.model('intervention').getDevisFile({
                         data: inter,
                         html: false,
                         obj: true,
-                    })
-                } else if (file_id) {
-                    return document.download(file_id);
-                } else {
-                    return Promise.resolve(null)
+                    }))
                 }
-            }
+                if (req.body.file) {
+                    filesPromises.push(document.download(req.body.file))
+                }
+                /*
+                                        'ok', //*/
+                Promise.all(filesPromises).then(function(result) {
+                        console.log('result')
+                        var files = _(result).compact().map(function(file) {
+                            return {
+                                ContentType: file.mimeType ||  mime.lookup(file.extension),
+                                Name: file.name ||  ['fichier', file.extension].join('.'),
+                                Content: file.data.toString('base64')
+                            }
+                        }).value();
+
+                        inter.fileSupp = req.body.fileSupp;
+                        inter.datePlain = moment(new Date(inter.date.intervention)).format('DD/MM/YYYY à HH:mm:ss')
+                        var text = _.template(template.mail.intervention.os())(inter).replaceAll('\n', '<br>')
+                        var mailOptions = {
+                            From: "intervention@edison-services.fr",
+                            To: req.session.email || "abel@chalier.me",
+                            Subject: "Ordre de service d'intervention N°" + inter.id,
+                            HtmlBody: text,
+                            Attachments: files
+                        }
+
+                        var validationPromises = [
+                            mail.send(mailOptions), sendSMS(req.body.sms, inter, req.session),
+                            envoi(inter, req.session.login)
+                        ]
+                        Promise.all(validationPromises).then(function(e) {
+                            console.timeEnd('envoi')
+                            resolve('ok')
+                        }, function(err) {
+                            console.log(err);
+                            reject("erreur, l'envoi a échoué")
+                        })
+                    },reject)
 
 
-            var sendSMS = function(text, inter, user) {
-                return db.model('sms').send({
-                    to: user.portable ||  '0633138868',
-                    text: "Message destiné à " + inter.artisan.nomSociete + "(" + inter.artisan.telephone.tel1 + ')\n' + text,
-                    login: user.login,
-                    origin: inter.id,
-                    link: inter.artisan.id,
-                    type: 'OS'
-                })
-
-            }
-
-            return new Promise(function(resolve, reject) {
-                if (!req.body.sms)
-                    return reject("Pas de text SMS");
-                if (!inter.artisan ||  !inter.artisan.id)
-                    return reject("Aucun artisan selectionné");
-                db.model('artisan').findOne({
-                    id: inter.artisan.id
-                }).exec(function(err, artisan) {
-                    if (err ||  !artisan)
-                        return reject("Impossible de trouver l'artisan");
-                    var doc = inter.toObject();
-                    doc.artisan = artisan;
-                    getSuppFile(req.body.file).then(function(result) {
-                        var suppFile = result || null;
-                        db.model('intervention').getOSFile(doc).then(function(osFileBuffer) {
-                            mail.sendOS(doc, osFileBuffer, suppFile, req.session).then(function(mail) {
-                                sendSMS(req.body.sms, doc, req.session).then(function(data) {
-                                    inter.status = "ENC";
-                                    inter.date.envoi = new Date();
-                                    inter.login.envoi = req.session.login;
-                                    inter.save().then(resolve, reject);
-                                }, reject)
-                            }, reject)
-                        }, reject)
-                    }, reject)
-                })
-            });
+            })
         }
     }
 }

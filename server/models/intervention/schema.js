@@ -338,7 +338,7 @@ module.exports = function(db) {
             ref: 'sms',
             type: String
         },
-        files: [{
+        file: [{
             name: String,
             mimeType: String,
             origin: String, //SCAN, UPLOAD, AUTO
