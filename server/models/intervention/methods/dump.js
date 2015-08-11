@@ -318,7 +318,7 @@
 
         var dumpOne = function(id) {
             return new Promise(function(resolve, reject) {
-                request.get('http://electricien13003.com/alvin/tt.php?id=' + id, function(err, resp, body) {
+                request.get(key.alvin.url + "/dumpIntervention.php?id=" + id + "&key=" + key.alvin.pass, function(err, resp, body) {
                     if (err || resp.statusCode !== 200 || !body || body == 'null') {
                         return reject('nope')
                     }

@@ -63,6 +63,7 @@ module.exports = function(schema) {
         if (e.id > 15000) {
             fltr = filtersFactory.filter(e);
         }
+        try {
         var rtn = {
             f: !_.isEmpty(fltr) ? _.clone(fltr) : undefined,
             t: e.login.ajout,
@@ -80,6 +81,9 @@ module.exports = function(schema) {
             ad: e.client.address.cp + ', ' + e.client.address.v,
             dm: e.login.demarchage || undefined
         };
+    } catch(e) {
+        console.log('--->', e)
+    }
         fltr = null;
         return rtn;
     }
@@ -118,9 +122,7 @@ module.exports = function(schema) {
     schema.statics.filterReload = function(req, res) {
         return new Promise(function(resolve) {
             db.model('intervention').find().sort('-id').select(selectedFields).then(function(docs) {
-                console.log('docs')
                 redis.get("interventionList", function(err, reply) {
-                    console.log('redis')
                     if (!err && reply) {
                         var data = JSON.parse(reply);
                         _.each(data, function(e) {
@@ -138,9 +140,11 @@ module.exports = function(schema) {
         })
     }
 
-    schema.statics.cacheReload = function() {
+    schema.statics.cacheReload = function(req, res) {
         return new Promise(function(resolve, reject) {
             console.log('cachereload')
+            try {
+
             db.model('intervention').find({
                 id: {
                     $gt: 10000
@@ -156,6 +160,9 @@ module.exports = function(schema) {
                     resolve(result);
                 })
             }, reject);
+        }catch(e) {
+            console.log(e)
+        }
         });
     }
 }
