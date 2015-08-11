@@ -779,9 +779,10 @@ module.exports = {
         title: "Envoyer",
         action: 'envoi',
         hide: function(inter) {
-            return (inter.status != "APR" &&  inter.status !== "ANN") || !inter.artisan
+            console.log(inter)
+            return inter.status == "VRF"  || !inter.artisan.id
         }
-    },/* {
+    }, /*{
         title: "Vérifier",
         action: 'verification',
         hide: function(inter) {

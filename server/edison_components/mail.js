@@ -28,22 +28,7 @@ Mail.prototype.readFilesOS = function() {
 
 }
 
-Mail.prototype.getAttachements = function(osFileBuffer, fileSupp) {
-    var attachements = [];
-    attachements.push({
-        Content: osFileBuffer.toString('base64'),
-        Name: "Ordre de service.pdf",
-        ContentType: "application/pdf"
-    });
-    if (fileSupp !== null) {
-        attachements.push({
-            Content: fileSupp.data.toString('base64'),
-            Name: fileSupp.name,
-            ContentType: fileSupp.mimeType
-        });
-    }
-    return attachements;
-}
+
 
 Mail.prototype.sendFacture = function(options) {
     //title, htmlTemplate, mailText
@@ -115,6 +100,23 @@ Mail.prototype.sendContrat = function(artisan, buffer, email, text) {
     });
 }
 
+Mail.prototype.getAttachements = function(data, osFileBuffer, fileSupp) {
+    var attachements = [];
+    attachements.push({
+        Content: osFileBuffer.toString('base64'),
+        Name: "OS n°" + data.id + ".pdf",
+        ContentType: "application/pdf"
+    });
+    if (fileSupp !== null) {
+        attachements.push({
+            Content: fileSupp.data.toString('base64'),
+            Name: fileSupp.name,
+            ContentType: fileSupp.mimeType
+        });
+    }
+    return attachements;
+}
+
 Mail.prototype.sendOS = function(data, osFileBuffer, fileSupp, user) {
     var _this = this;
 
@@ -125,10 +127,11 @@ Mail.prototype.sendOS = function(data, osFileBuffer, fileSupp, user) {
                 To: user.email || "abel@chalier.me",
                 Subject: "Ordre de service d'intervention No " + data.id,
                 HtmlBody: textOS,
-                Attachments: _this.getAttachements(osFileBuffer, fileSupp)
+                Attachments: _this.getAttachements(data, osFileBuffer, fileSupp)
             }, function(error, success) {
                 if (error)
                     return reject(error);
+                console.log(error, success);
                 return resolve(success)
             })
         }, reject);

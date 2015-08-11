@@ -290,6 +290,7 @@
                 //var x = db.model('intervention').cachify(resp)
                 //cache.push(x)
                 if (err) {
+                    console.log('--->', data[i].id)
                     console.log(err);
                 }
 

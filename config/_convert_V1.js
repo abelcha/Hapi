@@ -53,7 +53,7 @@ var V1 = function(d, devis, legacy) {
     x.prix_ht_final = d.prixFinal;
     x.id_sst_selectionne = _.get(d, 'artisan.id', 0);
     var login = _.find(users, 'login', d.login.ajout)
-    x.ajoute_par = _.get(login, 'oldLogin', d.login.ajout)
+    x.ajoute_par = login && login.oldLogin ? login.oldLogin : d.login.ajout;
         //0 => pas de facture, 1 => facture a faire, 2 => facture effectué, 3 => facture payé (reglement recu)
     if (!d.reglementSurPlace) {
         x.reglement_sur_place = 0
@@ -148,6 +148,7 @@ V1.prototype.send = function(cb) {
         url: 'http://electricien13003.com/alvin/postData.php',
         qs: this.data
     }, function(err, resp, body) {
+    	//console.log('-->', err, body)
         if (!err && resp.statusCode === 200) {
             console.log(body)
             cb(null, body)

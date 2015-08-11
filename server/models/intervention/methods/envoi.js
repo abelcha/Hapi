@@ -1,4 +1,20 @@
 module.exports = function(schema) {
+    var PDF = require('edsx-mail');
+    schema.statics.os = {
+        unique: true,
+        findBefore: true,
+        method: 'GET',
+        fn: function(inter, req, res) {
+            try {
+            var pdf = PDF('intervention', inter).getOS(function(err, buff) {
+                res.contentType('application/pdf');
+                res.send(buff)
+            })
+            } catch(e) {
+                console.log('-->', e.stack)
+            }
+        }
+    }
 
     schema.statics.envoi = {
         unique: true,

@@ -3,10 +3,10 @@ var Timer = module.exports = function() {
 
     this.emitter = new CronEmitter();
 
-    //this.emitter.add("*/10 * * * *", "every 10 minutes");
-    //this.emitter.add("*/120 * * * *", "every hour");
-    //this.emitter.add("*/5 * * * *", "every 5 minutes");
-    //this.emitter.add("*/2 * * * *", "every minute");
+    this.emitter.add("*/10 * * * *", "every 10 minutes");
+    this.emitter.add("*/120 * * * *", "every hour");
+    this.emitter.add("*/5 * * * *", "every 5 minutes");
+    this.emitter.add("*/2 * * * *", "every minute");
 
     /*    this.emitter.on("every 10 minutes", function() {
             edison.worker.createJob({
@@ -28,13 +28,13 @@ var Timer = module.exports = function() {
             name: 'db',
             model: 'intervention',
             method: 'workerDump',
-            arg: 23000
+            arg: 25000
         }).then(function() {
             edison.worker.createJob({
                 name: 'db',
                 model: 'devis',
                 method: 'workerDump',
-                arg: 23000
+                arg: 25000
             })
         })
     })

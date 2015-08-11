@@ -2,7 +2,7 @@ global.requireLocal = function(pth) {
     return require(process.cwd() + '/' + pth)
 }
 var request = require('request');
-var V1 = require('config/_convert_V1.js')
+var V1 = require('./config/_convert_V1.js')
 global.db = require(process.cwd() + '/server/edison_components/db.js')()
 var _ = require('lodash');
 
@@ -22,13 +22,10 @@ request.get('http://electricien13003.com/alvin/tt.php?id=' + id, function(err, r
         } catch (e) {
             console.log('--->', e.stack)
         }
-        //v1.compare()
-        try {
 
         v1.send(function(resp) {
             process.exit()
         });
-
        // process.exit()
     })
 })
