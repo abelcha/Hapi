@@ -6,6 +6,7 @@
     var Entities = require('html-entities').XmlEntities;
     var _ = require('lodash');
     var async = require('async')
+    var V1 = requireLocal('config/_convert_V1');
     var entities = new Entities();
 
     module.exports = function(schema) {
@@ -56,8 +57,8 @@
                 client.telephone.tel1 = d.tel1.replace(/[^0-9]/g, '');
             if (d.tel2)
                 client.telephone.tel2 = d.tel2.replace(/[^0-9]/g, '');
-                client.telephone.origine = d.numero_origine
-            /* COMMENTS */
+            client.telephone.origine = d.numero_origine
+                /* COMMENTS */
             var user = getUser(d.ajoute_par)
             user = user ? user.login : d.ajoute_par;
             var comments = [];
@@ -165,14 +166,14 @@
             rtn.prixFinal = d.comptaPrixFinal || d.prix_ht_final || d.prix_ht_annonce || 0;
 
 
-            if (d.fact === true) {
+            if (d.nom_facture) {
                 rtn.facture = {
                     relance: d.relance_facture,
                     payeur: d.type_facture,
                     email: d.mail_facture,
                     nom: d.nom_facture,
                     prenom: d.prenom_facture,
-                    telephone: d.tel_facture,
+                    tel: d.tel_facture,
                     address: {
                         n: d.numero_facture || "0",
                         r: d.adresse_facture,
@@ -189,7 +190,11 @@
             //cout_fourniture_ht -> total fourniture
             //fourniture_avancee -> avance par le sst
             //return null;
-            rtn.compta = {}
+            rtn.compta = {
+                    paiement: {
+                        dette: d.etat_reglement === "DETTE"
+                    }
+                }
                 //paiement effectue
             if (d.comptaPrixFinal) {
                 rtn.compta = {
@@ -199,15 +204,14 @@
                         mode: d.pVirement == "0" ? "CHQ" : "VIR",
                         base: d.comptaPrixFinal,
                         montant: d.comptaMontantFinal,
-                        dette: d.etat_reglement === "DETTE",
-                        ready: rtn.id > 25000,
-                        effectue: rtn.id <= 25000,
+                        ready: false /*rtn.id > 25000*/ ,
+                        effectue: true /*rtn.id <= 25000*/ ,
                         pourcentage: {
                             deplacement: d.pDeplacement,
                             maindOeuvre: d.pMaindOeuvre,
                             fourniture: d.pFourniture
                         },
-                        historique: rtn.id > 25000 ? [] : [{
+                        historique: /* rtn.id > 25000 ? [] :*/ [{
                             tva: d.comptaTVA || 0,
                             dateFlush: toDate(d.date_paiement_sst),
                             dateAjout: toDate(d.date_paiement_sst),
@@ -287,8 +291,6 @@
 
         var execDump = function(limit) {
             return new Promise(function(resolve, reject) {
-                var inters = [];
-                var t = Date.now();
                 db.model('intervention').remove({
                     id: {
                         $gt: limit
@@ -300,22 +302,45 @@
                         lol(data, cache, 0, function(cache) {
                             console.log('STOP')
                             resolve('ok')
-                            /*redis.set("interventionList", JSON.stringify(cache), function() {
-                                resolve('ok')
-                            })*/
+                                /*redis.set("interventionList", JSON.stringify(cache), function() {
+                                    resolve('ok')
+                                })*/
                         })
                     });
                 });
             });
         }
 
+
         schema.statics.workerDump = function(limit) {
             return execDump(limit)
         }
 
+        var dumpOne = function(id) {
+            return new Promise(function(resolve, reject) {
+                request.get('http://electricien13003.com/alvin/tt.php?id=' + id, function(err, resp, body) {
+                    if (err || resp.statusCode !== 200 || !body || body == 'null') {
+                        return reject('nope')
+                    }
+                    db.model('intervention').update({
+                        id: id
+                    }, translateModel(JSON.parse(body)), {
+                        upsert: true
+                    }).exec(function(err, resp) {
+                        if (err)
+                            reject(err);
+                        console.log(resp)
+                        resolve('ok')
+                    })
+                });
+            })
+        }
+
         schema.statics.dump = function(req, res) {
             var limit = req.query.limit ||  0;
-            if ((envDev || envProd) && !isWorker) {
+            if (req.query.id) {
+                return dumpOne(req.query.id)
+            } else if ((envDev || envProd) && !isWorker) {
                 return edison.worker.createJob({
                     name: 'db',
                     model: 'intervention',

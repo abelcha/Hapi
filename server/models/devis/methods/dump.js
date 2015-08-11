@@ -48,11 +48,12 @@
             console.log(d.id, d.tel1)
             if (d.tel1 && d.tel1.length)
                 client.telephone.tel1 = d.tel1.replace(/[^0-9]/g, '');
-            else 
+            else
                 client.telephone.tel1 = '0101010101'
             if (d.tel2)
                 client.telephone.tel2 = d.tel2.replace(/[^0-9]/g, '');
-            /* COMMENTS */
+            client.telephone.appel = d.numero_appel ||  undefined
+                /* COMMENTS */
             var user = getUser(d.ajoute_par)
             user = user ? user.login : d.ajoute_par;
             var rtn = {
@@ -112,7 +113,7 @@
 
             /* INFO */
             rtn.categorie = d.categorie;
-
+            rtn.sms = d.id_sms;
             return rtn;
         }
 

@@ -42,11 +42,7 @@ module.exports = function(db) {
             text: String,
             date: Date
         }],
-        historique: [{
-            date: Date,
-            login: String,
-            data: {},
-        }],
+        historique: [],
         client: { //
             civilite: {
                 type: String,
@@ -65,8 +61,8 @@ module.exports = function(db) {
                 },
                 tel2: String,
                 tel3: String,
-                origine: String
-
+                origine: String,
+                appel: String,
             },
             address: {
                 n: {
@@ -337,6 +333,10 @@ module.exports = function(db) {
                 fournitureErrone: Boolean,
 
             },
+        },
+        sms: {
+            ref: 'sms',
+            type: String
         },
         files: [{
             name: String,
