@@ -54,8 +54,8 @@ module.exports = function(schema) {
                 }).then(function(sst) {
                     sst.save().then();
                 })
-                db.model('intervention').cacheActualise(doc);
                 redis.del('interventionStats');
+                db.model('intervention').cacheActualise(doc);
             }
         }
     })

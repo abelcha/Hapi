@@ -70,8 +70,12 @@ module.exports = function(schema) {
     schema.statics.stats = function(req, res) {
         return new Promise(function(resolve, reject) {
             redis.get('interventionStats', function(err, resp) {
-                if (!err && resp && !_.get(req, 'query.cache'))
+                if (!err && resp && !_.get(req, 'query.cache')) {
+                    console.log('cache');
                     return resolve(resp)
+                }
+                    console.log('nocache');
+
                 var allFilters = {};
                 mergeFilters(allFilters, 'intervention')
                 mergeFilters(allFilters, 'devis')

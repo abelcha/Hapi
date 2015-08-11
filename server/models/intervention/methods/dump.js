@@ -341,6 +341,7 @@
                     }).exec(function(err, resp, c) {
                         if (err)
                             return reject(err);
+                        resolve(resp);
                         db.model('intervention').findOne({
                             id: id
                         }).then(function(doc) {
