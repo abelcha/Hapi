@@ -147,7 +147,7 @@ module.exports = function(schema) {
 
             db.model('intervention').find({
                 id: {
-                    $gt: 10000
+                    $gt: req.query.limit || 10000
                 }
             }).sort('-id').select(selectedFields).then(function(docs) {
                 console.log('yay memory')
