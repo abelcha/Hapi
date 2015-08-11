@@ -283,8 +283,8 @@
                 return cb(cache)
             var z = translateModel(data[i]);
             db.model('intervention')(z).save().then(function(resp) {
-                //var x = db.model('intervention').cachify(resp)
-                //cache.push(x)
+                var x = db.model('intervention').cachify(resp)
+                cache.push(x)
                 return lol(data, cache, i + 1, cb)
             });
         }
@@ -301,10 +301,9 @@
                         var cache = [];
                         lol(data, cache, 0, function(cache) {
                             console.log('STOP')
-                            resolve('ok')
-                                /*redis.set("interventionList", JSON.stringify(cache), function() {
-                                    resolve('ok')
-                                })*/
+                            redis.set("interventionList", JSON.stringify(cache), function() {
+                                resolve('ok')
+                            })
                         })
                     });
                 });
