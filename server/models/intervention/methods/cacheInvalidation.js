@@ -141,7 +141,11 @@ module.exports = function(schema) {
     schema.statics.cacheReload = function() {
         return new Promise(function(resolve, reject) {
             console.log('cachereload')
-            db.model('intervention').find().sort('-id').select(selectedFields).then(function(docs) {
+            db.model('intervention').find({
+                id: {
+                    $gt: 10000
+                }
+            }).sort('-id').select(selectedFields).then(function(docs) {
                 console.log('yay memory')
                 var result = [];
                 for (var i = 0; i < docs.length - 1; i++) {
