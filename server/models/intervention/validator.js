@@ -46,6 +46,9 @@ module.exports = function(schema) {
 
     });
 
+
+
+
     schema.post('save', function(doc) {
         if (!isWorker) {
             if (doc.artisan.id) {
