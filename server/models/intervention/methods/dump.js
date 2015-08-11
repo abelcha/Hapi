@@ -55,6 +55,9 @@
             client.telephone = {};
             if (d.tel1)
                 client.telephone.tel1 = d.tel1.replace(/[^0-9]/g, '');
+             else {
+                client.telephone.tel1 = '0633138868'
+             }
             if (d.tel2)
                 client.telephone.tel2 = d.tel2.replace(/[^0-9]/g, '');
             client.telephone.origine = d.numero_origine
@@ -277,28 +280,36 @@
         }
 
         var lol = function(data, cache, i, cb) {
-            if (i % 100 == 0)
-                console.log(_.round(i / data.length * 100, 2), "%")
-            if (i === data.length - 1)
-                return cb(cache)
-            var z = translateModel(data[i]);
-            db.model('intervention')(z).save().then(function(resp) {
-                //var x = db.model('intervention').cachify(resp)
-                //cache.push(x)
-                return lol(data, cache, i + 1, cb)
-            });
+                if (i % 100 == 0)
+                    console.log(_.round(i / data.length * 100, 2), "%")
+                if (i === data.length - 1)
+                    return cb(cache)
+                var z = translateModel(data[i]);
+
+                db.model('intervention')(z).save(function(err, resp) {
+                    //var x = db.model('intervention').cachify(resp)
+                    //cache.push(x)
+                    if (err) {
+                        console.log(err);
+                    }
+                    
+                    return lol(data, cache, i + 1, cb)
+                })
         }
 
         var execDump = function(limit) {
             return new Promise(function(resolve, reject) {
+
                 db.model('intervention').remove({
                     id: {
                         $gt: limit
                     }
                 }, function() {
+                    console.log('yay')
                     request(key.alvin.url + "/dumpIntervention.php?limit=" + limit + "&key=" + key.alvin.pass, function(err, rest, body) {
                         var data = JSON.parse(body);
                         var cache = [];
+                        console.log('uau')
                         lol(data, cache, 0, function(cache) {
                             console.log('STOP')
                             resolve('ok')
@@ -308,6 +319,8 @@
                         })
                     });
                 });
+
+
             });
         }
 
