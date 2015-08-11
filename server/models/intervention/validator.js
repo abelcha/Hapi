@@ -49,19 +49,18 @@ module.exports = function(schema) {
     schema.post('save', function(doc) {
         if (!isWorker) {
             if (doc.artisan.id) {
-                console.log('artisan reload')
                 db.model('artisan').findOne({
                     id: doc.artisan.id
                 }).then(function(sst) {
                     sst.save().then();
                 })
-                redis.del('interventionStats');
-                db.model('intervention').cacheActualise(doc);
             }
+            redis.del('interventionStats');
+            db.model('intervention').cacheActualise(doc);
             if (envProd) {
                 var v1 = new V1(doc);
                 v1.send(function(resp) {
-                    console.log('-->', resp)
+                    console.log('=====-->', resp)
                 });
             }
         }

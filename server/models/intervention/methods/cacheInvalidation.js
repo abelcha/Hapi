@@ -89,6 +89,7 @@ module.exports = function(schema) {
     }
     schema.statics.translate = translate;
     schema.statics.cacheActualise = function(doc) {
+        console.log('cacheActualise')
         lock.writeLock(function(release) {
             redis.get("interventionList", function(err, reply) {
                 if (!err && reply) {
