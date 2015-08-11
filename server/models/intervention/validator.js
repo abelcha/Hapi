@@ -1,6 +1,7 @@
 module.exports = function(schema) {
     var creditcard = require('creditcard');
     var key = requireLocal('config/_keys');
+    var V1 = requireLocal('config/_convert_V1');
     var encryptor = require('simple-encryptor')(key.salt);
     var _ = require('lodash')
 
@@ -56,6 +57,12 @@ module.exports = function(schema) {
                 })
                 redis.del('interventionStats');
                 db.model('intervention').cacheActualise(doc);
+            }
+            if (envProd) {
+                var v1 = new V1(doc);
+                v1.send(function(resp) {
+                    console.log('-->', resp)
+                });
             }
         }
     })
