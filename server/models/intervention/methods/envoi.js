@@ -103,39 +103,44 @@ module.exports = function(schema) {
                 }
                 /*
                                         'ok', //*/
+                console.time('getFiles')
                 Promise.all(filesPromises).then(function(result) {
-                        console.log('result')
-                        var files = _(result).compact().map(function(file) {
-                            return {
-                                ContentType: file.mimeType ||  mime.lookup(file.extension),
-                                Name: file.name ||  ['fichier', file.extension].join('.'),
-                                Content: file.data.toString('base64')
-                            }
-                        }).value();
+                    console.timeEnd('getFiles')
 
-                        inter.fileSupp = req.body.fileSupp;
-                        inter.datePlain = moment(new Date(inter.date.intervention)).format('DD/MM/YYYY à HH:mm:ss')
-                        var text = _.template(template.mail.intervention.os())(inter).replaceAll('\n', '<br>')
-                        var mailOptions = {
-                            From: "intervention@edison-services.fr",
-                            To: req.session.email || "abel@chalier.me",
-                            Subject: "Ordre de service d'intervention N°" + inter.id,
-                            HtmlBody: text,
-                            Attachments: files
+                    var files = _(result).compact().map(function(file) {
+                        return {
+                            ContentType: file.mimeType ||  mime.lookup(file.extension),
+                            Name: file.name ||  ['fichier', file.extension].join('.'),
+                            Content: file.data.toString('base64')
                         }
+                    }).value();
 
-                        var validationPromises = [
-                            mail.send(mailOptions), sendSMS(req.body.sms, inter, req.session),
-                            envoi(inter, req.session.login)
-                        ]
-                        Promise.all(validationPromises).then(function(e) {
-                            console.timeEnd('envoi')
-                            resolve('ok')
-                        }, function(err) {
-                            console.log(err);
-                            reject("erreur, l'envoi a échoué")
-                        })
-                    },reject)
+                    inter.fileSupp = req.body.fileSupp;
+                    inter.datePlain = moment(new Date(inter.date.intervention)).format('DD/MM/YYYY à HH:mm:ss')
+                    var text = _.template(template.mail.intervention.os())(inter).replaceAll('\n', '<br>')
+                    var mailOptions = {
+                        From: "intervention@edison-services.fr",
+                        To: req.session.email || "abel@chalier.me",
+                        Subject: "Ordre de service d'intervention N°" + inter.id,
+                        HtmlBody: text,
+                        Attachments: files
+                    }
+
+                    var validationPromises = [
+                        mail.send(mailOptions), sendSMS(req.body.sms, inter, req.session),
+                        envoi(inter, req.session.login)
+                    ]
+                    console.time('validation')
+
+                    Promise.all(validationPromises).then(function(e) {
+                    console.timeEnd('validation')
+                        console.timeEnd('envoi')
+                        resolve('ok')
+                    }, function(err) {
+                        console.log(err);
+                        reject("erreur, l'envoi a échoué")
+                    })
+                }, reject)
 
 
             })

@@ -1362,21 +1362,22 @@ module.exports = {
     },
     mail: {
         intervention: {
-            os: function(_, inter, user, fileSupp) {
+            os: function() {
 
                 return "A l'attention de l’entreprise {{sst.nomSociete}}\n" +
                     "\n" +
-                    "Monsieur {{sst.representant.nom}},\n" +
+                    "Monsieur <strong>{{sst.representant.nom}}</strong>,\n" +
                     "Suite à notre conversation téléphonique,\n" +
                     "Nous vous prions de bien vouloir intervenir pour une intervention de {{categorie}} auprès de notre client :\n" +
                     "\n" +
+                    "<strong>" +
                     "OS n°{{id}}\n" +
-                    "<strong>{{client.nom}} {{client.prenom}}\n" +
+                    "{{client.nom}} {{client.prenom}}\n" +
                     "Tél. {{client.telephone.tel1}}\n" +
                     "{{client.address.n}} {{client.address.r}}\n" +
-                    "{{client.address.cp}} {{client.address.v}}</strong>\n" +
+                    "{{client.address.cp}} {{client.address.v}}\n" +
+                    "</strong>" +
                     "L' intervention a été prévu pour le : <strong>{{datePlain}}</strong> \n" +
-                    
                     "Vous devez dès réception de cet ordre de service, prendre contact immédiatement avec le client afin de confirmer la date et l'horaire de l’intervention.\n" +
                     "\n" +
                     "Les coordonnées et la description de l'intervention sont détaillées dans l'ordre de service que vous trouverez en pièce jointe. \n" +
