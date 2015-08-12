@@ -217,6 +217,8 @@ var getIntervention = function($route, $q, edisonAPI) {
                     comments: [],
                     produits: [],
                     tva: 10,
+                    remarque: 'PAS DE REMARQUES',
+                    modeReglement: 'CH',
                     client: {
                         civilite: 'M.'
                     },

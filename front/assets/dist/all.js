@@ -217,6 +217,8 @@ var getIntervention = function($route, $q, edisonAPI) {
                     comments: [],
                     produits: [],
                     tva: 10,
+                    remarque: 'PAS DE REMARQUES',
+                    modeReglement: 'CH',
                     client: {
                         civilite: 'M.'
                     },
@@ -2207,7 +2209,7 @@ angular.module('edison')
                     LxNotificationService.success(validationMessage);
                     if (typeof cb === 'function')
                         cb(null, resp);
-                }, function(err) {
+                }).catch(function(err) {
                     var validationMessage = _.template("L'envoi de la facture {{id}} à échoué")(_this)
                     LxNotificationService.error(validationMessage);
                     if (typeof cb === 'function')
@@ -2236,7 +2238,7 @@ angular.module('edison')
                     LxNotificationService.success(validationMessage);
                     if (typeof cb === 'function')
                         cb(null, resp);
-                }, function(err) {
+                }).catch(function(err) {
                     LxNotificationService.success("L'envoi du sms a échoué");
                     if (typeof cb === 'function')
                         cb(err);
@@ -2262,7 +2264,7 @@ angular.module('edison')
                 }).success(function(resp) {
                     if (typeof cb === 'function')
                         cb(null, resp);
-                }, function(err) {
+                }).catch(function(err) {
                     if (typeof cb === 'function')
                         cb(err);
                 })
@@ -2286,7 +2288,7 @@ angular.module('edison')
                 }).success(function(resp) {
                     if (typeof cb === 'function')
                         cb(null, resp);
-                }, function(err) {
+                }).catch(function(err) {
                     if (typeof cb === 'function')
                         cb(err);
                 })
@@ -2401,7 +2403,7 @@ angular.module('edison')
                     LxProgressService.circular.hide();
                     if (typeof cb === 'function')
                         cb(null, resp);
-                }, function(err) {
+                }).catch(function(err) {
                     LxProgressService.circular.hide();
                     if (typeof cb === 'function')
                         cb(err);

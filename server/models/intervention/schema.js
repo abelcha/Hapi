@@ -147,7 +147,10 @@ module.exports = function(db) {
         descriptionTags: [
             String
         ],
-        remarque: String,
+        remarque: {
+            type: String,
+            default: 'PAS DE REMARQUES'
+        },
         produits: [{
             pu: Number,
             quantite: Number,
@@ -173,7 +176,8 @@ module.exports = function(db) {
             fournisseur: String
         }],
         modeReglement: {
-            type: String
+            type: String,
+            default: 'CH'
         },
         prixAnnonce: {
             type: Number,
