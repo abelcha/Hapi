@@ -76,7 +76,19 @@ module.exports = function(schema) {
         populateArtisan: true,
         method: 'POST',
         fn: function(inter, req, res) {
-            //return res.send('ok')
+
+
+            if ((envDev || envProd) && !isWorker) {
+                return edison.worker.createJob({
+                    name: 'db_id',
+                    model: 'intervention',
+                    method: 'envoi',
+                    data: inter,
+                    arg: req.body
+                })
+            }
+
+
             var _this = this;
 
             return new Promise(function(resolve, reject) {
@@ -133,7 +145,7 @@ module.exports = function(schema) {
                     console.time('validation')
 
                     Promise.all(validationPromises).then(function(e) {
-                    console.timeEnd('validation')
+                        console.timeEnd('validation')
                         console.timeEnd('envoi')
                         resolve('ok')
                     }, function(err) {

@@ -11,14 +11,17 @@ global.envDev = process.env.NODE_ENV === "developement";
 var dep = require(process.cwd() + '/server/loadDependencies');
 global.edison = dep.loadDir(process.cwd() + "/server/edison_components");
 global.redis = edison.redis();
+global.document = new edison.dropbox();
+global.mail = new edison.mail();
+
 try {
-global.db = edison.db();
-    
-} catch(e) {
+    global.db = edison.db();
+
+} catch (e) {
     console.log("err")
 }
 var key = requireLocal('config/_keys');
-global.sms = new edison.mobyt(key.mobyt.login,key.mobyt.pass);
+global.sms = new edison.mobyt(key.mobyt.login, key.mobyt.pass);
 global.isWorker = true;
 
 if (envProd) {
@@ -54,6 +57,20 @@ jobs.process('db', function(job, done) {
         done(null, result);
     }, function(err) {
         console.log("job error", JSON.stringify(err, undefined, 1));
+        return done(err ||  "error");
+    })
+});
+
+
+jobs.process('db_id', function(job, done) {
+    console.log(job.data)
+    db.model(job.data.model)[job.data.method].fn(job.data.data, {
+        body: job.data.arg
+    }).then(function(result)  {
+        console.log("job success")
+        done(null, result);
+    }, function(err) {
+        console.log("job error", err.stack);
         return done(err ||  "error");
     })
 });
