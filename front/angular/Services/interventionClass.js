@@ -158,7 +158,7 @@ angular.module('edison')
                     file: file
                 }).then(function(resp) {
                     console.log('ok')
-                    var validationMessage = _.template("L'intervention {{id}} est envoyé")(resp.data)
+                    var validationMessage = _.template("L'intervention est envoyé")
                     LxNotificationService.success(validationMessage);
                     if (typeof cb === 'function')
                         cb(null, resp.data)
