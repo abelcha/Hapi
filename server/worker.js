@@ -7,7 +7,7 @@ global.requireLocal = function(pth) {
 }
 
 global.__catch = function(e) {
-    var prettyError  = require('pretty-error');
+    var prettyError = require('pretty-error');
     console.log((new prettyError().render(e)));
     throw e;
 }
@@ -70,11 +70,12 @@ jobs.process('db', function(job, done) {
 
 
 jobs.process('db_id', function(job, done) {
-        db.model(job.data.model)[job.data.method].fn(job.data.data, job.data.req).then(function(result)  {
-            console.log("job success")
-            done(null, result);
-        }, function(err) {
-            console.log("job error", err.stack);
-            return done(err ||  "error");
-        }).catch(__catch)
+    console.log(job.data.model, job.data.method)
+    db.model(job.data.model)[job.data.method].fn(job.data.data, job.data.req).then(function(result)  {
+        console.log("job success")
+        done(null, result);
+    }, function(err) {
+        console.log("job error", err.stack);
+        return done(err ||  "error");
+    }).catch(__catch)
 });
