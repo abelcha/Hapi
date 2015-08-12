@@ -54,7 +54,7 @@ var V1 = function(d, devis, legacy) {
     x.id_sst_selectionne = _.get(d, 'artisan.id', 0);
     var login = _.find(users, 'login', d.login.ajout)
     x.ajoute_par = login && login.oldLogin ? login.oldLogin : d.login.ajout;
-        //0 => pas de facture, 1 => facture a faire, 2 => facture effectué, 3 => facture payé (reglement recu)
+    //0 => pas de facture, 1 => facture a faire, 2 => facture effectué, 3 => facture payé (reglement recu)
     if (!d.reglementSurPlace) {
         x.reglement_sur_place = 0
         if (d.date.envoiFacture) {
@@ -116,7 +116,7 @@ var V1 = function(d, devis, legacy) {
             envoyer: d.historique.length
         });
     } else {
-    	x.devis = "";
+        x.devis = "";
     }
 
     x.A_DEMARCHE = Number(d.aDemarcher);
@@ -144,19 +144,26 @@ V1.prototype.compare = function() {
 }
 
 V1.prototype.send = function(cb) {
-    request.get({
-        url: 'http://electricien13003.com/alvin/postData.php',
-        qs: this.data
-    }, function(err, resp, body) {
-    	console.log('-->', err, body)
-        if (!err && resp.statusCode === 200) {
-            console.log(body)
-            cb(null, body)
-        } else {
-            console.log("err", body)
-            cb("err")
-        }
-    })
+    console.log('send')
+    try {
+
+        request.get({
+            url: 'http://electricien13003.com/alvin/postData.php',
+            qs: this.data
+        }, function(err, resp, body) {
+            console.log('have send')
+            console.log('-->', err, body)
+            if (!err && resp.statusCode === 200) {
+                console.log(body)
+                cb(null, body)
+            } else {
+                console.log("err", body)
+                cb("err")
+            }
+        })
+    } catch(e) {
+        __catch(e);
+    }
 }
 
 V1.prototype.data = {
