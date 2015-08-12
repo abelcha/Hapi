@@ -56,7 +56,7 @@ module.exports = function(schema) {
         var fs = require('fs');
         var file = this
         return new Promise(function(resolve, reject) {
-            var path = [process.cwd(), 'front', 'assets', 'pdf', (file || 'manuelV1') + '.pdf'].join('/')
+            var path = [process.cwd(), 'front', 'assets', 'pdf', (file || 'manuelV1.pdf')].join('/')
             fs.readFile(path, function(err, buffer) {
                 if (err)
                     return reject(err);
@@ -72,8 +72,8 @@ module.exports = function(schema) {
         })
     }
 
-    schema.statics.manuel = getStaticFile.bind('manuelV1')
-    schema.statics.notice = getStaticFile.bind('noticeV1')
+    schema.statics.manuel = getStaticFile.bind('manuelV1.pdf')
+    schema.statics.notice = getStaticFile.bind('noticeV1.pdf')
 
     schema.statics.envoi = {
         unique: true,
@@ -108,8 +108,8 @@ module.exports = function(schema) {
                 ]
                 if (envProd) {
                     console.log('envprod')
-                    filesPromises.push(getStaticFile.bind('manuelV1')(),
-                        getStaticFile.bind('noticeV1')())
+                    filesPromises.push(getStaticFile.bind('manuelV1.pdf')(),
+                        getStaticFile.bind('noticeV1.pdf')())
                 }
                 if (inter.devisOrigine) {
                     filesPromises.push(db.model('intervention').getDevisFile({

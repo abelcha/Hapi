@@ -47,10 +47,7 @@ angular.module('edison').controller('MainController', function($timeout, $q, Dat
     })
     $scope.searchBox = {
         search: function(x) {
-            console.log('-->', x)
             var deferred = $q.defer();
-            if (x.length < 3)
-                return []
             edisonAPI.searchText(x, {
                 limit: 10,
                 flat: true
@@ -60,7 +57,6 @@ angular.module('edison').controller('MainController', function($timeout, $q, Dat
             return deferred.promise;
         },
         change: function(x) {
-            console.log('change')
             if (x) {
                 $location.url(x.link)
             }
