@@ -66,6 +66,7 @@ module.exports = function(schema) {
         if (e.id > 15000) {
             fltr = filtersFactory.filter(e);
         }
+        
         console.log(e.categorie, e.status)
         try {
             var rtn = {
