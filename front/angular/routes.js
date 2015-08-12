@@ -388,7 +388,7 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
             controllerAs: "vm",
         })
         .otherwise({
-            templateUrl: 'templates/Error404.html',
+            redirectTo:'/dashboard'
         });
     // use the HTML5 History API
     $locationProvider.html5Mode(true);

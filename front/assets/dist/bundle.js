@@ -758,7 +758,7 @@ module.exports = {
         title: 'Recap Artisan',
         action: "ouvrirRecapSST",
         hide: function(inter) {
-            return !inter.artisan && !inter.artisan.id
+            return !inter.artisan || !inter.artisan.id
         }
     }, {
         title: "Appel l'artisan",
@@ -767,20 +767,20 @@ module.exports = {
             fontWeight: 'bold'
         },
         hide: function(inter) {
-            return !inter.artisan && !inter.artisan.id
+            return !inter.artisan || !inter.artisan.id
         }
     }, {
         title: "SMS artisan",
         action: 'smsArtisan',
         hide: function(inter) {
-            return !inter.artisan && !inter.artisan.id
+            return !inter.artisan || !inter.artisan.id
         }
     }, {
         title: "Envoyer",
         action: 'envoi',
         hide: function(inter) {
             console.log(inter)
-            return inter.status == "VRF"  || (!inter.artisan && !inter.artisan.id)
+            return inter.status == "VRF"  || (!inter.artisan || !inter.artisan.id)
         }
     }, /*{
         title: "Vérifier",
@@ -1368,7 +1368,7 @@ module.exports = {
                     "\n" +
                     "Monsieur <strong>{{sst.representant.nom}}</strong>,\n" +
                     "Suite à notre conversation téléphonique,\n" +
-                    "Nous vous prions de bien vouloir intervenir pour une intervention de {{categorie}} auprès de notre client :\n" +
+                    "Nous vous prions de bien vouloir intervenir pour une intervention de {{categoriePlain}} auprès de notre client :\n" +
                     "\n" +
                     "<strong>" +
                     "OS n°{{id}}\n" +
@@ -1381,7 +1381,7 @@ module.exports = {
                     "Vous devez dès réception de cet ordre de service, prendre contact immédiatement avec le client afin de confirmer la date et l'horaire de l’intervention.\n" +
                     "\n" +
                     "Les coordonnées et la description de l'intervention sont détaillées dans l'ordre de service que vous trouverez en pièce jointe. \n" +
-                    "<% if (devisOrigine) {%> <strong>Vous trouverez également le devis accepté et signé par notre client</strong> <%}%>" +
+                    "<% if (typeof devisOrigine !== 'undefined') {%> <strong>Vous trouverez également le devis accepté et signé par notre client</strong> <%}%>" +
                     "\n" +
                     "Vous trouverez ci-joint :\n" +
                     " • Ordre de service d’intervention n°{{id}}\n" +
@@ -1389,7 +1389,7 @@ module.exports = {
                     " • Manuel à suivre pour la réalisation des devis et factures\n" +
                     " • Une description étape par étape de notre mode de fonctionnement\n" +
                     "<strong>" + 
-                    "<% if (devisOrigine) {%> • Le devis n°{{devisOrigine}} accepté <%}%>\n" +
+                    "<% if (typeof devisOrigine !== 'undefined') {%> • Le devis n°{{devisOrigine}} accepté <%}%>\n" +
                     "<% if (fileSupp) {%> • PJ supplémentaire <%}%>\n" +
                     "</strong>" + 
                     "\n" +
