@@ -19,7 +19,8 @@ db.model('intervention')
         'desc': 1
     }).match({
         total: {
-            $gte: 10
+            $lt: 10,
+            $gte:7
         }
     })
     .exec(function(err, docs) {
