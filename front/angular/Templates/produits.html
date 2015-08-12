@@ -2,8 +2,7 @@
     <div class="p+">
         <strong ng-click="display = !display" class="fs-headline display-block">Facture / Devis</strong><a ng-if="data.devisOrigine" href="/devis/{{data.devisOrigine}}">Devis Original</a>
         <md-content class="autocomplete" style="width: 40%;margin-top: -22px;margin-left: 54%;float: left;" layout-padding layout="column" md-input-container flex>
-            <md-autocomplete ng-if="data.produits.length || display" md-search-text-change="null" 
-            md-selected-item-change="produits.add(selectedProduct)" md-selected-item="selectedProduct" md-search-text="produits.searchText" md-items="item in produits.search(produits.searchText)" md-item-text="item.title" placeholder="Entrer un produit">
+            <md-autocomplete ng-if="data.produits.length || display" md-search-text-change="null" md-selected-item-change="produits.add(selectedProduct)" md-selected-item="selectedProduct" md-search-text="produits.searchText" md-items="item in produits.search(produits.searchText)" md-item-text="item.title" placeholder="Entrer un produit">
                 <span md-highlight-text="produits.searchText"> 
                 {{item.ref}} -  {{item.title}} - {{item.pu}}€</span>
             </md-autocomplete>
@@ -14,12 +13,12 @@
                 <table class="data-table data-table--has-primary data-table--has-secondary">
                     <thead>
                         <tr>
-                            <th style="font-weight:bold">Référence</th>
-                            <th style="font-weight:bold">Désignation</th>
-                            <th style="font-weight:bold">Q</th>
-                            <th style="font-weight:bold">PU</th>
-                            <th style="font-weight:bold">Montant</th>
-                            <th style="font-weight:bold">Modif</th>
+                            <th style="font-weight:bold;width: 105px;">Référence</th>
+                            <th style="font-weight:bold;">Désignation</th>
+                            <th style="font-weight:bold;width: 100px;">Q</th>
+                            <th style="font-weight:bold;width: 120px;">PU</th>
+                            <th style="font-weight:bold;width: 120px;">Montant</th>
+                            <th style="font-weight:bold;width: 170px;">Modif</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -27,7 +26,7 @@
                             <td>
                                 <span>{{p.ref}}</span>
                             </td>
-                            <td lx-ripple ng-click="produits.edit($index)" lx-tooltip="{{p.desc|crlf}}">
+                            <td lx-ripple ng-click="produits.edit($index)" lx-tooltip="{{p.desc | limitTo:50}}...">
                                 <span>{{p.title}}</span>
                             </td>
                             <td>
@@ -46,7 +45,7 @@
                             <td>
                                 <lx-dropdown position="right" from-top>
                                     <button class="btn--no-conflicts btn--l btn--black btn--icon" lx-ripple lx-dropdown-toggle>
-                                        <i class="mdi mdi-dots-vertical"></i>
+                                        <i class="fa fa-reorder"></i>
                                     </button>
                                     <lx-dropdown-menu>
                                         <ul>
@@ -59,9 +58,13 @@
                             </td>
                         </tr>
                         <tr class="products data-table__clickable-row">
-                            <td colspan="4"></td>
-                            <td colspan="2"><strong>TOTAL TTC : {{produits.total() * (data.tva / 100 + 1) | currency:''}} €
-                                <br> TOTAL HT : {{produits.total() | currency:''}} €</strong>
+                            <td colspan="5"></td>
+                            <td colspan="1">
+                                <strong>
+                                 TOTAL HT : {{produits.total() | currency:''}} €<br>
+                                 TVA: {{produits.total() * (data.tva / 100) | currency:''}} €<br>
+                                 TOTAL TTC : {{produits.total() * (data.tva / 100 + 1) | currency:''}} €
+                                </strong>
                             </td>
                         </tr>
                     </tbody>

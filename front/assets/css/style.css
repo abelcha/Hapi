@@ -70,7 +70,7 @@
 md-content.autocomplete {
     position: absolute;
     background: transparent;
-    z-index: 99;
+    z-index: 75;
     height: 100%;
     pointer-events: none;
 }

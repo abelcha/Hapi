@@ -141,7 +141,9 @@ angular.module('edison').factory('productsList', ['dialog', 'openPost', function
             return _.max(this.produits, 'pu');
         },
         total: function() {
-            return _.round(_.sum(this.produits, 'pu'), 2)
+            var total = _.round(_.sum(this.produits, 'pu'), 2)
+            console.log(total)
+            return total;
         },
         previsualise: function(data) {
             openPost('/api/intervention/facturePreview', {
