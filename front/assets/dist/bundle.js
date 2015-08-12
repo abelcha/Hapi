@@ -1568,7 +1568,7 @@ module.exports = {
                     "{{client.address.n}} {{client.address.r}}\n" +
                     "{{client.address.cp}} {{client.address.v}}\n" +
                     "</strong>" +
-                    "L' intervention a été prévu pour le : <strong>{{datePlain}}</strong> \n" +
+                    "&nbsp;&nbsp;L' intervention a été prévu pour le : <strong>{{datePlain}}</strong> \n" +
                     "Vous devez dès réception de cet ordre de service, prendre contact immédiatement avec le client afin de confirmer la date et l'horaire de l’intervention.\n" +
                     "\n" +
                     "Les coordonnées et la description de l'intervention sont détaillées dans l'ordre de service que vous trouverez en pièce jointe. \n" +
@@ -1579,23 +1579,23 @@ module.exports = {
                     "</center>" +
                     "\n" +
                     "\n" +
+                    "<strong>" +
                     "Vous trouverez ci-joint :\n" +
+                    "</strong>" +
                     " • Ordre de service d’intervention n°{{id}}\n" +
                     " • Un devis et une facture vierge à remplir obligatoirement sur place\n" +
                     " • Manuel à suivre pour la réalisation des devis et factures\n" +
                     " • Une description étape par étape de notre mode de fonctionnement\n" +
-                    "<strong>" + 
+                    "<strong>" +
                     "<% if (typeof devisOrigine !== 'undefined') {%> • Le devis n°{{devisOrigine}} accepté\n <%}%>" +
                     "<% if (fileSupp) {%> • PJ supplémentaire <%}%>\n" +
-                    "</strong>" + 
+                    "</strong>" +
                     "\n" +
                     "\n" +
                     "\n" +
                     "Vous pouvez joindre à tout moment le <strong>Service Intervention</strong> de Edison Services par téléphone au : <strong>09.72.42.30.00</strong>\n" +
-                    "\n"+
+                    "\n" +
                     "L’équipe <strong>Edison Services</strong>\n"
-               
-
             }
         },
         devis: {
