@@ -20,7 +20,7 @@
     max-width:##;
 }
 
-@media only screen and (max-width: 1550px) {
+@media only screen and (max-width: 1680px) {
     .container.intervention {
         max-width: 900px!important;
     }
