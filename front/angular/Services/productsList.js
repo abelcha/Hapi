@@ -142,7 +142,6 @@ angular.module('edison').factory('productsList', ['dialog', 'openPost', function
         },
         total: function() {
             var total = _.round(_.sum(this.produits, 'pu'), 2)
-            console.log(total)
             return total;
         },
         previsualise: function(data) {
