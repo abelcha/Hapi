@@ -18,13 +18,18 @@ module.exports = function(schema) {
         this.client.address.r = upper(this.client.address.r)
         this.client.address.v = upper(this.client.address.v)
         next();
-
     });
 
     schema.post('save', function(doc) {
         if (!isWorker) {
             redis.del('interventionStats', function() {
                 db.model('devis').cacheActualise(doc);
+            });
+        }
+        if (envProd) {
+            var v1 = new V1(doc, true);
+            v1.send(function(resp) {
+                console.log('=====-->', resp)
             });
         }
     })
