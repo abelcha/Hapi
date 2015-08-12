@@ -4,15 +4,15 @@
             <strong class="fs-headline display-block">Reglement Client </strong>
             <div class="paragraph fs-body-1 mt+">
                 <div class="row">
-                    <div class="col-sm-2">
+                    <div class="col-md-2">
                         <lx-text-field label="Montant Recu TTC">
                             <input ng-model="reglement.montantTTC" type="number" ng-disabled="reglement.recu">
                         </lx-text-field>
                     </div>
-                    <div class="col-sm-2">
+                    <div class="col-md-2">
                         <select class="form-control" ng-model="data.tva" ng-disabled="reglement.recu" ng-options="tva.short_name as tva.long_name for tva in config.tva"></select>
                     </div>
-                    <div class="col-sm-2 ">
+                    <div class="col-md-2 ">
                         <lx-text-field label="Montant Recu HT">
                             <input ng-model="reglement.montant" type="number" disabled="true">
                         </lx-text-field>
@@ -23,7 +23,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-sm-2" ng-if="reglement.recu && reglement.historique.length">
+                    <div class="col-md-2" ng-if="reglement.recu && reglement.historique.length">
                         <lx-text-field label="Avoir">
                             <input min="0" ng-disabled="reglement.avoir.effectue" ng-model="reglement.avoir.montant" type="number">
                         </lx-text-field>
@@ -33,28 +33,28 @@
                         <input type="checkbox" id="flav" ng-model="reglement.avoir.effectue" disabled="true" class="switch__input">
                         <label for="flav" class="switch__label">Effectué</label>
                     </div>
-                    <div ng-if="reglement.avoir.montant > 0 && reglement.historique.length" class="col-sm-2">
+                    <div ng-if="reglement.avoir.montant > 0 && reglement.historique.length" class="col-md-2">
                         <select class="form-control" ng-disabled="reglement.avoir.effectue" ng-model="reglement.avoir._type" ng-options="ta.short_name as ta.long_name for ta in config.typeAvoir"></select>
                     </div>
                 </div>
             </div>
             <div class="row">
-                <div class="col-sm-3" ng-if="data.reglementSurPlace">
+                <div class="col-md-3" ng-if="data.reglementSurPlace">
                     <md-checkbox  ng-model="data.compta.info.facture" aria-label="_" class="md-warn">
                         Facture non conforme
                     </md-checkbox>
                 </div>
-                <div class="col-sm-3" ng-if="paiement.tva == 10">
+                <div class="col-md-3" ng-if="paiement.tva == 10">
                     <md-checkbox ng-model="data.compta.info.attestationTva" aria-label="_" class="md-warn">
                         Attestation de TVA
                     </md-checkbox>
                 </div>
-                <div class="col-sm-3" ng-if="data.devis.length > 0">
+                <div class="col-md-3" ng-if="data.devis.length > 0">
                     <md-checkbox ng-model="data.compta.info.devis" aria-label="_" class="md-warn">
                        Devis non conforme
                     </md-checkbox>
                 </div>
-                <div class="col-sm-3" ng-if="data.fourniture.length > 0">
+                <div class="col-md-3" ng-if="data.fourniture.length > 0">
                     <md-checkbox ng-model="data.compta.info.fourniture" aria-label="_" class="md-warn">
                         Cout de fourniture
                     </md-checkbox>
@@ -72,36 +72,36 @@
             <br>
             <div class="paragraph fs-body-1 mt+">
                 <div class="row">
-                    <div class="col-sm-2">
+                    <div class="col-md-2">
                         <lx-text-field label="Base Paiement SST">
                             <input ng-model="paiement.base" type="number">
                         </lx-text-field>
                     </div>
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         <select class="form-control" ng-model="data.compta.paiement.mode" ng-options="modePaiement.short_name as modePaiement.long_name for modePaiement in config.modePaiement"></select>
                     </div>
-                    <div class="col-sm-2">
+                    <div class="col-md-2">
                         <select class="form-control" ng-model="paiement.tva" ng-options="tva.short_name as tva.long_name for tva in config.tvaSST"></select>
                     </div>
                 </div>
                 <br>
                 <div class="row">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         <lx-text-field label="Déplacement">
                             <input type="number" min="0" max="100" ng-model="paiement.pourcentage.deplacement">
                         </lx-text-field>
                     </div>
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         <lx-text-field label="Main D'oeuvre">
                             <input type="number" min="0" max="100" ng-model="paiement.pourcentage.maindOeuvre">
                         </lx-text-field>
                     </div>
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         <lx-text-field label="Fourniture">
                             <input type="number" min="0" max="100" ng-model="paiement.pourcentage.fourniture">
                         </lx-text-field>
                     </div>
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         <div class="switch" style="float:right;margin-right:30px">
                             <input type="checkbox" id="switch1" ng-model="paiement.ready" class="switch__input">
                             <label for="switch1" class="switch__label">Flush</label>
@@ -111,7 +111,7 @@
                 </div>
                 <br>
                 <div class="row">
-                    <div class="col-sm-3 col-sm-offset-9">
+                    <div class="col-md-3 col-md-offset-9">
                         <div class="switch" style="float:right;margin-right:30px">
                             <input type="checkbox" id="switch3" ng-model="paiement.dette" class="switch__input">
                             <label for="switch3" class="switch__label switch_red">Dette</label>

@@ -1,6 +1,6 @@
-<div class="container" style=" margin: auto;max-width: 1200px;">
+<div class="container intervention" style=" margin: auto;">
     <div class="row" ng-right-click="vm.rowRightClick($event)">
-        <div class="col-sm-12 " style="height:100%">
+        <div class="col-md-12 " style="height:100%">
             <div class="form-horizontal" style="overflow:hidden;height:100%" novalidate>
                 <div class="card margin" style="padding:20px">
                     <div class="p+">
@@ -16,7 +16,7 @@
                 <info-client ng-if="vm.data.client.address && vm.data.categorie" model="vm.data.client"></info-client>
                 <info-categorie model="vm.data.categorie" change="vm.searchArtisans(newCategorie)"></info-categorie>
                 <div class="row" style="margin:0">
-                    <div class="col-sm-8" style="padding-left:0">
+                    <div class="col-md-8" style="padding-left:0">
                         <div class="card margin">
                             <div class="p+">
                                 <span class="fs-headline display-block">
@@ -117,7 +117,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-4" style="padding: 0;">
+                    <div class="col-md-4" style="padding: 0;">
                         <div class="card">
                             <div class="p+" style='overflow:hidden;'>
                                 <strong class="fs-headline display-block">Artisans</strong>
@@ -158,13 +158,13 @@
                         <span class="fs-subhead tc-black-2 display-block">Informations Intervention</span>
                                 <div class=" fs-body-1 mt+">
                                     <div class="form-group">
-                                        <div class="col-sm-3">
+                                        <div class="col-md-3">
                                             <div class="text-field date-picker">
                                                 <label class="selected">Heure d'intervention</label>
                                                 <input type="text" pick-a-time="vm.data.date.intervention" />
                                             </div>
                                         </div>
-                                        <div class="col-sm-3 col-sm-offset-3">
+                                        <div class="col-md-3 col-md-offset-3">
                                             <div class="text-field date-picker">
                                                 <label class="selected">Date d'intervention</label>
                                                 <input type="text" pick-a-date="vm.data.date.intervention" />
@@ -172,13 +172,13 @@
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <div class="col-sm-5">
+                                        <div class="col-md-5">
                                             <md-input-container flex>
                                                 <label>Description Simplifiée</label>
                                                 <textarea ng-model="vm.data.description" columns="1" md-maxlength="150" capitalize></textarea>
                                             </md-input-container>
                                         </div>
-                                        <div class="col-sm-6 col-sm-offset-1">
+                                        <div class="col-md-6 col-md-offset-1">
                                             <md-input-container flex>
                                                 <label>Remarques Supplémentaires</label>
                                                 <textarea ng-model="vm.data.remarque" columns="1" md-maxlength="150" capitalize></textarea>
@@ -186,30 +186,24 @@
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <div class="col-sm-3">
+                                        <div class="col-md-3">
                                             <lx-text-field label="Prix Annoncé HT">
                                                 <input eurofilter ng-model="vm.data.prixAnnonce" ng-disabled="vm.data.date.verification">
                                             </lx-text-field>
                                         </div>
-                                        <div class="col-sm-3">
+                                        <div class="col-md-3">
                                             <lx-text-field label="Prix Final HT" ng-if="vm.data.date.envoi">
                                                 <input eurofilter ng-model="vm.data.prixFinal">
                                             </lx-text-field>
                                         </div>
-                                        <div class="col-sm-3">
+                                        <div class="col-md-3">
                                             <md-switch class="md-primary" md-no-ink aria-label="Switch No Ink" ng-model="vm.data.reglementSurPlace">
-                                                Reglement Sur Place
+                                                <span ng-if="vm.data.reglementSurPlace">Reglement Sur Place</span>
+                                                <span ng-if="!vm.data.reglementSurPlace">Facture à Faire</span>
+
                                             </md-switch>
-                                            <!--     <md-checkbox ng-model="vm.data.reglementSurPlace" aria-label="Checkbox 1">
-                                                <div class="hidden-sm hidden-md">
-                                                    Reglement Sur Place
-                                                </div>
-                                                <div class="hidden-lg hidden-xs ">
-                                                    RSP
-                                                </div>
-                                            </md-checkbox> -->
                                         </div>
-                                        <div class=" col-sm-2">
+                                        <div class=" col-md-2">
                                             <div class="select-style text-field">
                                                 <select ng-model="vm.data.modeReglement" ng-options="mr.short_name as mr.long_name for mr in config.modeDeReglements">
                                                 </select>

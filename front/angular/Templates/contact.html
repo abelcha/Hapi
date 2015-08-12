@@ -2,7 +2,7 @@
     <div class="shadow-box listeInterventions">
         <div class="row" style="">
             <br>
-            <div class="col-sm-4">
+            <div class="col-md-4">
                 <input type="text" ng-model="vm.tableFilter" ng-change="vm.reloadData()" class="form-control">
                 <br>
                 <div style="height: 670px;overflow: scroll;" when-scroll-ends="vm.loadMore()">
@@ -24,7 +24,7 @@
                     </ul>
                 </div>
             </div>
-            <div class="col-sm-8" style="height: 670px;overflow: scroll;" ng-right-click="vm.rowRightClick($event, vm.sst)">
+            <div class="col-md-8" style="height: 670px;overflow: scroll;" ng-right-click="vm.rowRightClick($event, vm.sst)">
                 <div style="cursor:default!important">
                     <md-content class="md-padding" ng-init="va = vm.sst">
                         <md-tabs md-dynamic-height md-border-bottom>
@@ -34,7 +34,7 @@
                                     <md-button style="float:right" class="md-raised md-primary">{{config.artisanOrigine[vm.sst.origin].long_name}}</md-button>
                                     <md-button style="float:right" class="md-raised {{config.etatsArtisan[vm.sst.status].color}} white-text">{{config.etatsArtisan[vm.sst.status].long_name}}</md-button>
                                     <br>
-                                    <div class="col-sm-6">
+                                    <div class="col-md-6">
                                         <a ng-href="mailto:{{vm.sst.email}}">{{vm.sst.email}}</a> -
                                         <a ng-href="callto:{{vm.sst.telephone.tel1}}">{{vm.sst.telephone.tel1}}</a>
                                         <a ng-href="callto:{{vm.sst.telephone.tel2}}">{{vm.sst.telephone.tel2}}</a>
@@ -51,7 +51,7 @@
                                         <p class="md-display-2">Main d'oeuvre : <strong>{{vm.sst.pourcentage.maindOeuvre}} %</strong></p>
                                         <p class="md-display-2">Fourniture : <strong>{{vm.sst.pourcentage.fourniture}} %</strong></p>
                                     </div>
-                                    <div class="col-sm-6">
+                                    <div class="col-md-6">
                                         <br>
                                         <h4 class="md-body-1">{{vm.sst.address.n}} {{vm.sst.address.r}}, <br>{{vm.sst.address.cp}} {{vm.sst.address.v}} </h4>
                                         <br>

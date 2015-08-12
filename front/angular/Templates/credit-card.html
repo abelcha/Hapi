@@ -4,29 +4,29 @@
         <span class="fs-subhead tc-black-2 display-block">Carte Bancaire</span>
         <div class="paragraph fs-body-1 mt+">
             <div class="form-group" ng-if="!model.cb.hash || model.cb.number">
-                <div class="col-sm-2">
+                <div class="col-md-2">
                     <div class="select-style text-field">
                         <select ng-model="model.cb.cardType" ng-options="cb.short_name as cb.long_name for cb in config.cardTypeArray()">
                         </select>
                         <label ng-class="{'selected' : model.cb.cardType}">Type</label>
                     </div>
                 </div>
-                <div class="col-sm-4">
+                <div class="col-md-4">
                     <lx-text-field label="Numero Carte">
                         <input type="text" ng-model="model.cb.number" cc maxlength="16">
                     </lx-text-field>
                 </div>
-                <div class="col-sm-2">
+                <div class="col-md-2">
                     <lx-text-field label="CVC">
                         <input type="text" ng-model="model.cb.cvc" maxlength="4" />
                     </lx-text-field>
                 </div>
-                <div class="col-sm-2">
+                <div class="col-md-2">
                     <lx-text-field label="Mois Expiration">
                         <input ng-model="model.cb.expMonth" maxlength="2" />
                     </lx-text-field>
                 </div>
-                <div class="col-sm-2">
+                <div class="col-md-2">
                     <lx-text-field label="Année Expiration">
                         <input ng-model="model.cb.expYear" maxlength="2" />
                     </lx-text-field>

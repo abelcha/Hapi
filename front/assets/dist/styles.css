@@ -2344,6 +2344,24 @@ body.loading {
     box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .26);
 }
 
+
+/* Small Devices, Tablets */
+
+@media only screen and (min-width: 768px) {
+    max-width:##;
+}
+
+@media only screen and (max-width: 1550px) {
+    .container.intervention {
+        max-width: 900px!important;
+    }
+}
+
+.container.intervention {
+    max-width: 12000px;
+}
+
+
 /*.autocompletedemoCustomTemplate .autocomplete-custom-template>li {
     border-bottom: 1px solid #ccc;
     height: auto;
@@ -2371,6 +2389,7 @@ body.loading {
     display: block!important;
 }
 */
+
 .deleted {
     display: none;
 }
