@@ -7,6 +7,10 @@
             <p ng-if="_model === 'intervention'"><strong>Prix Annoncé: </strong> {{data.prixAnnonce || 0}} €</p>
             <p ng-if="_model === 'intervention' && data.prixFinal"><strong>Prix Final: </strong> {{_.round(data.prixFinal, 2) || 0}} €</p>
             <p ng-if="_model === 'intervention'"><strong>Reglement: </strong>{{data.reglementSurPlace ? 'Sur place' : 'Par facture'}} - {{data.modeReglement}}</p>
+            <p ng-if="!data.reglementSurPlace">
+                <p><strong>Nom Facture:</strong> {{::data.facture.prenom}} {{::data.facture.nom}}</p>
+                <p><strong>Addresse: Facture</strong> {{::data.facture.address.n}} {{::data.facture.address.r}}, {{::data.facture.address.cp}} {{::data.facture.client.address.v}}</p>
+            </p>
             <p ng-if="_model === 'devis'">
                 <strong>Flagship : </strong> {{::produits.flagship().title}} ({{::produits.flagship().pu}} €)
             </p>
@@ -30,7 +34,7 @@
             <p>
                 <md-button ng-if="data.status === 'ENC'" ng-click="Intervention(data).verification()" class="md-raised md-primary green">Vérifier</md-button>
                 <md-button ng-click="Intervention(data).annulation()" class="md-raised md-warn">Annuler</md-button>
-             <md-button ng-if="data.produits.length" ng-click="produits.previsualise(data)" class="md-raised md-primary yellow black-text">Preview</md-button>
+                <md-button ng-if="data.produits.length" ng-click="produits.previsualise(data)" class="md-raised md-primary yellow black-text">Preview</md-button>
             </p>
         </div>
         <div ng-if="_model === 'devis'" class="col-sm-4 info-ext">

@@ -2344,6 +2344,33 @@ body.loading {
     box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .26);
 }
 
+/*.autocompletedemoCustomTemplate .autocomplete-custom-template>li {
+    border-bottom: 1px solid #ccc;
+    height: auto;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    white-space: normal;
+}
+
+.autocompletedemoCustomTemplate .autocomplete-custom-template>li:last-child {
+    border-bottom-width: 0;
+}
+
+.autocompletedemoCustomTemplate .autocomplete-custom-template>li>.item-title,
+.autocompletedemoCustomTemplate .autocomplete-custom-template>li> .item-metadata {
+    display: block;
+    line-height: 2;
+}
+
+.autocompletedemoCustomTemplate .autocomplete-custom-template>li> .item-title md-icon {
+    height: 18px;
+    width: 18px;
+}
+
+.md-autocomplete-suggestions {
+    display: block!important;
+}
+*/
 .deleted {
     display: none;
 }

@@ -25,7 +25,8 @@
                 <!-- / .navbar-header -->
                 <div id="main-navbar-collapse" class="collapse navbar-collapse main-navbar-collapse">
                     <!--  -->
-                    <md-autocomplete class="searchBar" style="width: 100px;float: right;margin-top: 3px;margin-right: 75px;" md-search-text-change="null" md-min-length="3" md-selected-item-change="searchBox.change(selectedItem)" md-selected-item="selectedItem" md-search-text="searchText" md-autofocus="false" md-items="item in searchBox.search(searchText)" placeholder="Recherche..." md-item-text="item.description"> <span md-highlight-text="searchText"> {{item.description}}</span>
+                    <md-autocomplete class="searchBar" style="width: 100px;float: right;margin-top: 3px;margin-right: 75px;" md-search-text-change="null" md-min-length="3" md-selected-item-change="searchBox.change(selectedItem)" md-menu-class="autocomplete-custom-template" md-selected-item="selectedItem" md-search-text="searchText" md-autofocus="false" md-items="item in searchBox.search(searchText)" placeholder="Recherche..." md-item-text="item.description">
+                         <span md-highlight-text="searchText"> {{item.description}}</span>
                     </md-autocomplete>
                 </div>
                 <!-- / #main-navbar-collapse -->
@@ -147,7 +148,6 @@
             <div class="double-bounce2"></div> -->
         </div>
     </div>
-    
     <script type="text/javascript">
     //  window.PixelAdmin.start(init);
     var searchInput = 'md-autocomplete.searchBar>md-autocomplete-wrap>input'
@@ -155,7 +155,7 @@
         $(searchInput).focus(function() {
             $('md-autocomplete.searchBar').css('width', '800px')
         })
-         $(searchInput).blur(function() {
+        $(searchInput).blur(function() {
             $('md-autocomplete.searchBar').css('width', '100px')
         })
 
