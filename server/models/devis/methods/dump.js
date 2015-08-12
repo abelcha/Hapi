@@ -179,7 +179,7 @@
                     if (err || resp.statusCode !== 200 || !body || body == 'null') {
                         return reject('nope')
                     }
-                    db.model('intervention').update({
+                    db.model('devis').update({
                         id: id
                     }, translateModel(JSON.parse(body)), {
                         upsert: true
@@ -187,10 +187,10 @@
                         if (err)
                             return reject(err);
                         resolve(resp);
-                        db.model('intervention').findOne({
+                        db.model('devis').findOne({
                             id: id
                         }).then(function(doc) {
-                            db.model('intervention').cacheActualise(doc);
+                            db.model('devis').cacheActualise(doc);
                         })
                     })
                 });

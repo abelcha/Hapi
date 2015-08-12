@@ -44,9 +44,11 @@ module.exports = function(schema) {
         inter.status = "ENC";
         inter.date.envoi = new Date();
         inter.login.envoi = login;
-        return db.model('intervention').findOneAndUpdate({
-            id: inter.id
-        }, inter)
+        return new Promise(function(resolve, reject) {
+            db.model('intervention').findOneAndUpdate({
+                id: inter.id
+            }, inter).then(resolve, reject)
+        }).catch(__catch);
     }
 
     var getStaticFile = function(req, res) {
@@ -101,9 +103,9 @@ module.exports = function(schema) {
                 if (!req.body.sms)
                     return reject("Impossible de trouver l'artisan");
                 var filesPromises = [
-                    getFileOS(inter)
+  //                  getFileOS(inter)
                 ]
-                if (envProd) {
+/*                if (envProd) {
                     filesPromises.push(getStaticFile.bind('manuelV1')(),
                         getStaticFile.bind('noticeV1')())
                 }
@@ -116,7 +118,7 @@ module.exports = function(schema) {
                 }
                 if (req.body.file) {
                     filesPromises.push(document.download(req.body.file))
-                }
+                }*/
 
                 console.time('getFiles')
                 Promise.all(filesPromises).then(function(result) {

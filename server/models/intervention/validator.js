@@ -24,25 +24,29 @@ module.exports = function(schema) {
       }, 'Categorie inconnue.');*/
 
     var preSave = function(next) {
-        this.sst = this.artisan.id
-        if (isWorker) {
-            return next();
-        }
-
-        if (this.cb.number) {
-            if (!creditcard.validate(this.cb.number))
-                return next(new Error('Numero de carte invalide'))
-            this.cb = {
-                hash: encryptor.encrypt(JSON.stringify(this.cb)),
-                preview: "**** ".repeat(3) + this.cb.number.slice(-4)
+        var _this = this;
+        try {
+            _this.sst = _this.artisan.id
+            if (isWorker) {
+                return next();
             }
+
+            if (_this.cb.number) {
+                if (!creditcard.validate(_this.cb.number))
+                    return next(new Error('Numero de carte invalide'))
+                _this.cb = {
+                    hash: encryptor.encrypt(JSON.stringify(_this.cb)),
+                    preview: "**** ".repeat(3) + _this.cb.number.slice(-4)
+                }
+            }
+        } catch (e) {
+            __catch(e)
         }
         next();
 
     }
 
     var postSave = function(doc) {
-        console.log('save')
         if (!isWorker) {
             if (doc.artisan.id) {
                 db.model('artisan').findOne({
@@ -59,7 +63,9 @@ module.exports = function(schema) {
                     console.log('=====-->', resp)
                 });
             }
+
         }
+
     }
 
     schema.pre('save', function(next) {
@@ -68,11 +74,6 @@ module.exports = function(schema) {
 
 
     schema.post('save', postSave)
-
-    schema.pre('findOneAndUpdate', function(next) {
-        preSave.bind(this)(next)
-    });
-
 
     schema.post('findOneAndUpdate', postSave)
 }
