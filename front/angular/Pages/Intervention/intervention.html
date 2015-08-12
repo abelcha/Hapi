@@ -173,10 +173,15 @@
                                     </div>
                                     <div class="form-group">
                                         <div class="col-md-5">
-                                            <md-input-container flex>
+                                            <!-- md-input-container flex>
                                                 <label>Description Simplifiée</label>
                                                 <textarea ng-model="vm.data.description" columns="1" md-maxlength="150" capitalize></textarea>
-                                            </md-input-container>
+                                                </md-input-container> -->
+                                            <md-autocomplete md-selected-item-change="vm.description.change()" md-input-name="autocompleteDescription" md-input-maxlength="130" md-selected-item="vm.description.selected" md-search-text="vm.data.description" md-items="item in vm.description.search(vm.data.description)" md-item-text="item.name">
+                                                <md-item-template>
+                                                    <span>{{item.name}}</span>
+                                                </md-item-template>
+                                            </md-autocomplete>
                                         </div>
                                         <div class="col-md-6 col-md-offset-1">
                                             <md-input-container flex>
@@ -200,7 +205,6 @@
                                             <md-switch class="md-primary" md-no-ink aria-label="Switch No Ink" ng-model="vm.data.reglementSurPlace">
                                                 <span ng-if="vm.data.reglementSurPlace">Reglement Sur Place</span>
                                                 <span ng-if="!vm.data.reglementSurPlace">Facture à Faire</span>
-
                                             </md-switch>
                                         </div>
                                         <div class=" col-md-2">

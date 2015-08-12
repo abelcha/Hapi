@@ -4,7 +4,10 @@
             <div class="p+">
                 <strong class="fs-headline display-block">Categorie</strong>
                 <br>
-                <button ng-click="callback(cat.short_name);" style="width: 12.5%;" ng-repeat="cat in ::config.categoriesArray()" class="btn--no-conflicts btn--m {{::cat.color}} btn--flat" lx-ripple>{{::cat.long_name}}</button>
+                <button ng-click="callback(cat.short_name);" style="width: 12.5%;" ng-repeat="cat in ::config.categoriesArray()" class="btn--no-conflicts btn--m {{::cat.color}} btn--flat" lx-ripple>
+                    <span class="hidden-lg">{{::cat.short_name}}</span>
+                    <span class="hidden-xs hidden-sm hidden-md">{{::cat.long_name}}</span>
+                </button>
             </div>
         </div>
     </div>

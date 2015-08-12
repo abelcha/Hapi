@@ -1,4 +1,4 @@
-var InterventionCtrl = function(Signalement, ContextMenu, $window, $timeout, $rootScope, $scope, $location, $routeParams, dialog, fourniture, LxNotificationService, LxProgressService, tabContainer, edisonAPI, Address, $q, mapAutocomplete, productsList, config, interventionPrm, Intervention, Map) {
+var InterventionCtrl = function(Description, Signalement, ContextMenu, $window, $timeout, $rootScope, $scope, $location, $routeParams, dialog, fourniture, LxNotificationService, LxProgressService, tabContainer, edisonAPI, Address, $q, mapAutocomplete, productsList, config, interventionPrm, Intervention, Map) {
     "use strict";
 
     var _this = this;
@@ -31,6 +31,7 @@ var InterventionCtrl = function(Signalement, ContextMenu, $window, $timeout, $ro
         intervention.devisOrigine = parseInt($routeParams.d)
     }
     _this.data = tab.data;
+    _this.description = new Description(intervention);
     _this.signalement = new Signalement(intervention)
     _this.contextMenu = new ContextMenu('intervention')
     _this.contextMenu.setData(intervention);

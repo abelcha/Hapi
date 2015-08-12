@@ -19,3 +19,6 @@ angular.module('browserify', [])
     .factory('FlushList', [function() {
         return require('./FlushList');
     }])
+    .factory('Description', [function() {
+        return require('./Description');
+    }])
