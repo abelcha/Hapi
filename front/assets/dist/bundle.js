@@ -9,10 +9,10 @@ var rmve = function(str, a) {
 }
 
 var strip = function(s) {
-    s = rmve(s, 'DE')
-    s = rmve(s, "D'")
-    s = rmve(s, 'AU')
-    s = rmve(s, 'A')
+    s = rmve(s, ' DE ')
+    s = rmve(s, " D'")
+    s = rmve(s, ' AU ')
+    s = rmve(s, ' A ')
     return s;
 }
 
@@ -20,9 +20,7 @@ var strip = function(s) {
 Description.prototype.search = function(str) {
     var _ = require('lodash');
     var resemblance = require('resemblance');
-    var tab = str.split('+')
-    this.saved = tab.slice(0, -1)
-    str = tab.pop()
+    str = str.toUpperCase()
     var list = _(this.data).map(function(e) {
             var res = 1 - resemblance.compareStrings(strip(e), str)
             return {

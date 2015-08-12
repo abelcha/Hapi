@@ -38,8 +38,9 @@ module.exports = function(schema) {
     var preSave = function(next) {
         var _this = this;
         try {
-        upperCaseEverything(this.client.address)
-        upperCaseEverything(this.facture.address)
+        upperCaseEverything(this.client)
+        upperCaseEverything(this.facture)
+        upperCaseEverything([this.facture])
             _this.sst = _this.artisan.id
             if (isWorker) {
                 return next();
