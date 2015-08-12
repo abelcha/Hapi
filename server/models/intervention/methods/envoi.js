@@ -103,9 +103,9 @@ module.exports = function(schema) {
                 if (!req.body.sms)
                     return reject("Impossible de trouver l'artisan");
                 var filesPromises = [
-  //                  getFileOS(inter)
+                    getFileOS(inter)
                 ]
-/*                if (envProd) {
+                if (envProd) {
                     filesPromises.push(getStaticFile.bind('manuelV1')(),
                         getStaticFile.bind('noticeV1')())
                 }
@@ -118,7 +118,7 @@ module.exports = function(schema) {
                 }
                 if (req.body.file) {
                     filesPromises.push(document.download(req.body.file))
-                }*/
+                }
 
                 console.time('getFiles')
                 Promise.all(filesPromises).then(function(result) {
