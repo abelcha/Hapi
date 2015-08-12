@@ -23,9 +23,23 @@ module.exports = function(schema) {
           return /CR|MN|MC|PT|PL|SR|CL|CH|VT|EL|AS/i.test(value);
       }, 'Categorie inconnue.');*/
 
+    var upperCaseEverything = function(options) {
+        var _this = this;
+        var obj = options || this.options;
+        _.each(obj, function(e, k) {
+            if (typeof e === 'string') {
+                obj[k] = e.toUpperCase();
+            }
+        })
+
+    }
+
+
     var preSave = function(next) {
         var _this = this;
         try {
+        upperCaseEverything(this.client.address)
+        upperCaseEverything(this.facture.address)
             _this.sst = _this.artisan.id
             if (isWorker) {
                 return next();
