@@ -148,7 +148,7 @@ V1.prototype.send = function(cb) {
         url: 'http://electricien13003.com/alvin/postData.php',
         qs: this.data
     }, function(err, resp, body) {
-    	//console.log('-->', err, body)
+    	console.log('-->', err, body)
         if (!err && resp.statusCode === 200) {
             console.log(body)
             cb(null, body)
