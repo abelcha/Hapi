@@ -17,6 +17,7 @@ module.exports = function(schema) {
                 inter.status = "VRF";
                 inter.save().then(resolve, reject)
             })
+            
         }
     }
 
