@@ -29978,7 +29978,7 @@ angular.module('lumx.notification', [])
             });
 
             var dialogLastBtn = angular.element('<button/>', {
-                class: 'btn btn--m btn--blue btn--flat',
+                class: 'btn--no-conflicts btn--m btn--blue btn--flat',
                 text: buttons.ok
             });
 
@@ -29987,7 +29987,7 @@ angular.module('lumx.notification', [])
             {
                 // DOM elements
                 var dialogFirstBtn = angular.element('<button/>', {
-                    class: 'btn btn--m btn--red btn--flat',
+                    class: 'btn--no-conflicts btn--m btn--red btn--flat',
                     text: buttons.cancel
                 });
 
@@ -32077,7 +32077,7 @@ angular.module("lumx.dropdown").run(['$templateCache', function(a) { a.put('drop
     '');
 	a.put('dropdown-toggle.html', '<div ng-transclude="child"></div>\n' +
     '');
-	a.put('dropdown-menu.html', '<div class="dropdown-menu dropdown-menu--{{ lxDropdownPosition }}" ng-class="{ \'dropdown__menu--is-dropped\': lxDropdownIsDropped }">\n' +
+	a.put('dropdown-menu.html', '<div class="dropdown-menu--no-conflicts dropdown-menu--{{ lxDropdownPosition }}" ng-class="{ \'dropdown__menu--is-dropped\': lxDropdownIsDropped }">\n' +
     '    <div class="dropdown-menu__content" ng-transclude="child" ng-if="lxDropdownIsDropped"></div>\n' +
     '</div>\n' +
     '');
@@ -32206,7 +32206,7 @@ angular.module("lumx.select").run(['$templateCache', function(a) { a.put('select
 angular.module("lumx.tabs").run(['$templateCache', function(a) { a.put('tabs.html', '<div class="tabs tabs--theme-{{ lxTabsLinksTc }} tabs--layout-{{ lxTabsLayout }}"\n' +
     '     ng-class="{ \'tabs--no-divider\': lsTabsNoDivider }">\n' +
     '\n' +
-    '    <button class="tabs__pagination-left btn btn--m bgc-{{ lxTabsLinksBgc }}"\n' +
+    '    <button class="tabs__pagination-left dropdown-menu--no-conflicts btn--m bgc-{{ lxTabsLinksBgc }}"\n' +
     '            ng-click="lxTabsShowPrevPage()"\n' +
     '            ng-if="lxTabsIsPaginationActive()"\n' +
     '            ng-disabled="lxTabsIsPaginationLeftDisabled()">\n' +
@@ -32227,7 +32227,7 @@ angular.module("lumx.tabs").run(['$templateCache', function(a) { a.put('tabs.htm
     '        </li>\n' +
     '    </ul>\n' +
     '\n' +
-    '    <button class="tabs__pagination-right btn btn--m bgc-{{ lxTabsLinksBgc }}"\n' +
+    '    <button class="tabs__pagination-right btn--no-conflicts btn--m bgc-{{ lxTabsLinksBgc }}"\n' +
     '            ng-click="lxTabsShowNextPage()"\n' +
     '            ng-if="lxTabsIsPaginationActive()"\n' +
     '            ng-disabled="lxTabsIsPaginationRightDisabled()">\n' +
@@ -32281,13 +32281,13 @@ angular.module("lumx.date-picker").run(['$templateCache', function(a) { a.put('d
     '                <!-- Calendar -->\n' +
     '                <div class="lx-date-picker__calendar" ng-if="!yearSelection">\n' +
     '                    <div class="lx-date-picker__nav">\n' +
-    '                        <button class="btn btn--xs btn--teal btn--icon" lx-ripple ng-click="previousMonth()">\n' +
+    '                        <button class="btn--no-conflicts btn--xs btn--teal btn--icon" lx-ripple ng-click="previousMonth()">\n' +
     '                            <i class="mdi mdi-chevron-left"></i>\n' +
     '                        </button>\n' +
     '\n' +
     '                        <span>{{ activeDate.format(\'MMMM YYYY\') }}</span>\n' +
     '\n' +
-    '                        <button class="btn btn--xs btn--teal btn--icon" lx-ripple ng-click="nextMonth()">\n' +
+    '                        <button class="btn--no-conflicts btn--xs btn--teal btn--icon" lx-ripple ng-click="nextMonth()">\n' +
     '                            <i class="mdi mdi-chevron-right"></i>\n' +
     '                        </button>\n' +
     '                    </div>\n' +
@@ -32326,7 +32326,7 @@ angular.module("lumx.date-picker").run(['$templateCache', function(a) { a.put('d
     '\n' +
     '            <!-- Actions -->\n' +
     '            <div class="lx-date-picker__actions">\n' +
-    '                <button class="btn btn--m btn--teal btn--flat" lx-ripple ng-click="closePicker()">Ok</button>\n' +
+    '                <button class="btn--no-conflicts btn--m btn--teal btn--flat" lx-ripple ng-click="closePicker()">Ok</button>\n' +
     '            </div>\n' +
     '        </div>\n' +
     '    </div>\n' +
