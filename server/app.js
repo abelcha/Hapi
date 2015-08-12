@@ -15,6 +15,13 @@ global.requireLocal = function(pth) {
     return require(process.cwd() + '/' + pth)
 }
 
+
+global.__catch = function(e) {
+    var prettyError  = require('pretty-error');
+    console.log((new prettyError().render(e)));
+    throw e;
+}
+
 var key = requireLocal('config/_keys');
 var dep = require(process.cwd() + '/server/loadDependencies');
 global.edison = dep.loadDir(process.cwd() + "/server/edison_components");

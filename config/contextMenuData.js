@@ -68,7 +68,7 @@ module.exports = {
         title: 'Recap Artisan',
         action: "ouvrirRecapSST",
         hide: function(inter) {
-            return !inter.artisan && !inter.artisan.id
+            return !inter.artisan || !inter.artisan.id
         }
     }, {
         title: "Appel l'artisan",
@@ -77,20 +77,20 @@ module.exports = {
             fontWeight: 'bold'
         },
         hide: function(inter) {
-            return !inter.artisan && !inter.artisan.id
+            return !inter.artisan || !inter.artisan.id
         }
     }, {
         title: "SMS artisan",
         action: 'smsArtisan',
         hide: function(inter) {
-            return !inter.artisan && !inter.artisan.id
+            return !inter.artisan || !inter.artisan.id
         }
     }, {
         title: "Envoyer",
         action: 'envoi',
         hide: function(inter) {
             console.log(inter)
-            return inter.status == "VRF"  || (!inter.artisan && !inter.artisan.id)
+            return inter.status == "VRF"  || (!inter.artisan || !inter.artisan.id)
         }
     }, /*{
         title: "Vérifier",

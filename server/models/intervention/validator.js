@@ -23,12 +23,7 @@ module.exports = function(schema) {
           return /CR|MN|MC|PT|PL|SR|CL|CH|VT|EL|AS/i.test(value);
       }, 'Categorie inconnue.');*/
 
-    var upper = function(str) {
-        return str ? str.toUpperCase() : str;
-    }
-
-
-    schema.pre('save', function(next, b, c) {
+    var preSave = function(next) {
         this.sst = this.artisan.id
         if (isWorker) {
             return next();
@@ -44,12 +39,10 @@ module.exports = function(schema) {
         }
         next();
 
-    });
+    }
 
-
-
-
-    schema.post('save', function(doc) {
+    var postSave = function(doc) {
+        console.log('save')
         if (!isWorker) {
             if (doc.artisan.id) {
                 db.model('artisan').findOne({
@@ -67,5 +60,19 @@ module.exports = function(schema) {
                 });
             }
         }
-    })
+    }
+
+    schema.pre('save', function(next) {
+        preSave.bind(this)(next)
+    });
+
+
+    schema.post('save', postSave)
+
+    schema.pre('findOneAndUpdate', function(next) {
+        preSave.bind(this)(next)
+    });
+
+
+    schema.post('findOneAndUpdate', postSave)
 }

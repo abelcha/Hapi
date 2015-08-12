@@ -44,7 +44,9 @@ module.exports = function(schema) {
         inter.status = "ENC";
         inter.date.envoi = new Date();
         inter.login.envoi = login;
-        return inter.save()
+        return db.model('intervention').findOneAndUpdate({
+            id: inter.id
+        }, inter)
     }
 
     var getStaticFile = function(req, res) {
@@ -84,7 +86,7 @@ module.exports = function(schema) {
                     model: 'intervention',
                     method: 'envoi',
                     data: inter,
-                    arg: req.body
+                    req: _.pick(req, 'body', 'session')
                 })
             }
 
@@ -99,10 +101,12 @@ module.exports = function(schema) {
                 if (!req.body.sms)
                     return reject("Impossible de trouver l'artisan");
                 var filesPromises = [
-                    getFileOS(inter),
-                    getStaticFile.bind('manuelV1')(),
-                    getStaticFile.bind('noticeV1')()
+                    getFileOS(inter)
                 ]
+                if (envProd) {
+                    filesPromises.push(getStaticFile.bind('manuelV1')(),
+                        getStaticFile.bind('noticeV1')())
+                }
                 if (inter.devisOrigine) {
                     filesPromises.push(db.model('intervention').getDevisFile({
                         data: inter,
@@ -113,8 +117,7 @@ module.exports = function(schema) {
                 if (req.body.file) {
                     filesPromises.push(document.download(req.body.file))
                 }
-                /*
-                                        'ok', //*/
+
                 console.time('getFiles')
                 Promise.all(filesPromises).then(function(result) {
                     console.timeEnd('getFiles')
@@ -130,6 +133,7 @@ module.exports = function(schema) {
                     inter.fileSupp = req.body.fileSupp;
                     inter.datePlain = moment(new Date(inter.date.intervention)).format('DD/MM/YYYY à HH:mm:ss')
                     var text = _.template(template.mail.intervention.os())(inter).replaceAll('\n', '<br>')
+
                     var mailOptions = {
                         From: "intervention@edison-services.fr",
                         To: req.session.email || "abel@chalier.me",
@@ -151,9 +155,8 @@ module.exports = function(schema) {
                     }, function(err) {
                         console.log(err);
                         reject("erreur, l'envoi a échoué")
-                    })
-                }, reject)
-
+                    }).catch(__catch)
+                }, reject).catch(__catch)
 
             })
         }
