@@ -21,6 +21,7 @@
 
         var translateModel = function(d) {
 
+            try {
 
             /* DATES */
             var date = {};
@@ -114,6 +115,9 @@
             /* INFO */
             rtn.categorie = d.categorie;
             rtn.sms = d.id_sms;
+            } catch(e) {
+                __catch(e)
+            }
             return rtn;
         }
 
