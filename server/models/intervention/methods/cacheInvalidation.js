@@ -67,7 +67,6 @@ module.exports = function(schema) {
             fltr = filtersFactory.filter(e);
         }
         
-        console.log(e.categorie, e.status)
         try {
             var rtn = {
                 f: !_.isEmpty(fltr) ? _.clone(fltr) : undefined,
