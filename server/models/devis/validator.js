@@ -19,6 +19,7 @@ module.exports = function(schema) {
         this.client.address.v = upper(this.client.address.v)
         next();
     });
+    
 
     schema.post('save', function(doc) {
         if (!isWorker) {
