@@ -15,7 +15,6 @@ var strip = function(s) {
     return s;
 }
 
-
 Description.prototype.search = function(str) {
     var _ = require('lodash');
     var resemblance = require('resemblance');
