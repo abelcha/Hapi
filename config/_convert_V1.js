@@ -7,6 +7,7 @@ var unicode = require('unicode-escape');
 var request = require('request');
 
 var V1 = function(d, devis, legacy) {
+    try {
 
     var x = this.data
     if (devis) {
@@ -120,6 +121,10 @@ var V1 = function(d, devis, legacy) {
     }
 
     x.A_DEMARCHE = Number(d.aDemarcher);
+    } catch(e) {
+        __catch(e)
+    }
+
     //  console.log(x)
 }
 

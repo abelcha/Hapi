@@ -1,5 +1,6 @@
 module.exports = function(schema) {
     var _reduce = require('lodash/collection/reduce')
+    var V1 = requireLocal('config/_convert_V1');
     var upper = function(str) {
         return str ? str.toUpperCase() : str;
     }
@@ -23,10 +24,9 @@ module.exports = function(schema) {
 
     schema.post('save', function(doc) {
         if (!isWorker) {
-            redis.del('interventionStats', function() {
-                db.model('devis').cacheActualise(doc);
-            });
-            if (envProd) {
+            redis.del('interventionStats');
+            db.model('devis').cacheActualise(doc);
+            if (envProd ||  envDev) {
                 console.log('v1 translate' + doc.id);
                 var v1 = new V1(doc, true);
                 v1.send(function(resp) {
