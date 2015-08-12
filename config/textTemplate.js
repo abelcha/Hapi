@@ -33,7 +33,7 @@ module.exports = {
                     "\n" +
                     "Monsieur <strong>{{sst.representant.nom}}</strong>,\n" +
                     "Suite à notre conversation téléphonique,\n" +
-                    "Nous vous prions de bien vouloir intervenir pour une intervention de {{categorie}} auprès de notre client :\n" +
+                    "Nous vous prions de bien vouloir intervenir pour une intervention de {{categoriePlain}} auprès de notre client :\n" +
                     "\n" +
                     "<strong>" +
                     "OS n°{{id}}\n" +

@@ -4,6 +4,7 @@ module.exports = function(schema) {
     var mime = require('mime')
     var moment = require('moment');
     var template = requireLocal('config/textTemplate');
+    var config = requireLocal('config/dataList')
     schema.statics.os = {
         unique: true,
         findBefore: true,
@@ -131,7 +132,8 @@ module.exports = function(schema) {
                             Content: file.data.toString('base64')
                         }
                     }).value();
-
+                    var c  = config.categories[d.categorie]
+                    inter.categoriePlain = c.suffix + ' ' + c.long_name.toLowerCase;
                     inter.fileSupp = req.body.fileSupp;
                     inter.datePlain = moment(new Date(inter.date.intervention)).format('DD/MM/YYYY à HH:mm:ss')
                     var text = _.template(template.mail.intervention.os())(inter).replaceAll('\n', '<br>')
