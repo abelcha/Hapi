@@ -74,7 +74,7 @@ module.exports = function(schema) {
         req.body.html = false
         return new Promise(function(resolve, reject) {
             var doc = JSON.parse(req.body.data);
-            _this.getFacture({
+            _this.getDevis({
                     data: doc,
                     html: true,
                     date: req.body.date,

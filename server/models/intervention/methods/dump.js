@@ -106,7 +106,7 @@
                 rtn.produits.map(function(p) {
                     p.desc = sanitizeHtml(entities.decode(p.desc))
                     p.ref = sanitizeHtml(entities.decode(p.ref))
-                    p.pu = sanitizeHtml(p.pu.replace(/[^\d.-]/g, ''))
+                    p.pu = typeof p.pu === 'number' ? p.pu : (parseInt(p.pu.replace(/[^\d.-]/g, '')) || 0)
                     p.ref = p.ref.replace(' ', '');
                     if (p.ref.startsWith("CAM"))
                         p.ref = "CAM001";

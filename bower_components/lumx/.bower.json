@@ -7,7 +7,7 @@
     "Framework"
   ],
   "homepage": "http://ui.lumapps.com",
-  "version": "0.3.64",
+  "version": "0.3.74",
   "authors": [
     "LumApps"
   ],
@@ -51,14 +51,14 @@
     "angular-route": "latest",
     "highlightjs": "latest"
   },
-  "_release": "0.3.64",
+  "_release": "0.3.74",
   "_resolution": {
     "type": "version",
-    "tag": "v0.3.64",
-    "commit": "73d30e12d27e549496307a008f19b9c003007512"
+    "tag": "v0.3.74",
+    "commit": "b3d737991f559157dcc8c84fcfb93a97d229a494"
   },
   "_source": "git://github.com/lumapps/lumX.git",
-  "_target": "~0.3.64",
+  "_target": "~0.3.74",
   "_originalSource": "lumx",
   "_direct": true
 }

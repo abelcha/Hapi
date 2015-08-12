@@ -90,7 +90,7 @@
             rtn.produits.map(function(p) {
                 p.desc = sanitizeHtml(entities.decode(p.desc))
                 p.ref = sanitizeHtml(entities.decode(p.ref))
-                p.pu = parseInt(sanitizeHtml(entities.decode(p.pu))) || 0
+                p.pu = typeof p.pu === 'number' ? p.pu : (parseInt(p.pu.replace(/[^\d.-]/g, '')) || 0)
                 p.ref = p.ref.replace(' ', '');
                 if (p.ref.startsWith("CAM"))
                     p.ref = "CAM001";
@@ -122,7 +122,13 @@
         var addInDB = function(data, i, cb) {
             if (i >= data.length - 1)
                 return cb(null)
-            var inter = db.model('devis')(translateModel(data[i]));
+
+            try {
+                var tm = translateModel(data[i])
+            } catch(e) {
+                __catch(e);
+            }
+            var inter = db.model('devis')(tm);
             if (i % 100 == 0)
                 console.log(((i / data.length) * 100).toFixed(2) + '%', inter.id);
             inter.save(function(err) {

@@ -1,4 +1,4 @@
-angular.module('edison').directive('dropdownRow', function(edisonAPI, config, $q, $timeout, Intervention) {
+angular.module('edison').directive('dropdownRow', function(Devis, productsList, edisonAPI, config, $q, $timeout, Intervention) {
     "use strict";
 
     return {
@@ -10,9 +10,10 @@ angular.module('edison').directive('dropdownRow', function(edisonAPI, config, $q
             row: '=',
         },
         link: function(scope, element, attrs) {
+            scope._ = _;
             scope.Intervention = Intervention
             scope._model = scope.model || "intervention"
-            console.log('-->', scope._model)
+
             scope.expendedStyle = {
                 height: 0,
                 overflow: 'hidden'
@@ -31,6 +32,9 @@ angular.module('edison').directive('dropdownRow', function(edisonAPI, config, $q
                     extended: true
                 }).then(function(result) {
                     scope.data = result.data;
+                    if (scope.data.produits) {
+                        scope.produits = new productsList(scope.data.produits);
+                    }
                     scope.client = scope.data.client;
                     scope.address = scope.client.address;
 
@@ -42,9 +46,10 @@ angular.module('edison').directive('dropdownRow', function(edisonAPI, config, $q
                 ]
                 var pThen = function(result) {
                     scope.data = result[0].data;
+                    scope.produits = new productsList(scope.data.produits);
+                    scope.hist = scope.data.historique
                     scope.client = scope.data.client;
                     scope.address = scope.client.address;
-                    scope.data.flagship = _.max(scope.data.produits, 'pu');
                 }
             } else if (scope._model === 'artisan') {
                 pAll = [

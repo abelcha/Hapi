@@ -144,6 +144,9 @@ module.exports = function(db) {
             type: String,
             required: true
         },
+        descriptionTags: [
+            String
+        ],
         remarque: String,
         produits: [{
             pu: Number,

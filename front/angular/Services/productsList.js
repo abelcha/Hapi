@@ -137,14 +137,11 @@ angular.module('edison').factory('productsList', ['dialog', 'openPost', function
             }
             return rtn
         },
+        flagship:function() {
+            return _.max(this.produits, 'pu');
+        },
         total: function() {
-            var total = 0;
-            if (this.produits) {
-                this.produits.forEach(function(e) {
-                    total += (e.pu * e.quantite);
-                })
-            }
-            return total
+            return _.round(_.sum(this.produits, 'pu'), 2)
         },
         previsualise: function(data) {
             openPost('/api/intervention/facturePreview', {

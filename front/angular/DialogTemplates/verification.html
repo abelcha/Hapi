@@ -1,4 +1,4 @@
-<md-dialog aria-label="Mango (Fruit)" style="  width: 1100px;height: 80%;">
+<md-dialog aria-label="Mango (Fruit)" style="  width: 1100px;height: 50%;">
     <md-dialog-content class="sticky-container" style="height: 100%;background:#C4C4C4;overflow:scroll">
         <div style="padding-left: 15px;padding-right: 15px;">
             <br>
@@ -15,7 +15,7 @@
                                 <input eurofilter ng-model="data.prixFinal">
                             </lx-text-field>
                         </div>
-                        <div class="col-sm-3">
+               <!--          <div class="col-sm-3 ">
                             <md-checkbox ng-model="data.reglementSurPlace" aria-label="Checkbox 1">
                                 <div class="hidden-sm hidden-md">
                                     Reglement Sur Place
@@ -24,8 +24,8 @@
                                     RSP
                                 </div>
                             </md-checkbox>
-                        </div>
-                        <div class="col-sm-3">
+                        </div> -->
+                        <div class="col-sm-3 col-sm-offset-3">
                             <div class="select-style text-field">
                                 <select ng-model="data.modeReglement" ng-options="mr.short_name as mr.long_name for mr in config.modeDeReglements">
                                 </select>
@@ -47,10 +47,10 @@
         </div>
     </md-dialog-content>
     <div class="md-actions" layout="row">
-        <md-button ng-click="answer(true);" class="md-primary">
+        <md-button ng-click="answer(true);" class="md-primary black-text">
             Annuler
         </md-button>
-        <md-button ng-click="answer(false);" class="md-primary">
+        <md-button ng-click="answer(false);" class="md-primary black-text">
             Valider
         </md-button>
     </div>

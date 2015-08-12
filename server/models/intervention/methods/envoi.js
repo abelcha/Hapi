@@ -104,9 +104,10 @@ module.exports = function(schema) {
                 if (!req.body.sms)
                     return reject("Impossible de trouver l'artisan");
                 var filesPromises = [
-                    //  getFileOS(inter)
+                    getFileOS(inter)
                 ]
                 if (envProd) {
+                    console.log('envprod')
                     filesPromises.push(getStaticFile.bind('manuelV1')(),
                         getStaticFile.bind('noticeV1')())
                 }
@@ -134,7 +135,7 @@ module.exports = function(schema) {
                     }).value();
                     var c = config.categories[inter.categorie]
                     inter.categoriePlain = c.suffix + ' ' + c.long_name.toLowerCase;
-                    inter.fileSupp = req.body.fileSupp;
+                    inter.fileSupp = req.body.file;
                     inter.datePlain = moment(new Date(inter.date.intervention)).format('DD/MM/YYYY à HH:mm:ss')
                     var text = _.template(template.mail.intervention.os())(inter).replaceAll('\n', '<br>')
 
@@ -147,7 +148,7 @@ module.exports = function(schema) {
                     }
 
                     var validationPromises = [
-                        mail.send(mailOptions), 
+                        mail.send(mailOptions),
                         //sendSMS(req.body.sms, inter, req.session),
                         envoi(inter, req.session.login)
                     ]

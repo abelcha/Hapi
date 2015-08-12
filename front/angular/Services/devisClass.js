@@ -29,6 +29,7 @@ angular.module('edison')
                     });
             };
             Devis.prototype.envoi = function(cb) {
+                console.log("envoiDevis")
                 var _this = this;
                 dialog.getText({
                     title: "Texte envoi devis",

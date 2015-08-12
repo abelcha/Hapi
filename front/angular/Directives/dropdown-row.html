@@ -1,40 +1,59 @@
 <div id="expended" ng-style="expendedStyle">
     <div class="row">
-        <div class="col-sm-4 info-ext" ng-if="_model === 'intervention' || _model === 'devis'">
+        <div class="col-sm-4 info-ext" ng-if="_model === 'intervention'||_model === 'devis'">
             <p><strong>Nom:</strong> {{::client.civilite}} {{::client.prenom}} {{::client.nom}}</p>
             <p><strong>Addresse:</strong> {{::client.address.n}} {{::client.address.r}}, {{::client.address.cp}} {{::client.address.v}}</p>
-            <p><strong>Description:</strong> {{::data.description}}</p>
-            <p><strong>Prix Annoncé: </strong> {{data.prixAnnonce || 0}} €</p>
-            <p ng-if="data.prixFinal"><strong>Prix Final: </strong> {{data.prixFinal || 0}} €</p>
-            <p><strong>Reglement: </strong>{{data.reglementSurPlace ? 'Sur place' : 'Par facture'}} - {{data.modeReglement}}</p>
+            <p ng-if="_model === 'intervention'"><strong>Description:</strong> {{::data.description}}</p>
+            <p ng-if="_model === 'intervention'"><strong>Prix Annoncé: </strong> {{data.prixAnnonce || 0}} €</p>
+            <p ng-if="_model === 'intervention' && data.prixFinal"><strong>Prix Final: </strong> {{_.round(data.prixFinal, 2) || 0}} €</p>
+            <p ng-if="_model === 'intervention'"><strong>Reglement: </strong>{{data.reglementSurPlace ? 'Sur place' : 'Par facture'}} - {{data.modeReglement}}</p>
+            <p ng-if="_model === 'devis'">
+                <strong>Flagship : </strong> {{::produits.flagship().title}} ({{::produits.flagship().pu}} €)
+            </p>
+            <p ng-if="_model === 'devis'">
+                <strong> Nombre de produits : </strong>{{::data.produits.length}}
+            </p>
+            <p ng-if="_model === 'devis'">
+                <strong> Montant HT : </strong>{{produits.total()}} €
+            </p>
             <p ng-if="data.ca"><strong>Annulation:</strong> {{::data.ca.long_name}}</p>
         </div>
         <div ng-if="_model === 'intervention'" class="col-sm-4 info-ext">
             <div style="min-height: 147px;padding-top:3px">
-                <p ng-if="data.devisOrigine.id">Devis <a href="/devis/{{data.devisOrigine.id}}">{{data.devisOrigine.id}}</a> ajouté le {{data.devisOrigine.date.ajout | date:"dd/MM/yy à HH'h'mm"}} par {{data.devisOrigine.login.ajout}}</p>
-
+                <p ng-if="data.devisOrigine.id">Devis <a href="/devis/{{data.devisOrigine.id}}">{{data.devisOrigine.id}}</a> ajouté le {{data.devisOrigine.date.ajout | date:"dd/MM/yy à HH'h'mm"}} par {{data.devisOrigine.login.ajout}}
+                </p>
                 <p>Ajouté le {{data.date.ajout | date:"dd/MM/yy à HH'h'mm"}} par {{data.login.ajout}}</p>
                 <p ng-if="data.date.envoi">Envoyé le {{data.date.envoi | date:"dd/MM/yy à HH'h'mm"}} par {{data.login.envoi}}</p>
                 <p ng-if="data.date.verification">Verifié le {{data.date.verification | date:"dd/MM/yy à HH'h'mm"}} par {{data.login.verification}}</p>
                 <p ng-if="data.date.annulation">Annulé le {{data.date.annulation | date:"dd/MM/yy à HH'h'mm"}} par {{data.login.annulation}} <i ng-if="data.causeAnnulation">({{::config.getCauseAnnulation(data.causeAnnulation).long_name}})</i></p>
             </div>
-                <p>
-                    <md-button ng-if="data.date.envoi" ng-click="Intervention(data).verification()" class="md-raised md-primary">Vérifier</md-button>
-                    <md-button ng-click="Intervention(data).annulation()" class="md-raised md-warn">Annuler</md-button>
-                </p>
+            <p>
+                <md-button ng-if="data.status === 'ENC'" ng-click="Intervention(data).verification()" class="md-raised md-primary green">Vérifier</md-button>
+                <md-button ng-click="Intervention(data).annulation()" class="md-raised md-warn">Annuler</md-button>
+             <md-button ng-if="data.produits.length" ng-click="produits.previsualise(data)" class="md-raised md-primary yellow black-text">Preview</md-button>
+            </p>
         </div>
         <div ng-if="_model === 'devis'" class="col-sm-4 info-ext">
-            <div>
-                <h4>Produits</h4>
+            <div ng-init="hist_title = ['Ajouté', '1er Envoi', 'Relance n°1', 'Relance n°2']">
+                <!--  <pre>
+                  {{data.produits}}
+                </pre> -->
+                <p>
+                    <strong> {{hist_title[0]}} </strong> le {{data.date.ajout|date:"dd/MM/yy à HH'h'mm"}} par {{data.login.ajout}}
+                </p>
+                <p ng-if="hist.length >= 1">
+                    <strong> {{hist_title[1]}} </strong> le {{hist[0].date|date:"dd/MM/yy à HH'h'mm"}} par {{hist[0].login}}
+                </p>
+                <p ng-if="hist.length >= 2">
+                    <strong> {{hist_title[2]}} </strong> le {{hist[1].date|date:"dd/MM/yy à HH'h'mm"}} par {{hist[1].login}}
+                </p>
+                <p ng-if="hist.length >= 3">
+                    <strong> {{hist_title[3]}} </strong> le {{hist[2].date|date:"dd/MM/yy à HH'h'mm"}} par {{hist[2].login}}
+                </p>
                 <br>
                 <p>
-                    <strong> Nombre de produits : </strong> {{::data.produits.length}}
-                </p>
-                <p>
-                    <strong>FlagShip : </strong> {{::data.flagship.title}}
-                </p>
-                <p>
-                    <strong> Nombre de produits : </strong>{{::data.produits.length}}
+                    <md-button class=" yellow black-text" ng-click="produits.previsualise(data)" class="md-raised md-primary">Preview</md-button>
+                    <md-button ng-if="data.status !== 'TRA' && data.status !== 'ANN'" ng-click="Devis(data).envoi()" class="md-raised md-primary  light-blue accent-3">Envoyer</md-button>
                 </p>
             </div>
         </div>

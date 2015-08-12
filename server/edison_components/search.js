@@ -17,7 +17,7 @@ module.exports = function(req, res) {
                 .limit(req.query.limit)
                 .then(function(resp) {
                     var mapFunc = options.mapFunc || function(e) {
-                        console.log(options.pre ||  '#')
+                        //console.log(options.pre ||  '#')
                         return {
                             link: ['', (options.model ||  'intervention'), e.id].join('/') + (options.link ||  ''),
                             description: (options.pre ||  '#') + _.template(options.template || "{{id}} - {{client.civilite}} {{client.nom}} -  {{client.address.cp}} {{client.address.v}}")(e)

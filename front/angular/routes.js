@@ -1,4 +1,4 @@
-angular.module('edison', ['browserify', 'ui.slimscroll', 'ngMdIcons', 'ngMaterial', 'lumx', 'ngAnimate', 'xeditable', 'btford.socket-io', 'ngFileUpload', 'pickadate', 'ngRoute', 'ngResource', 'ngTable', 'ngMap'])
+angular.module('edison', ['browserify', 'ui.slimscroll', 'ngMaterial', 'lumx', 'ngAnimate', 'xeditable', 'btford.socket-io', 'ngFileUpload', 'pickadate', 'ngRoute', 'ngResource', 'ngTable', 'ngMap'])
     .config(function($mdThemingProvider) {
         "use strict";
         $mdThemingProvider.theme('default')
@@ -33,7 +33,8 @@ angular.module('edison').controller('MainController', function($timeout, $q, Dat
     $rootScope.options = {
         showMap: true
     };
-    $timeout(function() {
+    $('input[type="search"]').ready(function() {
+
         $('input[type="search"]').on('keyup', function(e, w) {
             if (e.which == 13) {
                 if ($('ul.md-autocomplete-suggestions>li').length) {
@@ -43,7 +44,7 @@ angular.module('edison').controller('MainController', function($timeout, $q, Dat
                 }
             }
         });
-    }, 400)
+    })
     $scope.searchBox = {
         search: function(x) {
             console.log('-->', x)
@@ -60,7 +61,9 @@ angular.module('edison').controller('MainController', function($timeout, $q, Dat
         },
         change: function(x) {
             console.log('change')
-            $location.url(x.link)
+            if (x) {
+                $location.url(x.link)
+            }
             $scope.searchText = "";
         }
     }
@@ -382,13 +385,13 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
             controller: "archivesPaiementController",
             controllerAs: "vm",
         })
-          .when('/compta/archivesReglement', {
+        .when('/compta/archivesReglement', {
             templateUrl: "Pages/Archives/archives.html",
             controller: "archivesReglementController",
             controllerAs: "vm",
         })
         .otherwise({
-            redirectTo:'/dashboard'
+            redirectTo: '/dashboard'
         });
     // use the HTML5 History API
     $locationProvider.html5Mode(true);
