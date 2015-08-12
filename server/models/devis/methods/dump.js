@@ -187,6 +187,7 @@
                     if (err || resp.statusCode !== 200 || !body || body == 'null') {
                         return reject('nope')
                     }
+                    console.log('-->', body)
                     db.model('devis').update({
                         id: id
                     }, translateModel(JSON.parse(body)), {

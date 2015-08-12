@@ -9,6 +9,7 @@ var filtersFactory = requireLocal('config/FiltersFactory')("intervention")
 
 module.exports = function(schema) {
 
+
     var selectedFields = [
         '-_id',
         'id',
