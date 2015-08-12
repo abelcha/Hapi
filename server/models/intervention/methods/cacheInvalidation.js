@@ -1,8 +1,10 @@
 'use strict';
 
-var ReadWriteLock = require('rwlock');
-var lock = new ReadWriteLock();
+//var ReadWriteLock = require('rwlock');
+//var lock = new ReadWriteLock();
 var _ = require("lodash")
+var ms = require('milliseconds');
+
 var filtersFactory = requireLocal('config/FiltersFactory')("intervention")
 
 module.exports = function(schema) {
@@ -56,7 +58,7 @@ module.exports = function(schema) {
         var config = requireLocal('config/dataList')
         var d = requireLocal('config/dates.js')
         console.log(e.id)
-        if (e.status === "ENC" && Date.now() > (new Date(e.date.intervention)).getTime()) {
+        if (e.status === "ENC" && Date.now() > (new Date(e.date.intervention)).getTime() + ms.hours(1)) {
             e.status = 'AVR';
         }
         var fltr = {}
@@ -64,33 +66,33 @@ module.exports = function(schema) {
             fltr = filtersFactory.filter(e);
         }
         try {
-        var rtn = {
-            f: !_.isEmpty(fltr) ? _.clone(fltr) : undefined,
-            t: e.login.ajout,
-            id: e.id,
-            ai: e.artisan.id,
-            s: config.etats[e.status].order,
-            c: config.categories[e.categorie].order,
-            n: e.client.civilite + ' ' + e.client.nom,
-            a: e.artisan.nomSociete,
-            pa: e.prixFinal || e.prixAnnonce,
-            da: d(e.date.ajout),
-            di: d(e.date.intervention),
-            rc: getReglementClient(e, fltr) ||  undefined,
-            ps: getPaiementArtisan(e, fltr) ||  undefined,
-            ad: e.client.address.cp + ', ' + e.client.address.v,
-            dm: e.login.demarchage || undefined
-        };
-    } catch(e) {
-        console.log('--->', e)
-    }
+            var rtn = {
+                f: !_.isEmpty(fltr) ? _.clone(fltr) : undefined,
+                t: e.login.ajout,
+                id: e.id,
+                ai: e.artisan.id,
+                s: config.etats[e.status].order,
+                c: config.categories[e.categorie].order,
+                n: e.client.civilite + ' ' + e.client.nom,
+                a: e.artisan.nomSociete,
+                pa: e.prixFinal || e.prixAnnonce,
+                da: d(e.date.ajout),
+                di: d(e.date.intervention),
+                rc: getReglementClient(e, fltr) ||  undefined,
+                ps: getPaiementArtisan(e, fltr) ||  undefined,
+                ad: e.client.address.cp + ', ' + e.client.address.v,
+                dm: e.login.demarchage || undefined
+            };
+        } catch (e) {
+            console.log('--->', e)
+        }
         fltr = null;
         return rtn;
     }
     schema.statics.translate = translate;
     schema.statics.cacheActualise = function(doc) {
         console.log('cacheActualise')
-        lock.writeLock(function(release) {
+        //lock.writeLock(function(release) {
             redis.get("interventionList", function(err, reply) {
                 if (!err && reply) {
                     var data = JSON.parse(reply);
@@ -112,11 +114,11 @@ module.exports = function(schema) {
                                 io.sockets.emit('interventionListChange', result);
                             }, 2500)
                         }
-                        release();
+                       // release();
                     });
                 }
             });
-        });
+      //  });
     }
 
 
@@ -146,24 +148,24 @@ module.exports = function(schema) {
             console.log('cachereload')
             try {
 
-            db.model('intervention').find({
-                id: {
-                    $gt: req.query.limit || 10000
-                }
-            }).sort('-id').select(selectedFields).then(function(docs) {
-                console.log('yay memory')
-                var result = [];
-                for (var i = 0; i < docs.length - 1; i++) {
-                    result[i] = translate(docs[i])
-                        //console.log('-->', i);
-                };
-                redis.set("interventionList", JSON.stringify(result), function() {
-                    resolve(result);
-                })
-            }, reject);
-        }catch(e) {
-            console.log(e)
-        }
+                db.model('intervention').find({
+                    id: {
+                        $gt: req.query.limit || 10000
+                    }
+                }).sort('-id').select(selectedFields).then(function(docs) {
+                    console.log('yay memory')
+                    var result = [];
+                    for (var i = 0; i < docs.length - 1; i++) {
+                        result[i] = translate(docs[i])
+                            //console.log('-->', i);
+                    };
+                    redis.set("interventionList", JSON.stringify(result), function() {
+                        resolve(result);
+                    })
+                }, reject);
+            } catch (e) {
+                console.log(e)
+            }
         });
     }
 }

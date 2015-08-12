@@ -332,7 +332,7 @@
         var dumpOne = function(id) {
             console.log('dumpOne', id)
             return new Promise(function(resolve, reject) {
-                request.get(key.alvin.url + "/dumpIntervention.php?id=" + id + "&key=" + key.alvin.pass, function(err, resp, body) {
+                request.get(key.alvin.url + "/dumpIntervention.php?devis=true&id=" + id + "&key=" + key.alvin.pass, function(err, resp, body) {
                     if (err || resp.statusCode !== 200 || !body || body == 'null') {
                         return reject('nope')
                     }
