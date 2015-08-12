@@ -46,7 +46,7 @@ module.exports = {
                     "Vous devez dès réception de cet ordre de service, prendre contact immédiatement avec le client afin de confirmer la date et l'horaire de l’intervention.\n" +
                     "\n" +
                     "Les coordonnées et la description de l'intervention sont détaillées dans l'ordre de service que vous trouverez en pièce jointe. \n" +
-                    "<% if (devisOrigine) {%> <strong>Vous trouverez également le devis accepté et signé par notre client</strong> <%}%>" +
+                    "<% if (typeof devisOrigine !== 'undefined') {%> <strong>Vous trouverez également le devis accepté et signé par notre client</strong> <%}%>" +
                     "\n" +
                     "Vous trouverez ci-joint :\n" +
                     " • Ordre de service d’intervention n°{{id}}\n" +
@@ -54,7 +54,7 @@ module.exports = {
                     " • Manuel à suivre pour la réalisation des devis et factures\n" +
                     " • Une description étape par étape de notre mode de fonctionnement\n" +
                     "<strong>" + 
-                    "<% if (devisOrigine) {%> • Le devis n°{{devisOrigine}} accepté <%}%>\n" +
+                    "<% if (typeof devisOrigine !== 'undefined') {%> • Le devis n°{{devisOrigine}} accepté <%}%>\n" +
                     "<% if (fileSupp) {%> • PJ supplémentaire <%}%>\n" +
                     "</strong>" + 
                     "\n" +

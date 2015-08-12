@@ -173,6 +173,30 @@
             return execDump(limit)
         }
 
+        var dumpOne = function(id) {
+            return new Promise(function(resolve, reject) {
+                request.get(key.alvin.url + "/dumpIntervention.php?id=" + id + "&key=" + key.alvin.pass, function(err, resp, body) {
+                    if (err || resp.statusCode !== 200 || !body || body == 'null') {
+                        return reject('nope')
+                    }
+                    db.model('intervention').update({
+                        id: id
+                    }, translateModel(JSON.parse(body)), {
+                        upsert: true
+                    }).exec(function(err, resp, c) {
+                        if (err)
+                            return reject(err);
+                        resolve(resp);
+                        db.model('intervention').findOne({
+                            id: id
+                        }).then(function(doc) {
+                            db.model('intervention').cacheActualise(doc);
+                        })
+                    })
+                });
+            })
+        }
+
         schema.statics.dump = function(req, res) {
             var limit = req.query.limit ||  0;
             if ((envDev || envProd) && !isWorker) {
