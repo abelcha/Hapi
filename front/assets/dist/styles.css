@@ -2351,9 +2351,9 @@ body.loading {
     max-width:##;
 }
 
-@media only screen and (max-width: 1680px) {
+@media only screen and (max-width: 1580px) {
     .container.intervention {
-        max-width: 900px!important;
+        max-width: 800px!important;
     }
 }
 
