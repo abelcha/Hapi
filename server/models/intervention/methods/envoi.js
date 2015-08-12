@@ -56,7 +56,7 @@ module.exports = function(schema) {
         var fs = require('fs');
         var file = this
         return new Promise(function(resolve, reject) {
-            var path = [process.cwd(), 'front', 'assets', 'pdf', (file || 'manuelV1.pdf')].join('/')
+            var path = [process.cwd(), 'front', 'assets', 'pdf', (file || 'manuel.pdf')].join('/')
             fs.readFile(path, function(err, buffer) {
                 if (err)
                     return reject(err);
@@ -72,8 +72,8 @@ module.exports = function(schema) {
         })
     }
 
-    schema.statics.manuel = getStaticFile.bind('manuelV1.pdf')
-    schema.statics.notice = getStaticFile.bind('noticeV1.pdf')
+    schema.statics.manuel = getStaticFile.bind('manuel.pdf')
+    schema.statics.notice = getStaticFile.bind('notice.pdf')
 
     schema.statics.envoi = {
         unique: true,
@@ -108,8 +108,8 @@ module.exports = function(schema) {
                 ]
                 if (envProd) {
                     console.log('envprod')
-                    filesPromises.push(getStaticFile.bind('manuelV1.pdf')(),
-                        getStaticFile.bind('noticeV1.pdf')())
+                    filesPromises.push(getStaticFile.bind('manuel.pdf')(),
+                        getStaticFile.bind('notice.pdf')())
                 }
                 if (inter.devisOrigine) {
                     filesPromises.push(db.model('intervention').getDevisFile({
@@ -134,7 +134,7 @@ module.exports = function(schema) {
                         }
                     }).value();
                     var c = config.categories[inter.categorie]
-                    inter.categoriePlain = c.suffix + ' ' + c.long_name.toLowerCase;
+                    inter.categoriePlain = c.suffix + ' ' + c.long_name.toLowerCase();
                     inter.fileSupp = req.body.file;
                     inter.datePlain = moment(new Date(inter.date.intervention)).format('DD/MM/YYYY à HH:mm:ss')
                     var text = _.template(template.mail.intervention.os())(inter).replaceAll('\n', '<br>')
