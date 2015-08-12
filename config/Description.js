@@ -15,17 +15,6 @@ var strip = function(s) {
     return s;
 }
 
-Description.prototype.change = function() {
-    var _this = this;
-/*    if (this.selected && this.selected.name) {
-        this.saved.push(this.selected.name);
-    }
-    var res = _.map(this.saved, _.trim).join(' + ')
-    window.setTimeout(function() {
-        console.log('-->', res)
-        _this.inter.description = res;
-    }, 1000)*/
-}
 
 Description.prototype.search = function(str) {
     var _ = require('lodash');
@@ -39,12 +28,8 @@ Description.prototype.search = function(str) {
                 match: res,
                 name: e
             }
-            // return _.deburr(e).startsWith(str.toUppercase())
-        }).sortBy('match').slice(0, 10).value()
-        /*    console.log("--------------------")
-            _.each(list, function(e) {
-                console.log(e)
-            })*/
+        }).sortBy('match').slice(0, 5).value()
+
     return list;
 }
 
