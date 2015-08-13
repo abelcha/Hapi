@@ -76,7 +76,7 @@ module.exports = function(schema) {
                 ai: e.artisan.id,
                 s: config.etats[e.status].order,
                 c: config.categories[e.categorie].order,
-                n: e.client.civilite + ' ' + e.client.nom + ' ' e.client.prenom,
+                n: e.client.civilite + ' ' + e.client.nom + ' ' + e.client.prenom,
                 a: e.artisan.nomSociete,
                 pa: e.prixFinal || e.prixAnnonce,
                 da: d(e.date.ajout),
