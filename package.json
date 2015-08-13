@@ -23,7 +23,7 @@
     "cron-emitter": "^0.2.2",
     "cron-parser": "^0.6.4",
     "dropbox": "^0.10.3",
-    "edsx-mail": "^1.1.2",
+    "edsx-mail": "^1.1.3",
     "ejs": "^2.2.4",
     "express": "^4.13.3",
     "express-csv": "^0.6.0",
