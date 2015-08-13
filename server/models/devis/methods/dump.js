@@ -200,6 +200,7 @@
                         id: id
                     }, tra, {
                         upsert: true
+                        
                     }).exec(function(err, resp, c) {
                         console.log('updated')
                         if (err)
