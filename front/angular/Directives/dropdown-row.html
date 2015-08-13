@@ -7,12 +7,12 @@
             <p ng-if="_model === 'intervention'"><strong>Prix Annoncé: </strong> {{data.prixAnnonce || 0}} €</p>
             <p ng-if="_model === 'intervention' && data.prixFinal"><strong>Prix Final: </strong> {{_.round(data.prixFinal, 2) || 0}} €</p>
             <p ng-if="_model === 'intervention'"><strong>Reglement: </strong>{{data.reglementSurPlace ? 'Sur place' : 'Par facture'}} - {{data.modeReglement}}</p>
-            <p ng-if="!data.reglementSurPlace">
-                <p><strong>Nom Facture:</strong> {{::data.facture.prenom}} {{::data.facture.nom}}</p>
+            <p ng-if="data.facture.nom">
+                <p><strong>Nom Facture:</strong> {{data.facture.prenom}} {{data.facture.nom}}</p>
                 <p><strong>Addresse Facture:</strong> {{data.facture.address.n}} {{data.facture.address.r}}, {{data.facture.address.cp}} {{data.facture.address.v}}</p>
             </p>
             <p ng-if="_model === 'devis'">
-                <strong>Flagship : </strong> {{::produits.flagship().title}} ({{::produits.flagship().pu}} €)
+                <strong>Flagship : </strong> {{produits.flagship().title}} ({{produits.flagship().pu}} €)
             </p>
             <p ng-if="_model === 'devis'">
                 <strong> Nombre de produits : </strong>{{::data.produits.length}}
