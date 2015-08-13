@@ -37,7 +37,7 @@
             <drop-down id="service-intervention" title="Service Intervention" icon="circle" open-default="user.service === 'INTERVENTION'">
                 <link fltr="i_all" icon="th-list" title="Tous les Interventions"></link>
                 <drop-down title="Mes Interventions" icon="calendar" open-default="user.service === 'INTERVENTION'">
-                    <link fltr="i_tall" icon="th-list" color="primary" title="{{dateFormat}}" login="{{user.login}}"></link>
+                   <link fltr="i_tall" icon="th-list" color="primary" bold="true" title="{{dateFormat}}" login="{{user.login}}"></link>
                     <link fltr="i_tenv" icon="th-list" login="{{user.login}}"></link>
                     <link fltr="i_apr" icon="th-list" color="primary" login="{{user.login}}"></link>
                     <link fltr="i_avr" icon="th-list" color="warning" login="{{user.login}}"></link>
@@ -49,7 +49,7 @@
                 </drop-down>
                 <drop-down icon="hospital-o" title="Mes Devis" open-default="user.service === 'INTERVENTION'">
                     <link fltr="d_all" model="devis" icon="th-list" title="Tous les Devis" color="default"></link>
-                    <link fltr="d_tall" model="devis" title="{{dateFormat}}" color="success" icon="th-list" login="{{user.login}}"></link>
+                    <link fltr="d_tall" model="devis" bold="true" title="{{dateFormat}}" color="success" icon="th-list" login="{{user.login}}"></link>
                     <link fltr="d_aev" model="devis" icon="th-list" color="danger" login="{{user.login}}"></link>
                     <link fltr="d_att" model="devis" icon="th-list" color="warning" login="{{user.login}}"></link>
                     <link fltr="d_ann" model="devis" icon="th-list" color="default" login="{{user.login}}"></link>

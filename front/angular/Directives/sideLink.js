@@ -6,7 +6,7 @@
          template: '<li>' +
              '      <a href="{{fullUrl}}" >' +
              '            <i ng-if="icon" class = "menu-icon fa fa-{{icon}}"> </i>' +
-             '            <span class="mm-text">{{title || exFltr.long_name}}</span>' +
+             '            <span ng-class="{bold : bold}" class="mm-text">{{title || exFltr.long_name}}</span>' +
              '            <span ng-if="total"class="label label-{{_color}}">{{total}}</span>' +
              '        </a>' +
              '      </li>',
@@ -18,6 +18,7 @@
              title: '@',
              url: '@',
              model: '@',
+             bold: '@',
              count: '@',
              noCounter: '@',
              color: '@',
