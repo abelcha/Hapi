@@ -226,7 +226,8 @@
                             </div>
                         </div>
                         <info-facture ng-if="!vm.data.reglementSurPlace" data="vm.data"></info-facture>
-                        <produits ng-if="vm.data.id || vm.data.devisOrigine" data="vm.data"></produits>
+                        <div id="produits"></div>
+                        <produits  ng-if="vm.data.id || vm.data.devisOrigine" data="vm.data"></produits>
                         <credit-card class="margin" model="vm.data" ng-if="vm.data.modeReglement === 'CB'"></credit-card>
                         <info-fourniture ng-if="vm.data.id" data="vm.data"></info-fourniture>
                         <info-compta ng-if="vm.data.status === 'VRF' && vm.data.artisan.document" data="vm.data"></info-compta>

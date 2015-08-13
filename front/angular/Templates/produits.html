@@ -1,6 +1,6 @@
 <div class="card margin">
     <div class="p+">
-        <strong ng-click="display = !display" class="fs-headline display-block">Facture / Devis</strong><a ng-if="data.devisOrigine" href="/devis/{{data.devisOrigine}}">Devis Original</a>
+        <strong ng-click="display = (!data.reglementSurPlace || data.produits.length)" class="fs-headline display-block">Facture / Devis</strong><a ng-if="data.devisOrigine" href="/devis/{{data.devisOrigine}}">Devis Original</a>
         <md-content class="autocomplete" style="width: 40%;margin-top: -22px;margin-left: 54%;float: left;" layout-padding layout="column" md-input-container flex>
             <md-autocomplete ng-if="data.produits.length || display" md-search-text-change="null" md-selected-item-change="produits.add(selectedProduct)" md-selected-item="selectedProduct" md-search-text="produits.searchText" md-items="item in produits.search(produits.searchText)" md-item-text="item.title" placeholder="Entrer un produit">
                 <span md-highlight-text="produits.searchText"> 
@@ -8,7 +8,7 @@
             </md-autocomplete>
         </md-content>
         <span class="fs-subhead tc-black-2 display-block">Pour generation de factures/devis</span>
-        <div class="paragraph fs-body-1 mt+" ng-if="data.produits.length || display || !data.reglementSurPlace">
+        <div class="paragraph fs-body-1 mt+" ng-if="display">
             <div class="data-table-container">
                 <table class="data-table data-table--has-primary data-table--has-secondary">
                     <thead>
