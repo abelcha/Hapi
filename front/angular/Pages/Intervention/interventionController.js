@@ -249,15 +249,6 @@ var InterventionCtrl = function(Description, Signalement, ContextMenu, $window, 
         }
     }
 
-    if ($routeParams.scrollTo) {
-        $timeout(function() {
-            
-                window.scrollTo(0, $('#' + $routeParams.scrollTo).offset().top);
-            
-            }, 120)
-            // $().scrollTo()
-    }
-
     $scope.sstAbsence = function(id) {
         if (id) {
             intervention.absenceArtisan(_this.searchArtisans);

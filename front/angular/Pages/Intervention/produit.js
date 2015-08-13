@@ -22,14 +22,8 @@
                  }
 
                  scope.createProd = function() {
-                     dialog.addProd(function(title, ref) {
-                         model.produits.push({
-                             quantite: 1,
-                             ref: ref,
-                             title: title,
-                             desc: title,
-                             pu: 0
-                         })
+                     dialog.addProd(function(resp) {
+                         model.produits.push(resp)
                      });
                  }
 

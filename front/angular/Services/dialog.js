@@ -104,7 +104,13 @@ angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', 'config', 
                 controller: function DialogController($scope, $mdDialog) {
                     $scope.answer = function(resp, text) {
                         $mdDialog.hide();
-                        return cb($scope.title, $scope.ref);
+                        return cb({
+                             quantite: $scope.quantite,
+                             ref: $scope.ref,
+                             title: $scope.title,
+                             desc: $scope.title,
+                             pu: $scope.pu
+                         });
                     }
                 },
                 templateUrl: '/DialogTemplates/getProd.html',
