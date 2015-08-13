@@ -23,6 +23,9 @@ angular.module('edison').controller('MainController', function($timeout, $q, Dat
         $rootScope.loadingData = false;
     });
 
+    $scope.shadowClick = function(url) {
+        $location.url(url)
+    }
     $scope.dateFormat = moment().format('llll').slice(0, -5);
     $scope.tabs = tabContainer;
     $scope.$watch('tabs.selectedTab', function(prev, curr) {
