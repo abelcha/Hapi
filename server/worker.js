@@ -9,11 +9,12 @@ global.requireLocal = function(pth) {
 global.__catch = function(e) {
     var prettyError = require('pretty-error');
     console.log((new prettyError().render(e)));
-    throw e;
+    throw e; 
 }
 
 global.envProd = process.env.NODE_ENV === "production";
 global.envDev = process.env.NODE_ENV === "developement";
+global.envStaging = process.env.NODE_ENV === "staging";
 var dep = require(process.cwd() + '/server/loadDependencies');
 global.edison = dep.loadDir(process.cwd() + "/server/edison_components");
 global.redis = edison.redis();
@@ -33,6 +34,8 @@ global.isWorker = true;
 
 if (envProd) {
     var redisUrl = url.parse(process.env.REDISTOGO_URL);
+} else if (envStaging) {
+    var redisURL = url.parse(process.env.REDIS_URL);
 }
 
 

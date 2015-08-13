@@ -27,6 +27,7 @@ var dep = require(process.cwd() + '/server/loadDependencies');
 global.edison = dep.loadDir(process.cwd() + "/server/edison_components");
 global.envProd = process.env.NODE_ENV === "production";
 global.envDev = process.env.NODE_ENV === "developement";
+global.envStaging = process.env.NODE_ENV === "staging";
 global.redis = edison.redis();
 global.db = edison.db();
 global.sms = new edison.mobyt(key.mobyt.login, key.mobyt.pass);
