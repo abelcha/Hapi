@@ -118,7 +118,7 @@ module.exports = function(schema) {
                         obj: true,
                     }))
                 }
-                if (req.body.file) {
+                if (req.body.file) { 
                     filesPromises.push(document.download(req.body.file))
                 }
 
