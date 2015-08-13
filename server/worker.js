@@ -32,14 +32,9 @@ var key = requireLocal('config/_keys');
 global.sms = new edison.mobyt(key.mobyt.login, key.mobyt.pass);
 global.isWorker = true;
 
-if (envProd) {
+if (envProd || envStaging) {
     var redisUrl = url.parse(process.env.REDISTOGO_URL);
-} else if (envStaging) {
-    var redisURL = url.parse(process.env.REDIS_URL);
 }
-
-
-
 redis.keys("kue*", function(err, re) {
     re.forEach(function(k) {
         redis.del(k);
