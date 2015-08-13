@@ -360,7 +360,7 @@
             var limit = req.query.limit ||  0;
             if (req.query.id) {
                 return dumpOne(req.query.id)
-            } else if ((envDev || envProd) && !isWorker) {
+            } else if (!isWorker) {
                 return edison.worker.createJob({
                     name: 'db',
                     model: 'intervention',

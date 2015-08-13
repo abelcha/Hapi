@@ -7,8 +7,8 @@ var path = require('path');
 require('pretty-error').start();
 
 express.response.pdf = function(obj, headers, status) {
-  this.header('Content-Type', 'application/pdf');
-  return this.send(obj, headers, status);
+    this.header('Content-Type', 'application/pdf');
+    return this.send(obj, headers, status);
 };
 
 global.requireLocal = function(pth) {
@@ -17,7 +17,7 @@ global.requireLocal = function(pth) {
 
 
 global.__catch = function(e) {
-    var prettyError  = require('pretty-error');
+    var prettyError = require('pretty-error');
     console.log((new prettyError().render(e)));
     throw e;
 }
@@ -36,8 +36,7 @@ global.document = new edison.dropbox();
 global.isWorker = false;
 global.io = require('socket.io')(http);
 edison.extendPrototypes();
-if (envProd ||  envDev)
-    global.jobs = edison.worker.initJobQueue();
+global.jobs = edison.worker.initJobQueue();
 
 
 new edison.timer();
@@ -153,7 +152,7 @@ app.use(function(err, req, res, next) {
 //}
 
 process.on('uncaughtException', function(error) {
-    console.log("Stack => ",error,  error.stack);
+    console.log("Stack => ", error, error.stack);
     // throw error;
 });
 

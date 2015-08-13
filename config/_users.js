@@ -47,6 +47,15 @@
      pseudo: 'Laurent',
      prenom: 'xxx',
      activated: false
+ },{
+     login: 'gregoi_x',
+     oldLogin: 'sebastien',
+     service: 'INTERVENTION',
+     root: false,
+     nom: 'clement',
+     pseudo: 'Laurent',
+     prenom: 'xxx',
+     activated: false
  }, {
      login: 'tayeb_g',
      oldLogin: 'tayeb',

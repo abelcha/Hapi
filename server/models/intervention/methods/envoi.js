@@ -84,7 +84,7 @@ module.exports = function(schema) {
         fn: function(inter, req, res) {
 
 
-            if ((envDev || envProd) && !isWorker) {
+            if (!isWorker) {
                 return edison.worker.createJob({
                     name: 'db_id',
                     model: 'intervention',

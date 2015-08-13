@@ -222,7 +222,7 @@
                 return dumpOne(req.query.id)
             }
             var limit = req.query.limit ||  0;
-            if ((envDev || envProd) && !isWorker) {
+            if (!isWorker) {
                 return edison.worker.createJob({
                     name: 'db',
                     model: 'devis',

@@ -12,25 +12,13 @@ module.exports = function(schema) {
             }).then(resolve, reject);
         }
 
-        var getWebCache = function(resolve, reject) {
-            return db.model('intervention').cacheReload().then(resolve, reject);
-        }
-
-        var getCache = function(resolve, reject) {
-            if (envProd || envDev) {
-                return getWorkerCache(resolve, reject);
-            } else {
-                return getWebCache(resolve, reject);
-            }
-        }
-
         var getList = function(resolve, reject) {
             if (!reloadCache)  {
                 redis.get('interventionList', function(err, reply) {
                     if (!err && reply) { 
                         res.json(JSON.parse(reply))
                     } else {
-                        return getCache(resolve, reject);
+                        return getWorkerCache(resolve, reject);
                     }
                 });
             } else {
