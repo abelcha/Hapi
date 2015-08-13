@@ -531,8 +531,8 @@ FiltersFactory.prototype.list = {
             }
         },
         fn: function(inter) {
-            return inter.status === "AVR" ||
-                (inter.status === "ENC" && Date.now() > dateInter(inter)) &&
+            return (inter.status === "AVR" ||
+                inter.status === "ENC") && Date.now() > dateInter(inter) &&
                 inter.reglementSurPlace === false
         }
     }, {
