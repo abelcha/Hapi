@@ -19,7 +19,7 @@ module.exports = function(schema) {
             c: e.categorie,
             cx: config.categories[e.categorie].long_name,
             id: e._id,
-            n: e.client.civilite + " " + e.client.nom,
+            n: e.client.civilite + " " + e.client.nom + ' ' + e.client.prenom,
             s: e.status,
             sx: config.etatsDevis[e.status].long_name,
             cp: e.client.address.cp,
