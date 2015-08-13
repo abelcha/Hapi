@@ -100,7 +100,7 @@ module.exports = function(schema) {
                     var data = JSON.parse(reply);
                     var index = _.findIndex(data, function(e, i) {
                         return e.id === doc.id;
-                    })
+                    });
                     var result = translate(doc)
                     if (index !== -1) {
                         data[index] = result;

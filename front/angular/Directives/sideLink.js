@@ -7,7 +7,7 @@
              '      <a href="{{fullUrl}}" >' +
              '            <i ng-if="icon" class = "menu-icon fa fa-{{icon}}"> </i>' +
              '            <span class="mm-text">{{title || exFltr.long_name}}</span>' +
-             '            <span ng-if="total !== void(0)"class="label label-{{_color}}">{{total}}</span>' +
+             '            <span ng-if="total"class="label label-{{_color}}">{{total}}</span>' +
              '        </a>' +
              '      </li>',
          scope: {
