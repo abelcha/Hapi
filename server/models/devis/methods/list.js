@@ -28,7 +28,6 @@ module.exports = function(schema) {
             pa: e.prixAnnonce,
         };
     }
-
     schema.statics.translate = translate;
 
     schema.statics.cacheActualise = function(doc) {
