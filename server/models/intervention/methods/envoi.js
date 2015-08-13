@@ -118,10 +118,10 @@ module.exports = function(schema) {
                         obj: true,
                     }))
                 }
-                if (req.body.file) { 
+                if (req.body.file) {
                     filesPromises.push(document.download(req.body.file))
                 }
-
+                var fileSupp = req.body.file;
                 console.time('getFiles')
                 Promise.all(filesPromises).then(function(result) {
                     console.timeEnd('getFiles')
@@ -133,6 +133,10 @@ module.exports = function(schema) {
                             Content: file.data.toString('base64')
                         }
                     }).value();
+                    
+                    if (fileSupp) {
+                        inter.textfileSupp = (files[files.length - 1].ContentType === 'application/pdf' ? 'un document supplementaine' : 'une photo transmises par le client');
+                    }
                     var c = config.categories[inter.categorie]
                     inter.categoriePlain = c.suffix + ' ' + c.long_name.toLowerCase();
                     inter.fileSupp = req.body.file;

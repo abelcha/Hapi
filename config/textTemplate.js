@@ -49,8 +49,8 @@ module.exports = {
                     "Les coordonnées et la description de l'intervention sont détaillées dans l'ordre de service que vous trouverez en pièce jointe. \n" +
                     "<center>" +
                     "<% if (typeof devisOrigine !== 'undefined' && !fileSupp) {%> <strong>Vous trouverez également le devis accepté et signé par notre client</strong> <%}%>" +
-                    "<% if (typeof devisOrigine === 'undefined' && fileSupp) {%> <strong>Vous trouverez également un document supplémentaire à votre disposition</strong> <%}%>" +
-                    "<% if (typeof devisOrigine !== 'undefined' && fileSupp) {%> <strong>Vous trouverez également le devis accepté et signé par notre client, et un document supplémentaire</strong> <%}%>" +
+                    "<% if (typeof devisOrigine === 'undefined' && fileSupp) {%> <strong>Vous trouverez également {{textfileSupp}} à votre disposition</strong> <%}%>" +
+                    "<% if (typeof devisOrigine !== 'undefined' && fileSupp) {%> <strong>Vous trouverez également le devis accepté et signé par notre client, et {{textfileSupp}}</strong> <%}%>" +
                     "</center>" +
                     "\n" +
                     "\n" +
@@ -63,7 +63,7 @@ module.exports = {
                     " • Une description étape par étape de notre mode de fonctionnement\n" +
                     "<strong>" +
                     "<% if (typeof devisOrigine !== 'undefined') {%> • Le devis n°{{devisOrigine}} accepté\n <%}%>" +
-                    "<% if (fileSupp) {%> • PJ supplémentaire <%}%>\n" +
+                    "<% if (fileSupp) {%> • {{textfileSupp}} <%}%>\n" +
                     "</strong>" +
                     "\n" +
                     "\n" +
