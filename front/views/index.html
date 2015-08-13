@@ -26,7 +26,7 @@
                 <div id="main-navbar-collapse" class="collapse navbar-collapse main-navbar-collapse">
                     <!--  -->
                     <md-autocomplete class="searchBar" style="width: 100px;float: right;margin-top: 3px;margin-right: 75px;" md-search-text-change="null" md-min-length="3" md-selected-item-change="searchBox.change(selectedItem)" md-menu-class="autocomplete-custom-template" md-selected-item="selectedItem" md-search-text="searchText" md-autofocus="false" md-items="item in searchBox.search(searchText)" placeholder="Recherche..." md-item-text="item.description">
-                         <span md-highlight-text="searchText"> {{item.description}}</span>
+                        <span md-highlight-text="searchText"> {{item.description}}</span>
                     </md-autocomplete>
                 </div>
                 <!-- / #main-navbar-collapse -->
@@ -42,46 +42,20 @@
                     <link fltr="i_apr" icon="th-list" color="primary" login="{{user.login}}"></link>
                     <link fltr="i_avr" icon="th-list" color="warning" login="{{user.login}}"></link>
                 </drop-down>
+                <drop-down title="Mes Factures" icon="truck">
+                    <link fltr="i_fall" icon="th-list" login="{{user.login}}"></link>
+                    <link fltr="i_fact" icon="th-list" login="{{user.login}}"></link>
+                    <link fltr="i_carl" icon="th-list" login="{{user.login}}"></link>
+                </drop-down>
                 <drop-down icon="hospital-o" title="Mes Devis" open-default="user.service === 'INTERVENTION'">
-                <link fltr="d_all" model="devis" icon="th-list" title="Tous les Devis" color="default"></link>
+                    <link fltr="d_all" model="devis" icon="th-list" title="Tous les Devis" color="default"></link>
                     <link fltr="d_tall" model="devis" title="{{dateFormat}}" color="success" icon="th-list" login="{{user.login}}"></link>
                     <link fltr="d_aev" model="devis" icon="th-list" color="danger" login="{{user.login}}"></link>
                     <link fltr="d_att" model="devis" icon="th-list" color="warning" login="{{user.login}}"></link>
                     <link fltr="d_ann" model="devis" icon="th-list" color="default" login="{{user.login}}"></link>
                 </drop-down>
-                <drop-down ng-click="mcs=true" title="Mes Collegues" icon="sitemap">
-                    <drop-down ng-if="mcs" title="{{telepro.login | loginify}}" ng-repeat="telepro in interventionsStats | orderBy:'-total'">
-                        <link-separator title="Mes Interventions" icon="calendar"></link-separator>
-                        <link fltr="i_tall" icon="th-list" title="{{dateFormat}}" login="{{telepro.login}}"></link>
-                        <link fltr="i_tenv" icon="th-list" login="{{telepro.login}}"></link>
-                        <link fltr="i_apr" icon="th-list" login="{{telepro.login}}"></link>
-                        <link fltr="i_avr" icon="th-list" login="{{telepro.login}}"></link>
-                        <link-separator title="Mes Sous-Traitants" icon="truck"></link-separator>
-                        <link fltr="i_sarl" icon="th-list" login="{{telepro.login}}"></link>
-                        <link fltr="i_fact" icon="th-list" login="{{telepro.login}}"></link>
-                        <link-separator title="Mes Clients" icon="truck"></link-separator>
-                        <link fltr="i_fact" icon="th-list" login="{{telepro.login}}"></link>
-                        <link fltr="i_carl" icon="th-list" login="{{telepro.login}}"></link>
-                        <link-separator icon="share" title="Mes S.A.V"></link-separator>
-                        <link fltr="i_sav" icon="th-list" login="{{telepro.login}}"></link>
-                        <link fltr="i_savEnc" icon="th-list" login="{{telepro.login}}"></link>
-                        <link-separator icon="bolt" title="Mes Litiges"></link-separator>
-                        <link fltr="i_lit" icon="th-list" login="{{telepro.login}}"></link>
-                        <link fltr="i_litEnc" icon="th-list" login="{{telepro.login}}"></link>
-                        <link-separator icon="hospital-o" title="Mes Devis"></link-separator>
-                        <link fltr="d_all" model="devis" icon="th-list" login="{{telepro.login}}"></link>
-                        <link fltr="d_tall" model="devis" icon="th-list" login="{{telepro.login}}"></link>
-                        <link fltr="d_att" model="devis" icon="th-list" login="{{telepro.login}}"></link>
-                        <link fltr="d_aev" model="devis" icon="th-list" login="{{telepro.login}}"></link>
-                        <link fltr="d_ann" model="devis" icon="th-list" login="{{telepro.login}}"></link>
-                    </drop-down>
-                </drop-down>
                 <drop-down title="Mes Sous-Traitants" icon="truck">
                     <link fltr="i_sarl" icon="th-list" login="{{user.login}}"></link>
-                </drop-down>
-                <drop-down title="Mes Clients" icon="truck">
-                    <link fltr="i_fact" icon="th-list" login="{{user.login}}"></link>
-                    <link fltr="i_carl" icon="th-list" login="{{user.login}}"></link>
                 </drop-down>
                 <drop-down icon="share" open-default="userStats.i_savEnc.total" title="Mes S.A.V">
                     <link fltr="i_sav" icon="th-list" login="{{user.login}}" color="primary"></link>

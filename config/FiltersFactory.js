@@ -319,6 +319,19 @@ FiltersFactory.prototype.list = {
                 !inter.compta.reglement.recu && Date.now() > dateInter(inter) + ms.weeks(2);
         }
     }, {
+        short_name: 'i_fall',
+        long_name: 'Toutes mes factures',
+        url: 'factureHistorique',
+        match: function() {
+            return {
+                status: 'VRF',
+                reglementSurPlace: false,
+            }
+        },
+        fn: function(inter) {
+            return inter.status === 'VRF' && !inter.reglementSurPlace
+        }
+    }, {
         short_name: 'i_fact',
         long_name: 'Facture à envoyer',
         url: 'factureaEnvoyer',
