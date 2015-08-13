@@ -1,0 +1,19 @@
+<md-dialog aria-label="Mango (Fruit)">
+    <md-dialog-content class="sticky-container">
+        <md-subheader class="md-sticky-no-effect">Ajout d'un produit</md-subheader>
+        <div style="padding:15px">
+           <!--  <select ng-model="absenceTime" ng-options="ind.value as ind.title for ind in absence">
+            </select> -->
+             <input style="width:300px" type="text" class="form-control" placeholder="Reference" ng-model="ref"><br>
+             <input style="width:300px" type="text" class="form-control" placeholder="title" ng-model="title">
+        </div>
+    </md-dialog-content>
+    <div class="md-actions" layout="row">
+        <md-button ng-click="answer()" class="md-primary black-text">
+           Annuler
+        </md-button>
+        <md-button ng-click="answer()" class="md-primary black-text">
+            Valider
+        </md-button>
+    </div>
+</md-dialog>

@@ -8,7 +8,7 @@
                  data: "=",
                  tva: '=',
                  display: '@',
-                 model:"@"
+                 model: "@"
              },
              link: function(scope, element, attrs) {
                  var model = scope.data;
@@ -18,9 +18,15 @@
                  scope.produits = new productsList(model.produits);
 
                  if (!scope.data.reglementSurPlace) {
-                    scope.display = true;
+                     scope.display = true;
                  }
- 
+
+                 scope.create = function() {
+                     dialog.addProd(function(title, ref) {
+                        console.log(title, ref)
+                     })
+                 }
+
                  scope.envoiFacture = function() {
                      model.envoiFacture(function(err, res) {
                          if (!err)

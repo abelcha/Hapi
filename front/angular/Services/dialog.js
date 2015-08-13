@@ -99,6 +99,17 @@ angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', 'config', 
                 templateUrl: '/DialogTemplates/choiceText.html',
             });
         },
+        getProd: function( cb) {
+            $mdDialog.show({
+                controller: function DialogController($scope, $mdDialog) {
+                    $scope.answer = function(resp, text) {
+                        $mdDialog.hide();
+                        return cb($scope.title, $scope.ref);
+                    }
+                },
+                templateUrl: '/DialogTemplates/getProd.html',
+            });
+        },
         getCauseAnnulation: function(cb) {
             $mdDialog.show({
                 controller: function($scope, config) {
