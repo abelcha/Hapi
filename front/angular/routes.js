@@ -275,7 +275,7 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
     "use strict";
     $routeProvider
         .when('/', {
-            redirectTo: '/dashboard',
+            redirectTo: '/intervention/list',
         })
         .when('/intervention/list', {
             templateUrl: "Pages/ListeInterventions/listeInterventions.html",
