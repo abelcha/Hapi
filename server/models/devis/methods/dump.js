@@ -189,6 +189,7 @@
                 var url = key.alvin.url + "/dumpIntervention.php?id=" + id + "&key=" + key.alvin.pass;
                 console.log(url)
                 request.get(url, function(err, resp, body) {
+                    console.log(err, body, resp.statusCode)
                     if (err || resp.statusCode !== 200 || !body || body == 'null') {
                         return reject('nope')
                     }
