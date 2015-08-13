@@ -20,7 +20,7 @@ module.exports = function(schema) {
                     resolve({
                         data: buff,
                         extension: '.pdf',
-                        name: 'OS n°' + inter.id
+                        name: 'OS n°' + inter.id + '.pdf'
                     })
                 })
                 
