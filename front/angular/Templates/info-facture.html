@@ -1,6 +1,6 @@
 <div flex-item class="card {{!data.id ? 'margin' : ''}}" style="box-shadow: 0 0px 0px rgba(0, 0, 0, 0);">
     <div class="p+">
-        <strong class="fs-headline display-block">Facture</strong>
+        <strong class="fs-headline display-block">Coordonées de facturations</strong>
         <md-content class="autocomplete" style="width: 55%;margin-top: -22px;margin-left: 40%;float: left;" layout-padding layout="column" md-input-container flex>
             <md-autocomplete class="address-autocomplete" md-search-text-change="null" md-selected-item-change="changeAddressFacture(selectedAddress)" md-selected-item="selectedAddress" md-search-text="searchText" md-items="item in autocomplete.search(searchText)" placeholder="Addresse de facturation..." md-item-text="item.description">
                 <span md-highlight-text="searchText"> {{item.description}}</span>
