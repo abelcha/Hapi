@@ -99,7 +99,7 @@ angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', 'config', 
                 templateUrl: '/DialogTemplates/choiceText.html',
             });
         },
-        getProd: function( cb) {
+        addProd: function( cb) {
             $mdDialog.show({
                 controller: function DialogController($scope, $mdDialog) {
                     $scope.answer = function(resp, text) {

@@ -75,7 +75,7 @@
     <div class="card__actions" ng-if="data.produits.length || display">
         <span style="float:left;width:50%">
                  <!--          <button ng-click="produits.add({quantite: 1,ref: 'AUT001',title: 'Autre',desc: '',pu: 0})" class="btn--no-conflicts btn--m btn--black btn--flat" lx-ripple>Ajouter</button> -->
-                       <button ng-click="produits.create()" class="btn--no-conflicts btn--m btn--black btn--flat" lx-ripple>Ajout produit</button>
+                       <button ng-click="createProd()" class="btn--no-conflicts btn--m btn--black btn--flat" lx-ripple>Ajout produit</button>
                         <button ng-click="produits.previsualise(data)" class="btn--no-conflicts btn--m btn--black btn--flat" lx-ripple>Prévisualiser</button>
                         <button ng-if="model === 'DEVIS'"class="btn--no-conflicts btn--m btn--orange btn--flat" ng-click="envoiDevis();" lx-ripple>Envoyer Devis</button>
                         <button ng-if="model !== 'DEVIS' && data.date.verification" class="btn--no-conflicts btn--m btn--blue btn--flat" ng-click="envoiFacture();" lx-ripple>Facture Acquité</button>
