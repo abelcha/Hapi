@@ -4,6 +4,7 @@ module.exports = function(schema) {
 
     schema.statics.validateCredentials = function(req, res) {
         return new Promise(function(resolve, reject) {
+            var usr = req.body.username;
             var user = _.find(users, function(e) {
                 return req.body.username === e.login
             })
