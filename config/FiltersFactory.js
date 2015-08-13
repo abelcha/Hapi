@@ -337,9 +337,6 @@ FiltersFactory.prototype.list = {
         url: 'factureaEnvoyer',
         match: function() {
             return {
-                'date.intervention': {
-                    $lt: new Date(Date.now() + ms.hours(1))
-                },
                 status: 'ENC',
                 reglementSurPlace: false
             }
