@@ -49,7 +49,7 @@ redis.keys("kue*", function(err, re) {
 
 var jobs = kue.createQueue({
     prefix: 'kue',
-    redis: envProd ? {
+    redis: envProd || envDev ? {
         port: redisUrl.port,
         host: redisUrl.hostname,
         auth: redisUrl.auth.split(":")[1],
