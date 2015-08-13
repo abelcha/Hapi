@@ -27,10 +27,12 @@ module.exports = function(schema) {
 
     schema.statics.dump = function(req, res) {
         return new Promise(function(resolve, reject) {
-            //     db.model('user').remove({}, function() {
+                 db.model('user').remove({}, function() {
             _.each(users, function(e) {
                 var usr = db.model('user')(e)
-                usr.save()
+                usr.save(function(err, resp) {
+                    console.log(err, resp)
+                })
                     // .save(function(err) {
                     //     if (err) {
                     //         res.status(500).send('fail');
@@ -40,7 +42,7 @@ module.exports = function(schema) {
                     // })
             });
             reject('okss')
-                //   })
+                   })
         })
     }
 }
