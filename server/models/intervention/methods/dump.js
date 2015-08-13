@@ -162,6 +162,7 @@
                     id: d.id_sst_selectionne,
                     nomSociete: d.nom_societe
                 }
+                rtn.sst = d.id_sst_selectionne;
             }
 
             rtn.modeReglement = d.mode_reglement;
