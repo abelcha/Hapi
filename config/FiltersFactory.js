@@ -129,7 +129,7 @@ FiltersFactory.prototype.list = {
         }
     }, {
         short_name: 'd_tall',
-        long_name: "Devis d'Aujourd'hui",
+        long_name: "Devis d'aujourd'hui",
         url: 'ajd',
         match: function() {
             return {
@@ -165,7 +165,7 @@ FiltersFactory.prototype.list = {
         }
     }, {
         short_name: 'd_aev',
-        long_name: "à envoyer",
+        long_name: "A envoyer",
         url: 'aEnvoyer',
         match: function() {
             return {
@@ -177,7 +177,7 @@ FiltersFactory.prototype.list = {
         }
     }, {
         short_name: 'd_att',
-        long_name: "en attente",
+        long_name: "En attente",
         url: 'enAttente',
         match: function() {
             return {
@@ -190,7 +190,7 @@ FiltersFactory.prototype.list = {
     }],
     intervention: [{
         short_name: 'i_all',
-        long_name: 'Toutes les Inters',
+        long_name: 'Toutes les inters',
         url: '',
         match: {},
         noCache: true,
@@ -228,7 +228,7 @@ FiltersFactory.prototype.list = {
         }
     }, {
         short_name: 'i_avr',
-        long_name: 'A Vérifier',
+        long_name: 'A vérifier',
         url: 'aVerifier',
         match: function() {
             return {
@@ -244,7 +244,7 @@ FiltersFactory.prototype.list = {
         }
     }, {
         short_name: 'i_apr',
-        long_name: 'A Programmer',
+        long_name: 'A programmer',
         url: 'aProgrammer',
         match: {
             'status': 'APR',
@@ -302,7 +302,7 @@ FiltersFactory.prototype.list = {
         }
     }, {
         short_name: 'i_carl',
-        long_name: 'Client à Relancer',
+        long_name: 'Client à relancer',
         url: 'relanceClient',
         match: function() {
             return {
@@ -380,7 +380,7 @@ FiltersFactory.prototype.list = {
         }
     }, {
         short_name: 'i_lit',
-        long_name: 'Tous les Litige',
+        long_name: 'Tous les litiges',
         url: 'litiges',
         match: {
             litiges: {
@@ -440,7 +440,7 @@ FiltersFactory.prototype.list = {
         }
     }, {
         short_name: 'i_hist',
-        long_name: 'HISTORIQUE',
+        long_name: 'Historique',
         url: 'historique',
         group: '$login.demarchage',
         match: {
