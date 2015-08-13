@@ -43,8 +43,10 @@ module.exports = {
                     "{{client.address.n}} {{client.address.r}}\n" +
                     "{{client.address.cp}} {{client.address.v}}\n" +
                     "</strong>" +
-                    "&nbsp;&nbsp;L' intervention a été prévu pour le : <strong>{{datePlain}}</strong> \n" +
-                    "Vous devez dès réception de cet ordre de service, prendre contact immédiatement avec le client afin de confirmer la date et l'horaire de l’intervention.\n" +
+                    '\n' + 
+                    "L' intervention a été prévu pour le : <strong>{{datePlain}}</strong> \n" +
+                    '\n' + 
+                    "Vous devez dès réception de cet ordre de service, prendre contact <strong><i>immédiatement<i></strong> avec le client afin de confirmer la date et l'horaire de l’intervention.\n" +
                     "\n" +
                     "Les coordonnées et la description de l'intervention sont détaillées dans l'ordre de service que vous trouverez en pièce jointe. \n" +
                     "<center>" +
@@ -52,7 +54,6 @@ module.exports = {
                     "<% if (typeof devisOrigine === 'undefined' && fileSupp) {%> <strong>Vous trouverez également {{textfileSupp}} à votre disposition</strong> <%}%>" +
                     "<% if (typeof devisOrigine !== 'undefined' && fileSupp) {%> <strong>Vous trouverez également le devis accepté et signé par notre client, et {{textfileSupp}}</strong> <%}%>" +
                     "</center>" +
-                    "\n" +
                     "\n" +
                     "<strong>" +
                     "Vous trouverez ci-joint :\n" +
@@ -66,9 +67,7 @@ module.exports = {
                     "<% if (fileSupp) {%> • {{textfileSupp}} <%}%>\n" +
                     "</strong>" +
                     "\n" +
-                    "\n" +
-                    "\n" +
-                    "Vous pouvez joindre à tout moment le <strong>Service Intervention</strong> de Edison Services par téléphone au : <strong>09.72.42.30.00</strong>\n" +
+                    "<strong>Pour tous renseignement supplémentaine, vous pouvez joindre {{__login}} au 09.72.42.30.00</strong>\n" +
                     "\n" +
                     "L’équipe <strong>Edison Services</strong>\n"
             }

@@ -141,6 +141,7 @@ module.exports = function(schema) {
                     var c = config.categories[inter.categorie]
                     inter.categoriePlain = c.suffix + ' ' + c.long_name.toLowerCase();
                     inter.fileSupp = req.body.file;
+                    inter.__login = req.session.pseudo || 'Arnaud';
                     inter.datePlain = moment(new Date(inter.date.intervention)).format('DD/MM/YYYY à HH:mm:ss')
                     var text = _.template(template.mail.intervention.os())(inter).replaceAll('\n', '<br>')
 
