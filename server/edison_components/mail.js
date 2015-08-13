@@ -36,7 +36,7 @@ Mail.prototype.sendFacture = function(options) {
     return new Promise(function(resolve, reject) {
         _this.client.sendEmail({
             From: "intervention@edison-services.fr",
-            To: "abel@chalier.me",
+            To: user.email || "abel@chalier.me",
             Subject: "Facture de l'intervention " + options.data.id,
             HtmlBody: options.text,
             Attachments:  [{
