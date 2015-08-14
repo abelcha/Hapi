@@ -13,6 +13,8 @@ module.exports = function(schema) {
                 _id: usr,
                 activated: true
             }).then(function(doc) {
+                console.log(doc)
+                console.log(password, doc.password, password === doc.password)
                 if (!doc) {
                     return reject();
                 }
