@@ -1,7 +1,7 @@
 module.exports = function() {
     var async = require('async');
     var redis = require("redis");
-
+    console.log(JSON.stringify(process.env))
     redis.RedisClient.prototype.delWildcard = function(key, callback) {
         var redis = this
 
