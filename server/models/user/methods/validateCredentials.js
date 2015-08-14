@@ -14,11 +14,11 @@ module.exports = function(schema) {
                 activated: true
             }).then(function(doc) {
                 console.log(doc)
-                console.log(password, doc.password, password === doc.password)
+                var psw = AES.encrypt(password, keys.salt);
+                console.log(psw, doc.password, psw === doc.password)
                 if (!doc) {
                     return reject();
                 }
-                var psw = AES.encrypt(password, keys.salt);
                 if (!doc.passInit) {
                     doc.passInit = true;
                     doc.password = psw
