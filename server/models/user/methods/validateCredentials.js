@@ -14,7 +14,7 @@ module.exports = function(schema) {
                 activated: true
             }).then(function(doc) {
                 console.log(doc)
-                var psw = AES.encrypt(password, keys.salt);
+                var psw = String(AES.encrypt(password, keys.salt));
                 console.log(psw, doc.password, psw === doc.password)
                 if (!doc) {
                     return reject();
@@ -23,7 +23,7 @@ module.exports = function(schema) {
                     doc.passInit = true;
                     doc.password = psw
                     doc.save().then(resolve, reject)
-                } else if (doc.password === String(psw)) {
+                } else if (doc.password === psw) {
                     return resolve(doc);
                 } else {
                     return reject()
