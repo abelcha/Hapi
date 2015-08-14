@@ -2,7 +2,7 @@ module.exports = function(schema) {
     var _ = require("lodash");
     var users = requireLocal('config/_users');
     var keys = requireLocal('config/_keys');
-
+    var MD5 = require('MD5')
 
     schema.statics.validateCredentials = function(req, res) {
         return new Promise(function(resolve, reject) {
@@ -13,9 +13,7 @@ module.exports = function(schema) {
                 _id: usr,
                 activated: true
             }).then(function(doc) {
-                console.log(doc)
-                var psw = String(AES.encrypt(password, keys.salt));
-                console.log(psw, doc.password, psw === doc.password)
+                var psw = MD5(password);
                 if (!doc) {
                     return reject();
                 }
