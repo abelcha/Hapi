@@ -22,6 +22,7 @@
     "creditcard": "^0.1.2",
     "cron-emitter": "^0.2.2",
     "cron-parser": "^0.6.4",
+    "crypto-js": "^3.1.5",
     "dropbox": "^0.10.3",
     "edsx-mail": "^1.1.5",
     "ejs": "^2.2.4",

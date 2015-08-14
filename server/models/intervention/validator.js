@@ -38,10 +38,13 @@ module.exports = function(schema) {
     var preSave = function(next) {
         var _this = this;
         try {
-        upperCaseEverything(this.client.address)
-        upperCaseEverything(this.facture)
-        upperCaseEverything([this.facture])
+            upperCaseEverything(this.client.address)
+            upperCaseEverything(this.facture)
+            upperCaseEverything([this.facture])
             _this.sst = _this.artisan.id
+            _this.enDemarchage = _this.login.demarchage;
+            _this.litigesEnCours = _.find(_this.litiges, 'regle', false);
+            _this.savEnCours = _.find(_this.sav, 'status', 'ENC');
             if (isWorker) {
                 return next();
             }
@@ -78,7 +81,6 @@ module.exports = function(schema) {
                     console.log('=====-->', resp)
                 });
             }
-
         }
 
     }

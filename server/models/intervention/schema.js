@@ -129,6 +129,14 @@ module.exports = function(db) {
             date: Date,
             regle: Boolean
         }],
+        litigesEnCours: {
+            type: Boolean,
+            default: true
+        },
+        savEnCours: {
+            type: Boolean,
+            default: true
+        },
         categorie: {
             type: String,
             required: true
@@ -192,6 +200,10 @@ module.exports = function(db) {
             default: true
         },
         aDemarcher: {
+            type: Boolean,
+            default: false
+        },
+        enDemarchage: {
             type: Boolean,
             default: false
         },
@@ -350,7 +362,7 @@ module.exports = function(db) {
             mimeType: String,
             origin: String, //SCAN, UPLOAD, AUTO
 
-        }]
+        }],
     });
     return schema
 }

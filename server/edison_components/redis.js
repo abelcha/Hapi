@@ -1,5 +1,18 @@
 module.exports = function() {
+    var async = require('async');
     var redis = require("redis");
+
+    redis.RedisClient.prototype.delWildcard = function(key, callback) {
+        var redis = this
+
+        redis.keys(key, function(err, rows) {
+            async.each(rows, function(row, callbackDelete) {
+                redis.del(row, callbackDelete)
+            }, callback)
+        });
+    }
+
+
     var redisClient;
     try {
 

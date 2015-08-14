@@ -28,6 +28,8 @@ try {
 } catch (e) {
     console.log("err")
 }
+try {
+
 var key = requireLocal('config/_keys');
 global.sms = new edison.mobyt(key.mobyt.login, key.mobyt.pass);
 global.isWorker = true;
@@ -77,3 +79,7 @@ jobs.process('db_id', function(job, done) {
         return done(err ||  "error");
     }).catch(__catch)
 });
+} catch(e) {
+    __catch(e)
+}
+

@@ -59,13 +59,51 @@ module.exports = function(schema) {
 
     var mergeFilters = function(allFilters, model) {
         var filters = FiltersFactory(model).getAllFilters();
-        _.each(filters, function(e) {
+        _.each(filters.slice(0, 3), function(e) {
             if (e.stats !== false && e.match) {
                 var match = typeof e.match === 'function' ? e.match() : e.match;
                 allFilters[e.short_name] = statusDistinctFactory(model, match, e.group);
             }
         });
     }
+
+
+    schema.statics.fltr = function(req, res) {
+        console.time('oko')
+        return new Promise(function(resolve, reject) {
+            var fltrs = FiltersFactory('intervention').getAllFilters();
+            var stack = {}
+            _.each(fltrs, function(e) {
+                if (e.aggregate) {
+                    var match = _.isFunction(e.aggregate) ? e.aggregate() : e.aggregate;
+                    stack[e.short_name] = {
+                        $cond: [{
+                            $and: match
+                        }, 1, 0]
+                    }
+                }
+            })
+            console.log(JSON.stringify(stack))
+            db.model('intervention')
+                .aggregate()
+                .project(stack)
+                .exec(function(err, resp) {
+                    console.timeEnd('oko')
+                    console.log(err)
+                    var result = {};
+                    _.each(stack, function(e, k) {
+                            result[k] = _(resp).filter(k, 1).pluck('_id').value();
+                            console.log(k, result[k].length)
+                        })
+                        //console.log(resp && resp.length)
+                        // console.log(_.filter(resp, 'i_tall', 1))
+                        //  resolve(String(resp.length))
+                        // console.log('yey')
+                        // console.log(err, resp)
+                })
+        });
+    }
+
 
     schema.statics.stats = function(req, res) {
         return new Promise(function(resolve, reject) {

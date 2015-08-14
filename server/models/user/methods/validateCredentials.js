@@ -1,18 +1,32 @@
 module.exports = function(schema) {
     var _ = require("lodash");
     var users = requireLocal('config/_users');
+    var keys = requireLocal('config/_keys');
+
 
     schema.statics.validateCredentials = function(req, res) {
         return new Promise(function(resolve, reject) {
+            var AES = require("crypto-js/aes");
+            var password = req.body.password;
             var usr = req.body.username.toLowerCase();
-            var user = _.find(users, function(e) {
-                if (req.body.username === e.login) {
-                    resolve(e)
+            db.model('user').findOne({
+                _id: usr,
+                activated: true
+            }).then(function(doc) {
+                if (!doc) {
+                    return reject();
                 }
-            })
-            if (user === void(0))
-                return reject();
-            return resolve(user)
+                var psw = AES.encrypt(password, keys.salt);
+                if (!doc.passInit) {
+                    doc.passInit = true;
+                    doc.password = psw
+                    doc.save().then(resolve, reject)
+                } else if (doc.password === String(psw)) {
+                    return resolve(doc);
+                } else {
+                    return reject()
+                }
+            }, reject).catch(__catch);
         });
 
     };
@@ -27,22 +41,18 @@ module.exports = function(schema) {
 
     schema.statics.dump = function(req, res) {
         return new Promise(function(resolve, reject) {
-                 db.model('user').remove({}, function() {
-            _.each(users, function(e) {
-                var usr = db.model('user')(e)
-                usr.save(function(err, resp) {
-                    console.log(err, resp)
-                })
-                    // .save(function(err) {
-                    //     if (err) {
-                    //         res.status(500).send('fail');
-                    //     } else {
-                    //         console.log(e.login, 'ok');
-                    //     }
-                    // })
-            });
-            reject('okss')
-                   })
+            db.model('user').remove(req.query.login ? {
+                _id: req.query.login
+            } : {}, function() {
+                _.each(users, function(e) {
+                    e._id = e.login;
+                    var usr = db.model('user')(e)
+                    usr.save(function(err, resp) {
+                        console.log(err, resp)
+                    })
+                });
+                reject('okss')
+            })
         })
     }
 }

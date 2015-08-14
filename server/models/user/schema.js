@@ -14,7 +14,14 @@ module.exports = function(db) {
         ligne: String,
         root: Boolean,
         password: String,
-        activated: Boolean
+        passInit: {
+            type: Boolean,
+            default: false
+        },
+        activated: {
+            type: Boolean,
+            default: false
+        }
     });
 
 }

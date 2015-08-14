@@ -66,11 +66,7 @@ app.use(require('body-parser').urlencoded({
 app.use(require('compression')());
 app.use(require('connect-redis-sessions')({
     client: redis,
-    app: "EDISON-SESSION",
-    ttl: 60 * 60 * 12,
-    cookie: {
-        maxAge: 1000 * 60 * 60 * 12
-    }
+    app: "EDISON-SESSION"
 }))
 
 

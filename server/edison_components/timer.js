@@ -16,6 +16,10 @@ var Timer = module.exports = function() {
             })
         });*/
 
+    this.emitter.on("midnight", function() {
+        redis.delWildcard("rs*")
+    })
+
     this.emitter.on("every 5 minutes", function() {
         edison.worker.createJob({
             name: 'db',

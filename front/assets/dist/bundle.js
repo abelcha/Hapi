@@ -390,6 +390,11 @@ FiltersFactory.prototype.list = {
         short_name: 'i_tall',
         long_name: "Aujourd'hui",
         url: 'ajd',
+        aggregate: function() {
+            return {
+                $gt: ['$date.ajout', today()]
+            }
+        },
         match: function() {
             return {
                 'date.ajout': {
@@ -404,6 +409,13 @@ FiltersFactory.prototype.list = {
         short_name: 'i_tenv',
         long_name: 'Envoyé',
         url: 'envoyeAjd',
+        aggregate: function() {
+            return [{
+                $eq: ['$status', 'ENC']
+            }, {
+                $gt: ['$date.ajout', today()]
+            }]
+        },
         match: function() {
             return {
                 'status': 'ENC',
@@ -419,6 +431,13 @@ FiltersFactory.prototype.list = {
         short_name: 'i_avr',
         long_name: 'A vérifier',
         url: 'aVerifier',
+        aggregate: function() {
+            return [{
+                $eq: ['$status', 'ENC']
+            }, {
+                $lt: ['$date.intervention', new Date(Date.now() + ms.hours(1))]
+            }]
+        },
         match: function() {
             return {
                 status: 'ENC',
@@ -435,6 +454,9 @@ FiltersFactory.prototype.list = {
         short_name: 'i_apr',
         long_name: 'A programmer',
         url: 'aProgrammer',
+        aggregate: [{
+            $eq: ['$status', 'APR']
+        }],
         match: {
             'status': 'APR',
         },
@@ -461,6 +483,9 @@ FiltersFactory.prototype.list = {
         short_name: 'i_vrf',
         long_name: 'Verifié',
         url: 'verifie',
+        aggregate: [{
+            $eq: ['$status', 'APR']
+        }],
         match: function() {
             return {
                 status: 'VRF',
@@ -474,6 +499,17 @@ FiltersFactory.prototype.list = {
         short_name: 'i_sarl',
         long_name: 'Relance sous-traitant',
         url: 'relanceArtisan',
+        aggregate: function() {
+            return [{
+                $eq: ['$status', 'VRF']
+            }, {
+                $eq: ['$reglementSurPlace', true]
+            }, {
+                $eq: ['$compta.reglement.recu', false]
+            }, {
+                $lt: ['date.intervention', new Date(Date.now() - ms.weeks(2))]
+            }]
+        },
         match: function() {
             return {
                 status: 'VRF',
@@ -493,6 +529,17 @@ FiltersFactory.prototype.list = {
         short_name: 'i_carl',
         long_name: 'Client à relancer',
         url: 'relanceClient',
+        aggregate: function() {
+            return [{
+                $eq: ['$status', 'VRF']
+            }, {
+                $eq: ['$compta.reglement.recu', false]
+            }, {
+                $eq: ['$reglementSurPlace', false]
+            }, {
+                $lt: ['date.intervention', new Date(Date.now() - ms.weeks(2))]
+            }]
+        },
         match: function() {
             return {
                 status: 'VRF',
@@ -511,6 +558,13 @@ FiltersFactory.prototype.list = {
         short_name: 'i_fall',
         long_name: 'Toutes mes factures',
         url: 'factureHistorique',
+        aggregate: function() {
+            return [{
+                $eq: ['$status', 'VRF']
+            }, {
+                $eq: ['$reglementSurPlace', false]
+            }]
+        },
         match: function() {
             return {
                 status: 'VRF',
@@ -524,6 +578,11 @@ FiltersFactory.prototype.list = {
         short_name: 'i_fact',
         long_name: 'Facture à envoyer',
         url: 'factureaEnvoyer',
+        aggregate: [{
+            $eq: ['$status', 'ENC']
+        }, {
+            $eq: ['$reglementSurPlace', false]
+        }],
         match: function() {
             return {
                 status: 'ENC',
@@ -532,13 +591,16 @@ FiltersFactory.prototype.list = {
         },
         fn: function(inter) {
             return (inter.status === "AVR" ||
-                inter.status === "ENC") && Date.now() > dateInter(inter) &&
+                    inter.status === "ENC") && Date.now() > dateInter(inter) &&
                 inter.reglementSurPlace === false
         }
     }, {
         short_name: 'i_sav',
         long_name: 'Tous les S.A.V',
         url: 'serviceApresVente',
+        aggregate: [{
+            $ne: ['$sav', []]
+        }],
         match: {
             sav: {
                 $gt: {
@@ -553,6 +615,9 @@ FiltersFactory.prototype.list = {
         short_name: 'i_savEnc',
         long_name: 'S.A.V En Cours',
         url: 'serviceApresVenteEnCours',
+        aggregate: [{
+            $eq: ['$savEnCours', true]
+        }],
         match: {
             sav: {
                 $elemMatch:  {
@@ -568,6 +633,9 @@ FiltersFactory.prototype.list = {
         short_name: 'i_lit',
         long_name: 'Tous les litiges',
         url: 'litiges',
+        aggregate: [{
+            $ne: ['$litiges', []]
+        }],
         match: {
             litiges: {
                 $gt: {
@@ -582,6 +650,9 @@ FiltersFactory.prototype.list = {
         short_name: 'i_litEnc',
         long_name: 'Litiges non résolus',
         url: 'litigesEnCours',
+        aggregate: [{
+            $eq: ['$litigesEnCours', true]
+        }],
         match: {
             litiges: {
                 $elemMatch:  {
@@ -597,6 +668,13 @@ FiltersFactory.prototype.list = {
         short_name: 'i_mar',
         long_name: 'MARKET',
         url: 'market',
+        aggregate: [{
+            $eq: ['$aDemarcher', true]
+        }, {
+            $eq: ['$status', 'APR']
+        }, {
+            $eq: ['$enDemarchage', true]
+        }],
         match: {
             aDemarcher: true,
             status: 'APR',
@@ -612,6 +690,15 @@ FiltersFactory.prototype.list = {
         long_name: 'PANIER',
         url: 'panier',
         group: '$login.demarchage',
+        aggregate: [{
+            $eq: ['$aDemarcher', true]
+        }, {
+            $ne: ['$status', 'ANN']
+        }, {
+            $ne: ['$status', 'VRF']
+        }, {
+            $eq: ['$enDemarchage', true]
+        }],
         match: {
             aDemarcher: true,
             status: {
@@ -629,6 +716,11 @@ FiltersFactory.prototype.list = {
         long_name: 'Historique',
         url: 'historique',
         group: '$login.demarchage',
+        aggregate: [{
+            $eq: ['$aDemarcher', true]
+        }, {
+            $eq: ['$enDemarchage', true]
+        }],
         match: {
             aDemarcher: true,
             'login.demarchage': {
