@@ -13,7 +13,7 @@ module.exports = function(schema) {
         fn: function(inter, req, res) {
             return new Promise(function(resolve, reject) {
 
-                var pdf = PDF('intervention', inter).getOS(function(err, buff) {
+                var pdf = PDF('intervention', inter).getOS(false, function(err, buff) {
                     if (req && res) {
                         res.pdf(buff)
                     }
