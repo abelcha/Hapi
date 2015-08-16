@@ -4316,10 +4316,10 @@ var InterventionsController = function($q, tabContainer, FiltersFactory, Context
     $rootScope.$on('interventionListChange', function(event, newData) {
         console.log('yay')
         if (_this.tab.fullUrl === tabContainer.getCurrentTab().fullUrl && newData._date > lastChange) {
-/*            console.log('yay2')
-            dataProvider.applyFilter(currentFilter, _this.tab.hash, _this.customFilter);
+            console.log('yay2')
+            //dataProvider.applyFilter(currentFilter, _this.tab.hash, _this.customFilter);
             console.log('yay3')
-            _this.tableParams.reload();*/
+            _this.tableParams.reload();
         }
         lastChange = newData._date;
     })
