@@ -50,9 +50,11 @@ angular.module('edison').factory('DataProvider', ['edisonAPI', 'socket', '$rootS
     }
 
     DataProvider.prototype.applyFilter = function(filter, hash, customFilter) {
+        console.log(filter, hash, customFilter)
         this.filteredData = this.getData();
         if (this.getData() && (filter || hash || customFilter)) {
             this.filteredData = _.filter(this.getData(), customFilter || this.rowFilterFactory(filter, hash));
+            console.log(this.filteredData);
         }
         console.timeEnd("interFilter")
 

@@ -1788,9 +1788,11 @@ angular.module('edison').factory('DataProvider', ['edisonAPI', 'socket', '$rootS
     }
 
     DataProvider.prototype.applyFilter = function(filter, hash, customFilter) {
+        console.log(filter, hash, customFilter)
         this.filteredData = this.getData();
         if (this.getData() && (filter || hash || customFilter)) {
             this.filteredData = _.filter(this.getData(), customFilter || this.rowFilterFactory(filter, hash));
+            console.log(this.filteredData);
         }
         console.timeEnd("interFilter")
 
@@ -4317,7 +4319,7 @@ var InterventionsController = function($q, tabContainer, FiltersFactory, Context
         console.log('yay')
         if (_this.tab.fullUrl === tabContainer.getCurrentTab().fullUrl && newData._date > lastChange) {
             console.log('yay2')
-            //dataProvider.applyFilter(currentFilter, _this.tab.hash, _this.customFilter);
+            dataProvider.applyFilter(currentFilter, _this.tab.hash, _this.customFilter);
             console.log('yay3')
             _this.tableParams.reload();
         }
