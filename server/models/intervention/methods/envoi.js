@@ -74,6 +74,20 @@ module.exports = function(schema) {
         })
     }
 
+    var pdfPromise = function(a, name, b) {
+        return new Promise(function(resolve, reject) {
+            PDF(a, b).buffer(function(err, buff) {
+                if (err)
+                    return reject(err);
+                resolve({
+                    data: buff,
+                    extension: '.pdf',
+                    name: name
+                })
+            })
+        })
+    }
+
     schema.statics.manuel = getStaticFile.bind('manuel.pdf')
     schema.statics.notice = getStaticFile.bind('notice.pdf')
 
@@ -84,8 +98,9 @@ module.exports = function(schema) {
         method: 'POST',
         fn: function(inter, req, res) {
 
-
+            console.log('uaua')
             if (!isWorker) {
+                console.log('eeworker')
                 return edison.worker.createJob({
                     name: 'db_id',
                     model: 'intervention',
@@ -95,10 +110,11 @@ module.exports = function(schema) {
                 })
             }
 
-
+            console.log('here')
             var _this = this;
 
             return new Promise(function(resolve, reject) {
+                try {
 
                 console.time('envoi')
                 if (!inter ||  !inter.sst)
@@ -107,15 +123,11 @@ module.exports = function(schema) {
                     return reject("Impossible de trouver l'artisan");
                 var filesPromises = [
                     getFileOS(inter),
-                    PDF('deviseur', {
-                        type: 'DEVIS',
-                        id: inter.id
-                    }),
-                    PDF('devisPreview', {
+                    pdfPromise('deviseur', 'Deviseur n°' + inter.id + '.pdf', {
                         type: 'FACTURE',
                         id: inter.id
                     }),
-                    
+
                 ]
                 if (envProd) {
                     console.log('envprod')
@@ -134,6 +146,9 @@ module.exports = function(schema) {
                 }
                 var fileSupp = req.body.file;
                 console.time('getFiles')
+            } catch(e) {
+                __catch(e)
+            }
                 Promise.all(filesPromises).then(function(result) {
                     console.timeEnd('getFiles')
 
