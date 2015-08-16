@@ -1658,31 +1658,26 @@ module.exports = {
             envoiFacture: function() {
                 return "Madame, Monsieur,\n" +
                     "\n" +
-                    "Suite à notre intervention le {{datePlain}} dans vos locaux:\n" +
-                    "<strong><center>" +
-                    "FRANCE LOISIRS\n" +
+                    "<p>Suite à notre intervention le {{datePlain}} dans vos locaux:\n" +
+                    "<p strong center>{{client.civilite}} {{client.nom}} {{client.prenom}}\n" +
                     "16 PLACE DE L'HÔTEL DE VILLE, 80000 AMIENS\n" +
-                    "Tél. : 0322916682l\n" +
-                    "</center></strong>" +
-                    "Pour les raisons suivantes: \n" +
-                    "<strong><center>" +
-                    "REALISATION DU DEVIS 23123\n" +
-                    "</center></strong>" +
-                    "Nous vous confirmons que l'intervention à été réalisé par nos soins.\n" +
+                    "Tél. : 0322916682l</p>" +
+                    "Pour les raisons suivantes: </p>" +
+                    "<p strong center>REALISATION DU DEVIS 23123</p>\n" +
+                    "<p>Nous vous confirmons que l'intervention à été réalisé par nos soins.\n" +
                     "Vous trouverez ci joint la facture à regler\n" +
-                    "Nous vous prions de bien vouloir transmettre le règlement par chèque à l'ordre de:\n" +
-                "S.A.R.L EDISON SERVICES\n" +
-                "A l'organisme qui gère notre comptabilité:\n" +
-                "EDISON SERVICES\n" +
-                "Service comptabilité\n" +
-                "75 rue des dames, Paris\n" +
-                "Par ailleurs, si quelque raison s'opposait au règlement de la facture, nous vous remercions de nous le faire savoir dans les plus brefs délais.\n" +
-                "Restant à votre entière disposition, nous vous prions de croire, Madame, Monsieur l'expression de nos sincères salutations distinguées.\n" +
-                "<ul>" +
-                "<li>Ci-joint la facture</li>" +
-                "</ul>" +
-                "Cordialement,"
-
+                    "Nous vous prions de bien vouloir transmettre le règlement par chèque à l'ordre de:</p>" +
+                    "<p strong center> S.A.R.L EDISON SERVICES</p>" +
+                    "<p>A l'organisme qui gère notre comptabilité:</p>" +
+                    "<p strong center> EDISON SERVICES\n" +
+                    "Service comptabilité\n" +
+                    "75 rue des dames, Paris</p>" +
+                    "<p>Par ailleurs, si quelque raison s'opposait au règlement de la facture, nous vous remercions de nous le faire savoir dans les plus brefs délais.\n" +
+                    "Restant à votre entière disposition, nous vous prions de croire, Madame, Monsieur l'expression de nos sincères salutations distinguées.</p>" +
+                    "<ul>" +
+                    "<li>Ci-joint la facture</li>" +
+                    "</ul>" +
+                    "Cordialement,"
             }
         }
     },
@@ -1735,7 +1730,7 @@ module.exports = {
                 return "Bonjour\n" +
                     "Suite à votre demande d'intervention le " + datePlain + " chez:\n" +
                     "\n" +
-                    "<strong>" +
+                    "<strong>\n" +
                     "{{client.nom}} {{client.prenom}}\n" +
                     "{{client.address.n}} {{client.address.r}}\n" +
                     "{{client.address.cp}} {{client.address.v}}\n" +
