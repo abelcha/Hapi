@@ -79,6 +79,22 @@ module.exports = function(schema) {
         findBefore: true,
         method: 'POST',
         fn: function(inter, req, res) {
+
+
+            if (!isWorker) {
+                return edison.worker.createJob({
+                    name: 'db_id',
+                    model: 'intervention',
+                    method: 'sendFacture',
+                    data: inter,
+                    req: _.pick(req, 'body', 'session')
+                })
+            }
+
+
+
+
+
             var params = req.body;
             if (!params.text ||  !params.date) {
                 Promise.reject("Invalid Request")
@@ -90,25 +106,31 @@ module.exports = function(schema) {
                 } catch (e) {
                     reject(e)
                 }
-                console.log(pdf.html())
                 pdf.toBuffer(function(err, buffer) {
-                        mail.send({
-                            From: "intervention@edison-services.fr",
-                            To: req.session.email || "abel@chalier.me",
-                            Subject: "Facture de l'intervention " + inter.id,
-                            HtmlBody: req.body.text.replace('\n', '<br>'),
-                            Attachments: [{
-                                Content: buffer.toString('base64'),
-                                Name: 'Facture.pdf',
-                                ContentType: 'application/pdf'
-                            }]
-                        }).then(function(resp) {
-                            console.log(resp);
-                            inter.date.envoiFacture = new Date();
-                            inter.login.envoiFacture = req.session.login;
-                            inter.save().then(resolve, reject)
-                        }, reject).catch(__catch)
-                    })
+                    mail.send({
+                        From: "intervention@edison-services.fr",
+                        To: req.session.email || "abel@chalier.me",
+                        Subject: "Facture de l'intervention " + inter.id,
+                        HtmlBody: req.body.text.replaceAll('\n', '<br>'),
+                        Attachments: [{
+                            Content: buffer.toString('base64'),
+                            Name: 'Facture.pdf',
+                            ContentType: 'application/pdf'
+                        }]
+                    }).then(function(resp) {
+                        db.model('intervention').findOne({
+                            id: inter.id
+                        }).then(function(doc) {
+                            doc.date.envoiFacture = new Date();
+                            doc.login.envoiFacture = req.session.login;
+                            doc.save().then(resolve, reject)
+                            document.stack(buffer, 'FACTURE' + doc.id, req.session.login)
+                                .then(function(resp) {
+                                    console.log('file added', resp)
+                                })
+                        })
+                    }, reject).catch(__catch)
+                })
             })
         }
     }

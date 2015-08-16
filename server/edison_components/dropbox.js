@@ -54,6 +54,14 @@ Dropbox.prototype.move = function(from, to) {
     })
 }
 
+Dropbox.prototype.stack = function(buffer, filename, login) {
+    var moment = require('moment');
+    return this.upload({
+        filename: '/STACK/' + filename + ' (' + login + ' at ' + moment().format('L-LTS').replace(/\D/g, '-') + ').pdf',
+        data: buffer
+    })
+}
+
 Dropbox.prototype.upload = function(params) {
     var _this = this;
     return new Promise(function(resolve, reject) {

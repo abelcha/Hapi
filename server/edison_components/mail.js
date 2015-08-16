@@ -115,7 +115,6 @@ Mail.prototype.send = function(options) {
     return new Promise(function(resolve, reject) {
 
         _this.client.sendEmail(options, function(err, success) {
-
             console.log(err, success);
             if (err)
                 return reject(err);
