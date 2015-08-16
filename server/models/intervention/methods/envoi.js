@@ -5,7 +5,7 @@ module.exports = function(schema) {
     var moment = require('moment');
     var template = requireLocal('config/textTemplate');
     var config = requireLocal('config/dataList')
- 
+
     schema.statics.os = {
         unique: true,
         findBefore: true,
@@ -24,7 +24,7 @@ module.exports = function(schema) {
                         name: 'OS n°' + inter.id + '.pdf'
                     })
                 })
-                
+
             })
         }
     }
@@ -106,7 +106,16 @@ module.exports = function(schema) {
                 if (!req.body.sms)
                     return reject("Impossible de trouver l'artisan");
                 var filesPromises = [
-                    getFileOS(inter)
+                    getFileOS(inter),
+                    PDF('deviseur', {
+                        type: 'DEVIS',
+                        id: inter.id
+                    }),
+                    PDF('devisPreview', {
+                        type: 'FACTURE',
+                        id: inter.id
+                    }),
+                    
                 ]
                 if (envProd) {
                     console.log('envprod')
@@ -135,7 +144,7 @@ module.exports = function(schema) {
                             Content: file.data.toString('base64')
                         }
                     }).value();
-                    
+
                     if (fileSupp) {
                         inter.textfileSupp = (files[files.length - 1].ContentType === 'application/pdf' ? 'un document supplementaine' : 'une photo transmises par le client');
                     }
