@@ -3494,7 +3494,7 @@ angular.module('edison').controller('DashboardController', DashboardController);
                      var q = "?width=" + Math.round($window.outerWidth * (scope.height === "small" ? 0.8 : 1.2));
                      if (scope.client && scope.client.address && scope.client.address.latLng)
                          q += ("&origin=" + scope.client.address.latLng);
-                     if (scope.data.artisan && scope.data.artisan.id)
+                     if (scope.data.artisan && scope.data.artisan.address)
                          q += ("&destination=" + scope.data.artisan.address.lt + "," + scope.data.artisan.address.lg);
                      return "/api/mapGetStatic" + q;
                  }

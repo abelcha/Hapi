@@ -90,6 +90,7 @@ module.exports = function(schema) {
                 } catch (e) {
                     reject(e)
                 }
+                console.log(pdf.html())
                 pdf.toBuffer(function(err, buffer) {
                         mail.send({
                             From: "intervention@edison-services.fr",
@@ -108,18 +109,6 @@ module.exports = function(schema) {
                             inter.save().then(resolve, reject)
                         }, reject).catch(__catch)
                     })
-                    /*                db.model('intervention').getFacture(options)
-                                        .then(function(buffer) {
-                                            options.file = buffer;
-                                            mail.sendFacture(options).then(function(resp) {
-                                                if (options.acquitte) {
-                                                    return resolve(resp);
-                                                }
-                                                inter.date.envoiFacture = new Date;
-                                                inter.login.envoiFacture = req.session.login;
-                                                inter.save().then(resolve, reject)
-                                            }, reject)
-                                        }, reject)*/
             })
         }
     }
