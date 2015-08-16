@@ -46,8 +46,17 @@ module.exports = function(schema) {
 
             })
         })
-
     }
+
+    schema.statics.list = function(req, res) {
+        var _this = this;
+        redis.get("interventionList", function(err, reply) {
+            if (!reply || err)
+                return _this.getCache();
+            return res.send(reply)
+        })
+    }
+
     schema.statics.cachify = function(e) {
 
         try {
