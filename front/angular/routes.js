@@ -77,6 +77,13 @@ angular.module('edison').controller('MainController', function($timeout, $q, Dat
             });
     };
 
+    socket.on('filterStatsReload', function(data) {
+        $scope.userStats = _.find(data, function(e) {
+            return e.login === $scope.user.login;
+        });
+        $rootScope.interventionsStats = data;
+    })
+
     $rootScope.openTab = function(tab) {
         console.log('-->', tab);
     }
@@ -85,14 +92,11 @@ angular.module('edison').controller('MainController', function($timeout, $q, Dat
         $rootScope.$broadcast('closeContextMenu');
     }
 
-    var interventionDataProvider = new DataProvider('intervention')
-    socket.on('interventionListChange', reloadStats);
-
     var devisDataProvider = new DataProvider('devis')
-    socket.on('devisListChange', reloadStats);
-
     var artisanDataProvider = new DataProvider('artisan')
-    socket.on('artisanListChange', reloadStats);
+    var interventionDataProvider = new DataProvider('intervention')
+
+
 
 
 

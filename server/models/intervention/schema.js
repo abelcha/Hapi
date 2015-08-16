@@ -363,6 +363,9 @@ module.exports = function(db) {
             origin: String, //SCAN, UPLOAD, AUTO
 
         }],
+        cache: {
+
+        }
     });
     return schema
 }

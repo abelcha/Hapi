@@ -68,49 +68,13 @@ module.exports = function(schema) {
     }
 
 
-    schema.statics.fltr = function(req, res) {
-        console.time('oko')
-        return new Promise(function(resolve, reject) {
-            var fltrs = FiltersFactory('intervention').getAllFilters();
-            var stack = {}
-            _.each(fltrs, function(e) {
-                if (e.aggregate) {
-                    var match = _.isFunction(e.aggregate) ? e.aggregate() : e.aggregate;
-                    stack[e.short_name] = {
-                        $cond: [{
-                            $and: match
-                        }, 1, 0]
-                    }
-                }
-            })
-            console.log(JSON.stringify(stack))
-            db.model('intervention')
-                .aggregate()
-                .project(stack)
-                .exec(function(err, resp) {
-                    console.timeEnd('oko')
-                    console.log(err)
-                    var result = {};
-                    _.each(stack, function(e, k) {
-                            result[k] = _(resp).filter(k, 1).pluck('_id').value();
-                            console.log(k, result[k].length)
-                        })
-                        //console.log(resp && resp.length)
-                        // console.log(_.filter(resp, 'i_tall', 1))
-                        //  resolve(String(resp.length))
-                        // console.log('yey')
-                        // console.log(err, resp)
-                })
-        });
-    }
-
-
     schema.statics.stats = function(req, res) {
         return new Promise(function(resolve, reject) {
             redis.get('interventionStats', function(err, resp) {
-                if (!err && resp && !_.get(req, 'query.cache')) {
+                if (req && !err && resp && !_.get(req, 'query.cache')) {
                     return resolve(resp)
                 }
+                console.log('stats nocache')
                 var allFilters = {};
                 mergeFilters(allFilters, 'intervention')
                 mergeFilters(allFilters, 'devis')
@@ -135,10 +99,85 @@ module.exports = function(schema) {
                         }
                         rtn.push(telepro);
                     });
-                    resolve(rtn)
-                    redis.set('interventionStats', JSON.stringify(rtn));
+                    redis.set('interventionStats', JSON.stringify(rtn), function() {
+                        resolve(rtn)
+                    });
                 });
             });
         });
     }
+
+
+
+
+
+
+
+
+
+
+    var createUpdate = function(obj) {
+        return function(cb) {
+            db.model('intervention').update(obj.query, obj.update, {
+                multi: true
+            }).exec(cb)
+        }
+    }
+
+    var fltr = schema.statics.fltrify = function(query, cb) {
+        try {
+            if (!query) {
+                query = {}
+            } else if (typeof query === 'function') {
+                cb = query;
+                query = {}
+            }
+            var fltrs = FiltersFactory('intervention').getAllFilters();
+
+            var updates = [];
+            _.each(fltrs, function(e) {
+                if (e.stats !== false && e.match) {
+                    var match = typeof e.match === 'function' ? e.match() : e.match;
+                    var field = 'cache.f.' + e.short_name;
+                    var tmp = {
+                        query: _.merge(_.clone(query), match  ||  {}),
+                        update: {
+                            $set: {}
+                        }
+                    }
+                    tmp.update.$set[field] = 1;
+                    tmp.query['$or'] = [{}, {}]
+                    tmp.query['$or'][0][field] = 0;
+                    tmp.query['$or'][1][field] = {
+                        $exists: false
+                    };
+                    updates.push(createUpdate(tmp))
+                }
+            });
+            db.model('intervention').update(query, {
+                $set: {
+                    'cache.f': {}
+                }
+            }, {
+                multi: true
+            }).exec(function(err, resp) {
+                async.parallel(updates, function(err, result) {
+                    if (typeof cb === 'function')
+                        cb(err, result)
+                });
+            })
+
+        } catch (e) {
+            __catch(e)
+        }
+    }
+
+    schema.statics.fltrAll = function(req, res) {
+        fltr(_.omit(req.query, 'x'), function(err, resp) {
+            res.json([err, resp])
+        })
+    }
+
+
+
 }

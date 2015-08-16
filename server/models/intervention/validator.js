@@ -45,10 +45,10 @@ module.exports = function(schema) {
             _this.enDemarchage = _this.login.demarchage;
             _this.litigesEnCours = _.find(_this.litiges, 'regle', false);
             _this.savEnCours = _.find(_this.sav, 'status', 'ENC');
+            _this.cache = db.model('intervention').cachify(_this);
             if (isWorker) {
                 return next();
             }
-
             if (_this.cb.number) {
                 if (!creditcard.validate(_this.cb.number))
                     return next(new Error('Numero de carte invalide'))
@@ -73,7 +73,7 @@ module.exports = function(schema) {
                     sst.save().then();
                 })
             }
-            redis.del('interventionStats');
+            //redis.del('interventionStats');
             db.model('intervention').cacheActualise(doc);
             if (envProd) {
                 var v1 = new V1(doc);

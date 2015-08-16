@@ -270,6 +270,7 @@
                     quantite: 1
                 })
             }
+
             return rtn;
         }
 
@@ -280,7 +281,7 @@
             })
         }
 
-        var lol = function(data, cache, i, cb) {
+        var __dump = function(data, cache, i, cb) {
             if (i % 100 == 0)
                 console.log(_.round(i / data.length * 100, 2), "%")
             if (i === data.length - 1)
@@ -288,14 +289,12 @@
             var z = translateModel(data[i]);
 
             db.model('intervention')(z).save(function(err, resp) {
-                //var x = db.model('intervention').cachify(resp)
-                //cache.push(x)
                 if (err) {
                     console.log('--->', data[i].id)
                     console.log(err);
                 }
 
-                return lol(data, cache, i + 1, cb)
+                return __dump(data, cache, i + 1, cb)
             })
         }
 
@@ -309,14 +308,18 @@
                 }, function() {
                     console.log('yay')
                     request(key.alvin.url + "/dumpIntervention.php?limit=" + limit + "&key=" + key.alvin.pass, function(err, rest, body) {
+                        console.time('dump')
                         var data = JSON.parse(body);
                         var cache = [];
-                        lol(data, cache, 0, function(cache) {
-                            console.log('STOP')
-                            resolve('ok')
-                                /*redis.set("interventionList", JSON.stringify(cache), function() {
+                        __dump(data, cache, 0, function(cache) {
+                            console.timeEnd('dump')
+                            console.time('cache')
+                            db.model('intervention').fltrify(function() {
+                                console.timeEnd('cache')
+                                db.model('intervention').getCache().then(function() {
                                     resolve('ok')
-                                })*/
+                                })
+                            })
                         })
                     });
                 });
@@ -332,7 +335,7 @@
 
         var dumpOne = function(id) {
             console.log('dumpOne', id)
-            
+
             return new Promise(function(resolve, reject) {
                 request.get(key.alvin.url + "/dumpIntervention.php?devis=true&id=" + id + "&key=" + key.alvin.pass, function(err, resp, body) {
                     if (err || resp.statusCode !== 200 || !body || body == 'null') {
@@ -346,11 +349,9 @@
                         if (err)
                             return reject(err);
                         resolve(resp);
-                        db.model('intervention').findOne({
-                            id: id
-                        }).then(function(doc) {
-                            db.model('intervention').cacheActualise(doc);
-                        })
+                        db.model('intervention').cacheActualise({
+                            id: parseInt(id)
+                        });
                     })
                 });
             })
