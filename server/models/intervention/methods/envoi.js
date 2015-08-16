@@ -5,6 +5,7 @@ module.exports = function(schema) {
     var moment = require('moment');
     var template = requireLocal('config/textTemplate');
     var config = requireLocal('config/dataList')
+ 
     schema.statics.os = {
         unique: true,
         findBefore: true,
