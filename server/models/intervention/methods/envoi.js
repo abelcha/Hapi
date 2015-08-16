@@ -12,7 +12,7 @@ module.exports = function(schema) {
         populateArtisan: true,
         fn: function(inter, req, res) {
             return new Promise(function(resolve, reject) {
-                console.log(inter.client.telephone)
+
                 var pdf = PDF('intervention', inter).getOS(function(err, buff) {
                     if (req && res) {
                         res.pdf(buff)
