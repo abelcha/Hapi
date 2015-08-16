@@ -42,6 +42,7 @@ var InterventionsController = function($q, tabContainer, FiltersFactory, Context
             total: dataProvider.filteredData,
             getData: function($defer, params) {
                 var data = dataProvider.filteredData;
+                console.log('herdata -->', data)
                 if (!_.isEqual(params.filter(), _this.currentFilter))
                     data = $filter('tableFilter')(data, params.filter());
                 _this.currentFilter = _.clone(params.filter());
