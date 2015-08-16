@@ -59,7 +59,7 @@ module.exports = function(schema) {
 
     var mergeFilters = function(allFilters, model) {
         var filters = FiltersFactory(model).getAllFilters();
-        _.each(filters.slice(0, 3), function(e) {
+        _.each(filters, function(e) {
             if (e.stats !== false && e.match) {
                 var match = typeof e.match === 'function' ? e.match() : e.match;
                 allFilters[e.short_name] = statusDistinctFactory(model, match, e.group);

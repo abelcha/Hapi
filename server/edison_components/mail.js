@@ -30,7 +30,7 @@ Mail.prototype.readFilesOS = function() {
 
 
 
-Mail.prototype.sendFacture = function(options) {
+Mail.prototype.sendFacture = function(options, user) {
     //title, htmlTemplate, mailText
     var _this = this;
     return new Promise(function(resolve, reject) {
@@ -45,6 +45,7 @@ Mail.prototype.sendFacture = function(options) {
                 ContentType: "application/pdf"
             }]
         }, function(err, resp) {
+            console.log(1, err, resp)
             if (err)
                 return reject(err);
             resolve(resp)
@@ -67,12 +68,14 @@ Mail.prototype.sendDevis = function(options, user) {
                 ContentType: "application/pdf"
             }]
         }, function(err, resp) {
+            console.log(2, err, resp)
             if (err)
                 return reject(err);
             resolve(resp)
         })
     });
 }
+
 
 Mail.prototype.sendContrat = function(artisan, buffer, email, text) {
     var _this = this;

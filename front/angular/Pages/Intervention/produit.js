@@ -1,5 +1,5 @@
  angular.module('edison').directive('produits',
-     function(config, productsList, dialog) {
+     function(config, productsList, dialog, openPost, Intervention, Devis) {
          "use strict";
          return {
              restrict: 'E',
@@ -16,6 +16,8 @@
                  model.produits = model.produits || [];
                  scope.config = config;
                  scope.produits = new productsList(model.produits);
+                 scope.Intervention = Intervention;
+                 scope.Devis = Devis;
 
                  if (!scope.data.reglementSurPlace) {
                      scope.display = true;
@@ -26,19 +28,17 @@
                          model.produits.push(resp)
                      });
                  }
-
-                 scope.envoiFacture = function() {
-                     model.envoiFacture(function(err, res) {
-                         if (!err)
-                             model.date.envoiFacture = new Date();
+                 scope.printDevis = function() {
+                     openPost('/api/intervention/printDevis', {
+                         data: JSON.stringify(scope.data),
+                         html: true
                      })
                  }
 
-
-                 scope.envoiDevis = function() {
-                     model.envoiDevis(function(err, res) {
-                         if (!err)
-                             model.date.envoiFacture = new Date();
+                 scope.printFactureAcquitte = function() {
+                     openPost('/api/intervention/printFactureAcquitte', {
+                         data: JSON.stringify(scope.data),
+                         html: true
                      })
                  }
              },

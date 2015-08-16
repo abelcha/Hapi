@@ -1,0 +1,3 @@
+devisclass.js -> devis.envoi
+interventionclass.js -> inter.envoiFacture
+produit.js --> (previews + send);

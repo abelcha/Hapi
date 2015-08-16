@@ -1653,6 +1653,39 @@ module.exports = {
             }
         }
     },
+    lettre: {
+        intervention: {
+            envoiFacture: function() {
+                return "Madame, Monsieur,\n" +
+                    "\n" +
+                    "Suite à notre intervention le {{datePlain}} dans vos locaux:\n" +
+                    "<strong><center>" +
+                    "FRANCE LOISIRS\n" +
+                    "16 PLACE DE L'HÔTEL DE VILLE, 80000 AMIENS\n" +
+                    "Tél. : 0322916682l\n" +
+                    "</center></strong>" +
+                    "Pour les raisons suivantes: \n" +
+                    "<strong><center>" +
+                    "REALISATION DU DEVIS 23123\n" +
+                    "</center></strong>" +
+                    "Nous vous confirmons que l'intervention à été réalisé par nos soins.\n" +
+                    "Vous trouverez ci joint la facture à regler\n" +
+                    "Nous vous prions de bien vouloir transmettre le règlement par chèque à l'ordre de:\n" +
+                "S.A.R.L EDISON SERVICES\n" +
+                "A l'organisme qui gère notre comptabilité:\n" +
+                "EDISON SERVICES\n" +
+                "Service comptabilité\n" +
+                "75 rue des dames, Paris\n" +
+                "Par ailleurs, si quelque raison s'opposait au règlement de la facture, nous vous remercions de nous le faire savoir dans les plus brefs délais.\n" +
+                "Restant à votre entière disposition, nous vous prions de croire, Madame, Monsieur l'expression de nos sincères salutations distinguées.\n" +
+                "<ul>" +
+                "<li>Ci-joint la facture</li>" +
+                "</ul>" +
+                "Cordialement,"
+
+            }
+        }
+    },
     mail: {
         intervention: {
             os: function() {
@@ -1670,9 +1703,9 @@ module.exports = {
                     "{{client.address.n}} {{client.address.r}}\n" +
                     "{{client.address.cp}} {{client.address.v}}\n" +
                     "</strong>" +
-                    '\n' + 
+                    '\n' +
                     "L' intervention a été prévu pour le : <strong>{{datePlain}}</strong> \n" +
-                    '\n' + 
+                    '\n' +
                     "Vous devez dès réception de cet ordre de service, prendre contact <strong><em>immédiatement</em></strong> avec le client afin de confirmer la date et l'horaire de l’intervention.\n" +
                     "\n" +
                     "Les coordonnées et la description de l'intervention sont détaillées dans l'ordre de service que vous trouverez en pièce jointe. \n" +
@@ -1697,6 +1730,26 @@ module.exports = {
                     "<strong>Pour tous renseignements supplémentaires, vous pouvez joindre {{__login}} au 09.72.42.30.00</strong>\n" +
                     "\n" +
                     "L’équipe <strong>Edison Services</strong>\n"
+            },
+            envoiFacture: function(datePlain) {
+                return "Bonjour\n" +
+                    "Suite à votre demande d'intervention le " + datePlain + " chez:\n" +
+                    "\n" +
+                    "<strong>" +
+                    "{{client.nom}} {{client.prenom}}\n" +
+                    "{{client.address.n}} {{client.address.r}}\n" +
+                    "{{client.address.cp}} {{client.address.v}}\n" +
+                    "</strong>" +
+                    "\n" +
+                    "Veuillez trouvez ci-joint notre facture d'intervention\n" +
+                    "Merci de transmettre le règlement directement à notre organisme de facturation.\n" +
+                    "\n" +
+                    "D'avance merci pour votre rapidité\n" +
+                    "Cordialement,\n"
+                "\n" +
+                "Service Comptabilité - Edison Services\n" +
+                "Tél. 09.72.51.08.01 (Ouvert de 09h00 à 12h30 / 14h00 à 16h30)\n" +
+                "Fax. 09.72.39.33.46\n";
             }
         },
         devis: {

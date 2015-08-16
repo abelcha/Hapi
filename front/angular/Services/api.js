@@ -112,8 +112,8 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
             envoi: function(id, options) {
                 return $http.post("/api/intervention/" + id + "/envoi", options);
             },
-            envoiFacture: function(id, options) {
-                return $http.post("/api/intervention/" + id + "/envoiFacture", options);
+            sendFacture: function(id, options) {
+                return $http.post("/api/intervention/" + id + "/sendFacture", options);
             }
         },
         artisan: {

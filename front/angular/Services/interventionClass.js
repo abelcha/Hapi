@@ -1,5 +1,5 @@
 angular.module('edison')
-    .factory('Intervention', function($location, $window, LxNotificationService, LxProgressService, dialog, edisonAPI, Devis, $rootScope, textTemplate) {
+    .factory('Intervention', function($location, $window, openPost, LxNotificationService, LxProgressService, dialog, edisonAPI, Devis, $rootScope, textTemplate) {
         "use strict";
 
         var Intervention = function(data) {
@@ -27,14 +27,30 @@ angular.module('edison')
             })
         };
 
-        Intervention.prototype.envoiFacture = function(cb) {
+        Intervention.prototype.facturePreview = function() {
+            openPost('/api/intervention/facturePreview', {
+                data: JSON.stringify(this),
+                html: true
+            })
+        }
+
+        Intervention.prototype.factureAcquittePreview = function() {
+
+            openPost('/api/intervention/factureAcquittePreview', {
+                data: JSON.stringify(this),
+                html: true
+            })
+        }
+
+
+        Intervention.prototype.sendFacture = function(cb) {
             var _this = this;
-            dialog.envoiFacture(_this, function(text, acquitte, date) {
-                edisonAPI.intervention.envoiFacture(_this.id, {
+            var datePlain = moment(this.date.intervention).format('LL');
+            var template = textTemplate.mail.intervention.envoiFacture.bind(_this)(datePlain)
+            var mailText = (_.template(template)(this))
+            dialog.envoiFacture(_this, mailText, false, function(text, acquitte, date) {
+                edisonAPI.intervention.sendFacture(_this.id, {
                     text: text,
-                    acquitte: acquitte,
-                    date: date,
-                    data: _this,
                 }).success(function(resp) {
                     var validationMessage = _.template("La facture de l'intervention {{id}} à été envoyé")(_this)
                     LxNotificationService.success(validationMessage);
@@ -46,9 +62,8 @@ angular.module('edison')
                     if (typeof cb === 'function')
                         cb(err);
                 })
-
             })
-        };
+        }
         Intervention.prototype.ouvrirFiche = function() {
             $location.url('/intervention/' + this.id)
         }
@@ -255,6 +270,8 @@ angular.module('edison')
                 number: 0
             }
         }
+
+
 
         return Intervention;
     });

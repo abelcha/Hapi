@@ -33,15 +33,12 @@ angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', 'config', 
                 templateUrl: '/DialogTemplates/facturierDeviseur.html',
             });
         },
-        envoiFacture: function(inter, cb) {
+        envoiFacture: function(inter, text, options, cb) {
             $mdDialog.show({
                 controller: function DialogController($scope, $mdDialog) {
-                    var template = "{{client.civilite}} {{client.nom}}, \n" +
-                        "Vous trouverez ci-joint la facture de notre intervention\n" +
-                        "Cordialement\n" +
-                        "Edison Services"
-                    $scope.text = _.template(template)(inter);
+                    $scope.text = text
                     $scope.date = new Date();
+                    $scope.options = options
                     $scope.acquitte = false;
                     $scope.answer = function(cancel) {
                         $mdDialog.hide();
@@ -99,18 +96,18 @@ angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', 'config', 
                 templateUrl: '/DialogTemplates/choiceText.html',
             });
         },
-        addProd: function( cb) {
+        addProd: function(cb) {
             $mdDialog.show({
                 controller: function DialogController($scope, $mdDialog) {
                     $scope.answer = function(resp, text) {
                         $mdDialog.hide();
                         return cb({
-                             quantite: $scope.quantite,
-                             ref: $scope.ref,
-                             title: $scope.title,
-                             desc: $scope.title,
-                             pu: $scope.pu
-                         });
+                            quantite: $scope.quantite,
+                            ref: $scope.ref,
+                            title: $scope.title,
+                            desc: $scope.title,
+                            pu: $scope.pu
+                        });
                     }
                 },
                 templateUrl: '/DialogTemplates/getProd.html',

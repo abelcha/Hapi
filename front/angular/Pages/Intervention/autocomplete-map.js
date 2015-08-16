@@ -50,7 +50,7 @@
                  }
 
                  scope.getStaticMap = function() {
-                     if (!_.get(scope, 'data.artisan.address.lt'))
+                     if (!_.get(scope, 'data.client.address.lt'))
                          return 0
                      var q = "?width=" + Math.round($window.outerWidth * (scope.height === "small" ? 0.8 : 1.2));
                      if (scope.client && scope.client.address && scope.client.address.latLng)

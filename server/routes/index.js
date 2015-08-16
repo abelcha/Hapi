@@ -32,7 +32,7 @@ module.exports = function(app) {
                 promise = model.findOne({
                     _id: id
                 });
-            } 
+            }
             if (model[method].populateArtisan === true) {
                 promise = promise.populate('sst');
             }
@@ -77,7 +77,10 @@ module.exports = function(app) {
         if (!model ||  typeof model[method] !== "function" || model[method].length !== 2) {
             return next();
         }
-        model[method](req, res).then(success.bind(res), die.bind(res))
+        var prm = model[method](req, res);
+        if (prm && typeof prm.then === 'function') {
+            return prm.then(success.bind(res), die.bind(res))
+        }
     });
 
     app.all('/api/:model/:id', function(req, res, next) {
