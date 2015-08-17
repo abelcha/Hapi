@@ -36,7 +36,6 @@ module.exports = function(schema) {
 
 
     var preSave = function(next) {
-        console.log('save')
         var _this = this;
         try {
             upperCaseEverything(this.client.address)
