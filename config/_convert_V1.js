@@ -149,20 +149,16 @@ V1.prototype.compare = function() {
 }
 
 V1.prototype.send = function(cb) {
-    console.log('send')
     try {
 
         request.get({
             url: 'http://electricien13003.com/alvin/postData.php',
             qs: this.data
         }, function(err, resp, body) {
-            console.log('have send')
-            console.log('-->', err, body)
             if (!err && resp.statusCode === 200) {
                 console.log(body)
                 cb(null, body)
             } else {
-                console.log("err", body)
                 cb("err")
             }
         })

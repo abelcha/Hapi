@@ -308,7 +308,6 @@
                 }, function() {
                     console.log('yay')
                     request(key.alvin.url + "/dumpIntervention.php?limit=" + limit + "&key=" + key.alvin.pass, function(err, rest, body) {
-                        console.time('dump')
                         var data = JSON.parse(body);
                         var cache = [];
                         __dump(data, cache, 0, function(cache) {
