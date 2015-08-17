@@ -102,7 +102,7 @@
                 rtn.devisOrigine = d.id;
                 var devis = JSON.parse(d.devis.split('<br>').join(""));
                 rtn.produits = devis.devisTab;
-                rtn.tva = devis.tva;
+                rtn.tva = parseInt(devis.tva) || 10;
                 rtn.produits.map(function(p) {
                     p.desc = sanitizeHtml(entities.decode(p.desc))
                     p.ref = sanitizeHtml(entities.decode(p.ref))
