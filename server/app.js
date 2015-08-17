@@ -4,6 +4,8 @@ var app = express();
 var http = require('http').Server(app);
 var port = (process.env.PORT || 8080);
 var path = require('path');
+var _ = require('lodash')
+var fs = require('fs')
 require('pretty-error').start();
 
 express.response.pdf = function(obj, headers, status) {
@@ -26,9 +28,7 @@ global.__catch = function(e) {
     throw e;
 }
 
-String.prototype.envify = function(str) {
-    return [process.env.APP_ENV, this].join('_')
-}
+
 
 var key = requireLocal('config/_keys');
 var dep = require(process.cwd() + '/server/loadDependencies');
@@ -70,7 +70,8 @@ app.use(require('body-parser').urlencoded({
 app.use(require('compression')());
 app.use(require('connect-redis-sessions')({
     client: redis,
-    app: "EDISON".envify()
+    app: "EDISON".envify(),
+    ttl: 999999999
 }))
 
 
@@ -111,6 +112,13 @@ app.get("/ping", function(req, res)  {
     res.json(Date.now());
 })
 
+var getEmbeddedScript = function(req) {
+    return '<script>' +
+        ';window.app_session = ' + JSON.stringify(req.session) +
+        ';window.app_env = ' + JSON.stringify(process.env.APP_ENV) +
+        '</script>';
+}
+
 app.use(function(req, res, next) {
     if (req.url.includes('.'))
         return next();
@@ -123,9 +131,16 @@ app.use(function(req, res, next) {
     } else {
 
         if (!req.url.startsWith('/api/')) {
-            return res.sendFile(process.cwd() + "/front/views/index.html")
+            fs.readFile(process.cwd() + "/front/views/index.html", 'utf8', function(err, data) {
+                if (err) {
+                    return res.status(500).send('error #00412')
+                }
+                return res.send(getEmbeddedScript(req) + data);
+            });
+        } else {
+            return next();
+
         }
-        return next();
     }
 });
 

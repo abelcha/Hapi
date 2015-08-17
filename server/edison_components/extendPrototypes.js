@@ -1,5 +1,9 @@
 module.exports = function() {
 
+    String.prototype.envify = function(str) {
+        return [process.env.APP_ENV, this].join('_')
+    }
+    
     String.prototype.lsplit = function() {
         return this.match(new RegExp('.{1,' + ((arguments.length == 1) ? (isFinite(String(arguments[0]).trim()) ? arguments[0] : false) : 1) + '}', 'g'));
     }
