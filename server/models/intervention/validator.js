@@ -36,6 +36,7 @@ module.exports = function(schema) {
 
 
     var preSave = function(next) {
+        console.log('save')
         var _this = this;
         try {
             upperCaseEverything(this.client.address)
@@ -75,11 +76,11 @@ module.exports = function(schema) {
             }
             //redis.del('interventionStats');
             db.model('intervention').cacheActualise(doc);
-            if (envProd) {
+            //if (envProd) {
                 var v1 = new V1(doc);
                 v1.send(function(resp) {
                 });
-            }
+        //    }
         }
 
     }
