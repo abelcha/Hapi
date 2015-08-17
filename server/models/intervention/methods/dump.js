@@ -234,7 +234,7 @@
                     },
                 }
             }
-
+            console.log(compta.paiement);
             if (d.date_paiement_client) {
                 rtn.compta.reglement = {
                     date: toDate(d.date_paiement_client),
