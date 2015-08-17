@@ -78,6 +78,7 @@ app.use(require('connect-redis-sessions')({
 
 app.get('/logout', function(req, res) {
     if (req.session && req.session.id)  {
+        new edison.event("LOGOUT", req.session.login);
         req.session.destroy();
     }
     res.redirect('/')

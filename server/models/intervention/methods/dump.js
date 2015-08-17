@@ -302,9 +302,9 @@
             return new Promise(function(resolve, reject) {
 
                 db.model('intervention').remove({
-/*                    id: {
-                        $gt: limit
-                    }*/
+                    /*                    id: {
+                                            $gt: limit
+                                        }*/
                 }, function() {
                     console.log('yay')
                     request(key.alvin.url + "/dumpIntervention.php?limit=" + limit + "&key=" + key.alvin.pass, function(err, rest, body) {
@@ -335,20 +335,28 @@
             return execDump(limit)
         }
 
-        var dumpOne = function(id) {
+        var dumpOne = function(id, login) {
             console.log('dumpOne', id)
-
             return new Promise(function(resolve, reject) {
                 var url = key.alvin.url + "/dumpIntervention.php?devis=false&id=" + id + "&key=" + key.alvin.pass;
                 console.log(url)
                 request.get(url, function(err, resp, body) {
                     if (err || resp.statusCode !== 200 || !body || body == 'null') {
+                        new edison.event("DUMP_ONE", login, id, {
+                            rejected: true,
+                        })
                         console.log('rejected', id)
                         return reject('nope')
                     }
+                    var v1 = JSON.parse(body)
+                    var v2 = translateModel(v1)
+                    new edison.event("DUMP_ONE", login, parseInt(id), {
+                        v1: v1,
+                        v2: v2
+                    })
                     db.model('intervention').update({
                         id: id
-                    }, translateModel(JSON.parse(body)), {
+                    }, v2, {
                         upsert: true
                     }).exec(function(err, resp, c) {
                         if (err)
@@ -368,7 +376,7 @@
         schema.statics.dump = function(req, res) {
             var limit = req.query.limit ||  0;
             if (req.query.id) {
-                return dumpOne(req.query.id)
+                return dumpOne(req.query.id, req.query.login || req.session.login)
             } else if (!isWorker) {
                 return edison.worker.createJob({
                     name: 'db',

@@ -8,125 +8,125 @@ var request = require('request');
 
 var V1 = function(d, devis, legacy) {
     try {
-    this.data = _.clone(this.___data)
-    var x = this.data
-    if (devis) {
-        d = db.model('intervention')(d)
-        d.status = 'DEVIS'
-    }
-    this.legacy = legacy
-    x.id = d.id;
-    var dateAjout = moment(new Date(d.date.ajout));
-    if (d.date.intervention) {
-        var dateIntervention = moment(new Date(d.date.intervention))
-        x.date_intervention = dateIntervention.format('DD/MM/YYYY')
-        x.date_intervention_en = dateIntervention.format('YYYYMMDD')
-        x.heure_intervention = dateIntervention.format('HH:mm:ss')
-        x.t_stamp_intervention = dateIntervention.unix()
-    }
-    if (d.compta.reglement.date) {
-        x.date_paiement_client = moment(new Date(d.compta.reglement.date)).format('DD/MM/YYYY')
-    }
-    x.t_stamp = dateAjout.unix()
-    x.date_ajout = dateAjout.format('DD/MM/YYYY')
-    x.heure_ajout = dateAjout.format('HH:mm:ss')
-    x.date_ajout_en = dateAjout.format('YYYYMMDD')
-    x.civilite = d.client.civilite;
-    x.nom = d.client.nom;
-    x.prenom = d.client.prenom;
-    x.tel1 = d.client.telephone.tel1
-    x.tel2 = d.client.telephone.tel2 || ""
-    x.numero_origine = d.client.telephone.origine || ""
-    x.email = d.client.email
-    x.societe = Number(d.client.civilite === 'Soc.')
-    x.numero = d.client.address.n
-    x.adresse = d.client.address.r
-    x.code_postal = d.client.address.cp
-    x.ville = d.client.address.v
-    x.lat = d.client.address.lt
-    x.lng = d.client.address.lg
-    var categorie = config.categories[d.categorie];
-    x[_.deburr(categorie.long_name).toLowerCase()] = '1';
-    x.categorie = _.deburr(categorie.long_name).toUpperCase();
-    x.description = d.description;
-    x.remarque_interne = _.pluck(d.comments, 'text').join('\n') ||  ""
-    x.prix_ht_annonce = d.prixAnnonce;
-    x.prix_ht_final = d.prixFinal;
-    x.id_sst_selectionne = _.get(d, 'artisan.id', 0);
-    var login = _.find(users, 'login', d.login.ajout)
-    x.ajoute_par = login && login.oldLogin ? login.oldLogin : d.login.ajout;
-    //0 => pas de facture, 1 => facture a faire, 2 => facture effectué, 3 => facture payé (reglement recu)
-    if (!d.reglementSurPlace) {
-        x.reglement_sur_place = 0
-        if (d.date.envoiFacture) {
-            x.reglement_sur_place = 2;
+        this.data = _.clone(this.___data)
+        var x = this.data
+        if (devis) {
+            d = db.model('intervention')(d)
+            d.status = 'DEVIS'
         }
-    } else {
-        x.reglement_sur_place = 1;
-    }
-    if (d.compta.reglement.recu) {
-        x.reglement_sur_place = 3;
-    }
-    x.mode_reglement = (!d.reglementSurPlace ? 'facture' : _.find(config.modeDeReglements, 'short_name', d.modeReglement).old_name);
-    x.remarque = d.remarque
-    if (d.facture) {
-        x.nom_facture = d.facture.nom
-        x.prenom_facture = d.facture.prenom
-        x.tel_facture = d.facture.telephone
-        x.mail_facture = d.facture.email
-        x.numero_facture = d.facture.address.n
-        x.adresse_facture = d.facture.address.r
-        x.code_postal_facture = d.facture.address.cp
-        x.ville_facture = d.facture.address.v
-        x.type_client = _.findIndex(config.typePayeur, 'short_name', d.facture.payeur)
-        x.relance_facture = d.facture.relance
-    }
-    if (d.fourniture.length) {
-        x.cout_fourniture = d.fourniture[0].pu;
-        x.fournisseur = d.fourniture[0].fournisseur
-        x.fourniture_sst = Number(d.fourniture[0].fournisseur == "")
-        x.fourniture_edison = Number(d.fourniture[0].fournisseur != "")
-        x.tva_facture = d.tva;
-    }
-    x.taux_tva = d.tva ||  10
-    console.log('==>', d.compta.paiement.effectue)
-    x.etat_intervention = devis ? 'DEVIS' : config.etats[d.status].old_name;
-    if (d.compta.paiement.dette) {
-        console.log('YAY DETTE')
-        x.etat_reglement = 'DETTE'
-    } else if (d.compta.paiement.effectue) {
-        console.log('YAY PAIEMENT EFFECTUE')
-        x.etat_reglement = 'PAIEMENT EFFECTUE'
-    } else if (d.status === 'VRF') {
-        console.log('YAY CHEQUE RECUPERER')
-        x.etat_reglement = 'CHEQUE RECUPERE'
-    }
-    console.log('etat teglement ====>', x.etat_reglement)
-    if (d.produits.length) {
-        var devisTab = [];
-        _.each(d.produits, function(e) {
-            devisTab.push({
-                pu: e.pu,
-                quantite: e.quantite,
-                ref: e.ref,
-                desc: e.desc.split('\n').join('<br>')
+        this.legacy = legacy
+        x.id = d.id;
+        var dateAjout = moment(new Date(d.date.ajout));
+        if (d.date.intervention) {
+            var dateIntervention = moment(new Date(d.date.intervention))
+            x.date_intervention = dateIntervention.format('DD/MM/YYYY')
+            x.date_intervention_en = dateIntervention.format('YYYYMMDD')
+            x.heure_intervention = dateIntervention.format('HH:mm:ss')
+            x.t_stamp_intervention = dateIntervention.unix()
+        }
+        if (d.compta.reglement.date) {
+            x.date_paiement_client = moment(new Date(d.compta.reglement.date)).format('DD/MM/YYYY')
+        }
+        x.t_stamp = dateAjout.unix()
+        x.date_ajout = dateAjout.format('DD/MM/YYYY')
+        x.heure_ajout = dateAjout.format('HH:mm:ss')
+        x.date_ajout_en = dateAjout.format('YYYYMMDD')
+        x.civilite = d.client.civilite;
+        x.nom = d.client.nom;
+        x.prenom = d.client.prenom;
+        x.tel1 = d.client.telephone.tel1
+        x.tel2 = d.client.telephone.tel2 || ""
+        x.numero_origine = d.client.telephone.origine || ""
+        x.email = d.client.email
+        x.societe = Number(d.client.civilite === 'Soc.')
+        x.numero = d.client.address.n
+        x.adresse = d.client.address.r
+        x.code_postal = d.client.address.cp
+        x.ville = d.client.address.v
+        x.lat = d.client.address.lt
+        x.lng = d.client.address.lg
+        var categorie = config.categories[d.categorie];
+        x[_.deburr(categorie.long_name).toLowerCase()] = '1';
+        x.categorie = _.deburr(categorie.long_name).toUpperCase();
+        x.description = d.description;
+        x.remarque_interne = _.pluck(d.comments, 'text').join('\n') ||  ""
+        x.prix_ht_annonce = d.prixAnnonce;
+        x.prix_ht_final = d.prixFinal;
+        x.id_sst_selectionne = _.get(d, 'artisan.id', 0);
+        var login = _.find(users, 'login', d.login.ajout)
+        x.ajoute_par = login && login.oldLogin ? login.oldLogin : d.login.ajout;
+        //0 => pas de facture, 1 => facture a faire, 2 => facture effectué, 3 => facture payé (reglement recu)
+        if (!d.reglementSurPlace) {
+            x.reglement_sur_place = 0
+            if (d.date.envoiFacture) {
+                x.reglement_sur_place = 2;
+            }
+        } else {
+            x.reglement_sur_place = 1;
+        }
+        if (d.compta.reglement.recu) {
+            x.reglement_sur_place = 3;
+        }
+        x.mode_reglement = (!d.reglementSurPlace ? 'facture' : _.find(config.modeDeReglements, 'short_name', d.modeReglement).old_name);
+        x.remarque = d.remarque
+        if (d.facture) {
+            x.nom_facture = d.facture.nom
+            x.prenom_facture = d.facture.prenom
+            x.tel_facture = d.facture.telephone
+            x.mail_facture = d.facture.email
+            x.numero_facture = d.facture.address.n
+            x.adresse_facture = d.facture.address.r
+            x.code_postal_facture = d.facture.address.cp
+            x.ville_facture = d.facture.address.v
+            x.type_client = _.findIndex(config.typePayeur, 'short_name', d.facture.payeur)
+            x.relance_facture = d.facture.relance
+        }
+        if (d.fourniture.length) {
+            x.cout_fourniture = d.fourniture[0].pu;
+            x.fournisseur = d.fourniture[0].fournisseur
+            x.fourniture_sst = Number(d.fourniture[0].fournisseur == "")
+            x.fourniture_edison = Number(d.fourniture[0].fournisseur != "")
+            x.tva_facture = d.tva;
+        }
+        x.taux_tva = d.tva ||  10
+        console.log('==>', d.compta.paiement.effectue)
+        x.etat_intervention = devis ? 'DEVIS' : config.etats[d.status].old_name;
+        if (d.compta.paiement.dette) {
+            console.log('YAY DETTE')
+            x.etat_reglement = 'DETTE'
+        } else if (d.compta.paiement.effectue) {
+            console.log('YAY PAIEMENT EFFECTUE')
+            x.etat_reglement = 'PAIEMENT EFFECTUE'
+        } else if (d.status === 'VRF') {
+            console.log('YAY CHEQUE RECUPERER')
+            x.etat_reglement = 'CHEQUE RECUPERE'
+        }
+        console.log('etat teglement ====>', x.etat_reglement)
+        if (d.produits.length) {
+            var devisTab = [];
+            _.each(d.produits, function(e) {
+                devisTab.push({
+                    pu: e.pu,
+                    quantite: e.quantite,
+                    ref: e.ref,
+                    desc: e.desc.split('\n').join('<br>')
+                });
             });
-        });
-        var sous_total = _.sum(devisTab, function(e) {
-            return e.quantite * e.pu
-        })
-        x.devis = JSON.stringify({
-            devisTab: devisTab,
-            sous_total: _.round(sous_total, 2),
-            total: _.round(sous_total * 0.01 * x.tva, 2),
-            envoyer: d.historique.length
-        });
-    } else {
-        x.devis = "";
-    }
+            var sous_total = _.sum(devisTab, function(e) {
+                return e.quantite * e.pu
+            })
+            x.devis = JSON.stringify({
+                devisTab: devisTab,
+                sous_total: _.round(sous_total, 2),
+                total: _.round(sous_total * 0.01 * x.tva, 2),
+                envoyer: d.historique.length
+            });
+        } else {
+            x.devis = "";
+        }
 
-    x.A_DEMARCHE = Number(d.aDemarcher);
-    } catch(e) {
+        x.A_DEMARCHE = Number(d.aDemarcher);
+    } catch (e) {
         __catch(e)
     }
 
@@ -154,10 +154,7 @@ V1.prototype.compare = function() {
 }
 
 V1.prototype.send = function(cb) {
-    console.log(this.data)
-    cb(null, 'ok')
-/*    try {
-
+    try {
         request.get({
             url: 'http://electricien13003.com/alvin/postData.php',
             qs: this.data
@@ -167,10 +164,15 @@ V1.prototype.send = function(cb) {
             } else {
                 cb("err")
             }
+            new edison.event("SEND_INTER", this.data.id, {
+                sended: this.data,
+                resp: body
+            });
+
         })
-    } catch(e) {
+    } catch (e) {
         __catch(e);
-    }*/
+    }
 }
 
 V1.prototype.___data = {

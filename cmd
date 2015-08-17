@@ -24,6 +24,7 @@ print(args[0], options, q)
 if (options.cache):
 	q['cache'] = True
 q['x'] = "true"
+q['login'] = "CMD"
 res = requests.get(baseUrl + args[0], params=q)
 print(res)
 print(res.text)
