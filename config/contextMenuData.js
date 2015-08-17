@@ -92,7 +92,7 @@ module.exports = {
             console.log(inter)
             return inter.status == "VRF"  || (!inter.artisan || !inter.artisan.id)
         }
-    }, /*{
+    }, {
         title: "Vérifier",
         action: 'verification',
         hide: function(inter) {
@@ -102,7 +102,7 @@ module.exports = {
         title: "Annuler",
         action: 'annulation'
 
-    }, */{
+    }, {
         title: "Je prend !",
         action: 'demarcher',
         hide: function(inter) {

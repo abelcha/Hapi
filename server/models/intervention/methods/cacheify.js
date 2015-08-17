@@ -34,6 +34,11 @@ module.exports = function(schema) {
             db.model('intervention').find({}, {
                 cache: true,
             }).then(function(resp) {
+                _.each(resp, function(e) {
+                    if (_.size(e.cache) == 1) {
+                        console.log(e)
+                    }
+                })
                 console.timeEnd('find')
                 console.time('pluck')
                 var x = _.pluck(resp, 'cache');
@@ -41,7 +46,7 @@ module.exports = function(schema) {
                 console.time('redis')
                 redis.set("interventionList", JSON.stringify(x), function() {
                     console.timeEnd('redis')
-                    resolve(x);
+                    resolve("x");
                 });
 
             })
@@ -80,7 +85,7 @@ module.exports = function(schema) {
                 dm: e.login.demarchage || undefined
             };
         } catch (e) {
-            console.log('--->', e)
+            __catch(e)
         }
         return rtn;
     }
@@ -113,6 +118,7 @@ module.exports = function(schema) {
                 } else {
                     data.unshift(result);
                 }
+                console.log(result)
                 db.model('intervention').stats().then(function(resp) {
                     io.sockets.emit('filterStatsReload', resp);
                 })

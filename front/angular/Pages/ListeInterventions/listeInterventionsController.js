@@ -12,7 +12,6 @@ var InterventionsController = function($q, tabContainer, FiltersFactory, Context
     var title = currentFilter ? currentFilter.long_name : "Interventions";
     _this.recap = $routeParams.sstID ? parseInt($routeParams.sstID) : false;
 
-
     LxProgressService.circular.show('#5fa2db', '#globalProgress');
     dataProvider.init(function(err, resp) {
         _this.tab = tabContainer.getCurrentTab();
@@ -42,7 +41,6 @@ var InterventionsController = function($q, tabContainer, FiltersFactory, Context
             total: dataProvider.filteredData,
             getData: function($defer, params) {
                 var data = dataProvider.filteredData;
-                console.log('herdata -->', data)
                 if (!_.isEqual(params.filter(), _this.currentFilter))
                     data = $filter('tableFilter')(data, params.filter());
                 _this.currentFilter = _.clone(params.filter());
@@ -55,13 +53,14 @@ var InterventionsController = function($q, tabContainer, FiltersFactory, Context
         _this.tableParams = new ngTableParams(tableParameters, tableSettings);
         LxProgressService.circular.hide();
     })
+    window.setTimeout(function() {
+    console.log(_this.tableParams)
+        
+    }, 1000)
     var lastChange = 0;
     $rootScope.$on('interventionListChange', function(event, newData) {
-        console.log('yay')
         if (_this.tab.fullUrl === tabContainer.getCurrentTab().fullUrl && newData._date > lastChange) {
-            console.log('yay2')
-            dataProvider.applyFilter(currentFilter, _this.tab.hash, _this.customFilter);
-            console.log('yay3')
+            //  dataProvider.applyFilter(currentFilter, _this.tab.hash, _this.customFilter);
             _this.tableParams.reload();
         }
         lastChange = newData._date;

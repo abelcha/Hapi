@@ -14,8 +14,8 @@ module.exports = function(schema) {
         doc.acquitte = acquitte;
         var text = textTemplate.lettre.intervention.envoiFacture();
         var lettre = {
-            address: doc.facture.address,
-            dest: doc.facture,
+            address: _.get(doc, 'facture.address', doc.client.address),
+            dest: _.get(doc, 'facture', doc.client),
             text: _.template(text)(doc),
             title: "OBJET : Facture en attente de rèlement"
         }
@@ -35,11 +35,13 @@ module.exports = function(schema) {
         var _this = this;
         try {
             var doc = JSON.parse(req.body.data);
+            var pdf = getFacturePdfObj(doc, doc.date.intervention);
+            res.send(pdf.html())
         } catch (e) {
+            __catch(e)
             return res.status(400).send('bad data')
         }
 
-        res.send(getFacturePdfObj(doc, doc.date.intervention).html())
     }
 
     schema.statics.factureAcquittePreview = function(req, res) {
@@ -63,6 +65,7 @@ module.exports = function(schema) {
         } catch (e) {
             return res.status(400).send('bad data')
         }
+        doc.type = 'devis'
         var result = PDF([{
             model: 'facture',
             options: doc

@@ -1075,7 +1075,7 @@ module.exports = {
             console.log(inter)
             return inter.status == "VRF"  || (!inter.artisan || !inter.artisan.id)
         }
-    }, /*{
+    }, {
         title: "Vérifier",
         action: 'verification',
         hide: function(inter) {
@@ -1085,7 +1085,7 @@ module.exports = {
         title: "Annuler",
         action: 'annulation'
 
-    }, */{
+    }, {
         title: "Je prend !",
         action: 'demarcher',
         hide: function(inter) {
@@ -1701,7 +1701,7 @@ module.exports = {
                     '\n' +
                     "L' intervention a été prévu pour le : <strong>{{datePlain}}</strong> \n" +
                     '\n' +
-                    "Vous devez dès réception de cet ordre de service, prendre contact <strong><em>immédiatement</em></strong> avec le client afin de confirmer la date et l'horaire de l’intervention.\n" +
+                    "Vous devez dès réception de cet ordre de service, prendre contact <strong><u>immédiatement</u></strong> avec le client afin de confirmer la date et l'horaire de l’intervention.\n" +
                     "\n" +
                     "Les coordonnées et la description de l'intervention sont détaillées dans l'ordre de service que vous trouverez en pièce jointe. \n" +
                     "<center>" +

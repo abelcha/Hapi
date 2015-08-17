@@ -141,7 +141,7 @@ app.use(function(req, res, next) {
 
 //if (!env_prod) {
 app.use(function(err, req, res, next) {
-    console.log("-->", err, err.stack);
+    __catch(err)
     res.status(err.status || 500);
     res.json(err, err.stack);
 });

@@ -168,10 +168,12 @@ angular.module('edison')
             var _this = this;
             var defaultText = textTemplate.sms.intervention.envoi.bind(_this)($rootScope.user);
             dialog.getFileAndText(_this, defaultText, _this.files, function(text, file) {
+                 LxProgressService.circular.show('#5fa2db', '#globalProgress');
                 edisonAPI.intervention.envoi(_this.id, {
                     sms: text,
                     file: file
                 }).then(function(resp) {
+                    LxProgressService.circular.hide();
                     console.log('ok')
                     var validationMessage = _.template("L'intervention est envoyé")
                     LxNotificationService.success(validationMessage);

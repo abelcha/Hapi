@@ -317,6 +317,9 @@
                             db.model('intervention').fltrify(function() {
                                 console.timeEnd('cache')
                                 db.model('intervention').getCache().then(function() {
+                                    data = null;
+                                    cache = null;
+                                    body = null;
                                     resolve('ok')
                                 })
                             })
@@ -337,10 +340,11 @@
             console.log('dumpOne', id)
 
             return new Promise(function(resolve, reject) {
-                request.get(key.alvin.url + "/dumpIntervention.php?devis=true&id=" + id + "&key=" + key.alvin.pass, function(err, resp, body) {
+                request.get(key.alvin.url + "/dumpIntervention.php?devis=false&id=" + id + "&key=" + key.alvin.pass, function(err, resp, body) {
                     if (err || resp.statusCode !== 200 || !body || body == 'null') {
                         return reject('nope')
                     }
+                    console.log(body)
                     db.model('intervention').update({
                         id: id
                     }, translateModel(JSON.parse(body)), {

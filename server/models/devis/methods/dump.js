@@ -165,7 +165,7 @@
                                   $gt: limit
                               }*/
                 }, function() {
-                    request(key.alvin.url + "/dumpDevis.php?limit=" + limit + "&key=" + key.alvin.pass, function(err, rest, body) {
+                    request(key.alvin.url + "/dumpDevis.php?devis=true&limit=" + limit + "&key=" + key.alvin.pass, function(err, rest, body) {
                         var data = JSON.parse(body);
                         addInDB(data, 0, function(err) {
                             if (err)
