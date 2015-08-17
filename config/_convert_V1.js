@@ -8,8 +8,8 @@ var request = require('request');
 
 var V1 = function(d, devis, legacy) {
     try {
-
-    var x = _.clone(this.___data)
+    this.data = _.clone(this.___data)
+    var x = this.data
     if (devis) {
         d = db.model('intervention')(d)
         d.status = 'DEVIS'
