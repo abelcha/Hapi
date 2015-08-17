@@ -2,7 +2,7 @@ module.exports = {
   initJobQueue: function() {
     var kue = require("kue");
     var url = require("url");
-    if (envProd) {
+    if (envProd || envStaging) {
       var redisURL = url.parse(process.env.REDISTOGO_URL);
       var redisOptions = {
         port: redisURL.port,
