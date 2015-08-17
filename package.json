@@ -31,6 +31,7 @@
     "html-pdf": "^1.2.2",
     "htmlencode": "0.0.4",
     "kue": "^0.9.4",
+    "le_node": "^1.0.14",
     "lodash": "^3.10.1",
     "lzjs": "^1.2.4",
     "milliseconds": "^1.0.3",

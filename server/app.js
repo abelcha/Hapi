@@ -15,7 +15,11 @@ global.requireLocal = function(pth) {
     return require(process.cwd() + '/' + pth)
 }
 
-
+/*var Logger = require('le_node');
+global.logger = new Logger({
+  token:'LOGENTRIES_TOKEN'
+});
+*/
 global.__catch = function(e) {
     var prettyError = require('pretty-error');
     console.log((new prettyError().render(e)));

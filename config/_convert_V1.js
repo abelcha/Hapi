@@ -94,8 +94,10 @@ var V1 = function(d, devis, legacy) {
     if (d.compta.paiement.dette) {
         x.etat_reglement = 'DETTE'
     } else if (d.compta.paiement.effectue) {
+        console.log('YAY PAIEMENT EFFECTUE')
         x.etat_reglement = 'PAIEMENT EFFECTUE'
     } else if (d.status === 'VRF') {
+        console.log('YAY CHEQUE RECUPERER')
         x.etat_reglement = 'CHEQUE RECUPERE'
     }
     if (d.produits.length) {
