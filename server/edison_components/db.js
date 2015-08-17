@@ -22,10 +22,11 @@ module.exports = function() {
                 require(folder + '/methods/' + method)(schema)
             }
         });
+        console.log(model)
         var model = mongoose.model(model, schema);
 
     })
-
+/*
     basePath = basePath + '/' + "event"
     getDirectories(basePath).forEach(function(model) {
         if (model !== "methods") {
@@ -39,9 +40,10 @@ module.exports = function() {
                     require(folder + '/methods/' + method)(schema)
                 }
             });
+            console.log(model)
             var model = mongoose.model(model, schema);
         }
-    });
+    });*/
     mongoose.utils = {
         round: function(field) {
             return {

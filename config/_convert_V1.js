@@ -154,6 +154,7 @@ V1.prototype.compare = function() {
 }
 
 V1.prototype.send = function(cb) {
+    var _this = this;
     try {
         request.get({
             url: 'http://electricien13003.com/alvin/postData.php',
@@ -164,7 +165,7 @@ V1.prototype.send = function(cb) {
             } else {
                 cb("err")
             }
-            new edison.event("SEND_INTER", this.data.id, {
+            new edison.event("SEND_INTER", _this.data.id, {
                 sended: this.data,
                 resp: body
             });
