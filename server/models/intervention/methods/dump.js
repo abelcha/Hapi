@@ -358,7 +358,6 @@
                             })
                         })
                         resolve(resp);
-                        console.log('cacheactualise')
                     })
                 });
             })

@@ -74,7 +74,6 @@ module.exports = function(schema) {
                 if (req && !err && resp && !_.get(req, 'query.cache')) {
                     return resolve(resp)
                 }
-                console.log('stats nocache')
                 var allFilters = {};
                 mergeFilters(allFilters, 'intervention')
                 mergeFilters(allFilters, 'devis')
