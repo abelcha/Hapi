@@ -188,22 +188,18 @@
         var dumpOne = function(id) {
             return new Promise(function(resolve, reject) {
                 var url = key.alvin.url + "/dumpIntervention.php?devis=true&id=" + id + "&key=" + key.alvin.pass;
-                console.log(url)
                 request.get(url, function(err, resp, body) {
                     console.log(err, body, resp.statusCode)
                     if (err || resp.statusCode !== 200 || !body || body == 'null') {
                         return reject('nope')
                     }
-                    console.log('-->', body)
                     var tra = translateModel(JSON.parse(body));
-                    console.log("gotTranslation", tra)
                     db.model('devis').update({
                         id: id
                     }, tra, {
                         upsert: true
 
                     }).exec(function(err, resp, c) {
-                        console.log('updated')
                         if (err)
                             return reject(err);
                         resolve(resp);

@@ -156,7 +156,6 @@ V1.prototype.send = function(cb) {
             qs: this.data
         }, function(err, resp, body) {
             if (!err && resp.statusCode === 200) {
-                console.log(body)
                 cb(null, body)
             } else {
                 cb("err")
