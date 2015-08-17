@@ -150,7 +150,7 @@ module.exports = function(schema) {
                     addInDB(data, 0, function(err) {
                         if (err)
                             return reject(err);
-                        redis.expire("artisanList", 0)
+                        redis.expire("artisanList".envify(), 0)
                         return resolve({
                             status: 'OK',
                             time: (Date.now() - t) / 1000

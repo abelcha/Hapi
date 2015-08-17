@@ -26,6 +26,10 @@ global.__catch = function(e) {
     throw e;
 }
 
+String.prototype.envify = function(str) {
+    return [process.env.APP_ENV, this].join('_')
+}
+
 var key = requireLocal('config/_keys');
 var dep = require(process.cwd() + '/server/loadDependencies');
 global.edison = dep.loadDir(process.cwd() + "/server/edison_components");
@@ -45,11 +49,6 @@ global.jobs = edison.worker.initJobQueue();
 
 
 new edison.timer();
-
-io.on('connection', function(socket) {
-
-});
-
 
 app.get('/api/client/:id/telephone', edison.axialis.get)
 
@@ -71,7 +70,7 @@ app.use(require('body-parser').urlencoded({
 app.use(require('compression')());
 app.use(require('connect-redis-sessions')({
     client: redis,
-    app: "EDISON-SESSION"
+    app: "EDISON".envify()
 }))
 
 
@@ -108,21 +107,7 @@ app.post('/login', function(req, res) {
 });
 
 
-app.get('/api/redis', function(req, res) {
-    redis.set("test", JSON.stringify({
-        lol: new Date()
-    }), function(err, resp) {
-        console.log("set=>", err, resp);
-
-        redis.get("test", function(err, reply) {
-            console.log('get', err, reply)
-            res.send('ok')
-        })
-    });
-})
-
 app.get("/ping", function(req, res)  {
-    console.log('hei')
     res.json(Date.now());
 })
 

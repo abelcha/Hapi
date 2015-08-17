@@ -44,7 +44,7 @@ module.exports = function(schema) {
                 var x = _.pluck(resp, 'cache');
                 console.timeEnd('pluck')
                 console.time('redis')
-                redis.set("interventionList", JSON.stringify(x), function() {
+                redis.set("interventionList".envify(), JSON.stringify(x), function() {
                     console.timeEnd('redis')
                     resolve("x");
                 });
@@ -55,7 +55,7 @@ module.exports = function(schema) {
 
     schema.statics.list = function(req, res) {
         var _this = this;
-        redis.get("interventionList", function(err, reply) {
+        redis.get("interventionList".envify(), function(err, reply) {
             if (!reply || err)
                 return _this.getCache();
             return res.send(reply)
@@ -101,7 +101,7 @@ module.exports = function(schema) {
                 db.model('intervention').fltrify(q, cb)
             },
             cacheList: function(cb) {
-                redis.get("interventionList", cb);
+                redis.get("interventionList".envify(), cb);
             },
             intervention: function(cb) {
                 db.model('intervention').findOne(q, cb)
@@ -122,7 +122,7 @@ module.exports = function(schema) {
                     io.sockets.emit('filterStatsReload', resp);
                 })
 
-                redis.set("interventionList", JSON.stringify(data), function() {
+                redis.set("interventionList".envify(), JSON.stringify(data), function() {
                     result._date = Date.now()
                     if (!isWorker) {
                         io.sockets.emit('interventionListChange', result);
@@ -136,34 +136,5 @@ module.exports = function(schema) {
 
         })
 
-
-
-
-
-        /*
-                redis.get("interventionList", function(err, reply) {
-                    if (!err && reply) {
-                        var data = JSON.parse(reply);
-                        var index = _.findIndex(data, function(e) {
-                            return e.id === doc.id;
-                        });
-                        result = doc.cache;
-                        if (index !== -1) {
-                            data[index] = result;
-                        } else {
-                            data.unshift(result);
-                        }
-                        redis.set("interventionList", JSON.stringify(data), function() {
-                            result._date = Date.now()
-                            if (!isWorker) {
-                                io.sockets.emit('interventionListChange', result);
-                                //sometimes it's too fast
-                                setTimeout(function() {
-                                    io.sockets.emit('interventionListChange', result);
-                                }, 2500)
-                            }
-                        });
-                    }
-                });*/
     }
 }

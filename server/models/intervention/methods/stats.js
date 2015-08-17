@@ -70,7 +70,7 @@ module.exports = function(schema) {
 
     schema.statics.stats = function(req, res) {
         return new Promise(function(resolve, reject) {
-            redis.get('interventionStats', function(err, resp) {
+            redis.get('interventionStats'.envify(), function(err, resp) {
                 if (req && !err && resp && !_.get(req, 'query.cache')) {
                     return resolve(resp)
                 }
@@ -98,7 +98,7 @@ module.exports = function(schema) {
                         }
                         rtn.push(telepro);
                     });
-                    redis.set('interventionStats', JSON.stringify(rtn), function() {
+                    redis.set('interventionStats'.envify(), JSON.stringify(rtn), function() {
                         resolve(rtn)
                     });
                 });

@@ -32,7 +32,7 @@ module.exports = function(schema) {
 
     schema.statics.cacheActualise = function(doc) {
         lock.writeLock(function(release) {
-            redis.get("artisanList", function(err, reply) {
+            redis.get("artisanList".envify(), function(err, reply) {
                 if (!err && reply) {
                     var data = JSON.parse(reply);
                     var index = _.findIndex(data, function(e, i) {
@@ -44,7 +44,7 @@ module.exports = function(schema) {
                     } else {
                         data.unshift(result);
                     }
-                    redis.set("artisanList", JSON.stringify(data), function() {
+                    redis.set("artisanList".envify(), JSON.stringify(data), function() {
                         io.sockets.emit('artisanListChange', result);
                         release();
                     });
@@ -58,7 +58,7 @@ module.exports = function(schema) {
 
     schema.statics.list = function(req, res) {
         return new Promise(function(resolve, reject) {
-            redis.get('artisanList', function(err, reply) {
+            redis.get('artisanList'.envify(), function(err, reply) {
                 if (!err && reply && !_.get(req, 'query.cache')) { // we just want to refresh the cache 
                     return res.send(reply)
                 } else {
@@ -67,7 +67,7 @@ module.exports = function(schema) {
                         .then(function(docs) {
                             docs = _.map(docs, translate)
                             resolve(docs);
-                            redis.set("artisanList", JSON.stringify(docs))
+                            redis.set("artisanList".envify(), JSON.stringify(docs))
                         })
                 }
             });

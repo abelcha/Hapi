@@ -6,6 +6,7 @@ import optparse
 parser = optparse.OptionParser()
 
 parser.add_option('-l', '--live', action="store_true", dest="live", default=False)
+parser.add_option('-s', '--staging', action="store_true", dest="staging", default=False)
 parser.add_option('-c', '--cache', action="store_true", dest="cache", default=False)
 options, args = parser.parse_args()
 
@@ -13,6 +14,8 @@ options, args = parser.parse_args()
 
 if (options.live):
 	baseUrl = "http://edsx.herokuapp.com/api/"
+elif (options.staging):
+	baseUrl = "http://edsx-dev.herokuapp.com/api/"
 else:
 	baseUrl = "http://127.0.0.1:8080/api/"
 
@@ -25,7 +28,6 @@ if (options.cache):
 	q['cache'] = True
 q['x'] = "true"
 q['login'] = "CMD"
-print(baseUrl + args[0]);
 res = requests.get(baseUrl + args[0], params=q)
 print(res)
 print(res.text)
