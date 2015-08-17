@@ -16,11 +16,8 @@ module.exports = function() {
     try {
 
         if (envProd || envStaging) {
-            //console.log('here')
             var url = require('url');
-            var xx = envProd ? process.env.REDISTOGO_URL : process.env.REDISCLOUD_URL
-            console.log(xx);
-            var redisURL = url.parse(xx);
+            var redisURL = url.parse(process.env.REDISTOGO_URL);
             redisClient = redis.createClient(redisURL.port, redisURL.hostname, {
                 no_ready_check: true
             });

@@ -377,6 +377,7 @@
             if (req.query.id) {
                 return dumpOne(req.query.id, req.query.login || req.session.login)
             } else if (!isWorker) {
+                console.log('dump worker')
                 return edison.worker.createJob({
                     name: 'db',
                     model: 'intervention',

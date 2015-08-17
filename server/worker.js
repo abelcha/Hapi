@@ -35,8 +35,7 @@ global.sms = new edison.mobyt(key.mobyt.login, key.mobyt.pass);
 global.isWorker = true;
 
 if (envProd || envStaging) {
-    console.log(envProd ,envStaging)
-    var redisUrl = url.parse(envProd ? process.env.REDISTOGO_URL : process.env.REDISCLOUD_URL);
+    var redisUrl = url.parse(process.env.REDISTOGO_URL);
 }
 redis.keys("kue*", function(err, re) {
     re.forEach(function(k) {

@@ -107,11 +107,22 @@ app.post('/login', function(req, res) {
 });
 
 
+app.get('/api/redis', function(req, res) {
+    redis.set("test", JSON.stringify({
+        lol: new Date()
+    }), function(err, resp) {
+        console.log("set=>", err, resp);
+
+        redis.get("test", function(err, reply) {
+            console.log('get', err, reply)
+            res.send('ok')
+        })
+    });
+})
 
 app.get("/ping", function(req, res)  {
-    res.json({
-        time: Date.now()
-    });
+    console.log('hei')
+    res.json(Date.now());
 })
 
 app.use(function(req, res, next) {
