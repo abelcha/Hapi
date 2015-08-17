@@ -18,16 +18,11 @@ module.exports = function() {
         if (envProd || envStaging) {
             var url = require('url');
             var redisURL = url.parse(process.env.REDISTOGO_URL);
-            console.log(process.env.REDISTOGO_URL)
-            console.log("create client")
             redisClient = redis.createClient(redisURL.port, redisURL.hostname, {
                 no_ready_check: true
             });
-            console.log("post")
 
             redisClient.auth(redisURL.auth.split(":")[1]);
-            console.log("auth")
-
 
         } else {
             redisClient = redis.createClient();

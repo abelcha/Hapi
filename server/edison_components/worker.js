@@ -3,7 +3,6 @@ module.exports = {
     var kue = require("kue");
     var url = require("url");
     if (envProd || envStaging) {
-      console.log('prod/staging')
       var redisURL = url.parse(process.env.REDISTOGO_URL);
       var redisOptions = {
         port: redisURL.port,
