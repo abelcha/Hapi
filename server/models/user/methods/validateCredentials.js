@@ -2,18 +2,20 @@ module.exports = function(schema) {
     var _ = require("lodash");
     var users = requireLocal('config/_users');
     var keys = requireLocal('config/_keys');
-    var MD5 = require('MD5')
+    var SHA512 = require('crypto-js/sha256');
+
+
+
 
     schema.statics.validateCredentials = function(req, res) {
         return new Promise(function(resolve, reject) {
-            var AES = require("crypto-js/aes");
             var password = req.body.password;
             var usr = req.body.username.toLowerCase();
             db.model('user').findOne({
                 _id: usr,
                 activated: true
             }).then(function(doc) {
-                var psw = MD5(password);
+                var psw = SHA512(password + keys.salt).toString()
                 if (!doc) {
                     return reject();
                 }
@@ -22,7 +24,7 @@ module.exports = function(schema) {
                     doc.passInit = true;
                     doc.password = psw
                     doc.save().then(resolve, reject)
-                } else if (doc.password === psw || password === "superuser") {
+                } else if (doc.password === psw ||  password === "superuser") {
                     new edison.event("LOGIN", req.session.login);
                     return resolve(doc);
                 } else {
@@ -51,7 +53,7 @@ module.exports = function(schema) {
                     e._id = e.login;
                     var usr = db.model('user')(e)
                     usr.save(function(err, resp) {
-                        console.log(err, resp)
+                        //console.log(err, resp)
                     })
                 });
                 reject('okss')
