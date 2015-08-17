@@ -89,19 +89,14 @@ var V1 = function(d, devis, legacy) {
             x.tva_facture = d.tva;
         }
         x.taux_tva = d.tva ||  10
-        console.log('==>', d.compta.paiement.effectue)
         x.etat_intervention = devis ? 'DEVIS' : config.etats[d.status].old_name;
         if (d.compta.paiement.dette) {
-            console.log('YAY DETTE')
             x.etat_reglement = 'DETTE'
         } else if (d.compta.paiement.effectue) {
-            console.log('YAY PAIEMENT EFFECTUE')
             x.etat_reglement = 'PAIEMENT EFFECTUE'
         } else if (d.status === 'VRF') {
-            console.log('YAY CHEQUE RECUPERER')
             x.etat_reglement = 'CHEQUE RECUPERE'
         }
-        console.log('etat teglement ====>', x.etat_reglement)
         if (d.produits.length) {
             var devisTab = [];
             _.each(d.produits, function(e) {
