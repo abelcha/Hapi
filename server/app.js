@@ -32,7 +32,7 @@ global.edison = dep.loadDir(process.cwd() + "/server/edison_components");
 global.envProd = process.env.APP_ENV === "PRODUCTION";
 global.envDev = process.env.APP_ENV === "DEVELOPMENT";
 global.envStaging = process.env.APP_ENV === "STAGING";
-console.log(envProd, envDev, envStaging)
+console.log(envDev, envStaging, envProd)
 global.redis = edison.redis();
 global.db = edison.db();
 global.sms = new edison.mobyt(key.mobyt.login, key.mobyt.pass);
