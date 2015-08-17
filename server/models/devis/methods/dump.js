@@ -154,12 +154,10 @@
 
 
         var execDump = function(limit) {
+            console.log('execdump')
             return new Promise(function(resolve, reject) {
                 var inters = [];
                 var t = Date.now();
-                db.model('event').remove({
-                    type: 'ENV_DEV'
-                })
                 db.model('devis').remove({
                     /*          id: {
                                   $gt: limit
