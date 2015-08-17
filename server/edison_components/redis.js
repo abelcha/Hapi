@@ -13,7 +13,7 @@ module.exports = function() {
 
 
     var redisClient;
-    try {
+/*    try {
 
         if (envProd || envStaging) {
             var url = require('url');
@@ -40,6 +40,6 @@ module.exports = function() {
 
     } catch (e) {
         __catch(e);
-    }
+    }*/
     return redisClient;
 }
