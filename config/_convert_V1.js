@@ -9,7 +9,7 @@ var request = require('request');
 var V1 = function(d, devis, legacy) {
     try {
 
-    var x = this.data
+    var x = _.clone(this.___data)
     if (devis) {
         d = db.model('intervention')(d)
         d.status = 'DEVIS'
@@ -173,7 +173,7 @@ V1.prototype.send = function(cb) {
     }*/
 }
 
-V1.prototype.data = {
+V1.prototype.___data = {
     "id": "",
     "t_stamp": "1439198596",
     "date_ajout": "10\/08\/2015",
