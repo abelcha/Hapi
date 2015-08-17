@@ -38,7 +38,7 @@ module.exports = {
         }
     }, {
         title: "Envoyer",
-        action: 'envoi',
+        action: 'sendDevis',
         hide: function(inter) {
             return inter.status !== "TRA" && inter.status !== 'ANN';
         }

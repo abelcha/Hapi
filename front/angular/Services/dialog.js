@@ -99,6 +99,8 @@ angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', 'config', 
         addProd: function(cb) {
             $mdDialog.show({
                 controller: function DialogController($scope, $mdDialog) {
+                    $scope.pu = 0;
+                    $scope.quantite = 1;
                     $scope.answer = function(resp, text) {
                         $mdDialog.hide();
                         return cb({
@@ -153,6 +155,20 @@ angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', 'config', 
                     }
                 },
                 templateUrl: '/DialogTemplates/text.html',
+            });
+        },
+        getTextDevis: function(previewFunction, options, cb) {
+            $mdDialog.show({
+                controller: function DialogController($scope, $mdDialog) {
+                    $scope.options = options;
+                    $scope.previewFunction = previewFunction;
+                    $scope.answer = function(cancel) {
+                        $mdDialog.hide();
+                        if (!cancel)
+                            return cb($scope.options.text);
+                    }
+                },
+                templateUrl: '/DialogTemplates/textDevis.html',
             });
         },
         getFileAndText: function(data, text, files, cb) {

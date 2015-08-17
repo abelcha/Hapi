@@ -43,7 +43,7 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
                 return $http.post("/api/devis", params);
             },
             envoi: function(id, options) {
-                return $http.post("/api/devis/envoi", options);
+                return $http.post("/api/devis/" + id +"/envoi", options);
             },
             annulation: function(id, causeAnnulation) {
                 return $http.post("/api/devis/" + id + "/annulation", {

@@ -2,7 +2,7 @@
     <div class="p+" ng-init="displayfact = (!data.reglementSurPlace||data.produits.length)">
         <strong ng-click="displayfact = !displayfact" class="fs-headline displayfact-block">Facture / Devis</strong><a ng-if="data.devisOrigine" href="/devis/{{data.devisOrigine}}">Devis Original</a>
         <md-content class="autocomplete" style="width: 40%;margin-top: -22px;margin-left: 54%;float: left;" layout-padding layout="column" md-input-container flex>
-            <md-autocomplete ng-if="displayfact" md-search-text-change="null" md-selected-item-change="produits.add(selectedProduct)" md-selected-item="selectedProduct" md-search-text="produits.searchText" md-items="item in produits.search(produits.searchText)" md-item-text="item.title" placeholder="Entrer un produit">
+            <md-autocomplete ng-if="displayfact" md-search-text-change="null" md-selected-item-change="produits.add(selectedProduct)" md-selected-item="selectedProduct" md-search-text="produits.searchText" md-items="item in produits.search(produits.searchText)" md-item-text="item.title" placeholder="Rechercher un produit...">
                 <span md-highlight-text="produits.searchText"> 
                 {{item.ref}} -  {{item.title}} - {{item.pu}}€</span>
             </md-autocomplete>
@@ -62,7 +62,7 @@
                             <td colspan="1">
                                 <strong>
                                  TOTAL HT : {{produits.total() | currency:''}} €<br>
-                                 TVA: {{produits.total() * (data.tva / 100) | currency:''}} €<br>
+                                 TVA ({{data.tva.toFixed(2)}}%): {{produits.total() * (data.tva / 100) | currency:''}} €<br>
                                  TOTAL TTC : {{produits.total() * (data.tva / 100 + 1) | currency:''}} €
                                 </strong>
                             </td>

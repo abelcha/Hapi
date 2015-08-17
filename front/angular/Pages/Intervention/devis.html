@@ -20,7 +20,7 @@
             <br>
             <produits display="true" model="DEVIS" data="vm.data"></produits>
             <br>
-            <div class="card">
+            <div class="card" ng-if="vm.data.id">
                 <div class="p+">
                     <strong class="fs-headline display-block" ng-click="displayHIST = !displayHIST">Historique</strong>
                     <span class="fs-subhead tc-black-2 display-block">Historique des envois</span>
@@ -52,16 +52,15 @@
     </div>
     <div class="fab" style="float: right;position: fixed;right: 70px;z-index: 999;top: 87%;">
         <button ng-click="vm.saveDevis({})" class="fab__primary btn--no-conflicts btn--xl btn--blue btn--fab" lx-ripple lx-tooltip="Enregistrer" tooltip-position="top">
-            <i class="mdi" ng-class="vm.data.id ? 'mdi-camera-iris' : 'mdi-plus'"></i>
-            <i class="mdi mdi-checkbox-marked-circle-outline"></i>
+            <i class="fa" ng-class="vm.data.id ? 'fa-circle-o' : 'fa-plus'"></i>
         </button>
         <div class="fab__actions fab__actions--left">
            
             <button ng-if="vm.data.status && vm.data.status !== 'TRA'" ng-click="vm.saveDevis({transfert:true})" class="btn--no-conflicts btn--l btn--black btn--fab" lx-ripple lx-tooltip="Transformer" tooltip-position="top"><i class="fa fa-plus"></i></button>
            
-            <button ng-if="vm.data.status" ng-click="vm.saveDevis({annulation:true})" class="btn--no-conflicts btn--l btn--black btn--fab" lx-ripple lx-tooltip="Annuler" tooltip-position="top"><i class="mdi mdi-close"></i></button>
+            <button ng-if="vm.data.status" ng-click="vm.saveDevis({annulation:true})" class="btn--no-conflicts btn--l btn--black btn--fab" lx-ripple lx-tooltip="Annuler" tooltip-position="top"><i class="fa fa-close"></i></button>
            
-            <button ng-click="vm.saveDevis({envoi:true})" class="btn--no-conflicts btn--l btn--black btn--fab" lx-ripple lx-tooltip="Envoyer" tooltip-position="top"><i class="mdi mdi-send"></i></button>
+            <button ng-click="vm.saveDevis({envoi:true})" class="btn--no-conflicts btn--l btn--black btn--fab" lx-ripple lx-tooltip="Envoyer" tooltip-position="top"><i class="fa fa-send"></i></button>
         </div>
     </div>
 </div>

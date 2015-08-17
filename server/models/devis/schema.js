@@ -91,5 +91,7 @@ module.exports = function(db) {
             type: Number,
             default: 20
         }
+    }, {
+        versionKey: false
     });
 }

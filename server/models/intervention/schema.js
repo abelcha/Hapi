@@ -366,6 +366,8 @@ module.exports = function(db) {
         cache: {
 
         }
+    }, {
+        versionKey: false
     });
     return schema
 }

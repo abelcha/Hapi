@@ -135,7 +135,7 @@ app.use(function(req, res, next) {
                 if (err) {
                     return res.status(500).send('error #00412')
                 }
-                return res.send(getEmbeddedScript(req) + data);
+                return res.send(data + getEmbeddedScript(req));
             });
         } else {
             return next();

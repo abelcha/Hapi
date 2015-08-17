@@ -32,10 +32,10 @@ module.exports = {
                     "\n" +
                     "<p>Suite à notre intervention le {{datePlain}} dans vos locaux:\n" +
                     "<p strong center>{{client.civilite}} {{client.nom}} {{client.prenom}}\n" +
-                    "16 PLACE DE L'HÔTEL DE VILLE, 80000 AMIENS\n" +
-                    "Tél. : 0322916682l</p>" +
+                    "{{client.address.n}} {{client.address.r}}, {{client.address.cp}} {{client.address.v}}\n" +
+                    "Tél. : 0322916682</p>" +
                     "Pour les raisons suivantes: </p>" +
-                    "<p strong center>REALISATION DU DEVIS 23123</p>\n" +
+                    "<p strong center>{{description}}</p>\n" +
                     "<p>Nous vous confirmons que l'intervention à été réalisé par nos soins.\n" +
                     "Vous trouverez ci joint la facture à regler\n" +
                     "Nous vous prions de bien vouloir transmettre le règlement par chèque à l'ordre de:</p>" +
@@ -153,8 +153,8 @@ module.exports = {
                     var text = intro + "je vous ai transmis un devis " + categorieClean + " en date du " + moment(this.historique[0].date).format('L') + ".\n\n" + end;
                 } else if (this.categorie == 'VT') {
                     var text = intro +
-                        "Suite à notre échange téléphonique concernant le remplacement de votre vitrage.\n\n" +
-                        "Veuillez trouver ci-joint la pièce commerciale Devis n°" + this.id + ".\n\n" +
+                        "Suite à notre échange téléphonique concernant le remplacement de votre vitrage," +
+                        "vous trouverez ci-joint le devis n°" + this.id + " correspondant à ce que nous avons vu ensemble.\n\n" +
                         "Merci de bien vouloir transmettre ce devis de remplacement de vitrage directement à votre compagnie d’assurance, afin d'obtenir leurs accords (si nécessaire).\n" +
                         "Merci de nous renvoyer le devis signé accompagné de la mention « BON POUR ACCORD » par mail.\n\n" +
                         "Nous interviendrons dans les plus brefs délais.\n\n" +
@@ -166,10 +166,10 @@ module.exports = {
                         return _.startsWith(e.ref, "BAL");
                     })) {
                     var text = intro +
-                        "Suite à notre échange téléphonique concernant le remplacement de votre ballon d'eau chaude sanitaire.\n\n" +
-                        "Veuillez trouver ci-joint la pièce commerciale Devis n°" + this.id + ".\n\n" +
+                        "Suite à notre échange téléphonique concernant le remplacement de votre ballon d'eau chaude sanitaire," +
+                        "vous trouverez ci-joint le devis n°" + this.id + ".\n\n" +
                         "Je reste à votre entière disposition pour tous renseignements complémentaires ou remarques que vous pourriez avoir (technique/prix).\n\n" +
-                        "Sachez par ailleurs, que votre installation sera éligible aux règles de notre assurance RC PRO et notre assurance décennale.\n" +
+                        "Sachez également, que votre installation sera éligible à notre assurance RC PRO et notre assurance décennale.\n" +
                         "Dès votre accord, nous interviendrons rapidement.\n\n" +
                         "Meilleures salutations,\n\n" +
                         (user.pseudo ||  " Arnaud") +
@@ -178,7 +178,10 @@ module.exports = {
                     var text = intro +
                         "Suite à notre dernier échange concernant la réalisation d'un devis " + categorieClean + ", \n" +
                         "vous trouverez ci-joint le devis n°" + this.id + " correspondant à ce que nous avons vu ensemble. \n\n" +
-                        "Je reste à votre entière disposition pour tous renseignements complémentaires ou remarques que vous pourriez avoir (technique/prix). \n\n" +
+                        "Sachez également, que votre installation sera éligible à notre assurance RC PRO et notre assurance décennale.\n" +
+                        "Lors de l'acceptation, je vous prie de me renvoyer le devis signé, accompagné de la mention:\n\n" +
+                        "<center><strong>\"BON POUR ACCORD\"</strong></center>\n\n" + 
+                        "Je reste à votre entière disposition pour tous les renseignements ou les remarques que vous pourriez avoir concernant ce devis (technique, délais, prix). \n\n" +
                         "Merci de me tenir au courant de la suite que vous donnerez à ce devis. \n\n" +
                         "Cordialement, \n\n" +
                         (user.pseudo ||  " Arnaud") + "\n<strong>Ligne direct : 09.72.42.30.00</strong>\n\n";

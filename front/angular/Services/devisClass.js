@@ -35,23 +35,23 @@ angular.module('edison')
             })
         }
 
-        Devis.prototype.envoi = function(cb) {
-            console.log("envoiDevis")
+        Devis.prototype.sendDevis = function(cb) {
             var _this = this;
-            dialog.getText({
-                title: "Texte envoi devis",
+            var preview = Devis(this).devisPreview.bind(this)
+            dialog.getTextDevis(preview,{
                 text: textTemplate.mail.devis.envoi.bind(_this)($rootScope.user),
-                width: "60%",
-                height: "80%"
+                width: "900px",
+                height: "700px"
             }, function(text) {
                 edisonAPI.devis.envoi(_this.id, {
                     text: text,
-                    data: _this,
                 }).success(function(resp) {
                     var validationMessage = _.template("le devis {{id}} à été envoyé")(_this);
                     LxNotificationService.success(validationMessage);
-                    if (typeof cb === 'function')
+                    if (typeof cb === 'function') {
+                        console.log('yes cb')
                         cb(null, resp);
+                    }
                 }).catch(function(err) {
                     var validationMessage = _.template("L'envoi du devis {{id}} à échoué\n")(_this)
                     if (err && err.data && typeof err.data === 'string')

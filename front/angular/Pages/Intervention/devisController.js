@@ -25,9 +25,11 @@ var DevisCtrl = function($scope, $rootScope, $location, $routeParams, LxNotifica
         var devis = tab.data;
     }
     _this.data = tab.data;
-    
-    var closeTab = function() {
-        tabContainer.close(tab);
+
+    var closeTab = function(err) {
+        console.log('=========>', err)
+        if (!err)
+            tabContainer.close(tab);
     }
 
     _this.saveDevis = function(options) {
@@ -35,11 +37,11 @@ var DevisCtrl = function($scope, $rootScope, $location, $routeParams, LxNotifica
             if (err) {
                 return false;
             } else if (options.envoi) {
-                devis.envoi.bind(resp)(closeTab);
+                Devis(resp).sendDevis(closeTab);
             } else if (options.annulation) {
-                devis.annulation(closeTab);
+                Devis(resp).annulation(closeTab);
             } else if (options.transfert) {
-                devis.transfert()
+                Devis(resp).transfert()
             } else {
                 closeTab();
             }

@@ -269,15 +269,15 @@ module.exports = {
     tva: [{
         short_name: 10,
         value: 0.1,
-        long_name: "TVA: 10%"
+        long_name: "TVA: 10.00%"
     }, {
         short_name: 20,
         value: 0.2,
-        long_name: "TVA: 20%"
+        long_name: "TVA: 20.00%"
     }, {
         short_name: 0,
         value: 0.0,
-        long_name: "TVA: 0%"
+        long_name: "TVA: 0.00%"
     }],
     tvaSST: [{
         short_name: 0,

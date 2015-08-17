@@ -11,10 +11,6 @@ angular.module('edison').controller('MainController', function($timeout, $q, Dat
     "use strict";
 
 
-    edisonAPI.getUser().success(function(result) {
-        $rootScope.user = result;
-        reloadStats();
-    });
     $scope.sidebarHeight = $("#main-menu-bg").height();
     $scope.config = config;
     $rootScope.loadingData = true;
@@ -76,6 +72,9 @@ angular.module('edison').controller('MainController', function($timeout, $q, Dat
                 $rootScope.interventionsStats = result;
             });
     };
+
+    $rootScope.user = window.app_session
+    reloadStats();
 
     socket.on('filterStatsReload', function(data) {
         $scope.userStats = _.find(data, function(e) {

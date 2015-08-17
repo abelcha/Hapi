@@ -1,13 +1,23 @@
 <md-dialog aria-label="Mango (Fruit)">
-    <md-dialog-content class="sticky-container">
+    <md-dialog-content class="sticky-container" style="width:800px">
         <md-subheader class="md-sticky-no-effect">Ajout d'un produit</md-subheader>
         <div style="padding:15px">
             <!--  <select ng-model="absenceTime" ng-options="ind.value as ind.title for ind in absence">
             </select> -->
-                <input style="width:100px" type="text" class="form-control" placeholder="Reference" ng-model="ref"><br>
-                <input style="width:300px" type="text" class="form-control" placeholder="title" ng-model="title"><br>
-                <input style="width:100px" type="text" type="number" class="form-control" placeholder="quantite" ng-model="quantite"><br>
-                <input style="width:100px" type="text" type="number" class="form-control" placeholder="pu" ng-model="pu"><br>
+            <div class="row">
+                <div class="col-sm-3">
+                    <input  type="text" class="form-control" placeholder="Réference" ng-model="ref">
+                </div>
+                <div class="col-sm-5">
+                    <input  type="text" class="form-control" placeholder="Designation" ng-model="title">
+                </div>
+                <div class="col-sm-2">
+                    <input  type="text" type="number" class="form-control" max="10" type="number "placeholder="Qt." ng-model="quantite">
+                </div>
+                <div class="col-sm-2">
+                    <input  type="text" type="number" class="form-control" type="number "placeholder="Prix" ng-model="pu">
+                </div>
+            </div>
         </div>
     </md-dialog-content>
     <div class="md-actions" layout="row">

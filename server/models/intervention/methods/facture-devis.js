@@ -65,6 +65,7 @@ module.exports = function(schema) {
         } catch (e) {
             return res.status(400).send('bad data')
         }
+        doc.id = doc.id || "00000"
         doc.type = 'devis'
         var result = PDF([{
             model: 'facture',
