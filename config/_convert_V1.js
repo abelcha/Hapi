@@ -149,7 +149,9 @@ V1.prototype.compare = function() {
 }
 
 V1.prototype.send = function(cb) {
-    try {
+    console.log(this.data)
+    cb(null, 'ok')
+/*    try {
 
         request.get({
             url: 'http://electricien13003.com/alvin/postData.php',
@@ -163,7 +165,7 @@ V1.prototype.send = function(cb) {
         })
     } catch(e) {
         __catch(e);
-    }
+    }*/
 }
 
 V1.prototype.data = {
