@@ -90,7 +90,6 @@ module.exports = function(schema) {
 
     schema.statics.manuel = getStaticFile.bind('manuel.pdf')
     schema.statics.notice = getStaticFile.bind('notice.pdf')
-
     schema.statics.envoi = {
         unique: true,
         findBefore: true,
@@ -99,58 +98,59 @@ module.exports = function(schema) {
         fn: function(inter, req, res) {
 
             console.log('uaua')
-            if (!isWorker) {
-                console.log('eeworker')
-                return edison.worker.createJob({
-                    name: 'db_id',
-                    model: 'intervention',
-                    method: 'envoi',
-                    data: inter,
-                    req: _.pick(req, 'body', 'session')
-                })
-            }
 
             console.log('here')
             var _this = this;
 
             return new Promise(function(resolve, reject) {
-                try {
 
-                    console.time('envoi')
-                    if (!inter ||  !inter.sst)
-                        return reject('pas de SST')
-                    if (!req.body.sms)
-                        return reject("Impossible de trouver l'artisan");
-                    var filesPromises = [
-                        getFileOS(inter),
-                        pdfPromise('deviseur', 'Facturier n°' + inter.id + '.pdf', {
-                            type: 'FACTURE',
-                            id: inter.id
-                        }),
-                        pdfPromise('deviseur', 'Deviseur n°' + inter.id + '.pdf', {
-                            type: 'DEVIS',
-                            id: inter.id
-                        }),
-
-                    ]
-                    if (envProd) {
-                        console.log('envprod')
-                        filesPromises.push(getStaticFile.bind('manuel.pdf')(),
-                            getStaticFile.bind('notice.pdf')())
-                    }
-                    if (inter.devisOrigine) {
-                        console.log('sweg')
-                        inter.type = 'DEVIS'
-                        filesPromises.push(pdfPromise('facture', 'Devis n°' + inter.id + '.pdf', inter))
-                    }
-                    if (req.body.file) {
-                        filesPromises.push(document.download(req.body.file))
-                    }
-                    var fileSupp = req.body.file;
-                    console.time('getFiles')
-                } catch (e) {
-                    __catch(e)
+                if (!isWorker) {
+                    console.log('eeworker')
+                    edison.worker.createJob({
+                        name: 'db_id',
+                        model: 'intervention',
+                        method: 'envoi',
+                        data: inter,
+                        req: _.pick(req, 'body', 'session')
+                    }).then(function() {
+                        inter.save().then(resolve, reject)
+                    })
                 }
+
+
+                console.time('envoi')
+                if (!inter ||  !inter.sst)
+                    return reject('pas de SST')
+                if (!req.body.sms)
+                    return reject("Impossible de trouver l'artisan");
+
+                var filesPromises = [
+                    getFileOS(inter),
+                    pdfPromise('deviseur', 'Facturier n°' + inter.id + '.pdf', {
+                        type: 'FACTURE',
+                        id: inter.id
+                    }),
+                    pdfPromise('deviseur', 'Deviseur n°' + inter.id + '.pdf', {
+                        type: 'DEVIS',
+                        id: inter.id
+                    }),
+
+                ]
+                if (envProd) {
+                    console.log('envprod')
+                    filesPromises.push(getStaticFile.bind('manuel.pdf')(),
+                        getStaticFile.bind('notice.pdf')())
+                }
+                if (inter.devisOrigine) {
+                    console.log('sweg')
+                    inter.type = 'DEVIS'
+                    filesPromises.push(pdfPromise('facture', 'Devis n°' + inter.id + '.pdf', inter))
+                }
+                if (req.body.file) {
+                    filesPromises.push(document.download(req.body.file))
+                }
+                var fileSupp = req.body.file;
+                console.time('getFiles')
                 Promise.all(filesPromises).then(function(result) {
                     console.timeEnd('getFiles')
 

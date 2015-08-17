@@ -118,7 +118,6 @@ module.exports = function(schema) {
                 } else {
                     data.unshift(result);
                 }
-                console.log(result)
                 db.model('intervention').stats().then(function(resp) {
                     io.sockets.emit('filterStatsReload', resp);
                 })

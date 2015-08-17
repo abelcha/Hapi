@@ -168,7 +168,7 @@ angular.module('edison')
             var _this = this;
             var defaultText = textTemplate.sms.intervention.envoi.bind(_this)($rootScope.user);
             dialog.getFileAndText(_this, defaultText, _this.files, function(text, file) {
-                 LxProgressService.circular.show('#5fa2db', '#globalProgress');
+                LxProgressService.circular.show('#5fa2db', '#globalProgress');
                 edisonAPI.intervention.envoi(_this.id, {
                     sms: text,
                     file: file
@@ -181,6 +181,7 @@ angular.module('edison')
                         cb(null, resp.data)
 
                 }, function(error) {
+                    LxProgressService.circular.hide();
                     console.log('error')
                     LxNotificationService.error(error.data);
                     if (typeof cb === 'function')
@@ -207,21 +208,25 @@ angular.module('edison')
             var _this = this;
             if (!this.produits.length)
                 return LxNotificationService.error("Veuillez renseigner les produits");
-            _this.envoiFacture(function() {
+            _this.sendFacture(function() {
                 _this.verificationSimple(cb)
             })
         }
 
         Intervention.prototype.verificationSimple = function(cb) {
             var _this = this;
+            LxProgressService.circular.show('#5fa2db', '#globalProgress');
+
             edisonAPI.intervention.verification(_this.id)
                 .then(function(resp) {
+                    LxProgressService.circular.hide()
                     var validationMessage = _.template("L'intervention {{id}} est vérifié")(resp.data)
                     LxNotificationService.success(validationMessage);
                     if (typeof cb === 'function') {
                         cb(null, resp.data);
                     }
                 }, function(error) {
+                    LxProgressService.circular.hide()
                     LxNotificationService.error(error.data);
                 })
         }

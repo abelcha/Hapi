@@ -281,11 +281,11 @@
             })
         }
 
-        var __dump = function(data, cache, i, cb) {
+        var __dump = function(data, i, cb) {
             if (i % 100 == 0)
                 console.log(_.round(i / data.length * 100, 2), "%")
             if (i === data.length - 1)
-                return cb(cache)
+                return cb()
             var z = translateModel(data[i]);
 
             db.model('intervention')(z).save(function(err, resp) {
@@ -294,7 +294,7 @@
                     console.log(err);
                 }
 
-                return __dump(data, cache, i + 1, cb)
+                return __dump(data, i + 1, cb)
             })
         }
 
@@ -302,15 +302,15 @@
             return new Promise(function(resolve, reject) {
 
                 db.model('intervention').remove({
-                    id: {
+/*                    id: {
                         $gt: limit
-                    }
+                    }*/
                 }, function() {
                     console.log('yay')
                     request(key.alvin.url + "/dumpIntervention.php?limit=" + limit + "&key=" + key.alvin.pass, function(err, rest, body) {
                         var data = JSON.parse(body);
-                        var cache = [];
-                        __dump(data, cache, 0, function(cache) {
+                        console.time('dump')
+                        __dump(data, 0, function() {
                             console.timeEnd('dump')
                             console.time('cache')
                             db.model('intervention').fltrify(function() {
@@ -341,9 +341,9 @@
             return new Promise(function(resolve, reject) {
                 request.get(key.alvin.url + "/dumpIntervention.php?devis=false&id=" + id + "&key=" + key.alvin.pass, function(err, resp, body) {
                     if (err || resp.statusCode !== 200 || !body || body == 'null') {
+                        console.log('rejected', id)
                         return reject('nope')
                     }
-                    console.log(body)
                     db.model('intervention').update({
                         id: id
                     }, translateModel(JSON.parse(body)), {
@@ -351,10 +351,14 @@
                     }).exec(function(err, resp, c) {
                         if (err)
                             return reject(err);
+                        db.model('intervention').findById(parseInt(id), function(err, doc) {
+                            doc.cache = db.model('intervention').cachify(doc);
+                            doc.save(function(err, resp) {
+                                db.model('intervention').cacheActualise(resp);
+                            })
+                        })
                         resolve(resp);
-                        db.model('intervention').cacheActualise({
-                            id: parseInt(id)
-                        });
+                        console.log('cacheactualise')
                     })
                 });
             })

@@ -83,26 +83,28 @@ module.exports = function(schema) {
         method: 'POST',
         fn: function(inter, req, res) {
 
-
-            if (!isWorker) {
-                return edison.worker.createJob({
-                    name: 'db_id',
-                    model: 'intervention',
-                    method: 'sendFacture',
-                    data: inter,
-                    req: _.pick(req, 'body', 'session')
-                })
-            }
-
-
-
-
-
-            var params = req.body;
-            if (!params.text ||  !params.date) {
-                Promise.reject("Invalid Request")
-            }
             return new Promise(function(resolve, reject) {
+
+                if (!isWorker) {
+                    return edison.worker.createJob({
+                        name: 'db_id',
+                        model: 'intervention',
+                        method: 'sendFacture',
+                        data: inter,
+                        req: _.pick(req, 'body', 'session')
+                    }).then(function() {
+                        inter.save().then(resolve, reject)
+                    }, reject)
+                }
+
+
+
+
+
+                var params = req.body;
+                if (!params.text ||  !params.date) {
+                    Promise.reject("Invalid Request")
+                }
                 try {
                     var pdf = getFacturePdfObj(inter, inter.date.intervention);
 
