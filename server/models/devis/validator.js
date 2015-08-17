@@ -28,10 +28,10 @@ module.exports = function(schema) {
             db.model('devis').cacheActualise(doc);
             if (envProd) {
                 console.log('v1 translate' + doc.id);
-                var v1 = new V1(doc, true);
+/*                var v1 = new V1(doc, true);
                 v1.send(function(resp) {
                     console.log('=====-->', resp)
-                });
+                });*/
             }
         }
     })

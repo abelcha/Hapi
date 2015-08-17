@@ -77,9 +77,9 @@ module.exports = function(schema) {
             //redis.del('interventionStats');
             db.model('intervention').cacheActualise(doc);
             if (envProd) {
-                var v1 = new V1(doc);
+/*                var v1 = new V1(doc);
                 v1.send(function(resp) {
-                });
+                });*/
             }
         }
 
