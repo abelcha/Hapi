@@ -89,6 +89,7 @@ var V1 = function(d, devis, legacy) {
         x.tva_facture = d.tva;
     }
     x.taux_tva = d.tva ||  10
+    console.log('==>', d.compta.paiement.effectue)
     x.etat_intervention = devis ? 'DEVIS' : config.etats[d.status].old_name;
     if (d.compta.paiement.dette) {
         x.etat_reglement = 'DETTE'
