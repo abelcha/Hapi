@@ -62,7 +62,9 @@
                             <td colspan="1">
                                 <strong>
                                  TOTAL HT : {{produits.total() | currency:''}} €<br>
-                                 TVA ({{data.tva.toFixed(2)}}%): {{produits.total() * (data.tva / 100) | currency:''}} €<br>
+                                 </strong> TVA ({{data.tva.toFixed(2)}}%) : {{produits.total() * (data.tva / 100) | currency:''}} €
+                                <strong>
+                                 <br>
                                  TOTAL TTC : {{produits.total() * (data.tva / 100 + 1) | currency:''}} €
                                 </strong>
                             </td>
@@ -87,7 +89,7 @@
                         <button ng-if="model !== 'DEVIS' && data.id" class="btn--no-conflicts btn--m btn--black btn--flat" lx-ripple>
                         <a href="/devis?i={{data.id}}">Créer Devis</a></button>
                          </span>
-        <span style="width: 130px;float: right;padding-bottom: 7px;">
+        <span style="width: 150px;float: right;padding-bottom: 7px;">
                          <select class="form-control" ng-model="data.tva" ng-options="tva.short_name as tva.long_name for tva in config.tva">
                             </select></span>
     </div>
