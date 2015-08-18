@@ -183,7 +183,7 @@
         }
 
 
-        var dumpOne = function(id) {
+        var dumpOne = function(id, login) {
             return new Promise(function(resolve, reject) {
                 var url = key.alvin.url + "/dumpIntervention.php?devis=true&id=" + id + "&key=" + key.alvin.pass;
                 request.get(url, function(err, resp, body) {
@@ -222,7 +222,7 @@
             console.log('dump')
             if (req.query.id) {
                 console.log('dumpOne')
-                return dumpOne(req.query.id)
+                return dumpOne(req.query.id, req.query.login || req.session.login)
             }
             var limit = req.query.limit ||  0;
             console.log('dump limit = ', limit)
