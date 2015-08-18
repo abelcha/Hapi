@@ -122,6 +122,7 @@ module.exports = function(schema) {
 
             return new Promise(function(resolve, reject) {
 
+                console.log("==>", inter.sst.status)
                 if (!isWorker) {
                     return edison.worker.createJob({
                         name: 'db_id',
@@ -151,7 +152,6 @@ module.exports = function(schema) {
                         id: inter.id
                     }),
                 ]
-                console.log("==>", inter.sst.status)
                 if (inter.sst.status === 'NEW' || inter.sst.status === 'POT') {
                     filesPromises.push(getStaticFile.bind("Manuel d'utilisation.pdf")(),
                         getStaticFile.bind("Notice d'intervention.pdf")())
