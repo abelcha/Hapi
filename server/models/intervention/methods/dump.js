@@ -349,6 +349,7 @@
                     }
                     var v1 = JSON.parse(body)
                     var v2 = translateModel(v1)
+                    v2.date.dump = Date.now();
                     new edison.event("DUMP_ONE", login, parseInt(id), {
                         v1: v1,
                         v2: v2

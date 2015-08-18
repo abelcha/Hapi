@@ -4,6 +4,7 @@ module.exports = function(schema) {
     var V1 = requireLocal('config/_convert_V1');
     var encryptor = require('simple-encryptor')(key.salt);
     var _ = require('lodash')
+    var moment = require('moment');
 
     /* M.|Me|Soc. */
     /*    schema.path('client.civilite').validate(function(value) {
@@ -73,9 +74,9 @@ module.exports = function(schema) {
                     sst.save().then();
                 })
             }
-            //redis.del('interventionStats');
+
             db.model('intervention').cacheActualise(doc);
-            if (envProd) {
+            if (envProd && doc.date.dump && moment(doc.date.dump).add(500).isAfter(new Date())) {
                 var v1 = new V1(doc);
                 v1.send(function(resp) {
                     console.log(resp)

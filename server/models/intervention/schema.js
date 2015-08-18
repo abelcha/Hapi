@@ -35,7 +35,8 @@ module.exports = function(db) {
             annulation: Date,
             paiementCLI: Date,
             paiementSST: Date,
-            demarchage: Date
+            demarchage: Date,
+            dump:Date,
         },
         comments: [{
             login: String,
