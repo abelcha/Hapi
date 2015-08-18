@@ -437,153 +437,6 @@ angular.module('edison').config(function($compileProvider) {
     $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|callto|mailto|file|tel):/);
 });
 
-angular.module("edison").filter('contactFilter', ['config', function(config) {
-    "use strict";
-
-    var clean = function(str) {
-        return _.deburr(str).toLowerCase();
-    }
-
-    var compare = function(a, b, strictMode) {
-        if (typeof a === "string") {
-            return clean(a).includes(b);
-        } else if (!strictMode) {
-            return clean(String(a)).startsWith(b);
-        } else {
-            return a === parseInt(b);
-        }
-    }
-    return function(dataContainer, input) {
-        var rtn = [];
-        input = clean(input);
-        _.each(dataContainer, function(data) {
-            if (!data.stringify)
-                data.stringify = clean(JSON.stringify(data))
-            if (!input || data.stringify.indexOf(input) >= 0) {
-                rtn.push(data);
-            } else {
-            }
-        })
-        return rtn;
-    }
-}]);
-
-angular.module('edison').filter('crlf', function() {
-	"use strict";
-    return function(text) {
-        return text.split(/\n/g).join('<br>');
-    };
-});
-
-angular.module('edison').filter('loginify', function() {
-    "use strict";
-    return function(obj) {
-        if (!obj)
-            return "";
-        return obj.slice(0, 1).toUpperCase() + obj.slice(1, -2)
-    };
-});
-
-angular.module('edison').filter('relativeDate', function() {
-    "use strict";
-    return function(date, no) {
-        return moment((date + 1370000000) * 1000).fromNow(no).toString()
-    };
-});
-
-angular.module('edison').filter('reverse', function() {
-    "use strict";
-    return function(items) {
-        if (!items)
-            return [];
-        return items.slice().reverse();
-    };
-});
-
-angular.module("edison").filter('tableFilter', ['config', function(config) {
-    "use strict";
-
-    var clean = function(str) {
-        return _.deburr(str).toLowerCase();
-    }
-
-    var compare = function(a, b, strictMode) {
-        if (typeof a === "string") {
-            return clean(a).includes(b);
-        } else if (!strictMode){
-            return clean(String(a)).startsWith(b);
-        } else {
-            return a === parseInt(b);
-        }
-    }
-    var compareCustom = function(key, data, input) {
-        if (key === '_categorie') {
-            var cell = config.categoriesHash()[data.c].long_name;
-            return compare(cell, input);
-        }
-        if (key === '_etat') {
-            var cell = config.etatsHash()[data.s].long_name
-            return compare(cell, input);
-        }
-        return true;
-    }
-
-    return function(dataContainer, inputs, strictMode) {
-        var rtn = [];
-        console.log(inputs)
-        console.time('fltr')
-        inputs = _.mapValues(inputs, clean);
-        _.each(dataContainer, function(data) {
-            if (data.id) {
-                var psh = true;
-                _.each(inputs, function(input, k) {
-                    if (input && input.length > 0) {
-                        if (k.charAt(0) === '_') {
-                            if (!compareCustom(k, data, input)) {
-                                psh = false;
-                                return false
-                            }
-                        } else {
-                            if (!compare(data[k], input, strictMode)) {
-                                psh = false;
-                                return false
-                            }
-                        }
-                    }
-                });
-                if (psh === true) {
-                    rtn.push(data);
-                }
-            }
-        })
-        console.timeEnd('fltr')
-
-        return rtn;
-    }
-}]);
-
-angular.module('edison').filter('total', function() {
-    "use strict";
-    return function(obj) {
-        if (obj && obj.total) {
-        	return obj.total;
-        }
-        return "0";
-    };
-});
-
-angular.module('edison').filter('montant', function() {
-    "use strict";
-    return function(obj) {
-        if (obj && obj.montant) {
-        	return (obj.montant > 999 ? (obj.montant / 1000).toFixed(0) + 'k' : obj.montant.toFixed(0)) + '€';
-        }
-        return "0€";
-    };
-});
-
-
-
 angular.module('edison').directive('allowPattern', [allowPatternDirective]);
 
 function allowPatternDirective() {
@@ -1002,6 +855,153 @@ angular.module('edison').directive('select', function($interpolate) {
          }
      };
  }]);
+
+angular.module("edison").filter('contactFilter', ['config', function(config) {
+    "use strict";
+
+    var clean = function(str) {
+        return _.deburr(str).toLowerCase();
+    }
+
+    var compare = function(a, b, strictMode) {
+        if (typeof a === "string") {
+            return clean(a).includes(b);
+        } else if (!strictMode) {
+            return clean(String(a)).startsWith(b);
+        } else {
+            return a === parseInt(b);
+        }
+    }
+    return function(dataContainer, input) {
+        var rtn = [];
+        input = clean(input);
+        _.each(dataContainer, function(data) {
+            if (!data.stringify)
+                data.stringify = clean(JSON.stringify(data))
+            if (!input || data.stringify.indexOf(input) >= 0) {
+                rtn.push(data);
+            } else {
+            }
+        })
+        return rtn;
+    }
+}]);
+
+angular.module('edison').filter('crlf', function() {
+	"use strict";
+    return function(text) {
+        return text.split(/\n/g).join('<br>');
+    };
+});
+
+angular.module('edison').filter('loginify', function() {
+    "use strict";
+    return function(obj) {
+        if (!obj)
+            return "";
+        return obj.slice(0, 1).toUpperCase() + obj.slice(1, -2)
+    };
+});
+
+angular.module('edison').filter('relativeDate', function() {
+    "use strict";
+    return function(date, no) {
+        return moment((date + 1370000000) * 1000).fromNow(no).toString()
+    };
+});
+
+angular.module('edison').filter('reverse', function() {
+    "use strict";
+    return function(items) {
+        if (!items)
+            return [];
+        return items.slice().reverse();
+    };
+});
+
+angular.module("edison").filter('tableFilter', ['config', function(config) {
+    "use strict";
+
+    var clean = function(str) {
+        return _.deburr(str).toLowerCase();
+    }
+
+    var compare = function(a, b, strictMode) {
+        if (typeof a === "string") {
+            return clean(a).includes(b);
+        } else if (!strictMode){
+            return clean(String(a)).startsWith(b);
+        } else {
+            return a === parseInt(b);
+        }
+    }
+    var compareCustom = function(key, data, input) {
+        if (key === '_categorie') {
+            var cell = config.categoriesHash()[data.c].long_name;
+            return compare(cell, input);
+        }
+        if (key === '_etat') {
+            var cell = config.etatsHash()[data.s].long_name
+            return compare(cell, input);
+        }
+        return true;
+    }
+
+    return function(dataContainer, inputs, strictMode) {
+        var rtn = [];
+        console.log(inputs)
+        console.time('fltr')
+        inputs = _.mapValues(inputs, clean);
+        _.each(dataContainer, function(data) {
+            if (data.id) {
+                var psh = true;
+                _.each(inputs, function(input, k) {
+                    if (input && input.length > 0) {
+                        if (k.charAt(0) === '_') {
+                            if (!compareCustom(k, data, input)) {
+                                psh = false;
+                                return false
+                            }
+                        } else {
+                            if (!compare(data[k], input, strictMode)) {
+                                psh = false;
+                                return false
+                            }
+                        }
+                    }
+                });
+                if (psh === true) {
+                    rtn.push(data);
+                }
+            }
+        })
+        console.timeEnd('fltr')
+
+        return rtn;
+    }
+}]);
+
+angular.module('edison').filter('total', function() {
+    "use strict";
+    return function(obj) {
+        if (obj && obj.total) {
+        	return obj.total;
+        }
+        return "0";
+    };
+});
+
+angular.module('edison').filter('montant', function() {
+    "use strict";
+    return function(obj) {
+        if (obj && obj.montant) {
+        	return (obj.montant > 999 ? (obj.montant / 1000).toFixed(0) + 'k' : obj.montant.toFixed(0)) + '€';
+        }
+        return "0€";
+    };
+});
+
+
 
 angular.module('edison').factory('Signalement', function() {
     "use strict";
@@ -2011,19 +2011,20 @@ angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', 'config', 
                     $scope.pu = 0;
                     $scope.window = $window
                     $scope.quantite = 1;
-                    $scope.$watchGroup(['ref', 'title'], function() {
-                        $scope.ref = $scope.ref && $scope.ref.toUpperCase();
-                        $scope.title = $scope.title && $scope.title.toUpperCase();
-                    })
+                    $scope.prod = {
+                        quantite: 1,
+                        pu: 0,
+                        title: "",
+                        ref: ""
+                    }
+                    $scope.$watch('prod', function() {
+                            $scope.prod.ref = $scope.prod.ref.toUpperCase();
+                            $scope.prod.title = $scope.prod.title.toUpperCase();
+                            $scope.prod.desc = $scope.prod.title;
+                    }, true)
                     $scope.answer = function(resp, text) {
                         $mdDialog.hide();
-                        return cb({
-                            quantite: $scope.quantite,
-                            ref: $scope.ref,
-                            title: $scope.title,
-                            desc: $scope.title,
-                            pu: $scope.pu
-                        });
+                        return cb($scope.prod);
                     }
                 },
                 templateUrl: '/DialogTemplates/getProd.html',

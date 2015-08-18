@@ -102,19 +102,20 @@ angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', 'config', 
                     $scope.pu = 0;
                     $scope.window = $window
                     $scope.quantite = 1;
-                    $scope.$watchGroup(['ref', 'title'], function() {
-                        $scope.ref = $scope.ref && $scope.ref.toUpperCase();
-                        $scope.title = $scope.title && $scope.title.toUpperCase();
-                    })
+                    $scope.prod = {
+                        quantite: 1,
+                        pu: 0,
+                        title: "",
+                        ref: ""
+                    }
+                    $scope.$watch('prod', function() {
+                            $scope.prod.ref = $scope.prod.ref.toUpperCase();
+                            $scope.prod.title = $scope.prod.title.toUpperCase();
+                            $scope.prod.desc = $scope.prod.title;
+                    }, true)
                     $scope.answer = function(resp, text) {
                         $mdDialog.hide();
-                        return cb({
-                            quantite: $scope.quantite,
-                            ref: $scope.ref,
-                            title: $scope.title,
-                            desc: $scope.title,
-                            pu: $scope.pu
-                        });
+                        return cb($scope.prod);
                     }
                 },
                 templateUrl: '/DialogTemplates/getProd.html',
