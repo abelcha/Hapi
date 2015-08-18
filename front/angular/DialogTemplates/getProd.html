@@ -1,21 +1,21 @@
 <md-dialog aria-label="Mango (Fruit)">
-    <md-dialog-content class="sticky-container" style="width:900px">
+    <md-dialog-content class="sticky-container" style="width:1000px">
         <md-subheader class="md-sticky-no-effect">Ajout d'un produit</md-subheader>
         <div style="padding:15px">
             <!--  <select ng-model="absenceTime" ng-options="ind.value as ind.title for ind in absence">
             </select> -->
             <div class="row">
                 <div class="col-sm-2">
-                    <input  capitalize type="text" class="form-control" maxlength="6" placeholder="Réference" ng-model="ref">
+                    <input   type="text" class="form-control" maxlength="6" placeholder="Réference" ng-model="ref">
                 </div>
-                <div class="col-sm-8">
-                    <input  capitalize type="text" class="form-control" placeholder="Designation" ng-model="title">
-                </div>
-                <div class="col-sm-1">
-                    <input  capitalize  type="number" class="form-control" maxlength="2" max="10" type="number "placeholder="Qt." ng-model="quantite">
+                <div class="col-sm-7">
+                    <input   type="text" class="form-control" placeholder="Designation" ng-model="title">
                 </div>
                 <div class="col-sm-1">
-                    <input  capitalize  type="number" class="form-control" maxlength="2" type="number "placeholder="Prix" ng-model="pu">
+                    <input    type="number" class="form-control" maxlength="2" max="10" type="number "placeholder="Qt." ng-model="quantite">
+                </div>
+                <div class="col-sm-2">
+                    <input    type="number" class="form-control" maxlength="2" type="number "placeholder="Prix" ng-model="pu">
                 </div>
             </div>
         </div>
