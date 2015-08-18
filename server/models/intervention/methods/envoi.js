@@ -122,7 +122,7 @@ module.exports = function(schema) {
 
             return new Promise(function(resolve, reject) {
 
-                console.log("==>", inter.sst.status)
+                console.log("==>", inter.sst.subStatus)
                 if (!isWorker) {
                     return edison.worker.createJob({
                         name: 'db_id',
