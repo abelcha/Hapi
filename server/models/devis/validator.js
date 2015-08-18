@@ -26,7 +26,7 @@ module.exports = function(schema) {
         if (!isWorker) {
             redis.del('interventionStats');
             db.model('devis').cacheActualise(doc);
-            if (envProd) {
+             if (envProd && !doc.date.dump || moment().subtract(5000).isAfter(doc.date.dump)) {
                 console.log('v1 translate' + doc.id);
                 var v1 = new V1(doc, true);
                 v1.send(function(resp) {

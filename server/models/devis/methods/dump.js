@@ -191,10 +191,17 @@
                     if (err || resp.statusCode !== 200 || !body || body == 'null') {
                         return reject('nope')
                     }
-                    var tra = translateModel(JSON.parse(body));
+                    var v1 = JSON.parse(body)
+                    var v2 = translateModel(v1)
+                    v2.date.dump = Date.now();
+                    new edison.event("DUMP_ONE_DEVIS", login, parseInt(id), {
+                        v1: v1,
+                        v2: v2
+                    })
+
                     db.model('devis').update({
                         id: id
-                    }, tra, {
+                    }, v2, {
                         upsert: true
 
                     }).exec(function(err, resp, c) {
@@ -214,13 +221,13 @@
         schema.statics.dump = function(req, res) {
             console.log('dump')
             if (req.query.id) {
-            console.log('dumpOne')
+                console.log('dumpOne')
                 return dumpOne(req.query.id)
             }
             var limit = req.query.limit ||  0;
             console.log('dump limit = ', limit)
             if (!isWorker) {
-            console.log('inWorker')
+                console.log('inWorker')
                 return edison.worker.createJob({
                     name: 'db',
                     model: 'devis',

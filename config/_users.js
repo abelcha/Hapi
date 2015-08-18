@@ -2,6 +2,7 @@
      login: 'abel_c',
      oldLogin: 'abel',
      portable: '0633138868',
+     ligne: "0633138868",
      email: "abel@chalier.me",
      service: 'INFORMATIQUE',
      root: true,
@@ -18,6 +19,7 @@
      nom: 'boukris',
      prenom: 'benjamin',
      pseudo: 'Arnaud',
+     ligne: '0342424242',
      activated: true
 
  }, {
@@ -47,7 +49,7 @@
      pseudo: 'Laurent',
      prenom: 'xxx',
      activated: false
- },{
+ }, {
      login: 'gregoi_x',
      oldLogin: 'sebastien',
      service: 'INTERVENTION',
@@ -98,7 +100,7 @@
      portable: '0637375945',
      root: true,
      nom: 'rhoum',
-     email:'yohann.rhoum@edison-services.fr',
+     email: 'yohann.rhoum@edison-services.fr',
      prenom: 'yohann',
      activated: true
  }]

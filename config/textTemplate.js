@@ -130,14 +130,11 @@ module.exports = {
                 } else {
                     intro = _.template("{{client.civilite}} {{client.nom}},\n\n")(this);
                 }
-                var start = intro + "Suite à notre conversation téléphonique de tout à l'heure, ";
+                var start = "Suite à notre conversation téléphonique de tout à l'heure, ";
                 var end = "Avez-vous reçu le devis ?\n" +
                     "Je n'ai pas eu de retour de votre part, devons nous planifier une intervention ?\n\n" +
                     "Merci de revenir vers moi pour me tenir au courant de la suite que vous donnerez à ce devis.\n\n" +
-                    "Je reste à votre disposition pour toutes les demandes de renseignement\n\n" +
-                    "Cordialement, \n\n" +
-                    (user.pseudo ||  " Arnaud") +
-                    "\n<strong>Ligne direct : 09.72.42.30.00</strong>\n";
+                    "Je reste à votre disposition pour toutes les demandes de renseignement\n\n";
 
                 if (this.historique && this.historique.length === 1) {
                     var cont;
@@ -152,41 +149,37 @@ module.exports = {
                 } else if (this.historique && this.historique.length > 1) {
                     var text = intro + "je vous ai transmis un devis " + categorieClean + " en date du " + moment(this.historique[0].date).format('L') + ".\n\n" + end;
                 } else if (this.categorie == 'VT') {
-                    var text = intro +
-                        "Suite à notre échange téléphonique concernant le remplacement de votre vitrage," +
+                    var text = "Suite à notre échange téléphonique concernant le remplacement de votre vitrage," +
                         "vous trouverez ci-joint le devis n°" + this.id + " correspondant à ce que nous avons vu ensemble.\n\n" +
                         "Merci de bien vouloir transmettre ce devis de remplacement de vitrage directement à votre compagnie d’assurance, afin d'obtenir leurs accords (si nécessaire).\n" +
                         "Merci de nous renvoyer le devis signé accompagné de la mention « BON POUR ACCORD » par mail.\n\n" +
                         "Nous interviendrons dans les plus brefs délais.\n\n" +
-                        "Je reste à votre entière disposition pour toutes les demandes de renseignement et les remarques que vous pourriez avoir.\n\n" +
-                        "Cordialement, \n\n" +
-                        (user.pseudo ||  " Arnaud") +
-                        "\n<strong>Ligne direct : 09.72.42.30.00</strong>\n"
+                        "Je reste à votre entière disposition pour toutes les demandes de renseignement et les remarques que vous pourriez avoir.\n\n";
                 } else if (_.find(this.produits, function(e) {
                         return _.startsWith(e.ref, "BAL");
                     })) {
-                    var text = intro +
-                        "Suite à notre échange téléphonique concernant le remplacement de votre ballon d'eau chaude sanitaire," +
+                    var text = "Suite à notre échange téléphonique concernant le remplacement de votre ballon d'eau chaude sanitaire," +
                         "vous trouverez ci-joint le devis n°" + this.id + ".\n\n" +
                         "Je reste à votre entière disposition pour tous renseignements complémentaires ou remarques que vous pourriez avoir (technique/prix).\n\n" +
                         "Sachez également, que votre installation sera éligible à notre assurance RC PRO et notre assurance décennale.\n" +
                         "Dès votre accord, nous interviendrons rapidement.\n\n" +
-                        "Meilleures salutations,\n\n" +
-                        (user.pseudo ||  " Arnaud") +
-                        "\n<strong>Ligne direct : 09.72.42.30.00</strong>\n\n";
+                        "Meilleures salutations,\n\n";
                 } else {
-                    var text = intro +
-                        "Suite à notre dernier échange concernant la réalisation d'un devis " + categorieClean + ", \n" +
+                    var text = "Suite à notre dernier échange concernant la réalisation d'un devis " + categorieClean + ", \n" +
                         "vous trouverez ci-joint le devis n°" + this.id + " correspondant à ce que nous avons vu ensemble. \n\n" +
                         "Sachez également, que votre installation sera éligible à notre assurance RC PRO et notre assurance décennale.\n" +
                         "Lors de l'acceptation, je vous prie de me renvoyer le devis signé, accompagné de la mention:\n\n" +
-                        "<center><strong>\"BON POUR ACCORD\"</strong></center>\n\n" + 
+                        "<strong>\"BON POUR ACCORD\"</strong>\n" +
                         "Je reste à votre entière disposition pour tous les renseignements ou les remarques que vous pourriez avoir concernant ce devis (technique, délais, prix). \n\n" +
-                        "Merci de me tenir au courant de la suite que vous donnerez à ce devis. \n\n" +
-                        "Cordialement, \n\n" +
-                        (user.pseudo ||  " Arnaud") + "\n<strong>Ligne direct : 09.72.42.30.00</strong>\n\n";
+                        "Merci de me tenir au courant de la suite que vous donnerez à ce devis. \n\n";
+
                 }
-                return text;
+                var outro = "Cordialement, \n\n" +
+                    (user.pseudo ||  " Arnaud,\n") +
+                    "<strong>Ligne Direct : " + (user.ligne ||  "09.72.42.30.00") + "</strong>\n" +
+                    "<strong>Ligne Atelier : " + (user.ligne ||  "09.72.42.30.00") + "</strong>\n";
+
+                return intro + text + outro;
             }
         },
         artisan: {

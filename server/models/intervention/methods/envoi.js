@@ -105,8 +105,7 @@ module.exports = function(schema) {
             return new Promise(function(resolve, reject) {
 
                 if (!isWorker) {
-                    console.log('eeworker')
-                    edison.worker.createJob({
+                    return edison.worker.createJob({
                         name: 'db_id',
                         model: 'intervention',
                         method: 'envoi',
