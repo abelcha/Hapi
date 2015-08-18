@@ -98,12 +98,13 @@ angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', 'config', 
         },
         addProd: function(cb) {
             $mdDialog.show({
-                controller: function DialogController($scope, $mdDialog) {
+                controller: function DialogController($scope, $mdDialog, $window) {
                     $scope.pu = 0;
+                    $scope.window = $window
                     $scope.quantite = 1;
                     $scope.$watchGroup(['ref', 'title'], function() {
-                        $scope.ref = $scope.ref.toUpperCase();
-                        $scope.title = $scope.title.toUpperCase();
+                        $scope.ref = $scope.ref && $scope.ref.toUpperCase();
+                        $scope.title = $scope.title && $scope.title.toUpperCase();
                     })
                     $scope.answer = function(resp, text) {
                         $mdDialog.hide();
