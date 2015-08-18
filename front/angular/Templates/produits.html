@@ -17,7 +17,7 @@
                             <th style="font-weight:bold;">Désignation</th>
                             <th style="font-weight:bold;width: 100px;">Q</th>
                             <th style="font-weight:bold;width: 120px;">PU</th>
-                            <th style="font-weight:bold;width: 120px;">Montant</th>
+                            <th style="font-weight:bold;width: 145px;">Montant</th>
                             <th style="font-weight:bold;width: 170px;">Modif</th>
                         </tr>
                     </thead>
@@ -58,14 +58,22 @@
                             </td>
                         </tr>
                         <tr class="products data-table__clickable-row">
-                            <td colspan="5"></td>
+                            <td colspan="4"></td>
                             <td colspan="1">
                                 <strong>
-                                 TOTAL HT : {{produits.total() | currency:''}} €<br>
-                                 </strong> TVA ({{data.tva.toFixed(2)}}%) : {{produits.total() * (data.tva / 100) | currency:''}} €
-                                <strong>
+                                 TOTAL HT
                                  <br>
-                                 TOTAL TTC : {{produits.total() * (data.tva / 100 + 1) | currency:''}} €
+                                 TVA ({{data.tva.toFixed(2)}}%) 
+                                 <br>
+                                 TOTAL TTC
+                                </strong>
+                            </td>
+                            <td colspan="1">
+                                <strong>
+                                 {{produits.total() | currency:''}} €<br>
+                                {{produits.total() * (data.tva / 100) | currency:''}} €
+                                 <br>
+                                 {{produits.total() * (data.tva / 100 + 1) | currency:''}} €
                                 </strong>
                             </td>
                         </tr>
