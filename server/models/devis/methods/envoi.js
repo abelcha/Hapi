@@ -22,7 +22,6 @@ module.exports = function(schema) {
         findBefore: true,
         method: 'POST',
         fn: function(devis, req, res) {
-
             return new Promise(function(resolve, reject) {
                 if (!isWorker) {
                     return edison.worker.createJob({
@@ -49,11 +48,11 @@ module.exports = function(schema) {
                     mail.send({
                         From: "intervention@edison-services.fr",
                         To: req.session.email || "abel@chalier.me",
-                        Subject: "Devis n°" + devis.id,
+                        Subject: "DEVIS n°" + devis.id,
                         HtmlBody: req.body.text.replaceAll('\n', '<br>'),
                         Attachments: [{
                             Content: buffer.toString('base64'),
-                            Name: 'Devis.pdf',
+                            Name: "Devis n°" + devis.id + '.pdf',
                             ContentType: 'application/pdf'
                         }]
                     }).then(function(resp) {
@@ -67,7 +66,7 @@ module.exports = function(schema) {
                             })
                             doc.status = 'ATT';
                             console.log('oksave')
-                            doc.save(function(err, resp){
+                            doc.save(function(err, resp) {
                                 console.log(err, resp)
                                 resolve(resp)
                             })

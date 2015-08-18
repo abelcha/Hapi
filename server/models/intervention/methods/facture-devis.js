@@ -17,8 +17,9 @@ module.exports = function(schema) {
             address: _.get(doc, 'facture.address', doc.client.address),
             dest: _.get(doc, 'facture', doc.client),
             text: _.template(text)(doc),
-            title: "OBJET : Facture en attente de rèlement"
+            title: "OBJET : Facture n°" + doc.id + " en attente de reglement"
         }
+        console.log(lettre)
         return PDF([{
             model: 'letter',
             options: lettre

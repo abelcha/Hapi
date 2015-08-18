@@ -21,10 +21,10 @@ angular.module('edison')
                     LxNotificationService.success(validationMessage);
                     if (typeof cb === 'function')
                         cb(null, resp.data)
-                }).catch(function(error) {
+                }, function(error) {
                     LxNotificationService.error(error.data);
                     if (typeof cb === 'function')
-                        cb(error.data)
+                        cb("une erreur est " + error.data)
                 });
         };
 
@@ -38,7 +38,7 @@ angular.module('edison')
         Devis.prototype.sendDevis = function(cb) {
             var _this = this;
             var preview = Devis(this).devisPreview.bind(this)
-            dialog.getTextDevis(preview,{
+            dialog.getTextDevis(preview, {
                 text: textTemplate.mail.devis.envoi.bind(_this)($rootScope.user),
                 width: "900px",
                 height: "700px"
@@ -52,7 +52,7 @@ angular.module('edison')
                         console.log('yes cb')
                         cb(null, resp);
                     }
-                }).catch(function(err) {
+                }, function(err) {
                     var validationMessage = _.template("L'envoi du devis {{id}} à échoué\n")(_this)
                     if (err && err.data && typeof err.data === 'string')
                         validationMessage += ('\n(' + err.data + ')')

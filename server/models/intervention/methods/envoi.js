@@ -58,7 +58,7 @@ module.exports = function(schema) {
         var fs = require('fs');
         var file = this
         return new Promise(function(resolve, reject) {
-            var path = [process.cwd(), 'front', 'assets', 'pdf', (file || 'manuel.pdf')].join('/')
+            var path = [process.cwd(), 'front', 'assets', 'pdf', file].join('/')
             fs.readFile(path, function(err, buffer) {
                 if (err)
                     return reject(err);
@@ -88,18 +88,36 @@ module.exports = function(schema) {
         })
     }
 
-    schema.statics.manuel = getStaticFile.bind('manuel.pdf')
-    schema.statics.notice = getStaticFile.bind('notice.pdf')
+
+    var pdfPromiseAndConditions = function(a, name, b) {
+        return new Promise(function(resolve, reject) {
+            PDF([{
+                model: a,
+                options: b
+            }, {
+                model: 'conditions',
+                options: {}
+            }]).toBuffer(function(err, buff) {
+                if (err)
+                    return reject(err);
+                resolve({
+                    data: buff,
+                    extension: '.pdf',
+                    name: name
+                })
+            })
+        })
+    }
+
+
     schema.statics.envoi = {
         unique: true,
         findBefore: true,
         populateArtisan: true,
         method: 'POST',
         fn: function(inter, req, res) {
+            console.time('envoi')
 
-            console.log('uaua')
-
-            console.log('here')
             var _this = this;
 
             return new Promise(function(resolve, reject) {
@@ -116,32 +134,29 @@ module.exports = function(schema) {
                     })
                 }
 
-
-                console.time('envoi')
                 if (!inter ||  !inter.sst)
                     return reject('pas de SST')
                 if (!req.body.sms)
                     return reject("Impossible de trouver l'artisan");
 
+
                 var filesPromises = [
                     getFileOS(inter),
-                    pdfPromise('deviseur', 'Facturier n°' + inter.id + '.pdf', {
+                    pdfPromiseAndConditions('deviseur', 'Facturier n°' + inter.id + '.pdf', {
                         type: 'FACTURE',
                         id: inter.id
                     }),
-                    pdfPromise('deviseur', 'Deviseur n°' + inter.id + '.pdf', {
+                    pdfPromiseAndConditions('deviseur', 'Deviseur n°' + inter.id + '.pdf', {
                         type: 'DEVIS',
                         id: inter.id
                     }),
-
                 ]
-                if (envProd) {
-                    console.log('envprod')
-                    filesPromises.push(getStaticFile.bind('manuel.pdf')(),
-                        getStaticFile.bind('notice.pdf')())
+
+                if (inter.sst.status === 'NEW' || inter.sst.status === 'POT') {
+                    filesPromises.push(getStaticFile.bind("Manuel d'utilisation.pdf")(),
+                        getStaticFile.bind("Notice d'intervention.pdf")())
                 }
                 if (inter.devisOrigine) {
-                    console.log('sweg')
                     inter.type = 'DEVIS'
                     filesPromises.push(pdfPromise('facture', 'Devis n°' + inter.id + '.pdf', inter))
                 }
@@ -150,6 +165,7 @@ module.exports = function(schema) {
                 }
                 var fileSupp = req.body.file;
                 console.time('getFiles')
+
                 Promise.all(filesPromises).then(function(result) {
                     console.timeEnd('getFiles')
 

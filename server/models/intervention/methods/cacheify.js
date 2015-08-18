@@ -7,7 +7,7 @@ module.exports = function(schema) {
     var getReglementClient = function(e) {
         if (e.compta.reglement.recu) {
             return 1;
-        } else if (e.status === "VRF") {
+        } else if (e._status === "VRF") {
             if (e.reglementSurPlace) {
                 return 3
             } else {
@@ -66,13 +66,15 @@ module.exports = function(schema) {
 
         try {
             if (e.status === "ENC" && Date.now() > (new Date(e.date.intervention)).getTime() + ms.hours(1)) {
-                e.status = 'AVR';
+                e._status = 'AVR';
+            } else {
+                e._status = e.status
             }
             var rtn = {
                 t: e.login.ajout,
                 id: e.id,
                 ai: e.artisan.id,
-                s: config.etats[e.status].order,
+                s: config.etats[e._status].order,
                 c: config.categories[e.categorie].order,
                 n: e.client.civilite + ' ' + e.client.nom + ' ' + e.client.prenom,
                 a: e.artisan.nomSociete,

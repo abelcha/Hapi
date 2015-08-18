@@ -234,7 +234,7 @@ angular.module('edison')
         Intervention.prototype.verification = function(cb) {
             var _this = this;
             if (!_this.reglementSurPlace) {
-                return $location.url('/intervention/' + this.id + "#facture")
+                return $location.url('/intervention/' + this.id)
             }
             dialog.verification(_this, function(inter) {
                 Intervention(inter).save(function(err, resp) {

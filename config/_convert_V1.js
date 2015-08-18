@@ -26,7 +26,7 @@ var V1 = function(d, devis, legacy) {
             x.t_stamp_intervention = dateIntervention.unix() + ms.hours(2)
         }
         if (d.compta.reglement.date) {
-            x.date_paiement_client = moment(new Date(d.compta.reglement.date)).format('DD/MM/YYYY')
+            x.date_paiement_client = moment(new Date(d.compta.reglement.date)).format('DD/MM/YYYY');
         }
         x.t_stamp = dateAjout.unix() + ms.hours(2)
         x.date_ajout = dateAjout.format('DD/MM/YYYY')
