@@ -101,6 +101,12 @@ angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', 'config', 
                 controller: function DialogController($scope, $mdDialog) {
                     $scope.pu = 0;
                     $scope.quantite = 1;
+                    $scope.$watch('ref', function() {
+                        $scope.ref = $scope.ref.toUpperCase();
+                    })
+                    $scope.$watch('desc', function() {
+                        $scope.desc = $scope.desc.toUpperCase();
+                    })
                     $scope.answer = function(resp, text) {
                         $mdDialog.hide();
                         return cb({
