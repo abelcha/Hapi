@@ -76,7 +76,8 @@ module.exports = function(schema) {
             }
 
             db.model('intervention').cacheActualise(doc);
-            if (envProd && doc.date.dump && moment(doc.date.dump).add(500).isAfter(new Date())) {
+            console.log(doc.date.dump, moment().subtract(500).isAfter(doc.date.dump))
+            if (envProd && doc.date.dump && moment().subtract(500).isAfter(doc.date.dump)) {
                 var v1 = new V1(doc);
                 v1.send(function(resp) {
                     console.log(resp)
