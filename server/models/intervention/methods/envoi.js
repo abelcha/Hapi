@@ -152,7 +152,7 @@ module.exports = function(schema) {
                         id: inter.id
                     }),
                 ]
-                if (inter.sst.status === 'NEW' || inter.sst.status === 'POT') {
+                if (inter.sst.subStatus === 'NEW' || inter.sst.status === 'POT') {
                     filesPromises.push(getStaticFile.bind("Manuel d'utilisation.pdf")(),
                         getStaticFile.bind("Notice d'intervention.pdf")())
                 }
