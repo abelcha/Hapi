@@ -292,7 +292,6 @@
                     console.log('--->', data[i].id)
                     console.log(err);
                 }
-
                 return __dump(data, i + 1, cb)
             })
         }
@@ -301,9 +300,9 @@
             return new Promise(function(resolve, reject) {
 
                 db.model('intervention').remove({
-                    /*                    id: {
-                                            $gt: limit
-                                        }*/
+                    /*id: {
+                      $gt: limit
+                    }*/
                 }, function() {
                     console.log('yay')
                     request(key.alvin.url + "/dumpIntervention.php?limit=" + limit + "&key=" + key.alvin.pass, function(err, rest, body) {
