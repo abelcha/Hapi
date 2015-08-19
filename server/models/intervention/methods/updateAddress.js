@@ -16,20 +16,10 @@ module.exports = function(schema) {
                         if (!err && !data.error_message && data.results[0]) {
                             var obj = data.results[0].geometry.location;
                             obj.id = e.id;
-                            request({
-                                    url: 'http://electricien13003.com/alvin/updateAddress.php',
-                                    qs: obj
-                                }, function(a, b, body) {
-                                    if (body && body.includes('true')) {
-                                        e.client.address.lt = obj.lat;
-                                        e.client.address.lg = obj.lng;
-                                        e.save();
-                                        console.log("SUCCESS")
-                                        console.log(obj)
-                                        console.log(body)
-                                    }
-                                })
-                                //   return cb(null, data.results[0].geometry.location);
+                            e.client.address.lt = obj.lat;
+                            e.client.address.lg = obj.lng;
+                            e.save();
+                            //   return cb(null, data.results[0].geometry.location);
                         } else {
                             console.log("nope")
                         }
