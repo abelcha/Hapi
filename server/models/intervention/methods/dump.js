@@ -19,7 +19,7 @@
         }
 
         var toDate = function(str) {
-            var d = new Date(parseInt(str) * 1000 - ms.hours(2));
+            var d = new Date(parseInt(str) * 1000);
             return d
         }
 
