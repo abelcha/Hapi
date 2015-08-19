@@ -74,7 +74,6 @@ module.exports = function(schema) {
                     sst.save().then();
                 })
             }
-
             db.model('intervention').cacheActualise(doc);
             console.log(envProd,  (!doc.date.dump || moment().subtract(5000).isAfter(doc.date.dump)))
             if (envProd && (!doc.date.dump || moment().subtract(5000).isAfter(doc.date.dump))) {
@@ -84,7 +83,6 @@ module.exports = function(schema) {
                 });
             }
         }
-
 
     }
 

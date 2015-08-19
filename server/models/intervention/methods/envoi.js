@@ -54,6 +54,21 @@ module.exports = function(schema) {
         }).catch(__catch);
     }
 
+    var getAttestations = function() {
+        return new Promise(function(resolve, reject) {
+            PDF('attestation', {}).buffer(function(err, buffer) {
+                if (err)
+                    reject(err)
+                resolve({
+                    data: buffer,
+                    extension: '.pdf',
+                    name: 'Attestation de TVA Simplifié.pdf'
+                })
+            })
+
+        })
+    }
+
     var getStaticFile = function(req, res) {
         var fs = require('fs');
         var file = this
@@ -151,7 +166,10 @@ module.exports = function(schema) {
                         type: 'DEVIS',
                         id: inter.id
                     }),
+                    getAttestations()
                 ]
+
+                filesPromises.push()
                 if (inter.sst.subStatus === 'NEW' || inter.sst.status === 'POT') {
                     filesPromises.push(getStaticFile.bind("Manuel d'utilisation.pdf")(),
                         getStaticFile.bind("Notice d'intervention.pdf")())
