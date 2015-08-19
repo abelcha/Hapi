@@ -1,50 +1,21 @@
 'use strict'
 var express = require('express');
-var app = express();
-var http = require('http').Server(app);
-var port = (process.env.PORT || 8080);
-var path = require('path');
-var _ = require('lodash')
-var fs = require('fs')
-require('pretty-error').start();
 
 express.response.pdf = function(obj, headers, status) {
     this.header('Content-Type', 'application/pdf');
     return this.send(obj, headers, status);
 };
 
-global.requireLocal = function(pth) {
-    return require(process.cwd() + '/' + pth)
-}
+var app = express();
+var http = require('http').Server(app);
+var port = (process.env.PORT || 8080);
+var path = require('path');
+var _ = require('lodash')
+var fs = require('fs')
+require('./shared.js')(express);
 
-/*var Logger = require('le_node');
-global.logger = new Logger({
-  token:'LOGENTRIES_TOKEN'
-});
-*/
-global.__catch = function(e) {
-    var prettyError = require('pretty-error');
-    console.log((new prettyError().render(e)));
-    throw e;
-}
-
-
-
-var key = requireLocal('config/_keys');
-var dep = require(process.cwd() + '/server/loadDependencies');
-global.edison = dep.loadDir(process.cwd() + "/server/edison_components");
-global.envProd = process.env.APP_ENV === "PRODUCTION";
-global.envDev = process.env.APP_ENV === "DEVELOPMENT";
-global.envStaging = process.env.APP_ENV === "STAGING";
-console.log(envDev, envStaging, envProd)
-global.redis = edison.redis();
-global.db = edison.db();
-global.sms = new edison.mobyt(key.mobyt.login, key.mobyt.pass);
-global.mail = new edison.mail;
-global.document = new edison.dropbox();
 global.isWorker = false;
 global.io = require('socket.io')(http);
-edison.extendPrototypes();
 global.jobs = edison.worker.initJobQueue();
 
 
@@ -58,6 +29,7 @@ app.use(require("multer")({
         return true;
     }
 }));
+
 app.use(express.static(path.join(process.cwd(), 'front', 'bower_components')));
 app.use(express.static(path.join(process.cwd(), 'front', 'assets')));
 app.use(express.static(path.join(process.cwd(), 'front', 'angular')));
