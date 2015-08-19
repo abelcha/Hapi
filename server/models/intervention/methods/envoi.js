@@ -122,7 +122,7 @@ module.exports = function(schema) {
             }, {
                 model: 'attestation',
                 options: {}
-            }]).toBuffer(function(err, buff) {
+            }], 5000).toBuffer(function(err, buff) {
                 if (err)
                     return reject(err);
                 resolve({

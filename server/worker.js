@@ -8,8 +8,8 @@ global.isWorker = false;
 
 
 try {
-
     var key = requireLocal('config/_keys');
+    
     global.sms = new edison.mobyt(key.mobyt.login, key.mobyt.pass);
     global.isWorker = true;
 
