@@ -6,6 +6,7 @@
     var Entities = require('html-entities').XmlEntities;
     var _ = require('lodash');
     var async = require('async')
+    var ms = require('milliseconds')
     var V1 = requireLocal('config/_convert_V1');
     var entities = new Entities();
 
@@ -18,7 +19,7 @@
         }
 
         var toDate = function(str) {
-            var d = new Date(parseInt(str) * 1000);
+            var d = new Date(parseInt(str) * 1000 - ms.hours(2));
             return d
         }
 
