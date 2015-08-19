@@ -2282,6 +2282,10 @@ angular.module('edison')
                 })
             })
         }
+
+        Intervention.prototype.ouvrirFicheV1 = function() {
+            $window.open('http://electricien13003.com/alvin/5_Gestion_des_interventions/show_res_bis_2.php?id_client=' + this.id)
+        }
         Intervention.prototype.ouvrirFiche = function() {
             $location.url('/intervention/' + this.id)
         }

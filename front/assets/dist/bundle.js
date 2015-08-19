@@ -1039,6 +1039,9 @@ module.exports = {
             fontWeight: 'bold'
         }
     }, {
+        title: 'Fiche Client V1',
+        action: "ouvrirFicheV1"
+    }, {
         title: "Appel Client",
         action: 'callClient',
         style: {
@@ -1073,7 +1076,7 @@ module.exports = {
         action: 'envoi',
         hide: function(inter) {
             console.log(inter)
-            return inter.status == "VRF"  || (!inter.artisan || !inter.artisan.id)
+            return inter.status == "VRF" || (!inter.artisan || !inter.artisan.id)
         }
     }, {
         title: "Vérifier",
