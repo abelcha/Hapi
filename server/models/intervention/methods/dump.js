@@ -18,11 +18,11 @@
         }
 
         var toDate = function(str) {
-            console.log(str);
             var d = new Date(parseInt(str) * 1000);
-            console.log(d);
             return d
         }
+
+
 
         var translateModel = function(d) {
 
