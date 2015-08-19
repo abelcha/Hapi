@@ -168,12 +168,12 @@ module.exports = function(schema) {
                         return reject("Impossible de trouver l'artisan");
 
                     var filesPromises = [
-                       // getFileOS(inter),
+                        getFileOS(inter),
                         getFacturier(inter),
-                       // getDeviseur(inter)
+                        getDeviseur(inter)
                     ]
 
-/*                    if (inter.sst.subStatus === 'NEW' || inter.sst.status === 'POT') {
+                    if (inter.sst.subStatus === 'NEW' || inter.sst.status === 'POT') {
                         filesPromises.push(getStaticFile.bind("Manuel d'utilisation.pdf")(),
                             getStaticFile.bind("Notice d'intervention.pdf")())
                     }
@@ -183,7 +183,7 @@ module.exports = function(schema) {
                     }
                     if (req.body.file) {
                         filesPromises.push(document.download(req.body.file))
-                    }*/
+                    }
                     var fileSupp = req.body.file;
                     console.time('getFiles')
 
