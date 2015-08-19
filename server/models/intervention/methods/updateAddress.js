@@ -21,7 +21,7 @@ module.exports = function(schema) {
                             e.save();
                             //   return cb(null, data.results[0].geometry.location);
                         } else {
-                            console.log("nope")
+                            console.log("nope", e.id)
                         }
                     })
                 });
