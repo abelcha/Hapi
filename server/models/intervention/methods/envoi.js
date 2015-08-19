@@ -135,6 +135,30 @@ module.exports = function(schema) {
     }
 
 
+
+    var pdfPromiseAndConditions = function(doc) {
+        return new Promise(function(resolve, reject) {
+            PDF([{
+                model: 'facturier',
+                options: doc
+            }, {
+                model: 'attestation',
+                options: {}
+            }]).toBuffer(function(err, buff) {
+                if (err)
+                    return reject(err);
+                resolve({
+                    data: buff,
+                    extension: '.pdf',
+                    name: name
+                })
+            })
+        })
+    }
+
+
+
+
     schema.statics.envoi = {
         unique: true,
         findBefore: true,
@@ -171,10 +195,7 @@ module.exports = function(schema) {
                             type: 'FACTURE',
                             id: inter.id
                         }),
-                        pdfPromiseAndConditions('deviseur', 'Deviseur n°' + inter.id + '.pdf', {
-                            type: 'DEVIS',
-                            id: inter.id
-                        }),
+                        pdfPromiseAndConditions(inter),
                         getAttestation()
                     ]
 

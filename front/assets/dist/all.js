@@ -3947,6 +3947,10 @@ var InterventionCtrl = function(Description, Signalement, ContextMenu, $window, 
         }
     })
 
+    
+    $scope.$watch(function() {
+
+    })
 
     $scope.smoothTransition = function(value) {
         if (!$scope.displaySAV) {
