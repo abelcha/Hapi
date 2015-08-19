@@ -84,6 +84,7 @@ module.exports = function(schema) {
             }
         }
 
+
     }
 
     schema.pre('save', function(next) {
