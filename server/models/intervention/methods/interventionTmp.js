@@ -5,7 +5,7 @@ module.exports = function(schema) {
 
     schema.statics.saveTmp = function(req, res) {
         var key = getKey(req.body.tmpID)
-        redis.setex(key, 360, JSON.stringify(req.body), function() {
+        redis.setex(key, 600, JSON.stringify(req.body), function() {
             res.send('ok')
         });
     }
