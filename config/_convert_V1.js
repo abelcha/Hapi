@@ -163,6 +163,7 @@ V1.prototype.send = function(cb) {
                 //console.log(body)
                 cb(null, body)
             } else {
+                console.log("ERR", body)
                 cb("err")
             }
             new edison.event("SEND_INTER", _this.data.id, {
