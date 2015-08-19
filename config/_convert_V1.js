@@ -17,9 +17,9 @@ var V1 = function(d, devis, legacy) {
         }
         this.legacy = legacy
         x.id = d.id;
-        var dateAjout = moment(new Date(d.date.ajout));
+        var dateAjout = moment(new Date(d.date.ajout)).add(2, 'hours');
         if (d.date.intervention) {
-            var dateIntervention = moment(new Date(d.date.intervention))
+            var dateIntervention = moment(new Date(d.date.intervention)).add(2, 'hours');
             x.date_intervention = dateIntervention.format('DD/MM/YYYY')
             x.date_intervention_en = dateIntervention.format('YYYYMMDD')
             x.heure_intervention = dateIntervention.format('HH:mm:ss')
