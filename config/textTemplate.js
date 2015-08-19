@@ -131,12 +131,13 @@ module.exports = {
                     intro = _.template("{{client.civilite}} {{client.nom}},\n\n")(this);
                 }
                 var start = "Suite à notre conversation téléphonique de tout à l'heure, ";
-                var end = "Avez-vous reçu le devis ?\n" +
+                var end = "Avez-vous reçu le devis ?\n\n" +
                     "Je n'ai pas eu de retour de votre part, devons nous planifier une intervention ?\n\n" +
                     "Merci de revenir vers moi pour me tenir au courant de la suite que vous donnerez à ce devis.\n\n" +
                     "Je reste à votre disposition pour toutes les demandes de renseignement\n\n";
 
                 if (this.historique && this.historique.length === 1) {
+            console.log('yay histor')                    
                     var cont;
                     if (this.categorie == 'VT')
                         cont = "je vous ai envoyé le devis que vous m'avez demandé pour le remplacement de votre vitrage, vous deviez le transmettre directement à votre compagnie d'assurance.\n\n";
@@ -147,7 +148,7 @@ module.exports = {
                     var text = start + cont + end;
 
                 } else if (this.historique && this.historique.length > 1) {
-                    var text = intro + "je vous ai transmis un devis " + categorieClean + " en date du " + moment(this.historique[0].date).format('L') + ".\n\n" + end;
+                    var text =  "je vous ai transmis un devis " + categorieClean + " en date du " + moment(this.historique[0].date).format('L') + ".\n\n" + end;
                 } else if (this.categorie == 'VT') {
                     var text = "Suite à notre échange téléphonique concernant le remplacement de votre vitrage," +
                         "vous trouverez ci-joint le devis n°" + this.id + " correspondant à ce que nous avons vu ensemble.\n\n" +
