@@ -9,7 +9,7 @@ module.exports = function(schema) {
 
         return new Promise(function(resolve, reject) {
             var resend = function() {
-                if (req.query.pdf) {
+                if (req.query.pdf ||true) {
                     console.log('yaypdf')
                     PDF(op).toBuffer(function(err, buffer) {
                         res.contentType('application/pdf')
@@ -59,7 +59,6 @@ module.exports = function(schema) {
                         if (e.mode === 'CHQ') {
                             return cb2();
                         }
-                        console.log(x.id, x.sst)
                         db.model('intervention').findOne({
                             id: x.id
                         }).populate('sst').then(function(doc) {
@@ -73,16 +72,12 @@ module.exports = function(schema) {
                                 });
                             }
                             cb2()
-                        }, function(err) {
-                            __catch(err)
-                        })
+                        }, callback)
 
                     }, callback)
 
                 }, function(err, result) {
-                    console.log('sweg', op)
-                    console.log(JSON.stringify(op));
-                    //resend(op, req.query.pdf)
+                    resend(op, req.query.pdf)
                 })
             } else {
                 resend(op, req.query.pdf)
