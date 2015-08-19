@@ -18,22 +18,22 @@ var V1 = function(d, devis, legacy) {
         this.legacy = legacy
         x.id = d.id;
         var dateAjout = moment(new Date(d.date.ajout))
+        x.t_stamp = dateAjout.unix()
         dateAjout.add(2, 'h');
+        x.date_ajout = dateAjout.format('DD/MM/YYYY')
+        x.heure_ajout = dateAjout.format('HH:mm:ss')
+        x.date_ajout_en = dateAjout.format('YYYYMMDD')
         if (d.date.intervention) {
             var dateIntervention = moment(new Date(d.date.intervention))
+            x.t_stamp_intervention = dateIntervention.unix()
             dateIntervention.add(2, 'h');
             x.date_intervention = dateIntervention.format('DD/MM/YYYY')
             x.date_intervention_en = dateIntervention.format('YYYYMMDD')
             x.heure_intervention = dateIntervention.format('HH:mm:ss')
-            x.t_stamp_intervention = dateIntervention.unix()
         }
         if (d.compta.reglement.date) {
             x.date_paiement_client = moment(new Date(d.compta.reglement.date)).format('DD/MM/YYYY');
         }
-        x.t_stamp = dateAjout.unix()
-        x.date_ajout = dateAjout.format('DD/MM/YYYY')
-        x.heure_ajout = dateAjout.format('HH:mm:ss')
-        x.date_ajout_en = dateAjout.format('YYYYMMDD')
         x.civilite = d.client.civilite;
         x.nom = d.client.nom;
         x.prenom = d.client.prenom;
