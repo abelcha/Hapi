@@ -6,30 +6,26 @@ module.exports = function(schema) {
     var template = requireLocal('config/textTemplate');
     var config = requireLocal('config/dataList')
 
-    schema.statics.os = {
+    schema.statics.file = {
         unique: true,
         findBefore: true,
         method: 'GET',
         populateArtisan: true,
         fn: function(inter, req, res) {
-            return new Promise(function(resolve, reject) {
-
-                var pdf = PDF('intervention', inter).getOS(false, function(err, buff) {
-                    if (req && res) {
-                        res.pdf(buff)
-                    }
-                    resolve({
-                        data: buff,
-                        extension: '.pdf',
-                        name: 'OS n°' + inter.id + '.pdf'
-                    })
-                })
-
-            })
+                if (req.query.file === 'os') {
+                    var prm = getOs();
+                } else if (req.query.file === 'facturier') {
+                    var prm = getFacturier()
+                } else if (req.query.file === 'deviseur') {
+                    var prm = getDeviseur();
+                } else if (req.query.file === 'devis') {
+                    var prm = getDevis()
+                } else {
+                    res.status(400).send("unknown file")    
+                }
         }
     }
 
-    var getFileOS = schema.statics.os.fn;
 
     var sendSMS = function(text, inter, user) {
         return db.model('sms').send({
@@ -53,6 +49,8 @@ module.exports = function(schema) {
             }, inter).then(resolve, reject)
         }).catch(__catch);
     }
+
+
     var getStaticFile = function(req, res) {
         var fs = require('fs');
         var file = this
@@ -61,9 +59,6 @@ module.exports = function(schema) {
             fs.readFile(path, function(err, buffer) {
                 if (err)
                     return reject(err);
-                if (req && res) {
-                    return res.pdf(buffer)
-                }
                 return resolve({
                     data: buffer,
                     name: String(file),
@@ -73,15 +68,31 @@ module.exports = function(schema) {
         })
     }
 
-    var pdfPromise = function(a, name, b) {
+    var getOS = function(doc) {
         return new Promise(function(resolve, reject) {
-            PDF(a, b).buffer(function(err, buff) {
+            PDF('intervention', doc).buffer(function(err, buff) {
                 if (err)
                     return reject(err);
                 resolve({
                     data: buff,
                     extension: '.pdf',
-                    name: name
+                    name: 'OS n°' + inter.id + '.pdf'
+                })
+            })
+        })
+    }
+
+
+    var getDevis = function(doc) {
+        return new Promise(function(resolve, reject) {
+            doc.type = 'DEVIS'
+            PDF('facture', doc).buffer(function(err, buff) {
+                if (err)
+                    return reject(err);
+                resolve({
+                    data: buff,
+                    extension: '.pdf',
+                    name: 'Devis n°' + doc.id + '.pdf'
                 })
             })
         })
@@ -122,7 +133,7 @@ module.exports = function(schema) {
             }, {
                 model: 'attestation',
                 options: {}
-            }], 5000).toBuffer(function(err, buff) {
+            }]).toBuffer(function(err, buff) {
                 if (err)
                     return reject(err);
                 resolve({
@@ -168,7 +179,7 @@ module.exports = function(schema) {
                         return reject("Impossible de trouver l'artisan");
 
                     var filesPromises = [
-                        getFileOS(inter),
+                        getOs(inter),
                         getFacturier(inter),
                         getDeviseur(inter)
                     ]
@@ -178,8 +189,7 @@ module.exports = function(schema) {
                             getStaticFile.bind("Notice d'intervention.pdf")())
                     }
                     if (inter.devisOrigine) {
-                        inter.type = 'DEVIS'
-                        filesPromises.push(pdfPromise('facture', 'Devis n°' + inter.id + '.pdf', inter))
+                        filesPromises.push(getDevis(inter));
                     }
                     if (req.body.file) {
                         filesPromises.push(document.download(req.body.file))
