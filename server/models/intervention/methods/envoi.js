@@ -54,17 +54,27 @@ module.exports = function(schema) {
         }).catch(__catch);
     }
 
-    var getAttestations = function() {
+    var getAttestation = function() {
         return new Promise(function(resolve, reject) {
-            PDF('attestation', {}).buffer(function(err, buffer) {
-                if (err)
-                    reject(err)
-                resolve({
-                    data: buffer,
-                    extension: '.pdf',
-                    name: 'Attestation de TVA Simplifié.pdf'
+            console.log("here")
+            try {
+
+                PDF('attestation', {}).buffer(function(err, buffer) {
+                    console.log("her2")
+
+                    if (err)
+                        reject(err)
+                    resolve({
+                        data: buffer,
+                        extension: '.pdf',
+                        name: 'Attestation de TVA Simplifié.pdf'
+                    })
                 })
-            })
+            } catch (e) {
+                console.log("err")
+                console.log(e)
+                console.log(e.stack())
+            }
 
         })
     }
@@ -136,99 +146,103 @@ module.exports = function(schema) {
             var _this = this;
 
             return new Promise(function(resolve, reject) {
+                try {
 
-                console.log("==>", inter.sst.subStatus)
-                if (!isWorker) {
-                    return edison.worker.createJob({
-                        name: 'db_id',
-                        model: 'intervention',
-                        method: 'envoi',
-                        data: inter,
-                        req: _.pick(req, 'body', 'session')
-                    }).then(function() {
-                        inter.save().then(resolve, reject)
-                    })
-                }
-
-                if (!inter ||  !inter.sst)
-                    return reject('pas de SST')
-                if (!req.body.sms)
-                    return reject("Impossible de trouver l'artisan");
-
-
-                var filesPromises = [
-                    getFileOS(inter),
-                    pdfPromiseAndConditions('deviseur', 'Facturier n°' + inter.id + '.pdf', {
-                        type: 'FACTURE',
-                        id: inter.id
-                    }),
-                    pdfPromiseAndConditions('deviseur', 'Deviseur n°' + inter.id + '.pdf', {
-                        type: 'DEVIS',
-                        id: inter.id
-                    }),
-                    getAttestations()
-                ]
-
-                filesPromises.push()
-                if (inter.sst.subStatus === 'NEW' || inter.sst.status === 'POT') {
-                    filesPromises.push(getStaticFile.bind("Manuel d'utilisation.pdf")(),
-                        getStaticFile.bind("Notice d'intervention.pdf")())
-                }
-                if (inter.devisOrigine) {
-                    inter.type = 'DEVIS'
-                    filesPromises.push(pdfPromise('facture', 'Devis n°' + inter.id + '.pdf', inter))
-                }
-                if (req.body.file) {
-                    filesPromises.push(document.download(req.body.file))
-                }
-                var fileSupp = req.body.file;
-                console.time('getFiles')
-
-                Promise.all(filesPromises).then(function(result) {
-                    console.timeEnd('getFiles')
-
-                    var files = _(result).compact().map(function(file) {
-                        return {
-                            ContentType: file.mimeType ||  mime.lookup(file.extension),
-                            Name: file.name ||  ['fichier', file.extension].join('.'),
-                            Content: file.data.toString('base64')
-                        }
-                    }).value();
-
-                    if (fileSupp) {
-                        inter.textfileSupp = (files[files.length - 1].ContentType === 'application/pdf' ? 'un document supplementaine' : 'une photo transmises par le client');
-                    }
-                    var c = config.categories[inter.categorie]
-                    inter.categoriePlain = c.suffix + ' ' + c.long_name.toLowerCase();
-                    inter.fileSupp = req.body.file;
-                    inter.__login = req.session.pseudo || 'Arnaud';
-                    inter.datePlain = moment(new Date(inter.date.intervention)).format('DD/MM/YYYY à HH:mm:ss')
-                    var text = _.template(template.mail.intervention.os())(inter).replaceAll('\n', '<br>')
-
-                    var mailOptions = {
-                        From: "intervention@edison-services.fr",
-                        To: req.session.email || "abel@chalier.me",
-                        Subject: "Ordre de service d'intervention N°" + inter.id,
-                        HtmlBody: text,
-                        Attachments: files
+                    if (!isWorker) {
+                        return edison.worker.createJob({
+                            name: 'db_id',
+                            model: 'intervention',
+                            method: 'envoi',
+                            data: inter,
+                            req: _.pick(req, 'body', 'session')
+                        }).then(function() {
+                            inter.save().then(resolve, reject)
+                        })
                     }
 
-                    var validationPromises = [
-                        mail.send(mailOptions),
-                        //sendSMS(req.body.sms, inter, req.session),
-                        envoi(inter, req.session.login)
+                    if (!inter ||  !inter.sst)
+                        return reject('pas de SST')
+                    if (!req.body.sms)
+                        return reject("Impossible de trouver l'artisan");
+
+                    var filesPromises = [
+                        getFileOS(inter),
+                        pdfPromiseAndConditions('deviseur', 'Facturier n°' + inter.id + '.pdf', {
+                            type: 'FACTURE',
+                            id: inter.id
+                        }),
+                        pdfPromiseAndConditions('deviseur', 'Deviseur n°' + inter.id + '.pdf', {
+                            type: 'DEVIS',
+                            id: inter.id
+                        }),
+                        getAttestation()
                     ]
-                    console.time('validation')
 
-                    Promise.all(validationPromises).then(function(e) {
-                        console.timeEnd('validation')
-                        console.timeEnd('envoi')
-                        resolve('ok')
-                    }, function(err) {
-                        console.log(err);
-                        reject("erreur, l'envoi a échoué")
-                    }).catch(__catch)
-                }, reject).catch(__catch)
+                    filesPromises.push()
+                    if (inter.sst.subStatus === 'NEW' || inter.sst.status === 'POT') {
+                        filesPromises.push(getStaticFile.bind("Manuel d'utilisation.pdf")(),
+                            getStaticFile.bind("Notice d'intervention.pdf")())
+                    }
+                    if (inter.devisOrigine) {
+                        inter.type = 'DEVIS'
+                        filesPromises.push(pdfPromise('facture', 'Devis n°' + inter.id + '.pdf', inter))
+                    }
+                    if (req.body.file) {
+                        filesPromises.push(document.download(req.body.file))
+                    }
+                    var fileSupp = req.body.file;
+                    console.time('getFiles')
+
+                    Promise.all(filesPromises).then(function(result) {
+                        console.timeEnd('getFiles')
+
+                        var files = _(result).compact().map(function(file) {
+                            return {
+                                ContentType: file.mimeType ||  mime.lookup(file.extension),
+                                Name: file.name ||  ['fichier', file.extension].join('.'),
+                                Content: file.data.toString('base64')
+                            }
+                        }).value();
+
+                        if (fileSupp) {
+                            inter.textfileSupp = (files[files.length - 1].ContentType === 'application/pdf' ? 'un document supplementaine' : 'une photo transmises par le client');
+                        }
+                        var c = config.categories[inter.categorie]
+                        inter.categoriePlain = c.suffix + ' ' + c.long_name.toLowerCase();
+                        inter.fileSupp = req.body.file;
+                        inter.__login = req.session.pseudo || 'Arnaud';
+                        inter.datePlain = moment(new Date(inter.date.intervention)).format('DD/MM/YYYY à HH:mm:ss')
+                        var text = _.template(template.mail.intervention.os())(inter).replaceAll('\n', '<br>')
+
+                        var mailOptions = {
+                            From: "intervention@edison-services.fr",
+                            To: req.session.email || "abel@chalier.me",
+                            Subject: "Ordre de service d'intervention N°" + inter.id,
+                            HtmlBody: text,
+                            Attachments: files
+                        }
+
+                        var validationPromises = [
+                            mail.send(mailOptions),
+                            //sendSMS(req.body.sms, inter, req.session),
+                            envoi(inter, req.session.login)
+                        ]
+                        console.time('validation')
+
+                        Promise.all(validationPromises).then(function(e) {
+                            console.timeEnd('validation')
+                            console.timeEnd('envoi')
+                            resolve('ok')
+                        }, function(err) {
+                            console.log(err);
+                            reject("erreur, l'envoi a échoué")
+                        }).catch(__catch)
+
+                    }, reject).catch(__catch)
+                } catch (e) {
+                    console.log('--->', e)
+                    console.log(e.stack);
+                }
 
             })
         }
