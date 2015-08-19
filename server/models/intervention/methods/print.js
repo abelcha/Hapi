@@ -59,6 +59,7 @@ module.exports = function(schema) {
                         if (e.mode === 'CHQ') {
                             return cb2();
                         }
+                        console.log(x.id, x.sst)
                         db.model('intervention').findOne({
                             id: x.id
                         }).populate('sst').then(function(doc) {
@@ -72,12 +73,16 @@ module.exports = function(schema) {
                                 });
                             }
                             cb2()
-                        }, callback)
+                        }, function(err) {
+                            __catch(err)
+                        })
 
                     }, callback)
 
                 }, function(err, result) {
-                    resend(op, req.query.pdf)
+                    console.log('sweg', op)
+                    console.log(JSON.stringify(op));
+                    //resend(op, req.query.pdf)
                 })
             } else {
                 resend(op, req.query.pdf)
