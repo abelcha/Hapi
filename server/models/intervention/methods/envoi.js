@@ -6,25 +6,6 @@ module.exports = function(schema) {
     var template = requireLocal('config/textTemplate');
     var config = requireLocal('config/dataList')
 
-    schema.statics.file = {
-        unique: true,
-        findBefore: true,
-        method: 'GET',
-        populateArtisan: true,
-        fn: function(inter, req, res) {
-                if (req.query.file === 'os') {
-                    var prm = getOs();
-                } else if (req.query.file === 'facturier') {
-                    var prm = getFacturier()
-                } else if (req.query.file === 'deviseur') {
-                    var prm = getDeviseur();
-                } else if (req.query.file === 'devis') {
-                    var prm = getDevis()
-                } else {
-                    res.status(400).send("unknown file")    
-                }
-        }
-    }
 
 
     var sendSMS = function(text, inter, user) {
@@ -76,7 +57,7 @@ module.exports = function(schema) {
                 resolve({
                     data: buff,
                     extension: '.pdf',
-                    name: 'OS n°' + inter.id + '.pdf'
+                    name: 'OS n°' + doc.id + '.pdf'
                 })
             })
         })
@@ -127,12 +108,12 @@ module.exports = function(schema) {
             PDF([{
                 model: 'facturier',
                 options: doc
-            }, {
+/*            }, {
                 model: 'conditions',
                 options: {}
             }, {
                 model: 'attestation',
-                options: {}
+                options: {}*/
             }]).toBuffer(function(err, buff) {
                 if (err)
                     return reject(err);
@@ -144,6 +125,36 @@ module.exports = function(schema) {
             })
         })
     }
+
+
+
+        schema.statics.file = {
+        unique: true,
+        findBefore: true,
+        method: 'GET',
+        populateArtisan: true,
+        fn: function(inter, req, res) {
+            inter = inter.toObject()
+                if (req.query.q === 'os') {
+                    var prm = getOS(inter);
+                } else if (req.query.q === 'facturier') {
+                    var prm = getFacturier(inter)
+                } else if (req.query.q === 'deviseur') {
+                    var prm = getDeviseur(inter);
+                } else if (req.query.q === 'devis') {
+                    var prm = getDevis(inter)
+                } else {
+                    return res.status(400).send("unknown file")    
+                }
+                prm.then(function(resp) {
+                    console.log(resp)
+                    res.pdf(resp.data);
+                }, function(err) {
+                    res.send(err);
+                }).catch(__catch)
+        }
+    }
+
 
 
 
@@ -251,4 +262,5 @@ module.exports = function(schema) {
             })
         }
     }
+
 }
