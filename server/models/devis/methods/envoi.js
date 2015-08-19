@@ -13,7 +13,7 @@ module.exports = function(schema) {
         }, {
             model: 'conditions',
             options: doc
-        }])
+        }], 500)
     }
 
     schema.statics.envoi = {
