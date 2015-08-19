@@ -11,7 +11,7 @@ module.exports = {
       }
     }
     return kue.createQueue({
-      prefix: 'kue',
+      prefix: 'kue'.envify(),
       redis: redisOptions ||  undefined,
       disableSearch: false
     })
