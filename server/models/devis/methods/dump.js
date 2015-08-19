@@ -46,7 +46,6 @@
                 };
 
                 client.telephone = {};
-                console.log(d.id, d.tel1)
                 if (d.tel1 && d.tel1.length)
                     client.telephone.tel1 = d.tel1.replace(/[^0-9]/g, '');
                 else
@@ -187,7 +186,6 @@
             return new Promise(function(resolve, reject) {
                 var url = key.alvin.url + "/dumpIntervention.php?devis=true&id=" + id + "&key=" + key.alvin.pass;
                 request.get(url, function(err, resp, body) {
-                    console.log(err, body, resp.statusCode)
                     if (err || resp.statusCode !== 200 || !body || body == 'null') {
                         return reject('nope')
                     }
