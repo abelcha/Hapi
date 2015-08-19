@@ -75,7 +75,7 @@ jobs.process('db_id', function(job, done) {
         console.log("job success")
         done(null, result);
     }, function(err) {
-        console.log("job error", err.stack);
+        console.log("job error", err);
         return done(err ||  "error");
     }).catch(__catch)
 });

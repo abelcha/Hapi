@@ -53,32 +53,6 @@ module.exports = function(schema) {
             }, inter).then(resolve, reject)
         }).catch(__catch);
     }
-
-    var getAttestation = function() {
-        return new Promise(function(resolve, reject) {
-            console.log("here")
-            try {
-
-                PDF('attestation', {}).buffer(function(err, buffer) {
-                    console.log("her2")
-
-                    if (err)
-                        reject(err)
-                    resolve({
-                        data: buffer,
-                        extension: '.pdf',
-                        name: 'Attestation de TVA Simplifié.pdf'
-                    })
-                })
-            } catch (e) {
-                console.log("err")
-                console.log(e)
-                console.log(e.stack())
-            }
-
-        })
-    }
-
     var getStaticFile = function(req, res) {
         var fs = require('fs');
         var file = this
@@ -114,32 +88,14 @@ module.exports = function(schema) {
     }
 
 
-    var pdfPromiseAndConditions = function(a, name, b) {
+
+
+
+    var getDeviseur = function(doc) {
         return new Promise(function(resolve, reject) {
+            doc.type = "deviseur"
             PDF([{
-                model: a,
-                options: b
-            }, {
-                model: 'conditions',
-                options: {}
-            }]).toBuffer(function(err, buff) {
-                if (err)
-                    return reject(err);
-                resolve({
-                    data: buff,
-                    extension: '.pdf',
-                    name: name
-                })
-            })
-        })
-    }
-
-
-
-    var pdfPromiseAndConditions = function(doc) {
-        return new Promise(function(resolve, reject) {
-            PDF([{
-                model: 'facturier',
+                model: 'deviseur',
                 options: doc
             }, {
                 model: 'attestation',
@@ -150,7 +106,28 @@ module.exports = function(schema) {
                 resolve({
                     data: buff,
                     extension: '.pdf',
-                    name: name
+                    name: 'deviseur n°' + doc.id + ".pdf"
+                })
+            })
+        })
+    }
+
+    var getFacturier = function(doc) {
+        return new Promise(function(resolve, reject) {
+            doc.type = "facturier"
+            PDF([{
+                model: 'deviseur',
+                options: doc
+            }, {
+                model: 'attestation',
+                options: {}
+            }]).toBuffer(function(err, buff) {
+                if (err)
+                    return reject(err);
+                resolve({
+                    data: buff,
+                    extension: '.pdf',
+                    name: 'facturier n°' + doc.id + ".pdf"
                 })
             })
         })
@@ -191,12 +168,8 @@ module.exports = function(schema) {
 
                     var filesPromises = [
                         getFileOS(inter),
-                        pdfPromiseAndConditions('deviseur', 'Facturier n°' + inter.id + '.pdf', {
-                            type: 'FACTURE',
-                            id: inter.id
-                        }),
-                        pdfPromiseAndConditions(inter),
-                        getAttestation()
+                        getFacturier(inter),
+                        getDeviseur(inter)
                     ]
 
                     filesPromises.push()
