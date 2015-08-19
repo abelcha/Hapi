@@ -98,7 +98,7 @@ module.exports = function(schema) {
                 model: 'deviseur',
                 options: doc
             }, {
-                model: 'attestation',
+                model: 'conditions',
                 options: {}
             }]).toBuffer(function(err, buff) {
                 if (err)
@@ -118,6 +118,9 @@ module.exports = function(schema) {
             PDF([{
                 model: 'deviseur',
                 options: doc
+            }, {
+                model: 'conditions',
+                options: {}
             }, {
                 model: 'attestation',
                 options: {}
