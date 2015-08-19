@@ -333,7 +333,7 @@
             return execDump(limit)
         }
 
-        var dumpOne = function(id, login) {
+        var dumpOne = function(id, login, convert) {
             console.log('dumpOne', id)
             return new Promise(function(resolve, reject) {
                 var url = key.alvin.url + "/dumpIntervention.php?devis=false&id=" + id + "&key=" + key.alvin.pass;
@@ -348,7 +348,8 @@
                     }
                     var v1 = JSON.parse(body)
                     var v2 = translateModel(v1)
-                    v2.date.dump = Date.now();
+                    if (!convert)
+                        v2.date.dump = Date.now();
                     new edison.event("DUMP_ONE", login, parseInt(id), {
                         v1: v1,
                         v2: v2
@@ -375,7 +376,7 @@
         schema.statics.dump = function(req, res) {
             var limit = req.query.limit ||  0;
             if (req.query.id) {
-                return dumpOne(req.query.id, req.query.login || req.session.login)
+                return dumpOne(req.query.id, req.query.login || req.session.login, req.query.convert)
             } else if (!isWorker) {
                 console.log('dump worker')
                 return edison.worker.createJob({

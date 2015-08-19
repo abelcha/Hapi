@@ -17,13 +17,15 @@ var V1 = function(d, devis, legacy) {
         }
         this.legacy = legacy
         x.id = d.id;
-        var dateAjout = moment(new Date(d.date.ajout)).add(2, 'hours');
+        var dateAjout = moment(new Date(d.date.ajout))
+        dateAjout.add(2, 'hours');
         if (d.date.intervention) {
-            var dateIntervention = moment(new Date(d.date.intervention)).add(2, 'hours');
+            var dateIntervention = moment(new Date(d.date.intervention))
+            dateIntervention.add(2, 'hours');
             x.date_intervention = dateIntervention.format('DD/MM/YYYY')
             x.date_intervention_en = dateIntervention.format('YYYYMMDD')
             x.heure_intervention = dateIntervention.format('HH:mm:ss')
-            x.t_stamp_intervention = dateIntervention.unix() + ms.hours(2)
+            x.t_stamp_intervention = dateIntervention.unix()
         }
         if (d.compta.reglement.date) {
             x.date_paiement_client = moment(new Date(d.compta.reglement.date)).format('DD/MM/YYYY');
