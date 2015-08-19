@@ -93,7 +93,7 @@ module.exports = function(schema) {
         return new Promise(function(resolve, reject) {
             doc.type = "deviseur"
             PDF([{
-                model: 'deviseur',
+                model: 'facturier',
                 options: doc
             }, {
                 model: 'conditions',
@@ -114,7 +114,7 @@ module.exports = function(schema) {
         return new Promise(function(resolve, reject) {
             doc.type = "facturier"
             PDF([{
-                model: 'deviseur',
+                model: 'facturier',
                 options: doc
             }, {
                 model: 'conditions',
