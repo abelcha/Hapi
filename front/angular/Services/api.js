@@ -43,7 +43,7 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
                 return $http.post("/api/devis", params);
             },
             envoi: function(id, options) {
-                return $http.post("/api/devis/" + id +"/envoi", options);
+                return $http.post("/api/devis/" + id + "/envoi", options);
             },
             annulation: function(id, causeAnnulation) {
                 return $http.post("/api/devis/" + id + "/annulation", {
@@ -59,6 +59,12 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
             },
         },
         intervention: {
+            saveTmp: function(data) {
+                return $http.post('/api/intervention/saveTmp', data);
+            },
+            getTmp: function(id) {
+                return $http.get('/api/intervention/getTmp?id=' + id);
+            },
             getStats: function() {
                 return $http({
                     method: 'GET',

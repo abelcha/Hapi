@@ -214,31 +214,7 @@ var getIntervention = function($route, $q, edisonAPI) {
             transform: true
         });
     } else if (id.length > 10) {
-        return $q(function(resolve) {
-            resolve({
-                data: {
-                    prixAnnonce: 0,
-                    prixFinal: 0,
-                    coutFourniture: 0,
-                    comments: [],
-                    produits: [],
-                    tva: 10,
-                    remarque: 'PAS DE REMARQUES',
-                    modeReglement: 'CH',
-                    client: {
-                        civilite: 'M.'
-                    },
-                    facture: {
-
-                    },
-                    reglementSurPlace: true,
-                    date: {
-                        ajout: Date.now(),
-                        intervention: Date.now()
-                    }
-                }
-            });
-        });
+        return edisonAPI.intervention.getTmp(id);
     } else {
         return edisonAPI.intervention.get(id, {
             cache: true,

@@ -214,31 +214,7 @@ var getIntervention = function($route, $q, edisonAPI) {
             transform: true
         });
     } else if (id.length > 10) {
-        return $q(function(resolve) {
-            resolve({
-                data: {
-                    prixAnnonce: 0,
-                    prixFinal: 0,
-                    coutFourniture: 0,
-                    comments: [],
-                    produits: [],
-                    tva: 10,
-                    remarque: 'PAS DE REMARQUES',
-                    modeReglement: 'CH',
-                    client: {
-                        civilite: 'M.'
-                    },
-                    facture: {
-
-                    },
-                    reglementSurPlace: true,
-                    date: {
-                        ajout: Date.now(),
-                        intervention: Date.now()
-                    }
-                }
-            });
-        });
+        return edisonAPI.intervention.getTmp(id);
     } else {
         return edisonAPI.intervention.get(id, {
             cache: true,
@@ -1217,7 +1193,7 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
                 return $http.post("/api/devis", params);
             },
             envoi: function(id, options) {
-                return $http.post("/api/devis/" + id +"/envoi", options);
+                return $http.post("/api/devis/" + id + "/envoi", options);
             },
             annulation: function(id, causeAnnulation) {
                 return $http.post("/api/devis/" + id + "/annulation", {
@@ -1233,6 +1209,12 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
             },
         },
         intervention: {
+            saveTmp: function(data) {
+                return $http.post('/api/intervention/saveTmp', data);
+            },
+            getTmp: function(id) {
+                return $http.get('/api/intervention/getTmp?id=' + id);
+            },
             getStats: function() {
                 return $http({
                     method: 'GET',
@@ -2467,7 +2449,9 @@ angular.module('edison')
             });
         }
         Intervention.prototype.fileUpload = function(file, cb) {
+
             var _this = this;
+            
             if (file) {
                 LxProgressService.circular.show('#5fa2db', '#fileUploadProgress');
                 edisonAPI.file.upload(file, {
@@ -2494,6 +2478,7 @@ angular.module('edison')
                 LxNotificationService.error(error.data);
             })
         }
+
         Intervention.prototype.reinitCB = function() {
             this.cb = {
                 number: 0
@@ -3722,7 +3707,7 @@ angular.module('edison').directive('infoCompta', ['config', 'Paiement',
 
 var InterventionCtrl = function(Description, Signalement, ContextMenu, $window, $timeout, $rootScope, $scope, $location, $routeParams, dialog, fourniture, LxNotificationService, LxProgressService, tabContainer, edisonAPI, Address, $q, mapAutocomplete, productsList, config, interventionPrm, Intervention, Map) {
     "use strict";
-
+    console.log(interventionPrm)
     var _this = this;
     _this.config = config;
     _this.dialog = dialog;
@@ -3947,10 +3932,18 @@ var InterventionCtrl = function(Description, Signalement, ContextMenu, $window, 
         }
     })
 
-    
-    $scope.$watch(function() {
 
-    })
+    var updateTmpIntervention = _.after(5, _.throttle(function() {
+       edisonAPI.intervention.saveTmp(intervention);
+
+    }, 2000))
+
+    if (!intervention.id) {
+        console.log('uyau')
+        $scope.$watch(function() {
+            return intervention;
+        }, updateTmpIntervention, true)
+    }
 
     $scope.smoothTransition = function(value) {
         if (!$scope.displaySAV) {

@@ -89,8 +89,6 @@ module.exports = function(schema) {
 
 
 
-
-
     var getDeviseur = function(doc) {
         return new Promise(function(resolve, reject) {
             doc.type = "deviseur"
@@ -175,7 +173,6 @@ module.exports = function(schema) {
                         getDeviseur(inter)
                     ]
 
-                    filesPromises.push()
                     if (inter.sst.subStatus === 'NEW' || inter.sst.status === 'POT') {
                         filesPromises.push(getStaticFile.bind("Manuel d'utilisation.pdf")(),
                             getStaticFile.bind("Notice d'intervention.pdf")())

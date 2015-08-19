@@ -1,6 +1,6 @@
 var InterventionCtrl = function(Description, Signalement, ContextMenu, $window, $timeout, $rootScope, $scope, $location, $routeParams, dialog, fourniture, LxNotificationService, LxProgressService, tabContainer, edisonAPI, Address, $q, mapAutocomplete, productsList, config, interventionPrm, Intervention, Map) {
     "use strict";
-
+    console.log(interventionPrm)
     var _this = this;
     _this.config = config;
     _this.dialog = dialog;
@@ -225,10 +225,18 @@ var InterventionCtrl = function(Description, Signalement, ContextMenu, $window, 
         }
     })
 
-    
-    $scope.$watch(function() {
 
-    })
+    var updateTmpIntervention = _.after(5, _.throttle(function() {
+       edisonAPI.intervention.saveTmp(intervention);
+
+    }, 2000))
+
+    if (!intervention.id) {
+        console.log('uyau')
+        $scope.$watch(function() {
+            return intervention;
+        }, updateTmpIntervention, true)
+    }
 
     $scope.smoothTransition = function(value) {
         if (!$scope.displaySAV) {

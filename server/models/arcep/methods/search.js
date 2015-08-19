@@ -13,7 +13,7 @@ module.exports = function(schema) {
                 }).then(function(doc) {
                     //console.log("==>", doc)
                     if (!doc || !doc.length)
-                        return reject(doc);
+                        return resolve([]);
                     return resolve(doc)
                 }, reject)
             })
