@@ -43,6 +43,7 @@ angular.module('edison')
                 width: "900px",
                 height: "700px"
             }, function(text) {
+                LxProgressService.circular.show('#5fa2db', '#globalProgress');
                 edisonAPI.devis.envoi(_this.id, {
                     text: text,
                 }).success(function(resp) {
@@ -53,6 +54,7 @@ angular.module('edison')
                         cb(null, resp);
                     }
                 }, function(err) {
+                    LxProgressService.circular.hide()
                     var validationMessage = _.template("L'envoi du devis {{id}} à échoué\n")(_this)
                     if (err && err.data && typeof err.data === 'string')
                         validationMessage += ('\n(' + err.data + ')')

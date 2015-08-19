@@ -190,7 +190,7 @@ module.exports = function(schema) {
                         return reject("Impossible de trouver l'artisan");
 
                     var filesPromises = [
-                        getOs(inter),
+                        getOS(inter),
                         getFacturier(inter),
                         getDeviseur(inter)
                     ]
