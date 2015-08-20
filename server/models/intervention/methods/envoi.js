@@ -85,7 +85,7 @@ module.exports = function(schema) {
 
     var getDeviseur = function(doc) {
         return new Promise(function(resolve, reject) {
-            doc.type = "deviseur"
+            doc.type = "DEVIS"
             PDF([{
                 model: 'facturier',
                 options: doc
@@ -106,7 +106,7 @@ module.exports = function(schema) {
 
     var getFacturier = function(doc) {
         return new Promise(function(resolve, reject) {
-            doc.type = "facturier"
+            doc.type = "FACTURE"
             var p1 = PDF([{
                 model: 'facturier',
                 options: doc
