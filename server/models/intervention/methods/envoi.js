@@ -90,7 +90,7 @@ module.exports = function(schema) {
             }, {
                 model: 'conditions',
                 options: {}
-            }]).toBuffer(function(err, buff) {
+            }], 500).toBuffer(function(err, buff) {
                 if (err)
                     return reject(err);
                 resolve({
@@ -114,7 +114,7 @@ module.exports = function(schema) {
             }, {
                 model: 'attestation',
                 options: {}
-            }]).toBuffer(function(err, buff) {
+            }], 500).toBuffer(function(err, buff) {
                 if (err)
                     return reject(err);
                 resolve({
