@@ -64,6 +64,21 @@ module.exports = function(schema) {
     }
 
 
+    var getAttestation = function(doc) {
+        return new Promise(function(resolve, reject) {
+            PDF('attestation', doc, 400).buffer(function(err, buff) {
+                if (err)
+                    return reject(err);
+                resolve({
+                    data: buff,
+                    extension: '.pdf',
+                    name: 'Attestation de TVA.pdf'
+                })
+            })
+        })
+    }
+
+
     var getDevis = function(doc) {
         return new Promise(function(resolve, reject) {
             doc.type = 'DEVIS'
@@ -113,9 +128,6 @@ module.exports = function(schema) {
             }, {
                 model: 'conditions',
                 options: {}
-            }, {
-                model: 'attestation',
-                options: doc
             }], 700).toBuffer(function(err, buff) {
                 if (err)
                     return reject(err);
@@ -128,6 +140,14 @@ module.exports = function(schema) {
         })
     }
 
+
+    getFacturierAndAttestation = function(doc) {
+        promise.all([getFacturier(inter),
+            getAttestation(inter)
+        ]).then(function(resp) {
+            console.log(resp)
+        })
+    }
 
 
     schema.statics.file = {
@@ -145,6 +165,8 @@ module.exports = function(schema) {
                 var prm = getDeviseur(inter);
             } else if (req.query.q === 'devis') {
                 var prm = getDevis(inter)
+            } else if (req.query.q === 'attestation') {
+                var prm = getAttestation(inter)
             } else {
                 return res.status(400).send("unknown file")
             }
@@ -155,22 +177,6 @@ module.exports = function(schema) {
                 res.send(err);
             }).catch(__catch)
         }
-    }
-
-
-    schema.statics.renderPDF = function(req, res) {
-        var html = req.query.html;
-        var html2pdf = require('html-pdf-wth-rendering');
-        html2pdf.create(html, {
-            format: 'A4',
-        }).toBuffer(function(err, buffer) {
-            if (err) {
-                console.log(err);
-                return res.send(String(err))
-            } else {
-            res.pdf(buffer);
-            }
-        })
     }
 
 
@@ -206,7 +212,7 @@ module.exports = function(schema) {
 
                     var filesPromises = [
                         getOS(inter),
-                        getFacturier(inter),
+                        getFacturierAndAttestation(inter),
                         getDeviseur(inter)
                     ]
 
