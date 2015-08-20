@@ -75,7 +75,7 @@ module.exports = function(schema) {
                     extension: '.pdf',
                     name: 'Devis n°' + doc.id + '.pdf'
                 })
-            }, 700)
+            }, 1200)
         })
     }
 
