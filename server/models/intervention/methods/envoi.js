@@ -51,7 +51,7 @@ module.exports = function(schema) {
 
     var getOS = function(doc) {
         return new Promise(function(resolve, reject) {
-            PDF('intervention', doc).buffer(function(err, buff) {
+            PDF('intervention', doc, 350).buffer(function(err, buff) {
                 if (err)
                     return reject(err);
                 resolve({
@@ -75,7 +75,7 @@ module.exports = function(schema) {
                     extension: '.pdf',
                     name: 'Devis n°' + doc.id + '.pdf'
                 })
-            })
+            }, 500)
         })
     }
 
