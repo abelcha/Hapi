@@ -47,6 +47,7 @@ module.exports = function(schema) {
                 pdf.toBuffer(function(err, buffer) {
                     mail.send({
                         From: "intervention@edison-services.fr",
+                        ReplyTo: req.session.email || "abel@chalier.me",
                         To: req.session.email || "abel@chalier.me",
                         Subject: "DEVIS n°" + devis.id,
                         HtmlBody: req.body.text.replaceAll('\n', '<br>'),

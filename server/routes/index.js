@@ -36,6 +36,7 @@ module.exports = function(app) {
             if (model[method].populateArtisan === true) {
                 promise = promise.populate('sst');
             }
+
             promise.then(function(data) {
                 if (!data)
                     reject("Document Not Found");

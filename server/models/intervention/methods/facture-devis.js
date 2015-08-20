@@ -65,7 +65,7 @@ module.exports = function(schema) {
         } catch (e) {
             return res.status(400).send('bad data')
         }
-        doc.id = doc.id || "00000"
+        doc.id = doc.id ||  "00000"
         doc.type = 'devis'
         var result = PDF([{
             model: 'facture',
@@ -115,6 +115,7 @@ module.exports = function(schema) {
                 pdf.toBuffer(function(err, buffer) {
                     mail.send({
                         From: "intervention@edison-services.fr",
+                        ReplyTo: req.session.email || "abel@chalier.me",
                         To: req.session.email || "abel@chalier.me",
                         Subject: "Facture de l'intervention " + inter.id,
                         HtmlBody: req.body.text.replaceAll('\n', '<br>'),

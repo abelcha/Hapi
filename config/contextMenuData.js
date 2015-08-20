@@ -28,14 +28,11 @@ module.exports = {
         action: 'call',
     }],
     devis: [{
-        title: 'Ouvrir Devis',
+        title: 'Modifier le devis',
         action: "ouvrirFiche"
     }, {
-        title: "Annuler",
-        action: 'annulation',
-        hide: function(inter) {
-            return inter.status !== 'ANN';
-        }
+        title: "Prévisualiser",
+        action: 'devisPreview',
     }, {
         title: "Envoyer",
         action: 'sendDevis',
@@ -48,17 +45,23 @@ module.exports = {
         hide: function(inter) {
             return inter.status !== 'TRA' && inter.status !== 'ANN';
         }
+    }, {
+        title: "Annuler",
+        action: 'annulation',
+        hide: function(inter) {
+            return inter.status !== 'ANN';
+        }
     }],
     intervention: [{
-        title: 'Fiche Client',
+        title: "Modifier l'intervention",
         action: "ouvrirFiche",
         style: {
             fontWeight: 'bold'
         }
     }, {
-        title: 'Fiche Client V1',
+/*        title: 'Fiche Client V1',
         action: "ouvrirFicheV1"
-    }, {
+    }, {*/
         title: "Appel Client",
         action: 'callClient',
         style: {
@@ -68,13 +71,13 @@ module.exports = {
             return false
         }
     }, {
-        title: 'Recap Artisan',
+        title: 'Recap sous-traitant',
         action: "ouvrirRecapSST",
         hide: function(inter) {
             return !inter.artisan || !inter.artisan.id
         }
     }, {
-        title: "Appel l'artisan",
+        title: "Appel sous-traitant",
         action: 'callArtisan',
         style: {
             fontWeight: 'bold'
@@ -83,7 +86,7 @@ module.exports = {
             return !inter.artisan || !inter.artisan.id
         }
     }, {
-        title: "SMS artisan",
+        title: "SMS sous-traitant",
         action: 'smsArtisan',
         hide: function(inter) {
             return !inter.artisan || !inter.artisan.id
@@ -103,7 +106,10 @@ module.exports = {
         }
     }, {
         title: "Annuler",
-        action: 'annulation'
+        action: 'annulation',
+        hide:function(inter) {
+            return inter.status === 'ANN' || inter.status === 'VRF'
+        }
 
     }, {
         title: "Je prend !",

@@ -65,9 +65,12 @@ angular.module('edison').directive('dropdownRow', function(Devis, productsList, 
             }
 
             $q.all(pAll).then(pThen)
-
-            scope.getStaticMap = function(address) {
-                var q = "?width=500&height=200&precision=0&zoom=11&origin=" + address.lt + ", " + address.lg;
+            scope.getStaticMap = function() {
+                var q = "?width=411&height=194px&precision=0&origin=" + scope.address.lt + ", " + scope.address.lg;
+                if (_.get(scope, 'data.artisan.address.lt'))
+                    q += "&destination=" + scope.data.artisan.address.lt + ", " + scope.data.artisan.address.lg;
+                else
+                    q += "&zoom=15";
                 return "/api/mapGetStatic" + q;
             }
 
