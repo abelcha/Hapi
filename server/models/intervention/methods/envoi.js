@@ -108,12 +108,12 @@ module.exports = function(schema) {
             PDF([{
                 model: 'facturier',
                 options: doc
-/*            }, {
+            }, {
                 model: 'conditions',
                 options: {}
             }, {
                 model: 'attestation',
-                options: {}*/
+                options: {}
             }]).toBuffer(function(err, buff) {
                 if (err)
                     return reject(err);
