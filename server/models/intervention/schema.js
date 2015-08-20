@@ -36,7 +36,7 @@ module.exports = function(db) {
             paiementCLI: Date,
             paiementSST: Date,
             demarchage: Date,
-            dump:Date,
+            dump: Date,
         },
         comments: [{
             login: String,
@@ -49,7 +49,10 @@ module.exports = function(db) {
                 type: String,
                 required: true
             },
-            prenom: String,
+            prenom: {
+                type: String,
+                default: ""
+            },
             nom: {
                 type: String,
                 required: true

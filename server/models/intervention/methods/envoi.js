@@ -51,7 +51,7 @@ module.exports = function(schema) {
 
     var getOS = function(doc) {
         return new Promise(function(resolve, reject) {
-            PDF('intervention', doc, 350).buffer(function(err, buff) {
+            PDF('intervention', doc, 400).buffer(function(err, buff) {
                 if (err)
                     return reject(err);
                 resolve({
@@ -75,7 +75,7 @@ module.exports = function(schema) {
                     extension: '.pdf',
                     name: 'Devis n°' + doc.id + '.pdf'
                 })
-            }, 500)
+            }, 700)
         })
     }
 
@@ -90,7 +90,7 @@ module.exports = function(schema) {
             }, {
                 model: 'conditions',
                 options: {}
-            }], 500).toBuffer(function(err, buff) {
+            }], 700).toBuffer(function(err, buff) {
                 if (err)
                     return reject(err);
                 resolve({
@@ -114,7 +114,7 @@ module.exports = function(schema) {
             }, {
                 model: 'attestation',
                 options: {}
-            }], 500).toBuffer(function(err, buff) {
+            }], 700).toBuffer(function(err, buff) {
                 if (err)
                     return reject(err);
                 resolve({
