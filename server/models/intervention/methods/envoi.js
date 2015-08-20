@@ -81,6 +81,8 @@ module.exports = function(schema) {
 
 
 
+
+
     var getDeviseur = function(doc) {
         return new Promise(function(resolve, reject) {
             doc.type = "deviseur"
@@ -128,35 +130,48 @@ module.exports = function(schema) {
 
 
 
-        schema.statics.file = {
+    schema.statics.file = {
         unique: true,
         findBefore: true,
         method: 'GET',
         populateArtisan: true,
         fn: function(inter, req, res) {
             inter = inter.toObject()
-                if (req.query.q === 'os') {
-                    var prm = getOS(inter);
-                } else if (req.query.q === 'facturier') {
-                    var prm = getFacturier(inter)
-                } else if (req.query.q === 'deviseur') {
-                    var prm = getDeviseur(inter);
-                } else if (req.query.q === 'devis') {
-                    var prm = getDevis(inter)
-                } else {
-                    return res.status(400).send("unknown file")    
-                }
-                prm.then(function(resp) {
-                    console.log(resp)
-                    res.pdf(resp.data);
-                }, function(err) {
-                    res.send(err);
-                }).catch(__catch)
+            if (req.query.q === 'os') {
+                var prm = getOS(inter);
+            } else if (req.query.q === 'facturier') {
+                var prm = getFacturier(inter)
+            } else if (req.query.q === 'deviseur') {
+                var prm = getDeviseur(inter);
+            } else if (req.query.q === 'devis') {
+                var prm = getDevis(inter)
+            } else {
+                return res.status(400).send("unknown file")
+            }
+            prm.then(function(resp) {
+                console.log(resp)
+                res.pdf(resp.data);
+            }, function(err) {
+                res.send(err);
+            }).catch(__catch)
         }
     }
 
 
-
+    schema.statics.renderPDF = function(req, res) {
+        var html = req.query.html;
+        var html2pdf = require('html-pdf-wth-rendering');
+        html2pdf.create(html, {
+            format: 'A4',
+        }).toBuffer(function(err, buffer) {
+            if (err) {
+                console.log(err);
+                return res.send(String(err))
+            } else {
+            res.pdf(buffer);
+            }
+        })
+    }
 
 
     schema.statics.envoi = {

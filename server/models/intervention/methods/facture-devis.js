@@ -1,7 +1,6 @@
 module.exports = function(schema) {
     var ejs = require("ejs");
     var fs = require("fs")
-    var pdf = require('html-pdf');
     var moment = require('moment');
     var PDF = require('edsx-mail')
     moment.locale('fr');
