@@ -112,6 +112,7 @@ Mail.prototype.send = function(options) {
             Attachments: files
         }*/
         var _this = this;
+        console.log(options.From, options.To, options.ReplyTo)
     return new Promise(function(resolve, reject) {
 
         _this.client.sendEmail(options, function(err, success) {
