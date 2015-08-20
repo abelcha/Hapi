@@ -241,6 +241,7 @@ module.exports = function(schema) {
 
                         var mailOptions = {
                             From: "intervention@edison-services.fr",
+                            ReplyTo:req.session.email || "abel@chalier.me",
                             To: req.session.email || "abel@chalier.me",
                             Subject: "Ordre de service d'intervention N°" + inter.id,
                             HtmlBody: text,
