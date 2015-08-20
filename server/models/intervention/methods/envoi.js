@@ -113,7 +113,7 @@ module.exports = function(schema) {
                 options: {}
             }, {
                 model: 'attestation',
-                options: {}
+                options: doc
             }], 700).toBuffer(function(err, buff) {
                 if (err)
                     return reject(err);
