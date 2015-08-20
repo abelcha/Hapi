@@ -5,9 +5,9 @@ module.exports = function(schema) {
     var moment = require('moment');
     var template = requireLocal('config/textTemplate');
     var config = requireLocal('config/dataList')
-
-
-
+    var fs = require('fs')
+    var PDFMerge = require('pdf-merge');
+    var async = require('async');
     var sendSMS = function(text, inter, user) {
         return db.model('sms').send({
             to: user.portable ||  '0633138868',
@@ -64,21 +64,6 @@ module.exports = function(schema) {
     }
 
 
-    var getAttestation = function(doc) {
-        return new Promise(function(resolve, reject) {
-            PDF('attestation', doc, 400).buffer(function(err, buff) {
-                if (err)
-                    return reject(err);
-                resolve({
-                    data: buff,
-                    extension: '.pdf',
-                    name: 'Attestation de TVA.pdf'
-                })
-            })
-        })
-    }
-
-
     var getDevis = function(doc) {
         return new Promise(function(resolve, reject) {
             doc.type = 'DEVIS'
@@ -113,7 +98,7 @@ module.exports = function(schema) {
                 resolve({
                     data: buff,
                     extension: '.pdf',
-                    name: 'deviseur n°' + doc.id + ".pdf"
+                    name: 'Deviseur n°' + doc.id + ".pdf"
                 })
             })
         })
@@ -122,32 +107,39 @@ module.exports = function(schema) {
     var getFacturier = function(doc) {
         return new Promise(function(resolve, reject) {
             doc.type = "facturier"
-            PDF([{
+            var p1 = PDF([{
                 model: 'facturier',
                 options: doc
-            }, {
+            }]);
+            var p2 = PDF([{
                 model: 'conditions',
                 options: {}
-            }], 700).toBuffer(function(err, buff) {
-                if (err)
-                    return reject(err);
-                resolve({
-                    data: buff,
-                    extension: '.pdf',
-                    name: 'facturier n°' + doc.id + ".pdf"
-                })
+            }, {
+                model: 'attestation',
+                options: doc
+            }])
+
+            async.parallel([
+                p1.toBuffer.bind(p1),
+                p2.toBuffer.bind(p2),
+            ], function(err, resp) {
+                var now = Date.now();
+                var f1 = '/tmp/f1-' + now + '.pdf';
+                var f2 = '/tmp/f2-' + now + '.pdf';
+                fs.writeFileSync(f1, resp[0])
+                fs.writeFileSync(f2, resp[1])
+                var pdfMerge = new PDFMerge([f1, f2]);
+                pdfMerge.asBuffer().merge(function(err, buffer) {
+                    resolve({
+                        data: buffer,
+                        extension: '.pdf',
+                        name: 'Facturier n°' + doc.id + ".pdf"
+                    })
+                });
             })
-        })
+        });
     }
 
-
-    getFacturierAndAttestation = function(doc) {
-        promise.all([getFacturier(inter),
-            getAttestation(inter)
-        ]).then(function(resp) {
-            console.log(resp)
-        })
-    }
 
 
     schema.statics.file = {
@@ -165,13 +157,10 @@ module.exports = function(schema) {
                 var prm = getDeviseur(inter);
             } else if (req.query.q === 'devis') {
                 var prm = getDevis(inter)
-            } else if (req.query.q === 'attestation') {
-                var prm = getAttestation(inter)
             } else {
                 return res.status(400).send("unknown file")
             }
             prm.then(function(resp) {
-                console.log(resp)
                 res.pdf(resp.data);
             }, function(err) {
                 res.send(err);
@@ -212,7 +201,7 @@ module.exports = function(schema) {
 
                     var filesPromises = [
                         getOS(inter),
-                        getFacturierAndAttestation(inter),
+                        getFacturier(inter),
                         getDeviseur(inter)
                     ]
 
