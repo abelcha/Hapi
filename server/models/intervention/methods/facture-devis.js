@@ -18,7 +18,7 @@ module.exports = function(schema) {
             text: _.template(text)(doc),
             title: "OBJET : Facture n°" + doc.id + " en attente de reglement"
         }
-        console.log(lettre)
+        doc.type = 'facture'
         return PDF([{
             model: 'letter',
             options: lettre
@@ -36,7 +36,10 @@ module.exports = function(schema) {
         try {
             var doc = JSON.parse(req.body.data);
             var pdf = getFacturePdfObj(doc, doc.date.intervention);
-            res.send(pdf.html())
+            return res.send(pdf.html())
+            pdf.toBuffer(function(err, buff) {
+                return res.pdf(buff)
+            })
         } catch (e) {
             __catch(e)
             return res.status(400).send('bad data')

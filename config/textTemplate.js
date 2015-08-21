@@ -36,7 +36,7 @@ module.exports = {
                     "Pour les raisons suivantes: </p>" +
                     "<p strong center>{{description}}</p>" +
                     "<p>Nous vous confirmons que l'intervention à été réalisé par nos soins.\n" +
-                    "Vous trouverez ci joint la facture à regler\n" +
+                    "Vous trouverez ci joint la facture à regler.\n" +
                     "Nous vous prions de bien vouloir transmettre le règlement par chèque à l'ordre de:</p>" +
                     "<p strong center> S.A.R.L EDISON SERVICES</p>" +
                     "<p>A l'organisme qui gère notre comptabilité:</p>" +
@@ -45,8 +45,8 @@ module.exports = {
                     "75 rue des dames, 75017 Paris\n" +
                     "Tél. 09.72.51.08.01 (Ouvert de 09h00 à 12h30 / 14h00 à 16h30)</p>" +
                     "<p>" +
-                    "Par ailleurs, si quelque raison s'opposait au règlement de la facture, nous vous remercions de nous le faire savoir dans les plus brefs délais.\n" +
-                    "Restant à votre entière disposition, nous vous prions de croire, Madame, Monsieur l'expression de nos sincères salutations distinguées.</p>" +
+                    "Par ailleurs, si quelque raison s'opposait au règlement de la facture, nous vous remercions de nous le \nfaire savoir dans les plus brefs délais.\n" +
+                    "Restant à votre entière disposition, nous vous prions de croire, Madame, Monsieur l'expression de nos \nsincères salutations distinguées.</p>" +
                     "<ul>" +
                     "<li>Ci-joint la facture</li>" +
                     "</ul>" +
