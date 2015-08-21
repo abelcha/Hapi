@@ -35,20 +35,20 @@ module.exports = function(schema) {
             }).then(function(resp) {
                 var cache = JSON.stringify(_.pluck(resp, 'cache'));
                 resp = null;
-                redis.set("interventionList".envify(), cache, resolve);
+                redis.set("interventionList".envify(), cache, function() {
+                    resolve(cache)
+                });
             }, reject).catch(__catch);
         })
     }
 
     schema.statics.list = function(req, res) {
         var _this = this;
-        console.log('uqqq')
         redis.get("interventionList".envify(), function(err, reply) {
             if (!reply || err) {
-                console.log('uau')
                 return _this.getCache();
             }
-            return res.json(JSON.parse(reply))
+            return res.jsonStr(reply)
         })
     }
 

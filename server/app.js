@@ -6,6 +6,11 @@ express.response.pdf = function(obj, headers, status) {
     return this.send(obj, headers, status);
 };
 
+express.response.jsonStr = function(obj, headers, status) {
+    this.header('Content-Type', 'application/json');
+    return this.send(obj, headers, status);
+};
+
 var app = express();
 var http = require('http').Server(app);
 var port = (process.env.PORT || 8080);
