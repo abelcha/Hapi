@@ -30,26 +30,13 @@ module.exports = function(schema) {
 
     schema.statics.getCache = function(req, res) {
         return new Promise(function(resolve, reject) {
-            console.time('find')
             db.model('intervention').find({}, {
                 cache: true,
             }).then(function(resp) {
-                _.each(resp, function(e) {
-                    if (_.size(e.cache) == 1) {
-                        console.log(e)
-                    }
-                })
-                console.timeEnd('find')
-                console.time('pluck')
-                var x = _.pluck(resp, 'cache');
-                console.timeEnd('pluck')
-                console.time('redis')
-                redis.set("interventionList".envify(), JSON.stringify(x), function() {
-                    console.timeEnd('redis')
-                    resolve("x");
-                });
-
-            })
+                var cache = JSON.stringify(_.pluck(resp, 'cache'));
+                resp = null;
+                redis.set("interventionList".envify(), JSON.stringify(cache),resolve);
+            }, reject).catch(__catch);
         })
     }
 
