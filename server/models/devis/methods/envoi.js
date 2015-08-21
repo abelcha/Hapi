@@ -23,6 +23,9 @@ module.exports = function(schema) {
         method: 'POST',
         fn: function(devis, req, res) {
             return new Promise(function(resolve, reject) {
+                if (!devis && !devis.produits || !devis.produits.length)
+                    return reject('Le devis est vide')
+
                 if (!isWorker) {
                     return edison.worker.createJob({
                         name: 'db_id',
@@ -35,8 +38,6 @@ module.exports = function(schema) {
                     }, reject)
                 }
 
-                if (!devis.produits || !devis.produits.length)
-                    return reject('Le devis est vide')
 
                 try {
                     var pdf = getDevisPdfObj(devis);
@@ -66,9 +67,7 @@ module.exports = function(schema) {
                                 id_devis: doc.id
                             })
                             doc.status = 'ATT';
-                            console.log('oksave')
                             doc.save(function(err, resp) {
-                                console.log(err, resp)
                                 resolve(resp)
                             })
                         }, reject)

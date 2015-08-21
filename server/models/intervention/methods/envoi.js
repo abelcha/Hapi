@@ -49,6 +49,22 @@ module.exports = function(schema) {
         })
     }
 
+    var getNotice = function(doc) {
+        return new Promise(function(resolve, reject) {
+            PDF('notice', doc, 400).buffer(function(err, buff) {
+                console.log(err, buff)
+                if (err)
+                    return reject(err);
+                resolve({
+                    data: buff,
+                    extension: '.pdf',
+                    name: 'OS n°' + doc.id + '.pdf'
+                })
+            })
+        })
+    }
+
+
     var getOS = function(doc) {
         return new Promise(function(resolve, reject) {
             PDF('intervention', doc, 400).buffer(function(err, buff) {
@@ -155,6 +171,9 @@ module.exports = function(schema) {
                 var prm = getFacturier(inter)
             } else if (req.query.q === 'deviseur') {
                 var prm = getDeviseur(inter);
+            } else if (req.query.q === 'notice') {
+                console.log('notice')
+                var prm = getNotice(inter);
             } else if (req.query.q === 'devis') {
                 var prm = getDevis(inter)
             } else {
@@ -163,7 +182,7 @@ module.exports = function(schema) {
             prm.then(function(resp) {
                 res.pdf(resp.data);
             }, function(err) {
-                res.send(err);
+                res.send(String(err));
             }).catch(__catch)
         }
     }
@@ -241,7 +260,7 @@ module.exports = function(schema) {
 
                         var mailOptions = {
                             From: "intervention@edison-services.fr",
-                            ReplyTo:req.session.email || "abel@chalier.me",
+                            ReplyTo: req.session.email || "abel@chalier.me",
                             To: req.session.email || "abel@chalier.me",
                             Subject: "Ordre de service d'intervention N°" + inter.id,
                             HtmlBody: text,

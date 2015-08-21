@@ -37,6 +37,7 @@ try {
                 console.log("job success")
                 done(null, result);
             }, function(err) {
+                console.log(err.stack)
                 console.log("job error", JSON.stringify(err, undefined, 1));
                 return done(err ||  "error");
             })
@@ -51,6 +52,7 @@ try {
                 done(null, result);
             }, function(err) {
                 console.log("job error", err);
+                console.log(err.stack)
                 return done(err ||  "error");
             }).catch(__catch)
         });

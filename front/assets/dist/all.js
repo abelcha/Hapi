@@ -1806,7 +1806,7 @@ angular.module('edison').factory('DataProvider', ['edisonAPI', 'socket', '$rootS
 }]);
 
 angular.module('edison')
-    .factory('Devis', function(openPost, $window, $rootScope, $location, LxNotificationService, dialog, edisonAPI, textTemplate) {
+    .factory('Devis', function(openPost, $window, $rootScope, $location, LxNotificationService, LxProgressService, dialog, edisonAPI, textTemplate) {
         "use strict";
         var Devis = function(data) {
             if (!(this instanceof Devis)) {
@@ -1854,6 +1854,7 @@ angular.module('edison')
                 edisonAPI.devis.envoi(_this.id, {
                     text: text,
                 }).success(function(resp) {
+                    LxProgressService.circular.hide()
                     var validationMessage = _.template("le devis {{id}} à été envoyé")(_this);
                     LxNotificationService.success(validationMessage);
                     if (typeof cb === 'function') {
@@ -1861,6 +1862,14 @@ angular.module('edison')
                         cb(null, resp);
                     }
                 }, function(err) {
+                    LxProgressService.circular.hide()
+                    var validationMessage = _.template("L'envoi du devis {{id}} à échoué\n")(_this)
+                    if (err && err.data && typeof err.data === 'string')
+                        validationMessage += ('\n(' + err.data + ')')
+                    LxNotificationService.error(validationMessage);
+                    if (typeof cb === 'function')
+                        cb(err);
+                }).catch(function(err) {
                     LxProgressService.circular.hide()
                     var validationMessage = _.template("L'envoi du devis {{id}} à échoué\n")(_this)
                     if (err && err.data && typeof err.data === 'string')
@@ -3543,7 +3552,7 @@ angular.module('edison').controller('DashboardController', DashboardController);
 
  }]);
 
-var DevisCtrl = function($scope, $rootScope, $location, $routeParams, LxNotificationService, tabContainer, config, dialog, devisPrm, Devis) {
+var DevisCtrl = function($scope, $rootScope, $location, $routeParams, LxProgressService, LxNotificationService, tabContainer, config, dialog, devisPrm, Devis) {
     "use strict";
     var _this = this;
     _this.config = config;

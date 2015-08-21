@@ -1,4 +1,4 @@
-var DevisCtrl = function($scope, $rootScope, $location, $routeParams, LxNotificationService, tabContainer, config, dialog, devisPrm, Devis) {
+var DevisCtrl = function($scope, $rootScope, $location, $routeParams, LxProgressService, LxNotificationService, tabContainer, config, dialog, devisPrm, Devis) {
     "use strict";
     var _this = this;
     _this.config = config;
