@@ -35,7 +35,7 @@ module.exports = function(schema) {
             }).then(function(resp) {
                 var cache = JSON.stringify(_.pluck(resp, 'cache'));
                 resp = null;
-                redis.set("interventionList".envify(), JSON.stringify(cache),resolve);
+                redis.set("interventionList".envify(), JSON.stringify(cache), resolve);
             }, reject).catch(__catch);
         })
     }
@@ -90,7 +90,12 @@ module.exports = function(schema) {
                 db.model('intervention').fltrify(q, cb)
             },
             cacheList: function(cb) {
-                redis.get("interventionList".envify(), cb);
+                redis.get("interventionList".envify(), function(err, reply) {
+                    if (err || !reply)
+                        return db.model('intervention')
+                            .getCache()
+                            .then(cb)
+                });
             },
             intervention: function(cb) {
                 db.model('intervention').findOne(q, cb)
