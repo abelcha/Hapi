@@ -14,18 +14,22 @@ angular.module('edison')
         }
         Devis.prototype.save = function(cb) {
             var _this = this;
-
+            console.log('yay')
             edisonAPI.devis.save(_this)
                 .then(function(resp) {
+                    console.log('resp')
                     var validationMessage = _.template("Les données du devis {{id}} ont à été enregistré")(resp.data);
                     LxNotificationService.success(validationMessage);
                     if (typeof cb === 'function')
                         cb(null, resp.data)
                 }, function(error) {
+                    console.log('err')
                     LxNotificationService.error(error.data);
                     if (typeof cb === 'function')
                         cb("une erreur est " + error.data)
-                });
+                }).catch(function(e) {
+                    console.log('ERRRR:>', e)
+                })
         };
 
         Devis.prototype.devisPreview = function() {

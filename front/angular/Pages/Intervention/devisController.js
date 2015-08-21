@@ -34,6 +34,7 @@ var DevisCtrl = function($scope, $rootScope, $location, $routeParams, LxProgress
 
     _this.saveDevis = function(options) {
         devis.save(function(err, resp) {
+            console.log('-->', 'saved')
             if (err) {
                 return false;
             } else if (options.envoi) {

@@ -86,7 +86,7 @@
                     rtn.transfertId = rtn.id;
                 }
                 rtn.produits = devis.devisTab;
-                rtn.tva = devis.tva;
+                rtn.tva = devis.tva || 20;
                 rtn.produits.map(function(p) {
                     p.desc = sanitizeHtml(entities.decode(p.desc))
                     p.ref = sanitizeHtml(entities.decode(p.ref))
