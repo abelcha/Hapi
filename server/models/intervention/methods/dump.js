@@ -365,9 +365,7 @@
                             return reject(err);
                         db.model('intervention').findById(parseInt(id), function(err, doc) {
                             doc.cache = db.model('intervention').cachify(doc);
-                            doc.save(function(err, resp) {
-                                db.model('intervention').cacheActualise(resp);
-                            })
+                            doc.save()
                         })
                         resolve(resp);
                     })

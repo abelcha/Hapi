@@ -53,14 +53,11 @@ var InterventionsController = function($q, tabContainer, FiltersFactory, Context
         _this.tableParams = new ngTableParams(tableParameters, tableSettings);
         LxProgressService.circular.hide();
     })
-    window.setTimeout(function() {
-    console.log(_this.tableParams)
-        
-    }, 1000)
+
     var lastChange = 0;
     $rootScope.$on('interventionListChange', function(event, newData) {
         if (_this.tab.fullUrl === tabContainer.getCurrentTab().fullUrl && newData._date > lastChange) {
-            //  dataProvider.applyFilter(currentFilter, _this.tab.hash, _this.customFilter);
+            dataProvider.applyFilter(currentFilter, _this.tab.hash, _this.customFilter);
             _this.tableParams.reload();
         }
         lastChange = newData._date;

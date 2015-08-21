@@ -107,50 +107,46 @@ module.exports = function(schema) {
         var q = {
             id: doc.id
         };
-
         async.series({
             reloadFilter: function(cb) {
                 db.model('intervention').fltrify(q, cb)
             },
             cacheList: function(cb) {
-                redis.get("interventionList".envify(), function(err, reply) {
-                    if (err || !reply)
-                        return db.model('intervention')
-                            .getCache()
-                            .then(cb)
-                });
+                redis.get("interventionList".envify(), cb);
             },
             intervention: function(cb) {
                 db.model('intervention').findOne(q, cb)
             }
         }, function(err, resp) {
-            if (resp.cacheList && resp.intervention) {
-                var data = JSON.parse(resp.cacheList);
-                var index = _.findIndex(data, function(e) {
-                    return e.id === doc.id;
-                });
-                result = resp.intervention.cache;
-                if (index !== -1) {
-                    data[index] = result;
-                } else {
-                    data.unshift(result);
-                }
-                db.model('intervention').stats().then(function(resp) {
-                    io.sockets.emit('filterStatsReload', resp);
-                })
-
-                redis.set("interventionList".envify(), JSON.stringify(data), function() {
-                    result._date = Date.now()
-                    if (!isWorker) {
-                        io.sockets.emit('interventionListChange', result);
-                        //sometimes it's too fast
-                        setTimeout(function() {
-                            io.sockets.emit('interventionListChange', result);
-                        }, 2500)
+            try {
+                if (resp.cacheList && resp.intervention) {
+                    var data = JSON.parse(resp.cacheList);
+                    var index = _.findIndex(data, function(e) {
+                        return e.id === doc.id;
+                    });
+                    result = resp.intervention.cache;
+                    if (index !== -1) {
+                        data[index] = result;
+                    } else {
+                        data.unshift(result);
                     }
-                });
+                    db.model('intervention').stats().then(function(resp) {
+                        io.sockets.emit('filterStatsReload', resp);
+                    })
+                    redis.set("interventionList".envify(), JSON.stringify(data), function() {
+                        result._date = Date.now()
+                        if (!isWorker) {
+                            io.sockets.emit('interventionListChange', result);
+                            //sometimes it's too fast
+                            setTimeout(function() {
+                                io.sockets.emit('interventionListChange', result);
+                            }, 2500)
+                        }
+                    });
+                }
+            } catch (e) {
+                __catch(e)
             }
-
         })
 
     }
