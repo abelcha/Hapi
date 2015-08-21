@@ -7,7 +7,7 @@ module.exports = function(schema) {
     var textTemplate = requireLocal('config/textTemplate');
     var _ = require('lodash')
 
-    var getFacturePdfObj = function(doc, date, acquitte) {
+    var getFacturePdfObj = function(doc, date, acquitte, reverse) {
 
         doc.datePlain = moment(date).format('LL');
         doc.acquitte = acquitte;
@@ -19,7 +19,8 @@ module.exports = function(schema) {
             title: "OBJET : Facture n°" + doc.id + " en attente de reglement"
         }
         doc.type = 'facture'
-        return PDF([{
+
+        var l = [{
             model: 'letter',
             options: lettre
         }, {
@@ -28,7 +29,12 @@ module.exports = function(schema) {
         }, {
             model: 'conditions',
             options: doc
-        }])
+        }]
+        if (reverse) {
+            var last = l.shift()
+            l.push(last);
+        }
+        return PDF(l)
     }
 
     schema.statics.facturePreview = function(req, res) {
@@ -134,10 +140,12 @@ module.exports = function(schema) {
                             doc.date.envoiFacture = new Date();
                             doc.login.envoiFacture = req.session.login;
                             doc.save().then(resolve, reject)
-                            document.stack(buffer, 'FACTURE' + doc.id, req.session.login)
-                                .then(function(resp) {
-                                    console.log('file added', resp)
-                                })
+                            getFacturePdfObj(doc, doc.date.intervention, false, true).toBuffer(function(err, buff) {
+                                document.stack(buff, 'FACTURE' + doc.id, req.session.login)
+                                    .then(function(resp) {
+                                        console.log('file added', resp)
+                                    })
+                            })
                         })
                     }, reject).catch(__catch)
                 })

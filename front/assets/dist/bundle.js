@@ -1666,28 +1666,38 @@ module.exports = {
         intervention: {
             envoiFacture: function() {
                 return "Madame, Monsieur,\n" +
-                    "<p>Suite à notre intervention le {{datePlain}} dans vos locaux:\n" +
-                    "<p strong center>{{client.civilite}} {{client.nom}} {{client.prenom}}\n" +
-                    "{{client.address.n}} {{client.address.r}}, {{client.address.cp}} {{client.address.v}}\n" +
-                    "Tél. : 0322916682</p>" +
-                    "Pour les raisons suivantes: </p>" +
-                    "<p strong center>{{description}}</p>" +
-                    "<p>Nous vous confirmons que l'intervention à été réalisé par nos soins.\n" +
-                    "Vous trouverez ci joint la facture à regler.\n" +
-                    "Nous vous prions de bien vouloir transmettre le règlement par chèque à l'ordre de:</p>" +
-                    "<p strong center> S.A.R.L EDISON SERVICES</p>" +
-                    "<p>A l'organisme qui gère notre comptabilité:</p>" +
-                    "<p strong center> EDISON SERVICES FRANCE\n" +
-                    "Service comptabilité\n" +
-                    "75 rue des dames, 75017 Paris\n" +
-                    "Tél. 09.72.51.08.01 (Ouvert de 09h00 à 12h30 / 14h00 à 16h30)</p>" +
-                    "<p>" +
-                    "Par ailleurs, si quelque raison s'opposait au règlement de la facture, nous vous remercions de nous le \nfaire savoir dans les plus brefs délais.\n" +
-                    "Restant à votre entière disposition, nous vous prions de croire, Madame, Monsieur l'expression de nos \nsincères salutations distinguées.</p>" +
-                    "<ul>" +
-                    "<li>Ci-joint la facture</li>" +
-                    "</ul>" +
-                    "Cordialement."
+            "<p>Suite à notre intervention le {{datePlain}} dans vos locaux:\n" +
+            "<p strong center>{{client.civilite}} {{client.nom}} {{client.prenom}}\n" +
+            "{{client.address.n}} {{client.address.r}}, {{client.address.cp}} {{client.address.v}}\n" +
+            "Tél. : 0322916682</p>" +
+            "Pour les raisons suivantes: </p>" +
+            "<p strong center>{{description}}</p>" +
+            "<p>Nous vous confirmons que l'intervention à été réalisé par nos soins.\n" +
+            "Vous trouverez ci joint la facture à regler.\n" +
+            "Nous vous prions de bien vouloir transmettre le règlement par chèque à l'ordre de:</p>" +
+            "<p strong center> S.A.R.L EDISON SERVICES</p>" +
+            "<p>A l'organisme qui gère notre comptabilité:</p>" +
+            "<p strong center> EDISON SERVICES FRANCE\n" +
+            "Service comptabilité\n" +
+            "75 rue des dames, 75017 Paris\n" +
+            "Tél. 09.72.51.08.01 (Ouvert de 09h00 à 12h30 / 14h00 à 16h30)</p>" +
+            "<p>" +
+            "Pour un reglement par virement :\n" +
+            "\n" +
+            "RIB: 30004 01557 00010041423 30\n" +
+            "IBAN: FR76 3000 4015 5700 0100 4142 330\n" +
+            "BIC: BNPAFRPPPRG" +
+            "</p>" +
+            "<p>" +
+            "Par ailleurs, si quelque raison s'opposait au règlement de la facture, nous vous remercions de nous le \nfaire savoir dans les plus brefs délais.\n" +
+            "\n" +
+            "Restant à votre entière disposition, nous vous prions de croire, Madame, Monsieur l'expression de nos \nsincères salutations distinguées.</p>" +
+            
+            "<p>Merci d'indiquer la réference de la facture (<strong>{{id}}</strong>) dans le réglement. </p>" + 
+            "<ul>" +
+            "<li>Ci-joint la facture</li>" +
+            "</ul>" +
+            "<p>Cordialement.</p>"
             }
         }
     },
@@ -1735,25 +1745,6 @@ module.exports = {
                     "<strong>Pour tous renseignements supplémentaires, vous pouvez joindre {{__login}} au 09.72.42.30.00</strong>\n" +
                     "\n" +
                     "L’équipe <strong>Edison Services</strong>\n"
-            },
-            envoiFacture: function(datePlain) {
-                return "Bonjour\n" +
-                    "Suite à votre demande d'intervention le " + datePlain + " chez:\n" +
-                    "<strong>\n" +
-                    "{{client.nom}} {{client.prenom}}\n" +
-                    "{{client.address.n}} {{client.address.r}}\n" +
-                    "{{client.address.cp}} {{client.address.v}}\n" +
-                    "</strong>" +
-                    "\n" +
-                    "Veuillez trouvez ci-joint notre facture d'intervention\n" +
-                    "Merci de transmettre le règlement directement à notre organisme de facturation.\n" +
-                    "\n" +
-                    "D'avance merci pour votre rapidité\n" +
-                    "Cordialement,\n" +
-                    "\n" +
-                    "Service Comptabilité - Edison Services\n" +
-                    "Tél. 09.72.51.08.01 (Ouvert de 09h00 à 12h30 / 14h00 à 16h30)\n" +
-                    "Fax. 09.72.39.33.46\n";
             }
         },
         devis: {
