@@ -23,7 +23,7 @@ angular.module('edison').directive('dropdownRow', function(Devis, productsList, 
             scope.config = config
             $timeout(function() {
                 $("#expended").velocity({
-                    height: 205,
+                    height: 220,
                 }, 200);
             }, 50)
 
@@ -66,7 +66,7 @@ angular.module('edison').directive('dropdownRow', function(Devis, productsList, 
 
             $q.all(pAll).then(pThen)
             scope.getStaticMap = function() {
-                var q = "?width=411&height=194px&precision=0&origin=" + scope.address.lt + ", " + scope.address.lg;
+                var q = "?format=jpg&width=411&height=210px&precision=0&origin=" + scope.address.lt + ", " + scope.address.lg;
                 if (_.get(scope, 'data.artisan.address.lt'))
                     q += "&destination=" + scope.data.artisan.address.lt + ", " + scope.data.artisan.address.lg;
                 else

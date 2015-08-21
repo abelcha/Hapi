@@ -35,7 +35,7 @@
                         {{::devis.sx}}</span>
                     </td>
                 </tr>
-                <tr ng-repeat-end ng-if="expendedRow && expendedRow === devis.id">
+                <tr ng-repeat-end ng-if="expendedRow && expendedRow === devis.id"  ng-right-click="vm.rowRightClick($event, devis)" >
                     <td colspan="42" style="background-color:white!important">
                         <dropdown-row model="devis" row="devis" expendedRow="expendedRow"></dropdown-row>
                     </td>

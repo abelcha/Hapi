@@ -90,6 +90,7 @@
      oldLogin: 'vincent',
      service: 'COMPTABILITE',
      root: true,
+     email: 'comptabilite@edison-services.fr',
      nom: 'queudray',
      prenom: 'vincent',
      activated: true

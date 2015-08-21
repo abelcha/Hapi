@@ -5,6 +5,17 @@ module.exports = function(schema) {
         return str ? str.toUpperCase() : str;
     }
 
+    var upperCaseEverything = function(options) {
+        var _this = this;
+        var obj = options || this.options;
+        _.each(obj, function(e, k) {
+            if (typeof e === 'string') {
+                obj[k] = e.toUpperCase();
+            }
+        })
+
+    }
+
 
     schema.pre('save', function(next) {
         this.prixAnnonce = _reduce(this.produits, function(result, n, key) {
@@ -18,6 +29,7 @@ module.exports = function(schema) {
         this.client.address.n = upper(this.client.address.n)
         this.client.address.r = upper(this.client.address.r)
         this.client.address.v = upper(this.client.address.v)
+        upperCaseEverything(this.client.address)
         next();
     });
 

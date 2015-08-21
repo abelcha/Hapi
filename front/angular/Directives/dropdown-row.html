@@ -1,30 +1,28 @@
 <div id="expended" ng-style="expendedStyle">
     <div class="row">
         <div class="col-sm-4 info-ext" ng-if="_model === 'intervention'||_model === 'devis'">
-            <p bold text-xxl>Coordonées client</p>
+            <p bold text-xxl underlined>Coordonées client</p>
             <p>{{client.civilite}} {{client.prenom}} {{client.nom}}</p>
-                <p>{{client.address.n}} {{client.address.r}}, </p>
-                <p>{{client.address.cp}} {{client.address.v}}</p>
+            <p>{{client.address.n}} {{client.address.r}}, </p>
+            <p>{{client.address.cp}} {{client.address.v}}</p>
             <p ng-if="_model === 'intervention'" strong>{{data.description}}</p>
-            <p ng-if="_model === 'intervention'" strong>{{data.prixAnnonce || 0}} €<span ng-if="data.prixFinal"> -> {{data.prixFinal}} €</span>
-                <!--             <p ng-if="_model === 'intervention'">
-            {{data.reglementSurPlace ? 'Reglement sur place' : ' Reglement par facture'}} ({{data.modeReglement}})</p>
-            <p ng-if="!data.reglementSurPlace" bold text-xxl>Coordonées Facturation</p>
-            <div ng-if="!data.reglementSurPlace && data.facture.nom && data.facture.address.r">
-                <p> {{data.facture.prenom}} {{data.facture.nom}}</p>
-                <p>{{data.facture.address.n}} {{data.facture.address.r}}, {{data.facture.address.cp}} {{data.facture.address.v}}</p>
-            </div> -->
-                <div ng-if="!data.reglementSurPlace && !data.facture.nom && !data.facture.r ">
+            <p ng-if="_model === 'intervention'"><span strong>{{data.prixAnnonce || 0}} €<span ng-if="data.prixFinal"> -> {{data.prixFinal}} € </span></span>
+                ({{data.reglementSurPlace ? 'Reglement sur place' : ' Reglement par facture'}} - {{data.modeReglement}})
+                <p ng-if="_model === 'intervention'">
+                </p>
+                <p ng-if="!data.reglementSurPlace" bold text-xxl underlined>Coordonées Facturation</p>
+                <div ng-if="!data.reglementSurPlace && data.facture.nom && data.facture.address.r">
+                    <p> {{data.facture.prenom}} {{data.facture.nom}}</p>
+                    <p>{{data.facture.address.n}} {{data.facture.address.r}}, {{data.facture.address.cp}} {{data.facture.address.v}}</p>
+                </div>
+                <div ng-if="_model === 'intervention' && !data.reglementSurPlace && !data.facture.nom && !data.facture.r ">
                     <p>FACTURE À FAIRE</p>
                 </div>
                 <p ng-if="_model === 'devis'">
-                    <strong>Flagship : </strong> {{produits.flagship().title}} ({{produits.flagship().pu}} €)
+                    {{produits.flagship().title}} ({{produits.flagship().pu}} €)
                 </p>
                 <p ng-if="_model === 'devis'">
-                    <strong> Nombre de produits : </strong>{{data.produits.length}}
-                </p>
-                <p ng-if="_model === 'devis'">
-                    <strong> Montant HT : </strong>{{produits.total()}} €
+                    {{data.produits.length}} Produits ( {{::produits.total()}} €)
                 </p>
                 <p ng-if="data.ca"><strong>Annulation:</strong> {{data.ca.long_name}}</p>
         </div>
@@ -34,17 +32,12 @@
                 </p>
                 <p>Ajouté le {{data.date.ajout | date:"dd/MM/yy à HH'h'mm"}} par {{data.login.ajout}}</p>
                 <p ng-if="data.date.envoi">Envoyé le {{data.date.envoi | date:"dd/MM/yy à HH'h'mm"}} par {{data.login.envoi}}</p>
-                <p ng-if="data.date.intervention">Intervention le {{data.date.intervention | date:"dd/MM/yy à HH'h'mm"}} par {{data.login.envoi}}</p>
+                <p ng-if="data.date.intervention">Intervention le {{data.date.intervention | date:"dd/MM/yy à HH'h'mm"}} par {{data.artisan.nomSociete}}</p>
                 <p ng-if="data.date.verification">Verifié le {{data.date.verification | date:"dd/MM/yy à HH'h'mm"}} par {{data.login.verification || 'inconnu'}}</p>
                 <p ng-if="data.compta.reglement.recu">Réglement encaissé le {{data.date.envoi | date:"dd/MM/yy à HH'h'mm"}} par {{data.compta.reglement.login}}</p>
                 <p ng-if="data.compta.paiement.effectue">Paiement éffectué le {{data.compta.paiement.date | date:"dd/MM/yy à HH'h'mm"}} par {{data.compta.paiement.login}}</p>
                 <p ng-if="data.date.annulation">Annulé le {{data.date.annulation | date:"dd/MM/yy à HH'h'mm"}} par {{data.login.annulation}} <i ng-if="data.causeAnnulation">({{config.getCauseAnnulation(data.causeAnnulation).long_name}})</i></p>
             </div>
-            <!--             <p>
-                <md-button ng-if="data.status === 'ENC'" ng-click="Intervention(data).verification()" class="md-raised md-primary green">Vérifier</md-button>
-                <md-button ng-click="Intervention(data).annulation()" class="md-raised md-warn">Annuler</md-button>
-                <md-button ng-if="data.produits.length" ng-click="produits.previsualise(data)" class="md-raised md-primary yellow black-text">Preview</md-button>
-            </p> -->
         </div>
         <div ng-if="_model === 'devis'" class="col-sm-4 info-ext">
             <div ng-init="hist_title = ['Ajouté', '1er Envoi', 'Relance n°1', 'Relance n°2']">
@@ -62,11 +55,6 @@
                 </p>
                 <p ng-if="hist.length >= 3">
                     <strong> {{hist_title[3]}} </strong> le {{hist[2].date|date:"dd/MM/yy à HH'h'mm"}} par {{hist[2].login}}
-                </p>
-                <br>
-                <p>
-                    <md-button class=" yellow black-text" ng-click="produits.previsualise(data)" class="md-raised md-primary">Preview</md-button>
-                    <md-button ng-if="data.status !== 'TRA' && data.status !== 'ANN'" ng-click="Devis(data).envoi()" class="md-raised md-primary  light-blue accent-3">Envoyer</md-button>
                 </p>
             </div>
         </div>
