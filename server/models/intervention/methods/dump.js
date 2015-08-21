@@ -87,7 +87,9 @@
                 comments: comments,
                 status: d.etat_intervention,
                 date: date,
-                client: client
+                client: client,
+                sms: d.id_sms || null,
+                smsStatus: d.status_sms || 0,
             }
 
             if (d.cout_fourniture > 0)  {
@@ -169,7 +171,7 @@
 
             rtn.modeReglement = d.mode_reglement;
             rtn.prixAnnonce = d.prix_ht_annonce;
-            rtn.prixFinal = d.comptaPrixFinal || d.prix_ht_final || d.prix_ht_annonce || 0;
+            rtn.prixFinal = d.comptaPrixFinal || d.prix_ht_final;
 
 
             if (d.nom_facture) {

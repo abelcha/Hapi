@@ -361,6 +361,7 @@ module.exports = function(db) {
             ref: 'sms',
             type: String
         },
+        smsStatus: Number,
         file: [{
             name: String,
             mimeType: String,
