@@ -108,7 +108,7 @@ module.exports = {
         title: "Annuler",
         action: 'annulation',
         hide:function(inter) {
-            return inter.status === 'ANN' || inter.status === 'VRF'
+            return false;//inter.status === 'ANN' || inter.status === 'VRF'
         }
 
     }, {

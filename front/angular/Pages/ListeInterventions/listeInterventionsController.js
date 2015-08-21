@@ -41,8 +41,9 @@ var InterventionsController = function($q, tabContainer, FiltersFactory, Context
             total: dataProvider.filteredData,
             getData: function($defer, params) {
                 var data = dataProvider.filteredData;
-                if (!_.isEqual(params.filter(), _this.currentFilter))
-                    data = $filter('tableFilter')(data, params.filter());
+                console.log(params.filter(), _this.currentFilter)
+                //if (!_.isEqual(params.filter(), _this.currentFilter))
+                data = $filter('tableFilter')(data, params.filter());
                 _this.currentFilter = _.clone(params.filter());
                 params.total(data.length);
                 data = $filter('orderBy')(data, params.orderBy());
@@ -59,6 +60,8 @@ var InterventionsController = function($q, tabContainer, FiltersFactory, Context
         if (_this.tab.fullUrl === tabContainer.getCurrentTab().fullUrl && newData._date > lastChange) {
             dataProvider.applyFilter(currentFilter, _this.tab.hash, _this.customFilter);
             _this.tableParams.reload();
+           // _this.tableParams.orderBy(_this.tableParams.$params.sorting)
+           // _this.tableParams.filter(_this.tableParams.$params.filter)
         }
         lastChange = newData._date;
     })

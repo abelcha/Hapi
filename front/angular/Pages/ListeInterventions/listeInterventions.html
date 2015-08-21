@@ -7,33 +7,33 @@
                         <strong>{{inter.id}}</strong>
                     </td>
                     <td data-title="'Télépro'" sortable="'t'" filter="{ 't': 'text' }">
-                        {{::inter.t}}
+                        {{inter.t}}
                     </td>
                     <td ng-init="inter._categorie = vm.config.categoriesHash()[inter.c].long_name" data-title="'Cat.'" sortable="'c'" filter="{ '_categorie': 'text' }">
-                        <span style="width:80px" class="label {{::vm.config.categoriesHash()[inter.c].color}}">{{::inter._categorie}}</span>
+                        <span style="width:80px" class="label {{vm.config.categoriesHash()[inter.c].color}}">{{inter._categorie}}</span>
                     </td>
                     <td data-title="'Ajout'" sortable="'da'" filter="{ 'da': 'text' }">
-                        {{::inter.da | relativeDate:true}}
+                        {{inter.da | relativeDate:true}}
                     </td>
                     <td variable-length data-title="'Client'" sortable="'n'" filter="{ 'n': 'text' }">
-                        {{::inter.n}}
+                        {{inter.n}}
                     </td>
                     <td variable-length data-title="'Ville'" sortable="'ad'" filter="{ 'ad': 'text' }">
-                        {{::inter.ad}}
+                        {{inter.ad}}
                     </td>
                     <td variable-length class="variable-length one-liner" data-title="'Artisan'" sortable="'a'" filter="{ 'a': 'text' }">
-                        <strong>{{::inter.a}}</strong>
+                        <strong>{{inter.a}}</strong>
                     </td>
                     <td data-title="'Intervention'" sortable="'di'" filter="{ 'di': 'text' }">
                         <div ng-show="inter.di[0] != 1">
-                            {{::inter.di | relativeDate}}
+                            {{inter.di | relativeDate}}
                         </div>
                     </td>
                     <td data-title="'Prix'" sortable="'pa'" filter="{ 'pa': 'text' }">
-                        <strong> {{::(inter.pa | number:2) || 0}} €</strong>
+                        <strong> {{(inter.pa | number:2) || 0}} €</strong>
                     </td>
                     <td ng-init="inter._status = vm.config.etatsHash()[inter.s];inter._etat = inter._status.long_name" data-title="'Status'" sortable="'s'" filter="{ '_etat': 'text' }">
-                        <span style="width:70px" class="label {{::vm.config.etatsHash()[inter.s].color}} display-block"> 
+                        <span style="width:70px" class="label {{vm.config.etatsHash()[inter.s].color}} display-block"> 
                         {{inter._etat}}</span>
                     </td>
                     <td data-title="'rCli'" sortable="'rc'" filter="{ 'rc': 'select' }" filter-data="config.reglementClient">
