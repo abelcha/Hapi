@@ -49,14 +49,18 @@ angular.module('edison')
             var template = textTemplate.mail.intervention.envoiFacture.bind(_this)(datePlain)
             var mailText = (_.template(template)(this))
             dialog.envoiFacture(_this, mailText, false, function(text, acquitte, date) {
+                LxProgressService.circular.show('#5fa2db', '#globalProgress');
+
                 edisonAPI.intervention.sendFacture(_this.id, {
                     text: text,
                 }).success(function(resp) {
+                    LxProgressService.circular.hide();
                     var validationMessage = _.template("La facture de l'intervention {{id}} à été envoyé")(_this)
                     LxNotificationService.success(validationMessage);
                     if (typeof cb === 'function')
                         cb(null, resp);
                 }).catch(function(err) {
+                    LxProgressService.circular.hide();
                     var validationMessage = _.template("L'envoi de la facture {{id}} à échoué")(_this)
                     LxNotificationService.error(validationMessage);
                     if (typeof cb === 'function')
@@ -251,7 +255,7 @@ angular.module('edison')
         Intervention.prototype.fileUpload = function(file, cb) {
 
             var _this = this;
-            
+
             if (file) {
                 LxProgressService.circular.show('#5fa2db', '#fileUploadProgress');
                 edisonAPI.file.upload(file, {
