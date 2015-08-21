@@ -42,6 +42,26 @@ module.exports = function(schema) {
         })
     }
 
+    schema.statics.fullReload = function(res, req) {
+        return new Promise(function(resolve, reject) {
+            console.time('fltr_reloaded');
+            db.model('intervention').fltrify(function(err) {
+                if (err)
+                    reject(err);
+                console.timeEnd('fltr_reloaded');
+                console.time('cache_reloaded')
+                db.model('intervention').getCache().then(function() {
+                    console.timeEnd('cache_reloaded')
+                    console.time('stats_reloaded');
+                    db.model('intervention').stats().then(function() {
+                        console.timeEnd('stats_reloaded');
+                        resolve('ok')
+                    }, reject)
+                }, reject)
+            })
+        })
+    }
+
     schema.statics.list = function(req, res) {
         var _this = this;
         redis.get("interventionList".envify(), function(err, reply) {

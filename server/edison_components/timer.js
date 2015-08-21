@@ -16,15 +16,10 @@ var Timer = module.exports = function() {
                     method: 'cacheReload'
                 })
             });*/
-
     this.emitter.on("10 minutes", function() {
-        db.model('intervention').getCache()
-            .then(function() {
-                console.log('cache reloaded')
-                db.model('intervention').stats().then(function() {
-                    console.log('stats reloaded');
-                })
-            })
+        db.model('intervention').fullReload().then(function() {
+            console.log('ok')
+        })
     })
 
 
