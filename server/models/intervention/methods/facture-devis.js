@@ -120,7 +120,7 @@ module.exports = function(schema) {
                         From: "intervention@edison-services.fr",
                         ReplyTo: req.session.email || "abel@chalier.me",
                         To: req.session.email || "abel@chalier.me",
-                        Subject: "Facture de l'intervention " + inter.id + " en attente de reglement",
+                        Subject: "Facture n°" + inter.id + " en attente de reglement",
                         HtmlBody: req.body.text.replaceAll('\n', '<br>'),
                         Attachments: [{
                             Content: buffer.toString('base64'),
