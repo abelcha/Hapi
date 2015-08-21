@@ -94,8 +94,10 @@
                         <button ng-click="Intervention(data).sendFacture()" class="btn--no-conflicts btn--m btn--black btn--flat" lx-ripple>Envoyer Facture</button>
 
                        <!--  <button ng-click="Intervention(data).factureAcquittePreview()" class="btn--no-conflicts btn--m btn--black btn--flat" lx-ripple>Facture Aquité</button> -->
+                        <a href="/devis?i={{data.id}}">
                         <button ng-if="model !== 'DEVIS' && data.id" class="btn--no-conflicts btn--m btn--black btn--flat" lx-ripple>
-                        <a href="/devis?i={{data.id}}">Créer Devis</a></button>
+                        Créer Devis</button>
+                        </a>
                          </span>
         <span style="width: 150px;float: right;padding-bottom: 7px;">
                          <select class="form-control" ng-model="data.tva" ng-options="tva.short_name as tva.long_name for tva in config.tva">

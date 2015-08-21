@@ -92,7 +92,7 @@
      root: true,
      nom: 'queudray',
      prenom: 'vincent',
-     activated: false
+     activated: true
  }, {
      login: 'yohann_r',
      oldLogin: 'yohann',
