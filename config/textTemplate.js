@@ -160,14 +160,14 @@ module.exports = {
                     var text = "Suite à notre dernier échange concernant la réalisation d'un devis " + categorieClean + ", \n" +
                         "vous trouverez ci-joint le devis n°" + this.id + " correspondant à ce que nous avons vu ensemble. \n\n" +
                         "Sachez également, que votre installation sera éligible à notre assurance RC PRO et notre assurance décennale.\n" +
-                        "Lors de l'acceptation, je vous prie de me renvoyer le devis signé, accompagné de la mention:\n" +
-                        "<strong> « BON POUR ACCORD » </strong>\n" +
+                        "Lors de l'acceptation, je vous prie de me renvoyer le devis signé, accompagné de la mention:\n\n" +
+                        "<strong> « BON POUR ACCORD » </strong>\n\n" +
                         "Je reste à votre entière disposition pour tous les renseignements ou les remarques que vous pourriez avoir concernant ce devis (technique, délais, prix). \n\n" +
                         "Merci de me tenir au courant de la suite que vous donnerez à ce devis. \n\n";
 
                 }
                 var outro = "Cordialement, \n\n" +
-                    (user.pseudo ||  " Arnaud,\n") +
+                    (user.pseudo ||  " Arnaud,") + '\n' +
                     "<strong>Ligne Direct : " + (user.ligne ||  "09.72.42.30.00") + "</strong>\n" +
                     "<strong>Ligne Atelier : " + "09.72.42.30.00" + "</strong>\n";
 
