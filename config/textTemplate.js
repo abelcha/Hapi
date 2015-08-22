@@ -29,43 +29,63 @@ module.exports = {
         intervention: {
             envoiFacture: function() {
                 return "Madame, Monsieur,\n" +
-            "<p>Suite à notre intervention le {{datePlain}} dans vos locaux:\n" +
-            "<p strong center>{{client.civilite}} {{client.nom}} {{client.prenom}}\n" +
-            "{{client.address.n}} {{client.address.r}}, {{client.address.cp}} {{client.address.v}}\n" +
-            "Tél. : 0322916682</p>" +
-            "Pour les raisons suivantes: </p>" +
-            "<p strong center>{{description}}</p>" +
-            "<p>Nous vous confirmons que l'intervention à été réalisé par nos soins.\n" +
-            "Vous trouverez ci joint la facture à regler.\n" +
-            "Nous vous prions de bien vouloir transmettre le règlement par chèque à l'ordre de:</p>" +
-            "<p strong center> S.A.R.L EDISON SERVICES</p>" +
-            "<p>A l'organisme qui gère notre comptabilité:</p>" +
-            "<p strong center> EDISON SERVICES FRANCE\n" +
-            "Service comptabilité\n" +
-            "75 rue des dames, 75017 Paris\n" +
-            "Tél. 09.72.51.08.01 (Ouvert de 09h00 à 12h30 / 14h00 à 16h30)</p>" +
-            "<p>" +
-            "Pour un reglement par virement :\n" +
-            "\n" +
-            "RIB: 30004 01557 00010041423 30\n" +
-            "IBAN: FR76 3000 4015 5700 0100 4142 330\n" +
-            "BIC: BNPAFRPPPRG" +
-            "</p>" +
-            "<p>" +
-            "Par ailleurs, si quelque raison s'opposait au règlement de la facture, nous vous remercions de nous le \nfaire savoir dans les plus brefs délais.\n" +
-            "\n" +
-            "Restant à votre entière disposition, nous vous prions de croire, Madame, Monsieur l'expression de nos \nsincères salutations distinguées.</p>" +
-            
-            "<p>Merci d'indiquer la réference de la facture (<strong>{{id}}</strong>) dans le réglement. </p>" + 
-            "<ul>" +
-            "<li>Ci-joint la facture</li>" +
-            "</ul>" +
-            "<p>Cordialement.</p>"
+                    "<p>Suite à notre intervention le {{datePlain}} dans vos locaux:\n" +
+                    "<p strong center>{{client.civilite}} {{client.nom}} {{client.prenom}}\n" +
+                    "{{client.address.n}} {{client.address.r}}, {{client.address.cp}} {{client.address.v}}\n" +
+                    "Tél. : 0322916682</p>" +
+                    "Pour les raisons suivantes: </p>" +
+                    "<p strong center>{{description}}</p>" +
+                    "<p>Nous vous confirmons que l'intervention à été réalisé par nos soins.\n" +
+                    "Vous trouverez ci joint la facture à regler.\n" +
+                    "Nous vous prions de bien vouloir transmettre le règlement par chèque à l'ordre de:</p>" +
+                    "<p strong center> S.A.R.L EDISON SERVICES</p>" +
+                    "<p>A l'organisme qui gère notre comptabilité:</p>" +
+                    "<p strong center> EDISON SERVICES FRANCE\n" +
+                    "Service comptabilité\n" +
+                    "75 rue des dames, 75017 Paris\n" +
+                    "Tél. 09.72.51.08.01 (Ouvert de 09h00 à 12h30 / 14h00 à 16h30)</p>" +
+                    "<p>" +
+                    "Pour un reglement par virement :\n" +
+                    "\n" +
+                    "RIB: 30004 01557 00010041423 30\n" +
+                    "IBAN: FR76 3000 4015 5700 0100 4142 330\n" +
+                    "BIC: BNPAFRPPPRG" +
+                    "</p>" +
+                    "<p>" +
+                    "Par ailleurs, si quelque raison s'opposait au règlement de la facture, nous vous remercions de nous le \nfaire savoir dans les plus brefs délais.\n" +
+                    "\n" +
+                    "Restant à votre entière disposition, nous vous prions de croire, Madame, Monsieur l'expression de nos \nsincères salutations distinguées.</p>" +
+
+                    "<p>Merci d'indiquer la réference de la facture (<strong>{{id}}</strong>) dans le réglement. </p>" +
+                    "<ul>" +
+                    "<li>Ci-joint la facture</li>" +
+                    "</ul>" +
+                    "<p>Cordialement.</p>"
             }
         }
     },
     mail: {
         intervention: {
+            envoiFacture: function(datePlain) {
+
+                return "Bonjour\n" +
+                    "Suite à votre demande d'intervention le " + datePlain + " chez:\n" +
+                    "<strong>\n" +
+                    "{{client.nom}} {{client.prenom}}\n" +
+                    "{{client.address.n}} {{client.address.r}}\n" +
+                    "{{client.address.cp}} {{client.address.v}}\n" +
+                    "</strong>" +
+                    "\n" +
+                    "Veuillez trouvez ci-joint notre facture d'intervention\n" +
+                    "Merci de transmettre le règlement directement à notre organisme de facturation.\n" +
+                    "\n" +
+                    "D'avance merci pour votre rapidité\n" +
+                    "Cordialement,\n" +
+                    "\n" +
+                    "Service Comptabilité - Edison Services\n" +
+                    "Tél. 09.72.51.08.01 (Ouvert de 09h00 à 12h30 / 14h00 à 16h30)\n" +
+                    "Fax. 09.72.39.33.46\n";
+            },
             os: function() {
 
                 return "A l'attention de l’entreprise {{sst.nomSociete}}\n" +
@@ -128,7 +148,7 @@ module.exports = {
                     "Je reste à votre disposition pour toutes les demandes de renseignement\n\n";
 
                 if (this.historique && this.historique.length === 1) {
-            console.log('yay histor')                    
+                    console.log('yay histor')
                     var cont;
                     if (this.categorie == 'VT')
                         cont = "je vous ai envoyé le devis que vous m'avez demandé pour le remplacement de votre vitrage, vous deviez le transmettre directement à votre compagnie d'assurance.\n\n";
@@ -139,7 +159,7 @@ module.exports = {
                     var text = start + cont + end;
 
                 } else if (this.historique && this.historique.length > 1) {
-                    var text =  "je vous ai transmis un devis " + categorieClean + " en date du " + moment(this.historique[0].date).format('L') + ".\n\n" + end;
+                    var text = "je vous ai transmis un devis " + categorieClean + " en date du " + moment(this.historique[0].date).format('L') + ".\n\n" + end;
                 } else if (this.categorie == 'VT') {
                     var text = "Suite à notre échange téléphonique concernant le remplacement de votre vitrage," +
                         "vous trouverez ci-joint le devis n°" + this.id + " correspondant à ce que nous avons vu ensemble.\n\n" +
