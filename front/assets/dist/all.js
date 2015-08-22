@@ -2264,6 +2264,7 @@ angular.module('edison')
         Intervention.prototype.sendFacture = function(cb) {
             var _this = this;
             var datePlain = moment(this.date.intervention).format('LL');
+            console.log(_this)
             var template = textTemplate.mail.intervention.envoiFacture.bind(_this)(datePlain)
             var mailText = (_.template(template)(this))
             dialog.envoiFacture(_this, mailText, false, function(text, acquitte, date) {
