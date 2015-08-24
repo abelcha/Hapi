@@ -53,7 +53,6 @@
                 console.log('-->', core.singleDumpUrl(id))
                 request.get(core.singleDumpUrl(id), function(err, resp, body) {
                     if (err || resp.statusCode !== 200 || !body || body == 'null') {
-                        console.log(err, resp.statusCode, body)
                         new edison.event("DUMP_ONE", login, id, {
                             rejected: true,
                         })
@@ -69,7 +68,11 @@
                         v2: v2
                     })
                     core.model().findById(parseInt(id), function(err, doc) {
-                        var doc = doc ||  core.model()(v2);
+                        if (doc) {
+                            doc = _.assign(doc, v2);
+                        } else {
+                            doc = core.model()(v2);
+                        }
                         doc.save().then(resolve, reject);
                     })
                 });

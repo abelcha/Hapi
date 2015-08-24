@@ -16,12 +16,12 @@
 
     module.exports.singleDumpUrl = function(id) {
         var key = requireLocal('config/_keys');
-        return key.alvin.url + "/dumpIntervention.php?devis=false&id=" + id + "&key=" + key.alvin.pass
+        return key.alvin.url + "dumpIntervention.php?devis=false&id=" + id + "&key=" + key.alvin.pass
     }
 
     module.exports.multiDumpUrl = function(limit) {
         var key = requireLocal('config/_keys');
-        return key.alvin.url + "/dumpIntervention.php?limit=" + limit + "&key=" + key.alvin.pass
+        return key.alvin.url + "dumpIntervention.php?limit=" + limit + "&key=" + key.alvin.pass
     }
 
 
