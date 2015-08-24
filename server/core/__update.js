@@ -15,7 +15,7 @@ module.exports = function(core) {
     return function(id, req, res) {
         return new Promise(function(resolve, reject) {
             var data = req.body
-            db.model('intervention').findOne({
+            core.model().findOne({
                 id: data.id
             }).then(function(doc) {
                 if (!doc)

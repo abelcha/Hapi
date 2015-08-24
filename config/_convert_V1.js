@@ -34,7 +34,7 @@ var V1 = function(d, devis, legacy) {
         if (d.compta.reglement.date) {
             x.date_paiement_client = moment(new Date(d.compta.reglement.date)).format('DD/MM/YYYY');
         }
-        x.sms = d.sms || undefined;
+        x.sms = d.sms ||  undefined;
         x.sms_status = d.sms_status;
         x.civilite = d.client.civilite;
         x.nom = d.client.nom;

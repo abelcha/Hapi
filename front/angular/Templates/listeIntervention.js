@@ -16,14 +16,11 @@ angular.module('edison').directive('listeIntervention', function(tabContainer, F
             var title = currentFilter ? currentFilter.long_name : "Interventions";
             scope.recap = $routeParams.sstID ? parseInt($routeParams.sstID) : false;
 
-
             dataProvider.init(function(err, resp) {
                 scope.config = config;
-
                 scope.customFilter = function(inter) {
                     return inter.ai === scope.id;
                 }
-
                 dataProvider.applyFilter(currentFilter, undefined, scope.customFilter);
                 var tableParameters = {
                     page: 1, // show first page
@@ -34,6 +31,8 @@ angular.module('edison').directive('listeIntervention', function(tabContainer, F
                     },
                     count: 100 // count per page
                 };
+
+
                 var tableSettings = {
                     //groupBy:$rootScope.config.selectedGrouping,
                     total: dataProvider.filteredData,
@@ -51,13 +50,17 @@ angular.module('edison').directive('listeIntervention', function(tabContainer, F
                 scope.tableParams = new ngTableParams(tableParameters, tableSettings);
             })
             var lastChange = 0;
+
             $rootScope.$on('INTERVENTION_CACHE_LIST_CHANGE', function(event, newData) {
-                if (scope.tab.fullUrl === tabContainer.getCurrentTab().fullUrl && newData._date > lastChange) {
+                if (scope.tab && scope.tab.fullUrl === tabContainer.getCurrentTab().fullUrl && newData._date > lastChange) {
                     dataProvider.applyFilter(currentFilter, scope.tab.hash, scope.customFilter);
                     scope.tableParams.reload();
+                    // _this.tableParams.orderBy(_this.tableParams.$params.sorting)
+                    // _this.tableParams.filter(_this.tableParams.$params.filter)
                 }
                 lastChange = newData._date;
             })
+
 
             scope.contextMenu = new ContextMenu('intervention')
 

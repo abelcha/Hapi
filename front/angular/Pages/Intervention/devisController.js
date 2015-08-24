@@ -1,4 +1,4 @@
-var DevisCtrl = function($scope, $rootScope, $location, $routeParams, LxProgressService, LxNotificationService, tabContainer, config, dialog, devisPrm, Devis) {
+var DevisCtrl = function(edisonAPI, $scope, $rootScope, $location, $routeParams, LxProgressService, LxNotificationService, tabContainer, config, dialog, devisPrm, Devis) {
     "use strict";
     var _this = this;
     _this.config = config;
@@ -54,6 +54,17 @@ var DevisCtrl = function($scope, $rootScope, $location, $routeParams, LxProgress
         if (oldVal !== newVal)
             devis.tva = 20;
     })
+
+
+    var updateTmpDevis = _.after(5, _.throttle(function() {
+        edisonAPI.devis.saveTmp(devis);
+    }, 2000))
+
+    if (!devis.id) {
+        $scope.$watch(function() {
+            return devis;
+        }, updateTmpDevis, true)
+    }
 
 }
 angular.module('edison').controller('DevisController', DevisCtrl);

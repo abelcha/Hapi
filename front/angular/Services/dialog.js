@@ -109,9 +109,9 @@ angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', 'config', 
                         ref: ""
                     }
                     $scope.$watch('prod', function() {
-                            $scope.prod.ref = $scope.prod.ref.toUpperCase();
-                            $scope.prod.title = $scope.prod.title.toUpperCase();
-                            $scope.prod.desc = $scope.prod.title;
+                        $scope.prod.ref = $scope.prod.ref.toUpperCase();
+                        $scope.prod.title = $scope.prod.title.toUpperCase();
+                        $scope.prod.desc = $scope.prod.title;
                     }, true)
                     $scope.answer = function(resp, text) {
                         $mdDialog.hide();
@@ -209,48 +209,20 @@ angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', 'config', 
                 });
             }
         },
-        absence: function(cb) {
+        selectSubProduct: function(elem, callback) {
             $mdDialog.show({
                 controller: function DialogController($scope, $mdDialog) {
-                    $scope.absenceTime = 'TODAY';
-                    $scope.absence = [{
-                        title: 'Toute la journée',
-                        value: 'TODAY'
-                    }, {
-                        title: '1 Heure',
-                        value: '1'
-                    }, {
-                        title: '2 Heure',
-                        value: '2'
-                    }, {
-                        title: '3 Heure',
-                        value: '3'
-                    }, {
-                        title: '4 Heure',
-                        value: '4'
-                    }]
-                    $scope.hide = function() {
+                    $scope.elem = elem
+                    $scope.answer = function(cancel, item) {
+                        console.log('--->', cancel, item)
                         $mdDialog.hide();
-                    };
-                    $scope.cancel = function() {
-                        $mdDialog.cancel();
-                    };
-                    $scope.answer = function(answer) {
-                        $mdDialog.hide(answer);
-                        var hours = 0;
-                        if (answer === "TODAY") {
-                            hours = 23 - (new Date()).getHours() + 1;
-                        } else {
-                            hours = parseInt(answer);
+                        if (!cancel) {
+                            console.log('cb')
+                            return callback(item)
                         }
-                        var start = new Date();
-                        var end = new Date();
-                        end.setHours(end.getHours() + hours)
-                        cb(start, end);
-
-                    };
+                    }
                 },
-                templateUrl: '/DialogTemplates/absence.html',
+                templateUrl: '/DialogTemplates/selectSubProduct.html',
             });
         }
     }

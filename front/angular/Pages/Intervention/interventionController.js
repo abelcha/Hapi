@@ -28,6 +28,14 @@ var InterventionCtrl = function(Description, Signalement, ContextMenu, $window, 
     }
     if ($routeParams.d) {
         intervention.devisOrigine = parseInt($routeParams.d)
+        intervention.date = {
+            ajout: new Date(),
+            intervention: new Date(),
+
+        }
+        intervention.reglementSurPlace = true;
+        intervention.modeReglement = 'CH';
+        intervention.remarque = 'PAS DE REMARQUES';
     }
     _this.data = tab.data;
     _this.description = new Description(intervention);
@@ -226,12 +234,11 @@ var InterventionCtrl = function(Description, Signalement, ContextMenu, $window, 
 
 
     var updateTmpIntervention = _.after(5, _.throttle(function() {
-       edisonAPI.intervention.saveTmp(intervention);
+        edisonAPI.intervention.saveTmp(intervention);
 
     }, 2000))
 
     if (!intervention.id) {
-        console.log('uyau')
         $scope.$watch(function() {
             return intervention;
         }, updateTmpIntervention, true)

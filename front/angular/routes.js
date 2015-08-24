@@ -206,7 +206,7 @@ var getIntervention = function($route, $q, edisonAPI) {
     var id = $route.current.params.id;
     if ($route.current.params.d) {
         return edisonAPI.devis.get($route.current.params.d, {
-            transform: true
+            select: 'date login produits tva client prixAnnonce categorie -_id'
         });
     } else if (id.length > 10) {
         return edisonAPI.intervention.getTmp(id);
@@ -221,31 +221,15 @@ var getDevis = function($route, $q, edisonAPI) {
     "use strict";
     var id = $route.current.params.id;
     if ($route.current.params.i) {
-        return edisonAPI.intervention.get($route.current.params.i, {
-            transform: true
+        return edisonAPI.intervention.get($route.current.params.d, {
+            select: 'client categorie tva -_id'
         });
     } else if (id.length > 10) {
-        return $q(function(resolve) {
-            resolve({
-                data: {
-                    isDevis: true,
-                    produits: [],
-                    tva: 10,
-                    client: {
-                        civilite: 'M.'
-                    },
-                    date: {
-                        ajout: Date.now(),
-                    },
-                    historique: []
-                }
-            });
-        });
+        return edisonAPI.devis.getTmp(id);
     } else {
         return edisonAPI.devis.get(id);
     }
 };
-
 
 angular.module('edison').config(function($routeProvider, $locationProvider) {
     "use strict";
@@ -289,8 +273,7 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
         })
         .when('/devis', {
             redirectTo: function(routeParams, path, params) {
-                var url = params.i ? "?i=" + params.i : "";
-                return '/devis/' + Date.now() + url;
+                return '/devis/' + Date.now();
             }
         })
         .when('/devis/:id', {

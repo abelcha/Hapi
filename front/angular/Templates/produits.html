@@ -2,9 +2,34 @@
     <div class="p+" ng-init="displayfact = (!data.reglementSurPlace||data.produits.length)">
         <strong ng-click="displayfact = !displayfact" class="fs-headline displayfact-block">Facture / Devis</strong><a ng-if="data.devisOrigine" href="/devis/{{data.devisOrigine}}">Devis Original</a>
         <md-content class="autocomplete" style="width: 40%;margin-top: -22px;margin-left: 54%;float: left;" layout-padding layout="column" md-input-container flex>
-            <md-autocomplete ng-if="displayfact" md-search-text-change="null" md-selected-item-change="produits.add(selectedProduct)" md-selected-item="selectedProduct" md-search-text="produits.searchText" md-items="item in produits.search(produits.searchText)" md-item-text="item.title" placeholder="Rechercher un produit...">
+                
+<!-- 
+           <md-autocomplete
+            md-search-text-change="null" 
+            md-min-length="3" 
+            md-selected-item-change="searchBox.change(selectedItem)" 
+            md-menu-class="autocomplete-custom-template" 
+            md-selected-item="selectedItem" 
+            md-search-text="searchText" 
+            md-autofocus="false" 
+            md-items="item in searchBox.search(searchText)" 
+            placeholder="Recherche..." 
+            md-item-text="item.description">
+            <span md-highlight-text="searchText"> {{item.description}}</span>
+            </md-autocomplete>       -->     
+
+            <md-autocomplete 
+            ng-if="displayfact" 
+            md-min-length="3" 
+            md-search-text-change="null" 
+            md-selected-item-change="produits.getDetail(selectedProduct)" 
+            md-selected-item="selectedProduct" 
+            md-search-text="produits.searchText" 
+            md-items="item in produits.search(produits.searchText)" 
+            md-item-text="item.title" 
+            placeholder="Rechercher un produit...">
                 <span md-highlight-text="produits.searchText"> 
-                {{item.ref}} -  {{item.title}} - {{item.pu}}€</span>
+                {{item.nom}} {{item.prix}}€</span>
             </md-autocomplete>
         </md-content>
         <span class="fs-subhead tc-black-2 display-block">Pour generation de factures/devis</span>

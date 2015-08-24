@@ -56,7 +56,7 @@ var InterventionsController = function($q, tabContainer, FiltersFactory, Context
 
     var lastChange = 0;
     $rootScope.$on('INTERVENTION_CACHE_LIST_CHANGE', function(event, newData) {
-        if (_this.tab.fullUrl === tabContainer.getCurrentTab().fullUrl && newData._date > lastChange) {
+        if (tabContainer.getCurrentTab() && _this.tab.fullUrl === tabContainer.getCurrentTab().fullUrl && newData._date > lastChange) {
             dataProvider.applyFilter(currentFilter, _this.tab.hash, _this.customFilter);
             _this.tableParams.reload();
             // _this.tableParams.orderBy(_this.tableParams.$params.sorting)

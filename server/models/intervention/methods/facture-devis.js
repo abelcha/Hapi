@@ -95,6 +95,12 @@ module.exports = function(schema) {
 
             return new Promise(function(resolve, reject) {
 
+                if (envDev) {
+                    inter.date.envoiFacture = new Date();
+                    inter.login.envoiFacture = req.session.login;
+                    return inter.save().then(resolve, reject)
+                }
+
                 if (!isWorker) {
                     return edison.worker.createJob({
                         name: 'db_id',
@@ -106,8 +112,6 @@ module.exports = function(schema) {
                         inter.save().then(resolve, reject)
                     }, reject)
                 }
-
-
 
 
 

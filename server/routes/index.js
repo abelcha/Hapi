@@ -22,6 +22,8 @@ module.exports = function(app) {
 
     app.get('/api/stats/telepro', edison.statsTelepro.get.bind(edison.statsTelepro));
 
+    app.get('/api/products/search', edison.products.search);
+
     app.get('/api/search/:text', edison.search)
 
     var uniqueModel = function(model, method, req, res) {

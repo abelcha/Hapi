@@ -1,0 +1,26 @@
+<md-dialog aria-label="Mango (Fruit)" style="  width: 860px;height: 500px;">
+    <md-dialog-content class="sticky-container" style="height: 100%">
+    <style>
+    li.produc-list:hover {
+        background: rgba(65, 136, 228, 0.12);
+    }
+    </style>
+        <div style="padding:15px;height:70%">
+            <span class="fs-title display-block mb">{{elem.nom}}</span>
+            <div class="divider divider--dark"></div>
+            <ul class="list mt++">
+                <li class="list-row produc-list" ng-repeat="item in elem.objets" ng-click="answer(null, item)" >
+                    <div class="list-row__content">
+                        <span class="display-block">{{item.ref}} - {{item.nom}}</span>
+                        <span class="display-block fs-body-1 tc-black-2">{{item.prix}} €</span>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </md-dialog-content>
+    <div class="md-actions" layout="row">
+        <md-button ng-click="answer(true);" class="md-primary black-text">
+            Annuler
+        </md-button>
+    </div>
+</md-dialog>

@@ -23,34 +23,6 @@ module.exports = function(core) {
             }
             prm.then(resolve, reject);
 
-            /*            if (req.query.transform) {
-                            db.model('intervention').findOne({
-                                id: id
-                            }).select().then(resolve, reject);
-                        } else {
-                            if (id === 'view') {
-                                return db.model('intervention').find()
-                                    .then(function(docs) {
-                                        resolve(docs)
-                                    });
-                            }
-                            var promise = db.model('intervention').findOne({
-                                id: id
-                            })
-                            if (req.query.devis ||  req.query.extended) {
-                                promise = promise.populate('devisOrigine')
-                            }
-                            if (req.query.artisan ||  req.query.extended) {
-                                promise = promise.populate('sst')
-                            }
-                            promise.then(function(doc)  {
-                                if (doc === null)
-                                    return reject('not found')
-
-                                rtn = doc.toObject();
-                                resolve(rtn);
-                            });
-                        }*/
         })
     }
 }

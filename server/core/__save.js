@@ -14,14 +14,13 @@
      return function(req, res) {
          return new Promise(function(resolve, reject) {
              data = req.body;
-             resolve('ok')
-             db.model('intervention').getNextID(function(nextID) {
+             core.model().getNextID(function(nextID) {
                  data.login = {
                      ajout: req.session.login
                  }
                  data.id = nextID;
                  data._id = nextID;
-                 var inter = db.model('intervention')(data);
+                 var inter = core.model()(data);
                  
                  if (_.isFunction(core.preSave))
                      core.preSave(data, req.session);

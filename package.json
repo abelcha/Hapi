@@ -23,6 +23,7 @@
     "cron-parser": "^0.7.0",
     "crypto-js": "^3.1.5",
     "dropbox": "^0.10.3",
+    "edsx-api-produits": "^2.0.2",
     "edsx-mail": "^2.0.24",
     "ejs": "^2.2.4",
     "express": "^4.13.3",

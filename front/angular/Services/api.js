@@ -1,6 +1,16 @@
 angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', function($http, $location, Upload) {
     "use strict";
     return {
+        searchProduct: function(text) {
+            return $http({
+                method: 'GET',
+                url: '/api/products/search',
+                cache: true,
+                params: {
+                    q: text
+                }
+            })
+        },
         stats: {
             telepro: function() {
                 return $http.get('/api/stats/telepro');
@@ -34,6 +44,12 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
 
         },
         devis: {
+            saveTmp: function(data) {
+                return $http.post('/api/devis/temporarySaving', data);
+            },
+            getTmp: function(id) {
+                return $http.get('/api/devis/temporarySaving?id=' + id);
+            },
             get: function(id, options) {
                 return $http({
                     method: 'GET',
@@ -55,12 +71,8 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
                     causeAnnulation: causeAnnulation
                 });
             },
-            list: function(options) {
-                return $http({
-                    method: 'GET',
-                    cache: options && options.cache,
-                    url: '/api/devis/list'
-                })
+            list: function() {
+                return $http.get('api/devis/getCacheList')
             },
         },
         intervention: {

@@ -206,7 +206,7 @@ var getIntervention = function($route, $q, edisonAPI) {
     var id = $route.current.params.id;
     if ($route.current.params.d) {
         return edisonAPI.devis.get($route.current.params.d, {
-            transform: true
+            select: 'date login produits tva client prixAnnonce categorie -_id'
         });
     } else if (id.length > 10) {
         return edisonAPI.intervention.getTmp(id);
@@ -221,31 +221,15 @@ var getDevis = function($route, $q, edisonAPI) {
     "use strict";
     var id = $route.current.params.id;
     if ($route.current.params.i) {
-        return edisonAPI.intervention.get($route.current.params.i, {
-            transform: true
+        return edisonAPI.intervention.get($route.current.params.d, {
+            select: 'client categorie tva -_id'
         });
     } else if (id.length > 10) {
-        return $q(function(resolve) {
-            resolve({
-                data: {
-                    isDevis: true,
-                    produits: [],
-                    tva: 10,
-                    client: {
-                        civilite: 'M.'
-                    },
-                    date: {
-                        ajout: Date.now(),
-                    },
-                    historique: []
-                }
-            });
-        });
+        return edisonAPI.devis.getTmp(id);
     } else {
         return edisonAPI.devis.get(id);
     }
 };
-
 
 angular.module('edison').config(function($routeProvider, $locationProvider) {
     "use strict";
@@ -289,8 +273,7 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
         })
         .when('/devis', {
             redirectTo: function(routeParams, path, params) {
-                var url = params.i ? "?i=" + params.i : "";
-                return '/devis/' + Date.now() + url;
+                return '/devis/' + Date.now();
             }
         })
         .when('/devis/:id', {
@@ -542,7 +525,7 @@ angular.module('edison').directive('dropdownRow', function(Devis, productsList, 
 
             if (scope._model === "intervention") {
                 edisonAPI.intervention.get(scope.row.id, {
-                    populate: 'sst'
+                    populate: ['sst', 'devisOrigine'].join(',')
                 }).then(function(result) {
                     scope.data = result.data;
                     if (scope.data.produits) {
@@ -1147,6 +1130,16 @@ angular.module('edison').factory('Address', function() {
 angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', function($http, $location, Upload) {
     "use strict";
     return {
+        searchProduct: function(text) {
+            return $http({
+                method: 'GET',
+                url: '/api/products/search',
+                cache: true,
+                params: {
+                    q: text
+                }
+            })
+        },
         stats: {
             telepro: function() {
                 return $http.get('/api/stats/telepro');
@@ -1180,6 +1173,12 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
 
         },
         devis: {
+            saveTmp: function(data) {
+                return $http.post('/api/devis/temporarySaving', data);
+            },
+            getTmp: function(id) {
+                return $http.get('/api/devis/temporarySaving?id=' + id);
+            },
             get: function(id, options) {
                 return $http({
                     method: 'GET',
@@ -1201,12 +1200,8 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
                     causeAnnulation: causeAnnulation
                 });
             },
-            list: function(options) {
-                return $http({
-                    method: 'GET',
-                    cache: options && options.cache,
-                    url: '/api/devis/list'
-                })
+            list: function() {
+                return $http.get('api/devis/getCacheList')
             },
         },
         intervention: {
@@ -2015,9 +2010,9 @@ angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', 'config', 
                         ref: ""
                     }
                     $scope.$watch('prod', function() {
-                            $scope.prod.ref = $scope.prod.ref.toUpperCase();
-                            $scope.prod.title = $scope.prod.title.toUpperCase();
-                            $scope.prod.desc = $scope.prod.title;
+                        $scope.prod.ref = $scope.prod.ref.toUpperCase();
+                        $scope.prod.title = $scope.prod.title.toUpperCase();
+                        $scope.prod.desc = $scope.prod.title;
                     }, true)
                     $scope.answer = function(resp, text) {
                         $mdDialog.hide();
@@ -2115,48 +2110,20 @@ angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', 'config', 
                 });
             }
         },
-        absence: function(cb) {
+        selectSubProduct: function(elem, callback) {
             $mdDialog.show({
                 controller: function DialogController($scope, $mdDialog) {
-                    $scope.absenceTime = 'TODAY';
-                    $scope.absence = [{
-                        title: 'Toute la journée',
-                        value: 'TODAY'
-                    }, {
-                        title: '1 Heure',
-                        value: '1'
-                    }, {
-                        title: '2 Heure',
-                        value: '2'
-                    }, {
-                        title: '3 Heure',
-                        value: '3'
-                    }, {
-                        title: '4 Heure',
-                        value: '4'
-                    }]
-                    $scope.hide = function() {
+                    $scope.elem = elem
+                    $scope.answer = function(cancel, item) {
+                        console.log('--->', cancel, item)
                         $mdDialog.hide();
-                    };
-                    $scope.cancel = function() {
-                        $mdDialog.cancel();
-                    };
-                    $scope.answer = function(answer) {
-                        $mdDialog.hide(answer);
-                        var hours = 0;
-                        if (answer === "TODAY") {
-                            hours = 23 - (new Date()).getHours() + 1;
-                        } else {
-                            hours = parseInt(answer);
+                        if (!cancel) {
+                            console.log('cb')
+                            return callback(item)
                         }
-                        var start = new Date();
-                        var end = new Date();
-                        end.setHours(end.getHours() + hours)
-                        cb(start, end);
-
-                    };
+                    }
                 },
-                templateUrl: '/DialogTemplates/absence.html',
+                templateUrl: '/DialogTemplates/selectSubProduct.html',
             });
         }
     }
@@ -2624,7 +2591,7 @@ angular.module('edison').factory('openPost', [function() {
     }
 }]);
 
-angular.module('edison').factory('productsList', ['dialog', 'openPost', function(dialog, openPost) {
+angular.module('edison').factory('productsList', function($q, dialog, openPost, edisonAPI) {
     "use strict";
     var ps = [{
         quantite: 1,
@@ -2743,40 +2710,64 @@ angular.module('edison').factory('productsList', ['dialog', 'openPost', function
             this.searchText = '';
             this.produits.push(prod);
         },
-        search: function(text) {
-            var rtn = []
-            for (var i = 0; i < ps.length; ++i) {
-                if (text === ps[i].title)
-                    return [];
-                var needle = _.deburr(text).toLowerCase()
+        /*        search: function(text) {
+                    var rtn = []
+                    for (var i = 0; i < ps.length; ++i) {
+                        if (text === ps[i].title)
+                            return [];
+                        var needle = _.deburr(text).toLowerCase()
 
-                var haystack = _.deburr(ps[i].title).toLowerCase();
-                var haystack2 = _.deburr(ps[i].ref).toLowerCase();
-                var haystack3 = _.deburr(ps[i].desc).toLowerCase();
-                if (_.includes(haystack, needle) ||
-                    _.includes(haystack2, needle) ||
-                    _.includes(haystack3, needle)) {
-                    var x = _.clone(ps[i])
-                    x.random = _.random();
-                    rtn.push(x)
-                }
-            }
-            return rtn
+                        var haystack = _.deburr(ps[i].title).toLowerCase();
+                        var haystack2 = _.deburr(ps[i].ref).toLowerCase();
+                        var haystack3 = _.deburr(ps[i].desc).toLowerCase();
+                        if (_.includes(haystack, needle) ||
+                            _.includes(haystack2, needle) ||
+                            _.includes(haystack3, needle)) {
+                            var x = _.clone(ps[i])
+                            x.random = _.random();
+                            rtn.push(x)
+                        }
+                    }
+                    return rtn
+                },*/
+        search: function(text) {
+            console.log('==>', text)
+            var deferred = $q.defer();
+            edisonAPI.searchProduct(text)
+                .success(function(resp) {
+                    deferred.resolve(resp)
+                })
+            return deferred.promise;
         },
-        flagship:function() {
+        getDetail: function(elem) {
+            if (!elem)
+                return 0
+            var _this = this;
+            dialog.selectSubProduct(elem, function(resp) {
+                var rtn = {
+                    quantite: 1,
+                    ref: resp.ref,
+                    title: elem.nom,
+                    desc: resp.nom + '\n' + elem.description.split('-').join('\n'),
+                    pu: Number(resp.prix)
+                }
+               _this.add(rtn)
+            })
+        },
+        flagship: function() {
             return _.max(this.produits, 'pu');
         },
         total: function() {
             var total = _.round(_.sum(this.produits, 'pu'), 2)
             return total;
         },
-       
+
     }
 
     return Produit;
 
 
-}]);
+});
 
 angular.module('edison').factory('socket', function(socketFactory) {
     "use strict";
@@ -3067,14 +3058,11 @@ angular.module('edison').directive('listeIntervention', function(tabContainer, F
             var title = currentFilter ? currentFilter.long_name : "Interventions";
             scope.recap = $routeParams.sstID ? parseInt($routeParams.sstID) : false;
 
-
             dataProvider.init(function(err, resp) {
                 scope.config = config;
-
                 scope.customFilter = function(inter) {
                     return inter.ai === scope.id;
                 }
-
                 dataProvider.applyFilter(currentFilter, undefined, scope.customFilter);
                 var tableParameters = {
                     page: 1, // show first page
@@ -3085,6 +3073,8 @@ angular.module('edison').directive('listeIntervention', function(tabContainer, F
                     },
                     count: 100 // count per page
                 };
+
+
                 var tableSettings = {
                     //groupBy:$rootScope.config.selectedGrouping,
                     total: dataProvider.filteredData,
@@ -3102,13 +3092,17 @@ angular.module('edison').directive('listeIntervention', function(tabContainer, F
                 scope.tableParams = new ngTableParams(tableParameters, tableSettings);
             })
             var lastChange = 0;
+
             $rootScope.$on('INTERVENTION_CACHE_LIST_CHANGE', function(event, newData) {
-                if (scope.tab.fullUrl === tabContainer.getCurrentTab().fullUrl && newData._date > lastChange) {
+                if (scope.tab && scope.tab.fullUrl === tabContainer.getCurrentTab().fullUrl && newData._date > lastChange) {
                     dataProvider.applyFilter(currentFilter, scope.tab.hash, scope.customFilter);
                     scope.tableParams.reload();
+                    // _this.tableParams.orderBy(_this.tableParams.$params.sorting)
+                    // _this.tableParams.filter(_this.tableParams.$params.filter)
                 }
                 lastChange = newData._date;
             })
+
 
             scope.contextMenu = new ContextMenu('intervention')
 
@@ -3558,7 +3552,7 @@ angular.module('edison').controller('DashboardController', DashboardController);
 
  }]);
 
-var DevisCtrl = function($scope, $rootScope, $location, $routeParams, LxProgressService, LxNotificationService, tabContainer, config, dialog, devisPrm, Devis) {
+var DevisCtrl = function(edisonAPI, $scope, $rootScope, $location, $routeParams, LxProgressService, LxNotificationService, tabContainer, config, dialog, devisPrm, Devis) {
     "use strict";
     var _this = this;
     _this.config = config;
@@ -3614,6 +3608,17 @@ var DevisCtrl = function($scope, $rootScope, $location, $routeParams, LxProgress
         if (oldVal !== newVal)
             devis.tva = 20;
     })
+
+
+    var updateTmpDevis = _.after(5, _.throttle(function() {
+        edisonAPI.devis.saveTmp(devis);
+    }, 2000))
+
+    if (!devis.id) {
+        $scope.$watch(function() {
+            return devis;
+        }, updateTmpDevis, true)
+    }
 
 }
 angular.module('edison').controller('DevisController', DevisCtrl);
@@ -3756,6 +3761,14 @@ var InterventionCtrl = function(Description, Signalement, ContextMenu, $window, 
     }
     if ($routeParams.d) {
         intervention.devisOrigine = parseInt($routeParams.d)
+        intervention.date = {
+            ajout: new Date(),
+            intervention: new Date(),
+
+        }
+        intervention.reglementSurPlace = true;
+        intervention.modeReglement = 'CH';
+        intervention.remarque = 'PAS DE REMARQUES';
     }
     _this.data = tab.data;
     _this.description = new Description(intervention);
@@ -3954,12 +3967,11 @@ var InterventionCtrl = function(Description, Signalement, ContextMenu, $window, 
 
 
     var updateTmpIntervention = _.after(5, _.throttle(function() {
-       edisonAPI.intervention.saveTmp(intervention);
+        edisonAPI.intervention.saveTmp(intervention);
 
     }, 2000))
 
     if (!intervention.id) {
-        console.log('uyau')
         $scope.$watch(function() {
             return intervention;
         }, updateTmpIntervention, true)
@@ -4363,7 +4375,7 @@ var InterventionsController = function($q, tabContainer, FiltersFactory, Context
 
     var lastChange = 0;
     $rootScope.$on('INTERVENTION_CACHE_LIST_CHANGE', function(event, newData) {
-        if (_this.tab.fullUrl === tabContainer.getCurrentTab().fullUrl && newData._date > lastChange) {
+        if (tabContainer.getCurrentTab() && _this.tab.fullUrl === tabContainer.getCurrentTab().fullUrl && newData._date > lastChange) {
             dataProvider.applyFilter(currentFilter, _this.tab.hash, _this.customFilter);
             _this.tableParams.reload();
             // _this.tableParams.orderBy(_this.tableParams.$params.sorting)
