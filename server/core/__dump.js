@@ -50,6 +50,7 @@
         var singleDump = function(id, login, convert) {
             console.log('dumpOne', id)
             return new Promise(function(resolve, reject) {
+                console.log('-->', core.singleDumpUrl(id))
                 request.get(core.singleDumpUrl(id), function(err, resp, body) {
                     if (err || resp.statusCode !== 200 || !body || body == 'null') {
                         new edison.event("DUMP_ONE", login, id, {
