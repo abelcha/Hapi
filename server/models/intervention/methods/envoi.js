@@ -219,24 +219,25 @@ module.exports = function(schema) {
                         return reject("Impossible de trouver l'artisan");
 
                     var filesPromises = [
-                        getOS(inter),
-                        getFacturier(inter),
-                        getDeviseur(inter)
+                        getOS(inter)
                     ]
+                    if (!envDev) {
 
-                    if (inter.sst.subStatus === 'NEW' || inter.sst.status === 'POT') {
-                        filesPromises.push(getStaticFile.bind("Manuel d'utilisation.pdf")(),
-                            getStaticFile.bind("Notice d'intervention.pdf")())
+                        filesPromises.push(getFacturier(inter));
+                        filesPromises.push(getDeviseur(inter));
+
+                        if (inter.sst.subStatus === 'NEW' || inter.sst.status === 'POT') {
+                            filesPromises.push(getStaticFile.bind("Manuel d'utilisation.pdf")(),
+                                getStaticFile.bind("Notice d'intervention.pdf")())
+                        }
+                        if (inter.devisOrigine) {
+                            filesPromises.push(getDevis(inter));
+                        }
+                        if (req.body.file) {
+                            filesPromises.push(document.download(req.body.file))
+                        }
                     }
-                    if (inter.devisOrigine) {
-                        filesPromises.push(getDevis(inter));
-                    }
-                    if (req.body.file) {
-                        filesPromises.push(document.download(req.body.file))
-                    }
-                    var fileSupp = req.body.file;
                     console.time('getFiles')
-
                     Promise.all(filesPromises).then(function(result) {
                         console.timeEnd('getFiles')
 
@@ -248,7 +249,7 @@ module.exports = function(schema) {
                             }
                         }).value();
 
-                        if (fileSupp) {
+                        if (req.body.file) {
                             inter.textfileSupp = (files[files.length - 1].ContentType === 'application/pdf' ? 'un document supplementaine' : 'une photo transmises par le client');
                         }
                         var c = config.categories[inter.categorie]

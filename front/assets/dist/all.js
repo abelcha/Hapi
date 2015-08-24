@@ -64,7 +64,7 @@ angular.module('edison').controller('MainController', function($timeout, $q, Dat
     }
 
     var reloadStats = function() {
-        edisonAPI.intervention.getStats()
+        edisonAPI.stats.telepro()
             .success(function(result) {
                 $scope.userStats = _.find(result, function(e) {
                     return e.login === $scope.user.login;
@@ -201,11 +201,6 @@ var getArtisan = function($route, $q, edisonAPI) {
     }
 };
 
-var getInterventionStats = function(edisonAPI) {
-    "use strict";
-    return edisonAPI.intervention.getStats();
-};
-
 var getIntervention = function($route, $q, edisonAPI) {
     "use strict";
     var id = $route.current.params.id;
@@ -217,8 +212,7 @@ var getIntervention = function($route, $q, edisonAPI) {
         return edisonAPI.intervention.getTmp(id);
     } else {
         return edisonAPI.intervention.get(id, {
-            cache: true,
-            extend: true
+            populate: 'sst'
         });
     }
 };
@@ -548,7 +542,7 @@ angular.module('edison').directive('dropdownRow', function(Devis, productsList, 
 
             if (scope._model === "intervention") {
                 edisonAPI.intervention.get(scope.row.id, {
-                    extended: true
+                    populate: 'sst'
                 }).then(function(result) {
                     scope.data = result.data;
                     if (scope.data.produits) {
@@ -928,7 +922,6 @@ angular.module("edison").filter('tableFilter', ['config', function(config) {
 
     return function(dataContainer, inputs, strictMode) {
         var rtn = [];
-        console.log(inputs)
         console.time('fltr')
         inputs = _.mapValues(inputs, clean);
         _.each(dataContainer, function(data) {
@@ -1154,6 +1147,11 @@ angular.module('edison').factory('Address', function() {
 angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', function($http, $location, Upload) {
     "use strict";
     return {
+        stats: {
+            telepro: function() {
+                return $http.get('/api/stats/telepro');
+            }
+        },
         compta: {
             lpa: function() {
                 return $http({
@@ -1213,17 +1211,10 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
         },
         intervention: {
             saveTmp: function(data) {
-                return $http.post('/api/intervention/saveTmp', data);
+                return $http.post('/api/intervention/temporarySaving', data);
             },
             getTmp: function(id) {
-                return $http.get('/api/intervention/getTmp?id=' + id);
-            },
-            getStats: function() {
-                return $http({
-                    method: 'GET',
-                    cache: false,
-                    url: '/api/intervention/stats'
-                })
+                return $http.get('/api/intervention/temporarySaving?id=' + id);
             },
             demarcher: function(id) {
                 return $http({
@@ -1231,12 +1222,8 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
                     url: '/api/intervention/' + id + '/demarcher'
                 })
             },
-            list: function(options) {
-                return $http({
-                    method: 'GET',
-                    cache: options && options.cache,
-                    url: '/api/intervention/list'
-                })
+            list: function() {
+                return $http.get('api/intervention/getCacheList')
             },
             get: function(id, options) {
                 return $http({
@@ -1252,7 +1239,12 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
                 return $http.get("/api/intervention/" + id + "/CB");
             },
             save: function(params) {
-                return $http.post("/api/intervention", params);
+                if (!params.id) {
+                    return $http.post("/api/intervention", params)
+                } else {
+                    return $http.post("/api/intervention/" + params.id, params)
+
+                }
             },
             getFiles: function(id) {
                 return $http({
@@ -1726,11 +1718,16 @@ angular.module('edison').factory('DataProvider', ['edisonAPI', 'socket', '$rootS
         var _this = this;
         this.model = model;
         this.hashModel = hashModel || 't';
-            socket.on(model + 'ListChange', function(newData) {
-                if (_this.getData()) {
-                    _this.updateData(newData);
-                }
-            });
+        socket.on(_this.socketListChange(), function(newData) {
+            if (_this.getData()) {
+                _this.updateData(newData);
+            }
+        });
+    }
+
+    DataProvider.prototype.socketListChange = function() {
+        var _this = this;
+        return _this.model.toUpperCase() + '_CACHE_LIST_CHANGE';
     }
 
     DataProvider.prototype.data = {}
@@ -1789,7 +1786,7 @@ angular.module('edison').factory('DataProvider', ['edisonAPI', 'socket', '$rootS
             } else {
                 _this.getData()[index] = newRow;
             }
-            $rootScope.$broadcast(_this.model + 'ListChange', newRow);
+            $rootScope.$broadcast(_this.socketListChange(), newRow);
         }
     }
 
@@ -3105,7 +3102,7 @@ angular.module('edison').directive('listeIntervention', function(tabContainer, F
                 scope.tableParams = new ngTableParams(tableParameters, tableSettings);
             })
             var lastChange = 0;
-            $rootScope.$on('interventionListChange', function(event, newData) {
+            $rootScope.$on('INTERVENTION_CACHE_LIST_CHANGE', function(event, newData) {
                 if (scope.tab.fullUrl === tabContainer.getCurrentTab().fullUrl && newData._date > lastChange) {
                     dataProvider.applyFilter(currentFilter, scope.tab.hash, scope.customFilter);
                     scope.tableParams.reload();
@@ -3399,7 +3396,7 @@ var ContactArtisanController = function($scope, $timeout, tabContainer, LxProgre
     /*
         $rootScope.$watch('tableilter', _this.reloadData);
     */
-    $rootScope.$on('artisanListChange', function() {
+    $rootScope.$on('ARTISAN_CACHE_LIST_CHANGE', function() {
         if (_this.tab.fullUrl === tabContainer.getCurrentTab().fullUrl) {
             dataProvider.applyFilter(currentFilter, _this.tab.hash);
         }
@@ -3731,7 +3728,6 @@ angular.module('edison').directive('infoCompta', ['config', 'Paiement',
 
 var InterventionCtrl = function(Description, Signalement, ContextMenu, $window, $timeout, $rootScope, $scope, $location, $routeParams, dialog, fourniture, LxNotificationService, LxProgressService, tabContainer, edisonAPI, Address, $q, mapAutocomplete, productsList, config, interventionPrm, Intervention, Map) {
     "use strict";
-    console.log(interventionPrm)
     var _this = this;
     _this.config = config;
     _this.dialog = dialog;
@@ -4176,7 +4172,7 @@ var ArtisanController = function($timeout, tabContainer, LxProgressService, Filt
         LxProgressService.circular.hide();
     });
 
-    $rootScope.$on('artisanListChange', function() {
+    $rootScope.$on('ARTISAN_CACHE_LIST_CHANGE', function() {
         if (_this.tab.fullUrl === tabContainer.getCurrentTab().fullUrl) {
             dataProvider.applyFilter(currentFilter, _this.tab.hash);
             _this.tableParams.reload();
@@ -4261,7 +4257,7 @@ var DevisController = function($timeout, tabContainer, FiltersFactory, ContextMe
         LxProgressService.circular.hide();
     });
 
-    $rootScope.$on('devisListChange', function() {
+    $rootScope.$on('DEVIS_CACHE_LIST_CHANGE', function() {
         if (_this.tab.fullUrl === tabContainer.getCurrentTab().fullUrl) {
             dataProvider.applyFilter(currentFilter, _this.tab.hash);
             _this.tableParams.reload();
@@ -4352,7 +4348,6 @@ var InterventionsController = function($q, tabContainer, FiltersFactory, Context
             total: dataProvider.filteredData,
             getData: function($defer, params) {
                 var data = dataProvider.filteredData;
-                console.log(params.filter(), _this.currentFilter)
                 //if (!_.isEqual(params.filter(), _this.currentFilter))
                 data = $filter('tableFilter')(data, params.filter());
                 _this.currentFilter = _.clone(params.filter());
@@ -4367,12 +4362,12 @@ var InterventionsController = function($q, tabContainer, FiltersFactory, Context
     })
 
     var lastChange = 0;
-    $rootScope.$on('interventionListChange', function(event, newData) {
+    $rootScope.$on('INTERVENTION_CACHE_LIST_CHANGE', function(event, newData) {
         if (_this.tab.fullUrl === tabContainer.getCurrentTab().fullUrl && newData._date > lastChange) {
             dataProvider.applyFilter(currentFilter, _this.tab.hash, _this.customFilter);
             _this.tableParams.reload();
-           // _this.tableParams.orderBy(_this.tableParams.$params.sorting)
-           // _this.tableParams.filter(_this.tableParams.$params.filter)
+            // _this.tableParams.orderBy(_this.tableParams.$params.sorting)
+            // _this.tableParams.filter(_this.tableParams.$params.filter)
         }
         lastChange = newData._date;
     })
@@ -4382,11 +4377,10 @@ var InterventionsController = function($q, tabContainer, FiltersFactory, Context
 
     _this.rowRightClick = function($event, inter) {
         edisonAPI.intervention.get(inter.id, {
-                extended: true
+                populate: 'sst'
             })
             .then(function(resp) {
                 _this.contextMenu.setData(resp.data);
-                console.log(resp.data)
                 _this.contextMenu.setPosition($event.pageX, $event.pageY)
                 _this.contextMenu.open();
             })

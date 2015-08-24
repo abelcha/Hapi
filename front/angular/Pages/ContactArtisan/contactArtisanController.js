@@ -59,7 +59,7 @@ var ContactArtisanController = function($scope, $timeout, tabContainer, LxProgre
     /*
         $rootScope.$watch('tableilter', _this.reloadData);
     */
-    $rootScope.$on('artisanListChange', function() {
+    $rootScope.$on('ARTISAN_CACHE_LIST_CHANGE', function() {
         if (_this.tab.fullUrl === tabContainer.getCurrentTab().fullUrl) {
             dataProvider.applyFilter(currentFilter, _this.tab.hash);
         }

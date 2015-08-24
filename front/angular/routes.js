@@ -64,7 +64,7 @@ angular.module('edison').controller('MainController', function($timeout, $q, Dat
     }
 
     var reloadStats = function() {
-        edisonAPI.intervention.getStats()
+        edisonAPI.stats.telepro()
             .success(function(result) {
                 $scope.userStats = _.find(result, function(e) {
                     return e.login === $scope.user.login;
@@ -201,11 +201,6 @@ var getArtisan = function($route, $q, edisonAPI) {
     }
 };
 
-var getInterventionStats = function(edisonAPI) {
-    "use strict";
-    return edisonAPI.intervention.getStats();
-};
-
 var getIntervention = function($route, $q, edisonAPI) {
     "use strict";
     var id = $route.current.params.id;
@@ -217,8 +212,7 @@ var getIntervention = function($route, $q, edisonAPI) {
         return edisonAPI.intervention.getTmp(id);
     } else {
         return edisonAPI.intervention.get(id, {
-            cache: true,
-            extend: true
+            populate: 'sst'
         });
     }
 };

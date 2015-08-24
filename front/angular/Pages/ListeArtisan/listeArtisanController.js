@@ -47,7 +47,7 @@ var ArtisanController = function($timeout, tabContainer, LxProgressService, Filt
         LxProgressService.circular.hide();
     });
 
-    $rootScope.$on('artisanListChange', function() {
+    $rootScope.$on('ARTISAN_CACHE_LIST_CHANGE', function() {
         if (_this.tab.fullUrl === tabContainer.getCurrentTab().fullUrl) {
             dataProvider.applyFilter(currentFilter, _this.tab.hash);
             _this.tableParams.reload();

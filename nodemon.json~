@@ -1,0 +1,4 @@
+{
+  "verbose": false,
+  "watch":["node_modules/edsx-mail/*.js", "server/routes/*", "config/*.js", "server/edison_components/*", "server/models/*", "server/app.js", "server/worker.js"]
+}

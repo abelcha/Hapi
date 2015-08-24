@@ -19,6 +19,7 @@ module.exports = function(db) {
             transfert: String
         },
         date: {
+            dump: Date,
             annulation: String,
             ajout: {
                 type: Date,
@@ -90,7 +91,8 @@ module.exports = function(db) {
         tva: {
             type: Number,
             default: 20
-        }
+        },
+        cache: {}
     }, {
         versionKey: false
     });

@@ -24,7 +24,7 @@ module.exports = function(schema) {
             sx: config.etatsDevis[e.status].long_name,
             cp: e.client.address.cp,
             ad: e.client.address.v,
-            ev: e.envois,
+            ev: e.historique.length,
             pa: e.prixAnnonce,
         };
     }

@@ -9,7 +9,6 @@ module.exports = function() {
     global.__catch = function(e) {
         var prettyError = require('pretty-error');
         console.log((new prettyError().render(e)));
-        throw e;
     }
 
     var key = requireLocal('config/_keys');

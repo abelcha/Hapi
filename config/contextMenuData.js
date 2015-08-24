@@ -95,7 +95,6 @@ module.exports = {
         title: "Envoyer",
         action: 'envoi',
         hide: function(inter) {
-            console.log(inter)
             return inter.status == "VRF" || (!inter.artisan || !inter.artisan.id)
         }
     }, {

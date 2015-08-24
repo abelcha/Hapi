@@ -11,7 +11,7 @@
     var entities = new Entities();
 
     module.exports = function(schema) {
-
+        return 0;
         var addProp = function(obj, prop, name) {
             if (prop) {
                 obj[name] = prop;

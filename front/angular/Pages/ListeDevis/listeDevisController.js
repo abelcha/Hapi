@@ -44,7 +44,7 @@ var DevisController = function($timeout, tabContainer, FiltersFactory, ContextMe
         LxProgressService.circular.hide();
     });
 
-    $rootScope.$on('devisListChange', function() {
+    $rootScope.$on('DEVIS_CACHE_LIST_CHANGE', function() {
         if (_this.tab.fullUrl === tabContainer.getCurrentTab().fullUrl) {
             dataProvider.applyFilter(currentFilter, _this.tab.hash);
             _this.tableParams.reload();

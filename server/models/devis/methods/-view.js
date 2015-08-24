@@ -16,7 +16,6 @@ module.exports = function(schema) {
                     rtn.devisOrigine = id;
                     rtn.reglementSurPlace = true;
                     rtn.modeReglement = 'CB';
-                    rtn.description = 'un earrea rae are ea '
                     rtn.date = {
                         ajout: Date.now(),
                         intervention: Date.now()

@@ -51,7 +51,7 @@ angular.module('edison').directive('listeIntervention', function(tabContainer, F
                 scope.tableParams = new ngTableParams(tableParameters, tableSettings);
             })
             var lastChange = 0;
-            $rootScope.$on('interventionListChange', function(event, newData) {
+            $rootScope.$on('INTERVENTION_CACHE_LIST_CHANGE', function(event, newData) {
                 if (scope.tab.fullUrl === tabContainer.getCurrentTab().fullUrl && newData._date > lastChange) {
                     dataProvider.applyFilter(currentFilter, scope.tab.hash, scope.customFilter);
                     scope.tableParams.reload();

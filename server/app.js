@@ -17,16 +17,20 @@ var port = (process.env.PORT || 8080);
 var path = require('path');
 var _ = require('lodash')
 var fs = require('fs')
+global.io = require('socket.io')(http);
 require('./shared.js')(express);
+global.jobs = edison.worker.initJobQueue();
 
 global.isWorker = false;
-global.io = require('socket.io')(http);
-global.jobs = edison.worker.initJobQueue();
 
 
 new edison.timer();
 
 app.get('/api/client/:id/telephone', edison.axialis.get)
+app.get('/favicon.ico', function(req, res) {
+    res.sendFile(process.cwd() + '/front/assets/img/favicon.ico')
+})
+
 
 app.use(require("multer")({
     inMemory: true,
@@ -141,10 +145,7 @@ app.use(function(err, req, res, next) {
 });
 //}
 
-process.on('uncaughtException', function(error) {
-    console.log("Stack => ", error, error.stack);
-    // throw error;
-});
+process.on('uncaughtException', __catch);
 
 
 http.listen(port, function() {

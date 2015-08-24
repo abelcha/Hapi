@@ -41,7 +41,6 @@ var InterventionsController = function($q, tabContainer, FiltersFactory, Context
             total: dataProvider.filteredData,
             getData: function($defer, params) {
                 var data = dataProvider.filteredData;
-                console.log(params.filter(), _this.currentFilter)
                 //if (!_.isEqual(params.filter(), _this.currentFilter))
                 data = $filter('tableFilter')(data, params.filter());
                 _this.currentFilter = _.clone(params.filter());
@@ -56,12 +55,12 @@ var InterventionsController = function($q, tabContainer, FiltersFactory, Context
     })
 
     var lastChange = 0;
-    $rootScope.$on('interventionListChange', function(event, newData) {
+    $rootScope.$on('INTERVENTION_CACHE_LIST_CHANGE', function(event, newData) {
         if (_this.tab.fullUrl === tabContainer.getCurrentTab().fullUrl && newData._date > lastChange) {
             dataProvider.applyFilter(currentFilter, _this.tab.hash, _this.customFilter);
             _this.tableParams.reload();
-           // _this.tableParams.orderBy(_this.tableParams.$params.sorting)
-           // _this.tableParams.filter(_this.tableParams.$params.filter)
+            // _this.tableParams.orderBy(_this.tableParams.$params.sorting)
+            // _this.tableParams.filter(_this.tableParams.$params.filter)
         }
         lastChange = newData._date;
     })
@@ -71,11 +70,10 @@ var InterventionsController = function($q, tabContainer, FiltersFactory, Context
 
     _this.rowRightClick = function($event, inter) {
         edisonAPI.intervention.get(inter.id, {
-                extended: true
+                populate: 'sst'
             })
             .then(function(resp) {
                 _this.contextMenu.setData(resp.data);
-                console.log(resp.data)
                 _this.contextMenu.setPosition($event.pageX, $event.pageY)
                 _this.contextMenu.open();
             })

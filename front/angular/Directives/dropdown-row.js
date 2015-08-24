@@ -29,7 +29,7 @@ angular.module('edison').directive('dropdownRow', function(Devis, productsList, 
 
             if (scope._model === "intervention") {
                 edisonAPI.intervention.get(scope.row.id, {
-                    extended: true
+                    populate: 'sst'
                 }).then(function(result) {
                     scope.data = result.data;
                     if (scope.data.produits) {

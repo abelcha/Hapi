@@ -14,7 +14,7 @@ module.exports = {
 		var files = fs.readdirSync(dir);
 		for (var i in files) {
 		    if (files[i].slice(-3) === ".js")
-		        ret[files[i].slice(0, -3)] = require(dir+'/'+files[i]);
+		        ret[_.camelCase(files[i].slice(0, -3))] = require(dir+'/'+files[i]);
 		}
 		return (ret);
 	}

@@ -1,6 +1,11 @@
 angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', function($http, $location, Upload) {
     "use strict";
     return {
+        stats: {
+            telepro: function() {
+                return $http.get('/api/stats/telepro');
+            }
+        },
         compta: {
             lpa: function() {
                 return $http({
@@ -60,17 +65,10 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
         },
         intervention: {
             saveTmp: function(data) {
-                return $http.post('/api/intervention/saveTmp', data);
+                return $http.post('/api/intervention/temporarySaving', data);
             },
             getTmp: function(id) {
-                return $http.get('/api/intervention/getTmp?id=' + id);
-            },
-            getStats: function() {
-                return $http({
-                    method: 'GET',
-                    cache: false,
-                    url: '/api/intervention/stats'
-                })
+                return $http.get('/api/intervention/temporarySaving?id=' + id);
             },
             demarcher: function(id) {
                 return $http({
@@ -78,12 +76,8 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
                     url: '/api/intervention/' + id + '/demarcher'
                 })
             },
-            list: function(options) {
-                return $http({
-                    method: 'GET',
-                    cache: options && options.cache,
-                    url: '/api/intervention/list'
-                })
+            list: function() {
+                return $http.get('api/intervention/getCacheList')
             },
             get: function(id, options) {
                 return $http({
@@ -99,7 +93,12 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
                 return $http.get("/api/intervention/" + id + "/CB");
             },
             save: function(params) {
-                return $http.post("/api/intervention", params);
+                if (!params.id) {
+                    return $http.post("/api/intervention", params)
+                } else {
+                    return $http.post("/api/intervention/" + params.id, params)
+
+                }
             },
             getFiles: function(id) {
                 return $http({

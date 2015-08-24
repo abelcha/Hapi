@@ -4,11 +4,16 @@ angular.module('edison').factory('DataProvider', ['edisonAPI', 'socket', '$rootS
         var _this = this;
         this.model = model;
         this.hashModel = hashModel || 't';
-            socket.on(model + 'ListChange', function(newData) {
-                if (_this.getData()) {
-                    _this.updateData(newData);
-                }
-            });
+        socket.on(_this.socketListChange(), function(newData) {
+            if (_this.getData()) {
+                _this.updateData(newData);
+            }
+        });
+    }
+
+    DataProvider.prototype.socketListChange = function() {
+        var _this = this;
+        return _this.model.toUpperCase() + '_CACHE_LIST_CHANGE';
     }
 
     DataProvider.prototype.data = {}
@@ -67,7 +72,7 @@ angular.module('edison').factory('DataProvider', ['edisonAPI', 'socket', '$rootS
             } else {
                 _this.getData()[index] = newRow;
             }
-            $rootScope.$broadcast(_this.model + 'ListChange', newRow);
+            $rootScope.$broadcast(_this.socketListChange(), newRow);
         }
     }
 

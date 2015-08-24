@@ -20,6 +20,8 @@ module.exports = function(app) {
         }
     })
 
+    app.get('/api/stats/telepro', edison.statsTelepro.get.bind(edison.statsTelepro));
+
     app.get('/api/search/:text', edison.search)
 
     var uniqueModel = function(model, method, req, res) {
@@ -63,14 +65,6 @@ module.exports = function(app) {
         }
     });
 
-    app.post('/api/:model', function(req, res, next) {
-        var model = db.model(req.params.model);
-        var method = 'save';
-        if (!model ||  typeof model[method] !== "function" || model[method].length !== 2) {
-            return next();
-        }
-        model[method](req, res).then(success.bind(res), die.bind(res))
-    });
 
     app.all('/api/:model/:method', function(req, res, next) {
         var model = db.model(req.params.model);
@@ -84,7 +78,7 @@ module.exports = function(app) {
         }
     });
 
-    app.all('/api/:model/:id', function(req, res, next) {
+    app.get('/api/:model/:id', function(req, res, next) {
         var model = db.model(req.params.model);
         var method = req.params.method;
         var id = req.params.id;
@@ -93,6 +87,25 @@ module.exports = function(app) {
         id = id.match(/^[0-9]+$/i) ? parseInt(id) : id;
         model.view(id, req, res).then(success.bind(res), die.bind(res));
     });
+
+    app.post('/api/:model', function(req, res, next) {
+        var model = db.model(req.params.model);
+        if (typeof model.__save !== "function") {
+            return next();
+        }
+        model.__save(req, res).then(success.bind(res), die.bind(res))
+    });
+
+    app.post('/api/:model/:id', function(req, res, next) {
+        var model = db.model(req.params.model);
+        if (typeof model.__update !== "function") {
+            return next();
+        }
+        console.log('update')
+        model.__update(req.params.id, req, res).then(success.bind(res), die.bind(res))
+    });
+
+
 
     app.get('/api/map/:method', function(req, res) {
         if (!edison.map[req.params.method]) {

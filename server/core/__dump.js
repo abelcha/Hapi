@@ -1,0 +1,77 @@
+    var config = requireLocal('config/dataList');
+    var request = require("request");
+    var _ = require('lodash');
+    var V1 = requireLocal('config/_convert_V1');
+    var async = require('async')
+
+    module.exports = function(core) {
+
+
+        var Dump = function(req, res) {
+            if (req.query.id) {
+                return singleDump(req.query.id, req.query.login || req.session.login, req.query.convert)
+            } else if (!isWorker) {
+                console.log('dump worker')
+                return edison.worker.createJob({
+                    name: 'db',
+                    model: core.name,
+                    method: 'dump',
+                    req: _.pick(req, 'query', 'session')
+                })
+            } else {
+                return multiDump(req.query.limit ||  0)
+            }
+        }
+
+
+        var multiDump = function(limit) {
+            return new Promise(function(resolve, reject) {
+                core.model().remove({}, function() {
+                    console.time('request')
+                    request(core.multiDumpUrl(limit), function(err, rest, body) {
+                        console.timeEnd('request')
+                        var data = JSON.parse(body);
+                        console.time('dump')
+                        var i = 0;
+                        async.eachSeries(data, function(e, callback) {
+                            if (++i % 100 == 0)
+                                console.log(_.round(i / data.length * 100, 2), "%")
+                            core.model()(core.toV2(e)).save(callback);
+                        }, function(err, resp) {
+                            core.model().fullReload().then(resolve, reject)
+                        })
+                    });
+                });
+
+
+            });
+        }
+
+        var singleDump = function(id, login, convert) {
+            console.log('dumpOne', id)
+            return new Promise(function(resolve, reject) {
+                request.get(core.singleDumpUrl(id), function(err, resp, body) {
+                    if (err || resp.statusCode !== 200 || !body || body == 'null') {
+                        new edison.event("DUMP_ONE", login, id, {
+                            rejected: true,
+                        })
+                        console.log('rejected', id)
+                        return reject('nope')
+                    }
+                    var v1 = JSON.parse(body)
+                    var v2 = core.toV2(v1)
+                    if (!convert)
+                        v2.date.dump = Date.now();
+                    new edison.event("DUMP_ONE" + core.NAME, login, parseInt(id), {
+                        v1: v1,
+                        v2: v2
+                    })
+                    core.model().findById(parseInt(id), function(err, doc) {
+                        var doc = doc ||  core.model()(v2);
+                        doc.save().then(resolve, reject);
+                    })
+                });
+            })
+        }
+        return Dump;
+    }

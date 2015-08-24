@@ -14,13 +14,14 @@
     <script src="/dist/all.js"></script>
 </head>
 
-
 <body ng-app="edison" ng-controller="MainController" style="  background: #f4f4f4 url(/img/mooning.png);" class="ng-cloak main-menu-fixed main-navbar-fixed theme-adminflare main-menu-animated" ng-class="{'mmc' : sideBarIsOpen}" ng-click="closeContextMenu()">
     <div id="main-wrapper" ng-hide="loadingData">
         <div id="main-navbar" class="navbar navbar-inverse" role="navigation">
             <!-- Main menu toggle -->
             <button type="button" id="main-menu-toggle" ng-click="sideBarIsOpen = !sideBarIsOpen">
-                <i class="navbar-icon fa fa-bars icon"></i><span class="hide-menu-text">HIDE MENU</span></button>
+                <img style="height: 40px;margin: 0 auto;" src="/img/logo_cutted.png">
+            </button>
+            <img style="height: 39px;margin-top: 3px;position: fixed;margin-left: 72px;" src="/img/logo_text_cutted.png">
             <div class="navbar-inner">
                 <!-- Main navbar header -->
                 <!-- / .navbar-header -->
@@ -38,7 +39,7 @@
             <drop-down id="service-intervention" title="Service Intervention" icon="circle" open-default="user.service === 'INTERVENTION'">
                 <link fltr="i_all" icon="th-list" title="Tous les Interventions"></link>
                 <drop-down title="Mes Interventions" icon="calendar" open-default="user.service === 'INTERVENTION'">
-                   <link fltr="i_tall" icon="th-list" color="default" text-white="true" bold="true" title="{{dateFormat}}" login="{{user.login}}"></link>
+                    <link fltr="i_tall" icon="th-list" color="default" text-white="true" bold="true" title="{{dateFormat}}" login="{{user.login}}"></link>
                     <link fltr="i_tenv" icon="th-list" login="{{user.login}}"></link>
                     <link fltr="i_apr" icon="th-list" color="primary" login="{{user.login}}"></link>
                     <link fltr="i_avr" icon="th-list" color="warning" login="{{user.login}}"></link>
@@ -103,7 +104,7 @@
         <div class="page-header" style="background: #f4f4f4 url(/img/mooning.png);">
             <div class="menu-tabs">
                 <md-tabs md-selected="tabs.selectedTab" style=" margin-left: 6px;">
-                    <md-tab ng-repeat="tab in tabs._tabs" ng-click="shadowClick(tab.fullUrl)"   style="padding-right:8px">
+                    <md-tab ng-repeat="tab in tabs._tabs" ng-click="shadowClick(tab.fullUrl)" style="padding-right:8px">
                         <md-tab-label><a id="{{tab.position}}_tab" href="{{tab.fullUrl}}">{{tab.title || "•••"}} </a><span ng-if="tab.hash" style="color:black;font-size:8px">{{tab.hash|loginify}}</span> <i ng-click="tabIconClick($event, tab)" class="fa fa-remove"></i></md-tab-label>
                     </md-tab>
                 </md-tabs>

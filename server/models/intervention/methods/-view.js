@@ -4,7 +4,7 @@ module.exports = function(schema) {
         var _this = this;
         id = parseInt(id);
         if (id == 0 || isNaN(id))
-            return Promise.reject("Invalid ID")
+            return Promise.reject(id + "id no a valid ID")
         return new Promise(function(resolve, reject) {
             if (req.query.transform) {
                 db.model('intervention').findOne({
@@ -24,16 +24,16 @@ module.exports = function(schema) {
                     promise = promise.populate('devisOrigine')
                 }
                 if (req.query.artisan ||  req.query.extended) {
-                    promise = promise.populate('artisan.id')
+                    promise = promise.populate('sst')
                 }
                 promise.then(function(doc)  {
                     if (doc === null)
                         return reject('not found')
 
                     rtn = doc.toObject();
-                    if (typeof doc.artisan.id == "object") {
+/*                    if (typeof doc.artisan.id == "object") {
                         rtn.artisan = doc.artisan.id;
-                    }
+                    }*/
                     resolve(rtn);
                 });
             }

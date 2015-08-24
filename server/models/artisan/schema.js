@@ -7,12 +7,12 @@ module.exports = function(db) {
             index: true
 
         },
-        origin:String,
+        origin: String,
         status: {
             type: String,
             default: 'POT'
         },
-        subStatus:String,
+        subStatus: String,
         date: {
             ajout: {
                 type: Date,
@@ -180,7 +180,8 @@ module.exports = function(db) {
                 signe: Boolean
             }],
         },
-        nbrIntervention:Number,
-        siret: String
+        nbrIntervention: Number,
+        siret: String,
+        cache: {}
     });
 }

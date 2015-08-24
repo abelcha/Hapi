@@ -274,20 +274,3 @@ module.exports = function(schema) {
 
 
 }
-
-/*            db.model('intervention')
-                .aggregate()
-                .match({
-                    'compta.reglement.recu': true,
-                })
-                .project({
-                    'compta.reglement.date': true,
-                })
-                .limit(1000)
-                .exec(function(err, docs) {
-                    var x = _.groupBy(docs, function(e) {
-                        var date = (new Date(e.compta.reglement.date))
-                        e.timestamp = date.getTime()
-                        return date.getMonth() + 1 + '/' + date.getFullYear()
-                    })
-                    resolve(x)*/

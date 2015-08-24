@@ -5,7 +5,6 @@ module.exports = function(schema) {
     var encryptor = require('simple-encryptor')(key.salt);
     var _ = require('lodash')
     var moment = require('moment');
-
     /* M.|Me|Soc. */
     /*    schema.path('client.civilite').validate(function(value) {
             return /M\.|Mme|Soc\./i.test(value);
@@ -36,7 +35,8 @@ module.exports = function(schema) {
     }
 
 
-    var preSave = function(next) {
+
+    var validatorPreSave = function(next) {
         var _this = this;
         try {
             upperCaseEverything(this.client.address)
@@ -46,7 +46,7 @@ module.exports = function(schema) {
             _this.enDemarchage = _this.login.demarchage;
             _this.litigesEnCours = _.find(_this.litiges, 'regle', false);
             _this.savEnCours = _.find(_this.sav, 'status', 'ENC');
-            _this.cache = db.model('intervention').cachify(_this);
+            _this.cache = db.model('intervention').Core.minify(_this);
             if (isWorker) {
                 return next();
             }
@@ -65,7 +65,7 @@ module.exports = function(schema) {
 
     }
 
-    var postSave = function(doc) {
+    var validatorPostSave = function(doc) {
         if (!isWorker) {
             if (doc.artisan.id) {
                 db.model('artisan').findOne({
@@ -74,24 +74,25 @@ module.exports = function(schema) {
                     sst.save().then();
                 })
             }
-            db.model('intervention').cacheActualise(doc);
-            console.log(envProd,  (!doc.date.dump || moment().subtract(5000).isAfter(doc.date.dump)))
-            if (envProd && (!doc.date.dump || moment().subtract(5000).isAfter(doc.date.dump))) {
-                var v1 = new V1(doc);
-                v1.send(function(resp) {
-                    console.log(resp)
-                });
-            }
+            db.model('intervention').uniqueCacheReload(doc, function() {
+                console.log(envProd, (!doc.date.dump || moment().subtract(5000).isAfter(doc.date.dump)))
+                if (envProd && (!doc.date.dump || moment().subtract(5000).isAfter(doc.date.dump))) {
+                    var v1 = new V1(doc);
+                    v1.send(function(resp) {
+                        console.log(resp)
+                    });
+                }
+            });
         }
 
     }
 
     schema.pre('save', function(next) {
-        preSave.bind(this)(next)
+        validatorPreSave.bind(this)(next)
     });
 
 
-    schema.post('save', postSave)
+    schema.post('save', validatorPostSave)
 
-    schema.post('findOneAndUpdate', postSave)
+    schema.post('findOneAndUpdate', validatorPostSave)
 }
