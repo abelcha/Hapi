@@ -2,7 +2,7 @@
         var async = require('async');
         var _ = require('lodash');
 
-        return function(doc) {
+        return function(doc, callback) {
             try {
 
                 async.series({
@@ -18,6 +18,8 @@
                         core.model().findById(doc.id, cb)
                     }
                 }, function(err, resp) {
+                    try {
+
                     if (resp.cacheList && resp.data) {
                         var data = JSON.parse(resp.cacheList);
                         var index = _.findIndex(data, function(e) {
@@ -29,6 +31,7 @@
                         } else {
                             data.unshift(result);
                         }
+
                         edison.statsTelepro.reload().then(function(resp) {
                             io.sockets.emit('filterStatsReload', resp);
                         })
@@ -41,8 +44,13 @@
                                     io.sockets.emit(core.listChange, result);
                                 }, 2500)
                             }
+                            callback()
                         });
                     }
+                    } catch(e) {
+                        console.log(e.stack)
+                    }
+
                 })
             } catch (e) {
                 __catch(e)
