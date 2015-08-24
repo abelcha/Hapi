@@ -53,6 +53,7 @@
                 console.log('-->', core.singleDumpUrl(id))
                 request.get(core.singleDumpUrl(id), function(err, resp, body) {
                     if (err || resp.statusCode !== 200 || !body || body == 'null') {
+                        console.log(err, resp.statusCode, body)
                         new edison.event("DUMP_ONE", login, id, {
                             rejected: true,
                         })
