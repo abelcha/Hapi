@@ -34,6 +34,8 @@ module.exports = function(modelName, schema) {
 
     schema.statics.__save = require('./__save')(core);
 
+    schema.statics.iterator = require('./__document-iterator')(core);
+
 
     schema.statics.Core = core;
 

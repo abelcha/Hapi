@@ -138,7 +138,6 @@ angular.module('edison').factory('productsList', function($q, dialog, openPost, 
                     return rtn
                 },*/
         search: function(text) {
-            console.log('==>', text)
             var deferred = $q.defer();
             edisonAPI.searchProduct(text)
                 .success(function(resp) {

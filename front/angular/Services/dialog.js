@@ -214,10 +214,8 @@ angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', 'config', 
                 controller: function DialogController($scope, $mdDialog) {
                     $scope.elem = elem
                     $scope.answer = function(cancel, item) {
-                        console.log('--->', cancel, item)
                         $mdDialog.hide();
                         if (!cancel) {
-                            console.log('cb')
                             return callback(item)
                         }
                     }

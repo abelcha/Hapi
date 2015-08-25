@@ -6,7 +6,7 @@
             <p>{{client.address.n}} {{client.address.r}}, </p>
             <p>{{client.address.cp}} {{client.address.v}}</p>
             <p ng-if="_model === 'intervention'" strong>{{data.description}}</p>
-            <p ng-if="_model === 'intervention'"><span strong>{{data.prixAnnonce || 0}} €<span ng-if="data.prixFinal"> -> {{data.prixFinal}} € </span></span>
+            <p ng-if="_model === 'intervention'"><span strong>{{data.prixAnnonce.toFixed(2) || 0.00}} €<span ng-if="data.prixFinal"> -> {{data.prixFinal.toFixed(2)}} € </span></span>
                 ({{data.reglementSurPlace ? 'Reglement sur place' : ' Reglement par facture'}} - {{data.modeReglement}})
                 <p ng-if="_model === 'intervention'">
                 </p>

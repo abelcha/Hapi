@@ -74,7 +74,6 @@ module.exports = function(schema) {
                     sst.save().then();
                 })
             }
-            console.log('yay1')
             db.model('intervention').uniqueCacheReload(doc, function() {
                 console.log('yay')
                 console.log(envProd, (!doc.date.dump || moment().subtract(5000).isAfter(doc.date.dump)))

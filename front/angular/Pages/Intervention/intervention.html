@@ -18,13 +18,13 @@
                 <div class="row" style="margin:0">
                     <div class="col-md-8" style="padding-left:0">
                         <div class="card margin">
-                            <div class="p+">
+                            <div class="p+" style="height: 538px;">
                                 <span class="fs-headline display-block">
          <button ng-click="vm.data.categorie = undefined" style="float:left" class="btn--no-conflicts btn--m {{config.categories[vm.data.categorie].color}} btn--flat" lx-ripple> {{config.categories[vm.data.categorie].long_name}}</button></span>
                                 <div class="fs-body-1 mt+" style="padding-top:10px">
                                     <edison-map first-address="firstAddress" is-new="vm.isNew" data="vm.data" client="vm.data.client" xmarkers="vm.nearestArtisans" address-change="vm.searchArtisans()" height="small"></edison-map>
                                 </div>
-                                <div class="p+" ng-if="vm.data.artisan.id && vm.data.artisan.stats.total">
+                                <div class="p+"  ng-if="vm.data.artisan.id && vm.data.artisan.stats.total">
                                     <span class="fs-subhead tc-black-2 display-block">
                                     {{vm.data.artisan.nomSociete}} - M. {{vm.data.artisan.representant.nom}} {{vm.data.artisan.representant.prenom}}</span>
                                     <div class="paragraph fs-body-1" style="height:90px;">
@@ -122,7 +122,7 @@
                             <div class="p+" style='overflow:hidden;'>
                                 <strong class="fs-headline display-block">Artisans</strong>
                                 <span class="fs-subhead tc-black-2 display-block select-style-neutral">
-                                <div  class="paragraph fs-body-1 mt+" slimscroll="{height:379}" style="height: 379px;">
+                                <div  class="paragraph fs-body-1 mt+" slimscroll="{height:474}" style="height: 474px;">
                                     <table ng-if="vm.nearestArtisans.length" class="table table-condensed" style="padding:0;color:black">
                                         <tbody>
                                          <tr><td colspan="12" style="text-align:center;border-top: 0px;"><h4 style="margin: 0;">Actifs</h4></td></tr>
@@ -143,8 +143,8 @@
                                     </h3>
                                 </div>
                             </div>
-                            <div class="card__actions" style="text-align:center">
-                            <md-switch class="md-primary" md-no-ink aria-label="Switch No Ink" ng-model="vm.data.aDemarcher">
+                            <div class="card__actions" style="text-align:center;height: 54px;">
+                            <md-switch style="margin-top: 6px;" class="md-primary" md-no-ink aria-label="Switch No Ink" ng-model="vm.data.aDemarcher">
                                     A Démarcher
                                     </md-switch>
                                 <br>
@@ -177,7 +177,7 @@
                                                 <label>Description Simplifiée</label>
                                                 <textarea ng-model="vm.data.description" columns="1" md-maxlength="150" capitalize></textarea>
                                                 </md-input-container> -->
-                                            <md-autocomplete  md-input-name="autocompleteDescription" md-input-maxlength="130" md-selected-item="vm.description.selected" md-search-text="vm.data.description" md-items="item in vm.description.search(vm.data.description)" md-item-text="item.name">
+                                            <md-autocomplete md-input-name="autocompleteDescription" md-input-maxlength="130" md-selected-item="vm.description.selected" md-search-text="vm.data.description" md-items="item in vm.description.search(vm.data.description)" md-item-text="item.name">
                                                 <md-item-template>
                                                     <span>{{item.name}}</span>
                                                 </md-item-template>
@@ -198,11 +198,11 @@
                                         </div>
                                         <div class="col-md-3">
                                             <lx-text-field label="Prix Final HT" ng-if="vm.data.date.envoi">
-                                                <input eurofilter ng-model="vm.data.prixFinal">
+                                                <input ng-disabled="!vm.data.reglementSurPlace" eurofilter ng-model="vm.data.prixFinal">
                                             </lx-text-field>
                                         </div>
                                         <div class="col-md-3">
-                                            <md-switch class="md-primary" md-no-ink aria-label="Switch No Ink" ng-model="vm.data.reglementSurPlace">
+                                            <md-switch class="md-primary" md-no-ink aria-label="Switch No Ink" ng-model="vm.data.reglementSurPlace" style="padding: 0px;margin-top: 5px;">
                                                 <span ng-if="vm.data.reglementSurPlace">Reglement Sur Place</span>
                                                 <span ng-if="!vm.data.reglementSurPlace">Facture à Faire</span>
                                             </md-switch>
@@ -227,7 +227,7 @@
                         </div>
                         <div id="facture"></div>
                         <info-facture ng-if="!vm.data.reglementSurPlace" data="vm.data"></info-facture>
-                        <produits  ng-if="vm.data.id || vm.data.devisOrigine" data="vm.data"></produits>
+                        <produits ng-if="vm.data.id || vm.data.devisOrigine" data="vm.data"></produits>
                         <credit-card class="margin" model="vm.data" ng-if="vm.data.modeReglement === 'CB'"></credit-card>
                         <info-fourniture ng-if="vm.data.id" data="vm.data"></info-fourniture>
                         <info-compta ng-if="vm.data.status === 'VRF' && vm.data.artisan.document" data="vm.data"></info-compta>

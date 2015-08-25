@@ -97,6 +97,7 @@
 
 
     module.exports.minify = function(e) {
+        console.log(e.id)
         var config = requireLocal('config/dataList')
         var d = requireLocal('config/dates.js')
         var ms = require('milliseconds')

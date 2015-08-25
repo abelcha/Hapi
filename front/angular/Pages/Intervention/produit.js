@@ -23,6 +23,12 @@
                      scope.display = true;
                  }
 
+                 scope.$watch('data.produits',function(curr, prev) {
+                    if (!_.isEqual(curr, prev)) {
+                        scope.data.prixFinal = scope.produits.total()
+                    }
+                 }, true)
+
                  scope.createProd = function() {
                      dialog.addProd(function(resp) {
                          model.produits.push(resp)
