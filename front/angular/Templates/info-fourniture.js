@@ -6,7 +6,8 @@ angular.module('edison').directive('infoFourniture', ['config', 'fourniture',
             templateUrl: '/Templates/info-fourniture.html',
             scope: {
                 data: "=",
-                display: "="
+                display: "=",
+                small:"="
             },
             link: function(scope, element, attrs) {
                 scope.config = config

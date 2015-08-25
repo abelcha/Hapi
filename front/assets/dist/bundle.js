@@ -1054,6 +1054,18 @@ module.exports = {
             return false
         }
     }, {
+        /*        title: 'Fiche Client V1',
+                action: "ouvrirFicheV1"
+            }, {*/
+        title: "Appel Client",
+        action: 'callClient',
+        style: {
+            fontWeight: 'bold'
+        },
+        hide: function(inter) {
+            return false
+        }
+    }, {
         title: 'Recap sous-traitant',
         action: "ouvrirRecapSST",
         hide: function(inter) {

@@ -1,9 +1,71 @@
 <div class="card margin">
     <div class="p+">
+        <style>
+        table.frntr > tbody > tr > td {
+            padding: 10px;
+            width: 50px;
+        }
+        </style>
         <strong ng-click="dsp = !dsp" class="fs-headline display-block">Fourniture</strong>
         <span class="fs-subhead tc-black-2 display-block">Fourniture</span>
         <div class="paragraph fs-body-1 mt+" ng-if="dsp || data.fourniture.length">
-            <div class="data-table-container">
+            <div ng-if="small" class="data-table-container" style="width:400px">
+                <ul class="list mt++">
+                    <li class="list-row list-row--has-separator" ng-repeat="f in data.fourniture">
+                        <div class="list-row__content">
+                            <table class="frntr table table-bordered">
+                                <tbody>
+                                    <tr>
+                                        <td><span>BL</span></td>
+                                        <td><span><input class="form-control" type="text" ng-model="f.bl"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>Designation</span></td>
+                                        <td><span><input class="form-control" type="text" ng-model="f.title"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>Quantite</span></td>
+                                        <td><span><input class="form-control" type="number" ng-model="f.quantite"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>Montant</span></td>
+                                        <td><span><input class="form-control" type="number" ng-model="f.pu"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>Fournisseur</span></td>
+                                        <td><span>
+                                            <select style="width: 170px;" class="form-control" ng-model="f.fournisseur" ng-options="frn.short_name as frn.short_name group by frn.type for frn in config.fournisseur ">
+                                            </select></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>Modif</span></td>
+                                        <td>
+                                            <lx-dropdown position="right" from-top>
+                                                <button class="btn--no-conflicts btn--l btn--black btn--icon" lx-ripple lx-dropdown-toggle>
+                                                    <i class="fa fa-navicon"></i>
+                                                </button>
+                                                <lx-dropdown-menu>
+                                                    <ul>
+                                                        <li><a ng-click="fourniture.moveDown($index)" class="dropdown-link">Descendre</a></li>
+                                                        <li><a ng-click="fourniture.moveTop($index)" class="dropdown-link">Monter</a></li>
+                                                        <li><a ng-click="fourniture.remove($index)" class="dropdown-link">Supprimer</a></li>
+                                                    </ul>
+                                                </lx-dropdown-menu>
+                                            </lx-dropdown>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <!--                             <br>
+                            <span>Designation</span><span e-type="text" style="width:100px" editable-text="f.title">{{f.title}}</span>
+                                            <br>
+                                            <span>Quantite</span><span e-type="text" style="width:100px" editable-text="f.quantite">{{f.quantite}}</span>
+                                            <br> -->
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div ng-if="!small" class="data-table-container">
                 <table class="data-table data-table--has-primary data-table--has-secondary">
                     <thead>
                         <tr>
@@ -44,7 +106,7 @@
                             <td>
                                 <lx-dropdown position="right" from-top>
                                     <button class="btn--no-conflicts btn--l btn--black btn--icon" lx-ripple lx-dropdown-toggle>
-                                        <i class="mdi mdi-dots-vertical"></i>
+                                          <i class="fa fa-navicon"></i>
                                     </button>
                                     <lx-dropdown-menu>
                                         <ul>

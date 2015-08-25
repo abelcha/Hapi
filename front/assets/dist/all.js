@@ -486,6 +486,9 @@ angular.module('edison').directive('creditcard', function() {
     "use strict";
     return {
         require: 'ngModel',
+        scope: {
+            inline: "=",
+        },
         link: function(scope, element, attrs, modelCtrl) {
             modelCtrl.$parsers.push(function(input) {
                 return input.replace('x', 'AAA')
@@ -1905,7 +1908,7 @@ angular.module('edison')
         return Devis;
     });
 
-angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', 'config', function($mdDialog, edisonAPI, config) {
+angular.module('edison').factory('dialog', function($mdDialog, edisonAPI, config, $window, LxNotificationService) {
     "use strict";
 
     return {
@@ -1915,10 +1918,17 @@ angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', 'config', 
                     $scope.data = inter
                     $scope.config = config;
                     $scope.answer = function(cancel) {
-                        $mdDialog.hide();
+                        $scope.window = $window;
                         $scope.inter = inter;
                         if (!cancel) {
-                            cb(inter);
+                            if (!$scope.inter.prixFinal) {
+                                LxNotificationService.error("Veuillez renseigner un prix final");
+                            } else {
+                                $mdDialog.hide();
+                                cb(inter);
+                            }
+                        } else {
+                                $mdDialog.hide();
                         }
                     }
                 },
@@ -2136,7 +2146,7 @@ angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', 'config', 
         }
     }
 
-}]);
+});
 
 angular.module('edison').factory('fourniture', [function() {
     "use strict";
@@ -3059,7 +3069,8 @@ angular.module('edison').directive('infoFourniture', ['config', 'fourniture',
             templateUrl: '/Templates/info-fourniture.html',
             scope: {
                 data: "=",
-                display: "="
+                display: "=",
+                small:"="
             },
             link: function(scope, element, attrs) {
                 scope.config = config
