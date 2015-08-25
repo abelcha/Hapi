@@ -1,5 +1,6 @@
 module.exports = function(schema) {
     var _ = require('lodash')
+    var moment = require('moment')
     var V1 = requireLocal('config/_convert_V1');
     var upper = function(str) {
         return str ? str.toUpperCase() : str;
