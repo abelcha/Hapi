@@ -18,9 +18,11 @@ module.exports = function(req, res) {
                 .then(function(resp) {
                     var mapFunc = options.mapFunc || function(e) {
                         //console.log(options.pre ||  '#')
+                        _.set(e, 'artisan.nomSociete', _.get(e, 'artisan.nomSociete', 'A Programmer'))
+                        e.artisan.nomSociete = e.artisan.nomSociete ||  'A Programmer'
                         return {
                             link: ['', (options.model ||  'intervention'), e.id].join('/') + (options.link ||  ''),
-                            description: (options.pre ||  '#') + _.template(options.template || "{{id}} - {{client.civilite}} {{client.nom}} -  {{client.address.cp}} {{client.address.v}}")(e)
+                            description: (options.pre ||  '#') + _.template(options.template || "{{id}} - {{client.civilite}} {{client.nom}} -  {{client.address.cp}} {{client.address.v}}  - {{artisan.nomSociete}} - {{status}}")(e)
                         }
                     };
                     var rtn = resp.map(mapFunc);
@@ -84,7 +86,7 @@ module.exports = function(req, res) {
         artisanNom: createFilter({
             pre: '@',
             model: 'artisan',
-            link:'/recap',
+            link: '/recap',
             query: {
                 $or: [{
                     'representant.nom': rgx
@@ -98,7 +100,7 @@ module.exports = function(req, res) {
         artisanVille: createFilter({
             pre: '@',
             model: 'artisan',
-            link:'/recap',
+            link: '/recap',
             query: {
                 'address.v': rgx
             },
@@ -108,7 +110,7 @@ module.exports = function(req, res) {
         artisanCP: createFilter({
             pre: '@',
             model: 'artisan',
-            link:'/recap',
+            link: '/recap',
             query: {
                 'address.cp': rgx
             },
@@ -118,7 +120,7 @@ module.exports = function(req, res) {
         artisanTelephone: createFilter({
             pre: '@',
             model: 'artisan',
-            link:'/recap',
+            link: '/recap',
             query: {
                 $or: [{
                     'telephone.tel1': rgx

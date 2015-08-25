@@ -8,7 +8,7 @@ var Timer = module.exports = function() {
     //    this.emitter.add("*/5 * * * *", "every 5 minutes");
     // this.emitter.add("*/2 * * * *", "every minute");
     this.emitter.add("0 3 * * *", "midnight");
-    this.emitter.add("*/10 * * * *", "10 minutes")
+    this.emitter.add("*/30 * * * *", "30 minutes")
         /*    this.emitter.on("every 10 minutes", function() {
                 edison.worker.createJob({
                     name: 'db',
@@ -16,9 +16,12 @@ var Timer = module.exports = function() {
                     method: 'cacheReload'
                 })
             });*/
-    this.emitter.on("10 minutes", function() {
+    this.emitter.on("30 minutes", function() {
         db.model('intervention').fullReload().then(function() {
-            console.log('ok')
+            console.log('inter ok')
+        })
+        db.model('devis').fullReload().then(function() {
+            console.log('devis ok')
         })
     })
 
