@@ -10,6 +10,9 @@ var ContactArtisanController = function($scope, $timeout, tabContainer, LxProgre
             })
     }
 
+    if ($location.hash() === 'interventions') {
+        $scope.selectedIndex = 1
+    }
     var dataProvider = new DataProvider('artisan');
     var filtersFactory = new FiltersFactory('artisan')
     var currentFilter;

@@ -20,18 +20,6 @@ module.exports = function(schema) {
 
     }
 
-    var envoi = function(inter, login) {
-        inter.status = "ENC";
-        inter.date.envoi = new Date();
-        inter.login.envoi = login;
-        return new Promise(function(resolve, reject) {
-            db.model('intervention').findOneAndUpdate({
-                id: inter.id
-            }, inter).then(resolve, reject)
-        }).catch(__catch);
-    }
-
-
     var getStaticFile = function(req, res) {
         var fs = require('fs');
         var file = this
@@ -209,6 +197,9 @@ module.exports = function(schema) {
                             data: inter,
                             req: _.pick(req, 'body', 'session')
                         }).then(function() {
+                            inter.status = "ENC";
+                            inter.date.envoi = new Date();
+                            inter.login.envoi = req.session.login;
                             inter.save().then(resolve, reject)
                         })
                     }
@@ -271,7 +262,6 @@ module.exports = function(schema) {
                         var validationPromises = [
                             mail.send(mailOptions),
                             //sendSMS(req.body.sms, inter, req.session),
-                            envoi(inter, req.session.login)
                         ]
                         console.time('validation')
 

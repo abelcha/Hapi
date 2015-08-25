@@ -95,6 +95,13 @@ module.exports = function(schema) {
 
             return new Promise(function(resolve, reject) {
 
+                var f = inter.facture;
+                if (!f.nom || !f.prenom || !f.address.r || !f.address.v || !f.address.cp || !f.address.n) {
+                    return reject('Les coordonées de facturations sont incompletes')
+                }
+                if (!inter.produits || !inter.produits.length) {
+                    return reject('Veuillez renseigner au moins 1 produits')
+                }
                 if (envDev) {
                     inter.date.envoiFacture = new Date();
                     inter.login.envoiFacture = req.session.login;

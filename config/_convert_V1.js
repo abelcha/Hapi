@@ -20,7 +20,7 @@ var V1 = function(d, devis, legacy) {
         var dateAjout = moment(new Date(d.date.ajout))
         x.t_stamp = dateAjout.unix()
         dateAjout.add(2, 'h');
-        x.date_ajout = dateAjout.format('DD/MM/YYYY')
+        x.date_ajout = dateAjout.format('YYYY-MM-DD')
         x.heure_ajout = dateAjout.format('HH:mm:ss')
         x.date_ajout_en = dateAjout.format('YYYYMMDD')
         if (d.date.intervention) {
@@ -33,6 +33,13 @@ var V1 = function(d, devis, legacy) {
         }
         if (d.compta.reglement.date) {
             x.date_paiement_client = moment(new Date(d.compta.reglement.date)).format('DD/MM/YYYY');
+        }
+        if (d.date.envoiFacture) {
+            x.date_edition_facture = moment(new Date(d.date.envoiFacture)).format('DD/MM/YYYY');
+        }
+        if (d.login.envoiFacture) {
+            var loginEnvoiFacture = _.find(users, 'login', d.login.envoiFacture)
+            x.facture_editee_par = _.get(_.find(users, 'login', d.login.envoiFacture), 'oldLogin', d.login.envoiFacture);
         }
         x.sms = d.sms ||  undefined;
         x.sms_status = d.sms_status;

@@ -2,17 +2,16 @@ module.exports = {
     sms: {
         intervention: {
             envoi: function(user) {
-                var sms = this.id ? "OS " + this.id + ". \n" : "";
-                sms += "Intervention chez " + this.client.civilite + " " +
-                    this.client.prenom + " " + this.client.nom + " au " +
-                    this.client.address.n + " " + this.client.address.r + " " +
-                    this.client.address.cp + ", " + this.client.address.v + " le " +
-                    moment(this.date.intervention).format("LLLL") + ". \n";
+                var sms = _.template("OS {{id}}\n" +
+                    "Intervention chez {{client.civilite}} {{client.prenom}} {{client.nom}} au " +
+                    "{{client.address.n}} {{client.address.r}} {{client.address.cp}}, {{client.address.v}} " +
+                    "le " + moment(this.date.intervention).format("LLLL") + ".\n")(this)
                 sms += this.prixAnnonce ? this.prixAnnonce + "€ HT. " : "Pas de prix annoncé. ";
                 sms += "\nMerci de prendre rdv avec le client au " + this.client.telephone.tel1;
-                sms += this.client.telephone.tel2 ? " ou au " + this.client.telephone.tel2 : ""
-                sms += '\nM.' + (user.pseudo ||  " Arnaud") + " (0132123212)";
-                return sms + ".\nEdison Services."
+                sms += this.client.telephone.tel2 ? " ou au " + this.client.telephone.tel2 : "";
+                sms += '\n' + (_.startCase(user.pseudo) ||  " Arnaud") + ',\n';
+                sms += "Ligne direct: " + (user.ligne ||  "09.72.42.30.00") + "\n";
+                return sms + "Edison Services."
             },
             demande: function(user) {
                 console.log(this.artisan)
@@ -20,7 +19,8 @@ module.exports = {
                     "Pourriez-vous vous rendre disponible ?\n" +
                     "Merci de nous contacter au plus vite au 09.72.42.30.00.\n" +
                     "Merci d'avance pour votre réponse.\n" +
-                    "\nM." + (user.pseudo ||  " Arnaud") + " (0132123212)\n" +
+                    "\nM." + (_.startCase(user.pseudo) ||  " Arnaud") + "\n" +
+                    "Ligne Direct " + user.ligne ||  "09.72.42.30.00" + "\n" +
                     "Edison Services"
             }
         }
@@ -35,7 +35,7 @@ module.exports = {
                     "Tél. : 0322916682</p>" +
                     "Pour les raisons suivantes: </p>" +
                     "<p strong center>{{description}}</p>" +
-                    "<p>Nous vous confirmons que l'intervention à été réalisé par nos soins.\n" +
+                    "<p>Nous vous confirmons que l'intervention à été réalisée par nos soins.\n" +
                     "Vous trouverez ci joint la facture à regler.\n" +
                     "Nous vous prions de bien vouloir transmettre le règlement par chèque à l'ordre de:</p>" +
                     "<p strong center> S.A.R.L EDISON SERVICES</p>" +
@@ -108,9 +108,9 @@ module.exports = {
                     "\n" +
                     "Les coordonnées et la description de l'intervention sont détaillées dans l'ordre de service que vous trouverez en pièce jointe. \n" +
                     "<center>" +
-                    "<% if (typeof devisOrigine !== 'undefined' && !fileSupp) {%> <strong>Vous trouverez également le devis accepté et signé par notre client</strong> <%}%>" +
-                    "<% if (typeof devisOrigine === 'undefined' && fileSupp) {%> <strong>Vous trouverez également {{textfileSupp}} à votre disposition</strong> <%}%>" +
-                    "<% if (typeof devisOrigine !== 'undefined' && fileSupp) {%> <strong>Vous trouverez également le devis accepté et signé par notre client, et {{textfileSupp}}</strong> <%}%>" +
+                    "<% if (typeof devisOrigine !== 'undefined' && !fileSupp) {%> \n<strong>Vous trouverez également le devis accepté et signé par notre client</strong> <%}%>" +
+                    "<% if (typeof devisOrigine === 'undefined' && fileSupp) {%> \n<strong>Vous trouverez également {{textfileSupp}} à votre disposition</strong> <%}%>" +
+                    "<% if (typeof devisOrigine !== 'undefined' && fileSupp) {%> \n<strong>Vous trouverez également le devis accepté et signé par notre client, et {{textfileSupp}}</strong> <%}%>" +
                     "</center>" +
                     "\n" +
                     "<strong>" +
@@ -179,7 +179,7 @@ module.exports = {
                 } else {
                     var text = "Suite à notre dernier échange concernant la réalisation d'un devis " + categorieClean + ", \n" +
                         "vous trouverez ci-joint le devis n°" + this.id + " correspondant à ce que nous avons vu ensemble. \n\n" +
-                        "Sachez également, que votre installation sera éligible à notre assurance RC PRO et notre assurance décennale.\n" +
+                        "Sachez également, que votre installation sera éligible à notre assurance RC PRO et notre assurance décennale.\n\n" +
                         "Lors de l'acceptation, je vous prie de me renvoyer le devis signé, accompagné de la mention:\n\n" +
                         "<strong> « BON POUR ACCORD » </strong>\n\n" +
                         "Je reste à votre entière disposition pour tous les renseignements ou les remarques que vous pourriez avoir concernant ce devis (technique, délais, prix). \n\n" +

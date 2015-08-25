@@ -43,7 +43,9 @@ angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', 'config', 
                     $scope.answer = function(cancel) {
                         $mdDialog.hide();
                         if (!cancel) {
-                            cb($scope.text, $scope.acquitte, $scope.date);
+                            cb(null, $scope.text, $scope.acquitte, $scope.date);
+                        } else {
+                            cb('nope')
                         }
                     }
                 },
@@ -127,10 +129,11 @@ angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', 'config', 
                     $scope.causeAnnulation = config.causeAnnulation;
                     $scope.answer = function(resp) {
                         if (!$scope.ca && resp)
-                            return false;
+                            return cb('nope');
                         $mdDialog.hide();
                         if (resp)
-                            return cb(resp);
+                            return cb(null, resp);
+                        return cb('nop')
                     }
                 },
                 templateUrl: '/DialogTemplates/causeAnnulation.html',
@@ -186,8 +189,9 @@ angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', 'config', 
                     $scope.answer = function(cancel) {
                         $mdDialog.hide();
                         if (cancel === false) {
-                            console.log('-->', $scope.addedFile)
-                            return cb($scope.smsText, $scope.addedFile);
+                            return cb(null, $scope.smsText, $scope.addedFile);
+                        } else {
+                            return cb('nope');
                         }
                     }
                 },

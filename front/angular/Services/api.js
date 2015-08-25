@@ -88,6 +88,9 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
                     url: '/api/intervention/' + id + '/demarcher'
                 })
             },
+            reactivation:function(id) {
+                return $http.post('api/intervention/' + id + '/reactivation')
+            },
             list: function() {
                 return $http.get('api/intervention/getCacheList')
             },

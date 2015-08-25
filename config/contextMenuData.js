@@ -59,9 +59,9 @@ module.exports = {
             fontWeight: 'bold'
         }
     }, {
-/*        title: 'Fiche Client V1',
-        action: "ouvrirFicheV1"
-    }, {*/
+        /*        title: 'Fiche Client V1',
+                action: "ouvrirFicheV1"
+            }, {*/
         title: "Appel Client",
         action: 'callClient',
         style: {
@@ -104,12 +104,17 @@ module.exports = {
             return inter.status !== "AVR" && inter.status !== 'ENC'
         }
     }, {
+        title: "Reactiver",
+        action: 'reactivation',
+        hide: function(inter) {
+            return inter.status !== 'ANN'
+        }
+    }, {
         title: "Annuler",
         action: 'annulation',
-        hide:function(inter) {
-            return false;//inter.status === 'ANN' || inter.status === 'VRF'
+        hide: function(inter) {
+            return inter.status === 'ANN' || inter.status === 'VRF'
         }
-
     }, {
         title: "Je prend !",
         action: 'demarcher',

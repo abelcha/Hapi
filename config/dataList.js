@@ -144,35 +144,35 @@ module.exports = {
             order: 0,
             short_name: 'ENC',
             long_name: 'En Cours',
-            old_name:'EN COURS',
+            old_name: 'EN COURS',
             color: 'orange'
         },
         VRF: {
             order: 1,
             short_name: 'VRF',
             long_name: 'Vérifié',
-            old_name:'INTERVENU',
+            old_name: 'INTERVENU',
             color: 'green'
         },
         APR: {
             order: 2,
             short_name: 'APR',
             long_name: 'A Progr.',
-            old_name:'A PROGRAMMER',
+            old_name: 'A PROGRAMMER',
             color: 'blue'
         },
         AVR: {
             order: 3,
             short_name: 'AVR',
             long_name: 'A Vérifier',
-            old_name:'EN COURS',
+            old_name: 'EN COURS',
             color: 'brown darken-3'
         },
         ANN: {
             order: 4,
             short_name: 'ANN',
             long_name: 'Annuler',
-            old_name:'ANNULE',
+            old_name: 'ANNULE',
             color: 'red'
         }
     },
@@ -288,6 +288,14 @@ module.exports = {
         value: 0.2,
         long_name: "TVA: 20%"
     }],
+    typeClient: [
+        "AUT",
+        "SOC",
+        "PRO",
+        "LOC",
+        "IMO",
+        "CUR"
+    ],
     typePayeur: [{
         short_name: 'SOC',
         long_name: 'Société'
@@ -307,6 +315,14 @@ module.exports = {
         short_name: 'GRN',
         long_name: 'Grands Comptes'
     }],
+    typePayeurObj: {
+        SOC: 'SOCIÉTÉ',
+        PRO: 'PROPRIÉTAIRE',
+        IMO: 'AGENCE IMMOBILIÈRE',
+        CUR: 'CURATELLE',
+        AUT: 'AUTRE',
+        GRN: 'GRAND COMPTE'
+    },
     compteFacturation: [{
         short_name: 'FRN_LSR',
         long_name: 'France Loisir',

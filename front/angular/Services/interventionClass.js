@@ -19,6 +19,7 @@ angular.module('edison')
             Devis().envoi.bind(this)(cb)
         };
 
+
         Intervention.prototype.demarcher = function(cb) {
             edisonAPI.intervention.demarcher(this.id).success(function() {
                 LxNotificationService.success("Vous demarchez l'intervention");
@@ -49,9 +50,10 @@ angular.module('edison')
             console.log(_this)
             var template = textTemplate.mail.intervention.envoiFacture.bind(_this)(datePlain)
             var mailText = (_.template(template)(this))
-            dialog.envoiFacture(_this, mailText, false, function(text, acquitte, date) {
+            dialog.envoiFacture(_this, mailText, false, function(err, text, acquitte, date) {
+                if (err)
+                    return cb('nope')
                 LxProgressService.circular.show('#5fa2db', '#globalProgress');
-
                 edisonAPI.intervention.sendFacture(_this.id, {
                     text: text,
                 }).success(function(resp) {
@@ -62,7 +64,7 @@ angular.module('edison')
                         cb(null, resp);
                 }).catch(function(err) {
                     LxProgressService.circular.hide();
-                    var validationMessage = _.template("L'envoi de la facture {{id}} à échoué")(_this)
+                    var validationMessage = _.template("L'envoi de la facture {{id}} à échoué\n" + "(" + err.data + ")")(_this)
                     LxNotificationService.error(validationMessage);
                     if (typeof cb === 'function')
                         cb(err);
@@ -77,12 +79,15 @@ angular.module('edison')
             $location.url('/intervention/' + this.id)
         }
         Intervention.prototype.ouvrirRecapSST = function() {
-            $location.url(['/artisan', this.artisan.id, 'recap'].join('/'))
+            $location.url(['/artisan', this.artisan.id, 'recap'].join('/') + '#interventions')
         }
         Intervention.prototype.smsArtisan = function(cb) {
             var _this = this;
             var text = textTemplate.sms.intervention.demande.bind(_this)($rootScope.user)
-            dialog.getFileAndText(_this, text, [], function(text) {
+            dialog.getFileAndText(_this, text, [], function(err, text) {
+                if (err) {
+                    return cb(err)
+                }
                 edisonAPI.sms.send({
                     link: _this.artisan.id,
                     origin: _this.id || _this.tmpID,
@@ -176,7 +181,9 @@ angular.module('edison')
         Intervention.prototype.envoi = function(cb) {
             var _this = this;
             var defaultText = textTemplate.sms.intervention.envoi.bind(_this)($rootScope.user);
-            dialog.getFileAndText(_this, defaultText, _this.files, function(text, file) {
+            dialog.getFileAndText(_this, defaultText, _this.files, function(err, text, file) {
+                if (err)
+                    return cb(err)
                 LxProgressService.circular.show('#5fa2db', '#globalProgress');
                 edisonAPI.intervention.envoi(_this.id, {
                     sms: text,
@@ -199,15 +206,27 @@ angular.module('edison')
             })
         };
 
+
+        Intervention.prototype.reactivation = function(cb) {
+            var _this = this;
+            edisonAPI.intervention.reactivation(this.id).then(function() {
+                LxNotificationService.success("L'intervention " + _this.id + " est à programmer");
+            })
+        };
+
         Intervention.prototype.annulation = function(cb) {
             var _this = this;
-            dialog.getCauseAnnulation(function(causeAnnulation) {
+            dialog.getCauseAnnulation(function(err, causeAnnulation) {
+                if (err) {
+                    return cb('err');
+                }
                 edisonAPI.intervention.annulation(_this.id, causeAnnulation)
                     .then(function(resp) {
                         var validationMessage = _.template("L'intervention {{id}} est annulé")(resp.data)
                         LxNotificationService.success(validationMessage);
-                        if (typeof cb === 'function')
+                        if (typeof cb === 'function') {
                             cb(null, resp.data)
+                        }
                     });
             });
         };
@@ -215,9 +234,14 @@ angular.module('edison')
 
         Intervention.prototype.envoiFactureVerif = function(cb) {
             var _this = this;
-            if (!this.produits.length)
-                return LxNotificationService.error("Veuillez renseigner les produits");
-            _this.sendFacture(function() {
+
+            if (!this.produits.length) {
+                LxNotificationService.error("Veuillez renseigner les produits");
+                return cb('nope')
+            }
+            _this.sendFacture(function(err) {
+                if (err)
+                    return cb(err);
                 _this.verificationSimple(cb)
             })
         }
@@ -237,6 +261,7 @@ angular.module('edison')
                 }, function(error) {
                     LxProgressService.circular.hide()
                     LxNotificationService.error(error.data);
+                    cb(error.data);
                 })
         }
 

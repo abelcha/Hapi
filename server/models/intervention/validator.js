@@ -23,15 +23,13 @@ module.exports = function(schema) {
           return /CR|MN|MC|PT|PL|SR|CL|CH|VT|EL|AS/i.test(value);
       }, 'Categorie inconnue.');*/
 
-    var upperCaseEverything = function(options) {
-        var _this = this;
-        var obj = options || this.options;
-        _.each(obj, function(e, k) {
-            if (typeof e === 'string') {
-                obj[k] = e.toUpperCase();
-            }
-        })
-
+    var UP = function(obj) {
+        if (obj) {
+            _.each(obj, function(e, k) {
+                if (typeof e === 'string')
+                    obj[k] = obj[k].toUpperCase();
+            })
+        }
     }
 
 
@@ -39,9 +37,9 @@ module.exports = function(schema) {
     var validatorPreSave = function(next) {
         var _this = this;
         try {
-            upperCaseEverything(this.client.address)
-            upperCaseEverything(this.facture)
-            upperCaseEverything([this.facture])
+            UP(this.facture.address)
+            UP(this.facture)
+            UP(this.client.address)
             _this.sst = _this.artisan.id
             _this.enDemarchage = _this.login.demarchage;
             _this.litigesEnCours = _.find(_this.litiges, 'regle', false);
@@ -75,7 +73,6 @@ module.exports = function(schema) {
                 })
             }
             db.model('intervention').uniqueCacheReload(doc, function() {
-                console.log('yay')
                 console.log(envProd, (!doc.date.dump || moment().subtract(5000).isAfter(doc.date.dump)))
                 if (envProd && (!doc.date.dump || moment().subtract(5000).isAfter(doc.date.dump))) {
                     var v1 = new V1(doc);

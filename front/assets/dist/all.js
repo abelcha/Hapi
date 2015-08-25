@@ -508,6 +508,7 @@ angular.module('edison').directive('dropdownRow', function(Devis, productsList, 
         link: function(scope, element, attrs) {
             scope._ = _;
             scope.Intervention = Intervention
+            scope.Devis = Devis
             scope._model = scope.model || "intervention"
 
             scope.expendedStyle = {
@@ -538,7 +539,9 @@ angular.module('edison').directive('dropdownRow', function(Devis, productsList, 
 
             } else if (scope._model === "devis") {
                 var pAll = [
-                    edisonAPI.devis.get(scope.row.id),
+                    edisonAPI.devis.get(scope.row.id, {
+                        populate: 'transfertId'
+                    }),
                 ]
                 var pThen = function(result) {
                     scope.data = result[0].data;
@@ -1216,6 +1219,9 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
                     method: 'POST',
                     url: '/api/intervention/' + id + '/demarcher'
                 })
+            },
+            reactivation:function(id) {
+                return $http.post('api/intervention/' + id + '/reactivation')
             },
             list: function() {
                 return $http.get('api/intervention/getCacheList')
@@ -1944,7 +1950,9 @@ angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', 'config', 
                     $scope.answer = function(cancel) {
                         $mdDialog.hide();
                         if (!cancel) {
-                            cb($scope.text, $scope.acquitte, $scope.date);
+                            cb(null, $scope.text, $scope.acquitte, $scope.date);
+                        } else {
+                            cb('nope')
                         }
                     }
                 },
@@ -2028,10 +2036,11 @@ angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', 'config', 
                     $scope.causeAnnulation = config.causeAnnulation;
                     $scope.answer = function(resp) {
                         if (!$scope.ca && resp)
-                            return false;
+                            return cb('nope');
                         $mdDialog.hide();
                         if (resp)
-                            return cb(resp);
+                            return cb(null, resp);
+                        return cb('nop')
                     }
                 },
                 templateUrl: '/DialogTemplates/causeAnnulation.html',
@@ -2087,8 +2096,9 @@ angular.module('edison').factory('dialog', ['$mdDialog', 'edisonAPI', 'config', 
                     $scope.answer = function(cancel) {
                         $mdDialog.hide();
                         if (cancel === false) {
-                            console.log('-->', $scope.addedFile)
-                            return cb($scope.smsText, $scope.addedFile);
+                            return cb(null, $scope.smsText, $scope.addedFile);
+                        } else {
+                            return cb('nope');
                         }
                     }
                 },
@@ -2199,6 +2209,7 @@ angular.module('edison')
             Devis().envoi.bind(this)(cb)
         };
 
+
         Intervention.prototype.demarcher = function(cb) {
             edisonAPI.intervention.demarcher(this.id).success(function() {
                 LxNotificationService.success("Vous demarchez l'intervention");
@@ -2229,9 +2240,10 @@ angular.module('edison')
             console.log(_this)
             var template = textTemplate.mail.intervention.envoiFacture.bind(_this)(datePlain)
             var mailText = (_.template(template)(this))
-            dialog.envoiFacture(_this, mailText, false, function(text, acquitte, date) {
+            dialog.envoiFacture(_this, mailText, false, function(err, text, acquitte, date) {
+                if (err)
+                    return cb('nope')
                 LxProgressService.circular.show('#5fa2db', '#globalProgress');
-
                 edisonAPI.intervention.sendFacture(_this.id, {
                     text: text,
                 }).success(function(resp) {
@@ -2242,7 +2254,7 @@ angular.module('edison')
                         cb(null, resp);
                 }).catch(function(err) {
                     LxProgressService.circular.hide();
-                    var validationMessage = _.template("L'envoi de la facture {{id}} à échoué")(_this)
+                    var validationMessage = _.template("L'envoi de la facture {{id}} à échoué\n" + "(" + err.data + ")")(_this)
                     LxNotificationService.error(validationMessage);
                     if (typeof cb === 'function')
                         cb(err);
@@ -2257,12 +2269,15 @@ angular.module('edison')
             $location.url('/intervention/' + this.id)
         }
         Intervention.prototype.ouvrirRecapSST = function() {
-            $location.url(['/artisan', this.artisan.id, 'recap'].join('/'))
+            $location.url(['/artisan', this.artisan.id, 'recap'].join('/') + '#interventions')
         }
         Intervention.prototype.smsArtisan = function(cb) {
             var _this = this;
             var text = textTemplate.sms.intervention.demande.bind(_this)($rootScope.user)
-            dialog.getFileAndText(_this, text, [], function(text) {
+            dialog.getFileAndText(_this, text, [], function(err, text) {
+                if (err) {
+                    return cb(err)
+                }
                 edisonAPI.sms.send({
                     link: _this.artisan.id,
                     origin: _this.id || _this.tmpID,
@@ -2356,7 +2371,9 @@ angular.module('edison')
         Intervention.prototype.envoi = function(cb) {
             var _this = this;
             var defaultText = textTemplate.sms.intervention.envoi.bind(_this)($rootScope.user);
-            dialog.getFileAndText(_this, defaultText, _this.files, function(text, file) {
+            dialog.getFileAndText(_this, defaultText, _this.files, function(err, text, file) {
+                if (err)
+                    return cb(err)
                 LxProgressService.circular.show('#5fa2db', '#globalProgress');
                 edisonAPI.intervention.envoi(_this.id, {
                     sms: text,
@@ -2379,15 +2396,27 @@ angular.module('edison')
             })
         };
 
+
+        Intervention.prototype.reactivation = function(cb) {
+            var _this = this;
+            edisonAPI.intervention.reactivation(this.id).then(function() {
+                LxNotificationService.success("L'intervention " + _this.id + " est à programmer");
+            })
+        };
+
         Intervention.prototype.annulation = function(cb) {
             var _this = this;
-            dialog.getCauseAnnulation(function(causeAnnulation) {
+            dialog.getCauseAnnulation(function(err, causeAnnulation) {
+                if (err) {
+                    return cb('err');
+                }
                 edisonAPI.intervention.annulation(_this.id, causeAnnulation)
                     .then(function(resp) {
                         var validationMessage = _.template("L'intervention {{id}} est annulé")(resp.data)
                         LxNotificationService.success(validationMessage);
-                        if (typeof cb === 'function')
+                        if (typeof cb === 'function') {
                             cb(null, resp.data)
+                        }
                     });
             });
         };
@@ -2395,9 +2424,14 @@ angular.module('edison')
 
         Intervention.prototype.envoiFactureVerif = function(cb) {
             var _this = this;
-            if (!this.produits.length)
-                return LxNotificationService.error("Veuillez renseigner les produits");
-            _this.sendFacture(function() {
+
+            if (!this.produits.length) {
+                LxNotificationService.error("Veuillez renseigner les produits");
+                return cb('nope')
+            }
+            _this.sendFacture(function(err) {
+                if (err)
+                    return cb(err);
                 _this.verificationSimple(cb)
             })
         }
@@ -2417,6 +2451,7 @@ angular.module('edison')
                 }, function(error) {
                     LxProgressService.circular.hide()
                     LxNotificationService.error(error.data);
+                    cb(error.data);
                 })
         }
 
@@ -3186,6 +3221,110 @@ var archivesPaiementController = function(edisonAPI, tabContainer, $routeParams,
 
 angular.module('edison').controller('archivesPaiementController', archivesPaiementController);
 
+ angular.module('edison').directive('artisanCategorie', ['config', function(config) {
+     "use strict";
+     return {
+         replace: true,
+         restrict: 'E',
+         templateUrl: '/Templates/artisan-categorie.html',
+         transclude: true,
+         scope: {
+             model: "=",
+         },
+         link: function(scope, element, attrs) {
+             scope.config = config
+             scope.findColor = function(categorie) {
+                 var f = _.find(scope.model.categories, function(e)  {
+                     return e === categorie.short_name
+                 })
+                 return f ? categorie.color : "white";
+
+             }
+             scope.toggleCategorie = function(categorie) {
+                var f = scope.model.categories.indexOf(categorie);
+                if (f >= 0) {
+                    scope.model.categories.splice(f, 1);
+                } else {
+                    scope.model.categories.push(categorie)
+                }
+             }
+         },
+     }
+
+ }]);
+
+var ArtisanCtrl = function($rootScope, $location, $routeParams, ContextMenu, LxNotificationService, tabContainer, config, dialog, artisanPrm, Artisan) {
+    "use strict";
+    var _this = this;
+    _this.config = config;
+    _this.dialog = dialog;
+    _this.moment = moment;
+    _this.contextMenu = new ContextMenu('artisan')
+
+    var tab = tabContainer.getCurrentTab();
+    if (!tab.data) {
+        var artisan = new Artisan(artisanPrm.data)
+        tab.setData(artisan);
+        if ($routeParams.id.length > 12) {
+            _this.isNew = true;
+            artisan.tmpID = $routeParams.id;
+            tab.setTitle('SST  ' + moment((new Date(parseInt(artisan.tmpID))).toISOString()).format("HH:mm").toString());
+        } else {
+            tab.setTitle('SST  ' + $routeParams.id);
+            if (!artisan) {
+                LxNotificationService.error("Impossible de trouver les informations !");
+                $location.url("/dashboard");
+                tabContainer.remove(tab);
+                return 0;
+            }
+        }
+    } else {
+        var artisan = tab.data;
+    }
+    _this.data = tab.data;
+    _this.saveArtisan = function(options) {
+        artisan.save(function(err, resp) {
+            if (err) {
+                return false;
+            } else if (options.contrat) {
+                artisan.envoiContrat.bind(resp)(tabContainer.close);
+            } else {
+                tabContainer.close(tab);
+            }
+        })
+    }
+    _this.onFileUpload = function(file, name) {
+        artisan.upload(file, name);
+    }
+
+    _this.clickTrigger = function(elem) {
+        angular.element("#file_" + elem + ">input").trigger('click');
+    }
+    _this.rightClick = function($event) {
+        console.log('rightClick')
+        _this.contextMenu.setPosition($event.pageX, $event.pageY)
+        _this.contextMenu.setData(artisan);
+        _this.contextMenu.open();
+    }
+
+    _this.leftClick = function($event, inter) {
+        console.log('leftClick')
+
+        if (_this.contextMenu.active)
+            return _this.contextMenu.close();
+    }
+
+    _this.addComment = function() {
+        artisan.comments.push({
+            login: $rootScope.user.login,
+            text: _this.commentText,
+            date: new Date()
+        })
+        _this.commentText = "";
+    }
+}
+angular.module('edison').controller('ArtisanController', ArtisanCtrl);
+
 var AvoirsController = function(tabContainer, edisonAPI, $rootScope, LxProgressService, LxNotificationService, FlushList) {
     "use strict";
     var _this = this
@@ -3234,6 +3373,9 @@ var ContactArtisanController = function($scope, $timeout, tabContainer, LxProgre
             })
     }
 
+    if ($location.hash() === 'interventions') {
+        $scope.selectedIndex = 1
+    }
     var dataProvider = new DataProvider('artisan');
     var filtersFactory = new FiltersFactory('artisan')
     var currentFilter;
@@ -3779,31 +3921,40 @@ var InterventionCtrl = function(Description, Signalement, ContextMenu, $window, 
     }
     $scope.loadFilesList();
 
-    var closeTab = function() {
-        tabContainer.close(tab);
+
+
+    var postSave = function(options, resp, cb) {
+        if (options && options.envoiFacture && options.verification) {
+            intervention.envoiFactureVerif(cb)
+        } else if (options && options.envoi === true) {
+            resp.files = intervention.files;
+            intervention.envoi.bind(resp)(cb);
+        } else if (options && options.annulation) {
+            intervention.annulation(cb);
+        } else if (options && options.verification) {
+            intervention.verificationSimple(cb);
+        } else {
+            cb(null)
+        }
     }
 
-    $scope.saveInter = function(options) {
+    var saveInter = function(options) {
+        $scope.saveInter = function() {
+            console.log('noope')
+        }
         intervention.save(function(err, resp) {
-            if (err) {
-                return false;
-            } else if (options && options.envoiFacture && options.verification) {
-                intervention.envoiFactureVerif(function() {
-                    closeTab()
+            if (!err) {
+                postSave(options, resp, function(err) {
+                    if (!err) {
+                        tabContainer.close(tab);
+                    }
+                    $scope.saveInter = saveInter;
                 })
-            } else if (options && options.envoi === true) {
-                resp.files = intervention.files;
-                intervention.envoi.bind(resp)(closeTab);
-            } else if (options && options.annulation) {
-                intervention.annulation(closeTab);
-            } else if (options && options.verification) {
-                intervention.verificationSimple(closeTab);
-            } else {
-                closeTab()
             }
         })
-
     }
+
+    $scope.saveInter = saveInter;
 
     $scope.clickOnArtisanMarker = function(event, sst) {
         intervention.sst = sst.id;
@@ -4332,109 +4483,5 @@ var SearchController = function(edisonAPI, tabContainer, $routeParams, $location
 }
 
 angular.module('edison').controller('SearchController', SearchController);
-
- angular.module('edison').directive('artisanCategorie', ['config', function(config) {
-     "use strict";
-     return {
-         replace: true,
-         restrict: 'E',
-         templateUrl: '/Templates/artisan-categorie.html',
-         transclude: true,
-         scope: {
-             model: "=",
-         },
-         link: function(scope, element, attrs) {
-             scope.config = config
-             scope.findColor = function(categorie) {
-                 var f = _.find(scope.model.categories, function(e)  {
-                     return e === categorie.short_name
-                 })
-                 return f ? categorie.color : "white";
-
-             }
-             scope.toggleCategorie = function(categorie) {
-                var f = scope.model.categories.indexOf(categorie);
-                if (f >= 0) {
-                    scope.model.categories.splice(f, 1);
-                } else {
-                    scope.model.categories.push(categorie)
-                }
-             }
-         },
-     }
-
- }]);
-
-var ArtisanCtrl = function($rootScope, $location, $routeParams, ContextMenu, LxNotificationService, tabContainer, config, dialog, artisanPrm, Artisan) {
-    "use strict";
-    var _this = this;
-    _this.config = config;
-    _this.dialog = dialog;
-    _this.moment = moment;
-    _this.contextMenu = new ContextMenu('artisan')
-
-    var tab = tabContainer.getCurrentTab();
-    if (!tab.data) {
-        var artisan = new Artisan(artisanPrm.data)
-        tab.setData(artisan);
-        if ($routeParams.id.length > 12) {
-            _this.isNew = true;
-            artisan.tmpID = $routeParams.id;
-            tab.setTitle('SST  ' + moment((new Date(parseInt(artisan.tmpID))).toISOString()).format("HH:mm").toString());
-        } else {
-            tab.setTitle('SST  ' + $routeParams.id);
-            if (!artisan) {
-                LxNotificationService.error("Impossible de trouver les informations !");
-                $location.url("/dashboard");
-                tabContainer.remove(tab);
-                return 0;
-            }
-        }
-    } else {
-        var artisan = tab.data;
-    }
-    _this.data = tab.data;
-    _this.saveArtisan = function(options) {
-        artisan.save(function(err, resp) {
-            if (err) {
-                return false;
-            } else if (options.contrat) {
-                artisan.envoiContrat.bind(resp)(tabContainer.close);
-            } else {
-                tabContainer.close(tab);
-            }
-        })
-    }
-    _this.onFileUpload = function(file, name) {
-        artisan.upload(file, name);
-    }
-
-    _this.clickTrigger = function(elem) {
-        angular.element("#file_" + elem + ">input").trigger('click');
-    }
-    _this.rightClick = function($event) {
-        console.log('rightClick')
-        _this.contextMenu.setPosition($event.pageX, $event.pageY)
-        _this.contextMenu.setData(artisan);
-        _this.contextMenu.open();
-    }
-
-    _this.leftClick = function($event, inter) {
-        console.log('leftClick')
-
-        if (_this.contextMenu.active)
-            return _this.contextMenu.close();
-    }
-
-    _this.addComment = function() {
-        artisan.comments.push({
-            login: $rootScope.user.login,
-            text: _this.commentText,
-            date: new Date()
-        })
-        _this.commentText = "";
-    }
-}
-angular.module('edison').controller('ArtisanController', ArtisanCtrl);
 
 //# sourceMappingURL=all.js.map

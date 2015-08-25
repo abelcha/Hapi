@@ -153,31 +153,40 @@ var InterventionCtrl = function(Description, Signalement, ContextMenu, $window, 
     }
     $scope.loadFilesList();
 
-    var closeTab = function() {
-        tabContainer.close(tab);
+
+
+    var postSave = function(options, resp, cb) {
+        if (options && options.envoiFacture && options.verification) {
+            intervention.envoiFactureVerif(cb)
+        } else if (options && options.envoi === true) {
+            resp.files = intervention.files;
+            intervention.envoi.bind(resp)(cb);
+        } else if (options && options.annulation) {
+            intervention.annulation(cb);
+        } else if (options && options.verification) {
+            intervention.verificationSimple(cb);
+        } else {
+            cb(null)
+        }
     }
 
-    $scope.saveInter = function(options) {
+    var saveInter = function(options) {
+        $scope.saveInter = function() {
+            console.log('noope')
+        }
         intervention.save(function(err, resp) {
-            if (err) {
-                return false;
-            } else if (options && options.envoiFacture && options.verification) {
-                intervention.envoiFactureVerif(function() {
-                    closeTab()
+            if (!err) {
+                postSave(options, resp, function(err) {
+                    if (!err) {
+                        tabContainer.close(tab);
+                    }
+                    $scope.saveInter = saveInter;
                 })
-            } else if (options && options.envoi === true) {
-                resp.files = intervention.files;
-                intervention.envoi.bind(resp)(closeTab);
-            } else if (options && options.annulation) {
-                intervention.annulation(closeTab);
-            } else if (options && options.verification) {
-                intervention.verificationSimple(closeTab);
-            } else {
-                closeTab()
             }
         })
-
     }
+
+    $scope.saveInter = saveInter;
 
     $scope.clickOnArtisanMarker = function(event, sst) {
         intervention.sst = sst.id;

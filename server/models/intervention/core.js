@@ -97,7 +97,6 @@
 
 
     module.exports.minify = function(e) {
-        console.log(e.id)
         var config = requireLocal('config/dataList')
         var d = requireLocal('config/dates.js')
         var ms = require('milliseconds')
@@ -195,10 +194,16 @@
         var Entities = require('html-entities').XmlEntities;
         var entities = new Entities();
 
-        var getUser = function(oldLogin) {
-            return _.find(users, function(e) {
+        var getLogin = function(oldLogin) {
+            var rtn = _.find(users, function(e) {
                 return e.oldLogin === oldLogin;
             })
+            if (!rtn) {
+                return oldLogin;
+            } else {
+                return rtn.login
+            }
+
         }
 
 
@@ -220,12 +225,10 @@
         addProp(date, toDate(d.t_stamp), 'ajout');
         addProp(date, toDate(d.t_stamp_intervention), 'intervention');
 
-
         if (d.date_edition_facture) {
             addProp(date, toDate(d.date_edition_facture), 'verification')
             addProp(date, toDate(d.date_edition_facture), 'envoiFacture')
         }
-
         /* CLIENT */
         var client = {
             civilite: d.civilite,
@@ -253,8 +256,7 @@
             client.telephone.tel2 = d.tel2.replace(/[^0-9]/g, '');
         client.telephone.origine = d.numero_origine
             /* COMMENTS */
-        var user = getUser(d.ajoute_par)
-        user = user ? user.login : d.ajoute_par;
+        var user = getLogin(d.ajoute_par)
         var comments = [];
         if (d.remarque_interne) {
             comments.push({
@@ -271,7 +273,6 @@
             fourniture: [],
             login: {
                 ajout: user,
-                envoiFacture: d.facture_editee_par ||  undefined
             },
             comments: comments,
             status: d.etat_intervention,
@@ -318,15 +319,37 @@
             });
         }
 
+
+        rtn.categorie = d.categorie;
+        rtn.description = d.description || "PAS DE DESCRIPTION";
+        rtn.remarque = d.remarque || "PAS DE REMARQUES";
+
+        rtn.modeReglement = d.mode_reglement;
+        rtn.prixAnnonce = d.prix_ht_annonce;
+        rtn.prixFinal = d.comptaPrixFinal || d.prix_ht_final;
+
+
         if (rtn.status === 'INT' || rtn.status === 'ENC') {
             rtn.date.envoi = rtn.date.ajout;
             rtn.login.envoi = rtn.login.ajout
         }
         if (rtn.status === "INT") {
+            rtn.login.verification = rtn.login.ajout
+            if (!rtn.reglementSurPlace) {
+                rtn.login.envoiFacture = getLogin(d.facture_editee_par ||  'boukris_b')
+                rtn.login.verification = rtn.login.envoiFacture
+            }
             rtn.date.verification = rtn.date.intervention || rtn.date.ajout;
-        }
-        if (rtn.status === 'INT') {
             rtn.status = 'VRF'
+            if (!rtn.reglementSurPlace && !rtn.produits ||  !rtn.produits.length) {
+                rtn.produits = [{
+                    ref: 'EDX121',
+                    title: rtn.description,
+                    desc: rtn.description,
+                    pu: rtn.prixFinal ||  rtn.prixAnnonce || 0,
+                    quantite: 1
+                }]
+            }
         }
 
         rtn.reglementSurPlace = !d.fact;
@@ -336,9 +359,7 @@
             })
             rtn.causeAnnulation = tmp ? tmp.short_name : undefined
         }
-        rtn.categorie = d.categorie;
-        rtn.description = d.description || "PAS DE DESCRIPTION";
-        rtn.remarque = d.remarque || "PAS DE REMARQUES";
+
         if (d.nom_societe) {
             rtn.artisan = {
                 id: d.id_sst_selectionne,
@@ -347,15 +368,10 @@
             rtn.sst = d.id_sst_selectionne;
         }
 
-        rtn.modeReglement = d.mode_reglement;
-        rtn.prixAnnonce = d.prix_ht_annonce;
-        rtn.prixFinal = d.comptaPrixFinal || d.prix_ht_final;
-
-
         if (d.nom_facture) {
             rtn.facture = {
                 relance: d.relance_facture,
-                payeur: d.type_facture,
+                payeur: config.typeClient[parseInt(d.type_client) || 0],
                 email: d.mail_facture,
                 nom: d.nom_facture,
                 prenom: d.prenom_facture,

@@ -1042,9 +1042,9 @@ module.exports = {
             fontWeight: 'bold'
         }
     }, {
-/*        title: 'Fiche Client V1',
-        action: "ouvrirFicheV1"
-    }, {*/
+        /*        title: 'Fiche Client V1',
+                action: "ouvrirFicheV1"
+            }, {*/
         title: "Appel Client",
         action: 'callClient',
         style: {
@@ -1087,12 +1087,17 @@ module.exports = {
             return inter.status !== "AVR" && inter.status !== 'ENC'
         }
     }, {
+        title: "Reactiver",
+        action: 'reactivation',
+        hide: function(inter) {
+            return inter.status !== 'ANN'
+        }
+    }, {
         title: "Annuler",
         action: 'annulation',
-        hide:function(inter) {
-            return false;//inter.status === 'ANN' || inter.status === 'VRF'
+        hide: function(inter) {
+            return inter.status === 'ANN' || inter.status === 'VRF'
         }
-
     }, {
         title: "Je prend !",
         action: 'demarcher',
@@ -1249,35 +1254,35 @@ module.exports = {
             order: 0,
             short_name: 'ENC',
             long_name: 'En Cours',
-            old_name:'EN COURS',
+            old_name: 'EN COURS',
             color: 'orange'
         },
         VRF: {
             order: 1,
             short_name: 'VRF',
             long_name: 'Vérifié',
-            old_name:'INTERVENU',
+            old_name: 'INTERVENU',
             color: 'green'
         },
         APR: {
             order: 2,
             short_name: 'APR',
             long_name: 'A Progr.',
-            old_name:'A PROGRAMMER',
+            old_name: 'A PROGRAMMER',
             color: 'blue'
         },
         AVR: {
             order: 3,
             short_name: 'AVR',
             long_name: 'A Vérifier',
-            old_name:'EN COURS',
+            old_name: 'EN COURS',
             color: 'brown darken-3'
         },
         ANN: {
             order: 4,
             short_name: 'ANN',
             long_name: 'Annuler',
-            old_name:'ANNULE',
+            old_name: 'ANNULE',
             color: 'red'
         }
     },
@@ -1393,6 +1398,14 @@ module.exports = {
         value: 0.2,
         long_name: "TVA: 20%"
     }],
+    typeClient: [
+        "AUT",
+        "SOC",
+        "PRO",
+        "LOC",
+        "IMO",
+        "CUR"
+    ],
     typePayeur: [{
         short_name: 'SOC',
         long_name: 'Société'
@@ -1412,6 +1425,14 @@ module.exports = {
         short_name: 'GRN',
         long_name: 'Grands Comptes'
     }],
+    typePayeurObj: {
+        SOC: 'SOCIÉTÉ',
+        PRO: 'PROPRIÉTAIRE',
+        IMO: 'AGENCE IMMOBILIÈRE',
+        CUR: 'CURATELLE',
+        AUT: 'AUTRE',
+        GRN: 'GRAND COMPTE'
+    },
     compteFacturation: [{
         short_name: 'FRN_LSR',
         long_name: 'France Loisir',
@@ -1638,17 +1659,16 @@ module.exports = {
     sms: {
         intervention: {
             envoi: function(user) {
-                var sms = this.id ? "OS " + this.id + ". \n" : "";
-                sms += "Intervention chez " + this.client.civilite + " " +
-                    this.client.prenom + " " + this.client.nom + " au " +
-                    this.client.address.n + " " + this.client.address.r + " " +
-                    this.client.address.cp + ", " + this.client.address.v + " le " +
-                    moment(this.date.intervention).format("LLLL") + ". \n";
+                var sms = _.template("OS {{id}}\n" +
+                    "Intervention chez {{client.civilite}} {{client.prenom}} {{client.nom}} au " +
+                    "{{client.address.n}} {{client.address.r}} {{client.address.cp}}, {{client.address.v}} " +
+                    "le " + moment(this.date.intervention).format("LLLL") + ".\n")(this)
                 sms += this.prixAnnonce ? this.prixAnnonce + "€ HT. " : "Pas de prix annoncé. ";
                 sms += "\nMerci de prendre rdv avec le client au " + this.client.telephone.tel1;
-                sms += this.client.telephone.tel2 ? " ou au " + this.client.telephone.tel2 : ""
-                sms += '\nM.' + (user.pseudo ||  " Arnaud") + " (0132123212)";
-                return sms + ".\nEdison Services."
+                sms += this.client.telephone.tel2 ? " ou au " + this.client.telephone.tel2 : "";
+                sms += '\n' + (_.startCase(user.pseudo) ||  " Arnaud") + ',\n';
+                sms += "Ligne direct: " + (user.ligne ||  "09.72.42.30.00") + "\n";
+                return sms + "Edison Services."
             },
             demande: function(user) {
                 console.log(this.artisan)
@@ -1656,7 +1676,8 @@ module.exports = {
                     "Pourriez-vous vous rendre disponible ?\n" +
                     "Merci de nous contacter au plus vite au 09.72.42.30.00.\n" +
                     "Merci d'avance pour votre réponse.\n" +
-                    "\nM." + (user.pseudo ||  " Arnaud") + " (0132123212)\n" +
+                    "\nM." + (_.startCase(user.pseudo) ||  " Arnaud") + "\n" +
+                    "Ligne Direct " + user.ligne ||  "09.72.42.30.00" + "\n" +
                     "Edison Services"
             }
         }
@@ -1671,7 +1692,7 @@ module.exports = {
                     "Tél. : 0322916682</p>" +
                     "Pour les raisons suivantes: </p>" +
                     "<p strong center>{{description}}</p>" +
-                    "<p>Nous vous confirmons que l'intervention à été réalisé par nos soins.\n" +
+                    "<p>Nous vous confirmons que l'intervention à été réalisée par nos soins.\n" +
                     "Vous trouverez ci joint la facture à regler.\n" +
                     "Nous vous prions de bien vouloir transmettre le règlement par chèque à l'ordre de:</p>" +
                     "<p strong center> S.A.R.L EDISON SERVICES</p>" +
@@ -1744,9 +1765,9 @@ module.exports = {
                     "\n" +
                     "Les coordonnées et la description de l'intervention sont détaillées dans l'ordre de service que vous trouverez en pièce jointe. \n" +
                     "<center>" +
-                    "<% if (typeof devisOrigine !== 'undefined' && !fileSupp) {%> <strong>Vous trouverez également le devis accepté et signé par notre client</strong> <%}%>" +
-                    "<% if (typeof devisOrigine === 'undefined' && fileSupp) {%> <strong>Vous trouverez également {{textfileSupp}} à votre disposition</strong> <%}%>" +
-                    "<% if (typeof devisOrigine !== 'undefined' && fileSupp) {%> <strong>Vous trouverez également le devis accepté et signé par notre client, et {{textfileSupp}}</strong> <%}%>" +
+                    "<% if (typeof devisOrigine !== 'undefined' && !fileSupp) {%> \n<strong>Vous trouverez également le devis accepté et signé par notre client</strong> <%}%>" +
+                    "<% if (typeof devisOrigine === 'undefined' && fileSupp) {%> \n<strong>Vous trouverez également {{textfileSupp}} à votre disposition</strong> <%}%>" +
+                    "<% if (typeof devisOrigine !== 'undefined' && fileSupp) {%> \n<strong>Vous trouverez également le devis accepté et signé par notre client, et {{textfileSupp}}</strong> <%}%>" +
                     "</center>" +
                     "\n" +
                     "<strong>" +
@@ -1815,7 +1836,7 @@ module.exports = {
                 } else {
                     var text = "Suite à notre dernier échange concernant la réalisation d'un devis " + categorieClean + ", \n" +
                         "vous trouverez ci-joint le devis n°" + this.id + " correspondant à ce que nous avons vu ensemble. \n\n" +
-                        "Sachez également, que votre installation sera éligible à notre assurance RC PRO et notre assurance décennale.\n" +
+                        "Sachez également, que votre installation sera éligible à notre assurance RC PRO et notre assurance décennale.\n\n" +
                         "Lors de l'acceptation, je vous prie de me renvoyer le devis signé, accompagné de la mention:\n\n" +
                         "<strong> « BON POUR ACCORD » </strong>\n\n" +
                         "Je reste à votre entière disposition pour tous les renseignements ou les remarques que vous pourriez avoir concernant ce devis (technique, délais, prix). \n\n" +

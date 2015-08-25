@@ -6,6 +6,7 @@
      email: "abel@chalier.me",
      service: 'INFORMATIQUE',
      root: true,
+     pseudo:'Alain',
      nom: 'abel',
      prenom: 'chalier',
      activated: true
@@ -41,7 +42,7 @@
      pseudo: 'éric',
      activated: false
  }, {
-     login: 'clement_x',
+     login: 'clement_b',
      oldLogin: 'laurent',
      service: 'INTERVENTION',
      root: false,
@@ -50,7 +51,7 @@
      prenom: 'xxx',
      activated: false
  }, {
-     login: 'gregoi_x',
+     login: 'gregoire_e',
      oldLogin: 'sebastien',
      service: 'INTERVENTION',
      root: false,

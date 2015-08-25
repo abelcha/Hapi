@@ -12,6 +12,7 @@ angular.module('edison').directive('dropdownRow', function(Devis, productsList, 
         link: function(scope, element, attrs) {
             scope._ = _;
             scope.Intervention = Intervention
+            scope.Devis = Devis
             scope._model = scope.model || "intervention"
 
             scope.expendedStyle = {
@@ -42,7 +43,9 @@ angular.module('edison').directive('dropdownRow', function(Devis, productsList, 
 
             } else if (scope._model === "devis") {
                 var pAll = [
-                    edisonAPI.devis.get(scope.row.id),
+                    edisonAPI.devis.get(scope.row.id, {
+                        populate: 'transfertId'
+                    }),
                 ]
                 var pThen = function(result) {
                     scope.data = result[0].data;
