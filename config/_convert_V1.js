@@ -31,7 +31,7 @@ var V1 = function(d, devis, legacy) {
             x.date_intervention_en = dateIntervention.format('YYYYMMDD')
             x.heure_intervention = dateIntervention.format('HH:mm:ss')
         }
-        if (d.compta.reglement.date) {
+        if (d.compta && d.compta.reglement.date) {
             x.date_paiement_client = moment(new Date(d.compta.reglement.date)).format('DD/MM/YYYY');
         }
         if (d.date.envoiFacture) {
