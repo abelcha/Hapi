@@ -11,7 +11,7 @@ var V1 = function(d, devis, legacy) {
     try {
         this.data = _.clone(this.___data)
         var x = this.data
-        if (devis) {
+        if (!d.compta) {
             d = db.model('intervention')(d)
             d.status = 'DEVIS'
         }
