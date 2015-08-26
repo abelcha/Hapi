@@ -1,5 +1,5 @@
 var InterventionsController = function($q, tabContainer, FiltersFactory, ContextMenu, LxProgressService, edisonAPI, DataProvider, $routeParams, $location, $rootScope, $filter, config, ngTableParams) {
-    "use strict";
+   /* "use strict";
     var _this = this;
     var currentFilter;
     var currentHash = $location.hash();
@@ -95,6 +95,6 @@ var InterventionsController = function($q, tabContainer, FiltersFactory, Context
                 $rootScope.expendedRow = inter.id
             }
         }
-    }
+    }*/
 }
 angular.module('edison').controller('InterventionsController', InterventionsController);

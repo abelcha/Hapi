@@ -169,7 +169,7 @@ V1.prototype.send = function(cb) {
         }, function(err, resp, body) {
             if (!err && resp.statusCode === 200) {
                 console.log('send', _this.data.id);
-                //console.log(body)
+                console.log(body)
                 cb(null, body)
             } else {
                 console.log("ERR", body)

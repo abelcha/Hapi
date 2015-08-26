@@ -1,0 +1,67 @@
+<div>
+    <div class="shadow-box listeInterventions">
+        <table style="background:white;cursor:pointer" ng-table="tableParams" class="table table-bordered table-hover table-hover table-striped" id="table-list" show-filter="true">
+            <tbody id="tbody-list">
+                <tr data-id="{{inter.id}}" ng-repeat-start="inter in $data" ng-right-click="rowRightClick($event, inter)" ng-click="rowClick($event, inter, false)" ng-class="{success : contextMenu.active && contextMenu.data.id === inter.id}">
+                    <td data-title="'Os'" sortable="'id'" filter="{ 'id': 'text' }">
+                        <strong>{{inter.id}}</strong>
+                    </td>
+                    <td data-title="'Télépro'" sortable="'t'" filter="{ 't': 'text' }">
+                        {{inter.t}}
+                    </td>
+                    <td ng-init="inter._categorie = config.categoriesHash()[inter.c].long_name" data-title="'Cat.'" sortable="'c'" filter="{ '_categorie': 'text' }">
+                        <span style="width:80px" class="label {{config.categoriesHash()[inter.c].color}}">{{inter._categorie}}</span>
+                    </td>
+                    <td data-title="'Ajout'" sortable="'da'" filter="{ 'da': 'text' }">
+                        {{inter.da | relativeDate:true}}
+                    </td>
+                    <td variable-length data-title="'Client'" sortable="'n'" filter="{ 'n': 'text' }">
+                        {{inter.n}}
+                    </td>
+                    <td variable-length data-title="'Ville'" sortable="'ad'" filter="{ 'ad': 'text' }">
+                        {{inter.ad}}
+                    </td>
+                    <td variable-length class="variable-length one-liner" data-title="'Artisan'" sortable="'a'" filter="{ 'a': 'text' }">
+                        <strong>{{inter.a}}</strong>
+                    </td>
+                    <td data-title="'Intervention'" sortable="'di'" filter="{ 'di': 'text' }">
+                        <div ng-show="inter.di[0] != 1">
+                            {{inter.di | relativeDate}}
+                        </div>
+                    </td>
+                    <td data-title="'Prix'" sortable="'pa'" filter="{ 'pa': 'text' }">
+                        {{(inter.pa | number:2) || 0}} €
+                    </td>
+                    <td ng-init="inter._status = config.etatsHash()[inter.s];inter._etat = inter._status.long_name" data-title="'Status'" sortable="'s'" filter="{ '_etat': 'text' }">
+                        <span style="width:75px" class="label {{config.etatsHash()[inter.s].color}} display-block"> 
+                        {{inter._etat}}</span>
+                    </td>
+                    <td data-title="'rCli'" sortable="'rc'" filter="{ 'rc': 'select' }" filter-data="config.reglementClient">
+                        <span ng-if="inter.rc" style="width:30px" class="label display-block {{config.reglementClient[inter.rc].color}}">
+                        <i class="fa fa-{{config.reglementClient[inter.rc].icon}}"></i>
+                    </span>
+                    </td>
+                    <td data-title="'rSST'" sortable="'ps'" filter="{ 'ps': 'select' }" filter-data="config.paiementArtisan">
+                        <span ng-if="inter.ps" style="width:30px" class="label display-block {{config.paiementArtisan[inter.ps].color}}">
+                        <i class="fa fa-{{config.paiementArtisan[inter.ps].icon}}"></i>
+                    </span>
+                    </td>
+                </tr>
+                <tr ng-repeat-end ng-if="expendedRow && expendedRow === inter.id" ng-right-click="rowRightClick($event, inter)">
+                    <td colspan="42" style="background-color:white!important">
+                        <dropdown-row row="inter" expendedRow="expendedRow"></dropdown-row>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="dropdown-menu--no-conflicts dropdown-menu--right dropdown__menu--is-dropped" style="margin-top: -215px;width: auto; height: auto; opacity: 1;" ng-style="contextMenu.style">
+        <div class="dropdown-menu__content ng-scope">
+            <ul class="ng-scope">
+                <li ng-hide="item.hidden" ng-repeat="item in contextMenu.list" ng-click="contextMenu.close();contextMenu.click(item)">
+                    <a class="dropdown-link" ng-style="item.style" tabindex="0">{{item.title}}</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
