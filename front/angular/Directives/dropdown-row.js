@@ -25,7 +25,7 @@ angular.module('edison').directive('dropdownRow', function(Devis, productsList, 
             $timeout(function() {
                 $("#expended").velocity({
                     height: 220,
-                }, 200);
+                }, 50);
             }, 50)
 
             if (scope._model === "intervention") {

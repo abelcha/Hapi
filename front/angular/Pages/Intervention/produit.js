@@ -23,13 +23,20 @@
                      scope.display = true;
                  }
 
-                 scope.$watch('data.produits',function(curr, prev) {
-                    if (!_.isEqual(curr, prev)) {
-                        scope.data.prixFinal = scope.produits.total()
-                    }
+                 scope.$watch('data.produits', function(curr, prev) {
+                     if (!_.isEqual(curr, prev)) {
+                         scope.data.prixFinal = scope.produits.total()
+                     }
                  }, true)
 
                  scope.createProd = function() {
+/*                     scope.produits.add({
+                         ref: 'EDIXX',
+                         desc: "",
+                         pu: 10,
+                         quantite: 1,
+                         focus: true,
+                     })*/
                      dialog.addProd(function(resp) {
                          model.produits.push(resp)
                      });

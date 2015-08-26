@@ -33,6 +33,12 @@ angular.module('edison')
         };
 
         Devis.prototype.devisPreview = function() {
+            if (!this.client.nom || !this.client.prenom || !this.client.address.r || !this.client.address.v ||  !this.client.address.cp || !this.client.address.n) {
+                return LxNotificationService.error('Les coordonées du devis sont incompletes');
+            }
+            if (!this.produits || !this.produits.length) {
+                return LxNotificationService.error('Veuillez renseigner au moins 1 produits');
+            }
             openPost('/api/intervention/devisPreview', {
                 data: JSON.stringify(this),
                 html: true

@@ -74,6 +74,7 @@ module.exports = function(schema) {
         } catch (e) {
             return res.status(400).send('bad data')
         }
+
         doc.id = doc.id ||  "00000"
         doc.type = 'devis'
         var result = PDF([{
@@ -96,7 +97,7 @@ module.exports = function(schema) {
             return new Promise(function(resolve, reject) {
 
                 var f = inter.facture;
-                if (!f.nom || !f.prenom || !f.address.r || !f.address.v || !f.address.cp || !f.address.n) {
+                if (!f.nom || !f.prenom || !f.address.r || !f.address.v ||  !f.address.cp || !f.address.n) {
                     return reject('Les coordonées de facturations sont incompletes')
                 }
                 if (!inter.produits || !inter.produits.length) {

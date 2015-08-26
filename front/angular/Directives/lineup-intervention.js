@@ -1,4 +1,4 @@
- angular.module('edison').directive('lineupIntervention', function($q, tabContainer, FiltersFactory, ContextMenu, LxProgressService, edisonAPI, DataProvider, $routeParams, $location, $rootScope, $filter, config, ngTableParams) {
+ angular.module('edison').directive('lineupIntervention', function(tabContainer, FiltersFactory, ContextMenu, LxProgressService, edisonAPI, DataProvider, $routeParams, $location, $rootScope, $filter, config, ngTableParams) {
      "use strict";
      return {
          replace: false,
@@ -16,18 +16,21 @@
              if ($routeParams.fltr) {
                  currentFilter = filtersFactory.getFilterByUrl($routeParams.fltr)
              }
-
+             $scope.tab = tabContainer.getCurrentTab();
+             $scope.tab.hash = currentHash;
+             $scope.config = config;
              var title = currentFilter ? currentFilter.long_name : "Interventions";
-             $scope.recap = $routeParams.sstID ? parseInt($routeParams.sstID) : false;
-             console.log('before')
-             dataProvider.init(function(err, resp) {
-                 $scope.tab = tabContainer.getCurrentTab();
+             if ($routeParams.id) {
+                 var id = parseInt($routeParams.id)
+                 $scope.customFilter = function(inter) {
+                     return inter.ai === id;
+                 }
+             } else {
                  $scope.tab.setTitle(title, currentHash);
-                 $scope.tab.hash = currentHash;
-                 $scope.config = config;
-                 console.log('filter')
+             }
+             dataProvider.init(function(err, resp) {
+
                  dataProvider.applyFilter(currentFilter, $scope.tab.hash, $scope.customFilter);
-                 console.log('after')
                  var tableParameters = {
                      page: 1,
                      total: dataProvider.filteredData.length,
@@ -75,15 +78,13 @@
                          populate: 'sst'
                      })
                      .then(function(resp) {
-                        console.log(resp)
                          $scope.contextMenu.setData(resp.data);
-                         $scope.contextMenu.setPosition($event.pageX, $event.pageY + 200)
+                         $scope.contextMenu.setPosition($event.pageX - ($routeParams.id ? 50 : 0), $event.pageY + ($routeParams.id ? 0 : 200))
                          $scope.contextMenu.open();
                      })
              }
 
              $scope.rowClick = function($event, inter) {
-                console.log($scope.expendedRow)
                  if ($scope.contextMenu.active)
                      return $scope.contextMenu.close();
                  if ($event.metaKey || $event.ctrlKey) {

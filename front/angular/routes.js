@@ -370,9 +370,7 @@ angular.module('edison').run(function(editableOptions) {
     $http.get("/Directives/dropdown-row.html", {
         cache: $templateCache
     });
-    $http.get("/Directives/artisan-recap.html", {
-        cache: $templateCache
-    });
+
     $http.get("/Templates/artisan-categorie.html", {
         cache: $templateCache
     });

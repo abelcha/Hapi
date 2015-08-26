@@ -2,8 +2,7 @@
     <div class="p+" ng-init="displayfact = (!data.reglementSurPlace||data.produits.length)">
         <strong ng-click="displayfact = !displayfact" class="fs-headline displayfact-block">Facture / Devis</strong><a ng-if="data.devisOrigine" href="/devis/{{data.devisOrigine}}">Devis Original</a>
         <md-content class="autocomplete" style="width: 40%;margin-top: -22px;margin-left: 54%;float: left;" layout-padding layout="column" md-input-container flex>
-                
-<!-- 
+            <!-- 
            <md-autocomplete
             md-search-text-change="null" 
             md-min-length="3" 
@@ -16,24 +15,84 @@
             placeholder="Recherche..." 
             md-item-text="item.description">
             <span md-highlight-text="searchText"> {{item.description}}</span>
-            </md-autocomplete>       -->     
-
-            <md-autocomplete 
-            ng-if="displayfact" 
-            md-min-length="3" 
-            md-search-text-change="null" 
-            md-selected-item-change="produits.getDetail(selectedProduct)" 
-            md-selected-item="selectedProduct" 
-            md-search-text="produits.searchText" 
-            md-items="item in produits.search(produits.searchText)" 
-            md-item-text="item.title" 
-            placeholder="Rechercher un produit...">
+            </md-autocomplete>       -->
+            <md-autocomplete ng-if="displayfact" md-min-length="3" md-search-text-change="null" md-selected-item-change="produits.getDetail(selectedProduct)" md-selected-item="selectedProduct" md-search-text="produits.searchText" md-items="item in produits.search(produits.searchText)" md-item-text="item.title" placeholder="Rechercher un produit...">
                 <span md-highlight-text="produits.searchText"> 
                 {{item.nom}} {{item.prix}}€</span>
             </md-autocomplete>
         </md-content>
         <span class="fs-subhead tc-black-2 display-block">Pour generation de factures/devis</span>
-        <div class="paragraph fs-body-1 mt+" ng-if="displayfact">
+        <br>
+        <br>
+        <table class="table table-bordered produits">
+            <thead>
+                <tr>
+                    <th>Référence</th>
+                    <th>Désignation</th>
+                    <th>Q</th>
+                    <th>PU</th>
+                    <th>Montant</th>
+                    <th>Modif</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="p in data.produits track by $index">
+                    <td style="width:10%">
+                        <input ng-focus="p.focus" type="text" class="xref form-control" ng-model="p.ref">
+                    </td>
+                    <td style="width:40%">
+                        <input capitalize type="text" style="width: 93%;display: inline;" placeholder="description" class="form-control" ng-model="p.title">
+                        <button ng-click="produits.edit($index)" class="btn--no-conflicts btn--l btn--black btn--icon">
+                            <i class="fa fa-plus"></i>
+                        </button>
+                    </td>
+                    <td style="width:10%">
+                        <input type="number" class="form-control" ng-model="p.quantite">
+                    </td>
+                    <td style="width:10%">
+                        <input type="number" class="form-control" ng-model="p.pu">
+                    </td>
+                    <td style="width:10%">
+                        <input type="text" class="form-control" disabled="true" value="{{p.pu * p.quantite}} €">
+                    </td>
+                    <td style="width:1%">
+                        <lx-dropdown position="right" from-top>
+                            <button class="btn--no-conflicts btn--l btn--black btn--icon" lx-ripple lx-dropdown-toggle>
+                                <i class="fa fa-reorder"></i>
+                            </button>
+                            <lx-dropdown-menu>
+                                <ul>
+                                    <li><a ng-click="produits.moveDown($index)" class="dropdown-link">Descendre</a></li>
+                                    <li><a ng-click="produits.moveTop($index)" class="dropdown-link">Monter</a></li>
+                                    <li><a ng-click="produits.remove($index)" class="dropdown-link">Supprimer</a></li>
+                                </ul>
+                            </lx-dropdown-menu>
+                        </lx-dropdown>
+                    </td>
+                </tr>
+                <tr class="products data-table__clickable-row" ng-if="data.produits.length">
+                    <td colspan="3"></td>
+                    <td colspan="1">
+                        <strong>
+                                 TOTAL HT
+                                 <br>
+                                 TVA ({{data.tva.toFixed(2)}}%) 
+                                 <br>
+                                 TOTAL TTC
+                                </strong>
+                    </td>
+                    <td colspan="2">
+                        <strong>
+                                 {{produits.total() | currency:''}} €<br>
+                                {{produits.total() * (data.tva / 100) | currency:''}} €
+                                 <br>
+                                 {{produits.total() * (data.tva / 100 + 1) | currency:''}} €
+                                </strong>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <!--  <div class="paragraph fs-body-1 mt+" ng-if="displayfact">
             <div class="data-table-container">
                 <table class="data-table data-table--has-primary data-table--has-secondary">
                     <thead>
@@ -47,7 +106,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr class="products data-table__clickable-row" ng-repeat="p in data.produits track by $index">
+                        <tr class="products data-table__clickable-row" >
                             <td>
                                 <span>{{p.ref}}</span>
                             </td>
@@ -105,22 +164,17 @@
                     </tbody>
                 </table>
             </div>
-        </div>
+        </div>-->
     </div>
     <div class="card__actions" ng-if="displayfact">
         <span style="float:left;width:50%">
                  <!--          <button ng-click="produits.add({quantite: 1,ref: 'AUT001',title: 'Autre',desc: '',pu: 0})" class="btn--no-conflicts btn--m btn--black btn--flat" lx-ripple>Ajouter</button> -->
                        <button ng-click="createProd()" class="btn--no-conflicts btn--m btn--black btn--flat" lx-ripple>Ajout produit</button>
-                        <button ng-click="Devis(data).devisPreview()" class="btn--no-conflicts btn--m btn--black btn--flat" lx-ripple>Devis</button>
-                        <button ng-click="Intervention(data).facturePreview()" class="btn--no-conflicts btn--m btn--black btn--flat" lx-ripple>Facture</button>
-                        
-                        <button ng-click="Devis(data).sendDevis()" class="btn--no-conflicts btn--m btn--black btn--flat" lx-ripple>Envoyer Devis</button>
+                        <button ng-if="model === 'DEVIS'" ng-click="Devis(data).devisPreview()" class="btn--no-conflicts btn--m btn--black btn--flat" lx-ripple>Voire devis</button>
+                        <button  ng-if="model !== 'DEVIS' && !data.reglementSurPlace"  ng-click="Intervention(data).facturePreview()" class="btn--no-conflicts btn--m btn--black btn--flat" lx-ripple>Voire Facture</button>
 
-                        <button ng-click="Intervention(data).sendFacture()" class="btn--no-conflicts btn--m btn--black btn--flat" lx-ripple>Envoyer Facture</button>
-
-                       <!--  <button ng-click="Intervention(data).factureAcquittePreview()" class="btn--no-conflicts btn--m btn--black btn--flat" lx-ripple>Facture Aquité</button> -->
-                        <a href="/devis?i={{data.id}}">
-                        <button ng-if="model !== 'DEVIS' && data.id" class="btn--no-conflicts btn--m btn--black btn--flat" lx-ripple>
+                        <a href="/devis?i={{data.id}}"ng-if="model !== 'DEVIS' && data.id">
+                        <button  class="btn--no-conflicts btn--m btn--black btn--flat" lx-ripple>
                         Créer Devis</button>
                         </a>
                          </span>

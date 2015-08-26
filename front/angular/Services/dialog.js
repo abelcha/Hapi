@@ -121,6 +121,8 @@ angular.module('edison').factory('dialog', function($mdDialog, edisonAPI, config
                         $scope.prod.ref = $scope.prod.ref.toUpperCase();
                         $scope.prod.title = $scope.prod.title.toUpperCase();
                         $scope.prod.desc = $scope.prod.title;
+                        $scope.prod.pu = $scope.prod.pu;
+                        $scope.prod.quantite = $scope.prod.quantite;
                     }, true)
                     $scope.answer = function(resp, text) {
                         $mdDialog.hide();
