@@ -8,7 +8,7 @@ var Timer = module.exports = function() {
     //    this.emitter.add("*/5 * * * *", "every 5 minutes");
     // this.emitter.add("*/2 * * * *", "every minute");
     this.emitter.add("0 3 * * *", "midnight");
-    this.emitter.add("*/30 * * * *", "30 minutes")
+    this.emitter.add("*/60 * * * *", "30 minutes")
         /*    this.emitter.on("every 10 minutes", function() {
                 edison.worker.createJob({
                     name: 'db',

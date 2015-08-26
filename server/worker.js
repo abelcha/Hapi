@@ -14,7 +14,7 @@ try {
     global.isWorker = true;
 
     if (envProd ||  envStaging) {
-        var redisUrl = url.parse(process.env.REDISTOGO_URL);
+        var redisUrl = url.parse(process.env.REDISCLOUD_URL);
     }
     redis.delWildcard("kue".envify() + '*', function() {
 
