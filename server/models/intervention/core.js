@@ -68,13 +68,12 @@
             curr.compta.paiement.login = session.login
             curr.compta.paiement.date = Date.now()
         }
-        console.log(curr.litige.open, prev.litige.open)
-        if (curr.litige.open === true && prev.litige.open === void(0)) {
+        if (curr.litige && curr.litige.open === true && prev.litige.open === void(0)) {
             console.log('opened')
             curr.litige.opened = new Date();
             curr.litige.openedBy = session.login;
         }
-        if (curr.litige.open === false && prev.litige.open === true) {
+        if (curr.litige && curr.litige.open === false && prev.litige.open === true) {
             console.log('closed')
             curr.litige.closed = new Date();
             curr.litige.closedBy = session.login;
