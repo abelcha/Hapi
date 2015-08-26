@@ -76,7 +76,7 @@ var V1 = function(d, devis, legacy) {
         } else {
             x.reglement_sur_place = 1;
         }
-        if (d.compta.reglement.recu) {
+        if (d.compta && d.compta.reglement.recu) {
             x.reglement_sur_place = 3;
         }
         x.mode_reglement = (!d.reglementSurPlace ? 'facture' : _.find(config.modeDeReglements, 'short_name', d.modeReglement).old_name);

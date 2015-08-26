@@ -31,7 +31,7 @@
      nom: 'xxx',
      prenom: 'harald',
      pseudo: 'Fabien',
-     activated: false
+     activated: true
  }, {
      login: 'jeremie_r',
      oldLogin: 'jeremie',
@@ -49,7 +49,7 @@
      nom: 'clement',
      pseudo: 'Laurent',
      prenom: 'xxx',
-     activated: false
+     activated: true
  }, {
      login: 'gregoire_e',
      oldLogin: 'sebastien',
@@ -58,7 +58,7 @@
      nom: 'clement',
      pseudo: 'Laurent',
      prenom: 'xxx',
-     activated: false
+     activated: true
  }, {
      login: 'tayeb_g',
      oldLogin: 'tayeb',
@@ -67,7 +67,7 @@
      nom: 'guillot',
      prenom: 'taieb',
      pseudo: 'Eric',
-     activated: false
+     activated: true
  }, {
      login: 'eliran_t',
      oldLogin: 'eliran',
