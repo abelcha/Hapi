@@ -41,7 +41,7 @@ var V1 = function(d, devis, legacy) {
             var loginEnvoiFacture = _.find(users, 'login', d.login.envoiFacture)
             x.facture_editee_par = _.get(_.find(users, 'login', d.login.envoiFacture), 'oldLogin', d.login.envoiFacture);
         }
-        x.sms = d.sms ||  undefined;
+        x.id_sms = d.sms ||  undefined;
         x.sms_status = d.sms_status;
         x.civilite = d.client.civilite;
         x.nom = d.client.nom;
