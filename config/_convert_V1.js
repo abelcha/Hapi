@@ -14,6 +14,7 @@ var V1 = function(d, devis, legacy) {
         if (!d.compta) {
             d = db.model('intervention')(d)
             d.status = 'DEVIS'
+            devis = true;
         }
         this.legacy = legacy
         x.id = d.id;
