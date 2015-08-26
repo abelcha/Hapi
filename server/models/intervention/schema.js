@@ -126,6 +126,14 @@ module.exports = function(db) {
             type: Number,
             ref: 'artisan'
         },
+        litige: {
+            openedBy:String,
+            closedBy:String,
+            opened:Date,
+            closed:Date,
+            description: String,
+            open: Boolean
+        },
         litiges: [{
             status: String,
             description: String,

@@ -119,6 +119,7 @@ gulp.task('styles', function() {
 
 
         'bower_components/font-awesome/css/font-awesome.min.css',
+        'bower_components/font-awesome-animation/dist/font-awesome-animation.min.css',
         'bower_components/bootstrap/dist/css/bootstrap.css',
         'bower_components/ng-table/dist/ng-table.css',
         'bower_components/angular-xeditable/dist/css/xeditable.css',

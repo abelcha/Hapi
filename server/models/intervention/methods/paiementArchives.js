@@ -159,7 +159,7 @@ module.exports = function(schema) {
         }
         return new Promise(function(resolve, reject) {
             var dateRange = getMonthRange(req.query.m - 1, req.query.y)
-
+            console.time('query')
             db.model('intervention').find({
                 'compta.reglement.recu': true,
                 $or: [{
@@ -174,9 +174,9 @@ module.exports = function(schema) {
                     var R = e.compta.reglement;
                     var P = e.compta.paiement;
                     var montant = {
-                        HT: e.compta.reglement.montant,
-                        TTC: _.round(R.montant * (1 + (e.tva / 100)), 2),
-                        TVA: _.round(R.montant * (e.tva / 100), 2)
+                        HT: format(e.compta.reglement.montant),
+                        TTC: format(R.montant * (1 + (e.tva / 100))),
+                        TVA: format(R.montant * (e.tva / 100))
                     }
                     var compte = {
                         VT1: _.padRight('4110' + e.tva, 8, '0'),
@@ -200,9 +200,9 @@ module.exports = function(schema) {
                     }
                     if (R.avoir.effectue && moment(R.avoir.date).isBetween(dateRange.$gte, dateRange.$lt)) {
                         var montantAvoir = {
-                            HT: R.avoir.montant,
-                            TTC: _.round(R.avoir.montant * (1 + (e.tva / 100)), 2),
-                            TVA: _.round(R.avoir.montant * (e.tva / 100), 2)
+                            HT: format(R.avoir.montant),
+                            TTC: format(R.avoir.montant * (1 + (e.tva / 100))),
+                            TVA: format(R.avoir.montant * (e.tva / 100))
                         };
                         if (R.avoir._type === 'REM_COM') {
                             var compteVTA2 = '70900000'

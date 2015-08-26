@@ -49,24 +49,35 @@
         }
     }
 
-    module.exports.preUpdate = function(doc, data, session) {
-        if (data.artisan && data.artisan.id && data.artisan.id !== doc.artisan.id) {
-            doc.status = 'APR';
+    module.exports.preUpdate = function(prev, curr, session) {
+        if (curr.artisan && curr.artisan.id && curr.artisan.id !== prev.artisan.id) {
+            prev.status = 'APR';
         }
-        if (data.compta.reglement.recu && !doc.compta.reglement.recu) {
-            data.compta.reglement.historique.push({
+        if (curr.compta.reglement.recu && !prev.compta.reglement.recu) {
+            curr.compta.reglement.historique.push({
                 login: session.login,
-                montant: data.compta.reglement.avoir.montant,
+                montant: curr.compta.reglement.avoir.montant,
             })
-            if (!data.compta.reglement.date) {
-                data.compta.reglement.date = Date.now()
-                data.compta.reglement.login = session.login
+            if (!curr.compta.reglement.date) {
+                curr.compta.reglement.date = Date.now()
+                curr.compta.reglement.login = session.login
             }
 
         }
-        if (data.compta.paiement.ready && !doc.compta.paiement.ready) {
-            data.compta.paiement.login = session.login
-            data.compta.paiement.date = Date.now()
+        if (curr.compta.paiement.ready && !prev.compta.paiement.ready) {
+            curr.compta.paiement.login = session.login
+            curr.compta.paiement.date = Date.now()
+        }
+        console.log(curr.litige.open, prev.litige.open)
+        if (curr.litige.open === true && prev.litige.open === void(0)) {
+            console.log('opened')
+            curr.litige.opened = new Date();
+            curr.litige.openedBy = session.login;
+        }
+        if (curr.litige.open === false && prev.litige.open === true) {
+            console.log('closed')
+            curr.litige.closed = new Date();
+            curr.litige.closedBy = session.login;
         }
 
     }

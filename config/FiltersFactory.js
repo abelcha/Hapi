@@ -448,10 +448,8 @@ FiltersFactory.prototype.list = {
             $ne: ['$litiges', []]
         }],
         match: {
-            litiges: {
-                $gt: {
-                    $size: 0
-                }
+            'litige': {
+                $exists: true
             }
         },
         fn: function(inter) {
@@ -465,11 +463,7 @@ FiltersFactory.prototype.list = {
             $eq: ['$litigesEnCours', true]
         }],
         match: {
-            litiges: {
-                $elemMatch:  {
-                    regle: false
-                }
-            }
+            'litige.open': true
         },
         fn: function(inter) {
             return inter.litiges && inter.litiges.length > 0 &&

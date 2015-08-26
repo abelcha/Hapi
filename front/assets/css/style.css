@@ -1,3 +1,11 @@
+md-switch.md-checked.md-primary .md-thumb {
+    background-color: rgb(65, 140, 228)!important;
+}
+
+md-switch.md-checked.md-primary .md-bar {
+    background-color: rgba(65, 140, 228, 0.5)!important;
+}
+
 .spacer,
 .spacer-md {
     height: 0.5cm;
@@ -14,6 +22,7 @@
 body {
     zoom: 100%!important;
 }
+
 .spacer-sm {
     height: 0.3cm;
 }
@@ -53,7 +62,6 @@ body {
 [right] {
     float: right;
 }
-
 
 [text-xxxs] {
     font-size: 10px!important;
@@ -98,6 +106,7 @@ body {
 [text-xxxl] {
     font-size: 20px!important;
 }
+
 .content-wrapper {
     padding: 64px 0px 0px!important;
 }

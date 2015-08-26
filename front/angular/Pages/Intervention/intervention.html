@@ -24,7 +24,7 @@
                                 <div class="fs-body-1 mt+" style="padding-top:10px">
                                     <edison-map first-address="firstAddress" is-new="vm.isNew" data="vm.data" client="vm.data.client" xmarkers="vm.nearestArtisans" address-change="vm.searchArtisans()" height="small"></edison-map>
                                 </div>
-                                <div class="p+"  ng-if="vm.data.artisan.id && vm.data.artisan.stats.total">
+                                <div class="p+" ng-if="vm.data.artisan.id && vm.data.artisan.stats.total">
                                     <span class="fs-subhead tc-black-2 display-block">
                                     {{vm.data.artisan.nomSociete}} - M. {{vm.data.artisan.representant.nom}} {{vm.data.artisan.representant.prenom}}</span>
                                     <div class="paragraph fs-body-1" style="height:90px;">
@@ -273,108 +273,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div ng-if="vm.data.id" class="card margin">
-                            <div class="p+">
-                                <strong ng-click="displayLIT = !displayLIT" class="fs-headline display-block">Litiges</strong>
-                                <span class="fs-subhead tc-black-2 display-block">Liste des litiges</span>
-                                <div class="paragraph fs-body-1 mt+" ng-if="displayLIT || vm.data.litiges.length">
-                                    <div class="data-table-container">
-                                        <table class="data-table data-table--has-primary data-table--has-secondary">
-                                            <thead>
-                                                <tr>
-                                                    <th style="font-weight:bold">Ajouté Par</th>
-                                                    <th style="font-weight:bold">Date</th>
-                                                    <th style="font-weight:bold">Description</th>
-                                                    <th style="font-weight:bold">Réglé</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr class="products data-table__clickable-row" ng-repeat="litige in vm.data.litiges">
-                                                    <td>
-                                                        <span>{{litige.login}}</span>
-                                                    </td>
-                                                    <td>
-                                                        <span>{{litige.date |  date:"dd/MM/yy"}}</span>
-                                                    </td>
-                                                    <td>
-                                                        <span style="white-space: pre;">{{litige.description}}</span>
-                                                    </td>
-                                                    <td>
-                                                        <span> <md-checkbox style="padding-top: 0;" ng-model="litige.regle" >
-                                   Réglé
-                                </md-checkbox></span>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card__actions" ng-if="displayLIT || vm.data.litiges.length">
-                                <button ng-click="addLitige();" class="btn--no-conflicts btn--m btn--red btn--flat" lx-ripple>Ajouter</button>
-                            </div>
-                        </div>
-                        <div class="card margin" ng-if="vm.data.date.verification">
-                            <div class="p+">
-                                <strong ng-click="smoothTransition(displaySAV)" class="fs-headline display-block">S.A.V</strong>
-                                <span class="fs-subhead tc-black-2 display-block">Service Apres Ventes</span>
-                                <div id="SAV" ng-style="savStyle" class="paragraph fs-body-1 mt+">
-                                    <div class="data-table-container" ng-show="vm.data.sav.length || displaySAV">
-                                        <table class="data-table data-table--has-primary data-table--has-secondary">
-                                            <thead>
-                                                <tr>
-                                                    <th style="font-weight:bold">Ajouté Par</th>
-                                                    <th style="font-weight:bold">Date</th>
-                                                    <th style="font-weight:bold">Description</th>
-                                                    <th style="font-weight:bold">Artisan</th>
-                                                    <th style="font-weight:bold">Status</th>
-                                                    <th style="font-weight:bold">Modif</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr class="products data-table__clickable-row" ng-repeat="p in vm.data.sav" ng-init="p.sst = p.artisan.id || 0">
-                                                    <td>
-                                                        <span>{{p.login}}</span>
-                                                    </td>
-                                                    <td>
-                                                        <span>{{p.date |  date:"dd/MM/yy"}}</span>
-                                                    </td>
-                                                    <td>
-                                                        <span>{{p.description}}</span>
-                                                    </td>
-                                                    <td style="width:100px"><span>
-                                                    <select ng-change="changeArtisan(p);" class="form-control" ng-model="p.sst" ng-options="sst.id as sst.n for sst in vm.artisans"></select>
-                                        </span>
-                                                    </td>
-                                                    <td>
-                                                        <span ng-if="p.status === 'ENC'" style="width:90px" class="label orange"> Envoyé</span>
-                                                        <span ng-if="p.status === 'OK'" style="width:90px" class="label green"> OK</span>
-                                                    </td>
-                                                    <td>
-                                                        <lx-dropdown position="right" from-top>
-                                                            <button class="btn--no-conflicts btn--l btn--black btn--icon" lx-ripple lx-dropdown-toggle>
-                                                                <i class="mdi mdi-dots-vertical"></i>
-                                                            </button>
-                                                            <lx-dropdown-menu>
-                                                                <ul>
-                                                                    <li><a ng-click="p.status = 'ENC'" class="dropdown-link">Envoyer</a></li>
-                                                                    <li><a ng-click="p.status = 'OK'" class="dropdown-link">Regler</a></li>
-                                                                </ul>
-                                                            </lx-dropdown-menu>
-                                                        </lx-dropdown>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card__actions" ng-if="vm.data.sav.length || displaySAV">
-                                <button ng-click="addSAV();" class="btn--no-conflicts btn--m btn--orange btn--flat" lx-ripple>Ajouter</button>
-                            </div>
-                        </div>
-                        <br>
-                        <br>
+                        <info-litige ng-if="vm.data.date.intervention" data="vm.data"></info-litige>
                         <br>
                         <div class="fab" style="position: fixed;right: 70px;z-index: 999;top: 87%;">
                             <button ng-click="saveInter({})" class="fab__primary btn--no-conflicts btn--xl btn--blue btn--fab" lx-ripple lx-tooltip="Enregistrer" tooltip-position="top">

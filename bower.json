@@ -38,6 +38,7 @@
     "lodash": "~3.10.0",
     "ng-file-upload": "~5.0.9",
     "mdi": "~1.1.70",
-    "angular-material-icons": "~0.5.0"
+    "angular-material-icons": "~0.5.0",
+    "font-awesome-animation": "~0.0.6"
   }
 }
