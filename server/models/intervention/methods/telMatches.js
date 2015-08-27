@@ -29,9 +29,8 @@ module.exports = function(schema) {
                 method: 'telMatches',
                 req: _.pick(req, 'body', 'session')
             }).then(function(resp) {
-                console.log(io, resp)
-                 io.sockets.emit('telephoneMatch', resp);
-                 res.send('ok')
+                io.sockets.emit('telephoneMatch', resp);
+                res.send('ok')
             })
         }
         return new Promise(function(resolve, reject) {
@@ -49,6 +48,7 @@ module.exports = function(schema) {
             q = _.groupBy(q, 'origin');
             //console.log(q)
             var artn = [];
+            var i = 0;
             async.each(q, function(e, cb) {
                 var query = {
                     $or: []
@@ -83,7 +83,7 @@ module.exports = function(schema) {
                             paiementRecu: e.compta.reglement.recu
                         }
                     })
-                    console.log('-->', e[0].origin)
+                    console.log('-->', e[0].origin, ++i, q.length)
                     var st = {
                         ligne: e[0].origin,
                         ANN: reduce(rtn, {
@@ -117,7 +117,7 @@ module.exports = function(schema) {
 
                 //            cb('null, e')
             }, function(err, resp) {
-               
+
                 return resolve(artn)
                     //console.log(err, resp)
             })
