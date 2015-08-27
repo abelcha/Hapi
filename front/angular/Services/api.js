@@ -81,6 +81,9 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
             },
         },
         intervention: {
+            getTelMatch:function(text) {
+                return $http.post('/api/intervention/telMatches', text);
+            },
             saveTmp: function(data) {
                 return $http.post('/api/intervention/temporarySaving', data);
             },

@@ -28,6 +28,11 @@
              } else {
                  $scope.tab.setTitle(title, currentHash);
              }
+             if ($routeParams.ids_in) {
+                 $scope.customFilter = function(inter) {
+                     return _.contains($routeParams.ids_in, inter.id);
+                 }
+             }
              dataProvider.init(function(err, resp) {
 
                  dataProvider.applyFilter(currentFilter, $scope.tab.hash, $scope.customFilter);

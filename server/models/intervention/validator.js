@@ -35,7 +35,6 @@ module.exports = function(schema) {
 
 
     var validatorPreSave = function(next) {
-        console.log('presave')
         var _this = this;
 
         try {

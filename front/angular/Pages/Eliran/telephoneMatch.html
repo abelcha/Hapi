@@ -1,0 +1,32 @@
+<div>
+    <div class="shadow-box listeInterventions">
+        <textarea class="form-control" elastic ng-model="__txt_tel">
+        </textarea>
+        <button ng-click="getTelMatch()" class="btn--no-conflicts btn--m btn--blue  btn--raised" lx-ripple>Search</button>
+	<table class="table">
+		<thead>
+			<tr>
+				<th>Ligne</th>
+				<th>nbr appels</th>
+				<th>en cours</th>
+				<th>vérifié</th>
+				<th>reglement recu</th>
+				<th>annulé</th>
+				<th>list</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="x in  resp">
+				<td>{{x.ligne}}</td>
+				<td>{{x.calls}}</td>
+				<td>{{x.ENC}}</td>
+				<td>{{x.AVR}}</td>
+				<td>{{x.PAY}}</td>
+				<td>{{x.ANN}}</td>
+				<td>{{x.list}}</td>
+			</tr>
+		</tbody>
+	</table>
+    </div>
+   <!--  -->
+</div>

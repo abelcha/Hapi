@@ -347,6 +347,11 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
             controller: "archivesReglementController",
             controllerAs: "vm",
         })
+        .when('/eliran/telephoneMatch', {
+            templateUrl: "Pages/Eliran/telephoneMatch.html",
+            controller: "telephoneMatch",
+            controllerAs: "vm",
+        })
         .otherwise({
             redirectTo: '/dashboard'
         });
@@ -596,6 +601,11 @@ angular.module('edison').directive('ngEnter', function () {
                  }
              } else {
                  $scope.tab.setTitle(title, currentHash);
+             }
+             if ($routeParams.ids_in) {
+                 $scope.customFilter = function(inter) {
+                     return _.contains($routeParams.ids_in, inter.id);
+                 }
              }
              dataProvider.init(function(err, resp) {
 
@@ -1247,6 +1257,9 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
             },
         },
         intervention: {
+            getTelMatch:function(text) {
+                return $http.post('/api/intervention/telMatches', text);
+            },
             saveTmp: function(data) {
                 return $http.post('/api/intervention/temporarySaving', data);
             },
@@ -3556,6 +3569,27 @@ var DashboardController = function(edisonAPI, tabContainer, $routeParams, $locat
 
 angular.module('edison').controller('DashboardController', DashboardController);
 
+
+var telephoneMatch = function(tabContainer, edisonAPI, $rootScope, $scope, $location, LxProgressService) {
+    "use strict";
+    var _this = this;
+    _this.tab = tabContainer.getCurrentTab();
+    _this.tab.setTitle('TelMatch');
+    $scope.__txt_tel = $rootScope.__txt_tel
+    $rootScope.getTelMatch = function() {
+         LxProgressService.circular.show('#5fa2db', '#globalProgress');
+        $rootScope.__txt_tel = $scope.__txt_tel
+        edisonAPI.intervention.getTelMatch({
+            q: $rootScope.__txt_tel
+        }).then(function(resp) {
+            $scope.resp = resp.data;
+            LxProgressService.circular.hide();
+           // $location.url('/intervention/list?ids_in=' + JSON.stringify(resp.data))
+        })
+    }
+
+}
+angular.module('edison').controller('telephoneMatch', telephoneMatch);
 
 
  angular.module('edison').directive('edisonMap', ['$window', 'Map', 'mapAutocomplete', 'Address',

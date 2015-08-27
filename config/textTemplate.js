@@ -9,7 +9,7 @@ module.exports = {
                 sms += this.prixAnnonce ? this.prixAnnonce + "€ HT. " : "Pas de prix annoncé. ";
                 sms += "\nMerci de prendre rdv avec le client au " + this.client.telephone.tel1;
                 sms += this.client.telephone.tel2 ? " ou au " + this.client.telephone.tel2 : "";
-                sms += '\n' + (_.startCase(user.pseudo) ||  " Arnaud") + ',\n';
+                sms += '\n' + (_.startCase(user.pseudo) ||  "Arnaud") + ',\n';
                 sms += "Ligne direct: " + (user.ligne ||  "09.72.42.30.00") + "\n";
                 return sms + "Edison Services."
             },
@@ -19,7 +19,7 @@ module.exports = {
                     "Pourriez-vous vous rendre disponible ?\n" +
                     "Merci de nous contacter au plus vite au 09.72.42.30.00.\n" +
                     "Merci d'avance pour votre réponse.\n" +
-                    "\nM." + (_.startCase(user.pseudo) ||  " Arnaud") + "\n" +
+                    "\nM." + (_.startCase(user.pseudo) ||  "Arnaud") + "\n" +
                     "Ligne Direct " + user.ligne ||  "09.72.42.30.00" + "\n" +
                     "Edison Services"
             }
@@ -187,7 +187,7 @@ module.exports = {
 
                 }
                 var outro = "Cordialement, \n\n" +
-                    (user.pseudo ||  " Arnaud,") + '\n' +
+                    (user.pseudo ||  "Arnaud,") + '\n' +
                     "<strong>Ligne Direct : " + (user.ligne ||  "09.72.42.30.00") + "</strong>\n" +
                     "<strong>Ligne Atelier : " + "09.72.42.30.00" + "</strong>\n";
 

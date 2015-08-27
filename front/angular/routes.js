@@ -347,6 +347,11 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
             controller: "archivesReglementController",
             controllerAs: "vm",
         })
+        .when('/eliran/telephoneMatch', {
+            templateUrl: "Pages/Eliran/telephoneMatch.html",
+            controller: "telephoneMatch",
+            controllerAs: "vm",
+        })
         .otherwise({
             redirectTo: '/dashboard'
         });
