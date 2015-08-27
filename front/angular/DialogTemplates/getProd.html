@@ -15,7 +15,7 @@
                     <input type="number" class="form-control" maxlength="2" max="10" type="number " placeholder="Qt." ng-model="prod.quantite">
                 </div>
                 <div class="col-lg-2">
-                    <input type="number" class="form-control" maxlength="2" type="number " placeholder="Prix" ng-model="prod.pu">
+                    <input type="number" class="form-control" type="number " placeholder="Prix" ng-model="prod.pu">
                 </div>
             </div>
             <div class="row" ng-if="window.innerWidth < 1400" style="padding: 14px;">
@@ -23,17 +23,17 @@
                 <br>
                 <input type="text" class="form-control" maxlength="100" placeholder="Designation" ng-model="prod.title">
                 <br>
-                <input type="number" class="form-control" maxlength="2" max="10" type="number " placeholder="Qt." ng-model="prod.quantite">
+                <input type="number" class="form-control"  max="10" type="number " placeholder="Qt." ng-model="prod.quantite">
                 <br>
-                <input type="number" class="form-control" maxlength="2" type="number " placeholder="Prix" ng-model="prod.pu">
+                <input type="number" class="form-control"type="number " placeholder="Prix" ng-model="prod.pu">
             </div>
         </div>
     </md-dialog-content>
     <div class="md-actions" layout="row">
-        <md-button ng-click="answer()" class="md-primary black-text">
+        <md-button ng-click="answer(true)" class="md-primary black-text">
             Annuler
         </md-button>
-        <md-button ng-click="answer(true)" class="md-primary black-text">
+        <md-button ng-click="answer()" class="md-primary black-text">
             Valider
         </md-button>
     </div>

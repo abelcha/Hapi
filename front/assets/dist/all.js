@@ -2074,8 +2074,9 @@ angular.module('edison').factory('dialog', function($mdDialog, edisonAPI, config
                     }, true)
                     $scope.answer = function(cancel) {
                         $mdDialog.hide();
-                        if (!cancel)
+                        if (!cancel) {
                             return cb($scope.prod);
+                        }
                     }
                 },
                 templateUrl: '/DialogTemplates/getProd.html',
@@ -4146,6 +4147,7 @@ angular.module('edison').controller('InterventionController', InterventionCtrl);
                          focus: true,
                      })*/
                      dialog.addProd(function(resp) {
+                        console.log(resp);
                          model.produits.push(resp)
                      });
                  }

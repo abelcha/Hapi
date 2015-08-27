@@ -38,6 +38,7 @@
                          focus: true,
                      })*/
                      dialog.addProd(function(resp) {
+                        console.log(resp);
                          model.produits.push(resp)
                      });
                  }
