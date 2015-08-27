@@ -1227,7 +1227,12 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
                 });
             },
             save: function(params) {
-                return $http.post("/api/devis", params);
+                if (!params.id) {
+                    return $http.post("/api/devis", params)
+                } else {
+                    return $http.post("/api/devis/" + params.id, params)
+
+                }
             },
             envoi: function(id, options) {
                 return $http.post("/api/devis/" + id + "/envoi", options);
@@ -1254,7 +1259,7 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
                     url: '/api/intervention/' + id + '/demarcher'
                 })
             },
-            reactivation:function(id) {
+            reactivation: function(id) {
                 return $http.post('api/intervention/' + id + '/reactivation')
             },
             list: function() {
