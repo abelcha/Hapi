@@ -83,7 +83,7 @@ module.exports = function(schema) {
                             paiementRecu: e.compta.reglement.recu
                         }
                     })
-                    console.log('-->', e[0].origin, ++i, q.length)
+                    console.log('-->', e[0].origin, _.round(100 * (++i / _.size(q)), 2), '%')
                     var st = {
                         ligne: e[0].origin,
                         ANN: reduce(rtn, {
