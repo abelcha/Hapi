@@ -3681,8 +3681,10 @@ var DevisCtrl = function(edisonAPI, $scope, $rootScope, $location, $routeParams,
     }
 
     _this.saveDevis = function(options) {
+        if (!devis.produits || !devis.produits.length) {
+            return LxNotificationService.error("Veuillez ajouter au moins 1 produit");
+        }
         devis.save(function(err, resp) {
-            console.log('-->', 'saved')
             if (err) {
                 return false;
             } else if (options.envoi) {
