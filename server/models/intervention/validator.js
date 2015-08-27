@@ -36,6 +36,8 @@ module.exports = function(schema) {
 
     var validatorPreSave = function(next) {
         var _this = this;
+        if (!this.client.address.lt)
+            console.log(this.client.address)
         try {
             UP(this.facture.address)
             UP(this.facture)
