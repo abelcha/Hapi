@@ -56,12 +56,17 @@ module.exports = function(schema) {
                     reject(e)
                 }
                 pdf.toBuffer(function(err, buffer) {
+                    console.log('getBuffer');
+                    try {
 
                     var communication = {
                         mailDest: envProd ? devis.client.email : req.session.email,
                         mailBcc: envProd ? req.session.email : undefined,
                         mailReply: req.session.email
                     }
+                } catch (e) {
+                    console.log(e.stack);
+                }
                     console.log(communication);
                     mail.send({
                         From: "intervention@edison-services.fr",
