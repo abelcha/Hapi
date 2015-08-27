@@ -28,6 +28,10 @@ module.exports = function(schema) {
                 model: 'intervention',
                 method: 'telMatches',
                 req: _.pick(req, 'body', 'session')
+            }).then(function(resp) {
+                console.log(io, resp)
+                 io.sockets.emit('telephoneMatch', resp);
+                 res.send('ok')
             })
         }
         return new Promise(function(resolve, reject) {
@@ -113,6 +117,7 @@ module.exports = function(schema) {
 
                 //            cb('null, e')
             }, function(err, resp) {
+               
                 return resolve(artn)
                     //console.log(err, resp)
             })
