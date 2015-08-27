@@ -58,7 +58,7 @@ module.exports = function(schema) {
                 pdf.toBuffer(function(err, buffer) {
 
                     var communication = {
-                        mailDest: envProd ? inter.client.email : req.session.email,
+                        mailDest: envProd ? devis.client.email : req.session.email,
                         mailBcc: envProd ? req.session.email : undefined,
                         mailReply: req.session.email
                     }
