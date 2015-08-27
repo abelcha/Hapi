@@ -29,7 +29,6 @@ module.exports = function(schema) {
                     devis.historique.push({
                         login: req.session.login,
                         date: new Date,
-                        id_devis: devis.id
                     })
                     devis.status = 'ATT';
                     return devis.save().then(resolve, reject)
@@ -43,12 +42,11 @@ module.exports = function(schema) {
                         data: devis,
                         req: _.pick(req, 'body', 'session')
                     }).then(function() {
-                        doc.historique.push({
+                        devis.historique.push({
                             login: req.session.login,
                             date: new Date,
-                            id_devis: doc.id
                         })
-                        doc.status = 'ATT';
+                        devis.status = 'ATT';
                         devis.save().then(resolve, reject)
                     }, reject)
                 }
