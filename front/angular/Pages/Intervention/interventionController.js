@@ -182,6 +182,8 @@ var InterventionCtrl = function(Description, Signalement, ContextMenu, $window, 
                     }
                     $scope.saveInter = saveInter;
                 })
+            } else {
+                 $scope.saveInter = saveInter;
             }
         })
     }
