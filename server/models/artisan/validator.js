@@ -30,11 +30,9 @@ module.exports = function(schema) {
             next();
         }
     });
-
     schema.post('save', function(doc) {
         if (!isWorker) {
             db.model('artisan').cacheActualise(doc);
-            db.model('intervention').stats().then();
         }
     })
 }

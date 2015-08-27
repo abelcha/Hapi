@@ -22,12 +22,6 @@ angular.module('edison').directive('dropdownRow', function(Devis, productsList, 
             scope.expendedReady = false;
             scope.data = {};
             scope.config = config
-            $timeout(function() {
-                $("#expended").velocity({
-                    height: 220,
-                }, 50);
-            }, 50)
-
             if (scope._model === "intervention") {
                 edisonAPI.intervention.get(scope.row.id, {
                     populate: ['sst', 'devisOrigine'].join(',')

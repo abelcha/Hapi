@@ -56,10 +56,19 @@ module.exports = function(schema) {
                     reject(e)
                 }
                 pdf.toBuffer(function(err, buffer) {
+
+                    var communication = {
+                        mailDest: envProd ? inter.client.email : req.session.email,
+                        mailBcc: envProd ? req.session.mail : undefined,
+                        mailReply: req.session.email
+                    }
+                    console.log(communication);
+                    console.log('uaua')
                     mail.send({
                         From: "intervention@edison-services.fr",
-                        ReplyTo: req.session.email || "abel@chalier.me",
-                        To: req.session.email || "abel@chalier.me",
+                        ReplyTo: communication.mailReply,
+                        To: communication.mailDest,
+                        Bcc: communication.mailBcc,
                         Subject: "DEVIS n°" + devis.id,
                         HtmlBody: req.body.text.replaceAll('\n', '<br>'),
                         Attachments: [{

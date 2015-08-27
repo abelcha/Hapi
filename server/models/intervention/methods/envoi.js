@@ -8,10 +8,10 @@ module.exports = function(schema) {
     var fs = require('fs')
     var PDFMerge = require('pdf-merge');
     var async = require('async');
-    var sendSMS = function(text, inter, user) {
+    var sendSMS = function(text, inter, user, tel) {
         return db.model('sms').send({
-            to: user.portable ||  '0633138868',
-            text: "Message destiné à " + inter.sst.nomSociete + "(" + inter.sst.telephone.tel1 + ')\n' + text,
+            to: tel,
+            text: text,
             login: user.login,
             origin: inter.id,
             link: inter.sst.id,
@@ -250,18 +250,26 @@ module.exports = function(schema) {
                         inter.datePlain = moment(new Date(inter.date.intervention)).format('DD/MM/YYYY à HH\\hmm')
                         var text = _.template(template.mail.intervention.os())(inter).replaceAll('\n', '<br>')
 
+                        var communication = {
+                            telephone: envProd ? inter.sst.telephone.tel1 : req.session.portable,
+                            mailDest: envProd ? inter.sst.email : req.session.email,
+                            mailBcc: envProd ? req.session.mail : undefined,
+                            mailReply: req.session.email
+                        }
+
                         var mailOptions = {
                             From: "intervention@edison-services.fr",
-                            ReplyTo: req.session.email || "abel@chalier.me",
-                            To: req.session.email || "abel@chalier.me",
+                            ReplyTo: communication.mailReply,
+                            To: communication.mailDest,
+                            Bcc: communication.Bcc,
                             Subject: "Ordre de service d'intervention N°" + inter.id,
                             HtmlBody: text,
                             Attachments: files
                         }
-
+                        console.log(communication);
                         var validationPromises = [
                             mail.send(mailOptions),
-                            //sendSMS(req.body.sms, inter, req.session),
+                            sendSMS(req.body.sms, inter, req.session, communication.telephone),
                         ]
                         console.time('validation')
 

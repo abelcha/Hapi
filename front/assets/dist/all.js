@@ -465,12 +465,6 @@ angular.module('edison').directive('dropdownRow', function(Devis, productsList, 
             scope.expendedReady = false;
             scope.data = {};
             scope.config = config
-            $timeout(function() {
-                $("#expended").velocity({
-                    height: 220,
-                }, 50);
-            }, 50)
-
             if (scope._model === "intervention") {
                 edisonAPI.intervention.get(scope.row.id, {
                     populate: ['sst', 'devisOrigine'].join(',')
@@ -1332,7 +1326,7 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
                 return $http.get('/api/artisan/' + id + "/extendedStats")
             },
             save: function(params) {
-                return $http.post("/api/artisan", params);
+                return $http.post("/api/artisan/__save", params);
             },
             list: function(options) {
                 return $http({

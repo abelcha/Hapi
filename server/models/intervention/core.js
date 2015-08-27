@@ -299,7 +299,7 @@
                 fournisseur: d.fournisseur,
                 pu: d.cout_fourniture,
                 quantite: 1
-            })
+            });
         }
 
         if (d.devis && d.id > 13740) {

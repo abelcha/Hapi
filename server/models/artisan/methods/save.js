@@ -11,7 +11,7 @@ module.exports = function(schema) {
             reject(str);
         }
     }
-    schema.statics.save = function(req, res) {
+    schema.statics.__save = function(req, res) {
 
         var updateArtisan = function(data) {
             return new Promise(function(resolve, reject) {
