@@ -5,13 +5,11 @@ module.exports = function(schema) {
         var async = require('async');
         return new Promise(function(resolve, reject) {
             db.model(req.query.model || 'devis').find({
-                $or: [{
-                        'client.address.lt': 0
-                    }, {
-                        'client.address.lg': 0
-                    }]
+                'client.address.lt': 0,
+                'client.address.lg': 0
                     //id: 26237
             }).limit(25).then(function(doc) {
+                console.log(doc.length);
                 try {
 
                     async.each(doc, function(e, cb) {
