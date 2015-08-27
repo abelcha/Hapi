@@ -36,6 +36,9 @@ module.exports = function(schema) {
     }
 
     var validatorPostSave = function(doc) {
+        if (!doc.client.address.lt) {
+            db.model('intervention').geolocateAddress(doc);
+        }
         if (!isWorker) {
             db.model('devis').uniqueCacheReload(doc, function() {
                 console.log(envProd, (!doc.date.dump || moment().subtract(5000).isAfter(doc.date.dump)))

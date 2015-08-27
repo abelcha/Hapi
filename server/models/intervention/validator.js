@@ -35,9 +35,9 @@ module.exports = function(schema) {
 
 
     var validatorPreSave = function(next) {
+        console.log('presave')
         var _this = this;
-        if (!this.client.address.lt)
-            console.log(this.client.address)
+
         try {
             UP(this.facture.address)
             UP(this.facture)
@@ -66,6 +66,9 @@ module.exports = function(schema) {
     }
 
     var validatorPostSave = function(doc) {
+        if (!doc.client.address.lt) {
+            db.model('intervention').geolocateAddress(doc);
+        }
         if (!isWorker) {
             if (doc.artisan.id) {
                 db.model('artisan').findOne({
