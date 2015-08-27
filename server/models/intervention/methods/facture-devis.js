@@ -97,7 +97,7 @@ module.exports = function(schema) {
             return new Promise(function(resolve, reject) {
 
                 var f = inter.facture;
-                if (!f.nom || !f.prenom || !f.address.r || !f.address.v ||  !f.address.cp || !f.address.n) {
+                if (!f.email ||  !f.nom || !f.prenom || !f.address.r || !f.address.v ||  !f.address.cp || !f.address.n) {
                     return reject('Les coordonées de facturations sont incompletes')
                 }
                 if (!inter.produits || !inter.produits.length) {
@@ -134,10 +134,16 @@ module.exports = function(schema) {
                     reject(e)
                 }
                 pdf.toBuffer(function(err, buffer) {
+                    var communication = {
+                        mailDest: envProd ? inter.facture.email : req.session.email,
+                        mailBcc: envProd ? req.session.email : undefined,
+                        mailReply: req.session.email
+                    }
                     mail.send({
                         From: "intervention@edison-services.fr",
-                        ReplyTo: req.session.email || "abel@chalier.me",
-                        To: req.session.email || "abel@chalier.me",
+                        ReplyTo: communication.mailReply,
+                        To: communication.mailDest,
+                        Bcc: communication.mailBcc,
                         Subject: "Facture n°" + inter.id + " en attente de reglement",
                         HtmlBody: req.body.text.replaceAll('\n', '<br>'),
                         Attachments: [{

@@ -253,7 +253,7 @@ module.exports = function(schema) {
                         var communication = {
                             telephone: envProd ? inter.sst.telephone.tel1 : req.session.portable,
                             mailDest: envProd ? inter.sst.email : req.session.email,
-                            mailBcc: envProd ? req.session.mail : undefined,
+                            mailBcc: envProd ? req.session.email : undefined,
                             mailReply: req.session.email
                         }
 

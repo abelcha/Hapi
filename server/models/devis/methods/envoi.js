@@ -59,7 +59,7 @@ module.exports = function(schema) {
 
                     var communication = {
                         mailDest: envProd ? inter.client.email : req.session.email,
-                        mailBcc: envProd ? req.session.mail : undefined,
+                        mailBcc: envProd ? req.session.email : undefined,
                         mailReply: req.session.email
                     }
                     console.log(communication);
