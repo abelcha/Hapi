@@ -97,6 +97,9 @@
             facture: {
 
             },
+            litige:{
+
+            },
             reglementSurPlace: true,
             date: {
                 ajout: new Date(timestamp),
