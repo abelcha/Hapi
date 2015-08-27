@@ -43,6 +43,12 @@ module.exports = function(schema) {
                         data: devis,
                         req: _.pick(req, 'body', 'session')
                     }).then(function() {
+                        doc.historique.push({
+                            login: req.session.login,
+                            date: new Date,
+                            id_devis: doc.id
+                        })
+                        doc.status = 'ATT';
                         devis.save().then(resolve, reject)
                     }, reject)
                 }
@@ -59,14 +65,14 @@ module.exports = function(schema) {
                     console.log('getBuffer');
                     try {
 
-                    var communication = {
-                        mailDest: envProd ? devis.client.email : req.session.email,
-                        mailBcc: envProd ? req.session.email : undefined,
-                        mailReply: req.session.email
+                        var communication = {
+                            mailDest: envProd ? devis.client.email : req.session.email,
+                            mailBcc: envProd ? req.session.email : undefined,
+                            mailReply: req.session.email
+                        }
+                    } catch (e) {
+                        console.log(e.stack);
                     }
-                } catch (e) {
-                    console.log(e.stack);
-                }
                     console.log(communication);
                     mail.send({
                         From: "intervention@edison-services.fr",
@@ -80,19 +86,7 @@ module.exports = function(schema) {
                             Name: "Devis n°" + devis.id + '.pdf',
                             ContentType: 'application/pdf'
                         }]
-                    }).then(function(resp) {
-                        db.model('devis').findOne({
-                            id: devis.id
-                        }).then(function(doc) {
-                            doc.historique.push({
-                                login: req.session.login,
-                                date: new Date,
-                                id_devis: doc.id
-                            })
-                            doc.status = 'ATT';
-                            doc.save().then(resolve, reject)
-                        }, reject).catch(__catch)
-                    })
+                    }).then(resolve, reject)
                 })
 
             })
