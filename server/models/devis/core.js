@@ -154,7 +154,7 @@
 
             var devis = JSON.parse(d.devis.split('<br>').join(""));
             rtn.historique = [];
-            _.each(new Array(devis.envoyer), function() {
+            _.times(parseInt(devis.envoyer), function() {
                     rtn.historique.push({
                         login: user,
                         date: rtn.date.ajout,
