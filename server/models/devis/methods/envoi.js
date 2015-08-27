@@ -63,7 +63,6 @@ module.exports = function(schema) {
                         mailReply: req.session.email
                     }
                     console.log(communication);
-                    console.log('uaua')
                     mail.send({
                         From: "intervention@edison-services.fr",
                         ReplyTo: communication.mailReply,

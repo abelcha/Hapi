@@ -1966,7 +1966,7 @@ angular.module('edison').factory('dialog', function($mdDialog, edisonAPI, config
                                 cb(inter);
                             }
                         } else {
-                                $mdDialog.hide();
+                            $mdDialog.hide();
                         }
                     }
                 },
@@ -2072,9 +2072,10 @@ angular.module('edison').factory('dialog', function($mdDialog, edisonAPI, config
                         $scope.prod.pu = $scope.prod.pu;
                         $scope.prod.quantite = $scope.prod.quantite;
                     }, true)
-                    $scope.answer = function(resp, text) {
+                    $scope.answer = function(cancel) {
                         $mdDialog.hide();
-                        return cb($scope.prod);
+                        if (!cancel)
+                            return cb($scope.prod);
                     }
                 },
                 templateUrl: '/DialogTemplates/getProd.html',

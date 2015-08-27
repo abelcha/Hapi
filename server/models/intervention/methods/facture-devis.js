@@ -139,6 +139,7 @@ module.exports = function(schema) {
                         mailBcc: envProd ? req.session.email : undefined,
                         mailReply: req.session.email
                     }
+                    console.log(communication);
                     mail.send({
                         From: "intervention@edison-services.fr",
                         ReplyTo: communication.mailReply,
