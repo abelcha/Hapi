@@ -95,7 +95,10 @@ var V1 = function(d, devis, legacy) {
             x.relance_facture = d.facture.relance
         }
         if (d.fourniture.length) {
-            x.cout_fourniture = d.fourniture[0].pu;
+            x.cout_fourniture = 0;//d.fourniture[0].pu;
+            _.each(d.fourniture, function(e) {
+                x.cout_fourniture += (e.quantite * e.pu)
+            })
             x.fournisseur = d.fourniture[0].fournisseur
             x.fourniture_sst = Number(d.fourniture[0].fournisseur == "")
             x.fourniture_edison = Number(d.fourniture[0].fournisseur != "")
