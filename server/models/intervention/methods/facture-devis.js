@@ -97,9 +97,10 @@ module.exports = function(schema) {
             return new Promise(function(resolve, reject) {
 
                 var f = inter.facture;
-                if (!f.email ||  !f.nom || !f.prenom || !f.address.r || !f.address.v ||  !f.address.cp || !f.address.n) {
+                if (!f.email ||  !f.nom || !f.address.r || !f.address.v ||  !f.address.cp || !f.address.n) {
                     return reject('Les coordonées de facturations sont incompletes')
                 }
+                f.prenom = f.prenom || "";
                 if (!inter.produits || !inter.produits.length) {
                     return reject('Veuillez renseigner au moins 1 produits')
                 }
