@@ -187,12 +187,12 @@
                 if (origin) {
                     p.title = origin.title;
                 } else {
-                    p.ref = "AUT001";
-                    p.title = "Autre"
+                    p.title = p.desc.toUpperCase().split(' ').slice(0, 3).join(' ')
                 }
                 return p
             });
 
+            console.log(rtn.produits);
             /* FACTURE */
             rtn.reglementSurPlace = !d.fact;
 
