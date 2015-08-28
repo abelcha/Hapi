@@ -28,6 +28,30 @@ module.exports = {
         action: 'call',
     }],
     devis: [{
+        title: 'Appels',
+        style: {
+            fontWeight: 'bold'
+        },
+        subs: [{
+            title: 'Client tel1',
+            action: 'callTel1',
+            hide: function(inter) {
+                return !inter.client.telephone.tel1
+            }
+        }, {
+            title: 'Client tel2',
+            action: 'callTel2',
+            hide: function(inter) {
+                return !inter.client.telephone.tel2
+            }
+        }, {
+            title: 'Client tel3',
+            action: 'callTel3',
+            hide: function(inter) {
+                return !inter.client.telephone.tel3
+            }
+        }]
+    }, {
         title: 'Modifier le devis',
         action: "ouvrirFiche"
     }, {
@@ -86,7 +110,6 @@ module.exports = {
             title: 'Client tel2',
             action: 'callTel2',
             hide: function(inter) {
-                console.log('=-:', inter)
                 return !inter.client.telephone.tel2
             }
         }, {
@@ -123,15 +146,6 @@ module.exports = {
     }, {
         title: 'Recap sous-traitant',
         action: "ouvrirRecapSST",
-        hide: function(inter) {
-            return !inter.artisan || !inter.artisan.id
-        }
-    }, {
-        title: "Appel sous-traitant",
-        action: 'callArtisan',
-        style: {
-            fontWeight: 'bold'
-        },
         hide: function(inter) {
             return !inter.artisan || !inter.artisan.id
         }
