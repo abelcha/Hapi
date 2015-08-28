@@ -72,9 +72,7 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
                 return $http.post("/api/devis/" + id + "/envoi", options);
             },
             annulation: function(id, causeAnnulation) {
-                return $http.post("/api/devis/" + id + "/annulation", {
-                    causeAnnulation: causeAnnulation
-                });
+                return $http.post("/api/devis/" + id + "/annulation");
             },
             list: function() {
                 return $http.get('api/devis/getCacheList')
@@ -132,10 +130,8 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
             verification: function(id, options) {
                 return $http.post("/api/intervention/" + id + "/verification", options);
             },
-            annulation: function(id, causeAnnulation) {
-                return $http.post("/api/intervention/" + id + "/annulation", {
-                    causeAnnulation: causeAnnulation
-                });
+            annulation: function(id, options) {
+                return $http.post("/api/intervention/" + id + "/annulation", options);
             },
             envoi: function(id, options) {
                 return $http.post("/api/intervention/" + id + "/envoi", options);

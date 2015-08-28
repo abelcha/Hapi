@@ -11,6 +11,11 @@ module.exports = function(schema) {
                 inter.login.annulation = req.session.login;
                 inter.status = "ANN";
                 inter.causeAnnulation = req.body.causeAnnulation;
+                if (req.body.reinit) {
+                    inter.artisan = undefined;
+                    inter.sst = undefined;
+                    inter.status = 'APR';
+                }
                 inter.save().then(resolve, reject)
             })
         }

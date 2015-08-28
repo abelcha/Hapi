@@ -247,11 +247,14 @@ angular.module('edison')
 
         Intervention.prototype.annulation = function(cb) {
             var _this = this;
-            dialog.getCauseAnnulation(function(err, causeAnnulation) {
+            dialog.getCauseAnnulation(function(err, causeAnnulation, reinit) {
                 if (err) {
                     return cb('err');
                 }
-                edisonAPI.intervention.annulation(_this.id, causeAnnulation)
+                edisonAPI.intervention.annulation(_this.id, {
+                        causeAnnulation: causeAnnulation,
+                        reinit: reinit
+                    })
                     .then(function(resp) {
                         var validationMessage = _.template("L'intervention {{id}} est annulé")(resp.data)
                         LxNotificationService.success(validationMessage);
@@ -309,6 +312,9 @@ angular.module('edison')
                 });
             });
         }
+
+
+
         Intervention.prototype.fileUpload = function(file, cb) {
 
             var _this = this;

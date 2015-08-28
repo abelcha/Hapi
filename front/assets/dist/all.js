@@ -1275,9 +1275,7 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
                 return $http.post("/api/devis/" + id + "/envoi", options);
             },
             annulation: function(id, causeAnnulation) {
-                return $http.post("/api/devis/" + id + "/annulation", {
-                    causeAnnulation: causeAnnulation
-                });
+                return $http.post("/api/devis/" + id + "/annulation");
             },
             list: function() {
                 return $http.get('api/devis/getCacheList')
@@ -1335,10 +1333,8 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
             verification: function(id, options) {
                 return $http.post("/api/intervention/" + id + "/verification", options);
             },
-            annulation: function(id, causeAnnulation) {
-                return $http.post("/api/intervention/" + id + "/annulation", {
-                    causeAnnulation: causeAnnulation
-                });
+            annulation: function(id, options) {
+                return $http.post("/api/intervention/" + id + "/annulation", options);
             },
             envoi: function(id, options) {
                 return $http.post("/api/intervention/" + id + "/envoi", options);
@@ -2011,15 +2007,13 @@ angular.module('edison')
         }
         Devis.prototype.annulation = function(cb) {
             var _this = this;
-            dialog.getCauseAnnulation(function(causeAnnulation) {
-                edisonAPI.devis.annulation(_this.id, causeAnnulation)
-                    .then(function(resp) {
-                        var validationMessage = _.template("Le devis {{id}} est annulé")(resp.data)
-                        LxNotificationService.success(validationMessage);
-                        if (typeof cb === 'function')
-                            cb(null, resp.data)
-                    });
-            });
+            edisonAPI.devis.annulation(_this.id)
+                .then(function(resp) {
+                    var validationMessage = _.template("Le devis {{id}} est annulé")(resp.data)
+                    LxNotificationService.success(validationMessage);
+                    if (typeof cb === 'function')
+                        cb(null, resp.data)
+                });
         };
 
         Devis.prototype.ouvrirFiche = function() {
@@ -2176,7 +2170,7 @@ angular.module('edison').factory('dialog', function($mdDialog, edisonAPI, config
                             return cb('nope');
                         $mdDialog.hide();
                         if (resp)
-                            return cb(null, resp);
+                            return cb(null, resp, $scope.reinit);
                         return cb('nop')
                     }
                 },
@@ -2574,11 +2568,14 @@ angular.module('edison')
 
         Intervention.prototype.annulation = function(cb) {
             var _this = this;
-            dialog.getCauseAnnulation(function(err, causeAnnulation) {
+            dialog.getCauseAnnulation(function(err, causeAnnulation, reinit) {
                 if (err) {
                     return cb('err');
                 }
-                edisonAPI.intervention.annulation(_this.id, causeAnnulation)
+                edisonAPI.intervention.annulation(_this.id, {
+                        causeAnnulation: causeAnnulation,
+                        reinit: reinit
+                    })
                     .then(function(resp) {
                         var validationMessage = _.template("L'intervention {{id}} est annulé")(resp.data)
                         LxNotificationService.success(validationMessage);
@@ -2636,6 +2633,9 @@ angular.module('edison')
                 });
             });
         }
+
+
+
         Intervention.prototype.fileUpload = function(file, cb) {
 
             var _this = this;
@@ -3393,6 +3393,42 @@ var archivesPaiementController = function(edisonAPI, tabContainer, $routeParams,
 
 angular.module('edison').controller('archivesPaiementController', archivesPaiementController);
 
+var AvoirsController = function(tabContainer, edisonAPI, $rootScope, LxProgressService, LxNotificationService, FlushList) {
+    "use strict";
+    var _this = this
+    var tab = tabContainer.getCurrentTab();
+    tab.setTitle('Avoirs')
+    _this.loadData = function(prevChecked) {
+        LxProgressService.circular.show('#5fa2db', '#globalProgress');
+        edisonAPI.compta.avoirs().then(function(result) {
+            console.log(result)
+            $rootScope.avoirs = result.data
+            LxProgressService.circular.hide()
+        })
+    }
+    if (!$rootScope.avoirs)
+        _this.loadData()
+
+    _this.reloadAvoir = function() {
+        _this.loadData()
+    }
+    _this.flush = function() {
+        var list = _.filter($rootScope.avoirs, {
+            checked: true
+        })
+        edisonAPI.compta.flushAvoirs(list).then(function(resp) {
+            LxNotificationService.success(resp.data);
+            _this.reloadAvoir()
+        }).catch(function(err) {
+            LxNotificationService.error(err.data);
+        })
+    }
+
+}
+
+
+angular.module('edison').controller('avoirsController', AvoirsController);
+
  angular.module('edison').directive('artisanCategorie', ['config', function(config) {
      "use strict";
      return {
@@ -3496,42 +3532,6 @@ var ArtisanCtrl = function($rootScope, $location, $routeParams, ContextMenu, LxN
     }
 }
 angular.module('edison').controller('ArtisanController', ArtisanCtrl);
-
-var AvoirsController = function(tabContainer, edisonAPI, $rootScope, LxProgressService, LxNotificationService, FlushList) {
-    "use strict";
-    var _this = this
-    var tab = tabContainer.getCurrentTab();
-    tab.setTitle('Avoirs')
-    _this.loadData = function(prevChecked) {
-        LxProgressService.circular.show('#5fa2db', '#globalProgress');
-        edisonAPI.compta.avoirs().then(function(result) {
-            console.log(result)
-            $rootScope.avoirs = result.data
-            LxProgressService.circular.hide()
-        })
-    }
-    if (!$rootScope.avoirs)
-        _this.loadData()
-
-    _this.reloadAvoir = function() {
-        _this.loadData()
-    }
-    _this.flush = function() {
-        var list = _.filter($rootScope.avoirs, {
-            checked: true
-        })
-        edisonAPI.compta.flushAvoirs(list).then(function(resp) {
-            LxNotificationService.success(resp.data);
-            _this.reloadAvoir()
-        }).catch(function(err) {
-            LxNotificationService.error(err.data);
-        })
-    }
-
-}
-
-
-angular.module('edison').controller('avoirsController', AvoirsController);
 
 var ContactArtisanController = function($scope, $timeout, tabContainer, LxProgressService, FiltersFactory, ContextMenu, edisonAPI, DataProvider, $routeParams, $location, $q, $rootScope, $filter, config, ngTableParams) {
     "use strict";
@@ -3656,6 +3656,20 @@ var ContactArtisanController = function($scope, $timeout, tabContainer, LxProgre
 }
 angular.module('edison').controller('ContactArtisanController', ContactArtisanController);
 
+var DashboardController = function(edisonAPI, tabContainer, $routeParams, $location, LxProgressService) {
+    var tab = tabContainer.getCurrentTab();
+    tab.setTitle('Dashboard')
+    var _this = this;
+    //LxProgressService.circular.show('#5fa2db', '#globalProgress');
+
+    _this.openLink = function(link) {
+        $location.url(link)
+    }
+}
+
+angular.module('edison').controller('DashboardController', DashboardController);
+
+
 var telephoneMatch = function(tabContainer, edisonAPI, $rootScope, $scope, $location, LxProgressService, socket) {
     "use strict";
     var _this = this;
@@ -3687,20 +3701,6 @@ var telephoneMatch = function(tabContainer, edisonAPI, $rootScope, $scope, $loca
 
 }
 angular.module('edison').controller('telephoneMatch', telephoneMatch);
-
-var DashboardController = function(edisonAPI, tabContainer, $routeParams, $location, LxProgressService) {
-    var tab = tabContainer.getCurrentTab();
-    tab.setTitle('Dashboard')
-    var _this = this;
-    //LxProgressService.circular.show('#5fa2db', '#globalProgress');
-
-    _this.openLink = function(link) {
-        $location.url(link)
-    }
-}
-
-angular.module('edison').controller('DashboardController', DashboardController);
-
 
 
  angular.module('edison').directive('edisonMap', ['$window', 'Map', 'mapAutocomplete', 'Address',

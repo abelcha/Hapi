@@ -2,17 +2,18 @@
     <md-dialog-content class="sticky-container">
         <md-subheader class="md-sticky-no-effect">Cause Annulation</md-subheader>
         <div style="padding:15px">
-           <!--  <select ng-model="absenceTime" ng-options="ind.value as ind.title for ind in absence">
+            <!--  <select ng-model="absenceTime" ng-options="ind.value as ind.title for ind in absence">
             </select> -->
-             <select class="form-control" ng-model="ca" 
-             ng-options="csa.short_name as csa.long_name group by csa.type for csa in causeAnnulation"
-             default-option="Cause D'annulation">
-                                                </select>
+            <select class="form-control" ng-model="ca" ng-options="csa.short_name as csa.long_name group by csa.type for csa in causeAnnulation" default-option="Cause D'annulation">
+            </select>
         </div>
+        <md-switch style="margin-top: 6px;" class="md-primary" md-no-ink aria-label="Switch No Ink" ng-model="reinit">
+            A Programmer
+        </md-switch>
     </md-dialog-content>
     <div class="md-actions" layout="row">
         <md-button ng-click="answer()" class="md-primary black-text">
-           Annuler
+            Annuler
         </md-button>
         <md-button ng-click="answer(ca)" class="md-primary black-text">
             Valider

@@ -143,7 +143,7 @@ angular.module('edison').factory('dialog', function($mdDialog, edisonAPI, config
                             return cb('nope');
                         $mdDialog.hide();
                         if (resp)
-                            return cb(null, resp);
+                            return cb(null, resp, $scope.reinit);
                         return cb('nop')
                     }
                 },

@@ -9,13 +9,7 @@ module.exports = function(schema) {
                 devis.date.annulation = new Date;
                 devis.login.annulation = req.session.login;
                 devis.status = "ANN";
-                devis.causeAnnulation = req.body.causeAnnulation;
-                db.model('event')({
-                    type: 'ANN_DEV',
-                    login: req.session.login,
-                    date: new Date,
-                    id_devis: devis.id
-                }).save();
+              //  devis.causeAnnulation = req.body.causeAnnulation;
                 devis.save().then(resolve, reject)
             })
         }

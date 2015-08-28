@@ -104,15 +104,13 @@ angular.module('edison')
         }
         Devis.prototype.annulation = function(cb) {
             var _this = this;
-            dialog.getCauseAnnulation(function(causeAnnulation) {
-                edisonAPI.devis.annulation(_this.id, causeAnnulation)
-                    .then(function(resp) {
-                        var validationMessage = _.template("Le devis {{id}} est annulé")(resp.data)
-                        LxNotificationService.success(validationMessage);
-                        if (typeof cb === 'function')
-                            cb(null, resp.data)
-                    });
-            });
+            edisonAPI.devis.annulation(_this.id)
+                .then(function(resp) {
+                    var validationMessage = _.template("Le devis {{id}} est annulé")(resp.data)
+                    LxNotificationService.success(validationMessage);
+                    if (typeof cb === 'function')
+                        cb(null, resp.data)
+                });
         };
 
         Devis.prototype.ouvrirFiche = function() {
