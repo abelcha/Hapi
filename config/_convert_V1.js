@@ -104,7 +104,7 @@ var V1 = function(d, devis, legacy) {
             console.log('-->', x.cout_fourniture)
             x.fournisseur = d.fourniture[0].fournisseur
             x.fourniture_sst = Number(d.fourniture[0].fournisseur == "")
-            x.fourniture_edison = Number(d.fourniture[0].fournisseur != "")
+            //x.fourniture_edison = Number(d.fourniture[0].fournisseur != "")
             x.tva_facture = d.tva;
         }
         x.taux_tva = d.tva ||  10
@@ -174,6 +174,7 @@ V1.prototype.send = function(cb) {
             url: 'http://electricien13003.com/alvin/postData.php',
             qs: this.data
         }, function(err, resp, body) {
+            console.log(_this.data)
             console.log(body);
             if (!err && resp.statusCode === 200) {
                 console.log('send', _this.data.id);
