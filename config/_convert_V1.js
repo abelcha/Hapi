@@ -94,11 +94,14 @@ var V1 = function(d, devis, legacy) {
             x.type_client = _.findIndex(config.typePayeur, 'short_name', d.facture.payeur)
             x.relance_facture = d.facture.relance
         }
+        console.log(d.fourniture);
         if (d.fourniture.length) {
-            x.cout_fourniture = 0;//d.fourniture[0].pu;
+            x.cout_fourniture = 0; //d.fourniture[0].pu;
             _.each(d.fourniture, function(e) {
+                console.log('-->', e)
                 x.cout_fourniture += (e.quantite * e.pu)
             })
+            console.log('-->', x.cout_fourniture)
             x.fournisseur = d.fourniture[0].fournisseur
             x.fourniture_sst = Number(d.fourniture[0].fournisseur == "")
             x.fourniture_edison = Number(d.fourniture[0].fournisseur != "")

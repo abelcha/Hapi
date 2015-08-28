@@ -471,7 +471,7 @@
                 bl: "0",
                 title: "Inconnu",
                 fournisseur: d.fournisseur,
-                pu: d.cout_fourniture,
+                pu: parseFloat(d.cout_fourniture),
                 quantite: 1
             });
         }
