@@ -37,7 +37,19 @@ module.exports = {
         title: "Envoyer",
         action: 'sendDevis',
         hide: function(inter) {
-            return inter.status !== "TRA" && inter.status !== 'ANN';
+            return inter.status !== "TRA" && inter.status !== 'ANN' && inter.historique.length == 0;
+        }
+    }, {
+        title: "Relance 1",
+        action: 'sendDevis',
+        hide: function(inter) {
+            return inter.status !== "TRA" && inter.status !== 'ANN' && inter.historique.length == 1;
+        }
+    }, {
+        title: "Relance 2",
+        action: 'sendDevis',
+        hide: function(inter) {
+            return inter.status !== "TRA" && inter.status !== 'ANN' && inter.historique.length > 1;
         }
     }, {
         title: "Transferer",
