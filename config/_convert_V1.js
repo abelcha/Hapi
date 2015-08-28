@@ -94,16 +94,13 @@ var V1 = function(d, devis, legacy) {
             x.type_client = _.findIndex(config.typePayeur, 'short_name', d.facture.payeur)
             x.relance_facture = d.facture.relance
         }
-        console.log(d.fourniture);
         if (d.fourniture.length) {
             x.cout_fourniture = 0; //d.fourniture[0].pu;
             _.each(d.fourniture, function(e) {
-                console.log('-->', e)
                 x.cout_fourniture += (e.quantite * e.pu)
             })
-            console.log('-->', x.cout_fourniture)
             x.fournisseur = d.fourniture[0].fournisseur
-            x.fourniture_sst = Number(d.fourniture[0].fournisseur == "")
+            x.fourniture_sst = Number(d.fourniture[0].fournisseur == "") + 1;
             //x.fourniture_edison = Number(d.fourniture[0].fournisseur != "")
             x.tva_facture = d.tva;
         }
@@ -174,8 +171,6 @@ V1.prototype.send = function(cb) {
             url: 'http://electricien13003.com/alvin/postData.php',
             qs: this.data
         }, function(err, resp, body) {
-            console.log(_this.data)
-            console.log(body);
             if (!err && resp.statusCode === 200) {
                 console.log('send', _this.data.id);
                 cb(null, body)

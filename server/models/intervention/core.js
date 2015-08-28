@@ -69,12 +69,10 @@
             curr.compta.paiement.date = Date.now()
         }
         if (curr.litige && curr.litige.open === true && prev.litige.open === void(0)) {
-            console.log('opened')
             curr.litige.opened = new Date();
             curr.litige.openedBy = session.login;
         }
         if (curr.litige && curr.litige.open === false && prev.litige.open === true) {
-            console.log('closed')
             curr.litige.closed = new Date();
             curr.litige.closedBy = session.login;
         }
@@ -466,7 +464,6 @@
                 quantite: 1
             })
         }
-        console.log('-====>', d.cout_fourniture)
         if (!fournitureArtisan && !fournitureEdison && d.cout_fourniture > 0) {
             rtn.fourniture.push({
                 bl: "0",
