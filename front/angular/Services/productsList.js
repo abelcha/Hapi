@@ -156,6 +156,7 @@ angular.module('edison').factory('productsList', function($q, dialog, openPost, 
             var _this = this;
             dialog.selectSubProduct(elem, function(resp) {
                 var rtn = {
+                    showDesc: true,
                     quantite: 1,
                     ref: resp.ref,
                     title: elem.nom,

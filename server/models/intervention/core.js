@@ -313,8 +313,9 @@
                 if (origin) {
                     p.title = origin.title;
                 } else {
-                    p.ref = "AUT001";
-                    p.title = "Autre"
+                    p.title = p.desc.toUpperCase().split(' ').slice(0, 3).join(' ')
+                    if (!p.ref || p.ref == 'AUT001')
+                        p.ref = p.desc.toUpperCase().slice(0, 3) + '0' + _.random(9, 99)
                 }
                 return p
             });

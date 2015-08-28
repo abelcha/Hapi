@@ -44,7 +44,7 @@
                         <input type="number" class="form-control" ng-model="p.pu">
                     </td>
                     <td style="width:10%">
-                        <input type="text" class="form-control" disabled="true" value="{{p.pu * p.quantite}} €">
+                        <input type="text" class="form-control" disabled="true" value="{{p.pu * p.quantite | currency:''}} €">
                     </td>
                     <td style="width:1%">
                         <lx-dropdown position="right" from-top>
