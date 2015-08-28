@@ -2042,7 +2042,7 @@ module.exports = {
                     "<p>Suite à notre intervention le {{datePlain}} dans vos locaux:\n" +
                     "<p strong center>{{client.civilite}} {{client.nom}} {{client.prenom}}\n" +
                     "{{client.address.n}} {{client.address.r}}, {{client.address.cp}} {{client.address.v}}\n" +
-                    "Tél. : {{client.address.telephone.tel1}}</p>" +
+                    "Tél. : {{client.telephone.tel1}}</p>" +
                     "Pour les raisons suivantes: </p>" +
                     "<p strong center>{{description}}</p>" +
                     "<p>Nous vous confirmons que l'intervention à été réalisée par nos soins.\n" +
