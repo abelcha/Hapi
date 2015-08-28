@@ -1401,8 +1401,11 @@ module.exports = {
         },
         subs: [{
             title: 'Client tel1',
-            action: 'callTel1'
-
+            action: 'callTel1',
+            hide: function(inter) {
+                console.log('=-:', inter)
+                return !inter.client.telephone.tel1
+            }
         }, {
             title: 'Client tel2',
             action: 'callTel2',
@@ -1423,7 +1426,7 @@ module.exports = {
                 return !inter.sst || !inter.sst.telephone.tel1
             }
         }, {
-            title: 'Sous-traitant tel1',
+            title: 'Sous-traitant tel2',
             action: 'callSst2',
             hide: function(inter) {
                 return !inter.sst || !inter.sst.telephone.tel2
