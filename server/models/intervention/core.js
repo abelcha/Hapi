@@ -97,7 +97,7 @@
             facture: {
 
             },
-            litige:{
+            litige: {
 
             },
             reglementSurPlace: true,
@@ -295,16 +295,6 @@
             smsStatus: d.status_sms || 0,
         }
 
-        if (d.cout_fourniture > 0)  {
-            rtn.fourniture.push({
-                bl: "0",
-                title: "Inconnu",
-                fournisseur: d.fournisseur,
-                pu: d.cout_fourniture,
-                quantite: 1
-            });
-        }
-
         if (d.devis && d.id > 13740) {
             rtn.devisOrigine = d.id;
             var devis = JSON.parse(d.devis.split('<br>').join(""));
@@ -331,6 +321,7 @@
                 return p
             });
         }
+        rtn.fourniture = [];
 
 
         rtn.categorie = d.categorie;
@@ -455,7 +446,6 @@
 
         var fournitureArtisan = parseFloat(d.comptaFournitureArtisan)
         var fournitureEdison = parseFloat(d.comptaTotalFourniture) - fournitureArtisan
-        rtn.fourniture = [];
         if (fournitureArtisan) {
             rtn.fourniture.push({
                 bl: "0",
@@ -475,6 +465,15 @@
                 pu: fournitureEdison,
                 quantite: 1
             })
+        }
+        if (!fournitureArtisan && !fournitureEdisonn && d.cout_fourniture > 0) {
+            rtn.fourniture.push({
+                bl: "0",
+                title: "Inconnu",
+                fournisseur: d.fournisseur,
+                pu: d.cout_fourniture,
+                quantite: 1
+            });
         }
         return rtn;
     }
