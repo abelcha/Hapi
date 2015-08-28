@@ -4445,13 +4445,12 @@ var DevisController = function($timeout, tabContainer, FiltersFactory, ContextMe
 
     _this.rowRightClick = function($event, inter) {
         console.log('yay');
-        
-        _this.contextMenu.setPosition($event.pageX, $event.pageY)
-        _this.contextMenu.setData(inter);
-        _this.contextMenu.open();
+
         edisonAPI.devis.get(inter.id)
             .then(function(resp) {
+                _this.contextMenu.setPosition($event.pageX, $event.pageY)
                 _this.contextMenu.setData(resp.data);
+                _this.contextMenu.open();
             })
     }
 
