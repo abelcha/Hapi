@@ -3,9 +3,9 @@
         <strong ng-click="displayfact = !displayfact" class="fs-headline displayfact-block">Facture / Devis</strong><a ng-if="data.devisOrigine" href="/devis/{{data.devisOrigine}}">Devis Original</a>
         <md-content class="autocomplete" style="width: 40%;margin-top: -22px;margin-left: 54%;float: left;" layout-padding layout="column" md-input-container flex>
 
-            <md-autocomplete ng-if="displayfact" md-min-length="3" md-search-text-change="null" md-selected-item-change="produits.getDetail(selectedProduct)" md-selected-item="selectedProduct" md-search-text="produits.searchText" md-items="item in produits.search(produits.searchText)" md-item-text="item.title" placeholder="Rechercher un produit...">
+          <md-autocomplete ng-if="displayfact" md-search-text-change="null" md-selected-item-change="produits.add(selectedProduct)" md-selected-item="selectedProduct" md-search-text="produits.searchText" md-items="item in produits.search(produits.searchText)" md-item-text="item.title" placeholder="Rechercher un produit...">
                 <span md-highlight-text="produits.searchText"> 
-                {{item.nom}} {{item.prix}}€</span>
+                {{item.ref}} -  {{item.title}} - {{item.pu}}€</span>
             </md-autocomplete>
         </md-content>
         <span class="fs-subhead tc-black-2 display-block">Pour generation de factures/devis</span>

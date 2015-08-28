@@ -100,7 +100,7 @@ module.exports = function(schema) {
                 if (!f.email ||  !f.nom || !f.address.r || !f.address.v ||  !f.address.cp || !f.address.n) {
                     return reject('Les coordonées de facturations sont incompletes')
                 }
-                f.prenom = f.prenom || "";
+                f.prenom = f.prenom ||  "";
                 if (!inter.produits || !inter.produits.length) {
                     return reject('Veuillez renseigner au moins 1 produits')
                 }
@@ -136,9 +136,9 @@ module.exports = function(schema) {
                 }
                 pdf.toBuffer(function(err, buffer) {
                     var communication = {
-                        mailDest: envProd ? inter.facture.email : req.session.email,
-                        mailBcc: envProd ? req.session.email : undefined,
-                        mailReply: req.session.email
+                        mailDest: envProd ? inter.facture.email : (req.session.email || 'contact@edison-services.fr'),
+                        mailBcc: envProd ? (req.session.email ||  'contact@edison-services.fr') : undefined,
+                        mailReply: (req.session.email ||  'contact@edison-services.fr')
                     }
                     console.log(communication);
                     mail.send({

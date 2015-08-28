@@ -20,7 +20,6 @@
      nom: 'boukris',
      prenom: 'benjamin',
      pseudo: 'Arnaud',
-     ligne: '0342424242',
      activated: true
 
  }, {

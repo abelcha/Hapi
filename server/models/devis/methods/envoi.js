@@ -64,9 +64,9 @@ module.exports = function(schema) {
                     try {
 
                         var communication = {
-                            mailDest: envProd ? devis.client.email : req.session.email,
-                            mailBcc: envProd ? req.session.email : undefined,
-                            mailReply: req.session.email
+                            mailDest: envProd ? devis.client.email : (req.session.email || 'contact@edison-services.fr'),
+                            mailBcc: envProd ? (req.session.email || 'contact@edison-services.fr') : undefined,
+                            mailReply: (req.session.email || 'contact@edison-services.fr')
                         }
                     } catch (e) {
                         console.log(e.stack);

@@ -117,34 +117,34 @@ angular.module('edison').factory('productsList', function($q, dialog, openPost, 
             this.searchText = '';
             this.produits.push(prod);
         },
-        /*        search: function(text) {
-                    var rtn = []
-                    for (var i = 0; i < ps.length; ++i) {
-                        if (text === ps[i].title)
-                            return [];
-                        var needle = _.deburr(text).toLowerCase()
-
-                        var haystack = _.deburr(ps[i].title).toLowerCase();
-                        var haystack2 = _.deburr(ps[i].ref).toLowerCase();
-                        var haystack3 = _.deburr(ps[i].desc).toLowerCase();
-                        if (_.includes(haystack, needle) ||
-                            _.includes(haystack2, needle) ||
-                            _.includes(haystack3, needle)) {
-                            var x = _.clone(ps[i])
-                            x.random = _.random();
-                            rtn.push(x)
-                        }
-                    }
-                    return rtn
-                },*/
         search: function(text) {
-            var deferred = $q.defer();
-            edisonAPI.searchProduct(text)
-                .success(function(resp) {
-                    deferred.resolve(resp)
-                })
-            return deferred.promise;
+            var rtn = []
+            for (var i = 0; i < ps.length; ++i) {
+                if (text === ps[i].title)
+                    return [];
+                var needle = _.deburr(text).toLowerCase()
+
+                var haystack = _.deburr(ps[i].title).toLowerCase();
+                var haystack2 = _.deburr(ps[i].ref).toLowerCase();
+                var haystack3 = _.deburr(ps[i].desc).toLowerCase();
+                if (_.includes(haystack, needle) ||
+                    _.includes(haystack2, needle) ||
+                    _.includes(haystack3, needle)) {
+                    var x = _.clone(ps[i])
+                    x.random = _.random();
+                    rtn.push(x)
+                }
+            }
+            return rtn
         },
+        /*        search: function(text) {
+                    var deferred = $q.defer();
+                    edisonAPI.searchProduct(text)
+                        .success(function(resp) {
+                            deferred.resolve(resp)
+                        })
+                    return deferred.promise;
+                },*/
         getDetail: function(elem) {
             if (!elem)
                 return 0
@@ -157,15 +157,15 @@ angular.module('edison').factory('productsList', function($q, dialog, openPost, 
                     desc: resp.nom + '\n' + elem.description.split('-').join('\n'),
                     pu: Number(resp.prix)
                 }
-               _this.add(rtn)
+                _this.add(rtn)
             })
         },
         flagship: function() {
             return _.max(this.produits, 'pu');
         },
         total: function() {
-            var total = _.round(_.sum(this.produits, function(e) {
-                return e.pu * e.quantite;
+            var total = _.round(_.sum(this.produits, function(e)  {
+                return (e.pu || 0) * (e.quantite || 0);
             }), 2)
             return total;
         },
