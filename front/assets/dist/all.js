@@ -687,8 +687,11 @@ angular.module('edison').directive('ngEnter', function () {
 angular.module('edison').directive('ngRightClick', function($parse) {
     "use strict";
     return function(scope, element, attrs) {
-        var fn = $parse(attrs.ngRightClick);
         element.bind('contextmenu', function(event) {
+            if (event.altKey ||  event.ctrlKey || event.shiftKey) {
+                return false
+            }
+            var fn = $parse(attrs.ngRightClick);
             scope.$apply(function() {
                 event.preventDefault();
                 fn(scope, {
@@ -1698,7 +1701,7 @@ angular.module('edison').factory('Compta', function() {
     return Compta
 });
 
-angular.module('edison').factory('ContextMenu', function($rootScope, $location, edisonAPI, $window, dialog, Devis, Intervention, Artisan, contextMenuData) {
+angular.module('edison').factory('ContextMenu', function($rootScope, $location, edisonAPI, $window, $timeout, dialog, Devis, Intervention, Artisan, contextMenuData) {
     "use strict";
 
     var ContextMenu = function(model) {
@@ -1713,6 +1716,21 @@ angular.module('edison').factory('ContextMenu', function($rootScope, $location, 
             top: 0,
             display: "none"
         }
+    }
+
+    ContextMenu.prototype.openSub = function(delay) {
+        var _this = this
+        this.openSubTimeout = $timeout(function() {
+            _this.mouseOverCM = true
+        }, delay || 0)
+
+    }
+
+    ContextMenu.prototype.closeSub = function() {
+        if (this.openSubTimeout) {
+            $timeout.cancel(this.openSubTimeout);
+        }
+        this.mouseOverCM = false
     }
 
     ContextMenu.prototype.getData = function() {
@@ -1731,8 +1749,15 @@ angular.module('edison').factory('ContextMenu', function($rootScope, $location, 
 
     ContextMenu.prototype.open = function() {
         var _this = this;
+        this.closeSub()
         this.list.forEach(function(e) {
-            e.hidden = e.hide && e.hide(_this.data);
+            if (e.subs) {
+                _.each(e.subs, function(sub) {
+                    sub.hidden = sub.hide && sub.hide(_this.data);
+                })
+            } else {
+                e.hidden = e.hide && e.hide(_this.data);
+            }
         });
         this.style.display = "block";
         this.active = true;
@@ -2271,6 +2296,37 @@ angular.module('edison')
             }
         };
 
+        var appelLocal = function(tel) {
+            console.log('---->', tel);
+            if (tel) {
+                $window.open('callto:' + tel, '_self', false);
+            }
+        }
+
+        Intervention.prototype.callTel1 = function() {
+            appelLocal(this.client.telephone.tel1)
+        }
+        Intervention.prototype.callTel2 = function() {
+            appelLocal(this.client.telephone.tel2)
+        }
+        Intervention.prototype.callTel3 = function() {
+            appelLocal(this.client.telephone.tel3)
+        }
+
+        Intervention.prototype.callSst1 = function() {
+            appelLocal(this.sst.telephone.tel1)
+        }
+        Intervention.prototype.callSst2 = function() {
+            appelLocal(this.sst.telephone.tel2)
+        }
+
+        Intervention.prototype.callPayeur1 = function() {
+            appelLocal(this.facture.tel)
+        }
+
+        Intervention.prototype.callPayeur2 = function() {
+            appelLocal(this.facture.tel2)
+        }
 
         Intervention.prototype.typeOf = function() {
             return 'Intervention';
@@ -3583,9 +3639,19 @@ var telephoneMatch = function(tabContainer, edisonAPI, $rootScope, $scope, $loca
         $rootScope.__txt_tel = $scope.__txt_tel
         edisonAPI.intervention.getTelMatch({
             q: $rootScope.__txt_tel
-        });
+        }).then(_.noop, function() {
+        LxProgressService.circular.hide()
+
+        })
     }
+
+    socket.on('intervention_db_telMatches', function(data) {
+        console.log('uyau')
+        $rootScope.globalProgressCounter = data + '%';
+    })
+
     socket.on('telephoneMatch', function(data) {
+        $rootScope.globalProgressCounter = ""
         LxProgressService.circular.hide()
         console.log(data);
         $scope.resp = data

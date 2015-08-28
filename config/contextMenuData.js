@@ -37,19 +37,19 @@ module.exports = {
         title: "Envoyer",
         action: 'sendDevis',
         hide: function(inter) {
-            return (inter.status === "TRA" && inter.status === 'ANN' ) || (inter.historique && inter.historique.length != 0);
+            return (inter.status === "TRA" && inter.status === 'ANN') || (inter.historique && inter.historique.length != 0);
         }
     }, {
         title: "Relance 1",
         action: 'sendDevis',
         hide: function(inter) {
-            return (inter.status === "TRA" && inter.status === 'ANN' ) || (!inter.historique || inter.historique.length != 1);
+            return (inter.status === "TRA" && inter.status === 'ANN') || (!inter.historique || inter.historique.length != 1);
         }
     }, {
         title: "Relance 2",
         action: 'sendDevis',
         hide: function(inter) {
-            return (inter.status === "TRA" && inter.status === 'ANN' ) || (!inter.historique || inter.historique.length < 2);
+            return (inter.status === "TRA" && inter.status === 'ANN') || (!inter.historique || inter.historique.length < 2);
         }
     }, {
         title: "Transferer",
@@ -71,29 +71,52 @@ module.exports = {
             fontWeight: 'bold'
         }
     }, {
-        /*        title: 'Fiche Client V1',
-                action: "ouvrirFicheV1"
-            }, {*/
-        title: "Appel Client",
-        action: 'callClient',
+        title: 'Appels',
         style: {
             fontWeight: 'bold'
         },
-        hide: function(inter) {
-            return false
-        }
-    }, {
-        /*        title: 'Fiche Client V1',
-                action: "ouvrirFicheV1"
-            }, {*/
-        title: "Appel Client",
-        action: 'callClient',
-        style: {
-            fontWeight: 'bold'
-        },
-        hide: function(inter) {
-            return false
-        }
+        subs: [{
+            title: 'Client tel1',
+            action: 'callTel1'
+
+        }, {
+            title: 'Client tel2',
+            action: 'callTel2',
+            hide: function(inter) {
+                console.log('=-:', inter)
+                return !inter.client.telephone.tel2
+            }
+        }, {
+            title: 'Client tel3',
+            action: 'callTel3',
+            hide: function(inter) {
+                return !inter.client.telephone.tel3
+            }
+        }, {
+            title: 'Sous-traitant tel1',
+            action: 'callSst1',
+            hide: function(inter) {
+                return !inter.sst || !inter.sst.telephone.tel1
+            }
+        }, {
+            title: 'Sous-traitant tel1',
+            action: 'callSst2',
+            hide: function(inter) {
+                return !inter.sst || !inter.sst.telephone.tel2
+            }
+        }, {
+            title: 'Payeur tel1',
+            action: 'callPayeur1',
+            hide: function(inter) {
+                return !inter.facture || !inter.facture.tel
+            }
+        }, {
+            title: 'Payeur tel2',
+            action: 'callPayeur2',
+            hide: function(inter) {
+                return !inter.facture || !inter.facture.tel2
+            }
+        }]
     }, {
         title: 'Recap sous-traitant',
         action: "ouvrirRecapSST",

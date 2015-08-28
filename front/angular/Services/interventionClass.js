@@ -11,6 +11,37 @@ angular.module('edison')
             }
         };
 
+        var appelLocal = function(tel) {
+            console.log('---->', tel);
+            if (tel) {
+                $window.open('callto:' + tel, '_self', false);
+            }
+        }
+
+        Intervention.prototype.callTel1 = function() {
+            appelLocal(this.client.telephone.tel1)
+        }
+        Intervention.prototype.callTel2 = function() {
+            appelLocal(this.client.telephone.tel2)
+        }
+        Intervention.prototype.callTel3 = function() {
+            appelLocal(this.client.telephone.tel3)
+        }
+
+        Intervention.prototype.callSst1 = function() {
+            appelLocal(this.sst.telephone.tel1)
+        }
+        Intervention.prototype.callSst2 = function() {
+            appelLocal(this.sst.telephone.tel2)
+        }
+
+        Intervention.prototype.callPayeur1 = function() {
+            appelLocal(this.facture.tel)
+        }
+
+        Intervention.prototype.callPayeur2 = function() {
+            appelLocal(this.facture.tel2)
+        }
 
         Intervention.prototype.typeOf = function() {
             return 'Intervention';

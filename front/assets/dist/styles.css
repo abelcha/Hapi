@@ -2382,6 +2382,18 @@ body {
     text-align: center
 }
 
+[no-margin] {
+    margin: 0px!important;
+}
+
+[align-right] {
+    text-align: right!important;
+}
+
+[align-left] {
+    text-align: left!important;
+}
+
 [underlined] {
     text-decoration: underline;
 }

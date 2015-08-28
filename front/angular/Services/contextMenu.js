@@ -1,4 +1,4 @@
-angular.module('edison').factory('ContextMenu', function($rootScope, $location, edisonAPI, $window, dialog, Devis, Intervention, Artisan, contextMenuData) {
+angular.module('edison').factory('ContextMenu', function($rootScope, $location, edisonAPI, $window, $timeout, dialog, Devis, Intervention, Artisan, contextMenuData) {
     "use strict";
 
     var ContextMenu = function(model) {
@@ -13,6 +13,21 @@ angular.module('edison').factory('ContextMenu', function($rootScope, $location, 
             top: 0,
             display: "none"
         }
+    }
+
+    ContextMenu.prototype.openSub = function(delay) {
+        var _this = this
+        this.openSubTimeout = $timeout(function() {
+            _this.mouseOverCM = true
+        }, delay || 0)
+
+    }
+
+    ContextMenu.prototype.closeSub = function() {
+        if (this.openSubTimeout) {
+            $timeout.cancel(this.openSubTimeout);
+        }
+        this.mouseOverCM = false
     }
 
     ContextMenu.prototype.getData = function() {
@@ -31,8 +46,15 @@ angular.module('edison').factory('ContextMenu', function($rootScope, $location, 
 
     ContextMenu.prototype.open = function() {
         var _this = this;
+        this.closeSub()
         this.list.forEach(function(e) {
-            e.hidden = e.hide && e.hide(_this.data);
+            if (e.subs) {
+                _.each(e.subs, function(sub) {
+                    sub.hidden = sub.hide && sub.hide(_this.data);
+                })
+            } else {
+                e.hidden = e.hide && e.hide(_this.data);
+            }
         });
         this.style.display = "block";
         this.active = true;

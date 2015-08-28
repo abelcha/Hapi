@@ -76,14 +76,18 @@ module.exports = function(schema) {
                     'compta.reglement.recu': true
                 }, function(err, resp) {
                     var rtn = _.map(resp, function(e) {
-                        return {
-                            id: e.id,
-                            prix: (e.prixFinal ||  e.prixAnnonce ||  0),
-                            status: e.status,
-                            paiementRecu: e.compta.reglement.recu
-                        }
-                    })
-                    console.log('-->', e[0].origin, _.round(100 * (++i / _.size(q)), 2), '%')
+                            return {
+                                id: e.id,
+                                prix: (e.prixFinal ||  e.prixAnnonce ||  0),
+                                status: e.status,
+                                paiementRecu: e.compta.reglement.recu
+                            }
+                        })
+                        ++i
+                    if (global.currenWorkerJob) {
+                        global.currenWorkerJob.progress(i,  _.size(q));
+                    }
+                    //console.log('-->', e[0].origin, _.round(100 * (i / _.size(q)), 2), '%')
                     var st = {
                         ligne: e[0].origin,
                         ANN: reduce(rtn, {

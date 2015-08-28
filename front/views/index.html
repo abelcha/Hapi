@@ -113,7 +113,9 @@
             <div id="content-wrapper">
                 <div ng-view style="margin-top: 16px;">
                 </div>
-                <div id="globalProgress" style="position:fixed;top: 50%;left: 57%;z-index: 12222;"></div>
+                <div id="globalProgress" style="position:fixed;top: 50%;left: 57%;z-index: 12222;">
+                    <span ng-if="globalProgressCounter">{{globalProgressCounter}}</span>
+                </div>
             </div>
         </div>
         <div id="main-menu-bg"></div>

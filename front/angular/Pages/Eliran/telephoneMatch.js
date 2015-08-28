@@ -9,9 +9,19 @@ var telephoneMatch = function(tabContainer, edisonAPI, $rootScope, $scope, $loca
         $rootScope.__txt_tel = $scope.__txt_tel
         edisonAPI.intervention.getTelMatch({
             q: $rootScope.__txt_tel
-        });
+        }).then(_.noop, function() {
+        LxProgressService.circular.hide()
+
+        })
     }
+
+    socket.on('intervention_db_telMatches', function(data) {
+        console.log('uyau')
+        $rootScope.globalProgressCounter = data + '%';
+    })
+
     socket.on('telephoneMatch', function(data) {
+        $rootScope.globalProgressCounter = ""
         LxProgressService.circular.hide()
         console.log(data);
         $scope.resp = data
