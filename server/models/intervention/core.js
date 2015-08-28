@@ -466,6 +466,7 @@
                 quantite: 1
             })
         }
+        console.log('-====>', d.cout_fourniture)
         if (!fournitureArtisan && !fournitureEdison && d.cout_fourniture > 0) {
             rtn.fourniture.push({
                 bl: "0",
