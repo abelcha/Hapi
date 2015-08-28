@@ -101,6 +101,7 @@ var getEmbeddedScript = function(req) {
     return '<script>' +
         ';window.app_session = ' + JSON.stringify(req.session) +
         ';window.app_env = ' + JSON.stringify(process.env.APP_ENV) +
+        ';window.app_users = ' + JSON.stringify(requireLocal('config/_users')) +
         '</script>';
 }
 

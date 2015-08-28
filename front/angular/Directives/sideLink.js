@@ -17,7 +17,7 @@
              icon: '@',
              title: '@',
              url: '@',
-             textWhite:'@',
+             textWhite: '@',
              model: '@',
              bold: '@',
              count: '@',
@@ -45,15 +45,18 @@
              $rootScope.$watch('interventionsStats', function() {
                  scope.total = findTotal();
              })
-             scope._color = (scope.color || 'success')
-             scope._model = scope.model || 'intervention';
-             var filtersFactory = new FiltersFactory(scope._model);
-             scope.exFltr = filtersFactory.getFilterByName(scope.fltr);
-             scope.total = findTotal();
-             scope._url = scope.exFltr.url.length ? "/" + scope.exFltr.url : scope.exFltr.url;
-             scope._login = scope.login ? ("#" + scope.login) : '';
-             scope._hashModel = scope.hashModel ? ("?hashModel=" + scope.hashModel) : '';
-             scope.fullUrl = scope.url || ('/' + scope._model + '/list' + scope._url + scope._hashModel + scope._login)
+             scope.$watch('login', function(current, prev) {
+                 scope._color = (scope.color || 'success')
+                 scope._model = scope.model || 'intervention';
+                 var filtersFactory = new FiltersFactory(scope._model);
+                 scope.exFltr = filtersFactory.getFilterByName(scope.fltr);
+                 scope.total = findTotal();
+                 scope._url = scope.exFltr.url.length ? "/" + scope.exFltr.url : scope.exFltr.url;
+                 scope._login = scope.login ? ("#" + scope.login) : '';
+                 scope._hashModel = scope.hashModel ? ("?hashModel=" + scope.hashModel) : '';
+                 scope.fullUrl = scope.url ||  ('/' + scope._model + '/list' + scope._url + scope._hashModel + scope._login)
+             })
+
          }
      };
  }]);
@@ -74,8 +77,7 @@
              title: '@',
              url: '@',
          },
-         link: function(scope, element, attrs) {
-         }
+         link: function(scope, element, attrs) {}
      };
  }]);
 

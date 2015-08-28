@@ -10,7 +10,7 @@ angular.module('edison', ['browserify', 'ui.slimscroll', 'ngMaterial', 'lumx', '
 angular.module('edison').controller('MainController', function($timeout, $q, DataProvider, tabContainer, $scope, socket, config, $rootScope, $location, edisonAPI, taskList, $window) {
     "use strict";
 
-
+    $rootScope.app_users = app_users;
     $scope.sidebarHeight = $("#main-menu-bg").height();
     $scope.config = config;
     $rootScope.loadingData = true;
@@ -18,6 +18,10 @@ angular.module('edison').controller('MainController', function($timeout, $q, Dat
         $window.scrollTo(0, 0);
         $rootScope.loadingData = false;
     });
+
+    $scope.changeUser = function(usr) {
+        $rootScope.user = usr
+    }
 
     $scope.shadowClick = function(url) {
         $location.url(url)

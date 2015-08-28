@@ -14,7 +14,7 @@
     <script src="/dist/all.js"></script>
 </head>
 
-<body ng-app="edison" ng-controller="MainController" style="  background: #f4f4f4 url(/img/mooning.png);" class="ng-cloak main-menu-fixed main-navbar-fixed theme-adminflare main-menu-animated" ng-class="{'mmc' : sideBarIsOpen}" ng-click="closeContextMenu()">
+<body ng-app="edison" ng-controller="MainController" style="  background: #f4f4f4 url(/img/mooning.png);" class="ng-cloak main-menu-fixed main-navbar-fixed theme-adminflare main-menu-animated" ng-class="{'mmc' : sideBarIsOpen}" ng-click="closeContextMenu();">
     <div id="main-wrapper" ng-hide="loadingData">
         <div id="main-navbar" class="navbar navbar-inverse" role="navigation">
             <!-- Main menu toggle -->
@@ -25,7 +25,24 @@
             <div class="navbar-inner">
                 <!-- Main navbar header -->
                 <!-- / .navbar-header -->
-                <span right>{{user.login}}</span>
+                <span right ng-click="userDropdown = !userDropdown" style="margin-right:80px"><li class="dropdown">
+                                <a href="#" class="dropdown-toggle user-menu" data-toggle="dropdown">
+                                    <img src="/img/profile/default.jpg" alt="">
+                                    <span bold>{{user.login | uppercase}}</span>
+                </a>
+                <ul ng-class="{'display-block' : userDropdown}" class="dropdown-menu open" >
+                    <!--   <li><a href="#"><span class="label label-warning pull-right">New</span>Profile</a></li> -->
+                    <li ng-repeat="u in app_users" ng-click="changeUser(u)">
+                        <a href="#">
+                            <span class="badge badge-primary pull-right"></span> {{u.login}}
+                        </a>
+                    </li><!-- 
+                    <li><a href="#"><i class="dropdown-icon fa fa-cog"></i>&nbsp;&nbsp;Settings</a></li> -->
+                    <li class="divider"></li>
+                    <li><a href="/logout"><i class="dropdown-icon fa fa-power-off"></i>&nbsp;&nbsp;Log Out</a></li>
+                </ul>
+                </li>
+                </span>
                 <div id="main-navbar-collapse" class="collapse navbar-collapse main-navbar-collapse">
                     <!--  -->
                     <md-autocomplete class="searchBar" style="width: 100px;float: right;margin-top: 3px;margin-right: 75px;" md-search-text-change="null" md-min-length="3" md-selected-item-change="searchBox.change(selectedItem)" md-menu-class="autocomplete-custom-template" md-selected-item="selectedItem" md-search-text="searchText" md-autofocus="false" md-items="item in searchBox.search(searchText)" placeholder="Recherche..." md-item-text="item.description">
@@ -66,7 +83,7 @@
                     <link fltr="i_savEnc" icon="th-list" login="{{user.login}}" color="danger"></link>
                 </drop-down>
                 <drop-down icon="bolt" open-default="userStats.i_litEnc.total" title="Mes Litiges">
-                    <link fltr="i_lit" login="{{user.login}}" icon="th-list" ></link>
+                    <link fltr="i_lit" login="{{user.login}}" icon="th-list"></link>
                     <link fltr="i_litEnc" login="{{user.login}}" icon="th-list" color="danger"></link>
                 </drop-down>
             </drop-down>

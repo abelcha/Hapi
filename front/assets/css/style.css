@@ -43,6 +43,10 @@ body {
     font-weight: bold;
 }
 
+.display-block {
+    display: block;
+}
+
 [bold] {
     font-weight: bold;
 }

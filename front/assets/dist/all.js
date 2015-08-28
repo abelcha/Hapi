@@ -10,7 +10,7 @@ angular.module('edison', ['browserify', 'ui.slimscroll', 'ngMaterial', 'lumx', '
 angular.module('edison').controller('MainController', function($timeout, $q, DataProvider, tabContainer, $scope, socket, config, $rootScope, $location, edisonAPI, taskList, $window) {
     "use strict";
 
-
+    $rootScope.app_users = app_users;
     $scope.sidebarHeight = $("#main-menu-bg").height();
     $scope.config = config;
     $rootScope.loadingData = true;
@@ -18,6 +18,10 @@ angular.module('edison').controller('MainController', function($timeout, $q, Dat
         $window.scrollTo(0, 0);
         $rootScope.loadingData = false;
     });
+
+    $scope.changeUser = function(usr) {
+        $rootScope.user = usr
+    }
 
     $scope.shadowClick = function(url) {
         $location.url(url)
@@ -745,7 +749,7 @@ angular.module('edison').directive('ngRightClick', function($parse) {
              icon: '@',
              title: '@',
              url: '@',
-             textWhite:'@',
+             textWhite: '@',
              model: '@',
              bold: '@',
              count: '@',
@@ -773,15 +777,18 @@ angular.module('edison').directive('ngRightClick', function($parse) {
              $rootScope.$watch('interventionsStats', function() {
                  scope.total = findTotal();
              })
-             scope._color = (scope.color || 'success')
-             scope._model = scope.model || 'intervention';
-             var filtersFactory = new FiltersFactory(scope._model);
-             scope.exFltr = filtersFactory.getFilterByName(scope.fltr);
-             scope.total = findTotal();
-             scope._url = scope.exFltr.url.length ? "/" + scope.exFltr.url : scope.exFltr.url;
-             scope._login = scope.login ? ("#" + scope.login) : '';
-             scope._hashModel = scope.hashModel ? ("?hashModel=" + scope.hashModel) : '';
-             scope.fullUrl = scope.url || ('/' + scope._model + '/list' + scope._url + scope._hashModel + scope._login)
+             scope.$watch('login', function(current, prev) {
+                 scope._color = (scope.color || 'success')
+                 scope._model = scope.model || 'intervention';
+                 var filtersFactory = new FiltersFactory(scope._model);
+                 scope.exFltr = filtersFactory.getFilterByName(scope.fltr);
+                 scope.total = findTotal();
+                 scope._url = scope.exFltr.url.length ? "/" + scope.exFltr.url : scope.exFltr.url;
+                 scope._login = scope.login ? ("#" + scope.login) : '';
+                 scope._hashModel = scope.hashModel ? ("?hashModel=" + scope.hashModel) : '';
+                 scope.fullUrl = scope.url ||  ('/' + scope._model + '/list' + scope._url + scope._hashModel + scope._login)
+             })
+
          }
      };
  }]);
@@ -802,8 +809,7 @@ angular.module('edison').directive('ngRightClick', function($parse) {
              title: '@',
              url: '@',
          },
-         link: function(scope, element, attrs) {
-         }
+         link: function(scope, element, attrs) {}
      };
  }]);
 
@@ -3393,42 +3399,6 @@ var archivesPaiementController = function(edisonAPI, tabContainer, $routeParams,
 
 angular.module('edison').controller('archivesPaiementController', archivesPaiementController);
 
-var AvoirsController = function(tabContainer, edisonAPI, $rootScope, LxProgressService, LxNotificationService, FlushList) {
-    "use strict";
-    var _this = this
-    var tab = tabContainer.getCurrentTab();
-    tab.setTitle('Avoirs')
-    _this.loadData = function(prevChecked) {
-        LxProgressService.circular.show('#5fa2db', '#globalProgress');
-        edisonAPI.compta.avoirs().then(function(result) {
-            console.log(result)
-            $rootScope.avoirs = result.data
-            LxProgressService.circular.hide()
-        })
-    }
-    if (!$rootScope.avoirs)
-        _this.loadData()
-
-    _this.reloadAvoir = function() {
-        _this.loadData()
-    }
-    _this.flush = function() {
-        var list = _.filter($rootScope.avoirs, {
-            checked: true
-        })
-        edisonAPI.compta.flushAvoirs(list).then(function(resp) {
-            LxNotificationService.success(resp.data);
-            _this.reloadAvoir()
-        }).catch(function(err) {
-            LxNotificationService.error(err.data);
-        })
-    }
-
-}
-
-
-angular.module('edison').controller('avoirsController', AvoirsController);
-
  angular.module('edison').directive('artisanCategorie', ['config', function(config) {
      "use strict";
      return {
@@ -3532,6 +3502,42 @@ var ArtisanCtrl = function($rootScope, $location, $routeParams, ContextMenu, LxN
     }
 }
 angular.module('edison').controller('ArtisanController', ArtisanCtrl);
+
+var AvoirsController = function(tabContainer, edisonAPI, $rootScope, LxProgressService, LxNotificationService, FlushList) {
+    "use strict";
+    var _this = this
+    var tab = tabContainer.getCurrentTab();
+    tab.setTitle('Avoirs')
+    _this.loadData = function(prevChecked) {
+        LxProgressService.circular.show('#5fa2db', '#globalProgress');
+        edisonAPI.compta.avoirs().then(function(result) {
+            console.log(result)
+            $rootScope.avoirs = result.data
+            LxProgressService.circular.hide()
+        })
+    }
+    if (!$rootScope.avoirs)
+        _this.loadData()
+
+    _this.reloadAvoir = function() {
+        _this.loadData()
+    }
+    _this.flush = function() {
+        var list = _.filter($rootScope.avoirs, {
+            checked: true
+        })
+        edisonAPI.compta.flushAvoirs(list).then(function(resp) {
+            LxNotificationService.success(resp.data);
+            _this.reloadAvoir()
+        }).catch(function(err) {
+            LxNotificationService.error(err.data);
+        })
+    }
+
+}
+
+
+angular.module('edison').controller('avoirsController', AvoirsController);
 
 var ContactArtisanController = function($scope, $timeout, tabContainer, LxProgressService, FiltersFactory, ContextMenu, edisonAPI, DataProvider, $routeParams, $location, $q, $rootScope, $filter, config, ngTableParams) {
     "use strict";
