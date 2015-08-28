@@ -9,6 +9,24 @@ angular.module('edison')
                 this[k] = data[k];
             }
         }
+
+        var appelLocal = function(tel) {
+            console.log('---->', tel);
+            if (tel) {
+                $window.open('callto:' + tel, '_self', false);
+            }
+        }
+
+        Devis.prototype.callTel1 = function() {
+            appelLocal(this.client.telephone.tel1)
+        }
+        Devis.prototype.callTel2 = function() {
+            appelLocal(this.client.telephone.tel2)
+        }
+        Devis.prototype.callTel3 = function() {
+            appelLocal(this.client.telephone.tel3)
+        }
+
         Devis.prototype.typeOf = function() {
             return 'Devis';
         }

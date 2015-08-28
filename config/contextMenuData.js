@@ -28,6 +28,12 @@ module.exports = {
         action: 'call',
     }],
     devis: [{
+        title: 'Modifier le devis',
+        action: "ouvrirFiche",
+        style: {
+            fontWeight: 'bold'
+        },
+    }, {
         title: 'Appels',
         style: {
             fontWeight: 'bold'
@@ -51,9 +57,6 @@ module.exports = {
                 return !inter.client.telephone.tel3
             }
         }]
-    }, {
-        title: 'Modifier le devis',
-        action: "ouvrirFiche"
     }, {
         title: "Prévisualiser",
         action: 'devisPreview',
