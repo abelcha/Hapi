@@ -466,7 +466,7 @@
                 quantite: 1
             })
         }
-        if (!fournitureArtisan && !fournitureEdisonn && d.cout_fourniture > 0) {
+        if (!fournitureArtisan && !fournitureEdison && d.cout_fourniture > 0) {
             rtn.fourniture.push({
                 bl: "0",
                 title: "Inconnu",
