@@ -1,5 +1,5 @@
  angular.module('edison').directive('produits',
-     function(config, productsList, dialog, openPost, Intervention, Devis) {
+     function(config, productsList, dialog, openPost, LxNotificationService, Intervention, Devis) {
          "use strict";
          return {
              restrict: 'E',
@@ -23,6 +23,13 @@
                      scope.display = true;
                  }
 
+                 scope.$watch('data.facture.payeur', function(curr, prev) {
+                     if (curr !== prev && (curr === 'GRN' ||  curr === 'SOC')) {
+                         scope.data.tva = 20;
+                         LxNotificationService.info("La TVA à été mise a 20%");
+                     }
+                 })
+
                  scope.$watch('data.produits', function(curr, prev) {
                      if (!_.isEqual(curr, prev)) {
                          scope.data.prixFinal = scope.produits.total()
@@ -30,15 +37,15 @@
                  }, true)
 
                  scope.createProd = function() {
-/*                     scope.produits.add({
-                         ref: 'EDIXX',
-                         desc: "",
-                         pu: 10,
-                         quantite: 1,
-                         focus: true,
-                     })*/
+                     /*                     scope.produits.add({
+                                              ref: 'EDIXX',
+                                              desc: "",
+                                              pu: 10,
+                                              quantite: 1,
+                                              focus: true,
+                                          })*/
                      dialog.addProd(function(resp) {
-                        console.log(resp);
+                         console.log(resp);
                          model.produits.push(resp)
                      });
                  }
