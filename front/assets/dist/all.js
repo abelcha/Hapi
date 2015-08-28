@@ -565,7 +565,7 @@ angular.module('edison').directive('ngEnter', function () {
          },
          link: function(scope, elem) {
              scope.$watch('data.litige.description', function(curr, prev) {
-                 if (!scope.data.litige.closed)
+                 if (scope.data.litige && !scope.data.litige.closed)
                      scope.data.litige.open = true
              })
          }
@@ -2860,7 +2860,9 @@ angular.module('edison').factory('productsList', function($q, dialog, openPost, 
             return _.max(this.produits, 'pu');
         },
         total: function() {
-            var total = _.round(_.sum(this.produits, 'pu'), 2)
+            var total = _.round(_.sum(this.produits, function(e) {
+                return e.pu * e.quantite;
+            }), 2)
             return total;
         },
 
@@ -3432,129 +3434,6 @@ var AvoirsController = function(tabContainer, edisonAPI, $rootScope, LxProgressS
 
 
 angular.module('edison').controller('avoirsController', AvoirsController);
-
-var ContactArtisanController = function($scope, $timeout, tabContainer, LxProgressService, FiltersFactory, ContextMenu, edisonAPI, DataProvider, $routeParams, $location, $q, $rootScope, $filter, config, ngTableParams) {
-    "use strict";
-    var _this = this;
-    _this.loadPanel = function(id) {
-        edisonAPI.artisan.get(id)
-            .then(function(resp) {
-                _this.sst = resp.data;
-                _this.tab.setTitle('@' + _this.sst.nomSociete.slice(0, 10));
-
-            })
-    }
-
-    if ($location.hash() === 'interventions') {
-        $scope.selectedIndex = 1
-    }
-    var dataProvider = new DataProvider('artisan');
-    var filtersFactory = new FiltersFactory('artisan')
-    var currentFilter;
-    if ($routeParams.fltr) {
-        currentFilter = filtersFactory.getFilterByUrl($routeParams.fltr)
-    }
-    var currentHash = $location.hash();
-    var title = currentFilter ? currentFilter.long_name : "Artisan";
-
-    LxProgressService.circular.show('#5fa2db', '#globalProgress');
-    dataProvider.init(function(err, resp) {
-
-        _this.tab = tabContainer.getCurrentTab();
-        _this.tab.setTitle(title, currentHash);
-        _this.tab.hash = currentHash;
-        _this.config = config;
-        _this.moment = moment;
-        if (!dataProvider.isInit()) {
-            dataProvider.setData(resp);
-        }
-
-        dataProvider.applyFilter(currentFilter, _this.tab.hash);
-        _this.tableFilter = "";
-        _this.tableLimit = 20;
-        $rootScope.expendedRow = $routeParams.id || 45
-        _this.recap = $location.url().includes('recap') ? $routeParams.id : undefined
-            // if (_this.recap) {
-            //     $scope.selectedIndex = 1;
-            // }
-        _this.loadPanel($rootScope.expendedRow)
-        _this.tableData = dataProvider.filteredData;
-        LxProgressService.circular.hide();
-    });
-    _this.getStaticMap = function(address) {
-        if (_this.sst && this.sst.address)
-            return "/api/mapGetStatic?width=500&height=400&precision=0&zoom=6&origin=" + _this.sst.address.lt + ", " + _this.sst.address.lg;
-    }
-
-    _this.reloadData = function() {
-        _this.tableData = $filter('contactFilter')(dataProvider.filteredData, _this.tableFilter);
-    }
-
-    _this.loadMore = function() {
-        _this.tableLimit += 10;
-    }
-
-    /*
-        $rootScope.$watch('tableilter', _this.reloadData);
-    */
-    $rootScope.$on('ARTISAN_CACHE_LIST_CHANGE', function() {
-        if (_this.tab.fullUrl === tabContainer.getCurrentTab().fullUrl) {
-            dataProvider.applyFilter(currentFilter, _this.tab.hash);
-        }
-    })
-
-    _this.contextMenu = new ContextMenu('artisan')
-
-    _this.rowRightClick = function($event, inter) {
-        console.log('contactclick')
-        _this.contextMenu.setPosition($event.pageX, $event.pageY)
-        edisonAPI.artisan.get(inter.id)
-            .then(function(resp) {
-                _this.contextMenu.setData(resp.data);
-                _this.contextMenu.open();
-            })
-    }
-
-    _this.rowClick = function($event, inter) {
-        if (_this.contextMenu.active)
-            return _this.contextMenu.close();
-        if ($event.metaKey || $event.ctrlKey) {
-            tabContainer.addTab('/artisan/' + inter.id, {
-                title: ('#' + inter.id),
-                setFocus: false,
-                allowDuplicates: false
-            });
-        } else {
-            if ($rootScope.expendedRow === inter.id) {
-                return 0;
-            } else {
-                $rootScope.expendedRow = inter.id
-                _this.loadPanel(inter.id)
-                $location.search('id', inter.id);
-            }
-        }
-    }
-
-
-    $scope.$watchCollection('[selectedIndex, expendedRow]', function(current, prev) {
-        if (prev[1] && $scope.selectedIndex == 4) {
-            $scope.compteTiers = undefined
-            edisonAPI.artisan.getCompteTiers($rootScope.expendedRow).success(function(resp) {
-                $scope.compteTiers = resp;
-            })
-        }
-    })
-    $scope.$watch('selectedIndex', function(current, prev) {
-        if (current !== void(0) && prev !== current)  {
-            $('md-tabs-content-wrapper').hide()
-            $timeout(function() {
-                $('md-tabs-content-wrapper').show()
-            }, 500)
-        }
-    })
-
-}
-angular.module('edison').controller('ContactArtisanController', ContactArtisanController);
 
 var DashboardController = function(edisonAPI, tabContainer, $routeParams, $location, LxProgressService) {
     var tab = tabContainer.getCurrentTab();
@@ -4484,5 +4363,128 @@ var SearchController = function(edisonAPI, tabContainer, $routeParams, $location
 }
 
 angular.module('edison').controller('SearchController', SearchController);
+
+var ContactArtisanController = function($scope, $timeout, tabContainer, LxProgressService, FiltersFactory, ContextMenu, edisonAPI, DataProvider, $routeParams, $location, $q, $rootScope, $filter, config, ngTableParams) {
+    "use strict";
+    var _this = this;
+    _this.loadPanel = function(id) {
+        edisonAPI.artisan.get(id)
+            .then(function(resp) {
+                _this.sst = resp.data;
+                _this.tab.setTitle('@' + _this.sst.nomSociete.slice(0, 10));
+
+            })
+    }
+
+    if ($location.hash() === 'interventions') {
+        $scope.selectedIndex = 1
+    }
+    var dataProvider = new DataProvider('artisan');
+    var filtersFactory = new FiltersFactory('artisan')
+    var currentFilter;
+    if ($routeParams.fltr) {
+        currentFilter = filtersFactory.getFilterByUrl($routeParams.fltr)
+    }
+    var currentHash = $location.hash();
+    var title = currentFilter ? currentFilter.long_name : "Artisan";
+
+    LxProgressService.circular.show('#5fa2db', '#globalProgress');
+    dataProvider.init(function(err, resp) {
+
+        _this.tab = tabContainer.getCurrentTab();
+        _this.tab.setTitle(title, currentHash);
+        _this.tab.hash = currentHash;
+        _this.config = config;
+        _this.moment = moment;
+        if (!dataProvider.isInit()) {
+            dataProvider.setData(resp);
+        }
+
+        dataProvider.applyFilter(currentFilter, _this.tab.hash);
+        _this.tableFilter = "";
+        _this.tableLimit = 20;
+        $rootScope.expendedRow = $routeParams.id || 45
+        _this.recap = $location.url().includes('recap') ? $routeParams.id : undefined
+            // if (_this.recap) {
+            //     $scope.selectedIndex = 1;
+            // }
+        _this.loadPanel($rootScope.expendedRow)
+        _this.tableData = dataProvider.filteredData;
+        LxProgressService.circular.hide();
+    });
+    _this.getStaticMap = function(address) {
+        if (_this.sst && this.sst.address)
+            return "/api/mapGetStatic?width=500&height=400&precision=0&zoom=6&origin=" + _this.sst.address.lt + ", " + _this.sst.address.lg;
+    }
+
+    _this.reloadData = function() {
+        _this.tableData = $filter('contactFilter')(dataProvider.filteredData, _this.tableFilter);
+    }
+
+    _this.loadMore = function() {
+        _this.tableLimit += 10;
+    }
+
+    /*
+        $rootScope.$watch('tableilter', _this.reloadData);
+    */
+    $rootScope.$on('ARTISAN_CACHE_LIST_CHANGE', function() {
+        if (_this.tab.fullUrl === tabContainer.getCurrentTab().fullUrl) {
+            dataProvider.applyFilter(currentFilter, _this.tab.hash);
+        }
+    })
+
+    _this.contextMenu = new ContextMenu('artisan')
+
+    _this.rowRightClick = function($event, inter) {
+        console.log('contactclick')
+        _this.contextMenu.setPosition($event.pageX, $event.pageY)
+        edisonAPI.artisan.get(inter.id)
+            .then(function(resp) {
+                _this.contextMenu.setData(resp.data);
+                _this.contextMenu.open();
+            })
+    }
+
+    _this.rowClick = function($event, inter) {
+        if (_this.contextMenu.active)
+            return _this.contextMenu.close();
+        if ($event.metaKey || $event.ctrlKey) {
+            tabContainer.addTab('/artisan/' + inter.id, {
+                title: ('#' + inter.id),
+                setFocus: false,
+                allowDuplicates: false
+            });
+        } else {
+            if ($rootScope.expendedRow === inter.id) {
+                return 0;
+            } else {
+                $rootScope.expendedRow = inter.id
+                _this.loadPanel(inter.id)
+                $location.search('id', inter.id);
+            }
+        }
+    }
+
+
+    $scope.$watchCollection('[selectedIndex, expendedRow]', function(current, prev) {
+        if (prev[1] && $scope.selectedIndex == 4) {
+            $scope.compteTiers = undefined
+            edisonAPI.artisan.getCompteTiers($rootScope.expendedRow).success(function(resp) {
+                $scope.compteTiers = resp;
+            })
+        }
+    })
+    $scope.$watch('selectedIndex', function(current, prev) {
+        if (current !== void(0) && prev !== current)  {
+            $('md-tabs-content-wrapper').hide()
+            $timeout(function() {
+                $('md-tabs-content-wrapper').show()
+            }, 500)
+        }
+    })
+
+}
+angular.module('edison').controller('ContactArtisanController', ContactArtisanController);
 
 //# sourceMappingURL=all.js.map

@@ -9,7 +9,7 @@
          },
          link: function(scope, elem) {
              scope.$watch('data.litige.description', function(curr, prev) {
-                 if (!scope.data.litige.closed)
+                 if (scope.data.litige && !scope.data.litige.closed)
                      scope.data.litige.open = true
              })
          }

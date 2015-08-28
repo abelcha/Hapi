@@ -36,7 +36,6 @@ module.exports = function(core) {
                         if (_.isFunction(core.postUpdate)) {
                             core.postUpdate(resp, data, req.session);
                         }
-                        console.log('resolve')
                         return resolve(resp);
                     } catch (e) {
                        console.log(e.stack)

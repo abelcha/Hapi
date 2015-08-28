@@ -164,7 +164,9 @@ angular.module('edison').factory('productsList', function($q, dialog, openPost, 
             return _.max(this.produits, 'pu');
         },
         total: function() {
-            var total = _.round(_.sum(this.produits, 'pu'), 2)
+            var total = _.round(_.sum(this.produits, function(e) {
+                return e.pu * e.quantite;
+            }), 2)
             return total;
         },
 
