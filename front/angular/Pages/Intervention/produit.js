@@ -44,10 +44,17 @@
                                               quantite: 1,
                                               focus: true,
                                           })*/
-                     dialog.addProd(function(resp) {
+                    model.produits.push({
+                        showDesc:true,
+                        desc:'',
+                        title:'',
+                        pu:0,
+                        quantite:0,
+                    })
+                   /*  dialog.addProd(function(resp) {
                          console.log(resp);
                          model.produits.push(resp)
-                     });
+                     });*/
                  }
                  scope.printDevis = function() {
                      openPost('/api/intervention/printDevis', {

@@ -83,6 +83,11 @@ angular.module('edison').factory('productsList', function($q, dialog, openPost, 
 
     var Produit = function(produits) {
         this.produits = produits;
+        _.each(this.produits, function(e) {
+            if (e.desc.toLowerCase() != e.title.toLowerCase()) {
+                e.showDesc = true
+            }
+        })
         this.lastCall = _.now()
     }
     Produit.prototype = {
