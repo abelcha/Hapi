@@ -9,19 +9,19 @@
     </md-content>
     <br>
     
-    <div ng-if="!map.display && height === 'small'" style="height:315px;width:100%;overflow:hidden;">
+<!--     <div ng-if="!map.display && height === 'small'" style="height:315px;width:100%;overflow:hidden;">
         <img id="static-map" style="width:100%;top: -9999px;bottom: -9999px;left: -9999px;right: -9999px;margin: auto;" ng-click="map.show()" src="{{getStaticMap()}}" />
     </div>
     <div ng-if="!map.display && height === 'big'" style="height:400px;width:100%;overflow:hidden;">
         <img id="static-map" style="width:100%;top: -9999px;bottom: -9999px;left: -9999px;right: -9999px;margin: auto;" ng-click="map.show()" src="{{getStaticMap()}}" />
-    </div>
-    <map ng-if="map.display && height === 'small'" zoom="{{map.zoom}}" pan-control="false" style="height:315px" center="{{map.center.latLng}}">
+    </div> -->
+    <map ng-if="map && height === 'small'" zoom="{{map.zoom}}" pan-control="false" style="height:315px" center="{{map.center.latLng}}">
         <directions ng-if="data.artisan" travel-mode="DRIVING" origin="{{data.artisan.address.lt}}, {{data.artisan.address.lg}}" destination="{{client.address.latLng}}">
         </directions>
         <marker ng-if="client.address.lt" position="{{client.address.lt}}, {{client.address.lg}}" color="grey"></marker>
         <marker ng-repeat="sst in xmarkers" title="{{sst.nomSociete}}" on-click="clickOnArtisanMarker(sst)" position="{{sst.address.lt}}, {{sst.address.lg}}" color="{{sst.status === 'ACT' ? 'red' : 'blue'}}"></marker>
     </map>
-     <map ng-if="map.display && height === 'big'" zoom="{{map.zoom}}" pan-control="false" style="height:400px" center="{{map.center.latLng}}">
+     <map ng-if="map && height === 'big'" zoom="{{map.zoom}}" pan-control="false" style="height:400px" center="{{map.center.latLng}}">
         <directions ng-if="data.artisan" travel-mode="DRIVING" origin="{{data.artisan.address.lt}}, {{data.artisan.address.lg}}" destination="{{client.address.latLng}}">
         </directions>
         <marker ng-if="client.address.lt" position="{{client.address.lt}}, {{client.address.lg}}" color="grey"></marker>
