@@ -40,7 +40,7 @@
      nom: 'roudier',
      prenom: 'jeremie',
      pseudo: 'éric',
-     activated: false
+     activated: true
  }, {
      login: 'clement_b',
      oldLogin: 'laurent',
@@ -51,7 +51,7 @@
      prenom: 'xxx',
      activated: true
  }, {
-     login: 'gregoire_e',
+     login: 'gregorie_e',
      oldLogin: 'sebastien',
      service: 'INTERVENTION',
      root: false,
