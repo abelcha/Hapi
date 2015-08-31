@@ -56,8 +56,9 @@ Dropbox.prototype.move = function(from, to) {
 
 Dropbox.prototype.stack = function(buffer, filename, login) {
     var moment = require('moment');
+    var folder = envProd ? 'PrintQueue' : 'PrintQueueDev'
     return this.upload({
-        filename: '/STACK/' + moment().format('L').replace(/\D/g, '-') + '/' + filename + ' (' + login + ').pdf',
+        filename: '/PrintQueue' + moment().format('L').replace(/\D/g, '-') + '  ' + filename + ' (' + login + ').pdf',
         data: buffer
     })
 }

@@ -124,7 +124,7 @@
             <div class="menu-tabs">
                 <md-tabs md-selected="tabs.selectedTab" style=" margin-left: 6px;">
                     <md-tab ng-repeat="tab in tabs._tabs" ng-click="shadowClick(tab.fullUrl)" style="padding-right:8px">
-                        <md-tab-label><a id="{{tab.position}}_tab" href="{{tab.fullUrl}}">{{tab.title || "•••"}} </a><span ng-if="tab.hash" style="color:black;font-size:8px">{{tab.hash|loginify}}</span> <i ng-click="tabIconClick($event, tab)" class="fa fa-remove"></i></md-tab-label>
+                        <md-tab-label><a id="{{tab.position}}_tab" href="{{tab.fullUrl}}">{{tab.title || "•••"}} </a><span ng-if="tab.hash" style="color:black;font-size:8px">{{tab.hash}}</span> <i ng-click="tabIconClick($event, tab)" class="fa fa-remove"></i></md-tab-label>
                     </md-tab>
                 </md-tabs>
             </div>

@@ -161,7 +161,7 @@ module.exports = function(schema) {
                             doc.login.envoiFacture = req.session.login;
                             doc.save().then(resolve, reject)
                             getFacturePdfObj(doc, doc.date.intervention, false, true).toBuffer(function(err, buff) {
-                                document.stack(buff, 'FACTURE' + doc.id, req.session.login)
+                                document.stack(buff, 'FACTURE ' + doc.id, req.session.login)
                                     .then(function(resp) {
                                         console.log('file added', resp)
                                     })
