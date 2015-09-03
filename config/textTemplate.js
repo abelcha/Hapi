@@ -19,7 +19,7 @@ module.exports = {
                     "Merci de nous contacter au plus vite au 09.72.42.30.00.\n" +
                     "Merci d'avance pour votre réponse.\n" +
                     "\nM." + (_.startCase(user.pseudo) ||  "Arnaud") + "\n" +
-                    "Ligne Direct " + user.ligne ||  "09.72.42.30.00" + "\n" +
+                    "Ligne Direct " + (user.ligne ||  "09.72.42.30.00") + "\n" +
                     "Edison Services"
             }
         }
