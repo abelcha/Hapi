@@ -1007,7 +1007,7 @@ angular.module("edison").filter('tableFilter', ['config', function(config) {
 
     return function(dataContainer, inputs, strictMode) {
         var rtn = [];
-        console.time('fltr')
+        //console.time('fltr')
         inputs = _.mapValues(inputs, clean);
         _.each(dataContainer, function(data) {
             if (data.id) {
@@ -1032,7 +1032,7 @@ angular.module("edison").filter('tableFilter', ['config', function(config) {
                 }
             }
         })
-        console.timeEnd('fltr')
+        //console.timeEnd('fltr')
 
         return rtn;
     }
@@ -1805,7 +1805,6 @@ angular.module('edison').factory('ContextMenu', function($rootScope, $location, 
         if (typeof link.action === 'function') {
             return link.action(this.getData())
         } else if (typeof link.action === 'string') {
-            console.log(this.data);
             return this.modelObject[this.model]()[link.action].bind(this.data)();
         } else {
             console.error("error here")
@@ -2056,6 +2055,24 @@ angular.module('edison').factory('dialog', function($mdDialog, edisonAPI, config
                     }
                 },
                 templateUrl: '/DialogTemplates/verification.html',
+            });
+        },
+        validationReglement: function(inter, cb) {
+            $mdDialog.show({
+                controller: function DialogController($scope, $mdDialog) {
+                    $scope.data = inter
+                    $scope.answer = function(resp) {
+                        $scope.data = inter;
+                        $mdDialog.hide();
+                        if (resp === null) {
+                            return cb('nope')
+                        } 
+                        $scope.data.compta.reglement.recu = resp;
+                        console.log('-->',  resp)
+                        return cb(null, $scope.data);
+                    }
+                },
+                templateUrl: '/DialogTemplates/validationReglement.html',
             });
         },
         facturierDeviseur: function(artisan, cb) {
@@ -2377,6 +2394,19 @@ angular.module('edison')
             Devis().envoi.bind(this)(cb)
         };
 
+        Intervention.prototype.validerReglement = function(cb) {
+            var _this = this;
+            dialog.validationReglement(this, function(err, resp) {
+                if (err) {
+                    return cb(err);
+                }
+                edisonAPI.intervention.save(_this).then(function(resp) {
+                    LxNotificationService.success("L'intervention " + _this.id + " est payé");
+                }, function(err) {
+                    LxNotificationService.error("Une erreur est survenu (" + err.data + ")");
+                });
+            })
+        };
 
         Intervention.prototype.demarcher = function(cb) {
             edisonAPI.intervention.demarcher(this.id).success(function() {
@@ -3198,7 +3228,7 @@ angular.module('edison').factory('taskList', ['dialog', 'edisonAPI', function(di
 
 angular.module('edison').factory('user', function($window) {
     "use strict";
-    return $window.user;
+    return $window.app_session;
 });
 
  angular.module('edison').directive('infoFacture', ['config', 'mapAutocomplete',
@@ -3827,6 +3857,9 @@ angular.module('edison').directive('infoCompta', ['config', 'Paiement',
             templateUrl: '/Templates/info-compta.html',
             scope: {
                 data: "=",
+                displayReglement:'@',
+                dialog:'@',
+                displayPaiement:'@',
             },
             link: function(scope, element, attrs) {
                 scope.config = config

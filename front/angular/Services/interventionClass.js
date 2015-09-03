@@ -50,6 +50,19 @@ angular.module('edison')
             Devis().envoi.bind(this)(cb)
         };
 
+        Intervention.prototype.validerReglement = function(cb) {
+            var _this = this;
+            dialog.validationReglement(this, function(err, resp) {
+                if (err) {
+                    return cb(err);
+                }
+                edisonAPI.intervention.save(_this).then(function(resp) {
+                    LxNotificationService.success("L'intervention " + _this.id + " est payé");
+                }, function(err) {
+                    LxNotificationService.error("Une erreur est survenu (" + err.data + ")");
+                });
+            })
+        };
 
         Intervention.prototype.demarcher = function(cb) {
             edisonAPI.intervention.demarcher(this.id).success(function() {

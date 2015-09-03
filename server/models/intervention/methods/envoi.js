@@ -261,7 +261,7 @@ module.exports = function(schema) {
                             From: "intervention@edison-services.fr",
                             ReplyTo: communication.mailReply,
                             To: communication.mailDest,
-                            Bcc: communication.Bcc,
+                            Bcc: communication.mailBcc,
                             Subject: "Ordre de service d'intervention N°" + inter.id,
                             HtmlBody: text,
                             Attachments: files

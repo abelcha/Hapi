@@ -1430,7 +1430,6 @@ module.exports = {
             title: 'Client tel1',
             action: 'callTel1',
             hide: function(inter) {
-                console.log('=-:', inter)
                 return !inter.client.telephone.tel1
             }
         }, {
@@ -1475,6 +1474,12 @@ module.exports = {
         action: "ouvrirRecapSST",
         hide: function(inter) {
             return !inter.artisan || !inter.artisan.id
+        }
+    }, {
+        title: 'Reglement Client',
+        action: "validerReglement",
+        hide: function(inter) {
+            return !((app_session.root || app_session.service === 'COMPTABILITE') && inter.status === 'VRF');
         }
     }, {
         title: "SMS sous-traitant",
@@ -1592,10 +1597,15 @@ module.exports = {
         icon: 'check',
         id: 1
     }, {
-        title: 'A Payé',
+        title: 'En Cours',
         color: 'orange',
         icon: 'refresh fa-spin',
         id: 2
+    }, {
+        title: 'Imminent',
+        color: 'orange',
+        icon: ' ellipsis-h',
+        id: 3
     }],
     reglementClient: [{
         title: '',
@@ -2079,8 +2089,7 @@ module.exports = {
                 return sms + "Edison Services."
             },
             demande: function(user) {
-                console.log(this.artisan)
-                return "Bonjour M. " + this.artisan.representant.nom + ", nous cherchons a vous joindre pour une intervention de vitrerie à faire aujourd'hui.\n" +
+                return "Bonjour M. " + _.get(this, 'sst.representant.nom', '') + ", nous cherchons a vous joindre pour une intervention de vitrerie à faire aujourd'hui.\n" +
                     "Pourriez-vous vous rendre disponible ?\n" +
                     "Merci de nous contacter au plus vite au 09.72.42.30.00.\n" +
                     "Merci d'avance pour votre réponse.\n" +

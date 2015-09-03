@@ -106,7 +106,6 @@ module.exports = {
             title: 'Client tel1',
             action: 'callTel1',
             hide: function(inter) {
-                console.log('=-:', inter)
                 return !inter.client.telephone.tel1
             }
         }, {
@@ -151,6 +150,12 @@ module.exports = {
         action: "ouvrirRecapSST",
         hide: function(inter) {
             return !inter.artisan || !inter.artisan.id
+        }
+    }, {
+        title: 'Reglement Client',
+        action: "validerReglement",
+        hide: function(inter) {
+            return !((app_session.root || app_session.service === 'COMPTABILITE') && inter.status === 'VRF');
         }
     }, {
         title: "SMS sous-traitant",

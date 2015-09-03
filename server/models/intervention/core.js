@@ -133,6 +133,8 @@
                 return 1;
             } else if (e.compta.reglement.recu) {
                 return 2
+            } else if (e.compta.paiement.ready){
+                return 3
             } else {
                 return 0
             }
@@ -328,8 +330,6 @@
         rtn.remarque = d.remarque || "PAS DE REMARQUES";
 
         rtn.modeReglement = d.mode_reglement;
-        rtn.prixAnnonce = d.prix_ht_annonce;
-        rtn.prixFinal = d.comptaPrixFinal || d.prix_ht_final;
 
 
         if (rtn.status === 'INT' || rtn.status === 'ENC') {
@@ -353,6 +353,13 @@
                     quantite: 1
                 }]
             }
+        }
+
+        rtn.prixAnnonce = d.prix_ht_annonce;
+        rtn.prixFinal = d.comptaPrixFinal || d.prix_ht_final ||  undefined;
+        if (!rtn.prixFinal && rtn.status === 'VRF') {
+            console.log('here')
+            rtn.prixFinal = rtn.prixAnnonce || 0;
         }
 
         rtn.reglementSurPlace = !d.fact;

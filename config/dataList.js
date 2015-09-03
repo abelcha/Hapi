@@ -74,10 +74,15 @@ module.exports = {
         icon: 'check',
         id: 1
     }, {
-        title: 'A Payé',
+        title: 'En Cours',
         color: 'orange',
         icon: 'refresh fa-spin',
         id: 2
+    }, {
+        title: 'Imminent',
+        color: 'orange',
+        icon: ' ellipsis-h',
+        id: 3
     }],
     reglementClient: [{
         title: '',

@@ -25,6 +25,24 @@ angular.module('edison').factory('dialog', function($mdDialog, edisonAPI, config
                 templateUrl: '/DialogTemplates/verification.html',
             });
         },
+        validationReglement: function(inter, cb) {
+            $mdDialog.show({
+                controller: function DialogController($scope, $mdDialog) {
+                    $scope.data = inter
+                    $scope.answer = function(resp) {
+                        $scope.data = inter;
+                        $mdDialog.hide();
+                        if (resp === null) {
+                            return cb('nope')
+                        } 
+                        $scope.data.compta.reglement.recu = resp;
+                        console.log('-->',  resp)
+                        return cb(null, $scope.data);
+                    }
+                },
+                templateUrl: '/DialogTemplates/validationReglement.html',
+            });
+        },
         facturierDeviseur: function(artisan, cb) {
             $mdDialog.show({
                 controller: function DialogController($scope, $mdDialog, config) {

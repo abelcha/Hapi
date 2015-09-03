@@ -1,39 +1,38 @@
 <div>
-    <div class="card margin" ng-init="reglement = data.compta.reglement;paiement = data.compta.paiement;info = data.compta.info">
+    <div class="card margin" ng-if="displayReglement !== 'false'" ng-init="reglement = data.compta.reglement;paiement = data.compta.paiement;info = data.compta.info">
         <div class="p+">
-            <strong class="fs-headline display-block">Reglement Client </strong>
+            <strong class="fs-headline display-block">Reglement Client <span ng-if="dialog" text-sm> (Prix Final: {{data.prixFinal}} €)</span></strong>
             <div class="paragraph fs-body-1 mt+">
                 <div class="row">
-                    <div class="col-md-2">
+                    <div ng-class="dialog ? 'col-md-4' : 'col-md-2'">
                         <lx-text-field label="Montant Recu TTC">
                             <input ng-model="reglement.montantTTC" type="number" ng-disabled="reglement.recu">
                         </lx-text-field>
                     </div>
-                    <div class="col-md-2">
+                    <div ng-class="dialog ? 'col-md-4' : 'col-md-2'">
                         <select class="form-control" ng-model="data.tva" ng-disabled="reglement.recu" ng-options="tva.short_name as tva.long_name for tva in config.tva"></select>
                     </div>
-                    <div class="col-md-2 ">
+                    <div ng-class="dialog ? 'col-md-4' : 'col-md-2'">
                         <lx-text-field label="Montant Recu HT">
                             <input ng-model="reglement.montant" type="number" disabled="true">
                         </lx-text-field>
                     </div>
-                    <div class="switch" style="float:right;margin-right:30px">
+                    <div ng-if="!dialog" class="switch" style="float:right;margin-right:30px">
                         <input type="checkbox" id="switch2" ng-model="reglement.recu" class="switch__input">
                         <label for="switch2" class="switch__label">Encaissé</label>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-2" ng-if="reglement.recu && reglement.historique.length">
+                    <div ng-class="dialog ? 'col-md-4' : 'col-md-2'" ng-if="reglement.recu && reglement.historique.length">
                         <lx-text-field label="Avoir">
                             <input min="0" ng-disabled="reglement.avoir.effectue" ng-model="reglement.avoir.montant" type="number">
                         </lx-text-field>
-                        <!--   <span ng-bind="round(data.prixFinal * ((data.tva / 100) + 1))"></span>-->
                     </div>
                     <div ng-if="reglement.avoir._type" class="switch" style="float:right;margin-right:30px">
                         <input type="checkbox" id="flav" ng-model="reglement.avoir.effectue" disabled="true" class="switch__input">
                         <label for="flav" class="switch__label">Effectué</label>
                     </div>
-                    <div ng-if="reglement.avoir.montant > 0 && reglement.historique.length" class="col-md-2">
+                    <div ng-if="reglement.avoir.montant > 0 && reglement.historique.length" ng-class="dialog ? 'col-md-4' : 'col-md-2'" >
                         <select class="form-control" ng-disabled="reglement.avoir.effectue" ng-model="reglement.avoir._type" ng-options="ta.short_name as ta.long_name for ta in config.typeAvoir"></select>
                     </div>
                 </div>
@@ -66,7 +65,7 @@
             <br>
         </div>
     </div>
-    <div class="card margin" >
+    <div class="card margin" ng-if="displayPaiement !== 'false'" >
         <div class="p+">
             <strong class="fs-headline display-block">Paiement Sous-Traitant</strong>
             <br>

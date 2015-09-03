@@ -6,6 +6,9 @@ angular.module('edison').directive('infoCompta', ['config', 'Paiement',
             templateUrl: '/Templates/info-compta.html',
             scope: {
                 data: "=",
+                displayReglement:'@',
+                dialog:'@',
+                displayPaiement:'@',
             },
             link: function(scope, element, attrs) {
                 scope.config = config

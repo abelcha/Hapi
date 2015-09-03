@@ -76,7 +76,6 @@ angular.module('edison').factory('ContextMenu', function($rootScope, $location, 
         if (typeof link.action === 'function') {
             return link.action(this.getData())
         } else if (typeof link.action === 'string') {
-            console.log(this.data);
             return this.modelObject[this.model]()[link.action].bind(this.data)();
         } else {
             console.error("error here")
