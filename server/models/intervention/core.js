@@ -358,7 +358,6 @@
         rtn.prixAnnonce = d.prix_ht_annonce;
         rtn.prixFinal = d.comptaPrixFinal || d.prix_ht_final ||  undefined;
         if (!rtn.prixFinal && rtn.status === 'VRF') {
-            console.log('here')
             rtn.prixFinal = rtn.prixAnnonce || 0;
         }
 

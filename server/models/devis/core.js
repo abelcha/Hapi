@@ -192,7 +192,6 @@
                 return p
             });
 
-            console.log(rtn.produits);
             /* FACTURE */
             rtn.reglementSurPlace = !d.fact;
 

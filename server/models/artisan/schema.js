@@ -81,7 +81,7 @@ module.exports = function(db) {
         },
         loc: {
             type: [Number],
-            index: '2d'
+            index: '2dsphere'
         },
         absences: {
             start: Date,
