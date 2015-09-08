@@ -61,7 +61,7 @@ Mobyt.prototype.send = function(params) {
         var f = {
             user: _this.user,
             pass: _this.pass,
-            data: params.text,
+            data: params.text + "\nSTOP 36608",
             rcpt: params.to.length == 10 ? params.to.replace('0', '+33') : params.to,
             sender: 'Edison Srv.',
             qty: 'n',
