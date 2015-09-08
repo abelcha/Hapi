@@ -36,6 +36,12 @@
                      }
                  }, true)
 
+                 scope.changeElemTitle = function(elem) {
+                    if (!elem.showDesc) {
+                        elem.desc = elem.title
+                    }
+                 }
+
                  scope.createProd = function() {
                      /*                     scope.produits.add({
                                               ref: 'EDIXX',
@@ -45,7 +51,7 @@
                                               focus: true,
                                           })*/
                     model.produits.push({
-                        showDesc:true,
+                        showDesc:false,
                         desc:'',
                         title:'',
                         pu:0,

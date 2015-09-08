@@ -32,7 +32,7 @@
                         <input ng-focus="p.focus" type="text" class="xref form-control" ng-model="p.ref">
                     </td>
                     <td style="width:40%">
-                        <input capitalize type="text" style="width: 93%;display: inline;" placeholder="description" class="form-control" ng-model="p.title">
+                        <input capitalize type="text" style="width: 93%;display: inline;" placeholder="description" class="form-control" ng-model="p.title" ng-change="changeElemTitle(p)">
                        <!--  <button ng-click="produits.edit($index)" class="btn--no-conflicts btn--l btn--black btn--icon">
                             <i class="fa fa-plus"></i>
                         </button> -->

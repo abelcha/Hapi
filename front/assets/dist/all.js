@@ -1973,6 +1973,10 @@ angular.module('edison')
 
         Devis.prototype.sendDevis = function(cb) {
             var _this = this;
+            if (!/\S+@\S+\.\S+/.test(_this.client.email)) {
+                LxNotificationService.error("L'addresse email est invalide");
+                return cb("err");
+            }
             var preview = Devis(this).devisPreview.bind(this)
             dialog.getTextDevis(preview, {
                 text: textTemplate.mail.devis.envoi.bind(_this)($rootScope.user),
@@ -3944,6 +3948,12 @@ angular.module('edison').directive('infoCompta', ['config', 'Paiement',
                      }
                  }, true)
 
+                 scope.changeElemTitle = function(elem) {
+                    if (!elem.showDesc) {
+                        elem.desc = elem.title
+                    }
+                 }
+
                  scope.createProd = function() {
                      /*                     scope.produits.add({
                                               ref: 'EDIXX',
@@ -3953,7 +3963,7 @@ angular.module('edison').directive('infoCompta', ['config', 'Paiement',
                                               focus: true,
                                           })*/
                     model.produits.push({
-                        showDesc:true,
+                        showDesc:false,
                         desc:'',
                         title:'',
                         pu:0,

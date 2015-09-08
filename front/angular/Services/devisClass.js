@@ -65,6 +65,10 @@ angular.module('edison')
 
         Devis.prototype.sendDevis = function(cb) {
             var _this = this;
+            if (!/\S+@\S+\.\S+/.test(_this.client.email)) {
+                LxNotificationService.error("L'addresse email est invalide");
+                return cb("err");
+            }
             var preview = Devis(this).devisPreview.bind(this)
             dialog.getTextDevis(preview, {
                 text: textTemplate.mail.devis.envoi.bind(_this)($rootScope.user),
