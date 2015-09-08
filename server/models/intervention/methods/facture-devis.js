@@ -156,7 +156,7 @@ module.exports = function(schema) {
                         }]
                     }).then(function(resp) {
                         if (req.body.acquitte) {
-                            return resolve(resp);
+                            return resolve("OK");
                         }
                         db.model('intervention').findOne({
                             id: inter.id
