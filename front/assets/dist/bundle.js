@@ -2088,6 +2088,7 @@ module.exports = {
                 sms += "Ligne direct: " + (user.ligne ||  "09.72.42.30.00") + "\n";
                 return sms + "Edison Services."
             },
+            annulation: "L'intervention {{id}} chez {{client.civilite}} {{client.nom}} à {{client.address.v}} le {{datePlain}} a été annulé. \nMerci de ne pas intervenir. \nEdison Services",
             demande: function(user) {
                 return "Bonjour M. " + _.get(this, 'sst.representant.nom', '') + ", nous cherchons a vous joindre pour une intervention de vitrerie à faire aujourd'hui.\n" +
                     "Pourriez-vous vous rendre disponible ?\n" +
@@ -2099,7 +2100,7 @@ module.exports = {
             }
         }
     },
-    
+
     lettre: {
         intervention: {
             envoiFacture: function() {

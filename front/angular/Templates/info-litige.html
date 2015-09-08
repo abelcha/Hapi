@@ -4,7 +4,7 @@
             <strong class="fs-headline display-block">Litiges</strong>
             <span class="fs-subhead tc-black-2 display-block">Problème sur l'intervention</span>
             <br>
-            <textarea ng-disabled="data.litige.description && data.litige.open === false" elastic class="form-control" placeholder="Description" ng-change="descriptionChange()" ng-model="data.litige.description" capitalize></textarea>
+            <textarea ng-disabled="data.litige.description && data.litige.open === false" elastic class="form-control" placeholder="Description" ng-change="descriptionChange()" ng-model="data.litige.description"></textarea>
             <md-switch class="md-primary" md-no-ink aria-label="xxx" ng-model="data.litige.open" style="padding: 0px;margin-top: 5px;">
                 <span bold ng-if="data.litige.description && data.litige.open">Ouvert </span>
                 <span bold ng-if="data.litige.description && !data.litige.open">Fermé</span>

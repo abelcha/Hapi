@@ -34,9 +34,9 @@ angular.module('edison').factory('dialog', function($mdDialog, edisonAPI, config
                         $mdDialog.hide();
                         if (resp === null) {
                             return cb('nope')
-                        } 
+                        }
                         $scope.data.compta.reglement.recu = resp;
-                        console.log('-->',  resp)
+                        console.log('-->', resp)
                         return cb(null, $scope.data);
                     }
                 },
@@ -152,17 +152,22 @@ angular.module('edison').factory('dialog', function($mdDialog, edisonAPI, config
                 templateUrl: '/DialogTemplates/getProd.html',
             });
         },
-        getCauseAnnulation: function(cb) {
+        getCauseAnnulation: function(inter, cb) {
             $mdDialog.show({
                 controller: function($scope, config) {
                     $scope.causeAnnulation = config.causeAnnulation;
+                    inter.datePlain = moment(inter.date.intervention).format('DD/MM/YYYY')
+                    $scope.textSms = _.template("L'intervention {{id}} chez {{client.civilite}} {{client.nom}} à {{client.address.v}} le {{datePlain}} a été annulé. \nMerci de ne pas intervenir. \nEdison Services")(inter)
                     $scope.answer = function(resp) {
-                        if (!$scope.ca && resp)
+                        if (!resp) {
+                            return LxNotificationService.error("Veuillez renseigner une raison d'annulation");
+                        }
+                        if (!$scope.ca)
                             return cb('nope');
                         $mdDialog.hide();
                         if (resp)
-                            return cb(null, resp, $scope.reinit);
-                        return cb('nop')
+                            return cb(null, resp, $scope.reinit, $scope.sendSms, $scope.textSms);
+                        return cb('nope');
                     }
                 },
                 templateUrl: '/DialogTemplates/causeAnnulation.html',

@@ -10,6 +10,12 @@
         <md-switch style="margin-top: 6px;" class="md-primary" md-no-ink aria-label="Switch No Ink" ng-model="reinit">
             A Programmer
         </md-switch>
+        <md-switch style="margin-top: 6px;" class="md-primary" md-no-ink aria-label="Switch No Ink" ng-model="sendSms">
+            SMS
+        </md-switch>
+        <div style="padding:15px">
+            <textarea ng-if="sendSms" elastic class="form-control" ng-model="textSms" placeholder="SMS..."></textarea>
+        </div>
     </md-dialog-content>
     <div class="md-actions" layout="row">
         <md-button ng-click="answer()" class="md-primary black-text">

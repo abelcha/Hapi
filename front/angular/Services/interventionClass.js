@@ -260,13 +260,16 @@ angular.module('edison')
 
         Intervention.prototype.annulation = function(cb) {
             var _this = this;
-            dialog.getCauseAnnulation(function(err, causeAnnulation, reinit) {
+            dialog.getCauseAnnulation(_this, function(err, causeAnnulation, reinit, sms, textSms) {
+                console.log(err, causeAnnulation, reinit, sms, textSms)
                 if (err) {
-                    return cb('err');
+                    return typeof cb === 'function' && cb('err');
                 }
                 edisonAPI.intervention.annulation(_this.id, {
                         causeAnnulation: causeAnnulation,
-                        reinit: reinit
+                        reinit: reinit,
+                        sms:sms,
+                        textSms:textSms
                     })
                     .then(function(resp) {
                         var validationMessage = _.template("L'intervention {{id}} est annulé")(resp.data)
