@@ -17,6 +17,7 @@ module.exports = function(schema) {
 
     schema.pre('save', function(next) {
         var _this = this;
+        _this.loc = [_this.address.lt, _this.address.lg]
         if (_this.status !== 'ARC') {
             db.model("intervention").find({
                 'artisan.id': _this.id
