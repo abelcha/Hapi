@@ -75,6 +75,7 @@ Mobyt.prototype.send = function(params) {
                 form: f
             })
             .then(function(response) {
+                console.log('===>', response)
                 if (response.startsWith('OK')) {
                     params.id = response.substr(3);
                     resolve(params);
@@ -82,6 +83,8 @@ Mobyt.prototype.send = function(params) {
                     reject(response);
                 }
             }, function(err) {
+                console.log('===>', err)
+
                 reject(err);
             });
     });
