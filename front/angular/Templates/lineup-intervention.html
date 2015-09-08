@@ -28,13 +28,13 @@
                     </td>
                     <td data-title="'Intervention'" sortable="'di'" filter="{ 'di': 'text' }">
                         <div ng-show="inter.di[0] != 1">
-                            {{inter.di | relativeDate}}
+                            {{inter.di | relativeDate:smallWin}}
                         </div>
                     </td>
                     <td data-title="'Prix'" sortable="'pa'" filter="{ 'pa': 'text' }">
                         {{(inter.pa | number:2) || 0}} €
                     </td>
-                    <td ng-init="inter._status = config.etatsHash()[inter.s];inter._etat = inter._status.long_name" data-title="'Status'" sortable="'s'" filter="{ '_etat': 'text' }">
+                    <td ng-init="inter._status = config.etatsHash()[inter.s];inter._etat = inter._status.long_name" data-title="smallWin ? 'S' : 'Status'" sortable="'s'" filter="{ '_etat': 'text' }">
                         <span ng-if="!smallWin" style="width:75px" class="label {{config.etatsHash()[inter.s].color}} display-block"> 
                         {{config.etatsHash()[inter.s].long_name}}</span>
                         <span ng-if="smallWin" style="width:34px" class="label {{config.etatsHash()[inter.s].color}} display-block"> 
