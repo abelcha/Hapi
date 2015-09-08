@@ -31,13 +31,17 @@
                     request(core.multiDumpUrl(limit), function(err, rest, body) {
                         console.timeEnd('request')
                         var data = JSON.parse(body);
-                        console.time('dump')
                         var i = 0;
+                        console.time('dump')
                         async.eachSeries(data, function(e, callback) {
                             if (++i % 100 == 0)
                                 console.log(_.round(i / data.length * 100, 2), "%")
                             core.model()(core.toV2(e)).save(callback);
                         }, function(err, resp) {
+                            console.timeEnd('dump')
+                            if (err) {
+                                return resolve(err);
+                            }
                             core.model().fullReload().then(resolve, reject)
                         })
                     });

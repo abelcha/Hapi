@@ -6,9 +6,9 @@ module.exports = function(schema) {
         var config = requireLocal('config/dataList')
         var _ = require('lodash')
         return new Promise(function(resolve, reject) {
-
             db.model('intervention').find().limit(req.query.limit || 1000).then(function(docs) {
                 var rtn = "";
+                console.log('-->', docs.length)
                 _.each(docs, function(e) {
 
                     e.__cat = config.categories[e.categorie].long_name
