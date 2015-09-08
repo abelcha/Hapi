@@ -100,7 +100,8 @@ var V1 = function(d, devis, legacy) {
                 x.cout_fourniture += (e.quantite * e.pu)
             })
             x.fournisseur = d.fourniture[0].fournisseur
-            x.fourniture_sst = Number(d.fourniture[0].fournisseur == "") + 1;
+            x.fourniture_sst = Number(d.fourniture[0].fournisseur !== "ARTISAN") + 1;
+            console.log('FFF-->', x.fournisseur, x.fourniture_sst)
             //x.fourniture_edison = Number(d.fourniture[0].fournisseur != "")
             x.tva_facture = d.tva;
         }
