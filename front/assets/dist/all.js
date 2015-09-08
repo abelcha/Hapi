@@ -1846,6 +1846,13 @@ angular.module('edison').factory('ContextMenu', function($rootScope, $location, 
         artisan: Artisan
     }
 
+    ContextMenu.prototype.tooltip = function(link) {
+        if (link.binding) {
+            return _.get(this.data, link.binding, '');
+        }
+        return '';
+    }
+
     ContextMenu.prototype.click = function(link) {
         if (typeof link.action === 'function') {
             return link.action(this.getData())

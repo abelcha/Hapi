@@ -41,6 +41,10 @@ module.exports = {
         subs: [{
             title: 'Client tel1',
             action: 'callTel1',
+            href: function(inter) {
+                console.log('-->sqdqds')
+                return inter.client.telephone.tel1
+            },
             hide: function(inter) {
                 return !inter.client.telephone.tel1
             }
@@ -105,42 +109,49 @@ module.exports = {
         subs: [{
             title: 'Client tel1',
             action: 'callTel1',
+            binding: 'client.telephone.tel1',
             hide: function(inter) {
                 return !inter.client.telephone.tel1
             }
         }, {
             title: 'Client tel2',
             action: 'callTel2',
+            binding: 'client.telephone.tel2',
             hide: function(inter) {
                 return !inter.client.telephone.tel2
             }
         }, {
             title: 'Client tel3',
             action: 'callTel3',
+            binding: 'client.telephone.tel3',
             hide: function(inter) {
                 return !inter.client.telephone.tel3
             }
         }, {
             title: 'Sous-traitant tel1',
             action: 'callSst1',
+            binding: 'sst.telephone.tel1',
             hide: function(inter) {
                 return !inter.sst || !inter.sst.telephone.tel1
             }
         }, {
             title: 'Sous-traitant tel2',
             action: 'callSst2',
+            binding: 'sst.telephone.tel2',
             hide: function(inter) {
                 return !inter.sst || !inter.sst.telephone.tel2
             }
         }, {
             title: 'Payeur tel1',
             action: 'callPayeur1',
+            binding: 'sst.facture.tel',
             hide: function(inter) {
                 return !inter.facture || !inter.facture.tel
             }
         }, {
             title: 'Payeur tel2',
             action: 'callPayeur2',
+            binding: 'sst.facture.tel2',
             hide: function(inter) {
                 return !inter.facture || !inter.facture.tel2
             }
@@ -155,7 +166,7 @@ module.exports = {
         title: 'Reglement Client',
         action: "validerReglement",
         hide: function(inter) {
-            return !((app_session.root || app_session.service === 'COMPTABILITE') && inter.status === 'VRF');
+            return !((app_session.root ||  app_session.service === 'COMPTABILITE') && inter.status === 'VRF');
         }
     }, {
         title: "SMS sous-traitant",
