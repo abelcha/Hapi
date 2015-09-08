@@ -991,7 +991,7 @@ angular.module('edison').filter('relativeDate', function() {
             return d.format('DD/MM/YY')
         } else {
             var x = d.fromNow().toString()
-            if (smallWin) {
+            /*if (smallWin) {
                 x = x.replace('heures', 'H')
                     .replace('heures', 'H')
                     .replace('jours', 'J')
@@ -999,7 +999,7 @@ angular.module('edison').filter('relativeDate', function() {
                     .replace('il y a ', '- ')
                     .replace('dans ', '+ ')
                     .replace('un ', '1 ')
-            }
+            }*/
             return x;
         }
         // return moment((date + 1370000000) * 1000).fromNow(no).toString()
@@ -1075,6 +1075,61 @@ angular.module("edison").filter('tableFilter', ['config', function(config) {
         return rtn;
     }
 }]);
+
+ angular.module('edison').directive('infoFacture', ['config', 'mapAutocomplete',
+     function(config, mapAutocomplete) {
+         "use strict";
+         return {
+             restrict: 'E',
+             templateUrl: '/Templates/info-facture.html',
+             scope: {
+                 data: "=",
+             },
+             link: function(scope, element, attrs) {
+                 var model = scope.data;
+                 scope.config = config
+                 scope.autocomplete = mapAutocomplete;
+                 scope.changeAddressFacture = function(place) {
+                     mapAutocomplete.getPlaceAddress(place).then(function(addr) {
+                         scope.data.facture = scope.data.facture ||  {}
+                         scope.data.facture.address = addr;
+                     });
+                 }
+                 scope.changeGrandCompte = function() {
+                     // var x = _.clone(config.compteFacturation[scope.data.facture.compte])
+                     scope.data.facture = _.find(config.compteFacturation, {
+                         short_name: scope.data.facture.compte
+                     });
+                     scope.data.facture.payeur = "GRN";
+                 }
+             },
+         }
+
+     }
+ ]);
+
+angular.module('edison').directive('infoFourniture', ['config', 'fourniture',
+    function(config, fourniture) {
+        "use strict";
+        return {
+            restrict: 'E',
+            templateUrl: '/Templates/info-fourniture.html',
+            scope: {
+                data: "=",
+                display: "=",
+                small:"="
+            },
+            link: function(scope, element, attrs) {
+                scope.config = config
+                scope.dsp = scope.display || false
+                scope.data.fourniture = scope.data.fourniture || [];
+                scope.fourniture = fourniture.init(scope.data.fourniture);
+            },
+        }
+
+    }
+]);
+
 
 angular.module('edison').factory('Signalement', function() {
     "use strict";
@@ -3280,61 +3335,6 @@ angular.module('edison').factory('user', function($window) {
     "use strict";
     return $window.app_session;
 });
-
- angular.module('edison').directive('infoFacture', ['config', 'mapAutocomplete',
-     function(config, mapAutocomplete) {
-         "use strict";
-         return {
-             restrict: 'E',
-             templateUrl: '/Templates/info-facture.html',
-             scope: {
-                 data: "=",
-             },
-             link: function(scope, element, attrs) {
-                 var model = scope.data;
-                 scope.config = config
-                 scope.autocomplete = mapAutocomplete;
-                 scope.changeAddressFacture = function(place) {
-                     mapAutocomplete.getPlaceAddress(place).then(function(addr) {
-                         scope.data.facture = scope.data.facture ||  {}
-                         scope.data.facture.address = addr;
-                     });
-                 }
-                 scope.changeGrandCompte = function() {
-                     // var x = _.clone(config.compteFacturation[scope.data.facture.compte])
-                     scope.data.facture = _.find(config.compteFacturation, {
-                         short_name: scope.data.facture.compte
-                     });
-                     scope.data.facture.payeur = "GRN";
-                 }
-             },
-         }
-
-     }
- ]);
-
-angular.module('edison').directive('infoFourniture', ['config', 'fourniture',
-    function(config, fourniture) {
-        "use strict";
-        return {
-            restrict: 'E',
-            templateUrl: '/Templates/info-fourniture.html',
-            scope: {
-                data: "=",
-                display: "=",
-                small:"="
-            },
-            link: function(scope, element, attrs) {
-                scope.config = config
-                scope.dsp = scope.display || false
-                scope.data.fourniture = scope.data.fourniture || [];
-                scope.fourniture = fourniture.init(scope.data.fourniture);
-            },
-        }
-
-    }
-]);
-
 
 var archiveReglementController = function(edisonAPI, tabContainer, $routeParams, $location, LxProgressService) {
 

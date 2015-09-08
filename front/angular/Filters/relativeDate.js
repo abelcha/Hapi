@@ -7,7 +7,7 @@ angular.module('edison').filter('relativeDate', function() {
             return d.format('DD/MM/YY')
         } else {
             var x = d.fromNow().toString()
-            if (smallWin) {
+            /*if (smallWin) {
                 x = x.replace('heures', 'H')
                     .replace('heures', 'H')
                     .replace('jours', 'J')
@@ -15,7 +15,7 @@ angular.module('edison').filter('relativeDate', function() {
                     .replace('il y a ', '- ')
                     .replace('dans ', '+ ')
                     .replace('un ', '1 ')
-            }
+            }*/
             return x;
         }
         // return moment((date + 1370000000) * 1000).fromNow(no).toString()
