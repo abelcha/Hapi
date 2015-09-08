@@ -88,6 +88,37 @@ angular.module('edison')
         }
 
 
+        Intervention.prototype.sendFactureAcquitte = function(cb) {
+            var _this = this;
+            var datePlain = moment(this.date.intervention).format('LL');
+            console.log(_this)
+            var template = textTemplate.mail.intervention.factureAcquitte.bind(_this)(datePlain)
+            var mailText = (_.template(template)(this))
+            dialog.envoiFacture(_this, mailText, true, function(err, text, acquitte, date) {
+                if (err)
+                    return cb('nope')
+                LxProgressService.circular.show('#5fa2db', '#globalProgress');
+                edisonAPI.intervention.sendFacture(_this.id, {
+                    text: text,
+                    acquitte: acquitte,
+                    date: date
+                }).success(function(resp) {
+                    console.log('--->', resp)
+                    LxProgressService.circular.hide();
+                    var validationMessage = _.template("La facture de l'intervention {{id}} à été envoyé")(_this)
+                    LxNotificationService.success(validationMessage);
+                    if (typeof cb === 'function')
+                        cb(null, resp);
+                }).catch(function(err) {
+                    LxProgressService.circular.hide();
+                    var validationMessage = _.template("L'envoi de la facture {{id}} à échoué\n" + "(" + err.data + ")")(_this)
+                    LxNotificationService.error(validationMessage);
+                    if (typeof cb === 'function')
+                        cb(err);
+                })
+            })
+        }
+
         Intervention.prototype.sendFacture = function(cb) {
             var _this = this;
             var datePlain = moment(this.date.intervention).format('LL');
@@ -268,8 +299,8 @@ angular.module('edison')
                 edisonAPI.intervention.annulation(_this.id, {
                         causeAnnulation: causeAnnulation,
                         reinit: reinit,
-                        sms:sms,
-                        textSms:textSms
+                        sms: sms,
+                        textSms: textSms
                     })
                     .then(function(resp) {
                         var validationMessage = _.template("L'intervention {{id}} est annulé")(resp.data)

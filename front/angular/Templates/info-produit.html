@@ -13,7 +13,7 @@
         <table ng-if="displayfact" class="table table-bordered produits">
             <thead>
                 <tr>
-                <th><i class="fa fa-plus"></i></th>
+                    <th><i class="fa fa-plus"></i></th>
                     <th>Référence</th>
                     <th>Désignation</th>
                     <th>Q</th>
@@ -24,8 +24,8 @@
             </thead>
             <tbody>
                 <tr ng-repeat-start="p in data.produits track by $index">
-                    <td  style="width:1%">
-                        <md-checkbox ng-model="p.showDesc" aria-label="Checkbox 2"   class="md-warn md-align-top-left">
+                    <td style="width:1%">
+                        <md-checkbox ng-model="p.showDesc" aria-label="Checkbox 2" class="md-warn md-align-top-left">
                         </md-checkbox>
                     </td>
                     <td style="width:10%">
@@ -33,7 +33,7 @@
                     </td>
                     <td style="width:40%">
                         <input capitalize type="text" style="width: 93%;display: inline;" placeholder="description" class="form-control" ng-model="p.title" ng-change="changeElemTitle(p)">
-                       <!--  <button ng-click="produits.edit($index)" class="btn--no-conflicts btn--l btn--black btn--icon">
+                        <!--  <button ng-click="produits.edit($index)" class="btn--no-conflicts btn--l btn--black btn--icon">
                             <i class="fa fa-plus"></i>
                         </button> -->
                     </td>
@@ -95,6 +95,7 @@
                        <button ng-click="createProd()" class="btn--no-conflicts btn--m btn--black btn--flat" lx-ripple>Ajout produit</button>
                         <button ng-click="Devis(data).devisPreview()" class="btn--no-conflicts btn--m btn--black btn--flat" lx-ripple>Voir devis</button>
                         <button  ng-if="model !== 'DEVIS' && !data.reglementSurPlace"  ng-click="Intervention(data).facturePreview()" class="btn--no-conflicts btn--m btn--black btn--flat" lx-ripple>Voir Facture</button>
+ <button  ng-if="model !== 'DEVIS' && data.status === 'ENC' || data.status === 'VRF' "  ng-click="Intervention(data).sendFactureAcquitte(null, true)" class="btn--no-conflicts btn--m btn--black btn--flat" lx-ripple>Envoyer Facture Acquitte</button>
 
                         <a href="/devis?i={{data.id}}"ng-if="model !== 'DEVIS' && data.id">
                         <button  class="btn--no-conflicts btn--m btn--black btn--flat" lx-ripple>

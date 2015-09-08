@@ -2153,6 +2153,15 @@ module.exports = {
     },
     mail: {
         intervention: {
+            factureAcquitte: function() {
+                return "Bonjour\n" +
+                    "Vous trouverez ci-joint la facture acquitté de l'intervention {{id}}\n" +
+                    "Cordialement\n" +
+                    "\n" +
+                    "Service Comptabilité - Edison Services\n" +
+                    "Tél. 09.72.51.08.01 (Ouvert de 09h00 à 12h30 / 14h00 à 16h30)\n" +
+                    "Fax. 09.72.39.33.46\n";
+            },
             envoiFacture: function(datePlain) {
 
                 return "Bonjour\n" +

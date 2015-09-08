@@ -58,13 +58,13 @@ angular.module('edison').factory('dialog', function($mdDialog, edisonAPI, config
                 templateUrl: '/DialogTemplates/facturierDeviseur.html',
             });
         },
-        envoiFacture: function(inter, text, options, cb) {
+        envoiFacture: function(inter, text, showAcquitte, cb) {
             $mdDialog.show({
                 controller: function DialogController($scope, $mdDialog) {
                     $scope.text = text
                     $scope.date = new Date();
-                    $scope.options = options
-                    $scope.acquitte = false;
+                    $scope.showAcquitte = showAcquitte;
+                    $scope.acquitte = showAcquitte;
                     $scope.answer = function(cancel) {
                         $mdDialog.hide();
                         if (!cancel) {

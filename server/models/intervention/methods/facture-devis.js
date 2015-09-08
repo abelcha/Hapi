@@ -93,7 +93,7 @@ module.exports = function(schema) {
         findBefore: true,
         method: 'POST',
         fn: function(inter, req, res) {
-
+            console.log('============sweg')
             return new Promise(function(resolve, reject) {
 
                 var f = inter.facture;
@@ -109,7 +109,7 @@ module.exports = function(schema) {
                     inter.login.envoiFacture = req.session.login;
                     return inter.save().then(resolve, reject)
                 }
-
+                console.log('here')
                 if (!isWorker) {
                     return edison.worker.createJob({
                         name: 'db_id',
@@ -129,7 +129,8 @@ module.exports = function(schema) {
                     Promise.reject("Invalid Request")
                 }
                 try {
-                    var pdf = getFacturePdfObj(inter, inter.date.intervention);
+                    console.log(req.body)
+                    var pdf = getFacturePdfObj(inter, inter.date.intervention, req.body.acquitte, req.body.date);
 
                 } catch (e) {
                     reject(e)
