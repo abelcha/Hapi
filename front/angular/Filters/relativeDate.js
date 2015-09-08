@@ -6,9 +6,10 @@ angular.module('edison').filter('relativeDate', function() {
         if (d < l) {
             return d.format('DD/MM/YY')
         } else {
+        	console.log('-->', smallWin)
             var x = d.fromNow().toString()
             if (smallWin) {
-                return x.replace('heures', 'H')
+                x = x.replace('heures', 'H')
                     .replace('heures', 'H')
                     .replace('jours', 'J')
                     .replace('jour', 'J')

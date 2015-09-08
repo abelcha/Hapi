@@ -15,7 +15,7 @@
                          <span ng-if="!smallWin" style="width:40px" class="label {{config.categoriesHash()[inter.c].color}}">{{config.categoriesHash()[inter.c].long_name}}</span>
                     </td>
                     <td data-title="'Ajout'" sortable="'da'" filter="{ 'da': 'text' }">
-                        {{inter.da | relativeDate:true}}
+                        {{inter.da | relativeDate:smallWin}}
                     </td>
                     <td variable-length data-title="'Client'" sortable="'n'" filter="{ 'n': 'text' }">
                         {{inter.n}}
