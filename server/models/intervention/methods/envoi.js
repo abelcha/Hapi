@@ -27,7 +27,7 @@ module.exports = function(schema) {
             var path = [process.cwd(), 'front', 'assets', 'pdf', file].join('/')
             fs.readFile(path, function(err, buffer) {
                 if (err)
-                    return reject(err);
+                    return reject( err );
                 return resolve({
                     data: buffer,
                     name: String(file),
