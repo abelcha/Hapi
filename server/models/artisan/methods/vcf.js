@@ -6,11 +6,11 @@ module.exports = function(schema) {
         var config = requireLocal('config/dataList')
         var _ = require('lodash')
         return new Promise(function(resolve, reject) {
-            db.model('artisan').find().limit(req.query.limit || 10000).then(function(docs) {
-                var rtn = "";
-                console.log('-->', docs.length)
+            db.model('artisan').find().limit(req.query.limit ||  3000).then(function(docs) {
+                res.setHeader('Content-disposition', 'attachment; filename=' + "export_clientsV2.vcf");
+                res.setHeader('Content-type', "text/vcard");
                 _.each(docs, function(e) {
-
+                    var rtn = "";
                     rtn += "BEGIN:VCARD\n";
                     rtn += "VERSION:3.0\n" +
                         _.template("N: {{id}} {{representant.nom}} {{representant.prenom}} - {{address.cp}} {{address.v}}\n")(e) +
@@ -25,11 +25,8 @@ module.exports = function(schema) {
                     }
                     rtn += "END:VCARD\n";
 
-
                 })
-                res.setHeader('Content-disposition', 'attachment; filename=' + "export_clientsV2.vcf");
-                res.setHeader('Content-type', "text/vcard");
-                res.send(rtn)
+                res.end();
             })
         })
     }
