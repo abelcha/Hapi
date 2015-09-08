@@ -43,6 +43,7 @@
                 </ul>
                 </li>
                 </span>
+
                 <div id="main-navbar-collapse" class="collapse navbar-collapse main-navbar-collapse">
                     <!--  -->
                     <md-autocomplete class="searchBar" style="width: 100px;float: right;margin-top: 3px;margin-right: 40px;" md-search-text-change="null" md-min-length="3" md-selected-item-change="searchBox.change(selectedItem)" md-menu-class="autocomplete-custom-template" md-selected-item="selectedItem" md-search-text="searchText" md-autofocus="false" md-items="item in searchBox.search(searchText)" placeholder="Recherche..." md-item-text="item.description">
@@ -53,7 +54,8 @@
             </div>
             <!-- / .navbar-inner -->
         </div>
-        <side-bar ng-if="user.login && interventionsStats">
+        <side-bar ng-if="user.login && interventionsStats" ng-mouseenter="toggleSidebar(false)"
+        ng-mouseleave="toggleSidebar(true)">
             <drop-down id="service-intervention" title="Service Intervention" icon="circle" open-default="user.service === 'INTERVENTION'">
                 <link fltr="i_all" icon="th-list" title="Tous les Interventions"></link>
                 <drop-down title="Mes Interventions" icon="calendar" open-default="user.service === 'INTERVENTION'">
@@ -121,7 +123,7 @@
             </li>
         </side-bar>
         <div class="page-header" style="background: #f4f4f4 url(/img/mooning.png);">
-            <div class="menu-tabs">
+            <div class="menu-tabs" style="width:{{sideBarIsOpen ? '95%' : '86%'}}">
                 <md-tabs md-selected="tabs.selectedTab" style=" margin-left: 6px;">
                     <md-tab ng-repeat="tab in tabs._tabs" ng-click="shadowClick(tab.fullUrl)" style="padding-right:8px">
                         <md-tab-label><a id="{{tab.position}}_tab" href="{{tab.fullUrl}}">{{tab.title || "•••"}} </a><span ng-if="tab.hash" style="color:black;font-size:8px">{{tab.hash}}</span> <i ng-click="tabIconClick($event, tab)" class="fa fa-remove" style="padding: 7px;"></i></md-tab-label>
@@ -129,6 +131,7 @@
                 </md-tabs>
             </div>
             <div id="content-wrapper">
+
                 <div ng-view style="margin-top: 16px;">
                 </div>
                 <div id="globalProgress" style="position:fixed;top: 50%;left: 57%;z-index: 12222;">

@@ -18,7 +18,19 @@ angular.module('edison').controller('MainController', function($timeout, $q, Dat
         $window.scrollTo(0, 0);
         $rootScope.loadingData = false;
     });
+    $(window).resize(function() {
+        $rootScope.smallWin = window.innerWidth < 1200
+        if ($rootScope.smallWin) {
+            console.log('yuauy')
+            $rootScope.sideBarIsOpen = true;
+        }
+    })
 
+    $scope.toggleSidebar = function(open) {
+        if (open && !$rootScope.smallWin)
+            return 0;
+        $scope.sideBarIsOpen = open;
+    }
 
     $scope.changeUser = function(usr) {
         $rootScope.user = usr
@@ -89,7 +101,7 @@ angular.module('edison').controller('MainController', function($timeout, $q, Dat
     })
 
     $rootScope.openTab = function(tab) {
-        console.log('-->', tab);
+     //   console.log('-->', tab);
     }
 
     $rootScope.closeContextMenu = function() {
@@ -978,7 +990,6 @@ angular.module('edison').filter('relativeDate', function() {
         if (d < l) {
             return d.format('DD/MM/YY')
         } else {
-        	console.log('-->', smallWin)
             var x = d.fromNow().toString()
             if (smallWin) {
                 x = x.replace('heures', 'H')

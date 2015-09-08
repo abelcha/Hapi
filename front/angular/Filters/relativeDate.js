@@ -6,7 +6,6 @@ angular.module('edison').filter('relativeDate', function() {
         if (d < l) {
             return d.format('DD/MM/YY')
         } else {
-        	console.log('-->', smallWin)
             var x = d.fromNow().toString()
             if (smallWin) {
                 x = x.replace('heures', 'H')
