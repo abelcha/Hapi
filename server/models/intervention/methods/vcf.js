@@ -8,9 +8,9 @@ module.exports = function(schema) {
         return new Promise(function(resolve, reject) {
             db.model('intervention').find()
             .select('id client categorie')
-            .limit(req.query.limit || 2000).then(function(docs) {
+            .limit(req.query.limit || 3000).sort('-id').then(function(docs) {
                 console.log('-->', docs.length)
-                res.setHeader('Content-disposition', 'attachment; filename=' + "export_clientsV2.vcf");
+                res.setHeader('Content-disposition', 'attachment; filename=' + "exportClientsV2.vcf");
                 res.setHeader('Content-type', "text/vcard");
                 var i = 0;
                 _.each(docs, function(e) {

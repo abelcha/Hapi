@@ -6,8 +6,8 @@ module.exports = function(schema) {
         var config = requireLocal('config/dataList')
         var _ = require('lodash')
         return new Promise(function(resolve, reject) {
-            db.model('artisan').find().select('id representant address telephone').limit(req.query.limit ||  3000).then(function(docs) {
-                res.setHeader('Content-disposition', 'attachment; filename=' + "export_clientsV2.vcf");
+            db.model('artisan').find().sort('-id').select('id representant address telephone').limit(req.query.limit ||  3000).then(function(docs) {
+                res.setHeader('Content-disposition', 'attachment; filename=' + "exportArtisanV2.vcf");
                 res.setHeader('Content-type', "text/vcard");
                 _.each(docs, function(e) {
                     var rtn = "";
