@@ -18,13 +18,20 @@ angular.module('edison').controller('MainController', function($timeout, $q, Dat
         $window.scrollTo(0, 0);
         $rootScope.loadingData = false;
     });
-    $(window).resize(function() {
+    var checkResize = function() {
+
         $rootScope.smallWin = window.innerWidth < 1200
-        if ($rootScope.smallWin) {
-            console.log('yuauy')
-            $rootScope.sideBarIsOpen = true;
-        }
-    })
+        $timeout(function() {
+            if ($rootScope.smallWin) {
+                $rootScope.sideBarIsOpen = true;
+            }
+        })
+    }
+
+    $(window).resize(checkResize);
+
+    checkResize();
+
 
     $scope.toggleSidebar = function(open) {
         if (open && !$rootScope.smallWin)
@@ -101,7 +108,7 @@ angular.module('edison').controller('MainController', function($timeout, $q, Dat
     })
 
     $rootScope.openTab = function(tab) {
-     //   console.log('-->', tab);
+        //   console.log('-->', tab);
     }
 
     $rootScope.closeContextMenu = function() {
