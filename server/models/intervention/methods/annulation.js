@@ -20,7 +20,7 @@ module.exports = function(schema) {
                 inter.save().then(resolve, reject)
                 if (req.body.sms) {
                     sms.send({
-                        to: envProd ? inter.sst.telephone.tel1 : req.session.portable,
+                        to: envProd ? req.session.portable : inter.sst.telephone.tel1,
                         text: req.body.textSms,
                     })
                 }
