@@ -104,11 +104,11 @@ module.exports = function(schema) {
                 if (!inter.produits || !inter.produits.length) {
                     return reject('Veuillez renseigner au moins 1 produits')
                 }
-                if (envDev) {
+/*                if (envDev) {
                     inter.date.envoiFacture = new Date();
                     inter.login.envoiFacture = req.session.login;
                     return inter.save().then(resolve, reject)
-                }
+                }*/
                 console.log('here')
                 if (!isWorker) {
                     return edison.worker.createJob({
@@ -155,6 +155,9 @@ module.exports = function(schema) {
                             ContentType: 'application/pdf'
                         }]
                     }).then(function(resp) {
+                        if (req.body.acquitte) {
+                            return resolve(resp);
+                        }
                         db.model('intervention').findOne({
                             id: inter.id
                         }).then(function(doc) {
