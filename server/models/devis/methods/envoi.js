@@ -4,7 +4,7 @@ module.exports = function(schema) {
     var PDF = require('edsx-mail')
     var getDevisPdfObj = function(doc) {
 
-        doc.datePlain = moment().format('LL');
+        doc.datePlain = moment.tz('Europe/Paris').format('LL');
         doc.acquitte = false;
         doc.type = "devis"
         return PDF([{

@@ -247,7 +247,7 @@ module.exports = function(schema) {
                         inter.categoriePlain = c.suffix + ' ' + c.long_name.toLowerCase();
                         inter.fileSupp = req.body.file;
                         inter.__login = req.session.pseudo || 'Arnaud';
-                        inter.datePlain = moment(new Date(inter.date.intervention), "Europe/Paris").format('DD/MM/YYYY à HH\\hmm')
+                        inter.datePlain = moment.tz(new Date(inter.date.intervention), "Europe/Paris").format('DD/MM/YYYY à HH\\hmm')
                         var text = _.template(template.mail.intervention.os())(inter).replaceAll('\n', '<br>')
 
                         var communication = {
