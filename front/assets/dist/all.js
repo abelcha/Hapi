@@ -225,7 +225,7 @@ var getDevis = function($route, $q, edisonAPI) {
     "use strict";
     var id = $route.current.params.id;
     if ($route.current.params.i) {
-        return edisonAPI.intervention.get($route.current.params.d, {
+        return edisonAPI.intervention.get($route.current.params.i, {
             select: 'client categorie tva -_id'
         });
     } else if (id.length > 10) {
@@ -277,7 +277,8 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
         })
         .when('/devis', {
             redirectTo: function(routeParams, path, params) {
-                return '/devis/' + Date.now();
+                var url = params.i ? "?i=" + params.i : "";
+                return '/devis/' + Date.now() + url;
             }
         })
         .when('/devis/:id', {
