@@ -3,6 +3,7 @@ module.exports = function(schema) {
     schema.statics.annulation = {
         unique: true,
         findBefore: true,
+        populateArtisan: true,
         method: 'POST',
         fn: function(inter, req, res) {
             return new Promise(function(resolve, reject) {
@@ -20,7 +21,7 @@ module.exports = function(schema) {
                 inter.save().then(resolve, reject)
                 if (req.body.sms) {
                     sms.send({
-                        to: envProd ? req.session.portable : inter.sst.telephone.tel1,
+                        to: envProd ? inter.sst.telephone.tel1 : req.session.portable,
                         text: req.body.textSms,
                     })
                 }
