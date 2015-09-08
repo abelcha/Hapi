@@ -225,6 +225,8 @@
                         <credit-card inline="true" class="margin" model="vm.data" ng-if="vm.data.modeReglement === 'CB'"></credit-card>
                         <info-fourniture ng-if="vm.data.id" data="vm.data"></info-fourniture>
                         <info-compta ng-if="vm.data.status === 'VRF' && vm.data.artisan.document" data="vm.data"></info-compta>
+                        <info-litige ng-if="vm.data.date.intervention && vm.id" data="vm.data"></info-litige>
+                        
                         <div class="row" style="margin:0">
                             <div style="width:48%;float:left;" class="card" id="fileUpload">
                                 <div class="p+">
@@ -267,7 +269,6 @@
                                 </div>
                             </div>
                         </div>
-                        <info-litige ng-if="vm.data.date.intervention" data="vm.data"></info-litige>
                         <br>
                         <div class="fab" style="position: fixed;right: 70px;z-index: 999;top: 87%;">
                             <button ng-click="saveInter({})" class="fab__primary btn--no-conflicts btn--xl btn--blue btn--fab" lx-ripple lx-tooltip="Enregistrer" tooltip-position="top">
