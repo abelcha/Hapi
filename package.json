@@ -19,6 +19,7 @@
     "compression": "^1.5.2",
     "connect-redis-sessions": "^1.2.0",
     "cookie-parser": "~1.3.3",
+    "cozy-vcard": "^0.2.14",
     "creditcard": "^0.1.2",
     "cron-emitter": "^0.2.2",
     "cron-parser": "^0.7.0",
@@ -59,6 +60,7 @@
     "unicode-escape": "^0.1.0",
     "uuid": "^2.0.1",
     "validate-email-dns": "^0.1.6",
+    "vcf": "^0.2.0",
     "waitress": "^0.1.5"
   },
   "devDependencies": {
