@@ -7,7 +7,7 @@ module.exports = function(schema) {
         var _ = require('lodash')
         return new Promise(function(resolve, reject) {
             db.model('intervention').find()
-            .select('client categorie')
+            .select('id client categorie')
             .limit(req.query.limit ||  10000).then(function(docs) {
                 console.log('-->', docs.length)
                 res.setHeader('Content-disposition', 'attachment; filename=' + "export_clientsV2.vcf");
