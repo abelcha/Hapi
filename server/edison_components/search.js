@@ -24,7 +24,7 @@ module.exports = function(req, res) {
                         e.artisan.nomSociete = e.artisan.nomSociete ||  'A Programmer'
                         return {
                             link: ['', (options.model ||  'intervention'), e.id].join('/') + (options.link ||  ''),
-                            description: (options.pre ||  '#') + _.template(options.template || "{{id}} - {{mmt}} - {{client.civilite}} {{client.nom}} -  {{client.address.cp}} {{client.address.v}}  - {{artisan.nomSociete}} - {{status}}")(e)
+                            description: (options.pre ||  '#') + _.template(options.template || "{{id}} - {{mmt}} - {{client.civilite}} {{client.nom}} -  {{client.address.cp}} {{client.address.v}}  - {{artisan.nomSociete}} - {{status}} - {{prixAnnonce}}/{{prixAnnonce}} €")(e)
                         }
                     };
                     var rtn = resp.map(mapFunc);
@@ -65,7 +65,7 @@ module.exports = function(req, res) {
                 inter.telMatch = t.tel1.startsWith(query) ? t.tel1 : t.tel2.startsWith(query) ? t.tel2 : t.tel3;
                 return {
                     link: '/intervention/' + inter.id,
-                    description: _.template("{{id}} - {{mmt}} - ({{telMatch}}) - {{client.civilite}} {{client.nom}} -  {{client.address.cp}} {{client.address.v}}")(inter)
+                    description: _.template("{{id}} - {{mmt}} - ({{telMatch}}) - {{client.civilite}} {{client.nom}} -  {{client.address.cp}} {{client.address.v}} {{prixAnnonce}}/{{prixAnnonce}} €")(inter)
                 }
             }
         }),
@@ -74,14 +74,14 @@ module.exports = function(req, res) {
                 'client.address.cp': rgx
             },
             regexp: new RegExp('^[0-9]+$'),
-            template: "{{id}} - {{mmt}} - ({{client.address.cp}}) - {{client.civilite}} {{client.nom}} - {{client.address.v}}"
+            template: "{{id}} - {{mmt}} - ({{client.address.cp}}) - {{client.civilite}} {{client.nom}} - {{client.address.v}} {{prixAnnonce}}/{{prixAnnonce}} €"
         }),
         interventionVille: createFilter({
             query: {
                 'client.address.v': rgx
             },
             regexp: new RegExp('^[^0-9]+$'),
-            template: "{{id}} - {{mmt}} - ({{client.address.v}}) - {{client.civilite}} {{client.nom}} - {{client.address.cp}}"
+            template: "{{id}} - {{mmt}} - ({{client.address.v}}) - {{client.civilite}} {{client.nom}} - {{client.address.cp}} {{prixAnnonce}}/{{prixAnnonce}} €"
 
         }),
 
