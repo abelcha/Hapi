@@ -6,23 +6,22 @@ module.exports = function(schema) {
         var config = requireLocal('config/dataList')
         var _ = require('lodash')
         return new Promise(function(resolve, reject) {
-            db.model('intervention').find().limit(req.query.limit || 10000).then(function(docs) {
+            db.model('artisan').find().limit(req.query.limit || 10000).then(function(docs) {
                 var rtn = "";
                 console.log('-->', docs.length)
                 _.each(docs, function(e) {
 
-                    e.__cat = config.categories[e.categorie].long_name
                     rtn += "BEGIN:VCARD\n";
                     rtn += "VERSION:3.0\n" +
-                        _.template("N: {{id}} {{client.nom}} {{client.prenom}} - {{client.address.cp}} {{client.address.v}} - {{__cat}}\n")(e) +
-                        _.template("FN: {{id}} {{client.nom}} {{client.prenom}} - {{client.address.cp}} {{client.address.v}} - {{__cat}}\n")(e) +
-                        "TEL;WORK;VOICE: " + e.client.telephone.tel1 + "\n";
+                        _.template("N: {{id}} {{representant.nom}} {{representant.prenom}} - {{address.cp}} {{address.v}}\n")(e) +
+                        _.template("N: {{id}} {{representant.nom}} {{representant.prenom}} - {{address.cp}} {{address.v}}\n")(e) +
+                        "TEL;WORK;VOICE: " + e.telephone.tel1 + "\n";
 
-                    if (e.client.telephone.tel2) {
-                        rtn += "TEL;WORK;VOICE: " + e.client.telephone.tel2 + "\n";
+                    if (e.telephone.tel2) {
+                        rtn += "TEL;WORK;VOICE: " + e.telephone.tel2 + "\n";
                     }
-                    if (e.client.telephone.tel3) {
-                        rtn += "TEL;WORK;VOICE: " + e.client.telephone.tel3 + "\n";
+                    if (e.telephone.tel3) {
+                        rtn += "TEL;WORK;VOICE: " + e.telephone.tel3 + "\n";
                     }
                     rtn += "END:VCARD\n";
 
