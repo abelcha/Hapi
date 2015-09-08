@@ -1,16 +1,18 @@
 <div>
-    <div class="shadow-box listeInterventions">
+<div class="shadow-box listeInterventions">
         <table style="background:white;cursor:pointer" ng-table="tableParams" class="table table-bordered table-hover table-hover table-striped" id="table-list" show-filter="true">
             <tbody id="tbody-list">
                 <tr data-id="{{inter.id}}" ng-repeat-start="inter in $data" ng-right-click="rowRightClick($event, inter)" ng-click="rowClick($event, inter, false)" ng-class="{success : contextMenu.active && contextMenu.data.id === inter.id}">
-                    <td data-title="'Os'" sortable="'id'" filter="{ 'id': 'text' }">
+                    <td data-title="'OS'" sortable="'id'" filter="{ 'id': 'text' }">
                         <strong>{{inter.id}}</strong>
                     </td>
-                    <td data-title="'Télépro'" sortable="'t'" filter="{ 't': 'text' }">
-                        {{inter.t}}
+                    <td  data-title="smallWin ? 'T' : 'Télépro'" sortable="'t'" filter="{ 't': 'text' }">
+                       <span ng-if="smallWin"> {{inter.t | limitTo: 3}}</span>
+                       <span ng-if="!smallWin"> {{inter.t}}</span>
                     </td>
-                    <td ng-init="inter._categorie = config.categoriesHash()[inter.c].long_name" data-title="'Cat.'" sortable="'c'" filter="{ '_categorie': 'text' }">
-                        <span style="width:80px" class="label {{config.categoriesHash()[inter.c].color}}">{{inter._categorie}}</span>
+                    <td ng-init="inter._categorie = config.categoriesHash()[inter.c].long_name" data-title="smallWin ? 'C' : 'Cat.'"sortable="'c'" filter="{ '_categorie': 'text' }">
+                        <span ng-if="smallWin" style="width:80px" class="label {{config.categoriesHash()[inter.c].color}}">{{config.categoriesHash()[inter.c].short_name}}</span>
+                         <span ng-if="!smallWin" style="width:40px" class="label {{config.categoriesHash()[inter.c].color}}">{{config.categoriesHash()[inter.c].long_name}}</span>
                     </td>
                     <td data-title="'Ajout'" sortable="'da'" filter="{ 'da': 'text' }">
                         {{inter.da | relativeDate:true}}
@@ -33,15 +35,17 @@
                         {{(inter.pa | number:2) || 0}} €
                     </td>
                     <td ng-init="inter._status = config.etatsHash()[inter.s];inter._etat = inter._status.long_name" data-title="'Status'" sortable="'s'" filter="{ '_etat': 'text' }">
-                        <span style="width:75px" class="label {{config.etatsHash()[inter.s].color}} display-block"> 
-                        {{inter._etat}}</span>
+                        <span ng-if="!smallWin" style="width:75px" class="label {{config.etatsHash()[inter.s].color}} display-block"> 
+                        {{config.etatsHash()[inter.s].long_name}}</span>
+                        <span ng-if="smallWin" style="width:34px" class="label {{config.etatsHash()[inter.s].color}} display-block"> 
+                        {{config.etatsHash()[inter.s].short_name}}</span>
                     </td>
-                    <td data-title="'rCli'" sortable="'rc'" filter="{ 'rc': 'select' }" filter-data="config.reglementClient">
+                    <td ng-if="!smallWin" data-title="'rCli'" sortable="'rc'" filter="{ 'rc': 'select' }" filter-data="config.reglementClient">
                         <span ng-if="inter.rc" style="width:30px" class="label display-block {{config.reglementClient[inter.rc].color}}">
                         <i class="fa fa-{{config.reglementClient[inter.rc].icon}}"></i>
                     </span>
                     </td>
-                    <td data-title="'rSST'" sortable="'ps'" filter="{ 'ps': 'select' }" filter-data="config.paiementArtisan">
+                    <td ng-if="!smallWin" data-title="'rSST'" sortable="'ps'" filter="{ 'ps': 'select' }" filter-data="config.paiementArtisan">
                         <span ng-if="inter.ps" style="width:30px" class="label display-block {{config.paiementArtisan[inter.ps].color}}">
                         <i class="fa fa-{{config.paiementArtisan[inter.ps].icon}}"></i>
                     </span>
@@ -60,8 +64,7 @@
             <ul class="ng-scope">
                 <li ng-hide="item.hidden" ng-repeat="item in contextMenu.list">
                     <a ng-mouseover="contextMenu.closeSub()" ng-if="!item.subs" class="dropdown-link" ng-style="item.style" tabindex="0" ng-click="contextMenu.close();contextMenu.click(item)">{{item.title}}</a>
-                    <a ng-style="item.style" ng-mouseover="contextMenu.openSub(300)" ng-if="item.subs" class="dropdown-link"  tabindex="0"><i no-margin align-left class="fa fa-angle-right"></i>{{item.title}}</a>
-                   
+                    <a ng-style="item.style" ng-mouseover="contextMenu.openSub(300)" ng-if="item.subs" class="dropdown-link" tabindex="0"><i no-margin align-left class="fa fa-angle-right"></i>{{item.title}}</a>
                     <a ng-style="sub.style" ng-repeat="sub in item.subs" ng-click="contextMenu.close();contextMenu.click(sub)" ng-hide="sub.hidden" ng-if="contextMenu.mouseOverCM && item.subs" class="dropdown-link"><i no-margin align-left class=" fa fa-angle-double-right"></i>{{sub.title}}</a>
                 </li>
             </ul>

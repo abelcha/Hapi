@@ -19,6 +19,7 @@ angular.module('edison').controller('MainController', function($timeout, $q, Dat
         $rootScope.loadingData = false;
     });
 
+
     $scope.changeUser = function(usr) {
         $rootScope.user = usr
     }

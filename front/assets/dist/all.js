@@ -19,6 +19,7 @@ angular.module('edison').controller('MainController', function($timeout, $q, Dat
         $rootScope.loadingData = false;
     });
 
+
     $scope.changeUser = function(usr) {
         $rootScope.user = usr
     }
@@ -587,6 +588,13 @@ angular.module('edison').directive('ngEnter', function () {
      if ($routeParams.fltr) {
          currentFilter = filtersFactory.getFilterByUrl($routeParams.fltr)
      }
+
+     _this.smallWin = window.innerWidth < 1200
+     $(window).resize(function() {
+         _this.smallWin = window.innerWidth < 1200
+         console.log('-->', _this.smallWin)
+     })
+
      _this.tab = tabContainer.getCurrentTab();
      _this.tab.hash = currentHash;
      _this.config = config;
