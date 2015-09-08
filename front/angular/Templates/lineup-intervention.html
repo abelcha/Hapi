@@ -60,7 +60,7 @@
             <ul class="ng-scope">
                 <li ng-hide="item.hidden" ng-repeat="item in contextMenu.list">
                     <a ng-mouseover="contextMenu.closeSub()" ng-if="!item.subs" class="dropdown-link" ng-style="item.style" tabindex="0" ng-click="contextMenu.close();contextMenu.click(item)">{{item.title}}</a>
-                    <a ng-style="item.style" ng-mouseover="contextMenu.openSub(200)" ng-if="item.subs" class="dropdown-link"  tabindex="0"><i no-margin align-left class="fa fa-angle-right"></i>{{item.title}}</a>
+                    <a ng-style="item.style" ng-mouseover="contextMenu.openSub(300)" ng-if="item.subs" class="dropdown-link"  tabindex="0"><i no-margin align-left class="fa fa-angle-right"></i>{{item.title}}</a>
                    
                     <a ng-style="sub.style" ng-repeat="sub in item.subs" ng-click="contextMenu.close();contextMenu.click(sub)" ng-hide="sub.hidden" ng-if="contextMenu.mouseOverCM && item.subs" class="dropdown-link"><i no-margin align-left class=" fa fa-angle-double-right"></i>{{sub.title}}</a>
                 </li>
