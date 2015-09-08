@@ -4019,7 +4019,13 @@ var InterventionCtrl = function(Description, Signalement, ContextMenu, $window, 
             intervention.tmpID = $routeParams.id;
             tab.setTitle('#' + moment((new Date(parseInt(intervention.tmpID))).toISOString()).format("HH:mm").toString());
         } else {
-            tab.setTitle('#' + $routeParams.id);
+            if (intervention && intervention.client.nom) {
+                var __title = intervention.client.civilite + intervention.client.nom
+                __title = __title.slice(0, 10);
+            } else {
+                var __title = '#' + $routeParams.id;
+            }
+            tab.setTitle(__title);
             if (!intervention) {
                 LxNotificationService.error("Impossible de trouver les informations !");
                 $location.url("/dashboard");
