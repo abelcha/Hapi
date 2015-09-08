@@ -6,13 +6,13 @@ module.exports = function(schema) {
         var config = requireLocal('config/dataList')
         var _ = require('lodash')
         return new Promise(function(resolve, reject) {
-            db.model('intervention').find().limit(req.query.limit || 10000).then(function(docs) {
-                var rtn = "";
+            db.model('intervention').find().limit(req.query.limit ||  10000).then(function(docs) {
                 console.log('-->', docs.length)
+                res.setHeader('Content-disposition', 'attachment; filename=' + "export_clientsV2.vcf");
+                res.setHeader('Content-type', "text/vcard");
                 _.each(docs, function(e) {
-
                     e.__cat = config.categories[e.categorie].long_name
-                    rtn += "BEGIN:VCARD\n";
+                    var rtn = "BEGIN:VCARD\n";
                     rtn += "VERSION:3.0\n" +
                         _.template("N: {{id}} {{client.nom}} {{client.prenom}} - {{client.address.cp}} {{client.address.v}} - {{__cat}}\n")(e) +
                         _.template("FN: {{id}} {{client.nom}} {{client.prenom}} - {{client.address.cp}} {{client.address.v}} - {{__cat}}\n")(e) +
@@ -25,12 +25,9 @@ module.exports = function(schema) {
                         rtn += "TEL;WORK;VOICE: " + e.client.telephone.tel3 + "\n";
                     }
                     rtn += "END:VCARD\n";
-
-
+                    res.write(rtn);
                 })
-                res.setHeader('Content-disposition', 'attachment; filename=' + "export_clientsV2.vcf");
-                res.setHeader('Content-type', "text/vcard");
-                res.send(rtn)
+                res.end();
             })
         })
     }
