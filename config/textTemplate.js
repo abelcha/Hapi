@@ -24,6 +24,7 @@ module.exports = {
             }
         }
     },
+    
     lettre: {
         intervention: {
             envoiFacture: function() {
