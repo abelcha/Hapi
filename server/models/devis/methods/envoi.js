@@ -1,6 +1,6 @@
 module.exports = function(schema) {
     var _ = require('lodash')
-    var moment = require('moment')
+    var moment = require('moment-timezone')
     var PDF = require('edsx-mail')
     var getDevisPdfObj = function(doc) {
 
