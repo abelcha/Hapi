@@ -3194,7 +3194,7 @@ angular.module('edison').factory('tabContainer', ['$location', '$window', '$q', 
         if (this.noClose) {
             tab = this._tabs[0]
         }
-        else if ((_.startsWith(url, '/search')  || _.startsWith(url, '/artisan/contact')) && this.getTabSimple(url)) {
+        else if ((_.includes(url, '/list') || _.startsWith(url, '/search')  || _.startsWith(url, '/artisan/contact')) && this.getTabSimple(url)) {
             tab = this.getTabSimple(url);
         }
         else if (this.noClose || this.isOpen(url, options)) {
