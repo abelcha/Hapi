@@ -1,6 +1,7 @@
 module.exports = function(req, res) {
     var rtn = [];
     var async = require('async');
+    var moment = require('moment-timezone')
     var _ = require('lodash');
     var regexpAccents = require('regexp-accents');
     _.templateSettings.interpolate = /{{([\s\S]+?)}}/g;
@@ -17,12 +18,13 @@ module.exports = function(req, res) {
                 .limit(req.query.limit)
                 .then(function(resp) {
                     var mapFunc = options.mapFunc || function(e) {
+                        e.mmt = moment.tz(e.date.intervention, 'Europe/Paris').format("DD/MM")
                         //console.log(options.pre ||  '#')
                         _.set(e, 'artisan.nomSociete', _.get(e, 'artisan.nomSociete', 'A Programmer'))
                         e.artisan.nomSociete = e.artisan.nomSociete ||  'A Programmer'
                         return {
                             link: ['', (options.model ||  'intervention'), e.id].join('/') + (options.link ||  ''),
-                            description: (options.pre ||  '#') + _.template(options.template || "{{id}} - {{client.civilite}} {{client.nom}} -  {{client.address.cp}} {{client.address.v}}  - {{artisan.nomSociete}} - {{status}}")(e)
+                            description: (options.pre ||  '#') + _.template(options.template || "{{id}} - {{mmt}} - {{client.civilite}} {{client.nom}} -  {{client.address.cp}} {{client.address.v}}  - {{artisan.nomSociete}} - {{status}}")(e)
                         }
                     };
                     var rtn = resp.map(mapFunc);
@@ -63,7 +65,7 @@ module.exports = function(req, res) {
                 inter.telMatch = t.tel1.startsWith(query) ? t.tel1 : t.tel2.startsWith(query) ? t.tel2 : t.tel3;
                 return {
                     link: '/intervention/' + inter.id,
-                    description: _.template("{{id}} ({{telMatch}}) - {{client.civilite}} {{client.nom}} -  {{client.address.cp}} {{client.address.v}}")(inter)
+                    description: _.template("{{id}} - {{mmt}} - ({{telMatch}}) - {{client.civilite}} {{client.nom}} -  {{client.address.cp}} {{client.address.v}}")(inter)
                 }
             }
         }),
@@ -72,14 +74,14 @@ module.exports = function(req, res) {
                 'client.address.cp': rgx
             },
             regexp: new RegExp('^[0-9]+$'),
-            template: "{{id}} ({{client.address.cp}}) - {{client.civilite}} {{client.nom}} - {{client.address.v}}"
+            template: "{{id}} - {{mmt}} - ({{client.address.cp}}) - {{client.civilite}} {{client.nom}} - {{client.address.v}}"
         }),
         interventionVille: createFilter({
             query: {
                 'client.address.v': rgx
             },
             regexp: new RegExp('^[^0-9]+$'),
-            template: "{{id}} ({{client.address.v}}) - {{client.civilite}} {{client.nom}} - {{client.address.cp}}"
+            template: "{{id}} - {{mmt}} - ({{client.address.v}}) - {{client.civilite}} {{client.nom}} - {{client.address.cp}}"
 
         }),
 
