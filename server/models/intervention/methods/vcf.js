@@ -18,9 +18,14 @@ module.exports = function(schema) {
                         //"N: 27285 CEYLAN IBRAHIM - 60160 MONTATAIRE - VITRERIE\n" + 
                         //"FN: 27285 - CEYLAN IBRAHIM - 60160 MONTATAIRE - VITRERIE\n" + 
                         _.template("FN: {{id}} {{client.nom}} {{client.prenom}} - {{client.address.cp}} {{client.address.v}} - {{__cat}}\n")(e) +
-                        "TEL;\n" +
-                        "WORK;\n" +
-                        "VOICE: " + e.client.telephone.tel1 + "\n"
+                        "TEL;WORK;VOICE: " + e.client.telephone.tel1 + "\n";
+
+                    if (e.client.telephone.tel2) {
+                        rtn += "TEL;WORK;VOICE: " + e.client.telephone.tel2 + "\n";
+                    }
+                    if (e.client.telephone.tel3) {
+                        rtn += "TEL;WORK;VOICE: " + e.client.telephone.tel3 + "\n";
+                    }
                     rtn += "END:VCARD\n";
 
 
