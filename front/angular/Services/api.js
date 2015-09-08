@@ -281,7 +281,7 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
                 })
             },
             send: function(params) {
-                return $http.post("/api/sms", params)
+                return $http.post("/api/sms/__save", params)
             },
 
         },

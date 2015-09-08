@@ -9,7 +9,7 @@ module.exports = function(schema) {
     var PDFMerge = require('pdf-merge');
     var async = require('async');
     var sendSMS = function(text, inter, user, tel) {
-        return db.model('sms').send({
+        return sms.send({
             to: tel,
             text: text,
             login: user.login,

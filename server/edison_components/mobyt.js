@@ -81,7 +81,9 @@ Mobyt.prototype.send = function(params) {
                 } else {
                     reject(response);
                 }
-            }, reject);
+            }, function(err) {
+                reject(err);
+            });
     });
 
 };
