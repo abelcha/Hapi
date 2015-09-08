@@ -66,7 +66,8 @@
 
 
     module.exports.preUpdate = function(prev, curr, session) {
-        prev.historique =   [];
+        prev.historique = [];
+        curr.historique = [];
     }
 
 
