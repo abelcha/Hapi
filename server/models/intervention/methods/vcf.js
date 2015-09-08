@@ -6,7 +6,9 @@ module.exports = function(schema) {
         var config = requireLocal('config/dataList')
         var _ = require('lodash')
         return new Promise(function(resolve, reject) {
-            db.model('intervention').find().limit(req.query.limit ||  10000).then(function(docs) {
+            db.model('intervention').find()
+            .select('client categorie')
+            .limit(req.query.limit ||  10000).then(function(docs) {
                 console.log('-->', docs.length)
                 res.setHeader('Content-disposition', 'attachment; filename=' + "export_clientsV2.vcf");
                 res.setHeader('Content-type', "text/vcard");
