@@ -40,7 +40,6 @@ var DevisCtrl = function(edisonAPI, $scope, $rootScope, $location, $routeParams,
             if (err) {
                 return false;
             } else if (options.envoi) {
-                devis.historique = [];
                 Devis(resp).sendDevis(closeTab);
             } else if (options.annulation) {
                 Devis(resp).annulation(closeTab);
