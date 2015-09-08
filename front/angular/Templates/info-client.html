@@ -16,12 +16,12 @@
                 <div class="form-group">
                     <div class="col-md-5">
                         <lx-text-field label="Nom">
-                            <input capitalize type="text" allow-pattern="[a-z|'| |-]" ng-model="client.nom">
+                            <input capitalize type="text"  ng-model="client.nom">
                         </lx-text-field>
                     </div>
                     <div class="col-md-5">
                         <lx-text-field label="{{client.civilite === 'Soc.' ? 'Nom Representant' : 'Prénom'}}">
-                            <input capitalize type="text" allow-pattern="[a-z|'| |-]"  ng-model="client.prenom">
+                            <input capitalize type="text" ng-model="client.prenom">
                         </lx-text-field>
                     </div>
                 </div>
@@ -57,7 +57,7 @@
                 <div class="form-group">
                     <div class="col-md-1">
                         <lx-text-field label="Numero">
-                            <input capitalize type="text" ng-model="client.address.n">
+                            <input capitalize type="text" allow-pattern="[0-9]" ng-model="client.address.n">
                         </lx-text-field>
                     </div>
                     <div class="col-md-5">
