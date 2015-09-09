@@ -98,10 +98,11 @@ angular.module('edison')
                 if (err)
                     return cb('nope')
                 LxProgressService.circular.show('#5fa2db', '#globalProgress');
-                edisonAPI.intervention.sendFacture(_this.id, {
+                edisonAPI.intervention.sendFactureAcquitte(_this.id, {
                     text: text,
                     acquitte: acquitte,
-                    date: date
+                    date: date,
+                    data:_this
                 }).success(function(resp) {
                     console.log('--->', resp)
                     LxProgressService.circular.hide();

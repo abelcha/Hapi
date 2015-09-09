@@ -1395,6 +1395,9 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
             },
             sendFacture: function(id, options) {
                 return $http.post("/api/intervention/" + id + "/sendFacture", options);
+            },
+             sendFactureAcquitte: function(id, options) {
+                return $http.post("/api/intervention/" + id + "/sendFactureAcquitte", options);
             }
         },
         artisan: {
@@ -2506,10 +2509,11 @@ angular.module('edison')
                 if (err)
                     return cb('nope')
                 LxProgressService.circular.show('#5fa2db', '#globalProgress');
-                edisonAPI.intervention.sendFacture(_this.id, {
+                edisonAPI.intervention.sendFactureAcquitte(_this.id, {
                     text: text,
                     acquitte: acquitte,
-                    date: date
+                    date: date,
+                    data:_this
                 }).success(function(resp) {
                     console.log('--->', resp)
                     LxProgressService.circular.hide();

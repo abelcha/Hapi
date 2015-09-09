@@ -19,17 +19,22 @@ module.exports = function(schema) {
             title: "OBJET : Facture n°" + doc.id + " en attente de reglement"
         }
         doc.type = 'facture'
+        if (acquitte) {
+            var l = [{
+                model: 'letter',
+                options: lettre
+            }]
+        } else {
+            var l = [];
+        }
 
-        var l = [{
-            model: 'letter',
-            options: lettre
-        }, {
+        l.push({
             model: 'facture',
             options: doc
         }, {
             model: 'conditions',
             options: doc
-        }]
+        })
         if (reverse) {
             var last = l.shift()
             l.push(last);
@@ -88,6 +93,88 @@ module.exports = function(schema) {
     }
 
 
+    schema.statics.sendFactureAcquitte = {
+        unique: true,
+        findBefore: true,
+        method: 'POST',
+        fn: function(dd, req, res) {
+            return new Promise(function(resolve, reject) {
+
+                var inter = req.body.data
+                var f = inter.facture;
+                if (!f.email ||  !f.nom || !f.address.r || !f.address.v ||  !f.address.cp || !f.address.n) {
+                    return reject('Les coordonées de facturations sont incompletes')
+                }
+                f.prenom = f.prenom ||  "";
+                if (!inter.produits || !inter.produits.length) {
+                    return reject('Veuillez renseigner au moins 1 produits')
+                }
+                if (!isWorker) {
+                    return edison.worker.createJob({
+                        name: 'db_id',
+                        model: 'intervention',
+                        method: 'sendFactureAcquitte',
+                        data: inter,
+                        req: _.pick(req, 'body', 'session')
+                    }).then(resolve, reject)
+                }
+
+                var params = req.body;
+                if (!params.text ||  !params.date) {
+                    Promise.reject("Invalid Request")
+                }
+                try {
+                    if (inter.reglementSurPlace) {
+                        inter.facture = inter.client;
+                    }
+                    var pdf = getFacturePdfObj(inter, inter.date.intervention, true, req.body.date);
+
+                } catch (e) {
+                    reject(e)
+                }
+                pdf.toBuffer(function(err, buffer) {
+                    var communication = {
+                        mailDest: envProd ? inter.facture.email : (req.session.email ||  'contact@edison-services.fr'),
+                        mailBcc: envProd ? (req.session.email ||  'contact@edison-services.fr') : undefined,
+                        mailReply: (req.session.email ||  'contact@edison-services.fr')
+                    }
+                    console.log(communication);
+                    mail.send({
+                        From: "intervention@edison-services.fr",
+                        ReplyTo: communication.mailReply,
+                        To: communication.mailDest,
+                        Bcc: communication.mailBcc,
+                        Subject: "Facture n°" + inter.id + " acquitté",
+                        HtmlBody: req.body.text.replaceAll('\n', '<br>'),
+                        Attachments: [{
+                            Content: buffer.toString('base64'),
+                            Name: 'Facture.pdf',
+                            ContentType: 'application/pdf'
+                        }]
+                    }).then(function(resp) {
+                        if (req.body.acquitte) {
+                            return resolve("OK");
+                        }
+                        db.model('intervention').findOne({
+                            id: inter.id
+                        }).then(function(doc) {
+                            doc.date.envoiFacture = new Date();
+                            doc.login.envoiFacture = req.session.login;
+                            doc.save().then(resolve, reject)
+                            getFacturePdfObj(doc, doc.date.intervention, false, true).toBuffer(function(err, buff) {
+                                document.stack(buff, 'FACTURE ' + doc.id, req.session.login)
+                                    .then(function(resp) {
+                                        console.log('file added', resp)
+                                    })
+                            })
+                        })
+                    }, reject).catch(__catch)
+                })
+            })
+        }
+
+    }
+
     schema.statics.sendFacture = {
         unique: true,
         findBefore: true,
@@ -104,11 +191,11 @@ module.exports = function(schema) {
                 if (!inter.produits || !inter.produits.length) {
                     return reject('Veuillez renseigner au moins 1 produits')
                 }
-/*                if (envDev) {
-                    inter.date.envoiFacture = new Date();
-                    inter.login.envoiFacture = req.session.login;
-                    return inter.save().then(resolve, reject)
-                }*/
+                /*                if (envDev) {
+                                    inter.date.envoiFacture = new Date();
+                                    inter.login.envoiFacture = req.session.login;
+                                    return inter.save().then(resolve, reject)
+                                }*/
                 console.log('here')
                 if (!isWorker) {
                     return edison.worker.createJob({
@@ -129,7 +216,6 @@ module.exports = function(schema) {
                     Promise.reject("Invalid Request")
                 }
                 try {
-                    console.log(req.body)
                     var pdf = getFacturePdfObj(inter, inter.date.intervention, req.body.acquitte, req.body.date);
 
                 } catch (e) {
@@ -137,7 +223,7 @@ module.exports = function(schema) {
                 }
                 pdf.toBuffer(function(err, buffer) {
                     var communication = {
-                        mailDest: envProd ? inter.facture.email : (req.session.email || 'contact@edison-services.fr'),
+                        mailDest: envProd ? inter.facture.email : (req.session.email ||  'contact@edison-services.fr'),
                         mailBcc: envProd ? (req.session.email ||  'contact@edison-services.fr') : undefined,
                         mailReply: (req.session.email ||  'contact@edison-services.fr')
                     }
