@@ -19,7 +19,7 @@ module.exports = function(schema) {
             title: "OBJET : Facture n°" + doc.id + " en attente de reglement"
         }
         doc.type = 'facture'
-        if (acquitte) {
+        if (!acquitte) {
             var l = [{
                 model: 'letter',
                 options: lettre
