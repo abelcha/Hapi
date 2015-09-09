@@ -9,10 +9,10 @@ module.exports = function(schema) {
         doc.acquitte = false;
         doc.type = "devis"
         return PDF([{
-            model: 'conditions',
+            model: 'facture',
             options: doc
         }, {
-            model: 'facture',
+            model: 'conditions',
             options: doc
         }], 500)
     }
@@ -64,9 +64,9 @@ module.exports = function(schema) {
                     console.log('getBuffer');
                     try {
                         var communication = {
-                            mailDest: envProd ? devis.client.email : (req.session.email ||  'contact@edison-services.fr'),
-                            mailBcc: envProd ? (req.session.email ||  'contact@edison-services.fr') : undefined,
-                            mailReply: (req.session.email ||  'contact@edison-services.fr')
+                            mailDest: envProd ? devis.client.email : (req.session.email || 'contact@edison-services.fr'),
+                            mailBcc: envProd ? (req.session.email || 'contact@edison-services.fr') : undefined,
+                            mailReply: (req.session.email || 'contact@edison-services.fr')
                         }
                     } catch (e) {
                         console.log(e.stack);

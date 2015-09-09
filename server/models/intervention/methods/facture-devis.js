@@ -29,10 +29,10 @@ module.exports = function(schema) {
         }
 
         l.push({
-            model: 'facture',
+            model: 'conditions',
             options: doc
         }, {
-            model: 'conditions',
+            model: 'facture',
             options: doc
         })
         if (reverse) {
