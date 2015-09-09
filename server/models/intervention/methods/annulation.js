@@ -6,8 +6,8 @@ module.exports = function(schema) {
         populateArtisan: true,
         method: 'POST',
         fn: function(inter, req, res) {
+            console.log(inter)
             return new Promise(function(resolve, reject) {
-                console.log(req.body)
                 inter.date.annulation = new Date;
                 inter.date.envoi = undefined;
                 inter.login.annulation = req.session.login;
@@ -21,7 +21,7 @@ module.exports = function(schema) {
                 inter.save().then(resolve, reject)
                 if (req.body.sms) {
                     sms.send({
-                        to: envProd ? inter.sst.telephone.tel1 : req.session.portable,
+                        to: envProd ? _.get(inter, 'sst.telephone.tel1', '0633138868') : req.session.portable,
                         text: req.body.textSms,
                     })
                 }
