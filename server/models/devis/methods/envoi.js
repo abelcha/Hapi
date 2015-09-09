@@ -3,7 +3,8 @@ module.exports = function(schema) {
     var moment = require('moment-timezone')
     var PDF = require('edsx-mail')
     var getDevisPdfObj = function(doc) {
-
+        doc.facture = doc.client;
+        doc.facture.tel = doc.client.telephone.tel1;
         doc.datePlain = moment.tz('Europe/Paris').format('LL');
         doc.acquitte = false;
         doc.type = "devis"
@@ -62,7 +63,6 @@ module.exports = function(schema) {
                 pdf.toBuffer(function(err, buffer) {
                     console.log('getBuffer');
                     try {
-
                         var communication = {
                             mailDest: envProd ? devis.client.email : (req.session.email || 'contact@edison-services.fr'),
                             mailBcc: envProd ? (req.session.email || 'contact@edison-services.fr') : undefined,
