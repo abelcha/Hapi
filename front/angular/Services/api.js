@@ -79,7 +79,7 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
             },
         },
         intervention: {
-            getTelMatch:function(text) {
+            getTelMatch: function(text) {
                 return $http.post('/api/intervention/telMatches', text);
             },
             saveTmp: function(data) {
@@ -139,8 +139,11 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
             sendFacture: function(id, options) {
                 return $http.post("/api/intervention/" + id + "/sendFacture", options);
             },
-             sendFactureAcquitte: function(id, options) {
+            sendFactureAcquitte: function(id, options) {
                 return $http.post("/api/intervention/" + id + "/sendFactureAcquitte", options);
+            },
+            statsBen: function(options) {
+                return $http.get("/api/intervention/statsBen", options);
             }
         },
         artisan: {

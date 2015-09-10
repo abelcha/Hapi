@@ -377,6 +377,11 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
             controller: "telephoneMatch",
             controllerAs: "vm",
         })
+        .when('/stats/:type', {
+            templateUrl: "Pages/Stats/stats.html",
+            controller: "StatsController",
+            controllerAs: 'vm',
+        })
         .otherwise({
             redirectTo: '/dashboard'
         });
