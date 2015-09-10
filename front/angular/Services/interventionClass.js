@@ -91,7 +91,6 @@ angular.module('edison')
         Intervention.prototype.sendFactureAcquitte = function(cb) {
             var _this = this;
             var datePlain = moment(this.date.intervention).format('LL');
-            console.log(_this)
             var template = textTemplate.mail.intervention.factureAcquitte.bind(_this)(datePlain)
             var mailText = (_.template(template)(this))
             dialog.envoiFacture(_this, mailText, true, function(err, text, acquitte, date) {
@@ -104,7 +103,6 @@ angular.module('edison')
                     date: date,
                     data:_this
                 }).success(function(resp) {
-                    console.log('--->', resp)
                     LxProgressService.circular.hide();
                     var validationMessage = _.template("La facture de l'intervention {{id}} à été envoyé")(_this)
                     LxNotificationService.success(validationMessage);
@@ -123,7 +121,6 @@ angular.module('edison')
         Intervention.prototype.sendFacture = function(cb) {
             var _this = this;
             var datePlain = moment(this.date.intervention).format('LL');
-            console.log(_this)
             var template = textTemplate.mail.intervention.envoiFacture.bind(_this)(datePlain)
             var mailText = (_.template(template)(this))
             dialog.envoiFacture(_this, mailText, false, function(err, text, acquitte, date) {
@@ -293,7 +290,6 @@ angular.module('edison')
         Intervention.prototype.annulation = function(cb) {
             var _this = this;
             dialog.getCauseAnnulation(_this, function(err, causeAnnulation, reinit, sms, textSms) {
-                console.log(err, causeAnnulation, reinit, sms, textSms)
                 if (err) {
                     return typeof cb === 'function' && cb('err');
                 }

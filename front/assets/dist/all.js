@@ -619,7 +619,6 @@ angular.module('edison').directive('ngEnter', function () {
      _this.smallWin = window.innerWidth < 1200
      $(window).resize(function() {
          _this.smallWin = window.innerWidth < 1200
-         console.log('-->', _this.smallWin)
      })
 
      _this.tab = tabContainer.getCurrentTab();
@@ -669,13 +668,12 @@ angular.module('edison').directive('ngEnter', function () {
 
      var lastChange = 0;
      $rootScope.$on(_this.model.toUpperCase() + '_CACHE_LIST_CHANGE', function(event, newData) {
-         if (tabContainer.getCurrentTab() && _this.tab.fullUrl === tabContainer.getCurrentTab().fullUrl && newData._date > lastChange) {
+         if (tabContainer.getCurrentTab() && _this.tab.fullUrl === tabContainer.getCurrentTab().fullUrl) {
              dataProvider.applyFilter(currentFilter, _this.tab.hash, _this.customFilter);
              _this.tableParams.reload();
              //_this.tableParams.orderBy(_this.tableParams.$params.sorting)
              //_this.tableParams.filter(_this.tableParams.$params.filter)
          }
-         lastChange = newData._date;
      })
 
 
@@ -1888,9 +1886,11 @@ angular.module('edison').factory('DataProvider', ['edisonAPI', 'socket', '$rootS
         var _this = this;
         this.model = model;
         this.hashModel = hashModel || 't';
-        socket.on(_this.socketListChange(), function(newData) {
-            if (_this.getData()) {
-                _this.updateData(newData);
+        this.rand = new Date
+        socket.on(_this.socketListChange(), function(change) {
+            if (_this.appliedList.indexOf(change.ts) === -1) {
+                _this.appliedList.push(change.ts)
+                _this.updateData(change.data);
             }
         });
     }
@@ -1899,6 +1899,7 @@ angular.module('edison').factory('DataProvider', ['edisonAPI', 'socket', '$rootS
         var _this = this;
         return _this.model.toUpperCase() + '_CACHE_LIST_CHANGE';
     }
+    DataProvider.prototype.appliedList = [];
 
     DataProvider.prototype.data = {}
 
@@ -1945,18 +1946,35 @@ angular.module('edison').factory('DataProvider', ['edisonAPI', 'socket', '$rootS
         }
     }
 
-    DataProvider.prototype.updateData = function(newRow) {
+    DataProvider.prototype.updateData = function(newRows) {
         var _this = this;
         if (this.getData()) {
-            var index = _.findIndex(this.getData(), function(e) {
-                return e.id === newRow.id
-            });
-            if (index === -1) {
-                _this.getData().unshift(newRow)
-            } else {
-                _this.getData()[index] = newRow;
+            var id_list = _(newRows).flatten().map('id').value();
+            console.log('here', id_list)
+
+            for (var i = 0; i < _this.getData().length && id_list.length; i++) {
+                var pos = id_list.indexOf(_this.getData()[i].id)
+                if (pos >= 0) {
+                    _this.getData()[i] = newRows[pos]
+                    id_list.splice(pos, 1);
+                }
+            };
+            if (id_list.length) {
+                var shift = _(newRows).filter(function(e) {
+                    return _.includes(id_list, e.id);
+                }).map('cache').value()
+                _this.getData().unshift(shift)
             }
-            $rootScope.$broadcast(_this.socketListChange(), newRow);
+            $rootScope.$broadcast(_this.socketListChange());
+            /* var index = _.findIndex(this.getData(), function(e) {
+                 return e.id === newRow.id
+             });
+             if (index === -1) {
+                 _this.getData().unshift(newRow)
+             } else {
+                 _this.getData()[index] = newRow;
+             }
+             */
         }
     }
 
@@ -2261,12 +2279,12 @@ angular.module('edison').factory('dialog', function($mdDialog, edisonAPI, config
                     inter.datePlain = moment(inter.date.intervention).format('DD/MM/YYYY')
                     $scope.textSms = _.template("L'intervention {{id}} chez {{client.civilite}} {{client.nom}} à {{client.address.v}} le {{datePlain}} a été annulé. \nMerci de ne pas intervenir. \nEdison Services")(inter)
                     $scope.answer = function(resp) {
-                        if (!resp) {
+                        if (!resp && $scope.ca) {
                             return LxNotificationService.error("Veuillez renseigner une raison d'annulation");
                         }
+                        $mdDialog.hide();
                         if (!$scope.ca)
                             return cb('nope');
-                        $mdDialog.hide();
                         if (resp)
                             return cb(null, resp, $scope.reinit, $scope.sendSms, $scope.textSms);
                         return cb('nope');
@@ -2510,7 +2528,6 @@ angular.module('edison')
         Intervention.prototype.sendFactureAcquitte = function(cb) {
             var _this = this;
             var datePlain = moment(this.date.intervention).format('LL');
-            console.log(_this)
             var template = textTemplate.mail.intervention.factureAcquitte.bind(_this)(datePlain)
             var mailText = (_.template(template)(this))
             dialog.envoiFacture(_this, mailText, true, function(err, text, acquitte, date) {
@@ -2523,7 +2540,6 @@ angular.module('edison')
                     date: date,
                     data:_this
                 }).success(function(resp) {
-                    console.log('--->', resp)
                     LxProgressService.circular.hide();
                     var validationMessage = _.template("La facture de l'intervention {{id}} à été envoyé")(_this)
                     LxNotificationService.success(validationMessage);
@@ -2542,7 +2558,6 @@ angular.module('edison')
         Intervention.prototype.sendFacture = function(cb) {
             var _this = this;
             var datePlain = moment(this.date.intervention).format('LL');
-            console.log(_this)
             var template = textTemplate.mail.intervention.envoiFacture.bind(_this)(datePlain)
             var mailText = (_.template(template)(this))
             dialog.envoiFacture(_this, mailText, false, function(err, text, acquitte, date) {
@@ -2712,7 +2727,6 @@ angular.module('edison')
         Intervention.prototype.annulation = function(cb) {
             var _this = this;
             dialog.getCauseAnnulation(_this, function(err, causeAnnulation, reinit, sms, textSms) {
-                console.log(err, causeAnnulation, reinit, sms, textSms)
                 if (err) {
                     return typeof cb === 'function' && cb('err');
                 }

@@ -12,7 +12,6 @@
      _this.smallWin = window.innerWidth < 1200
      $(window).resize(function() {
          _this.smallWin = window.innerWidth < 1200
-         console.log('-->', _this.smallWin)
      })
 
      _this.tab = tabContainer.getCurrentTab();
@@ -62,13 +61,12 @@
 
      var lastChange = 0;
      $rootScope.$on(_this.model.toUpperCase() + '_CACHE_LIST_CHANGE', function(event, newData) {
-         if (tabContainer.getCurrentTab() && _this.tab.fullUrl === tabContainer.getCurrentTab().fullUrl && newData._date > lastChange) {
+         if (tabContainer.getCurrentTab() && _this.tab.fullUrl === tabContainer.getCurrentTab().fullUrl) {
              dataProvider.applyFilter(currentFilter, _this.tab.hash, _this.customFilter);
              _this.tableParams.reload();
              //_this.tableParams.orderBy(_this.tableParams.$params.sorting)
              //_this.tableParams.filter(_this.tableParams.$params.filter)
          }
-         lastChange = newData._date;
      })
 
 

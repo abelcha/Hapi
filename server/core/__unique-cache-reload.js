@@ -2,59 +2,52 @@
         var async = require('async');
         var _ = require('lodash');
 
-        return function(doc, callback) {
-            try {
+        _.mixin({
+            debounceArgs: function(fn, timeout, options) {
+                var __dbArgs = []
+                var __dbFn = _.debounce(function() {
+                    fn.call(undefined, __dbArgs);
+                    __dbArgs = []
+                }, timeout, options);
+                return function() {
+                    __dbArgs.push(_.values(arguments));
+                    __dbFn();
+                }
+            },
+            throttleArgs: function(fn, timeout, options) {
+                var _thArgs = []
+                var _thFn = _.throttle(function() {
+                    fn.call(undefined, _thArgs);
+                    _thArgs = []
+                }, timeout, options);
+                return function() {
+                    _thArgs.push(_.values(arguments));
+                    _thFn();
+                }
+            },
+        })
 
-                async.series({
-                    reloadFilter: function(cb) {
-                        core.model().reloadFilters({
-                            id: doc.id
-                        }, cb)
-                    },
-                    cacheList: function(cb) {
-                        redis.get(core.redisCacheListName.envify(), cb);
-                    },
-                    data:function(cb) {
-                        core.model().findById(doc.id, cb)
-                    }
-                }, function(err, resp) {
-                    try {
 
-                    if (resp.cacheList && resp.data) {
-                        var data = JSON.parse(resp.cacheList);
-                        var index = _.findIndex(data, function(e) {
-                            return e.id === resp.data.id;
-                        });
-                        result = resp.data.cache;
-                        if (index !== -1) {
-                            data[index] = result;
-                        } else {
-                            data.unshift(result);
-                        }
 
-                        edison.statsTelepro.reload().then(function(resp) {
-                            io.sockets.emit('filterStatsReload', resp);
-                        })
-                        redis.set(core.redisCacheListName.envify(), JSON.stringify(data), function() {
-                            result._date = Date.now()
-                            if (!isWorker) {
-                                io.sockets.emit(core.listChange, result);
-                                //sometimes it's too fast
-                                setTimeout(function() {
-                                    io.sockets.emit(core.listChange, result);
-                                }, 2500)
-                            }
-                            callback()
-                        });
-                    }
-                    } catch(e) {
-                        console.log(e.stack)
-                    }
+        return _.throttleArgs(function(docs) {
 
-                })
-            } catch (e) {
-                __catch(e)
+            if (!isWorker) {
+                return edison.worker.createJob({
+                    name: 'db',
+                    model: core.name,
+                    method: 'throttleCacheReload',
+                    req: docs
+                }).then(function(resp) {
+                    io.sockets.emit(core.listChange, {
+                        data: resp[0],
+                        ts: _.now()
+                    });
+                    io.sockets.emit('filterStatsReload', resp[1]);
+                    Promise.resolve('ok')
+                }, Promise.reject.bind(Promise))
             }
 
-        }
+        }, 3000, {
+            leading: true
+        })
     }

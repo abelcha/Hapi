@@ -2,6 +2,10 @@ module.exports = function(modelName, schema) {
     var core = requireLocal(['server', 'models', modelName, 'core.js'].join('/'));
     schema.statics.dump = require('./__dump')(core);
 
+    /* on save update cachelist + filter (=cacheActualise) */
+    schema.statics.uniqueCacheReload = require('./__unique-cache-reload')(core);
+    schema.statics.throttleCacheReload = require('./__throttle-cache-reload')(core);
+
 
     /* reload list of cache:{t:12, ...} for display  (getCache)*/
     schema.statics.cacheListReload = require('./__reload-cache-list')(core);
@@ -18,8 +22,6 @@ module.exports = function(modelName, schema) {
     }
 
 
-    /* on save update cachelist + filter (=cacheActualise) */
-    schema.statics.uniqueCacheReload = require('./__unique-cache-reload')(core);
 
 
     /* full reload on dump end*/

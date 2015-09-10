@@ -5,6 +5,8 @@ module.exports = function(core) {
         return new Promise(function(resolve, reject) {
             core.model().find({}, {
                 cache: true,
+            }).sort({
+                id: -1
             }).then(function(resp) {
                 var cache = JSON.stringify(_.pluck(resp, 'cache'));
                 resp = null;

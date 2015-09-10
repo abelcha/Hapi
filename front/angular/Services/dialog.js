@@ -159,12 +159,12 @@ angular.module('edison').factory('dialog', function($mdDialog, edisonAPI, config
                     inter.datePlain = moment(inter.date.intervention).format('DD/MM/YYYY')
                     $scope.textSms = _.template("L'intervention {{id}} chez {{client.civilite}} {{client.nom}} à {{client.address.v}} le {{datePlain}} a été annulé. \nMerci de ne pas intervenir. \nEdison Services")(inter)
                     $scope.answer = function(resp) {
-                        if (!resp) {
+                        if (!resp && $scope.ca) {
                             return LxNotificationService.error("Veuillez renseigner une raison d'annulation");
                         }
+                        $mdDialog.hide();
                         if (!$scope.ca)
                             return cb('nope');
-                        $mdDialog.hide();
                         if (resp)
                             return cb(null, resp, $scope.reinit, $scope.sendSms, $scope.textSms);
                         return cb('nope');

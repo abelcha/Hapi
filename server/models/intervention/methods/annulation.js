@@ -6,7 +6,6 @@ module.exports = function(schema) {
         populateArtisan: true,
         method: 'POST',
         fn: function(inter, req, res) {
-            console.log(inter)
             return new Promise(function(resolve, reject) {
                 inter.date.annulation = new Date;
                 inter.date.envoi = undefined;

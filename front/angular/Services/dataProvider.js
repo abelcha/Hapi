@@ -4,9 +4,11 @@ angular.module('edison').factory('DataProvider', ['edisonAPI', 'socket', '$rootS
         var _this = this;
         this.model = model;
         this.hashModel = hashModel || 't';
-        socket.on(_this.socketListChange(), function(newData) {
-            if (_this.getData()) {
-                _this.updateData(newData);
+        this.rand = new Date
+        socket.on(_this.socketListChange(), function(change) {
+            if (_this.appliedList.indexOf(change.ts) === -1) {
+                _this.appliedList.push(change.ts)
+                _this.updateData(change.data);
             }
         });
     }
@@ -15,6 +17,7 @@ angular.module('edison').factory('DataProvider', ['edisonAPI', 'socket', '$rootS
         var _this = this;
         return _this.model.toUpperCase() + '_CACHE_LIST_CHANGE';
     }
+    DataProvider.prototype.appliedList = [];
 
     DataProvider.prototype.data = {}
 
@@ -61,18 +64,35 @@ angular.module('edison').factory('DataProvider', ['edisonAPI', 'socket', '$rootS
         }
     }
 
-    DataProvider.prototype.updateData = function(newRow) {
+    DataProvider.prototype.updateData = function(newRows) {
         var _this = this;
         if (this.getData()) {
-            var index = _.findIndex(this.getData(), function(e) {
-                return e.id === newRow.id
-            });
-            if (index === -1) {
-                _this.getData().unshift(newRow)
-            } else {
-                _this.getData()[index] = newRow;
+            var id_list = _(newRows).flatten().map('id').value();
+            console.log('here', id_list)
+
+            for (var i = 0; i < _this.getData().length && id_list.length; i++) {
+                var pos = id_list.indexOf(_this.getData()[i].id)
+                if (pos >= 0) {
+                    _this.getData()[i] = newRows[pos]
+                    id_list.splice(pos, 1);
+                }
+            };
+            if (id_list.length) {
+                var shift = _(newRows).filter(function(e) {
+                    return _.includes(id_list, e.id);
+                }).map('cache').value()
+                _this.getData().unshift(shift)
             }
-            $rootScope.$broadcast(_this.socketListChange(), newRow);
+            $rootScope.$broadcast(_this.socketListChange());
+            /* var index = _.findIndex(this.getData(), function(e) {
+                 return e.id === newRow.id
+             });
+             if (index === -1) {
+                 _this.getData().unshift(newRow)
+             } else {
+                 _this.getData()[index] = newRow;
+             }
+             */
         }
     }
 
