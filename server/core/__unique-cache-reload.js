@@ -32,11 +32,12 @@
         return _.throttleArgs(function(docs) {
 
             if (!isWorker) {
+                console.time('throttleCacheReload')
                 return edison.worker.createJob({
                     name: 'db',
                     model: core.name,
                     method: 'throttleCacheReload',
-                    req: docs
+                    req: _(docs).flatten().map('id').uniq().value()
                 }).then(function(resp) {
                     io.sockets.emit(core.listChange, {
                         data: resp[0],
@@ -44,10 +45,11 @@
                     });
                     io.sockets.emit('filterStatsReload', resp[1]);
                     Promise.resolve('ok')
+                    console.timeEnd('throttleCacheReload')
                 }, Promise.reject.bind(Promise))
             }
 
-        }, 3000, {
+        }, 5000, {
             leading: true
         })
     }

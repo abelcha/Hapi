@@ -3,9 +3,8 @@
         var _ = require('lodash');
 
 
-        return function(docs) {
+        return function(id_list) {
             return new Promise(function(resolve, reject) {
-                var id_list = _(docs).flatten().map('id').value();
                 async.series({
                     reloadFilter: function(cb) {
                         core.model().reloadFilters({
@@ -35,7 +34,7 @@
 
                     try {
 
-                        console.log('NBS ==> ',  resp.data.length)
+                        console.log('NBS ==> ',  resp.data.length, id_list)
                         if (resp.cacheList && resp.data) {
                             var cache = JSON.parse(resp.cacheList);
                             for (var i = 0; i < cache.length && id_list.length; i++) {
