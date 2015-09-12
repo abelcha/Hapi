@@ -23,6 +23,15 @@ global.jobs = edison.worker.initJobQueue();
 
 global.isWorker = false;
 
+if (envProd) {
+    var net = require('net');
+
+    var socket = net.createConnection(2003, "6ede54ad.carbon.hostedgraphite.com", function() {
+        socket.write("26b9bf18-ab21-493e-bea7-31aff56c95cd.test.testing 1.2\n");
+        socket.end();
+    });
+}
+
 
 new edison.timer();
 
