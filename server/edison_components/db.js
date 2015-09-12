@@ -24,7 +24,7 @@ module.exports = function() {
                 //console.log(method)
             }
         });
-        if (model === 'intervention' || model === 'devis' || model === 'artisan') {
+        if (model === 'intervention' || model === 'devis') {
             requireLocal('server/core')(model, schema)
         }
         var model = mongoose.model(model, schema);
