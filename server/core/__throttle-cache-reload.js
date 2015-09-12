@@ -25,16 +25,12 @@
                             cache: true
                         }, cb)
                     },
-                    statsTelepro: function(cb) {
-                        edison.statsTelepro.reload().then(function(resp) {
-                            cb(null, resp);
-                        });
-                    }
+            
                 }, function(err, resp) {
 
                     try {
 
-                        console.log('NBS ==> ',  resp.data.length, id_list)
+                        console.log('NBS ==> ', resp.data.length, id_list)
                         if (resp.cacheList && resp.data) {
                             var cache = JSON.parse(resp.cacheList);
                             for (var i = 0; i < cache.length && id_list.length; i++) {
@@ -45,15 +41,16 @@
                                 }
                             };
                             if (id_list.length) {
-                                var shift = _(resp.data).filter(function(e) {
+                                var z = _.filter(resp.data, function(e) {
                                     return _.includes(id_list, e._id);
-                                }).map('cache').value()
-                                cache.unshift(shift)
+                                })
+                                _.each(z, function(x) {
+                                    cache.unshift(x.cache)
+                                })
                             }
-
                         }
                         redis.set(core.redisCacheListName.envify(), JSON.stringify(cache), function() {
-                            resolve([_.map(resp.data, 'cache'), resp.statsTelepro]);
+                            resolve(_.map(resp.data, 'cache'));
                         });
                     } catch (e) {
                         __catch(e);

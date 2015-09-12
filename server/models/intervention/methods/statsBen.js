@@ -39,40 +39,14 @@ module.exports = function(schema) {
                         }
                     })
                     _.times(31, function(i) {
-                    //    console.log('-->', i)
                         resp.push({
                             day: i + 1,
                             prix: 0,
                             recu:'En Attente'
                         })
                     })
-                  //  console.log(resp)
                     resolve(resp);
-                    // console.log(err, resp);
                 })
-                /*  db.model(model ||  'intervention')
-                      .aggregate()
-                      .match({
-
-                      })
-                      .group({
-                          _id: {
-                              telepro: customGroup || '$login.ajout'
-                          },
-                          mnt: {
-                              $sum: "$prixAnnonce"
-                          },
-                          total: {
-                              $sum: 1
-                          }
-                      })
-                      .project({
-                          _id: 1,
-                          name: '$_id.st',
-                          login: '$_id.telepro',
-                          total: 1,
-                          montant: db.utils.round("$mnt")
-                      }).exec(cb);*/
         })
     }
 }

@@ -40,12 +40,12 @@
                     req: _(docs).flatten().map('id').uniq().value()
                 }).then(function(resp) {
                     io.sockets.emit(core.listChange, {
-                        data: resp[0],
+                        data: resp,
                         ts: _.now()
                     });
-                    io.sockets.emit('filterStatsReload', resp[1]);
-                    Promise.resolve('ok')
-                    console.timeEnd('throttleCacheReload')
+                    edison.statsTelepro.reload().then(function(_resp) {
+                        io.sockets.emit('filterStatsReload', _resp);
+                    });
                 }, Promise.reject.bind(Promise))
             }
 

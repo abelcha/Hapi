@@ -68,8 +68,6 @@ angular.module('edison').factory('DataProvider', ['edisonAPI', 'socket', '$rootS
         var _this = this;
         if (this.getData()) {
             var id_list = _(newRows).flatten().map('id').value();
-            console.log('here', id_list)
-
             for (var i = 0; i < _this.getData().length && id_list.length; i++) {
                 var pos = id_list.indexOf(_this.getData()[i].id)
                 if (pos >= 0) {
@@ -78,22 +76,16 @@ angular.module('edison').factory('DataProvider', ['edisonAPI', 'socket', '$rootS
                 }
             };
             if (id_list.length) {
-                var shift = _(newRows).filter(function(e) {
+                var z = _.filter(newRows, function(e) {
                     return _.includes(id_list, e.id);
-                }).map('cache').value()
-                _this.getData().unshift(shift)
+                })
+                _.each(z, function(x) {
+                    _this.getData().unshift(x)
+                })
             }
             $rootScope.$broadcast(_this.socketListChange());
-            /* var index = _.findIndex(this.getData(), function(e) {
-                 return e.id === newRow.id
-             });
-             if (index === -1) {
-                 _this.getData().unshift(newRow)
-             } else {
-                 _this.getData()[index] = newRow;
-             }
-             */
         }
+
     }
 
     DataProvider.prototype.getData = function() {

@@ -1950,8 +1950,6 @@ angular.module('edison').factory('DataProvider', ['edisonAPI', 'socket', '$rootS
         var _this = this;
         if (this.getData()) {
             var id_list = _(newRows).flatten().map('id').value();
-            console.log('here', id_list)
-
             for (var i = 0; i < _this.getData().length && id_list.length; i++) {
                 var pos = id_list.indexOf(_this.getData()[i].id)
                 if (pos >= 0) {
@@ -1960,22 +1958,16 @@ angular.module('edison').factory('DataProvider', ['edisonAPI', 'socket', '$rootS
                 }
             };
             if (id_list.length) {
-                var shift = _(newRows).filter(function(e) {
+                var z = _.filter(newRows, function(e) {
                     return _.includes(id_list, e.id);
-                }).map('cache').value()
-                _this.getData().unshift(shift)
+                })
+                _.each(z, function(x) {
+                    _this.getData().unshift(x)
+                })
             }
             $rootScope.$broadcast(_this.socketListChange());
-            /* var index = _.findIndex(this.getData(), function(e) {
-                 return e.id === newRow.id
-             });
-             if (index === -1) {
-                 _this.getData().unshift(newRow)
-             } else {
-                 _this.getData()[index] = newRow;
-             }
-             */
         }
+
     }
 
     DataProvider.prototype.getData = function() {
@@ -3757,6 +3749,83 @@ var telephoneMatch = function(tabContainer, edisonAPI, $rootScope, $scope, $loca
 }
 angular.module('edison').controller('telephoneMatch', telephoneMatch);
 
+var LpaController = function(openPost, $window, tabContainer, edisonAPI, $rootScope, LxProgressService, LxNotificationService, FlushList) {
+    "use strict";
+    var _this = this
+    var tab = tabContainer.getCurrentTab();
+    tab.setTitle('LPA')
+    _this.loadData = function(prevChecked) {
+        LxProgressService.circular.show('#5fa2db', '#globalProgress');
+        edisonAPI.compta.lpa().then(function(result) {
+            _.each(result.data, function(sst) {
+                sst.list = new FlushList(sst.list, prevChecked);
+                _this.reloadList(sst)
+            })
+            $rootScope.lpa = result.data
+            LxProgressService.circular.hide()
+        })
+    }
+    if (!$rootScope.lpa)
+        _this.loadData()
+    _this.checkArtisan = function(sst) {
+        sst.checked = !sst.checked
+        _.each(sst.list.getList(), function(e) {
+            e.checked = sst.checked;
+        })
+    }
+    _this.updateNumeroCheque = function(index) {
+        var base = $rootScope.lpa[index].numeroCheque;
+        if (base) {
+            for (var i = index; i < $rootScope.lpa.length; i++) {
+                $rootScope.lpa[i].numeroCheque = ++base
+            };
+        }
+    }
+    _this.flush = function() {
+        var rtn = [];
+        _.each($rootScope.lpa, function(sst) {
+            _.each(sst.list.getList(), function(e) {
+                if (e.checked) {
+                    e.numeroCheque = sst.numeroCheque
+                    rtn.push(e);
+                }
+            })
+        })
+        edisonAPI.compta.flush(rtn).then(function(resp) {
+            LxNotificationService.success(resp.data);
+            _this.reloadLPA()
+        }).catch(function(err) {
+            LxNotificationService.error(err.data);
+        })
+    }
+    _this.reloadList = function(artisan) {
+        artisan.total = artisan.list.getTotal()
+        artisan.total = artisan.list.getTotal(true)
+        artisan.total = artisan.list.getTotal()
+    }
+    _this.reloadLPA = function() {
+        var rtn = [];
+        _.each($rootScope.lpa, function(sst) {
+            _.each(sst.list.getList(), function(e) {
+                if (e.checked) {
+                    rtn.push(e.id);
+                }
+            })
+        })
+        _this.loadData(rtn)
+    }
+
+    _this.print = function(type) {
+        openPost('/api/intervention/print', {
+            type: type,
+            data: $rootScope.lpa
+        });
+    }
+}
+
+
+angular.module('edison').controller('LpaController', LpaController);
+
 
  angular.module('edison').directive('edisonMap', ['$window', 'Map', 'mapAutocomplete', 'Address',
      function($window, Map, mapAutocomplete, Address) {
@@ -4408,83 +4477,6 @@ var InterventionCtrl = function(Description, Signalement, ContextMenu, $window, 
 }
 
 angular.module('edison').controller('InterventionController', InterventionCtrl);
-
-var LpaController = function(openPost, $window, tabContainer, edisonAPI, $rootScope, LxProgressService, LxNotificationService, FlushList) {
-    "use strict";
-    var _this = this
-    var tab = tabContainer.getCurrentTab();
-    tab.setTitle('LPA')
-    _this.loadData = function(prevChecked) {
-        LxProgressService.circular.show('#5fa2db', '#globalProgress');
-        edisonAPI.compta.lpa().then(function(result) {
-            _.each(result.data, function(sst) {
-                sst.list = new FlushList(sst.list, prevChecked);
-                _this.reloadList(sst)
-            })
-            $rootScope.lpa = result.data
-            LxProgressService.circular.hide()
-        })
-    }
-    if (!$rootScope.lpa)
-        _this.loadData()
-    _this.checkArtisan = function(sst) {
-        sst.checked = !sst.checked
-        _.each(sst.list.getList(), function(e) {
-            e.checked = sst.checked;
-        })
-    }
-    _this.updateNumeroCheque = function(index) {
-        var base = $rootScope.lpa[index].numeroCheque;
-        if (base) {
-            for (var i = index; i < $rootScope.lpa.length; i++) {
-                $rootScope.lpa[i].numeroCheque = ++base
-            };
-        }
-    }
-    _this.flush = function() {
-        var rtn = [];
-        _.each($rootScope.lpa, function(sst) {
-            _.each(sst.list.getList(), function(e) {
-                if (e.checked) {
-                    e.numeroCheque = sst.numeroCheque
-                    rtn.push(e);
-                }
-            })
-        })
-        edisonAPI.compta.flush(rtn).then(function(resp) {
-            LxNotificationService.success(resp.data);
-            _this.reloadLPA()
-        }).catch(function(err) {
-            LxNotificationService.error(err.data);
-        })
-    }
-    _this.reloadList = function(artisan) {
-        artisan.total = artisan.list.getTotal()
-        artisan.total = artisan.list.getTotal(true)
-        artisan.total = artisan.list.getTotal()
-    }
-    _this.reloadLPA = function() {
-        var rtn = [];
-        _.each($rootScope.lpa, function(sst) {
-            _.each(sst.list.getList(), function(e) {
-                if (e.checked) {
-                    rtn.push(e.id);
-                }
-            })
-        })
-        _this.loadData(rtn)
-    }
-
-    _this.print = function(type) {
-        openPost('/api/intervention/print', {
-            type: type,
-            data: $rootScope.lpa
-        });
-    }
-}
-
-
-angular.module('edison').controller('LpaController', LpaController);
 
 var ArtisanController = function($timeout, tabContainer, LxProgressService, FiltersFactory, ContextMenu, edisonAPI, DataProvider, $routeParams, $location, $q, $rootScope, $filter, config, ngTableParams) {
     "use strict";
