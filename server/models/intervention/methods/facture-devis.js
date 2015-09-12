@@ -79,9 +79,12 @@ module.exports = function(schema) {
         } catch (e) {
             return res.status(400).send('bad data')
         }
-
         doc.id = doc.id ||  "00000"
         doc.type = 'devis'
+        doc.facture = doc.client;
+        doc.facture.tel = doc.client.telephone.tel1;
+        doc.acquitte = false;
+        doc.type = "devis"
         var result = PDF([{
             model: 'facture',
             options: doc
