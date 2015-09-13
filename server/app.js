@@ -11,6 +11,8 @@ express.response.jsonStr = function(obj, headers, status) {
     return this.send(obj, headers, status);
 };
 
+console.log('-->', process.version)
+
 var app = express();
 var http = require('http').Server(app);
 var port = (process.env.PORT || 8080);
@@ -31,7 +33,6 @@ global.isWorker = false;
         socket.end();
     });
 }*/
-
 
 new edison.timer();
 
@@ -115,7 +116,7 @@ var getEmbeddedScript = function(req) {
 }
 
 app.use(function(req, res, next) {
-    if (req.url.includes('.'))
+    if (_.includes(req.url, '.'))
         return next();
     if (req.session && !req.session.id && (!req.query.x)) {
         if (req.url.startsWith('/api/')) {
@@ -125,7 +126,7 @@ app.use(function(req, res, next) {
         }
     } else {
 
-        if (!req.url.startsWith('/api/')) {
+        if (!_.startsWith(req.url, '/api/')) {
             fs.readFile(process.cwd() + "/front/views/index.html", 'utf8', function(err, data) {
                 if (err) {
                     return res.status(500).send('error #00412')

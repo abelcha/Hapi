@@ -2,6 +2,7 @@ module.exports = function() {
     var mongoose = require("mongoose");
     var fs = require('fs');
     var path = require('path');
+    var _ = require('lodash');
 
     mongoose.connect(process.env.MONGOLAB_URI || 'mongodb://localhost/EDISON');
 
@@ -18,7 +19,7 @@ module.exports = function() {
         require(folder + '/validator')(schema);
 
         fs.readdirSync(folder + '/methods').forEach(function(method) {
-            if (method.endsWith('.js') && !method.startsWith('-')) {
+            if (_.endsWith(method, '.js') && !_.startsWith(method, '-')) {
                 require(folder + '/methods/' + method)(schema)
             } else {
                 //console.log(method)

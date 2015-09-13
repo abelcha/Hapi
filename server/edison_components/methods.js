@@ -30,5 +30,13 @@ module.exports = {
     mapGetStatic: function(req, res) {
         return edison.map.getStaticDirections(req, res);
     },
-    
+    memory: function(req, res) {
+        var prettyBytes = require('pretty-bytes');
+        var _ = require('lodash')
+        var u = process.memoryUsage();
+        u = _.map(u, prettyBytes);
+        console.log(u)
+        res.send('ok')
+    }
+
 }

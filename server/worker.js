@@ -29,13 +29,10 @@ try {
         });
 
         jobs.process('db', function(job, done) {
-            console.log('job')
             var terminated = false
-            console.log(job.data.model, job.data.method)
             global.currenWorkerJob = job;
             db.model(job.data.model)[job.data.method](job.data.req).then(function(result)  {
                 terminated = true;
-                console.log("job success")
                 done(null, result);
             }, function(err) {
                 console.log(err.stack)
@@ -46,10 +43,7 @@ try {
 
 
         jobs.process('db_id', function(job, done) {
-            console.log('job')
-            console.log(job.data.model, job.data.method)
             db.model(job.data.model)[job.data.method].fn(job.data.data, job.data.req).then(function(result)  {
-                console.log("job success")
                 done(null, result);
             }, function(err) {
                 console.log("job error", err);
