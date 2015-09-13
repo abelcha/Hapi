@@ -372,8 +372,8 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
             controller: "archivesReglementController",
             controllerAs: "vm",
         })
-        .when('/eliran/telephoneMatch', {
-            templateUrl: "Pages/Eliran/telephoneMatch.html",
+        .when('/tools/telephoneMatch', {
+            templateUrl: "Pages/Tools/telephoneMatch.html",
             controller: "telephoneMatch",
             controllerAs: "vm",
         })
@@ -1403,7 +1403,11 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
                 return $http.post("/api/intervention/" + id + "/sendFactureAcquitte", options);
             },
             statsBen: function(options) {
-                return $http.get("/api/intervention/statsBen", options);
+                return $http({
+                    method: 'GET',
+                    url: "/api/intervention/statsBen",
+                    params: options
+                });
             }
         },
         artisan: {
@@ -3717,115 +3721,6 @@ var DashboardController = function(edisonAPI, tabContainer, $routeParams, $locat
 angular.module('edison').controller('DashboardController', DashboardController);
 
 
-var telephoneMatch = function(tabContainer, edisonAPI, $rootScope, $scope, $location, LxProgressService, socket) {
-    "use strict";
-    var _this = this;
-    _this.tab = tabContainer.getCurrentTab();
-    _this.tab.setTitle('TelMatch');
-    $scope.__txt_tel = $rootScope.__txt_tel
-    $rootScope.getTelMatch = function() {
-        LxProgressService.circular.show('#5fa2db', '#globalProgress');
-        $rootScope.__txt_tel = $scope.__txt_tel
-        edisonAPI.intervention.getTelMatch({
-            q: $rootScope.__txt_tel
-        }).then(_.noop, function() {
-        LxProgressService.circular.hide()
-
-        })
-    }
-
-    socket.on('intervention_db_telMatches', function(data) {
-        console.log('uyau')
-        $rootScope.globalProgressCounter = data + '%';
-    })
-
-    socket.on('telephoneMatch', function(data) {
-        $rootScope.globalProgressCounter = ""
-        LxProgressService.circular.hide()
-        console.log(data);
-        $scope.resp = data
-    })
-
-}
-angular.module('edison').controller('telephoneMatch', telephoneMatch);
-
-var LpaController = function(openPost, $window, tabContainer, edisonAPI, $rootScope, LxProgressService, LxNotificationService, FlushList) {
-    "use strict";
-    var _this = this
-    var tab = tabContainer.getCurrentTab();
-    tab.setTitle('LPA')
-    _this.loadData = function(prevChecked) {
-        LxProgressService.circular.show('#5fa2db', '#globalProgress');
-        edisonAPI.compta.lpa().then(function(result) {
-            _.each(result.data, function(sst) {
-                sst.list = new FlushList(sst.list, prevChecked);
-                _this.reloadList(sst)
-            })
-            $rootScope.lpa = result.data
-            LxProgressService.circular.hide()
-        })
-    }
-    if (!$rootScope.lpa)
-        _this.loadData()
-    _this.checkArtisan = function(sst) {
-        sst.checked = !sst.checked
-        _.each(sst.list.getList(), function(e) {
-            e.checked = sst.checked;
-        })
-    }
-    _this.updateNumeroCheque = function(index) {
-        var base = $rootScope.lpa[index].numeroCheque;
-        if (base) {
-            for (var i = index; i < $rootScope.lpa.length; i++) {
-                $rootScope.lpa[i].numeroCheque = ++base
-            };
-        }
-    }
-    _this.flush = function() {
-        var rtn = [];
-        _.each($rootScope.lpa, function(sst) {
-            _.each(sst.list.getList(), function(e) {
-                if (e.checked) {
-                    e.numeroCheque = sst.numeroCheque
-                    rtn.push(e);
-                }
-            })
-        })
-        edisonAPI.compta.flush(rtn).then(function(resp) {
-            LxNotificationService.success(resp.data);
-            _this.reloadLPA()
-        }).catch(function(err) {
-            LxNotificationService.error(err.data);
-        })
-    }
-    _this.reloadList = function(artisan) {
-        artisan.total = artisan.list.getTotal()
-        artisan.total = artisan.list.getTotal(true)
-        artisan.total = artisan.list.getTotal()
-    }
-    _this.reloadLPA = function() {
-        var rtn = [];
-        _.each($rootScope.lpa, function(sst) {
-            _.each(sst.list.getList(), function(e) {
-                if (e.checked) {
-                    rtn.push(e.id);
-                }
-            })
-        })
-        _this.loadData(rtn)
-    }
-
-    _this.print = function(type) {
-        openPost('/api/intervention/print', {
-            type: type,
-            data: $rootScope.lpa
-        });
-    }
-}
-
-
-angular.module('edison').controller('LpaController', LpaController);
-
 
  angular.module('edison').directive('edisonMap', ['$window', 'Map', 'mapAutocomplete', 'Address',
      function($window, Map, mapAutocomplete, Address) {
@@ -4478,6 +4373,83 @@ var InterventionCtrl = function(Description, Signalement, ContextMenu, $window, 
 
 angular.module('edison').controller('InterventionController', InterventionCtrl);
 
+var LpaController = function(openPost, $window, tabContainer, edisonAPI, $rootScope, LxProgressService, LxNotificationService, FlushList) {
+    "use strict";
+    var _this = this
+    var tab = tabContainer.getCurrentTab();
+    tab.setTitle('LPA')
+    _this.loadData = function(prevChecked) {
+        LxProgressService.circular.show('#5fa2db', '#globalProgress');
+        edisonAPI.compta.lpa().then(function(result) {
+            _.each(result.data, function(sst) {
+                sst.list = new FlushList(sst.list, prevChecked);
+                _this.reloadList(sst)
+            })
+            $rootScope.lpa = result.data
+            LxProgressService.circular.hide()
+        })
+    }
+    if (!$rootScope.lpa)
+        _this.loadData()
+    _this.checkArtisan = function(sst) {
+        sst.checked = !sst.checked
+        _.each(sst.list.getList(), function(e) {
+            e.checked = sst.checked;
+        })
+    }
+    _this.updateNumeroCheque = function(index) {
+        var base = $rootScope.lpa[index].numeroCheque;
+        if (base) {
+            for (var i = index; i < $rootScope.lpa.length; i++) {
+                $rootScope.lpa[i].numeroCheque = ++base
+            };
+        }
+    }
+    _this.flush = function() {
+        var rtn = [];
+        _.each($rootScope.lpa, function(sst) {
+            _.each(sst.list.getList(), function(e) {
+                if (e.checked) {
+                    e.numeroCheque = sst.numeroCheque
+                    rtn.push(e);
+                }
+            })
+        })
+        edisonAPI.compta.flush(rtn).then(function(resp) {
+            LxNotificationService.success(resp.data);
+            _this.reloadLPA()
+        }).catch(function(err) {
+            LxNotificationService.error(err.data);
+        })
+    }
+    _this.reloadList = function(artisan) {
+        artisan.total = artisan.list.getTotal()
+        artisan.total = artisan.list.getTotal(true)
+        artisan.total = artisan.list.getTotal()
+    }
+    _this.reloadLPA = function() {
+        var rtn = [];
+        _.each($rootScope.lpa, function(sst) {
+            _.each(sst.list.getList(), function(e) {
+                if (e.checked) {
+                    rtn.push(e.id);
+                }
+            })
+        })
+        _this.loadData(rtn)
+    }
+
+    _this.print = function(type) {
+        openPost('/api/intervention/print', {
+            type: type,
+            data: $rootScope.lpa
+        });
+    }
+}
+
+
+angular.module('edison').controller('LpaController', LpaController);
+
 var ArtisanController = function($timeout, tabContainer, LxProgressService, FiltersFactory, ContextMenu, edisonAPI, DataProvider, $routeParams, $location, $q, $rootScope, $filter, config, ngTableParams) {
     "use strict";
     var _this = this;
@@ -4673,35 +4645,40 @@ angular.module('edison').controller('SearchController', SearchController);
 
 var StatsController = function(tabContainer, $routeParams, edisonAPI, $rootScope, $scope, $location, LxProgressService, socket) {
     "use strict";
-    console.log("swef")
-    console.log('==>', $routeParams);
-
-    /* 
- var svg = dimple.newSvg("#chartContainer", 600, 200);
-            var myChart = new dimple.chart(svg, resp);
-            myChart.defaultColors = [
-                new dimple.color("#4CAF50"), //RGL
-                new dimple.color("#F44336"), //ANN
-                new dimple.color("#FDD835"), //ATT
-                new dimple.color("#F44336"), //ENV
-                new dimple.color("#0091EA"), //PAY
-                new dimple.color("black"),
-            ];
-            myChart.setBounds(60, 30, 380, 120)
-            var x = myChart.addCategoryAxis("x", "date");
-            x.addOrderRule("dt");
-            myChart.addMeasureAxis("y", "total");
-            myChart.addSeries("status", dimple.plot.bar);
-            myChart.addLegend(60, 10, 410, 20, "right");
-            myChart.draw();
-            console.log('===>', resp.data);
-
-*/
     var _this = this;
     _this.tab = tabContainer.getCurrentTab();
     _this.tab.setTitle('Stats');
-    edisonAPI.intervention.statsBen().then(function(resp) {
-            var svg = dimple.newSvg("#chartContainer", 1200, 400);
+
+    var d = new Date();
+    var start = {
+        month: 9,
+        year: 2013
+    }
+    var current = {
+        month: d.getMonth(),
+        year: d.getFullYear()
+    }
+
+    var frenchMonths = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Aout', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
+
+    _this.dateSelect = [];
+
+    _.times(current.year - start.year + 1, function(yr) {
+        _.times(12, function(mth) {
+            _this.dateSelect.push({
+                m: mth + 1,
+                y: start.year + yr,
+                t: frenchMonths[mth] + ' ' + (start.year + yr)
+            })
+        })
+    })
+    _this.dateSelect.splice(current.month - 11)
+
+
+    $scope.$watch("selectedDate", function(curr) {
+        edisonAPI.intervention.statsBen(curr).then(function(resp) {
+            $('#chartContainer > *').remove()
+            var svg = dimple.newSvg("#chartContainer", 1300, 400);
             var myChart = new dimple.chart(svg, resp.data);
             myChart.defaultColors = [
                 new dimple.color("#4CAF50"), //RGL
@@ -4714,15 +4691,60 @@ var StatsController = function(tabContainer, $routeParams, edisonAPI, $rootScope
             myChart.setBounds(60, 30, 1000, 300)
             var x = myChart.addCategoryAxis("x", "day");
             //x.addOrderRule("dt");
-            myChart.addMeasureAxis("y", "prix");
+            var y = myChart.addMeasureAxis("y", "prix");
+            //y.tickFormat = ',.0f';
             myChart.addSeries("recu", dimple.plot.bar);
             //myChart.addPctAxis("y", "paye");
+            myChart.assignColor("En Attente", "#2196F3");
+            myChart.assignColor("Encaissé", "#4CAF50");
             myChart.addLegend(60, 10, 410, 20, "right");
             myChart.draw();
-            console.log('===>', resp.data);
+            console.log(svg)
+            var xAxis = svg.axis()
+                .scale(xScale)
+                .tickFormat(function(d) {
+                    return dataset[d].keyword;
+                })
+                .orient("bottom");
+
+        })
     })
+
+    $scope.selectedDate = _this.dateSelect[_this.dateSelect.length - 1];
+
+
 }
 angular.module('edison').controller('StatsController', StatsController);
 
+var telephoneMatch = function(tabContainer, edisonAPI, $rootScope, $scope, $location, LxProgressService, socket) {
+    "use strict";
+    var _this = this;
+    _this.tab = tabContainer.getCurrentTab();
+    _this.tab.setTitle('TelMatch');
+    $scope.__txt_tel = $rootScope.__txt_tel
+    $rootScope.getTelMatch = function() {
+        LxProgressService.circular.show('#5fa2db', '#globalProgress');
+        $rootScope.__txt_tel = $scope.__txt_tel
+        edisonAPI.intervention.getTelMatch({
+            q: $rootScope.__txt_tel
+        }).then(_.noop, function() {
+        LxProgressService.circular.hide()
+
+        })
+    }
+
+    socket.on('intervention_db_telMatches', function(data) {
+        console.log('uyau')
+        $rootScope.globalProgressCounter = data + '%';
+    })
+
+    socket.on('telephoneMatch', function(data) {
+        $rootScope.globalProgressCounter = ""
+        LxProgressService.circular.hide()
+        $scope.resp = data
+    })
+
+}
+angular.module('edison').controller('telephoneMatch', telephoneMatch);
 
 //# sourceMappingURL=all.js.map

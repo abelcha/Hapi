@@ -143,7 +143,11 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
                 return $http.post("/api/intervention/" + id + "/sendFactureAcquitte", options);
             },
             statsBen: function(options) {
-                return $http.get("/api/intervention/statsBen", options);
+                return $http({
+                    method: 'GET',
+                    url: "/api/intervention/statsBen",
+                    params: options
+                });
             }
         },
         artisan: {

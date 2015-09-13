@@ -37,13 +37,16 @@ module.exports = function(schema) {
 
             var q = req.body.q.split('\n');
             q = _.map(q, function(e) {
-                return {
-                    origin: e.split('\t')[0].replace('33', '0'),
-                    client: e.split('\t')[1].replace('33', '0')
+                var sp = e.split(/\t| /);
+                if (sp.length === 2) {
+                    return {
+                        origin: sp[0].replace('33', '0'),
+                        client: sp[1].replace('33', '0')
+                    }
                 }
             })
             q = _.filter(q, function(e) {
-                return e.client.length == 10;
+                return e.client && e.client.length == 10;
             })
             q = _.groupBy(q, 'origin');
             //console.log(q)
@@ -85,7 +88,7 @@ module.exports = function(schema) {
                         })
                         ++i
                     if (global.currenWorkerJob) {
-                        global.currenWorkerJob.progress(i,  _.size(q));
+                        global.currenWorkerJob.progress(i, _.size(q));
                     }
                     //console.log('-->', e[0].origin, _.round(100 * (i / _.size(q)), 2), '%')
                     var st = {

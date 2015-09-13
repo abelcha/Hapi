@@ -1,5 +1,11 @@
 <div class="card">
     <div class="row">
+        <div style="padding:40px" class="col-sm-3">
+            <select class="form-control" ng-model="selectedDate" ng-options="ds as ds.t for ds in vm.dateSelect">
+            </select>
+        </div>
+    </div>
+    <div class="row">
         <div id="chartContainer" class="col-sm-4">
         </div>
     </div>

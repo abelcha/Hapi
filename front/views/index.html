@@ -30,20 +30,20 @@
                                     <img src="/img/profile/default.jpg" alt="">
                                     <span bold>{{user.login | uppercase}}</span>
                 </a>
-                <ul ng-class="{'display-block' : userDropdown}" class="dropdown-menu open" >
+                <ul ng-class="{'display-block' : userDropdown}" class="dropdown-menu open">
                     <!--   <li><a href="#"><span class="label label-warning pull-right">New</span>Profile</a></li> -->
                     <li ng-repeat="u in app_users" ng-click="changeUser(u)">
                         <a href="#">
                             <span class="badge badge-primary pull-right"></span> {{u.login}}
                         </a>
-                    </li><!-- 
+                    </li>
+                    <!-- 
                     <li><a href="#"><i class="dropdown-icon fa fa-cog"></i>&nbsp;&nbsp;Settings</a></li> -->
                     <li class="divider"></li>
                     <li><a href="/logout"><i class="dropdown-icon fa fa-power-off"></i>&nbsp;&nbsp;Log Out</a></li>
                 </ul>
                 </li>
                 </span>
-
                 <div id="main-navbar-collapse" class="collapse navbar-collapse main-navbar-collapse">
                     <!--  -->
                     <md-autocomplete class="searchBar" style="width: 100px;float: right;margin-top: 3px;margin-right: 40px;" md-search-text-change="null" md-min-length="3" md-selected-item-change="searchBox.change(selectedItem)" md-menu-class="autocomplete-custom-template" md-selected-item="selectedItem" md-search-text="searchText" md-autofocus="false" md-items="item in searchBox.search(searchText)" placeholder="Recherche..." md-item-text="item.description">
@@ -54,8 +54,7 @@
             </div>
             <!-- / .navbar-inner -->
         </div>
-        <side-bar ng-if="user.login && interventionsStats" ng-mouseenter="toggleSidebar(false)"
-        ng-mouseleave="toggleSidebar(true)">
+        <side-bar ng-if="user.login && interventionsStats" ng-mouseenter="toggleSidebar(false)" ng-mouseleave="toggleSidebar(true)">
             <drop-down id="service-intervention" title="Service Intervention" icon="circle" open-default="user.service === 'INTERVENTION'">
                 <link fltr="i_all" icon="th-list" title="Tous les Interventions"></link>
                 <drop-down title="Mes Interventions" icon="calendar" open-default="user.service === 'INTERVENTION'">
@@ -113,6 +112,10 @@
                 <simple-link icon="database" title="Archives Reglements" url="/compta/archivesReglement"></simple-link>
                 <simple-link icon="database" title="Archive Paiements" url="/compta/archivesPaiement"></simple-link>
             </drop-down>
+            <drop-down title="Outils" icon="circle" ng-if="user.root === true">
+                <simple-link icon="wrench" title="Telephone Match" url="/tools/telephoneMatch"></simple-link>
+                <simple-link icon="wrench" title="Stats C.A" url="/stats/ca"></simple-link>
+            </drop-down>
             <br>
             <br>
             <li>
@@ -131,7 +134,6 @@
                 </md-tabs>
             </div>
             <div id="content-wrapper">
-
                 <div ng-view style="margin-top: 16px;">
                 </div>
                 <div id="globalProgress" style="position:fixed;top: 50%;left: 57%;z-index: 12222;">

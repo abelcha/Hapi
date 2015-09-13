@@ -1,4 +1,4 @@
-var MD5 = require('MD5')
+var MD5 = require('md5')
 var _ = require("lodash");
 var requestp = require("request-promise")
 var Mobyt = function(user, pass) {

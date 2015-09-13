@@ -23,7 +23,6 @@ var telephoneMatch = function(tabContainer, edisonAPI, $rootScope, $scope, $loca
     socket.on('telephoneMatch', function(data) {
         $rootScope.globalProgressCounter = ""
         LxProgressService.circular.hide()
-        console.log(data);
         $scope.resp = data
     })
 

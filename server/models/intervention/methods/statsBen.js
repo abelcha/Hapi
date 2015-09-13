@@ -10,8 +10,7 @@ module.exports = function(schema) {
                     $lt: new Date(date.getFullYear(), date.getMonth() + 1, 0)
                 }
             }
-            var dateRange = getMonthRange('7', '2015')
-            console.log('->', dateRange)
+            var dateRange = getMonthRange(req.query.m - 1, req.query.y)
             db.model('intervention').aggregate()
                 .match({
                     'date.ajout': dateRange,
@@ -30,7 +29,6 @@ module.exports = function(schema) {
                     if (err) {
                         reject(err);
                     }
-                    console.log(resp);
                     resp = _.map(resp, function(e) {
                         return {
                             prix: e.prixFinal ||  e.prixAnnonce ||  0,
