@@ -46,17 +46,14 @@ module.exports = {
                     "75 rue des dames, 75017 Paris\n" +
                     "Tél. 09.72.51.08.01 (Ouvert de 09h00 à 12h30 / 14h00 à 16h30)</p>" +
                     "<p>" +
-                    "Pour un reglement par virement :\n" +
-                    "\n" +
-                    "RIB: 30004 01557 00010041423 30\n" +
+                    "Pour un reglement par virement :</p>" +
+                    "<p>RIB: 30004 01557 00010041423 30\n" +
                     "IBAN: FR76 3000 4015 5700 0100 4142 330\n" +
                     "BIC: BNPAFRPPPRG" +
                     "</p>" +
                     "<p>" +
-                    "Par ailleurs, si quelque raison s'opposait au règlement de la facture, nous vous remercions de nous le \nfaire savoir dans les plus brefs délais.\n" +
-                    "\n" +
-                    "Restant à votre entière disposition, nous vous prions de croire, Madame, Monsieur l'expression de nos \nsincères salutations distinguées.</p>" +
-
+                    "Par ailleurs, si quelque raison s'opposait au règlement de la facture, nous vous remercions de nous le \nfaire savoir dans les plus brefs délais.</p>" +
+                    "<p>Restant à votre entière disposition, nous vous prions de croire, Madame, Monsieur l'expression de nos sincères salutations distinguées.</p>" +
                     "<p>Merci d'indiquer la réference de la facture (<strong>{{id}}</strong>) dans le réglement. </p>" +
                     "<ul>" +
                     "<li>Ci-joint la facture</li>" +
