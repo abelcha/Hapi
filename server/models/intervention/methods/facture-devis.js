@@ -84,6 +84,7 @@ module.exports = function(schema) {
         doc.facture = doc.client;
         doc.facture.tel = doc.client.telephone.tel1;
         doc.acquitte = false;
+        doc.user = req.session;
         doc.type = "devis"
         var result = PDF([{
             model: 'facture',
