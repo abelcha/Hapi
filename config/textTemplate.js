@@ -10,7 +10,7 @@ module.exports = {
                 sms += "\nMerci de prendre rdv avec le client au " + this.client.telephone.tel1;
                 sms += this.client.telephone.tel2 ? " ou au " + this.client.telephone.tel2 : "";
                 sms += '\n' + (_.startCase(user.pseudo) ||  "Arnaud") + ',\n';
-                sms += "Ligne direct: " + (user.ligne ||  "09.72.42.30.00") + "\n";
+                sms += "Ligne directe: " + (user.ligne  ? (user.ligne.match(/.{2}|.{1,2}/g).join('.')) : "09.72.42.30.00") + "\n";
                 return sms + "Edison Services."
             },
             annulation: "L'intervention {{id}} chez {{client.civilite}} {{client.nom}} à {{client.address.v}} le {{datePlain}} a été annulé. \nMerci de ne pas intervenir. \nEdison Services",
@@ -20,7 +20,7 @@ module.exports = {
                     "Merci de nous contacter au plus vite au 09.72.42.30.00.\n" +
                     "Merci d'avance pour votre réponse.\n" +
                     "\nM." + (_.startCase(user.pseudo) ||  "Arnaud") + "\n" +
-                    "Ligne Direct " + (user.ligne ||  "09.72.42.30.00") + "\n" +
+                    "Ligne Directe " + (user.ligne  ? (user.ligne.match(/.{2}|.{1,2}/g).join('.')) : "09.72.42.30.00") + "\n" +
                     "Edison Services"
             }
         }
@@ -156,8 +156,22 @@ module.exports = {
                     "Je n'ai pas eu de retour de votre part, devons nous planifier une intervention ?\n\n" +
                     "Merci de revenir vers moi pour me tenir au courant de la suite que vous donnerez à ce devis.\n\n" +
                     "Je reste à votre disposition pour toutes les demandes de renseignement\n\n";
+                if (this.combo) {
+                    var combos = require('./combo-produits.js')
+                    this.combo = _.find(combos, 'title', this.combo)
+                    var text = "Suite à notre dernier échange téléphonique concernant la réalisation d'un " + this.combo.text + ".\n" +
+                        "\n" +
+                        "Vous trouverez ci-joint <strong>le devis n°" + this.id + " </strong>qui correspond à ce que nous avons vu ensemble.\n" +
+                        "\n" +
+                        "Je vous rappel que les délais d'interventions dépendent également de votre rapidement de réponse.\n" +
+                        "Sachez également que votre installation sera éligible à notre assurance RC PRO et notre assurance décennale.\n" +
+                        "Lors de l'acceptation, je vous prie de me renvoyer signé, accompagné de la mention : \n" +
+                        "\n" +
+                        "<strong> « BON POUR ACCORD » </strong>\n\n" +
+                        "\n" +
+                        "Je reste à votre entière disposition pour tous les renseignements ou les remarques que vous pourriez avoir concernant ce devis (technique, délais, prix).\n"
 
-                if (this.historique && this.historique.length === 1) {
+                } else if (this.historique && this.historique.length === 1) {
                     console.log('yay histor')
                     var cont;
                     if (this.categorie == 'VT')
@@ -196,9 +210,10 @@ module.exports = {
                         "Merci de me tenir au courant de la suite que vous donnerez à ce devis. \n\n";
 
                 }
+                console.log('-->', user)
                 var outro = "Cordialement, \n\n" +
                     (user.pseudo ||  "Arnaud,") + '\n' +
-                    "<strong>Ligne Direct : " + (user.ligne ||  "09.72.42.30.00") + "</strong>\n" +
+                    "<strong>Ligne Directe : " + (user.ligne  ? (user.ligne.match(/.{2}|.{1,2}/g).join('.')) : "09.72.42.30.00") + "</strong>\n" +
                     "<strong>Ligne Atelier : " + "09.72.42.30.00" + "</strong>\n";
 
                 return intro + text + outro;

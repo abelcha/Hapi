@@ -183,7 +183,6 @@ module.exports = function(schema) {
         findBefore: true,
         method: 'POST',
         fn: function(inter, req, res) {
-            console.log('============sweg')
             return new Promise(function(resolve, reject) {
 
                 var f = inter.facture;
@@ -199,7 +198,6 @@ module.exports = function(schema) {
                                     inter.login.envoiFacture = req.session.login;
                                     return inter.save().then(resolve, reject)
                                 }*/
-                console.log('here')
                 if (!isWorker) {
                     return edison.worker.createJob({
                         name: 'db_id',
@@ -228,19 +226,20 @@ module.exports = function(schema) {
                     var communication = {
                         mailDest: envProd ? inter.facture.email : (req.session.email ||  'contact@edison-services.fr'),
                         mailBcc: envProd ? (req.session.email ||  'contact@edison-services.fr') : undefined,
-                        mailReply: (req.session.email ||  'contact@edison-services.fr')
+                        mailReply: (req.session.email ||  'comptabilite@edison-services.fr')
                     }
                     console.log(communication);
+                    console.log(req.body.text.replaceAll("\n", '<br>'));
                     mail.send({
-                        From: "intervention@edison-services.fr",
+                        From: "comptabilite@edison@edison-services.fr",
                         ReplyTo: communication.mailReply,
                         To: communication.mailDest,
                         Bcc: communication.mailBcc,
                         Subject: "Facture n°" + inter.id + " en attente de reglement",
-                        HtmlBody: req.body.text.replaceAll('\n', '<br>'),
+                        HtmlBody: req.body.text.replaceAll("\n", '<br>'),
                         Attachments: [{
                             Content: buffer.toString('base64'),
-                            Name: 'Facture.pdf',
+                            Name: "Facture n°" + inter.id + ".pdf",
                             ContentType: 'application/pdf'
                         }]
                     }).then(function(resp) {

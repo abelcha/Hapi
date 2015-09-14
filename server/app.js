@@ -88,6 +88,7 @@ app.post('/login', function(req, res) {
         .then(function(user) {
             req.session.upgrade(user.login, function() {
                 req.session.login = user.login
+                req.session.ligne = user.ligne
                 req.session.nom = user.nom;
                 req.session.prenom = user.prenom;
                 req.session.portable = user.portable;

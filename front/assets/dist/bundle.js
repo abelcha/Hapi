@@ -928,7 +928,7 @@ angular.module('browserify', [])
 },{"./Description":1,"./FiltersFactory":2,"./FlushList":3,"./Paiement":4,"./combo-produits":6,"./contextMenuData.js":8,"./dataList.js":9,"./textTemplate.js":12}],6:[function(require,module,exports){
 module.exports = [{
     title: "Devis débouchage camion haute pression",
-    text: " A l'intention de {{client.civilité}} {{client.nom}} {{client.prenom}}, <br> <p> Suite à notre dernier échange téléphonique concernant la réalisation d'un devis d'<u>assainissement</u> pour <u>le débouchage haute pression de votre canalisation.</u> </p> <p> Vous trouverez ci-joint le <b>devis n°261655</b> qui correspond à ce que nous avons vu ensemble. </p> <p> Je vous rappel que les délais d'interventions dépendent également de votre rapidement de réponse. <br> Sachez également que votre installation sera éligible à notre assurance RC PRO et notre assurance décennale. <br> Lors de l'acceptation, je vous prie de me renvoyer signé ,accompagné de la mention : <br> </p> <div style='width: 100%; text-align: center; margin-top: 20px; margin-bottom: 20px;'> <b>\"BON POUR ACCORD\".</b> </div> <p> Je reste à votre entière disposition pour tous les renseignements ou les remarques que vous pourriez avoir concernant ce devis (technique, délais, prix). </p> <p> D'avance merci de me tenir au courant de la suite que vous donnerez à ce devis. </p> <p> Cordialement, </p> <p> Arnaud <br> Ligne direct: 09.72.40.37.94 Ligne atelier: 09.72.42.30.00 </p>",
+    text: "devis d'<u>assainissement</u> pour <u>le débouchage haute pression de votre canalisation.</u>",
     ref: 'DEVIS_DEBOUCHAGE_CHP',
     produits: [{
         title: "DEBOUCHAGE CAMION HAUTE PRESSION",
@@ -955,7 +955,7 @@ module.exports = [{
 }, {
     title: "Devis débouchage camion vidange fosse septique",
     ref: 'DEVIS_DEBOUCHAGE_CVFS',
-    text: " A l'intention de {{client.civilité}} {{client.nom}} {{client.prenom}}, <br> <p> Suite à notre dernier échange téléphonique concernant la réalisation d'un devis d'<u>assainissement</u> pour <u>la vidange de votre fosse septique.</u> </p> <p> Vous trouverez ci-joint le <b>devis n°261655</b> qui correspond à ce que nous avons vu ensemble.</p> <p> Je vous rappel que les délais d'interventions dépendent également de votre rapidement de réponse. <br> Sachez également que votre installation sera éligible à notre assurance RC PRO et notre assurance décennale. <br> Lors de l'acceptation, je vous prie de me renvoyer signé ,accompagné de la mention : <br> </p> <div style='width: 100%; text-align: center; margin-top: 20px; margin-bottom: 20px;'> <b>\"BON POUR ACCORD\".</b> </div> <p> Je reste à votre entière disposition pour tous les renseignements ou les remarques que vous pourriez avoir concernant ce devis (technique, délais, prix). </p> <p> D'avance merci de me tenir au courant de la suite que vous donnerez à ce devis. </p> <p> Cordialement, </p> <p> Arnaud <br> Ligne direct: 09.72.40.37.94 Ligne atelier: 09.72.42.30.00 </p>",
+    text: "devis d'<u>assainissement</u> pour <u>la vidange de votre fosse septique.</u>",
     produits: [{
         desc: "VIDANGE FOSSE SEPTIQUE\n" +
             "CONTENANCE DE LA CUVE = 1 M3" +
@@ -984,7 +984,7 @@ module.exports = [{
 }, {
     title: "Devis sany-broyeur",
     ref: "DEVIS_SANY_B",
-    text: " A l'intention de {{client.civilité}} {{client.nom}} {{client.prenom}}, <br> <p> Suite à notre dernier échange téléphonique concernant la réalisation d'un devis d'<u>assainissement</u> pour <u>l'installation d'un système de sani-broyeur.</u> </p> <p> Vous trouverez ci-joint le <b>devis n°261655</b> qui correspond à ce que nous avons vu ensemble.</p> <p> Je vous rappel que les délais d'interventions dépendent également de votre rapidement de réponse. <br> Sachez également que votre installation sera éligible à notre assurance RC PRO et notre assurance décennale. <br> Lors de l'acceptation, je vous prie de me renvoyer signé ,accompagné de la mention : <br> </p> <div style='width: 100%; text-align: center; margin-top: 20px; margin-bottom: 20px;'> <b>\"BON POUR ACCORD\".</b> </div> <p> Je reste à votre entière disposition pour tous les renseignements ou les remarques que vous pourriez avoir concernant ce devis (technique, délais, prix). </p> <p> D'avance merci de me tenir au courant de la suite que vous donnerez à ce devis. </p> <p> Cordialement, </p> <p> Arnaud <br> Ligne direct: 09.72.40.37.94 Ligne atelier: 09.72.42.30.00 </p>",
+    text: "devis de <u>plomberie</u> pour <u>l'installation d'un système de sani-broyeur</u>",
     produits: [{
         title: "SANIBROYEUR PRO WC",
         desc: "SANIBROYEUR PRO WC" +
@@ -1006,7 +1006,7 @@ module.exports = [{
 }, {
     title: "Devis de tableau électrique 1 rangée - 13 modules",
     ref: "DEVIS_TAB_ELEC_1_13",
-    text: " A l'intention de {{client.civilité}} {{client.nom}} {{client.prenom}}, <br> <p> Suite à notre dernier échange téléphonique concernant la réalisation d'un devis de mise en conformité électrique NF C 15-100, nous vous proposons le remplacement  de votre tableau <b>1 rangée - 13 modules</b> </p> <p> Vous trouverez ci-joint le <b>devis n°261655</b> qui correspond à ce que nous avons vu ensemble.</p> <p> Je vous rappel que les délais d'interventions dépendent également de votre rapidement de réponse. <br> Sachez également que votre installation sera éligible à notre assurance RC PRO et notre assurance décennale. <br> Lors de l'acceptation, je vous prie de me renvoyer signé ,accompagné de la mention : <br> </p> <div style='width: 100%; text-align: center; margin-top: 20px; margin-bottom: 20px;'> <b>\"BON POUR ACCORD\".</b> </div> <p> Je reste à votre entière disposition pour tous les renseignements ou les remarques que vous pourriez avoir concernant ce devis (technique, délais, prix). </p> <p> D'avance merci de me tenir au courant de la suite que vous donnerez à ce devis. </p> <p> Cordialement, </p> <p> Arnaud <br> Ligne direct: 09.72.40.37.94 Ligne atelier: 09.72.42.30.00 </p>",
+    text: "devis de mise en conformité électrique NF C 15-100, nous vous proposons le remplacement  de votre tableau <strong>1 rangée - 13 modules</strong>",
     produits: [{
         title: "Remise en conformité électrique NF C15-100",
         desc: "Remise en conformité électrique NF C15-100\n" +
@@ -1064,7 +1064,7 @@ module.exports = [{
 }, {
     title: "Devis de tableau électrique 2 rangée - 13 modules",
     ref: "DEVIS_TAB_ELEC_2_13",
-    text: " A l'intention de {{client.civilité}} {{client.nom}} {{client.prenom}}, <br> <p> Suite à notre dernier échange téléphonique concernant la réalisation d'un devis de mise en conformité électrique NF C 15-100, nous vous proposons le remplacement  de votre tableau <b>2 rangée - 13 modules</b> </p> <p> Vous trouverez ci-joint le <b>devis n°261655</b> qui correspond à ce que nous avons vu ensemble.</p> <p> Je vous rappel que les délais d'interventions dépendent également de votre rapidement de réponse. <br> Sachez également que votre installation sera éligible à notre assurance RC PRO et notre assurance décennale. <br> Lors de l'acceptation, je vous prie de me renvoyer signé ,accompagné de la mention : <br> </p> <div style='width: 100%; text-align: center; margin-top: 20px; margin-bottom: 20px;'> <b>\"BON POUR ACCORD\".</b> </div> <p> Je reste à votre entière disposition pour tous les renseignements ou les remarques que vous pourriez avoir concernant ce devis (technique, délais, prix). </p> <p> D'avance merci de me tenir au courant de la suite que vous donnerez à ce devis. </p> <p> Cordialement, </p> <p> Arnaud <br> Ligne direct: 09.72.40.37.94 Ligne atelier: 09.72.42.30.00 </p>",
+    text: "devis de mise en conformité électrique NF C 15-100, nous vous proposons le remplacement  de votre tableau <strong>2 rangées - 13 modules</strong>",
     produits: [{
         title: "Remise en conformité électrique NF C15-100",
         desc: "Remise en conformité électrique NF C15-100\n" +
@@ -1127,8 +1127,8 @@ module.exports = [{
 }, {
     title: "Devis chauffe-eau gaz ELM LEBLANC",
     ref: "DEVIS_CHF_EAU_ELM",
-    text: " A l'intention de {{client.civilité}} {{client.nom}} {{client.prenom}}, <br> <p> Suite à notre dernier échange téléphonique concernant la réalisation d'un <u>devis de remplacement de votre chauffe-eau gaz</u> </p> <p> Vous trouverez ci-joint le <b>devis n°261655</b> qui correspond à ce que nous avons vu ensemble.</p> <p> Je vous rappel que les délais d'interventions dépendent également de votre rapidement de réponse. <br> Sachez également que votre installation sera éligible à notre assurance RC PRO et notre assurance décennale. <br> Lors de l'acceptation, je vous prie de me renvoyer signé ,accompagné de la mention : <br> </p> <div style='width: 100%; text-align: center; margin-top: 20px; margin-bottom: 20px;'> <b>\"BON POUR ACCORD\".</b> </div> <p> Je reste à votre entière disposition pour tous les renseignements ou les remarques que vous pourriez avoir concernant ce devis (technique, délais, prix). </p> <p> D'avance merci de me tenir au courant de la suite que vous donnerez à ce devis. </p> <p> Cordialement, </p> <p> Arnaud <br> Ligne direct: 09.72.40.37.94 Ligne atelier: 09.72.42.30.00 </p>",
-    produits: [{
+    text: "<u>devis de remplacement de votre chauffe-eau gaz</u>",
+        produits: [{
         title: "Installation d’un chauffe-eau gaz (eau chaude sanitaire)",
         desc: "Installation d’un chauffe-eau gaz (eau chaude sanitaire)\n" +
             "Dépose complète de l’existant\n" +
@@ -1169,8 +1169,8 @@ module.exports = [{
 }, {
     title: "Devis chaudière gaz mural ELM LEBLANC avec ECS",
     ref: "DEVIS_CHD_GM_ELM",
-    text: " A l'intention de {{client.civilité}} {{client.nom}} {{client.prenom}}, <br> <p> Suite à notre dernier échange téléphonique concernant la réalisation d'un <u>devis de remplacement de votre chaudière gaz</u> </p> <p> Vous trouverez ci-joint le <b>devis n°261655</b> qui correspond à ce que nous avons vu ensemble.</p> <p> Je vous rappel que les délais d'interventions dépendent également de votre rapidement de réponse. <br> Sachez également que votre installation sera éligible à notre assurance RC PRO et notre assurance décennale. <br> Lors de l'acceptation, je vous prie de me renvoyer signé ,accompagné de la mention : <br> </p> <div style='width: 100%; text-align: center; margin-top: 20px; margin-bottom: 20px;'> <b>\"BON POUR ACCORD\".</b> </div> <p> Je reste à votre entière disposition pour tous les renseignements ou les remarques que vous pourriez avoir concernant ce devis (technique, délais, prix). </p> <p> D'avance merci de me tenir au courant de la suite que vous donnerez à ce devis. </p> <p> Cordialement, </p> <p> Arnaud <br> Ligne direct: 09.72.40.37.94 Ligne atelier: 09.72.42.30.00 </p>",
-    produits: [{
+    text: "<u>devis de remplacement de votre chaudière gaz</u>",
+        produits: [{
         title: "Installation d’une chaudière gaz (chauffage + eau chaude sanitaire)\n" +
             "Dépose complète de l’existant\n" +
             "Mise à la décharge de l’unité de chauffage existante" +
@@ -2105,7 +2105,7 @@ module.exports = {
                 sms += "\nMerci de prendre rdv avec le client au " + this.client.telephone.tel1;
                 sms += this.client.telephone.tel2 ? " ou au " + this.client.telephone.tel2 : "";
                 sms += '\n' + (_.startCase(user.pseudo) ||  "Arnaud") + ',\n';
-                sms += "Ligne direct: " + (user.ligne ||  "09.72.42.30.00") + "\n";
+                sms += "Ligne directe: " + (user.ligne  ? (user.ligne.match(/.{2}|.{1,2}/g).join('.')) : "09.72.42.30.00") + "\n";
                 return sms + "Edison Services."
             },
             annulation: "L'intervention {{id}} chez {{client.civilite}} {{client.nom}} à {{client.address.v}} le {{datePlain}} a été annulé. \nMerci de ne pas intervenir. \nEdison Services",
@@ -2115,7 +2115,7 @@ module.exports = {
                     "Merci de nous contacter au plus vite au 09.72.42.30.00.\n" +
                     "Merci d'avance pour votre réponse.\n" +
                     "\nM." + (_.startCase(user.pseudo) ||  "Arnaud") + "\n" +
-                    "Ligne Direct " + (user.ligne ||  "09.72.42.30.00") + "\n" +
+                    "Ligne Directe " + (user.ligne  ? (user.ligne.match(/.{2}|.{1,2}/g).join('.')) : "09.72.42.30.00") + "\n" +
                     "Edison Services"
             }
         }
@@ -2251,8 +2251,22 @@ module.exports = {
                     "Je n'ai pas eu de retour de votre part, devons nous planifier une intervention ?\n\n" +
                     "Merci de revenir vers moi pour me tenir au courant de la suite que vous donnerez à ce devis.\n\n" +
                     "Je reste à votre disposition pour toutes les demandes de renseignement\n\n";
+                if (this.combo) {
+                    var combos = require('./combo-produits.js')
+                    this.combo = _.find(combos, 'title', this.combo)
+                    var text = "Suite à notre dernier échange téléphonique concernant la réalisation d'un " + this.combo.text + ".\n" +
+                        "\n" +
+                        "Vous trouverez ci-joint <strong>le devis n°" + this.id + " </strong>qui correspond à ce que nous avons vu ensemble.\n" +
+                        "\n" +
+                        "Je vous rappel que les délais d'interventions dépendent également de votre rapidement de réponse.\n" +
+                        "Sachez également que votre installation sera éligible à notre assurance RC PRO et notre assurance décennale.\n" +
+                        "Lors de l'acceptation, je vous prie de me renvoyer signé, accompagné de la mention : \n" +
+                        "\n" +
+                        "<strong> « BON POUR ACCORD » </strong>\n\n" +
+                        "\n" +
+                        "Je reste à votre entière disposition pour tous les renseignements ou les remarques que vous pourriez avoir concernant ce devis (technique, délais, prix).\n"
 
-                if (this.historique && this.historique.length === 1) {
+                } else if (this.historique && this.historique.length === 1) {
                     console.log('yay histor')
                     var cont;
                     if (this.categorie == 'VT')
@@ -2291,9 +2305,10 @@ module.exports = {
                         "Merci de me tenir au courant de la suite que vous donnerez à ce devis. \n\n";
 
                 }
+                console.log('-->', user)
                 var outro = "Cordialement, \n\n" +
                     (user.pseudo ||  "Arnaud,") + '\n' +
-                    "<strong>Ligne Direct : " + (user.ligne ||  "09.72.42.30.00") + "</strong>\n" +
+                    "<strong>Ligne Directe : " + (user.ligne  ? (user.ligne.match(/.{2}|.{1,2}/g).join('.')) : "09.72.42.30.00") + "</strong>\n" +
                     "<strong>Ligne Atelier : " + "09.72.42.30.00" + "</strong>\n";
 
                 return intro + text + outro;
@@ -2309,7 +2324,7 @@ module.exports = {
 
 };
 
-},{"./dataList.js":9}],13:[function(require,module,exports){
+},{"./combo-produits.js":6,"./dataList.js":9}],13:[function(require,module,exports){
 /**
  * Gets the last element of `array`.
  *

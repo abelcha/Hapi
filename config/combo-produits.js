@@ -1,6 +1,6 @@
 module.exports = [{
     title: "Devis débouchage camion haute pression",
-    text: " A l'intention de {{client.civilité}} {{client.nom}} {{client.prenom}}, <br> <p> Suite à notre dernier échange téléphonique concernant la réalisation d'un devis d'<u>assainissement</u> pour <u>le débouchage haute pression de votre canalisation.</u> </p> <p> Vous trouverez ci-joint le <b>devis n°261655</b> qui correspond à ce que nous avons vu ensemble. </p> <p> Je vous rappel que les délais d'interventions dépendent également de votre rapidement de réponse. <br> Sachez également que votre installation sera éligible à notre assurance RC PRO et notre assurance décennale. <br> Lors de l'acceptation, je vous prie de me renvoyer signé ,accompagné de la mention : <br> </p> <div style='width: 100%; text-align: center; margin-top: 20px; margin-bottom: 20px;'> <b>\"BON POUR ACCORD\".</b> </div> <p> Je reste à votre entière disposition pour tous les renseignements ou les remarques que vous pourriez avoir concernant ce devis (technique, délais, prix). </p> <p> D'avance merci de me tenir au courant de la suite que vous donnerez à ce devis. </p> <p> Cordialement, </p> <p> Arnaud <br> Ligne direct: 09.72.40.37.94 Ligne atelier: 09.72.42.30.00 </p>",
+    text: "devis d'<u>assainissement</u> pour <u>le débouchage haute pression de votre canalisation.</u>",
     ref: 'DEVIS_DEBOUCHAGE_CHP',
     produits: [{
         title: "DEBOUCHAGE CAMION HAUTE PRESSION",
@@ -27,7 +27,7 @@ module.exports = [{
 }, {
     title: "Devis débouchage camion vidange fosse septique",
     ref: 'DEVIS_DEBOUCHAGE_CVFS',
-    text: " A l'intention de {{client.civilité}} {{client.nom}} {{client.prenom}}, <br> <p> Suite à notre dernier échange téléphonique concernant la réalisation d'un devis d'<u>assainissement</u> pour <u>la vidange de votre fosse septique.</u> </p> <p> Vous trouverez ci-joint le <b>devis n°261655</b> qui correspond à ce que nous avons vu ensemble.</p> <p> Je vous rappel que les délais d'interventions dépendent également de votre rapidement de réponse. <br> Sachez également que votre installation sera éligible à notre assurance RC PRO et notre assurance décennale. <br> Lors de l'acceptation, je vous prie de me renvoyer signé ,accompagné de la mention : <br> </p> <div style='width: 100%; text-align: center; margin-top: 20px; margin-bottom: 20px;'> <b>\"BON POUR ACCORD\".</b> </div> <p> Je reste à votre entière disposition pour tous les renseignements ou les remarques que vous pourriez avoir concernant ce devis (technique, délais, prix). </p> <p> D'avance merci de me tenir au courant de la suite que vous donnerez à ce devis. </p> <p> Cordialement, </p> <p> Arnaud <br> Ligne direct: 09.72.40.37.94 Ligne atelier: 09.72.42.30.00 </p>",
+    text: "devis d'<u>assainissement</u> pour <u>la vidange de votre fosse septique.</u>",
     produits: [{
         desc: "VIDANGE FOSSE SEPTIQUE\n" +
             "CONTENANCE DE LA CUVE = 1 M3" +
@@ -56,7 +56,7 @@ module.exports = [{
 }, {
     title: "Devis sany-broyeur",
     ref: "DEVIS_SANY_B",
-    text: " A l'intention de {{client.civilité}} {{client.nom}} {{client.prenom}}, <br> <p> Suite à notre dernier échange téléphonique concernant la réalisation d'un devis d'<u>assainissement</u> pour <u>l'installation d'un système de sani-broyeur.</u> </p> <p> Vous trouverez ci-joint le <b>devis n°261655</b> qui correspond à ce que nous avons vu ensemble.</p> <p> Je vous rappel que les délais d'interventions dépendent également de votre rapidement de réponse. <br> Sachez également que votre installation sera éligible à notre assurance RC PRO et notre assurance décennale. <br> Lors de l'acceptation, je vous prie de me renvoyer signé ,accompagné de la mention : <br> </p> <div style='width: 100%; text-align: center; margin-top: 20px; margin-bottom: 20px;'> <b>\"BON POUR ACCORD\".</b> </div> <p> Je reste à votre entière disposition pour tous les renseignements ou les remarques que vous pourriez avoir concernant ce devis (technique, délais, prix). </p> <p> D'avance merci de me tenir au courant de la suite que vous donnerez à ce devis. </p> <p> Cordialement, </p> <p> Arnaud <br> Ligne direct: 09.72.40.37.94 Ligne atelier: 09.72.42.30.00 </p>",
+    text: "devis de <u>plomberie</u> pour <u>l'installation d'un système de sani-broyeur</u>",
     produits: [{
         title: "SANIBROYEUR PRO WC",
         desc: "SANIBROYEUR PRO WC" +
@@ -78,7 +78,7 @@ module.exports = [{
 }, {
     title: "Devis de tableau électrique 1 rangée - 13 modules",
     ref: "DEVIS_TAB_ELEC_1_13",
-    text: " A l'intention de {{client.civilité}} {{client.nom}} {{client.prenom}}, <br> <p> Suite à notre dernier échange téléphonique concernant la réalisation d'un devis de mise en conformité électrique NF C 15-100, nous vous proposons le remplacement  de votre tableau <b>1 rangée - 13 modules</b> </p> <p> Vous trouverez ci-joint le <b>devis n°261655</b> qui correspond à ce que nous avons vu ensemble.</p> <p> Je vous rappel que les délais d'interventions dépendent également de votre rapidement de réponse. <br> Sachez également que votre installation sera éligible à notre assurance RC PRO et notre assurance décennale. <br> Lors de l'acceptation, je vous prie de me renvoyer signé ,accompagné de la mention : <br> </p> <div style='width: 100%; text-align: center; margin-top: 20px; margin-bottom: 20px;'> <b>\"BON POUR ACCORD\".</b> </div> <p> Je reste à votre entière disposition pour tous les renseignements ou les remarques que vous pourriez avoir concernant ce devis (technique, délais, prix). </p> <p> D'avance merci de me tenir au courant de la suite que vous donnerez à ce devis. </p> <p> Cordialement, </p> <p> Arnaud <br> Ligne direct: 09.72.40.37.94 Ligne atelier: 09.72.42.30.00 </p>",
+    text: "devis de mise en conformité électrique NF C 15-100, nous vous proposons le remplacement  de votre tableau <strong>1 rangée - 13 modules</strong>",
     produits: [{
         title: "Remise en conformité électrique NF C15-100",
         desc: "Remise en conformité électrique NF C15-100\n" +
@@ -136,7 +136,7 @@ module.exports = [{
 }, {
     title: "Devis de tableau électrique 2 rangée - 13 modules",
     ref: "DEVIS_TAB_ELEC_2_13",
-    text: " A l'intention de {{client.civilité}} {{client.nom}} {{client.prenom}}, <br> <p> Suite à notre dernier échange téléphonique concernant la réalisation d'un devis de mise en conformité électrique NF C 15-100, nous vous proposons le remplacement  de votre tableau <b>2 rangée - 13 modules</b> </p> <p> Vous trouverez ci-joint le <b>devis n°261655</b> qui correspond à ce que nous avons vu ensemble.</p> <p> Je vous rappel que les délais d'interventions dépendent également de votre rapidement de réponse. <br> Sachez également que votre installation sera éligible à notre assurance RC PRO et notre assurance décennale. <br> Lors de l'acceptation, je vous prie de me renvoyer signé ,accompagné de la mention : <br> </p> <div style='width: 100%; text-align: center; margin-top: 20px; margin-bottom: 20px;'> <b>\"BON POUR ACCORD\".</b> </div> <p> Je reste à votre entière disposition pour tous les renseignements ou les remarques que vous pourriez avoir concernant ce devis (technique, délais, prix). </p> <p> D'avance merci de me tenir au courant de la suite que vous donnerez à ce devis. </p> <p> Cordialement, </p> <p> Arnaud <br> Ligne direct: 09.72.40.37.94 Ligne atelier: 09.72.42.30.00 </p>",
+    text: "devis de mise en conformité électrique NF C 15-100, nous vous proposons le remplacement  de votre tableau <strong>2 rangées - 13 modules</strong>",
     produits: [{
         title: "Remise en conformité électrique NF C15-100",
         desc: "Remise en conformité électrique NF C15-100\n" +
@@ -199,8 +199,8 @@ module.exports = [{
 }, {
     title: "Devis chauffe-eau gaz ELM LEBLANC",
     ref: "DEVIS_CHF_EAU_ELM",
-    text: " A l'intention de {{client.civilité}} {{client.nom}} {{client.prenom}}, <br> <p> Suite à notre dernier échange téléphonique concernant la réalisation d'un <u>devis de remplacement de votre chauffe-eau gaz</u> </p> <p> Vous trouverez ci-joint le <b>devis n°261655</b> qui correspond à ce que nous avons vu ensemble.</p> <p> Je vous rappel que les délais d'interventions dépendent également de votre rapidement de réponse. <br> Sachez également que votre installation sera éligible à notre assurance RC PRO et notre assurance décennale. <br> Lors de l'acceptation, je vous prie de me renvoyer signé ,accompagné de la mention : <br> </p> <div style='width: 100%; text-align: center; margin-top: 20px; margin-bottom: 20px;'> <b>\"BON POUR ACCORD\".</b> </div> <p> Je reste à votre entière disposition pour tous les renseignements ou les remarques que vous pourriez avoir concernant ce devis (technique, délais, prix). </p> <p> D'avance merci de me tenir au courant de la suite que vous donnerez à ce devis. </p> <p> Cordialement, </p> <p> Arnaud <br> Ligne direct: 09.72.40.37.94 Ligne atelier: 09.72.42.30.00 </p>",
-    produits: [{
+    text: "<u>devis de remplacement de votre chauffe-eau gaz</u>",
+        produits: [{
         title: "Installation d’un chauffe-eau gaz (eau chaude sanitaire)",
         desc: "Installation d’un chauffe-eau gaz (eau chaude sanitaire)\n" +
             "Dépose complète de l’existant\n" +
@@ -241,8 +241,8 @@ module.exports = [{
 }, {
     title: "Devis chaudière gaz mural ELM LEBLANC avec ECS",
     ref: "DEVIS_CHD_GM_ELM",
-    text: " A l'intention de {{client.civilité}} {{client.nom}} {{client.prenom}}, <br> <p> Suite à notre dernier échange téléphonique concernant la réalisation d'un <u>devis de remplacement de votre chaudière gaz</u> </p> <p> Vous trouverez ci-joint le <b>devis n°261655</b> qui correspond à ce que nous avons vu ensemble.</p> <p> Je vous rappel que les délais d'interventions dépendent également de votre rapidement de réponse. <br> Sachez également que votre installation sera éligible à notre assurance RC PRO et notre assurance décennale. <br> Lors de l'acceptation, je vous prie de me renvoyer signé ,accompagné de la mention : <br> </p> <div style='width: 100%; text-align: center; margin-top: 20px; margin-bottom: 20px;'> <b>\"BON POUR ACCORD\".</b> </div> <p> Je reste à votre entière disposition pour tous les renseignements ou les remarques que vous pourriez avoir concernant ce devis (technique, délais, prix). </p> <p> D'avance merci de me tenir au courant de la suite que vous donnerez à ce devis. </p> <p> Cordialement, </p> <p> Arnaud <br> Ligne direct: 09.72.40.37.94 Ligne atelier: 09.72.42.30.00 </p>",
-    produits: [{
+    text: "<u>devis de remplacement de votre chaudière gaz</u>",
+        produits: [{
         title: "Installation d’une chaudière gaz (chauffage + eau chaude sanitaire)\n" +
             "Dépose complète de l’existant\n" +
             "Mise à la décharge de l’unité de chauffage existante" +
