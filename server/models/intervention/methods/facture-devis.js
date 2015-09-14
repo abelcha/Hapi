@@ -139,11 +139,11 @@ module.exports = function(schema) {
                     var communication = {
                         mailDest: envProd ? inter.facture.email : (req.session.email ||  'contact@edison-services.fr'),
                         mailBcc: envProd ? (req.session.email ||  'contact@edison-services.fr') : undefined,
-                        mailReply: (req.session.email ||  'contact@edison-services.fr')
+                        mailReply: (req.session.email ||  'comptabilite@edison-services.fr')
                     }
                     console.log(communication);
                     mail.send({
-                        From: "intervention@edison-services.fr",
+                        From: "comptabilite@edison-services.fr",
                         ReplyTo: communication.mailReply,
                         To: communication.mailDest,
                         Bcc: communication.mailBcc,
@@ -151,7 +151,7 @@ module.exports = function(schema) {
                         HtmlBody: req.body.text.replaceAll('\n', '<br>'),
                         Attachments: [{
                             Content: buffer.toString('base64'),
-                            Name: 'Facture.pdf',
+                            Name: "Facture n°" + inter.id + ".pdf",
                             ContentType: 'application/pdf'
                         }]
                     }).then(function(resp) {
