@@ -230,7 +230,7 @@ module.exports = function(schema) {
                     console.log(communication);
                     console.log(req.body.text.replaceAll("\n", '<br>'));
                     mail.send({
-                        From: "comptabilite@edison@edison-services.fr",
+                        From: "comptabilite@edison-services.fr",
                         ReplyTo: communication.mailReply,
                         To: communication.mailDest,
                         Bcc: communication.mailBcc,

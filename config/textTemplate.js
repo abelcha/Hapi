@@ -68,7 +68,7 @@ module.exports = {
     mail: {
         intervention: {
             factureAcquitte: function() {
-                return "Bonjour\n" +
+                return "Bonjour,\n" +
                     "Vous trouverez ci-joint la facture acquitté de l'intervention {{id}}\n" +
                     "Cordialement\n" +
                     "\n" +
