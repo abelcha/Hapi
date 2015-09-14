@@ -2,20 +2,6 @@ module.exports = function(schema) {
     var _ = require('lodash')
     var moment = require('moment-timezone')
     var PDF = require('edsx-mail')
-    var getDevisPdfObj = function(doc) {
-        doc.facture = doc.client;
-        doc.facture.tel = doc.client.telephone.tel1;
-        doc.datePlain = moment.tz('Europe/Paris').format('LL');
-        doc.acquitte = false;
-        doc.type = "devis"
-        return PDF([{
-            model: 'facture',
-            options: doc
-        }, {
-            model: 'conditions',
-            options: doc
-        }], 500)
-    }
 
     schema.statics.envoi = {
 
@@ -23,17 +9,37 @@ module.exports = function(schema) {
         findBefore: true,
         method: 'POST',
         fn: function(devis, req, res) {
+
+
+            var getDevisPdfObj = function(doc) {
+                doc.facture = doc.client;
+                doc.facture.tel = doc.client.telephone.tel1;
+                doc.datePlain = moment.tz('Europe/Paris').format('LL');
+                doc.user = req.session;
+                doc.acquitte = false;
+                doc.type = "devis"
+                return PDF([{
+                    model: 'facture',
+                    options: doc
+                }, {
+                    model: 'conditions',
+                    options: doc
+                }], 500)
+            }
+
+
+
             return new Promise(function(resolve, reject) {
                 if (!devis && !devis.produits || !devis.produits.length)
                     return reject('Le devis est vide')
-/*                if (envDev) {
-                    devis.historique.push({
-                        login: req.session.login,
-                        date: new Date,
-                    })
-                    devis.status = 'ATT';
-                    return devis.save().then(resolve, reject)
-                }*/
+                        /*                if (envDev) {
+                                            devis.historique.push({
+                                                login: req.session.login,
+                                                date: new Date,
+                                            })
+                                            devis.status = 'ATT';
+                                            return devis.save().then(resolve, reject)
+                                        }*/
                 if (!isWorker) {
                     return edison.worker.createJob({
                         name: 'db_id',
@@ -63,9 +69,9 @@ module.exports = function(schema) {
                     console.log('getBuffer');
                     try {
                         var communication = {
-                            mailDest: envProd ? devis.client.email : (req.session.email || 'contact@edison-services.fr'),
-                            mailBcc: envProd ? (req.session.email || 'contact@edison-services.fr') : undefined,
-                            mailReply: (req.session.email || 'contact@edison-services.fr')
+                            mailDest: envProd ? devis.client.email : (req.session.email ||  'contact@edison-services.fr'),
+                            mailBcc: envProd ? (req.session.email ||  'contact@edison-services.fr') : undefined,
+                            mailReply: (req.session.email ||  'contact@edison-services.fr')
                         }
                     } catch (e) {
                         console.log(e.stack);
