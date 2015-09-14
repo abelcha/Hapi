@@ -55,6 +55,7 @@ var InterventionCtrl = function(Description, Signalement, ContextMenu, $window, 
     }
 
     Mousetrap.bind(['command+k', 'ctrl+k'], function() {
+        $window.open("appurl:", '_self');
         edisonAPI.file.scan({
             type: 'SCAN',
             model: 'intervention',
@@ -158,7 +159,6 @@ var InterventionCtrl = function(Description, Signalement, ContextMenu, $window, 
     }
 
     $scope.onFileUpload = function(file) {
-        console.log('-->', file)
         intervention.fileUpload(file, function(err, resp) {
             $scope.fileUploadText = "";
             $scope.loadFilesList();
