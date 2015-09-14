@@ -2259,7 +2259,7 @@ module.exports = {
                         "Sachez également que votre installation sera éligible à notre assurance RC PRO et notre assurance décennale.\n" +
                         "Lors de l'acceptation, je vous prie de me renvoyer signé, accompagné de la mention : \n" +
                         "\n" +
-                        "<strong> « BON POUR ACCORD » </strong>\n\n" +
+                        "<strong> « BON POUR ACCORD » </strong>\n" +
                         "\n" +
                         "Je reste à votre entière disposition pour tous les renseignements ou les remarques que vous pourriez avoir concernant ce devis (technique, délais, prix).\n"
 
