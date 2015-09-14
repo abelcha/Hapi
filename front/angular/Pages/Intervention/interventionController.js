@@ -61,6 +61,7 @@ var InterventionCtrl = function(Description, Signalement, ContextMenu, $window, 
             model: 'intervention',
             link: intervention.id
         }).then(function() {
+            $scope.loadFilesList();
             LxNotificationService.success("Le fichier est enregistré");
         })
         return false;
