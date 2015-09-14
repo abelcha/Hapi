@@ -266,6 +266,9 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
                     file: file
                 })
             },
+            scan:function(options) {
+                return $http.post('/api/document/scan', options);
+            }
         },
         call: {
             get: function(origin, link) {

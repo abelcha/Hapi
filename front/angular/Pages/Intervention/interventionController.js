@@ -5,6 +5,7 @@ var InterventionCtrl = function(Description, Signalement, ContextMenu, $window, 
     _this.dialog = dialog;
     _this.autocomplete = mapAutocomplete;
     var tab = tabContainer.getCurrentTab();
+
     if (!tab.data) {
         var intervention = new Intervention(interventionPrm.data)
 
@@ -53,6 +54,16 @@ var InterventionCtrl = function(Description, Signalement, ContextMenu, $window, 
         _this.contextMenu.open();
     }
 
+    Mousetrap.bind(['command+k', 'ctrl+k'], function() {
+        edisonAPI.file.scan({
+            type: 'SCAN',
+            model: 'intervention',
+            link: intervention.id
+        }).then(function() {
+            LxNotificationService.success("Le fichier est enregistré");
+        })
+        return false;
+    });
 
     $scope.changeArtisan = function(sav) {
         sav.artisan = _.find(_this.artisans, function(e) {
@@ -147,6 +158,7 @@ var InterventionCtrl = function(Description, Signalement, ContextMenu, $window, 
     }
 
     $scope.onFileUpload = function(file) {
+        console.log('-->', file)
         intervention.fileUpload(file, function(err, resp) {
             $scope.fileUploadText = "";
             $scope.loadFilesList();
@@ -189,7 +201,7 @@ var InterventionCtrl = function(Description, Signalement, ContextMenu, $window, 
                     $scope.saveInter = saveInter;
                 })
             } else {
-                 $scope.saveInter = saveInter;
+                $scope.saveInter = saveInter;
             }
         })
     }

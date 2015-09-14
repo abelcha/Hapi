@@ -37,7 +37,11 @@
          _.each(fltrs, function(e, k) {
              // console.log(e, k)
              if (!e) e = undefined;
+             if (e !== "hashModel") {
              $location.search(k, e);
+                
+             }else 
+             console.log(e)
          })
      }, 250)
 

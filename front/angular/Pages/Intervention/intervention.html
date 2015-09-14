@@ -226,7 +226,6 @@
                         <info-fourniture ng-if="vm.data.id" data="vm.data"></info-fourniture>
                         <info-compta ng-if="vm.data.status === 'VRF' && vm.data.artisan.document" data="vm.data"></info-compta>
                         <info-litige ng-if="vm.data.date.intervention && vm.id" data="vm.data"></info-litige>
-                        
                         <div class="row" style="margin:0">
                             <div style="width:48%;float:left;" class="card" id="fileUpload">
                                 <div class="p+">
@@ -237,7 +236,8 @@
                                             <ul class="list mt++" style="padding-bottom:20px;margin-left: 0px">
                                                 <li class="list-row" ng-repeat="file in vm.data.files | reverse">
                                                     <div class="list-row__content">
-                                                        <a target="_blank" href="/api/document/{{file._id}}"> <span class="display-block">{{file.name || "Fichier" + $index}}</span></a>
+                                                        <a ng-if="!file.virtual" target="_blank" href="/api/document/{{file._id}}"> <span class="display-block">{{file.name || "Fichier" + $index}}</span></a>
+                                                        <span ng-if="file.virtual" class="display-block">{{file.name}}</span>
                                                         <span class="display-block fs-body-1 tc-black-2">{{file.date | date:"dd/MM/yy"}} - {{file.type}} - {{file.login}}</span>
                                                     </div>
                                                 </li>
@@ -275,13 +275,9 @@
                                 <i class="fa fa-cloud-upload"></i>
                             </button>
                             <div class="fab__actions fab__actions--left">
-                               
                                 <button ng-if="vm.data.status" ng-click="saveInter({annulation:true})" class="btn--no-conflicts btn--l btn--black btn--fab red" lx-ripple lx-tooltip="Annuler" tooltip-position="top"><i class="fa fa-ban"></i></button>
-                               
                                 <button ng-if="(!vm.data.status || vm.data.status === 'ANN' || vm.data.status === 'APR' || vm.data.status === 'ENC') " ng-click="saveInter({envoi:true})" class="btn--no-conflicts btn--l btn--black btn--fab orange" lx-ripple lx-tooltip="Envoyer l'intervention" tooltip-position="top"><i class="fa fa-send"></i></button>
-                               
                                 <button ng-show="vm.data.status === 'ENC'  && vm.data.reglementSurPlace" ng-click="saveInter({verification:true})" class="btn--no-conflicts btn--l btn--black btn--fab  green" lx-ripple lx-tooltip="Verifier" tooltip-position="top"><i class="fa fa-check"></i></button>
-                               
                                 <button ng-show="vm.data.status === 'ENC' && !vm.data.reglementSurPlace" ng-click="calculPrixFinal();saveInter({verification:true, envoiFacture:true})" class="btn--no-conflicts btn--l btn--black btn--fab green" lx-ripple lx-tooltip="Envoyer facture + vérifier" tooltip-position="top"><i class="fa fa-check"></i></button>
                             </div>
                         </div>

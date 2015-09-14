@@ -60,6 +60,7 @@ gulp.task('jsLibs', function() {
         'bower_components/moment/locale/fr.js',
         'bower_components/d3/d3.min.js',
         'bower_components/dimple/dist/dimple.latest.min.js',
+        'bower_components/mousetrap/mousetrap.min.js',
 //        'bower_components/angular-material-icons/angular-material-icons.js',
 
     ]

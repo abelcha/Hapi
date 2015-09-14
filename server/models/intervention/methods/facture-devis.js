@@ -211,7 +211,6 @@ module.exports = function(schema) {
                 }
 
 
-
                 var params = req.body;
                 if (!params.text ||  !params.date) {
                     Promise.reject("Invalid Request")

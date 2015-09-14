@@ -664,7 +664,11 @@ angular.module('edison').directive('ngEnter', function () {
          _.each(fltrs, function(e, k) {
              // console.log(e, k)
              if (!e) e = undefined;
+             if (e !== "hashModel") {
              $location.search(k, e);
+                
+             }else 
+             console.log(e)
          })
      }, 250)
 
@@ -1557,6 +1561,9 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
                     file: file
                 })
             },
+            scan:function(options) {
+                return $http.post('/api/document/scan', options);
+            }
         },
         call: {
             get: function(origin, link) {
@@ -4065,6 +4072,7 @@ var InterventionCtrl = function(Description, Signalement, ContextMenu, $window, 
     _this.dialog = dialog;
     _this.autocomplete = mapAutocomplete;
     var tab = tabContainer.getCurrentTab();
+
     if (!tab.data) {
         var intervention = new Intervention(interventionPrm.data)
 
@@ -4113,6 +4121,16 @@ var InterventionCtrl = function(Description, Signalement, ContextMenu, $window, 
         _this.contextMenu.open();
     }
 
+    Mousetrap.bind(['command+k', 'ctrl+k'], function() {
+        edisonAPI.file.scan({
+            type: 'SCAN',
+            model: 'intervention',
+            link: intervention.id
+        }).then(function() {
+            LxNotificationService.success("Le fichier est enregistré");
+        })
+        return false;
+    });
 
     $scope.changeArtisan = function(sav) {
         sav.artisan = _.find(_this.artisans, function(e) {
@@ -4207,6 +4225,7 @@ var InterventionCtrl = function(Description, Signalement, ContextMenu, $window, 
     }
 
     $scope.onFileUpload = function(file) {
+        console.log('-->', file)
         intervention.fileUpload(file, function(err, resp) {
             $scope.fileUploadText = "";
             $scope.loadFilesList();
@@ -4249,7 +4268,7 @@ var InterventionCtrl = function(Description, Signalement, ContextMenu, $window, 
                     $scope.saveInter = saveInter;
                 })
             } else {
-                 $scope.saveInter = saveInter;
+                $scope.saveInter = saveInter;
             }
         })
     }
