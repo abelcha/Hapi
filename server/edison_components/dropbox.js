@@ -39,6 +39,18 @@ Dropbox.prototype.download = function(file_id) {
     })
 }
 
+Dropbox.prototype.list = function(dir) {
+    var _this = this;
+    return new Promise(function(resolve, reject) {
+        _this.client.readdir(dir, function(error, entries) {
+            if (error) {
+                return reject(error);
+            }
+            resolve(entries)
+        });
+    })
+}
+
 Dropbox.prototype.move = function(from, to) {
     var _this = this;
     return new Promise(function(resolve, reject) {
