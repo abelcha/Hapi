@@ -18,26 +18,36 @@
      _this.tab.hash = currentHash;
      _this.config = config;
      var title = currentFilter ? currentFilter.long_name : _this.model;
-     if ($routeParams.id) {
-         var id = parseInt($routeParams.id)
+     if ($routeParams.sstid) {
+         var id = parseInt($routeParams.sstid)
          _this.customFilter = function(inter) {
              return inter.ai === id;
          }
      } else {
          _this.tab.setTitle(title, currentHash);
      }
-     if ($routeParams.ids_in) {
+     if ($routeParams.sstids_in) {
          _this.customFilter = function(inter) {
-             return _.contains($routeParams.ids_in, inter.id);
+             return _.contains($routeParams.sstids_in, inter.id);
          }
      }
+
+     var actualiseUrl = _.throttle(function(fltrs) {
+        console.log('actual')
+         _.each(fltrs, function(e, k) {
+             // console.log(e, k)
+             if (!e) e = undefined;
+             $location.search(k, e);
+         })
+     }, 250)
+
      dataProvider.init(function(err, resp) {
 
          dataProvider.applyFilter(currentFilter, _this.tab.hash, _this.customFilter);
          var tableParameters = {
              page: 1,
              total: dataProvider.filteredData.length,
-             filter: {},
+             filter: $location.search(),
              sorting: {
                  id: 'desc'
              },
@@ -46,6 +56,7 @@
          var tableSettings = {
              total: dataProvider.filteredData,
              getData: function($defer, params) {
+                 actualiseUrl(params.filter())
                  var data = dataProvider.filteredData;
                  data = $filter('tableFilter')(data, params.filter());
                  _this.currentFilter = _.clone(params.filter());
@@ -79,7 +90,7 @@
              })
              .then(function(resp) {
                  _this.contextMenu.setData(resp.data);
-                 _this.contextMenu.setPosition($event.pageX - ($routeParams.id ? 50 : 0), $event.pageY + ($routeParams.id ? 0 : 200))
+                 _this.contextMenu.setPosition($event.pageX - ($routeParams.sstid ? 50 : 0), $event.pageY + ($routeParams.sstid ? 0 : 200))
                  _this.contextMenu.open();
              })
      }

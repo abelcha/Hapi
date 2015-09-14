@@ -36,7 +36,7 @@ module.exports = {
         var u = process.memoryUsage();
         u = _.map(u, prettyBytes);
         console.log(u)
-        res.send('ok')
+        res.send(u)
     }
 
 }

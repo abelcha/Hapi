@@ -2337,9 +2337,25 @@ md-switch.md-checked.md-primary .md-bar {
     background-color: rgba(65, 140, 228, 0.5)!important;
 }
 
+#table-list>thead>tr>th.filter {
+    padding: 3px;
+}
+
 .spacer,
 .spacer-md {
     height: 0.5cm;
+}
+
+.rotate {
+    -moz-transition: all 0.2s linear;
+    -webkit-transition: all 0.2s linear;
+    transition: all 0.2s linear;
+}
+
+.rotate-90 {
+    -moz-transform: rotate(90deg);
+    -webkit-transform: rotate(90deg);
+    transform: rotate(90deg);
 }
 
 .spacer-lg {

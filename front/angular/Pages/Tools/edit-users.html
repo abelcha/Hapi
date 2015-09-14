@@ -1,0 +1,84 @@
+<div class="card margin">
+    <style type="text/css">
+    .tbls-usrs>tbody>tr>td {}
+    </style>
+    <div class="p+" style="width:95%">
+        <div class="row">
+            <div class="col-sm-4">
+                <input placeholder="Rechercher..." type="text" ng-model="search" class="form-control">
+            </div>
+        </div>
+        <br>
+        <table class="table table-bordered tbls-usrs">
+            <thead>
+                <tr>
+                    <th>Login</th>
+                    <th>Nom</th>
+                    <th>Prenom</th>
+                    <th>Portable</th>
+                    <th>Email</th>
+                    <th>Pseudo</th>
+                    <th>Service</th>
+                    <th>Ligne</th>
+                    <th>Root</th>
+                    <th>init pw</th>
+                    <th>Actif</th>
+                    <th>Sup.</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat-start="p in usrs | filter:search track by $index">
+                    <td>
+                        <input type="text" class="form-control" ng-model="p.login">
+                    </td>
+                    <td>
+                        <input type="text" class="form-control" ng-model="p.nom">
+                    </td>
+                    <td>
+                        <input type="text" class="form-control" ng-model="p.prenom">
+                    </td>
+                    <td>
+                        <input type="text" class="form-control" ng-model="p.portable">
+                    </td>
+                    <td>
+                        <input type="text" class="form-control" ng-model="p.email">
+                    </td>
+                    <td>
+                        <input type="text" class="form-control" ng-model="p.pseudo">
+                    </td>
+                    <td>
+                        <input type="text" class="form-control" ng-model="p.service">
+                    </td>
+                    <td>
+                        <input type="text" class="form-control" ng-model="p.ligne">
+                    </td>
+                    <td style="width:1%">
+                        <md-checkbox ng-model="p.root" aria-label="Checkbox 2" class="md-warn md-align-top-left">
+                        </md-checkbox>
+                    </td>
+                    <td style="width:1%">
+                        <md-checkbox ng-model="p.passInit" aria-label="Checkbox 2" class="md-warn md-align-top-left">
+                        </md-checkbox>
+                    </td>
+                    <td style="width:1%">
+                        <md-checkbox ng-model="p.activated" aria-label="Checkbox 2" class="md-warn md-align-top-left">
+                        </md-checkbox>
+                    </td>
+                    <td style="width:1%">
+                        <button class="btn--no-conflicts btn--l btn--red btn--icon" ng-click="usrs.splice($index, 1)">
+                            <i class="fa fa-remove"></i>
+                        </button>
+                    </td>
+                </tr>
+                <tr style="background: #F1F1F1;" ng-repeat-end ng-if="p.open">
+                    <td colspan="20">
+                        <textarea class="form-control" elastic ng-model="p.desc"></textarea>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="fab" style="position: fixed;right: 70px;z-index: 999;top: 87%;">
+        <button ng-click="usrs.push({single:false, open:true})" class="btn--no-conflicts btn--l btn--black btn--fab green"><i class="fa fa-plus"></i></button>
+    </div>
+</div>

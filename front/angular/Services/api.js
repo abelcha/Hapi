@@ -1,19 +1,25 @@
 angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', function($http, $location, Upload) {
     "use strict";
     return {
-        searchProduct: function(text) {
-            return $http({
-                method: 'GET',
-                url: '/api/products/search',
-                cache: true,
-                params: {
-                    q: text
-                }
-            })
+        product: {
+            list: function() {
+                return $http.get('/api/product/list');
+            },
+            save: function(data) {
+                return $http.post('/api/product/__save', data);
+            }
         },
         stats: {
             telepro: function() {
                 return $http.get('/api/stats/telepro');
+            }
+        },
+        users: {
+            save: function(data) {
+                return $http.post('/api/user/__save', data);
+            },
+            list: function() {
+                return $http.get('/api/user/list');
             }
         },
         compta: {

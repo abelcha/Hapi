@@ -127,10 +127,10 @@ module.exports = function(db) {
             ref: 'artisan'
         },
         litige: {
-            openedBy:String,
-            closedBy:String,
-            opened:Date,
-            closed:Date,
+            openedBy: String,
+            closedBy: String,
+            opened: Date,
+            closed: Date,
             description: String,
             open: Boolean
         },
@@ -195,6 +195,7 @@ module.exports = function(db) {
             title: String,
             fournisseur: String
         }],
+        combo: String,
         modeReglement: {
             type: String,
             default: 'CH'

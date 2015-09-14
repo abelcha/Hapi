@@ -4,8 +4,38 @@ angular.module('edison', ['browserify', 'ui.slimscroll', 'ngMaterial', 'lumx', '
         $mdThemingProvider.theme('default')
             .primaryPalette('indigo')
             .accentPalette('blue-grey');
-    });
+    })
+    .run(function(editableOptions) {
+        "use strict";
+        editableOptions.theme = 'bs3'; // bootstrap3 theme. Can be also 'bs2', 'default'
+    }).run(function($templateCache, $route, $http) {
+        var url;
+        for (var i in $route.routes) {
+            if (url = $route.routes[i].templateUrl) {
+                $http.get(url, {
+                    cache: $templateCache
+                });
+            }
+        }
+        $http.get("/Directives/dropdown-row.html", {
+            cache: $templateCache
+        });
 
+        $http.get("/Templates/artisan-categorie.html", {
+            cache: $templateCache
+        });
+        $http.get("/Templates/info-client.html", {
+            cache: $templateCache
+        });
+        $http.get("/Templates/info-categorie.html", {
+            cache: $templateCache
+        });
+        $http.get("/Templates/autocomplete-map.html", {
+            cache: $templateCache
+        });
+    }).config(function($compileProvider) {
+        $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|callto|mailto|file|tel):/);
+    });
 
 angular.module('edison').controller('MainController', function($timeout, $q, DataProvider, tabContainer, $scope, socket, config, $rootScope, $location, edisonAPI, taskList, $window) {
     "use strict";
@@ -165,7 +195,6 @@ angular.module('edison').controller('MainController', function($timeout, $q, Dat
         $scope.tabs.close(tab)
     };
 });
-
 var getDevisList = function(edisonAPI) {
     "use strict";
     return edisonAPI.devis.list({
@@ -265,11 +294,15 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
             templateUrl: "Pages/ListeInterventions/listeInterventions.html",
             controller: "InterventionsController",
             controllerAs: 'vm',
+            reloadOnSearch: false
+
         })
         .when('/intervention/list/:fltr', {
             templateUrl: "Pages/ListeInterventions/listeInterventions.html",
             controller: "InterventionsController",
             controllerAs: 'vm',
+            reloadOnSearch: false
+
         })
         .when('/intervention', {
             redirectTo: function(routeParams, path, params) {
@@ -289,11 +322,15 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
             templateUrl: "Pages/ListeDevis/listeDevis.html",
             controller: "ListeDevisController",
             controllerAs: 'vm',
+            reloadOnSearch: false
+
         })
         .when('/devis/list/:fltr', {
             templateUrl: "Pages/ListeDevis/listeDevis.html",
             controller: "ListeDevisController",
             controllerAs: "vm",
+            reloadOnSearch: false
+
         })
         .when('/devis', {
             redirectTo: function(routeParams, path, params) {
@@ -315,20 +352,26 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
             controllerAs: 'vm',
             reloadOnSearch: false
         })
-        .when('/artisan/:id/recap', {
+        .when('/artisan/:sstid/recap', {
             templateUrl: "Pages/ListeArtisan/contactArtisan.html",
             controller: "ContactArtisanController",
             controllerAs: 'vm',
+            reloadOnSearch: false
+
         })
         .when('/artisan/list', {
             templateUrl: "Pages/ListeArtisan/listeArtisan.html",
             controller: "ListeArtisanController",
             controllerAs: 'vm',
+            reloadOnSearch: false
+
         })
         .when('/artisan/list/:fltr', {
             templateUrl: "Pages/ListeArtisan/listeArtisan.html",
             controller: "ListeArtisanController",
             controllerAs: "vm",
+            reloadOnSearch: false
+
         })
         .when('/artisan', {
             redirectTo: function() {
@@ -377,50 +420,27 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
             controller: "telephoneMatch",
             controllerAs: "vm",
         })
+        .when('/tools/editProducts', {
+            templateUrl: "Pages/Tools/edit-products.html",
+            controller: "editProducts",
+            controllerAs: "vm",
+        })
+        .when('/tools/editUsers', {
+            templateUrl: "Pages/Tools/edit-users.html",
+            controller: "editUsers",
+            controllerAs: "vm",
+        })
         .when('/stats/:type', {
             templateUrl: "Pages/Stats/stats.html",
             controller: "StatsController",
             controllerAs: 'vm',
+            reloadOnSearch: false
         })
         .otherwise({
             redirectTo: '/dashboard'
         });
     // use the HTML5 History API
     $locationProvider.html5Mode(true);
-});
-
-angular.module('edison').run(function(editableOptions) {
-    "use strict";
-
-    editableOptions.theme = 'bs3'; // bootstrap3 theme. Can be also 'bs2', 'default'
-}).run(function($templateCache, $route, $http) {
-    var url;
-    for (var i in $route.routes) {
-        if (url = $route.routes[i].templateUrl) {
-            $http.get(url, {
-                cache: $templateCache
-            });
-        }
-    }
-    $http.get("/Directives/dropdown-row.html", {
-        cache: $templateCache
-    });
-
-    $http.get("/Templates/artisan-categorie.html", {
-        cache: $templateCache
-    });
-    $http.get("/Templates/info-client.html", {
-        cache: $templateCache
-    });
-    $http.get("/Templates/info-categorie.html", {
-        cache: $templateCache
-    });
-    $http.get("/Templates/autocomplete-map.html", {
-        cache: $templateCache
-    });
-})
-angular.module('edison').config(function($compileProvider) {
-    $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|callto|mailto|file|tel):/);
 });
 
 angular.module('edison').directive('allowPattern', [allowPatternDirective]);
@@ -625,26 +645,36 @@ angular.module('edison').directive('ngEnter', function () {
      _this.tab.hash = currentHash;
      _this.config = config;
      var title = currentFilter ? currentFilter.long_name : _this.model;
-     if ($routeParams.id) {
-         var id = parseInt($routeParams.id)
+     if ($routeParams.sstid) {
+         var id = parseInt($routeParams.sstid)
          _this.customFilter = function(inter) {
              return inter.ai === id;
          }
      } else {
          _this.tab.setTitle(title, currentHash);
      }
-     if ($routeParams.ids_in) {
+     if ($routeParams.sstids_in) {
          _this.customFilter = function(inter) {
-             return _.contains($routeParams.ids_in, inter.id);
+             return _.contains($routeParams.sstids_in, inter.id);
          }
      }
+
+     var actualiseUrl = _.throttle(function(fltrs) {
+        console.log('actual')
+         _.each(fltrs, function(e, k) {
+             // console.log(e, k)
+             if (!e) e = undefined;
+             $location.search(k, e);
+         })
+     }, 250)
+
      dataProvider.init(function(err, resp) {
 
          dataProvider.applyFilter(currentFilter, _this.tab.hash, _this.customFilter);
          var tableParameters = {
              page: 1,
              total: dataProvider.filteredData.length,
-             filter: {},
+             filter: $location.search(),
              sorting: {
                  id: 'desc'
              },
@@ -653,6 +683,7 @@ angular.module('edison').directive('ngEnter', function () {
          var tableSettings = {
              total: dataProvider.filteredData,
              getData: function($defer, params) {
+                 actualiseUrl(params.filter())
                  var data = dataProvider.filteredData;
                  data = $filter('tableFilter')(data, params.filter());
                  _this.currentFilter = _.clone(params.filter());
@@ -686,7 +717,7 @@ angular.module('edison').directive('ngEnter', function () {
              })
              .then(function(resp) {
                  _this.contextMenu.setData(resp.data);
-                 _this.contextMenu.setPosition($event.pageX - ($routeParams.id ? 50 : 0), $event.pageY + ($routeParams.id ? 0 : 200))
+                 _this.contextMenu.setPosition($event.pageX - ($routeParams.sstid ? 50 : 0), $event.pageY + ($routeParams.sstid ? 0 : 200))
                  _this.contextMenu.open();
              })
      }
@@ -1261,19 +1292,25 @@ angular.module('edison').factory('Address', function() {
 angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', function($http, $location, Upload) {
     "use strict";
     return {
-        searchProduct: function(text) {
-            return $http({
-                method: 'GET',
-                url: '/api/products/search',
-                cache: true,
-                params: {
-                    q: text
-                }
-            })
+        product: {
+            list: function() {
+                return $http.get('/api/product/list');
+            },
+            save: function(data) {
+                return $http.post('/api/product/__save', data);
+            }
         },
         stats: {
             telepro: function() {
                 return $http.get('/api/stats/telepro');
+            }
+        },
+        users: {
+            save: function(data) {
+                return $http.post('/api/user/__save', data);
+            },
+            list: function() {
+                return $http.get('/api/user/list');
             }
         },
         compta: {
@@ -2950,89 +2987,14 @@ angular.module('edison').factory('openPost', [function() {
 
 angular.module('edison').factory('productsList', function($q, dialog, openPost, edisonAPI) {
     "use strict";
-    var ps = [{
-        quantite: 1,
-        ref: "EDI001",
-        title: "Main d'œuvre",
-        desc: "Main d'œuvre",
-        pu: 65
-    }, {
-        quantite: 1,
-        ref: "EDI002",
-        title: "Déplacement",
-        desc: "Déplacement",
-        pu: 65
-    }, {
-        quantite: 1,
-        ref: "EDI005",
-        title: "Forfait Intervention",
-        desc: "Forfait INSTALLATION / MAIN D\'OUVRAGEEssais et mise en service inclus",
-        pu: 130
-    }, {
-        quantite: 1,
-        ref: "FRN001",
-        title: "Fourniture",
-        desc: "",
-        pu: 0
-    }, {
-        quantite: 1,
-        ref: "BAL001",
-        title: "ballon mural vertical",
-        desc: "Chauffe-eau électrique mural vertical\nRésistance blindée anti-calcaire\nPuissance : 1800 W\nType de courant : monophasé\nV = 200L\n\nRACCORDEMENT ÉLECTRIQUE MONO 220V (HEURE CREUSE / PLEINE)\n\nMARQUE ATLANTIC CERTIFIE\n\nGarantie constructeur : Jusqu'à 5 ans\nGarante pièce d'origine : Jusqu'à 2 ans\n\nAssistance et dépannage constructeur inclus jusqu'à 2 ans\n\nESSAIS ET MISE EN SERVICE INCLUS",
-        pu: 432.1
-
-    }, {
-        quantite: 1,
-        ref: "BAL002",
-        title: "groupe de securité",
-        desc: "Groupe de sécurité anti-calcaire 3/4.Robinet à sphère.\nClapet démontable\nRaccordement eau froide et chauffe eau : 20/27.Echappement 26/34.7 bars.\nEntonnoir siphon",
-        pu: 69.97
-    }, {
-        quantite: 1,
-        ref: "BAL003",
-        title: "Raccordement hydraulique",
-        desc: "Raccordement hydraulique\nFlexibles inox de 50 cm F20/27 ø 16 mm",
-        pu: 16.33
-    }, {
-        quantite: 1,
-        ref: "BAL004",
-        title: "Trépied Ballon",
-        desc: "Trépied pour chauffe-eau électrique.\nAccessoire obligatoire pour l'installation d'un chauffe-eau électrique de 100, 150, ou 200 litres sur un mur non porteur",
-        pu: 93.21
-    }, {
-        quantite: 1,
-        ref: 'VIT001',
-        title: "Remplacement Vitrage",
-        desc: "Remplacement d'un vitrage suite a un bris de glace \nporte fenêtre\ndouble vitrage\nvitrage clair\n2000 x 1000\nchâssis pvc / alu / bois\n\ncommande spéciale sur mesure\nadaptation et fixation sur place\n\nremplacement a l'identique",
-        pu: 297.13
-    }, {
-        quantite: 1,
-        ref: "VIT002",
-        title: "Pack Vitrerie",
-        desc: "depose/livraison + mise a la decharge + taxe energie",
-        pu: 75
-    }, {
-        quantite: 1,
-        ref: "SANI001",
-        title: "Pack Sanibroyeur",
-        desc: "PACK COMPLET SANIBROYEUR PRO\nRefoulement horizontal < 100m\nRefoulement vertical > 5m\nRégime moteur > 2800 tr/min\nNorme européenne \nEN 12050-3\nRaccordement hydraulique\nRaccordement électrique\nGarantie constructeur",
-        pu: 672.21
-    }, {
-        quantite: 1,
-        ref: "CAM001",
-        title: "Camion D'assainisement",
-        desc: "DÉGORGEMENT CANALISATION TRÈS HAUTE PRESSION PAR CAMION D’ASSAINISSEMENT : \nCurage et nettoyage complet de la canalisation jusqu\'à 10M",
-        pu: 696.25
-    }, {
-        quantite: 1,
-        ref: "AUT001",
-        title: "Autre",
-        desc: "",
-        pu: 0
-    }];
-
     var Produit = function(produits) {
         this.produits = produits;
+        var _this = this
+        if (!this.ps) {
+            edisonAPI.product.list().then(function(resp) {
+                _this.ps = resp.data
+            })
+        }
         _.each(this.produits, function(e) {
             if (e.desc.toLowerCase() != e.title.toLowerCase()) {
                 e.showDesc = true
@@ -3070,22 +3032,23 @@ angular.module('edison').factory('productsList', function($q, dialog, openPost, 
                 return 0
             this.lastCall = _.now()
             this.searchText = '';
+            prod.quantite = 1;
             this.produits.push(prod);
         },
         search: function(text) {
             var rtn = []
-            for (var i = 0; i < ps.length; ++i) {
-                if (text === ps[i].title)
+            for (var i = 0; i < this.ps.length; ++i) {
+                if (text === this.ps[i].title)
                     return [];
                 var needle = _.deburr(text).toLowerCase()
 
-                var haystack = _.deburr(ps[i].title).toLowerCase();
-                var haystack2 = _.deburr(ps[i].ref).toLowerCase();
-                var haystack3 = _.deburr(ps[i].desc).toLowerCase();
+                var haystack = _.deburr(this.ps[i].title).toLowerCase();
+                var haystack2 = _.deburr(this.ps[i].ref).toLowerCase();
+                var haystack3 = _.deburr(this.ps[i].desc).toLowerCase();
                 if (_.includes(haystack, needle) ||
                     _.includes(haystack2, needle) ||
                     _.includes(haystack3, needle)) {
-                    var x = _.clone(ps[i])
+                    var x = _.clone(this.ps[i])
                     x.random = _.random();
                     rtn.push(x)
                 }
@@ -3996,7 +3959,7 @@ angular.module('edison').directive('infoCompta', ['config', 'Paiement',
 ]);
 
  angular.module('edison').directive('produits',
-     function(config, productsList, dialog, openPost, LxNotificationService, Intervention, Devis) {
+     function(config, productsList, dialog, openPost, LxNotificationService, Intervention, Devis, Combo) {
          "use strict";
          return {
              restrict: 'E',
@@ -4009,6 +3972,7 @@ angular.module('edison').directive('infoCompta', ['config', 'Paiement',
              },
              link: function(scope, element, attrs) {
                  var model = scope.data;
+                 scope.combo = Combo;
                  scope.config = config
                  model.produits = model.produits || [];
                  scope.config = config;
@@ -4033,10 +3997,26 @@ angular.module('edison').directive('infoCompta', ['config', 'Paiement',
                      }
                  }, true)
 
+                 scope.$watch('data.combo', function(curr, prev) {
+                     if (curr && !_.isEqual(curr, prev)) {
+                        var prod = _.find(Combo, function(e) {
+                            return e.title === curr;
+                        })
+                        console.log(prod)
+                         _.each(prod.produits, function(e) {
+                             if (!e.ref) {
+                                 e.ref = e.desc.toUpperCase().slice(0, 3) + '0' + _.random(9, 99)
+                             }
+                         })
+                         model.produits = prod.produits || [];
+                         scope.produits = new productsList(model.produits);
+                     }
+                 }, true)
+
                  scope.changeElemTitle = function(elem) {
-                    if (!elem.showDesc) {
-                        elem.desc = elem.title
-                    }
+                     if (!elem.showDesc) {
+                         elem.desc = elem.title
+                     }
                  }
 
                  scope.createProd = function() {
@@ -4047,17 +4027,17 @@ angular.module('edison').directive('infoCompta', ['config', 'Paiement',
                                               quantite: 1,
                                               focus: true,
                                           })*/
-                    model.produits.push({
-                        showDesc:false,
-                        desc:'',
-                        title:'',
-                        pu:0,
-                        quantite:0,
-                    })
-                   /*  dialog.addProd(function(resp) {
-                         console.log(resp);
-                         model.produits.push(resp)
-                     });*/
+                     model.produits.push({
+                             showDesc: false,
+                             desc: '',
+                             title: '',
+                             pu: 0,
+                             quantite: 0,
+                         })
+                         /*  dialog.addProd(function(resp) {
+                               console.log(resp);
+                               model.produits.push(resp)
+                           });*/
                  }
                  scope.printDevis = function() {
                      openPost('/api/intervention/printDevis', {
@@ -4676,6 +4656,8 @@ var StatsController = function(tabContainer, $routeParams, edisonAPI, $rootScope
 
 
     $scope.$watch("selectedDate", function(curr) {
+        $location.search('m', curr.m);
+        $location.search('y', curr.y);
         edisonAPI.intervention.statsBen(curr).then(function(resp) {
             $('#chartContainer > *').remove()
             var svg = dimple.newSvg("#chartContainer", 1300, 400);
@@ -4699,13 +4681,6 @@ var StatsController = function(tabContainer, $routeParams, edisonAPI, $rootScope
             myChart.assignColor("Encaissé", "#4CAF50");
             myChart.addLegend(60, 10, 410, 20, "right");
             myChart.draw();
-            console.log(svg)
-            var xAxis = svg.axis()
-                .scale(xScale)
-                .tickFormat(function(d) {
-                    return dataset[d].keyword;
-                })
-                .orient("bottom");
 
         })
     })
@@ -4715,6 +4690,65 @@ var StatsController = function(tabContainer, $routeParams, edisonAPI, $rootScope
 
 }
 angular.module('edison').controller('StatsController', StatsController);
+
+var editProducts = function(tabContainer, edisonAPI, $rootScope, $scope, $location, LxNotificationService, socket) {
+    "use strict";
+    var _this = this;
+    _this.tab = tabContainer.getCurrentTab();
+    _this.tab.setTitle('Produits');
+
+
+    var single = function(e) {
+        e.single = (_(e.desc).deburr().toLowerCase() !== _(e.title).deburr().toLowerCase())
+        return e;
+    }
+
+    edisonAPI.product.list().then(function(resp) {
+        $scope.pl = _.map(resp.data, single);
+    })
+
+    var save = _.throttle(function() {
+        edisonAPI.product.save($scope.pl).then(function() {
+            //  LxNotificationService.success("Les produits on été mis a jour");
+        })
+    }, 500)
+
+    $scope.$watch('pl', function(curr, prev) {
+        if (curr && prev && !_.isEqual(prev, curr)) {
+            save()
+        }
+    }, true)
+
+
+}
+angular.module('edison').controller('editProducts', editProducts);
+
+var editUsers = function(tabContainer, edisonAPI, $rootScope, $scope, $location, LxNotificationService, socket) {
+    "use strict";
+    var _this = this;
+    _this.tab = tabContainer.getCurrentTab();
+    _this.tab.setTitle('Produits');
+
+
+
+    edisonAPI.users.list().then(function(resp) {
+        $scope.usrs = resp.data
+    })
+
+    var save = _.throttle(function() {
+        edisonAPI.users.save($scope.usrs).then(function() {
+        })
+    }, 500)
+
+    $scope.$watch('usrs', function(curr, prev) {
+        if (curr && prev && !_.isEqual(prev, curr)) {
+            save()
+        }
+    }, true)
+
+
+}
+angular.module('edison').controller('editUsers', editUsers);
 
 var telephoneMatch = function(tabContainer, edisonAPI, $rootScope, $scope, $location, LxProgressService, socket) {
     "use strict";

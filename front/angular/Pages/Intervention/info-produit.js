@@ -1,5 +1,5 @@
  angular.module('edison').directive('produits',
-     function(config, productsList, dialog, openPost, LxNotificationService, Intervention, Devis) {
+     function(config, productsList, dialog, openPost, LxNotificationService, Intervention, Devis, Combo) {
          "use strict";
          return {
              restrict: 'E',
@@ -12,6 +12,7 @@
              },
              link: function(scope, element, attrs) {
                  var model = scope.data;
+                 scope.combo = Combo;
                  scope.config = config
                  model.produits = model.produits || [];
                  scope.config = config;
@@ -36,10 +37,26 @@
                      }
                  }, true)
 
+                 scope.$watch('data.combo', function(curr, prev) {
+                     if (curr && !_.isEqual(curr, prev)) {
+                        var prod = _.find(Combo, function(e) {
+                            return e.title === curr;
+                        })
+                        console.log(prod)
+                         _.each(prod.produits, function(e) {
+                             if (!e.ref) {
+                                 e.ref = e.desc.toUpperCase().slice(0, 3) + '0' + _.random(9, 99)
+                             }
+                         })
+                         model.produits = prod.produits || [];
+                         scope.produits = new productsList(model.produits);
+                     }
+                 }, true)
+
                  scope.changeElemTitle = function(elem) {
-                    if (!elem.showDesc) {
-                        elem.desc = elem.title
-                    }
+                     if (!elem.showDesc) {
+                         elem.desc = elem.title
+                     }
                  }
 
                  scope.createProd = function() {
@@ -50,17 +67,17 @@
                                               quantite: 1,
                                               focus: true,
                                           })*/
-                    model.produits.push({
-                        showDesc:false,
-                        desc:'',
-                        title:'',
-                        pu:0,
-                        quantite:0,
-                    })
-                   /*  dialog.addProd(function(resp) {
-                         console.log(resp);
-                         model.produits.push(resp)
-                     });*/
+                     model.produits.push({
+                             showDesc: false,
+                             desc: '',
+                             title: '',
+                             pu: 0,
+                             quantite: 0,
+                         })
+                         /*  dialog.addProd(function(resp) {
+                               console.log(resp);
+                               model.produits.push(resp)
+                           });*/
                  }
                  scope.printDevis = function() {
                      openPost('/api/intervention/printDevis', {

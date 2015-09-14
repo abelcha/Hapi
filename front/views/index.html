@@ -40,7 +40,7 @@
                     <!-- 
                     <li><a href="#"><i class="dropdown-icon fa fa-cog"></i>&nbsp;&nbsp;Settings</a></li> -->
                     <li class="divider"></li>
-                    <li><a href="/logout"><i class="dropdown-icon fa fa-power-off"></i>&nbsp;&nbsp;Log Out</a></li>
+                    <li><a href="/logout/"><i class="dropdown-icon fa fa-power-off"></i>&nbsp;&nbsp;Log Out</a></li>
                 </ul>
                 </li>
                 </span>
@@ -115,6 +115,8 @@
             <drop-down title="Outils" icon="circle" ng-if="user.root === true">
                 <simple-link icon="wrench" title="Telephone Match" url="/tools/telephoneMatch"></simple-link>
                 <simple-link icon="wrench" title="Stats C.A" url="/stats/ca"></simple-link>
+                <simple-link icon="wrench" title="Produits" url="/tools/editProducts"></simple-link>
+                <simple-link icon="wrench" title="Utilisateurs" url="/tools/editUsers"></simple-link>
             </drop-down>
             <br>
             <br>

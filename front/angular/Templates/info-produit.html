@@ -9,6 +9,9 @@
         </md-content>
         <span class="fs-subhead tc-black-2 display-block">Pour generation de factures/devis</span>
         <br>
+        <select ng-if="displayfact" style="width:40%"class="form-control" ng-model="data.combo" ng-options="cmb.title as cmb.title for cmb in combo" default-option="Combos">
+            <option value="" disabled>Combos</option>
+        </select>
         <br>
         <table ng-if="displayfact" class="table table-bordered produits">
             <thead>
@@ -90,7 +93,7 @@
         </table>
     </div>
     <div class="card__actions" ng-if="displayfact">
-        <span style="float:left;width:50%">
+        <span style="float:left;width: 75%;">
                  <!--          <button ng-click="produits.add({quantite: 1,ref: 'AUT001',title: 'Autre',desc: '',pu: 0})" class="btn--no-conflicts btn--m btn--black btn--flat" lx-ripple>Ajouter</button> -->
                        <button ng-click="createProd()" class="btn--no-conflicts btn--m btn--black btn--flat" lx-ripple>Ajout produit</button>
                         <button ng-click="Devis(data).devisPreview()" class="btn--no-conflicts btn--m btn--black btn--flat" lx-ripple>Voir devis</button>

@@ -83,6 +83,7 @@ module.exports = function(db) {
             type: Number,
             ref: 'intervention'
         },
+        combo: String,
         categorie: String,
         produits: [{
             pu: Number,

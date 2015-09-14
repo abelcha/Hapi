@@ -31,6 +31,8 @@ var StatsController = function(tabContainer, $routeParams, edisonAPI, $rootScope
 
 
     $scope.$watch("selectedDate", function(curr) {
+        $location.search('m', curr.m);
+        $location.search('y', curr.y);
         edisonAPI.intervention.statsBen(curr).then(function(resp) {
             $('#chartContainer > *').remove()
             var svg = dimple.newSvg("#chartContainer", 1300, 400);
@@ -54,13 +56,6 @@ var StatsController = function(tabContainer, $routeParams, edisonAPI, $rootScope
             myChart.assignColor("Encaissé", "#4CAF50");
             myChart.addLegend(60, 10, 410, 20, "right");
             myChart.draw();
-            console.log(svg)
-            var xAxis = svg.axis()
-                .scale(xScale)
-                .tickFormat(function(d) {
-                    return dataset[d].keyword;
-                })
-                .orient("bottom");
 
         })
     })

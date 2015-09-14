@@ -186,7 +186,7 @@ Description.prototype.data = [
 
 module.exports = Description;
 
-},{"lodash":17,"resemblance":89}],2:[function(require,module,exports){
+},{"lodash":18,"resemblance":90}],2:[function(require,module,exports){
 var ms = require('milliseconds');
 var _each = require('lodash/collection/each');
 var moment = require('moment');
@@ -729,7 +729,7 @@ FiltersFactory.prototype.list = {
 
 module.exports = FiltersFactory;
 
-},{"lodash/collection/each":13,"milliseconds":85,"moment":86}],3:[function(require,module,exports){
+},{"lodash/collection/each":14,"milliseconds":86,"moment":87}],3:[function(require,module,exports){
     var _each = require('lodash/collection/each');
     var _includes = require('lodash/collection/includes');
     var _round = require('lodash/math/round')
@@ -812,7 +812,7 @@ module.exports = FiltersFactory;
 
     module.exports = FlushList;
 
-},{"lodash/collection/each":13,"lodash/collection/includes":16,"lodash/math/round":77}],4:[function(require,module,exports){
+},{"lodash/collection/each":14,"lodash/collection/includes":17,"lodash/math/round":78}],4:[function(require,module,exports){
  var _each = require('lodash/collection/each');
  var _get = require('lodash/object/get')
  var _clone = require('lodash/lang/clone')
@@ -896,7 +896,7 @@ module.exports = FiltersFactory;
  }
  module.exports = Paiement
 
-},{"lodash/collection/each":13,"lodash/lang/clone":69,"lodash/math/round":77,"lodash/object/get":78}],5:[function(require,module,exports){
+},{"lodash/collection/each":14,"lodash/lang/clone":70,"lodash/math/round":78,"lodash/object/get":79}],5:[function(require,module,exports){
 angular.module('browserify', [])
     .factory('config', [function() {
         "use strict";
@@ -921,136 +921,117 @@ angular.module('browserify', [])
     .factory('Description', [function() {
         return require('./Description');
     }])
+    .factory('Combo', [function() {
+        return require('./combo-produits');
+    }])
 
-},{"./Description":1,"./FiltersFactory":2,"./FlushList":3,"./Paiement":4,"./contextMenuData.js":8,"./dataList.js":9,"./textTemplate.js":11}],6:[function(require,module,exports){
-var page1 = {
-    titre: "Devis débouchage camion haute pression",
-    text: "	A l'interntion de {{civilité}} {{nom}} {{prenom}}, <br> <p> Suite à notre dernier échange téléphonique concernant la réalisation d'un devis d'<u>assainissement</u> pour <u>le débouchage haute pression de votre canalisation.</u> </p> <p> Vous trouverez ci-joint le <b>devis n°261655</b> qui correspond à ce que nous avons vu ensemble. </p> <p> Je vous rappel que les délais d'interventions dépendent également de votre rapidement de réponse. <br> Sachez également que votre installation sera éligible à notre assurance RC PRO et notre assurance décennale. <br> Lors de l'acceptation, je vous prie de me renvoyer signé ,accompagné de la mention : <br> </p> <div style='width: 100%; text-align: center; margin-top: 20px; margin-bottom: 20px;'> <b>\"BON POUR ACCORD\".</b> </div> <p> Je reste à votre entière disposition pour tous les renseignements ou les remarques que vous pourriez avoir concernant ce devis (technique, délais, prix). </p> <p> D'avance merci de me tenir au courant de la suite que vous donnerez à ce devis. </p> <p> Cordialement, </p> <p> {{nom artisan}} <br> Ligne direct: 09.72.40.37.94 Ligne atelier: 09.72.42.30.00 </p>",
+},{"./Description":1,"./FiltersFactory":2,"./FlushList":3,"./Paiement":4,"./combo-produits":6,"./contextMenuData.js":8,"./dataList.js":9,"./textTemplate.js":12}],6:[function(require,module,exports){
+module.exports = [{
+    title: "Devis débouchage camion haute pression",
+    text: " A l'intention de {{client.civilité}} {{client.nom}} {{client.prenom}}, <br> <p> Suite à notre dernier échange téléphonique concernant la réalisation d'un devis d'<u>assainissement</u> pour <u>le débouchage haute pression de votre canalisation.</u> </p> <p> Vous trouverez ci-joint le <b>devis n°261655</b> qui correspond à ce que nous avons vu ensemble. </p> <p> Je vous rappel que les délais d'interventions dépendent également de votre rapidement de réponse. <br> Sachez également que votre installation sera éligible à notre assurance RC PRO et notre assurance décennale. <br> Lors de l'acceptation, je vous prie de me renvoyer signé ,accompagné de la mention : <br> </p> <div style='width: 100%; text-align: center; margin-top: 20px; margin-bottom: 20px;'> <b>\"BON POUR ACCORD\".</b> </div> <p> Je reste à votre entière disposition pour tous les renseignements ou les remarques que vous pourriez avoir concernant ce devis (technique, délais, prix). </p> <p> D'avance merci de me tenir au courant de la suite que vous donnerez à ce devis. </p> <p> Cordialement, </p> <p> Arnaud <br> Ligne direct: 09.72.40.37.94 Ligne atelier: 09.72.42.30.00 </p>",
+    ref: 'DEVIS_DEBOUCHAGE_CHP',
     produits: [{
-        desc: "DEBOUCHAGE CAMION HAUTE PRESSION",
         title: "DEBOUCHAGE CAMION HAUTE PRESSION",
+        desc: "DEBOUCHAGE CAMION HAUTE PRESSION\n" +
+            "CAMION HYDRO-CUREUR\n" +
+            "DEGRAISSAGE CANALISATION\n" +
+            "PRESSION  >  400 BAR\n" +
+            "Remarques : Nettoyage de conduites domestiques et de l’égout principal jusqu’à un Ø de 300 mm",
         quantite: 1,
         pu: 496.25
     }, {
-        desc: "CAMION HYDRO-CUREUR",
-        title: "CAMION HYDRO-CUREUR"
-    }, {
-        desc: "DEGRAISSAGE CANALISATION",
-        title: "DEGRAISSAGE CANALISATION"
-    }, {
-        desc: "PRESSION  >  400 BAR",
-        title: "PRESSION  >  400 BAR"
-    }, {
-        desc: "Remarques : Nettoyage de conduites domestiques et de l’égout principal jusqu’à un Ø de 300 mm",
-        title: "Remarques : Nettoyage de conduites domestiques et de l’égout principal jusqu’à un Ø de 300 mm"
-    }, {
+        ref: 'EDI001',
         desc: "MAIN D'OEUVRE",
         title: "MAIN D'OEUVRE",
         quantite: 1,
         pu: 85
     }, {
+        ref: 'EDI002',
         desc: "DEPLACEMENT",
         title: "DEPLACEMENT",
         quantite: 1,
         pu: 65
     }]
-}
-var page2 = {
-    titre: "Devis débouchage camion vidange fosse septique",
-    text: "	A l'interntion de {{civilité}} {{nom}} {{prenom}}, <br> <p> Suite à notre dernier échange téléphonique concernant la réalisation d'un devis d'<u>assainissement</u> pour <u>la vidange de votre fosse septique.</u> </p> <p> Vous trouverez ci-joint le <b>devis n°261655</b> qui correspond à ce que nous avons vu ensemble.</p> <p> Je vous rappel que les délais d'interventions dépendent également de votre rapidement de réponse. <br> Sachez également que votre installation sera éligible à notre assurance RC PRO et notre assurance décennale. <br> Lors de l'acceptation, je vous prie de me renvoyer signé ,accompagné de la mention : <br> </p> <div style='width: 100%; text-align: center; margin-top: 20px; margin-bottom: 20px;'> <b>\"BON POUR ACCORD\".</b> </div> <p> Je reste à votre entière disposition pour tous les renseignements ou les remarques que vous pourriez avoir concernant ce devis (technique, délais, prix). </p> <p> D'avance merci de me tenir au courant de la suite que vous donnerez à ce devis. </p> <p> Cordialement, </p> <p> {{nom artisan}} <br> Ligne direct: 09.72.40.37.94 Ligne atelier: 09.72.42.30.00 </p>",
+}, {
+    title: "Devis débouchage camion vidange fosse septique",
+    ref: 'DEVIS_DEBOUCHAGE_CVFS',
+    text: " A l'intention de {{client.civilité}} {{client.nom}} {{client.prenom}}, <br> <p> Suite à notre dernier échange téléphonique concernant la réalisation d'un devis d'<u>assainissement</u> pour <u>la vidange de votre fosse septique.</u> </p> <p> Vous trouverez ci-joint le <b>devis n°261655</b> qui correspond à ce que nous avons vu ensemble.</p> <p> Je vous rappel que les délais d'interventions dépendent également de votre rapidement de réponse. <br> Sachez également que votre installation sera éligible à notre assurance RC PRO et notre assurance décennale. <br> Lors de l'acceptation, je vous prie de me renvoyer signé ,accompagné de la mention : <br> </p> <div style='width: 100%; text-align: center; margin-top: 20px; margin-bottom: 20px;'> <b>\"BON POUR ACCORD\".</b> </div> <p> Je reste à votre entière disposition pour tous les renseignements ou les remarques que vous pourriez avoir concernant ce devis (technique, délais, prix). </p> <p> D'avance merci de me tenir au courant de la suite que vous donnerez à ce devis. </p> <p> Cordialement, </p> <p> Arnaud <br> Ligne direct: 09.72.40.37.94 Ligne atelier: 09.72.42.30.00 </p>",
     produits: [{
-        desc: "VIDANGE FOSSE SEPTIQUE",
-        title: "VIDANGE FOSSE SEPTIQUE"
-    }, {
-        desc: "CONTENANCE DE LA CUVE = 1 M3",
+        desc: "VIDANGE FOSSE SEPTIQUE\n" +
+            "CONTENANCE DE LA CUVE = 1 M3" +
+            "PRIX / M3",
         title: "CONTENANCE DE LA CUVE = 1 M3",
         quantite: 1,
         pu: 156.25
-    }, {
-        desc: "PRIX / M3",
-        title: "PRIX / M3"
     }, {
         desc: "TRAITEMENT DES DÉCHETS",
         title: "TRAITEMENT DES DÉCHETS",
         quantite: 1,
         pu: 69.21
     }, {
+        ref: 'EDI001',
         desc: "MAIN D'OEUVRE",
         title: "MAIN D'OEUVRE",
         quantite: 1,
         pu: 85
     }, {
+        ref: 'EDI002',
         desc: "DEPLACEMENT",
         title: "DEPLACEMENT",
         quantite: 1,
         pu: 65
     }]
-}
-var page3 = {
-    titre: "Devis sany-broyeur",
-    text: "	A l'interntion de {{civilité}} {{nom}} {{prenom}}, <br> <p> Suite à notre dernier échange téléphonique concernant la réalisation d'un devis d'<u>assainissement</u> pour <u>l'installation d'un système de sani-broyeur.</u> </p> <p> Vous trouverez ci-joint le <b>devis n°261655</b> qui correspond à ce que nous avons vu ensemble.</p> <p> Je vous rappel que les délais d'interventions dépendent également de votre rapidement de réponse. <br> Sachez également que votre installation sera éligible à notre assurance RC PRO et notre assurance décennale. <br> Lors de l'acceptation, je vous prie de me renvoyer signé ,accompagné de la mention : <br> </p> <div style='width: 100%; text-align: center; margin-top: 20px; margin-bottom: 20px;'> <b>\"BON POUR ACCORD\".</b> </div> <p> Je reste à votre entière disposition pour tous les renseignements ou les remarques que vous pourriez avoir concernant ce devis (technique, délais, prix). </p> <p> D'avance merci de me tenir au courant de la suite que vous donnerez à ce devis. </p> <p> Cordialement, </p> <p> {{nom artisan}} <br> Ligne direct: 09.72.40.37.94 Ligne atelier: 09.72.42.30.00 </p>",
+}, {
+    title: "Devis sany-broyeur",
+    ref: "DEVIS_SANY_B",
+    text: " A l'intention de {{client.civilité}} {{client.nom}} {{client.prenom}}, <br> <p> Suite à notre dernier échange téléphonique concernant la réalisation d'un devis d'<u>assainissement</u> pour <u>l'installation d'un système de sani-broyeur.</u> </p> <p> Vous trouverez ci-joint le <b>devis n°261655</b> qui correspond à ce que nous avons vu ensemble.</p> <p> Je vous rappel que les délais d'interventions dépendent également de votre rapidement de réponse. <br> Sachez également que votre installation sera éligible à notre assurance RC PRO et notre assurance décennale. <br> Lors de l'acceptation, je vous prie de me renvoyer signé ,accompagné de la mention : <br> </p> <div style='width: 100%; text-align: center; margin-top: 20px; margin-bottom: 20px;'> <b>\"BON POUR ACCORD\".</b> </div> <p> Je reste à votre entière disposition pour tous les renseignements ou les remarques que vous pourriez avoir concernant ce devis (technique, délais, prix). </p> <p> D'avance merci de me tenir au courant de la suite que vous donnerez à ce devis. </p> <p> Cordialement, </p> <p> Arnaud <br> Ligne direct: 09.72.40.37.94 Ligne atelier: 09.72.42.30.00 </p>",
     produits: [{
-        desc: "SANIBROYEUR PRO WC",
         title: "SANIBROYEUR PRO WC",
+        desc: "SANIBROYEUR PRO WC" +
+            "EN 12050-3 - Silence\n" +
+            "Régime moteur spécial : 2800 (tr/min)\n" +
+            "Refoulements 5m horizontal\n" +
+            "Refoulements 100m vertical\n" +
+            "Alimentation 220-240 / 50\n" +
+            "Garantie 2 ans constructeur * sous d’une utilisation conforme à la notice\n",
         quantite: 1,
         pu: 539.10
     }, {
-        desc: "EN 12050-3 - Silence",
-        title: "EN 12050-3 - Silence"
-    }, {
-        desc: "Régime moteur spécial : 2800 (tr/min)",
-        title: "Régime moteur spécial : 2800 (tr/min)"
-    }, {
-        desc: "Refoulements 5m horizontal",
-        title: "Refoulements 5m horizontal"
-    }, {
-        desc: "Refoulements 100m vertical",
-        title: "Refoulements 100m vertical"
-    }, {
-        desc: "Alimentation 220-240 / 50",
-        title: "Alimentation 220-240 / 50"
-    }, {
-        desc: "Garantie 2 ans constructeur * sous d’une utilisation conforme à la notice",
-        title: "Garantie 2 ans constructeur * sous d’une utilisation conforme à la notice"
-    }, {
+        ref: "EDI001",
         desc: "MAIN D’OEUVRE",
         title: "MAIN D’OEUVRE",
         quantite: 1,
         pu: 130
     }]
-}
-var page4 = {
-    titre: "Devis de tableau électrique 1 rangée - 13 modules",
-    text: "	A l'interntion de {{civilité}} {{nom}} {{prenom}}, <br> <p> Suite à notre dernier échange téléphonique concernant la réalisation d'un devis de mise en conformité électrique NF C 15-100, nous vous proposons le remplacement  de votre tableau <b>1 rangée - 13 modules</b> </p> <p> Vous trouverez ci-joint le <b>devis n°261655</b> qui correspond à ce que nous avons vu ensemble.</p> <p> Je vous rappel que les délais d'interventions dépendent également de votre rapidement de réponse. <br> Sachez également que votre installation sera éligible à notre assurance RC PRO et notre assurance décennale. <br> Lors de l'acceptation, je vous prie de me renvoyer signé ,accompagné de la mention : <br> </p> <div style='width: 100%; text-align: center; margin-top: 20px; margin-bottom: 20px;'> <b>\"BON POUR ACCORD\".</b> </div> <p> Je reste à votre entière disposition pour tous les renseignements ou les remarques que vous pourriez avoir concernant ce devis (technique, délais, prix). </p> <p> D'avance merci de me tenir au courant de la suite que vous donnerez à ce devis. </p> <p> Cordialement, </p> <p> {{nom artisan}} <br> Ligne direct: 09.72.40.37.94 Ligne atelier: 09.72.42.30.00 </p>",
+}, {
+    title: "Devis de tableau électrique 1 rangée - 13 modules",
+    ref: "DEVIS_TAB_ELEC_1_13",
+    text: " A l'intention de {{client.civilité}} {{client.nom}} {{client.prenom}}, <br> <p> Suite à notre dernier échange téléphonique concernant la réalisation d'un devis de mise en conformité électrique NF C 15-100, nous vous proposons le remplacement  de votre tableau <b>1 rangée - 13 modules</b> </p> <p> Vous trouverez ci-joint le <b>devis n°261655</b> qui correspond à ce que nous avons vu ensemble.</p> <p> Je vous rappel que les délais d'interventions dépendent également de votre rapidement de réponse. <br> Sachez également que votre installation sera éligible à notre assurance RC PRO et notre assurance décennale. <br> Lors de l'acceptation, je vous prie de me renvoyer signé ,accompagné de la mention : <br> </p> <div style='width: 100%; text-align: center; margin-top: 20px; margin-bottom: 20px;'> <b>\"BON POUR ACCORD\".</b> </div> <p> Je reste à votre entière disposition pour tous les renseignements ou les remarques que vous pourriez avoir concernant ce devis (technique, délais, prix). </p> <p> D'avance merci de me tenir au courant de la suite que vous donnerez à ce devis. </p> <p> Cordialement, </p> <p> Arnaud <br> Ligne direct: 09.72.40.37.94 Ligne atelier: 09.72.42.30.00 </p>",
     produits: [{
-        desc: "Remise en conformité électrique NF C15-100",
-        title: "Remise en conformité électrique NF C15-100"
-    }, {
-        desc: "Identification des circuits électriques",
-        title: "Identification des circuits électriques"
-    }, {
-        desc: "Schéma électrique",
-        title: "Schéma électrique"
+        title: "Remise en conformité électrique NF C15-100",
+        desc: "Remise en conformité électrique NF C15-100\n" +
+            "Identification des circuits électriques\n" +
+            "Schéma électrique\n",
     }, {
         desc: "TABLEAU ELECTRIQUE 1 RANGEE - 13 MODULES",
         title: "TABLEAU ELECTRIQUE 1 RANGEE - 13 MODULES",
         quantite: 1,
-        prix: 89.10
+        pu: 89.10
     }, {
         desc: "INTERUPTEUR DIFFERENTIEL 30 mA - 40A",
         title: "INTERUPTEUR DIFFERENTIEL 30 mA - 40A",
         quantite: 1,
-        prix: 166.25
+        pu: 166.25
     }, {
         desc: "DISJONCTEUR DIFFERENTIEL 32 A",
         title: "DISJONCTEUR DIFFERENTIEL 32 A",
         quantite: 1,
-        prix: 32.65
+        pu: 32.65
     }, {
         desc: "DISJONCTEUR DIFFERENTIEL 20 A",
         title: "DISJONCTEUR DIFFERENTIEL 20 A",
         quantite: 2,
-        prix: 29.31
+        pu: 29.31
     }, {
         desc: "DISJONCTEUR DIFFERENTIEL 16 A",
         title: "DISJONCTEUR DIFFERENTIEL 16 A",
@@ -1072,47 +1053,45 @@ var page4 = {
         quantite: 2,
         pu: 28.67
     }, {
-        desc: "MAIN D'OEUVRE",
+        ref: "EDI001",
+
+        desc: "MAIN D'OEUVRE\n" +
+            "Dépose de l'existant et mise en service inclus",
         title: "MAIN D'OEUVRE",
         quantite: 1,
         pu: 280
-    }, {
-        desc: "Dépose de l'existant et mise en service inclus",
-        title: "Dépose de l'existant et mise en service inclus"
     }]
-}
-var page5 = {
-    titre: "Devis de tableau électrique 2 rangée - 13 modules",
-    text: "	A l'interntion de {{civilité}} {{nom}} {{prenom}}, <br> <p> Suite à notre dernier échange téléphonique concernant la réalisation d'un devis de mise en conformité électrique NF C 15-100, nous vous proposons le remplacement  de votre tableau <b>2 rangée - 13 modules</b> </p> <p> Vous trouverez ci-joint le <b>devis n°261655</b> qui correspond à ce que nous avons vu ensemble.</p> <p> Je vous rappel que les délais d'interventions dépendent également de votre rapidement de réponse. <br> Sachez également que votre installation sera éligible à notre assurance RC PRO et notre assurance décennale. <br> Lors de l'acceptation, je vous prie de me renvoyer signé ,accompagné de la mention : <br> </p> <div style='width: 100%; text-align: center; margin-top: 20px; margin-bottom: 20px;'> <b>\"BON POUR ACCORD\".</b> </div> <p> Je reste à votre entière disposition pour tous les renseignements ou les remarques que vous pourriez avoir concernant ce devis (technique, délais, prix). </p> <p> D'avance merci de me tenir au courant de la suite que vous donnerez à ce devis. </p> <p> Cordialement, </p> <p> {{nom artisan}} <br> Ligne direct: 09.72.40.37.94 Ligne atelier: 09.72.42.30.00 </p>",
+}, {
+    title: "Devis de tableau électrique 2 rangée - 13 modules",
+    ref: "DEVIS_TAB_ELEC_2_13",
+    text: " A l'intention de {{client.civilité}} {{client.nom}} {{client.prenom}}, <br> <p> Suite à notre dernier échange téléphonique concernant la réalisation d'un devis de mise en conformité électrique NF C 15-100, nous vous proposons le remplacement  de votre tableau <b>2 rangée - 13 modules</b> </p> <p> Vous trouverez ci-joint le <b>devis n°261655</b> qui correspond à ce que nous avons vu ensemble.</p> <p> Je vous rappel que les délais d'interventions dépendent également de votre rapidement de réponse. <br> Sachez également que votre installation sera éligible à notre assurance RC PRO et notre assurance décennale. <br> Lors de l'acceptation, je vous prie de me renvoyer signé ,accompagné de la mention : <br> </p> <div style='width: 100%; text-align: center; margin-top: 20px; margin-bottom: 20px;'> <b>\"BON POUR ACCORD\".</b> </div> <p> Je reste à votre entière disposition pour tous les renseignements ou les remarques que vous pourriez avoir concernant ce devis (technique, délais, prix). </p> <p> D'avance merci de me tenir au courant de la suite que vous donnerez à ce devis. </p> <p> Cordialement, </p> <p> Arnaud <br> Ligne direct: 09.72.40.37.94 Ligne atelier: 09.72.42.30.00 </p>",
     produits: [{
-        desc: "Remise en conformité électrique NF C15-100",
-        title: "Remise en conformité électrique NF C15-100"
-    }, {
-        desc: "Identification des circuits électriques",
-        title: "Identification des circuits électriques"
-    }, {
-        desc: "Schéma électrique",
-        title: "Schéma électrique"
-    }, {
-        desc: "TABLEAU ELECTRIQUE 1 RANGEE - 13 MODULES",
-        title: "TABLEAU ELECTRIQUE 1 RANGEE - 13 MODULES",
+        title: "Remise en conformité électrique NF C15-100",
+        desc: "Remise en conformité électrique NF C15-100\n" +
+            "Identification des circuits électriques\n" +
+            "Schéma électrique\n",
         quantite: 1,
-        prix: 139.10
+        pu: 0
+    }, {
+        title: "Remise en conformité électrique NF C15-100",
+        desc: "TABLEAU ELECTRIQUE 1 RANGEE - 13 MODULES",
+        quantite: 1,
+        pu: 139.10
     }, {
         desc: "INTERUPTEUR DIFFERENTIEL 30 mA - 40A",
         title: "INTERUPTEUR DIFFERENTIEL 30 mA - 40A",
         quantite: 2,
-        prix: 166.25
+        pu: 166.25
     }, {
         desc: "DISJONCTEUR DIFFERENTIEL 32 A",
         title: "DISJONCTEUR DIFFERENTIEL 32 A",
         quantite: 2,
-        prix: 32.65
+        pu: 32.65
     }, {
         desc: "DISJONCTEUR DIFFERENTIEL 20 A",
         title: "DISJONCTEUR DIFFERENTIEL 20 A",
         quantite: 4,
-        prix: 29.31
+        pu: 29.31
     }, {
         desc: "DISJONCTEUR DIFFERENTIEL 16 A",
         title: "DISJONCTEUR DIFFERENTIEL 16 A",
@@ -1134,140 +1113,101 @@ var page5 = {
         quantite: 4,
         pu: 28.67
     }, {
+        ref: "EDI001",
         desc: "MAIN D'OEUVRE",
         title: "MAIN D'OEUVRE",
         quantite: 1,
         pu: 280
     }, {
         desc: "Dépose de l'existant et mise en service inclus",
-        title: "Dépose de l'existant et mise en service inclus"
+        title: "Dépose de l'existant et mise en service inclus",
+        quantite: 1,
+        pu: 0
     }]
-}
-var page6 = {
-    titre: "Devis chauffe-eau gaz ELM LEBLANC",
-    text: "	A l'interntion de {{civilité}} {{nom}} {{prenom}}, <br> <p> Suite à notre dernier échange téléphonique concernant la réalisation d'un <u>devis de remplacement de votre chauffe-eau gaz</u> </p> <p> Vous trouverez ci-joint le <b>devis n°261655</b> qui correspond à ce que nous avons vu ensemble.</p> <p> Je vous rappel que les délais d'interventions dépendent également de votre rapidement de réponse. <br> Sachez également que votre installation sera éligible à notre assurance RC PRO et notre assurance décennale. <br> Lors de l'acceptation, je vous prie de me renvoyer signé ,accompagné de la mention : <br> </p> <div style='width: 100%; text-align: center; margin-top: 20px; margin-bottom: 20px;'> <b>\"BON POUR ACCORD\".</b> </div> <p> Je reste à votre entière disposition pour tous les renseignements ou les remarques que vous pourriez avoir concernant ce devis (technique, délais, prix). </p> <p> D'avance merci de me tenir au courant de la suite que vous donnerez à ce devis. </p> <p> Cordialement, </p> <p> {{nom artisan}} <br> Ligne direct: 09.72.40.37.94 Ligne atelier: 09.72.42.30.00 </p>",
+}, {
+    title: "Devis chauffe-eau gaz ELM LEBLANC",
+    ref: "DEVIS_CHF_EAU_ELM",
+    text: " A l'intention de {{client.civilité}} {{client.nom}} {{client.prenom}}, <br> <p> Suite à notre dernier échange téléphonique concernant la réalisation d'un <u>devis de remplacement de votre chauffe-eau gaz</u> </p> <p> Vous trouverez ci-joint le <b>devis n°261655</b> qui correspond à ce que nous avons vu ensemble.</p> <p> Je vous rappel que les délais d'interventions dépendent également de votre rapidement de réponse. <br> Sachez également que votre installation sera éligible à notre assurance RC PRO et notre assurance décennale. <br> Lors de l'acceptation, je vous prie de me renvoyer signé ,accompagné de la mention : <br> </p> <div style='width: 100%; text-align: center; margin-top: 20px; margin-bottom: 20px;'> <b>\"BON POUR ACCORD\".</b> </div> <p> Je reste à votre entière disposition pour tous les renseignements ou les remarques que vous pourriez avoir concernant ce devis (technique, délais, prix). </p> <p> D'avance merci de me tenir au courant de la suite que vous donnerez à ce devis. </p> <p> Cordialement, </p> <p> Arnaud <br> Ligne direct: 09.72.40.37.94 Ligne atelier: 09.72.42.30.00 </p>",
     produits: [{
-        desc: "Installation d’un chauffe-eau gaz (eau chaude sanitaire)",
-        title: "Installation d’un chauffe-eau gaz (eau chaude sanitaire)"
+        title: "Installation d’un chauffe-eau gaz (eau chaude sanitaire)",
+        desc: "Installation d’un chauffe-eau gaz (eau chaude sanitaire)\n" +
+            "Dépose complète de l’existant\n" +
+            "Mise à la décharge de l’unité de chauffage existante\n" +
+            "Mise en conformité des raccordements gaz\n" +
+            "Installation et mise en service inclus\n",
+        quantite: 1,
+        pu: 0
     }, {
-        desc: "Dépose complète de l’existant",
-        title: "Dépose complète de l’existant"
-    }, {
-        desc: "Mise à la décharge de l’unité de chauffage existante",
-        title: "Mise à la décharge de l’unité de chauffage existante"
-    }, {
-        desc: "Mise en conformité des raccordements gaz",
-        title: "Mise en conformité des raccordements gaz"
-    }, {
-        desc: "Installation et mise en service inclus",
-        title: "Installation et mise en service inclus"
-    }, {
-        desc: "CHAUFFE-EAU GAZ A TIRAGE NATUREL",
         title: "CHAUFFE-EAU GAZ A TIRAGE NATUREL",
+        desc: "CHAUFFE-EAU GAZ A TIRAGE NATUREL\n" +
+            "Marque : ELM LEBLANC - ONDEA\n" +
+            "Puissance : 7 à 29,5 kW\n" +
+            "Débit : 8 à 17 litres / minute\n" +
+            "Mode d’allumage par veilleuse\n" +
+            "Dimensions (L x P x H ) : 425 x 334 x 655\n" +
+            "Capacité pour : Cuisine + Lavabos + Douche + Baignoire\n" +
+            "Équipé du système S.P.O.T.T (sécurité gaz)\n",
         quantite: 1,
-        prix: 938.52
-    }, {
-        desc: "Marque : ELM LEBLANC - ONDEA",
-        title: "Marque : ELM LEBLANC - ONDEA"
-    }, {
-        desc: "Puissance : 7 à 29,5 kW",
-        title: "Puissance : 7 à 29,5 kW"
-    }, {
-        desc: "Débit : 8 à 17 litres / minute",
-        title: "Débit : 8 à 17 litres / minute"
-    }, {
-        desc: "Diamètre évacuation : 125 mm",
-        title: "Diamètre évacuation : 125 mm"
-    }, {
-        desc: "Mode d’allumage par veilleuse",
-        title: "Mode d’allumage par veilleuse"
-    }, {
-        desc: "Dimensions (L x P x H ) : 425 x 334 x 655",
-        title: "Dimensions (L x P x H ) : 425 x 334 x 655"
-    }, {
-        desc: "Capacité pour : Cuisine + Lavabos + Douche + Baignoire",
-        title: "Capacité pour : Cuisine + Lavabos + Douche + Baignoire"
-    }, {
-        desc: "Équipé du système S.P.O.T.T (sécurité gaz)",
-        title: "Équipé du système S.P.O.T.T (sécurité gaz)"
+        pu: 938.52
     }, {
         desc: "KIT MÉLANGEUR POUR ONDEA",
         title: "KIT MÉLANGEUR POUR ONDEA",
         quantite: 1,
-        prix: 89.13
+        pu: 89.13
     }, {
         desc: "CACHE INFERIEUR LC 17",
         title: "CACHE INFERIEUR LC 17",
         quantite: 1,
-        prix: 63.21
+        pu: 63.21
     }, {
+        ref: "EDI001",
         desc: "MAIN D’OEUVRE",
         title: "MAIN D’OEUVRE",
         quantite: 1,
-        prix: 330.00
+        pu: 330.00
     }]
-}
-var page7 = {
-    titre: "Devis chaudière gaz mural ELM LEBLANC avec ECS",
-    text: "	A l'interntion de {{civilité}} {{nom}} {{prenom}}, <br> <p> Suite à notre dernier échange téléphonique concernant la réalisation d'un <u>devis de remplacement de votre chaudière gaz</u> </p> <p> Vous trouverez ci-joint le <b>devis n°261655</b> qui correspond à ce que nous avons vu ensemble.</p> <p> Je vous rappel que les délais d'interventions dépendent également de votre rapidement de réponse. <br> Sachez également que votre installation sera éligible à notre assurance RC PRO et notre assurance décennale. <br> Lors de l'acceptation, je vous prie de me renvoyer signé ,accompagné de la mention : <br> </p> <div style='width: 100%; text-align: center; margin-top: 20px; margin-bottom: 20px;'> <b>\"BON POUR ACCORD\".</b> </div> <p> Je reste à votre entière disposition pour tous les renseignements ou les remarques que vous pourriez avoir concernant ce devis (technique, délais, prix). </p> <p> D'avance merci de me tenir au courant de la suite que vous donnerez à ce devis. </p> <p> Cordialement, </p> <p> {{nom artisan}} <br> Ligne direct: 09.72.40.37.94 Ligne atelier: 09.72.42.30.00 </p>",
+}, {
+    title: "Devis chaudière gaz mural ELM LEBLANC avec ECS",
+    ref: "DEVIS_CHD_GM_ELM",
+    text: " A l'intention de {{client.civilité}} {{client.nom}} {{client.prenom}}, <br> <p> Suite à notre dernier échange téléphonique concernant la réalisation d'un <u>devis de remplacement de votre chaudière gaz</u> </p> <p> Vous trouverez ci-joint le <b>devis n°261655</b> qui correspond à ce que nous avons vu ensemble.</p> <p> Je vous rappel que les délais d'interventions dépendent également de votre rapidement de réponse. <br> Sachez également que votre installation sera éligible à notre assurance RC PRO et notre assurance décennale. <br> Lors de l'acceptation, je vous prie de me renvoyer signé ,accompagné de la mention : <br> </p> <div style='width: 100%; text-align: center; margin-top: 20px; margin-bottom: 20px;'> <b>\"BON POUR ACCORD\".</b> </div> <p> Je reste à votre entière disposition pour tous les renseignements ou les remarques que vous pourriez avoir concernant ce devis (technique, délais, prix). </p> <p> D'avance merci de me tenir au courant de la suite que vous donnerez à ce devis. </p> <p> Cordialement, </p> <p> Arnaud <br> Ligne direct: 09.72.40.37.94 Ligne atelier: 09.72.42.30.00 </p>",
     produits: [{
+        title: "Installation d’une chaudière gaz (chauffage + eau chaude sanitaire)\n" +
+            "Dépose complète de l’existant\n" +
+            "Mise à la décharge de l’unité de chauffage existante" +
+            "Mise en conformité des raccordements gaz\n" +
+            "Installation et mise en service inclus\n",
         desc: "Installation d’une chaudière gaz (chauffage + eau chaude sanitaire)",
-        title: "Installation d’une chaudière gaz (chauffage + eau chaude sanitaire)"
-    }, {
-        desc: "Dépose complète de l’existant",
-        title: "Dépose complète de l’existant"
-    }, {
-        desc: "Mise à la décharge de l’unité de chauffage existante",
-        title: "Mise à la décharge de l’unité de chauffage existante"
-    }, {
-        desc: "Mise en conformité des raccordements gaz",
-        title: "Mise en conformité des raccordements gaz"
-    }, {
-        desc: "Installation et mise en service inclus",
-        title: "Installation et mise en service inclus"
+        quantite: 1,
+        pu: 0
     }, {
         desc: "CHAUDIERE GAZ A TIRAGE NATUREL",
-        title: "CHAUDIERE GAZ A TIRAGE NATUREL",
+        title: "CHAUDIERE GAZ A TIRAGE NATUREL" +
+            "Puissance : 9.5 à 24 kW\n" +
+            "Débit : 11.5  litres / minute\n" +
+            "Diamètre évacuation : 125 mm\n" +
+            "Mode d’allumage par veilleuse\n" +
+            "Dimensions (L x P x H ) : 400 x 385 x 865\n" +
+            "Équipé du système S.P.O.T.T (sécurité gaz)",
         quantite: 1,
-        prix: 1438.52
-    }, {
-        desc: "Marque : ELM LEBLANC - ACLEIS",
-        title: "Marque : ELM LEBLANC - ACLEIS"
-    }, {
-        desc: "Puissance : 9.5 à 24 kW",
-        title: "Puissance : 9.5 à 24 kW"
-    }, {
-        desc: "Débit : 11.5  litres / minute",
-        title: "Débit : 11.5  litres / minute"
-    }, {
-        desc: "Diamètre évacuation : 125 mm",
-        title: "Diamètre évacuation : 125 mm"
-    }, {
-        desc: "Mode d’allumage par veilleuse",
-        title: "Mode d’allumage par veilleuse"
-    }, {
-        desc: "Dimensions (L x P x H ) : 400 x 385 x 865",
-        title: "Dimensions (L x P x H ) : 400 x 385 x 865"
-    }, {
-        desc: "Équipé du système S.P.O.T.T (sécurité gaz)",
-        title: "Équipé du système S.P.O.T.T (sécurité gaz)"
+        pu: 1438.52
     }, {
         desc: "DOSSERET DE REMPLACEMENT CHAUDIÈRE",
         title: "DOSSERET DE REMPLACEMENT CHAUDIÈRE",
         quantite: 1,
-        prix: 189.13
+        pu: 189.13
     }, {
         desc: "SOUPAPE DE SÉCURITÉ 4BAR DN15",
         title: "SOUPAPE DE SÉCURITÉ 4BAR DN15",
         quantite: 1,
-        prix: 119.21
+        pu: 119.21
     }, {
+        ref: "EDI001",
         desc: "MAIN D’OEUVRE",
         title: "MAIN D’OEUVRE",
         quantite: 1,
-        prix: 380.00
+        pu: 380.00
     }]
-}
+}]
 
 },{}],7:[function(require,module,exports){
 module.exports = Compta;
@@ -2079,11 +2019,80 @@ module.exports = {
     }
 }
 
-},{"lodash/collection/find":14}],10:[function(require,module,exports){
+},{"lodash/collection/find":15}],10:[function(require,module,exports){
 module.exports = function(d) {
 	return Math.round(((new Date(d)).getTime() / 1000) - 1370000000)
 }
 },{}],11:[function(require,module,exports){
+module.exports = [{
+    ref: "EDI001",
+    title: "Main d'œuvre",
+    desc: "Main d'œuvre",
+    pu: 65
+}, {
+    ref: "EDI002",
+    title: "Déplacement",
+    desc: "Déplacement",
+    pu: 65
+}, {
+    ref: "EDI005",
+    title: "Forfait Intervention",
+    desc: "Forfait INSTALLATION / MAIN D\'OUVRAGEEssais et mise en service inclus",
+    pu: 130
+}, {
+    ref: "FRN001",
+    title: "Fourniture",
+    desc: "Fourniture",
+    pu: 0
+}, {
+    ref: "BAL001",
+    title: "ballon mural vertical",
+    desc: "Chauffe-eau électrique mural vertical\nRésistance blindée anti-calcaire\nPuissance : 1800 W\nType de courant : monophasé\nV = 200L\n\nRACCORDEMENT ÉLECTRIQUE MONO 220V (HEURE CREUSE / PLEINE)\n\nMARQUE ATLANTIC CERTIFIE\n\nGarantie constructeur : Jusqu'à 5 ans\nGarante pièce d'origine : Jusqu'à 2 ans\n\nAssistance et dépannage constructeur inclus jusqu'à 2 ans\n\nESSAIS ET MISE EN SERVICE INCLUS",
+    pu: 432.1
+
+}, {
+    ref: "BAL002",
+    title: "groupe de securité",
+    desc: "Groupe de sécurité anti-calcaire 3/4.Robinet à sphère.\nClapet démontable\nRaccordement eau froide et chauffe eau : 20/27.Echappement 26/34.7 bars.\nEntonnoir siphon",
+    pu: 69.97
+}, {
+    ref: "BAL003",
+    title: "Raccordement hydraulique",
+    desc: "Raccordement hydraulique\nFlexibles inox de 50 cm F20/27 ø 16 mm",
+    pu: 16.33
+}, {
+    ref: "BAL004",
+    title: "Trépied Ballon",
+    desc: "Trépied pour chauffe-eau électrique.\nAccessoire obligatoire pour l'installation d'un chauffe-eau électrique de 100, 150, ou 200 litres sur un mur non porteur",
+    pu: 93.21
+}, {
+    ref: 'VIT001',
+    title: "Remplacement Vitrage",
+    desc: "Remplacement d'un vitrage suite a un bris de glace \nporte fenêtre\ndouble vitrage\nvitrage clair\n2000 x 1000\nchâssis pvc / alu / bois\n\ncommande spéciale sur mesure\nadaptation et fixation sur place\n\nremplacement a l'identique",
+    pu: 297.13
+}, {
+    ref: "VIT002",
+    title: "Pack Vitrerie",
+    desc: "depose/livraison + mise a la decharge + taxe energie",
+    pu: 75
+}, {
+    ref: "SANI001",
+    title: "Pack Sanibroyeur",
+    desc: "PACK COMPLET SANIBROYEUR PRO\nRefoulement horizontal < 100m\nRefoulement vertical > 5m\nRégime moteur > 2800 tr/min\nNorme européenne \nEN 12050-3\nRaccordement hydraulique\nRaccordement électrique\nGarantie constructeur",
+    pu: 672.21
+}, {
+    ref: "CAM001",
+    title: "Camion D'assainisement",
+    desc: "DÉGORGEMENT CANALISATION TRÈS HAUTE PRESSION PAR CAMION D’ASSAINISSEMENT : \nCurage et nettoyage complet de la canalisation jusqu\'à 10M",
+    pu: 696.25
+}, {
+    ref: "AUT001",
+    title: "Autre",
+    desc: "Autre",
+    pu: 0
+}]
+
+},{}],12:[function(require,module,exports){
 module.exports = {
     sms: {
         intervention: {
@@ -2300,7 +2309,7 @@ module.exports = {
 
 };
 
-},{"./dataList.js":9}],12:[function(require,module,exports){
+},{"./dataList.js":9}],13:[function(require,module,exports){
 /**
  * Gets the last element of `array`.
  *
@@ -2321,10 +2330,10 @@ function last(array) {
 
 module.exports = last;
 
-},{}],13:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 module.exports = require('./forEach');
 
-},{"./forEach":15}],14:[function(require,module,exports){
+},{"./forEach":16}],15:[function(require,module,exports){
 var baseEach = require('../internal/baseEach'),
     createFind = require('../internal/createFind');
 
@@ -2382,7 +2391,7 @@ var find = createFind(baseEach);
 
 module.exports = find;
 
-},{"../internal/baseEach":25,"../internal/createFind":46}],15:[function(require,module,exports){
+},{"../internal/baseEach":26,"../internal/createFind":47}],16:[function(require,module,exports){
 var arrayEach = require('../internal/arrayEach'),
     baseEach = require('../internal/baseEach'),
     createForEach = require('../internal/createForEach');
@@ -2421,7 +2430,7 @@ var forEach = createForEach(arrayEach, baseEach);
 
 module.exports = forEach;
 
-},{"../internal/arrayEach":19,"../internal/baseEach":25,"../internal/createForEach":47}],16:[function(require,module,exports){
+},{"../internal/arrayEach":20,"../internal/baseEach":26,"../internal/createForEach":48}],17:[function(require,module,exports){
 var baseIndexOf = require('../internal/baseIndexOf'),
     getLength = require('../internal/getLength'),
     isArray = require('../lang/isArray'),
@@ -2480,7 +2489,7 @@ function includes(collection, target, fromIndex, guard) {
 
 module.exports = includes;
 
-},{"../internal/baseIndexOf":31,"../internal/getLength":52,"../internal/isIterateeCall":61,"../internal/isLength":63,"../lang/isArray":71,"../lang/isString":75,"../object/values":82}],17:[function(require,module,exports){
+},{"../internal/baseIndexOf":32,"../internal/getLength":53,"../internal/isIterateeCall":62,"../internal/isLength":64,"../lang/isArray":72,"../lang/isString":76,"../object/values":83}],18:[function(require,module,exports){
 (function (global){
 /**
  * @license
@@ -14836,7 +14845,7 @@ module.exports = includes;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 
-},{}],18:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 /**
  * Copies the values of `source` to `array`.
  *
@@ -14858,7 +14867,7 @@ function arrayCopy(source, array) {
 
 module.exports = arrayCopy;
 
-},{}],19:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 /**
  * A specialized version of `_.forEach` for arrays without support for callback
  * shorthands and `this` binding.
@@ -14882,7 +14891,7 @@ function arrayEach(array, iteratee) {
 
 module.exports = arrayEach;
 
-},{}],20:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 /**
  * A specialized version of `_.some` for arrays without support for callback
  * shorthands and `this` binding.
@@ -14907,7 +14916,7 @@ function arraySome(array, predicate) {
 
 module.exports = arraySome;
 
-},{}],21:[function(require,module,exports){
+},{}],22:[function(require,module,exports){
 var baseCopy = require('./baseCopy'),
     keys = require('../object/keys');
 
@@ -14928,7 +14937,7 @@ function baseAssign(object, source) {
 
 module.exports = baseAssign;
 
-},{"../object/keys":79,"./baseCopy":24}],22:[function(require,module,exports){
+},{"../object/keys":80,"./baseCopy":25}],23:[function(require,module,exports){
 var baseMatches = require('./baseMatches'),
     baseMatchesProperty = require('./baseMatchesProperty'),
     bindCallback = require('./bindCallback'),
@@ -14965,7 +14974,7 @@ function baseCallback(func, thisArg, argCount) {
 
 module.exports = baseCallback;
 
-},{"../utility/identity":83,"../utility/property":84,"./baseMatches":35,"./baseMatchesProperty":36,"./bindCallback":42}],23:[function(require,module,exports){
+},{"../utility/identity":84,"../utility/property":85,"./baseMatches":36,"./baseMatchesProperty":37,"./bindCallback":43}],24:[function(require,module,exports){
 var arrayCopy = require('./arrayCopy'),
     arrayEach = require('./arrayEach'),
     baseAssign = require('./baseAssign'),
@@ -15095,7 +15104,7 @@ function baseClone(value, isDeep, customizer, key, object, stackA, stackB) {
 
 module.exports = baseClone;
 
-},{"../lang/isArray":71,"../lang/isObject":74,"./arrayCopy":18,"./arrayEach":19,"./baseAssign":21,"./baseForOwn":29,"./initCloneArray":56,"./initCloneByTag":57,"./initCloneObject":58}],24:[function(require,module,exports){
+},{"../lang/isArray":72,"../lang/isObject":75,"./arrayCopy":19,"./arrayEach":20,"./baseAssign":22,"./baseForOwn":30,"./initCloneArray":57,"./initCloneByTag":58,"./initCloneObject":59}],25:[function(require,module,exports){
 /**
  * Copies properties of `source` to `object`.
  *
@@ -15120,7 +15129,7 @@ function baseCopy(source, props, object) {
 
 module.exports = baseCopy;
 
-},{}],25:[function(require,module,exports){
+},{}],26:[function(require,module,exports){
 var baseForOwn = require('./baseForOwn'),
     createBaseEach = require('./createBaseEach');
 
@@ -15137,7 +15146,7 @@ var baseEach = createBaseEach(baseForOwn);
 
 module.exports = baseEach;
 
-},{"./baseForOwn":29,"./createBaseEach":44}],26:[function(require,module,exports){
+},{"./baseForOwn":30,"./createBaseEach":45}],27:[function(require,module,exports){
 /**
  * The base implementation of `_.find`, `_.findLast`, `_.findKey`, and `_.findLastKey`,
  * without support for callback shorthands and `this` binding, which iterates
@@ -15164,7 +15173,7 @@ function baseFind(collection, predicate, eachFunc, retKey) {
 
 module.exports = baseFind;
 
-},{}],27:[function(require,module,exports){
+},{}],28:[function(require,module,exports){
 /**
  * The base implementation of `_.findIndex` and `_.findLastIndex` without
  * support for callback shorthands and `this` binding.
@@ -15189,7 +15198,7 @@ function baseFindIndex(array, predicate, fromRight) {
 
 module.exports = baseFindIndex;
 
-},{}],28:[function(require,module,exports){
+},{}],29:[function(require,module,exports){
 var createBaseFor = require('./createBaseFor');
 
 /**
@@ -15208,7 +15217,7 @@ var baseFor = createBaseFor();
 
 module.exports = baseFor;
 
-},{"./createBaseFor":45}],29:[function(require,module,exports){
+},{"./createBaseFor":46}],30:[function(require,module,exports){
 var baseFor = require('./baseFor'),
     keys = require('../object/keys');
 
@@ -15227,7 +15236,7 @@ function baseForOwn(object, iteratee) {
 
 module.exports = baseForOwn;
 
-},{"../object/keys":79,"./baseFor":28}],30:[function(require,module,exports){
+},{"../object/keys":80,"./baseFor":29}],31:[function(require,module,exports){
 var toObject = require('./toObject');
 
 /**
@@ -15258,7 +15267,7 @@ function baseGet(object, path, pathKey) {
 
 module.exports = baseGet;
 
-},{"./toObject":67}],31:[function(require,module,exports){
+},{"./toObject":68}],32:[function(require,module,exports){
 var indexOfNaN = require('./indexOfNaN');
 
 /**
@@ -15287,7 +15296,7 @@ function baseIndexOf(array, value, fromIndex) {
 
 module.exports = baseIndexOf;
 
-},{"./indexOfNaN":55}],32:[function(require,module,exports){
+},{"./indexOfNaN":56}],33:[function(require,module,exports){
 var baseIsEqualDeep = require('./baseIsEqualDeep'),
     isObject = require('../lang/isObject'),
     isObjectLike = require('./isObjectLike');
@@ -15317,7 +15326,7 @@ function baseIsEqual(value, other, customizer, isLoose, stackA, stackB) {
 
 module.exports = baseIsEqual;
 
-},{"../lang/isObject":74,"./baseIsEqualDeep":33,"./isObjectLike":64}],33:[function(require,module,exports){
+},{"../lang/isObject":75,"./baseIsEqualDeep":34,"./isObjectLike":65}],34:[function(require,module,exports){
 var equalArrays = require('./equalArrays'),
     equalByTag = require('./equalByTag'),
     equalObjects = require('./equalObjects'),
@@ -15421,7 +15430,7 @@ function baseIsEqualDeep(object, other, equalFunc, customizer, isLoose, stackA, 
 
 module.exports = baseIsEqualDeep;
 
-},{"../lang/isArray":71,"../lang/isTypedArray":76,"./equalArrays":49,"./equalByTag":50,"./equalObjects":51}],34:[function(require,module,exports){
+},{"../lang/isArray":72,"../lang/isTypedArray":77,"./equalArrays":50,"./equalByTag":51,"./equalObjects":52}],35:[function(require,module,exports){
 var baseIsEqual = require('./baseIsEqual'),
     toObject = require('./toObject');
 
@@ -15475,7 +15484,7 @@ function baseIsMatch(object, matchData, customizer) {
 
 module.exports = baseIsMatch;
 
-},{"./baseIsEqual":32,"./toObject":67}],35:[function(require,module,exports){
+},{"./baseIsEqual":33,"./toObject":68}],36:[function(require,module,exports){
 var baseIsMatch = require('./baseIsMatch'),
     getMatchData = require('./getMatchData'),
     toObject = require('./toObject');
@@ -15507,7 +15516,7 @@ function baseMatches(source) {
 
 module.exports = baseMatches;
 
-},{"./baseIsMatch":34,"./getMatchData":53,"./toObject":67}],36:[function(require,module,exports){
+},{"./baseIsMatch":35,"./getMatchData":54,"./toObject":68}],37:[function(require,module,exports){
 var baseGet = require('./baseGet'),
     baseIsEqual = require('./baseIsEqual'),
     baseSlice = require('./baseSlice'),
@@ -15554,7 +15563,7 @@ function baseMatchesProperty(path, srcValue) {
 
 module.exports = baseMatchesProperty;
 
-},{"../array/last":12,"../lang/isArray":71,"./baseGet":30,"./baseIsEqual":32,"./baseSlice":39,"./isKey":62,"./isStrictComparable":65,"./toObject":67,"./toPath":68}],37:[function(require,module,exports){
+},{"../array/last":13,"../lang/isArray":72,"./baseGet":31,"./baseIsEqual":33,"./baseSlice":40,"./isKey":63,"./isStrictComparable":66,"./toObject":68,"./toPath":69}],38:[function(require,module,exports){
 /**
  * The base implementation of `_.property` without support for deep paths.
  *
@@ -15570,7 +15579,7 @@ function baseProperty(key) {
 
 module.exports = baseProperty;
 
-},{}],38:[function(require,module,exports){
+},{}],39:[function(require,module,exports){
 var baseGet = require('./baseGet'),
     toPath = require('./toPath');
 
@@ -15591,7 +15600,7 @@ function basePropertyDeep(path) {
 
 module.exports = basePropertyDeep;
 
-},{"./baseGet":30,"./toPath":68}],39:[function(require,module,exports){
+},{"./baseGet":31,"./toPath":69}],40:[function(require,module,exports){
 /**
  * The base implementation of `_.slice` without an iteratee call guard.
  *
@@ -15625,7 +15634,7 @@ function baseSlice(array, start, end) {
 
 module.exports = baseSlice;
 
-},{}],40:[function(require,module,exports){
+},{}],41:[function(require,module,exports){
 /**
  * Converts `value` to a string if it's not one. An empty string is returned
  * for `null` or `undefined` values.
@@ -15640,7 +15649,7 @@ function baseToString(value) {
 
 module.exports = baseToString;
 
-},{}],41:[function(require,module,exports){
+},{}],42:[function(require,module,exports){
 /**
  * The base implementation of `_.values` and `_.valuesIn` which creates an
  * array of `object` property values corresponding to the property names
@@ -15664,7 +15673,7 @@ function baseValues(object, props) {
 
 module.exports = baseValues;
 
-},{}],42:[function(require,module,exports){
+},{}],43:[function(require,module,exports){
 var identity = require('../utility/identity');
 
 /**
@@ -15705,7 +15714,7 @@ function bindCallback(func, thisArg, argCount) {
 
 module.exports = bindCallback;
 
-},{"../utility/identity":83}],43:[function(require,module,exports){
+},{"../utility/identity":84}],44:[function(require,module,exports){
 (function (global){
 /** Native method references. */
 var ArrayBuffer = global.ArrayBuffer,
@@ -15730,7 +15739,7 @@ module.exports = bufferClone;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 
-},{}],44:[function(require,module,exports){
+},{}],45:[function(require,module,exports){
 var getLength = require('./getLength'),
     isLength = require('./isLength'),
     toObject = require('./toObject');
@@ -15763,7 +15772,7 @@ function createBaseEach(eachFunc, fromRight) {
 
 module.exports = createBaseEach;
 
-},{"./getLength":52,"./isLength":63,"./toObject":67}],45:[function(require,module,exports){
+},{"./getLength":53,"./isLength":64,"./toObject":68}],46:[function(require,module,exports){
 var toObject = require('./toObject');
 
 /**
@@ -15792,7 +15801,7 @@ function createBaseFor(fromRight) {
 
 module.exports = createBaseFor;
 
-},{"./toObject":67}],46:[function(require,module,exports){
+},{"./toObject":68}],47:[function(require,module,exports){
 var baseCallback = require('./baseCallback'),
     baseFind = require('./baseFind'),
     baseFindIndex = require('./baseFindIndex'),
@@ -15819,7 +15828,7 @@ function createFind(eachFunc, fromRight) {
 
 module.exports = createFind;
 
-},{"../lang/isArray":71,"./baseCallback":22,"./baseFind":26,"./baseFindIndex":27}],47:[function(require,module,exports){
+},{"../lang/isArray":72,"./baseCallback":23,"./baseFind":27,"./baseFindIndex":28}],48:[function(require,module,exports){
 var bindCallback = require('./bindCallback'),
     isArray = require('../lang/isArray');
 
@@ -15841,7 +15850,7 @@ function createForEach(arrayFunc, eachFunc) {
 
 module.exports = createForEach;
 
-},{"../lang/isArray":71,"./bindCallback":42}],48:[function(require,module,exports){
+},{"../lang/isArray":72,"./bindCallback":43}],49:[function(require,module,exports){
 /** Native method references. */
 var pow = Math.pow;
 
@@ -15866,7 +15875,7 @@ function createRound(methodName) {
 
 module.exports = createRound;
 
-},{}],49:[function(require,module,exports){
+},{}],50:[function(require,module,exports){
 var arraySome = require('./arraySome');
 
 /**
@@ -15919,7 +15928,7 @@ function equalArrays(array, other, equalFunc, customizer, isLoose, stackA, stack
 
 module.exports = equalArrays;
 
-},{"./arraySome":20}],50:[function(require,module,exports){
+},{"./arraySome":21}],51:[function(require,module,exports){
 /** `Object#toString` result references. */
 var boolTag = '[object Boolean]',
     dateTag = '[object Date]',
@@ -15969,7 +15978,7 @@ function equalByTag(object, other, tag) {
 
 module.exports = equalByTag;
 
-},{}],51:[function(require,module,exports){
+},{}],52:[function(require,module,exports){
 var keys = require('../object/keys');
 
 /** Used for native method references. */
@@ -16038,7 +16047,7 @@ function equalObjects(object, other, equalFunc, customizer, isLoose, stackA, sta
 
 module.exports = equalObjects;
 
-},{"../object/keys":79}],52:[function(require,module,exports){
+},{"../object/keys":80}],53:[function(require,module,exports){
 var baseProperty = require('./baseProperty');
 
 /**
@@ -16055,7 +16064,7 @@ var getLength = baseProperty('length');
 
 module.exports = getLength;
 
-},{"./baseProperty":37}],53:[function(require,module,exports){
+},{"./baseProperty":38}],54:[function(require,module,exports){
 var isStrictComparable = require('./isStrictComparable'),
     pairs = require('../object/pairs');
 
@@ -16078,7 +16087,7 @@ function getMatchData(object) {
 
 module.exports = getMatchData;
 
-},{"../object/pairs":81,"./isStrictComparable":65}],54:[function(require,module,exports){
+},{"../object/pairs":82,"./isStrictComparable":66}],55:[function(require,module,exports){
 var isNative = require('../lang/isNative');
 
 /**
@@ -16096,7 +16105,7 @@ function getNative(object, key) {
 
 module.exports = getNative;
 
-},{"../lang/isNative":73}],55:[function(require,module,exports){
+},{"../lang/isNative":74}],56:[function(require,module,exports){
 /**
  * Gets the index at which the first occurrence of `NaN` is found in `array`.
  *
@@ -16121,7 +16130,7 @@ function indexOfNaN(array, fromIndex, fromRight) {
 
 module.exports = indexOfNaN;
 
-},{}],56:[function(require,module,exports){
+},{}],57:[function(require,module,exports){
 /** Used for native method references. */
 var objectProto = Object.prototype;
 
@@ -16149,7 +16158,7 @@ function initCloneArray(array) {
 
 module.exports = initCloneArray;
 
-},{}],57:[function(require,module,exports){
+},{}],58:[function(require,module,exports){
 var bufferClone = require('./bufferClone');
 
 /** `Object#toString` result references. */
@@ -16214,7 +16223,7 @@ function initCloneByTag(object, tag, isDeep) {
 
 module.exports = initCloneByTag;
 
-},{"./bufferClone":43}],58:[function(require,module,exports){
+},{"./bufferClone":44}],59:[function(require,module,exports){
 /**
  * Initializes an object clone.
  *
@@ -16232,7 +16241,7 @@ function initCloneObject(object) {
 
 module.exports = initCloneObject;
 
-},{}],59:[function(require,module,exports){
+},{}],60:[function(require,module,exports){
 var getLength = require('./getLength'),
     isLength = require('./isLength');
 
@@ -16249,7 +16258,7 @@ function isArrayLike(value) {
 
 module.exports = isArrayLike;
 
-},{"./getLength":52,"./isLength":63}],60:[function(require,module,exports){
+},{"./getLength":53,"./isLength":64}],61:[function(require,module,exports){
 /** Used to detect unsigned integer values. */
 var reIsUint = /^\d+$/;
 
@@ -16275,7 +16284,7 @@ function isIndex(value, length) {
 
 module.exports = isIndex;
 
-},{}],61:[function(require,module,exports){
+},{}],62:[function(require,module,exports){
 var isArrayLike = require('./isArrayLike'),
     isIndex = require('./isIndex'),
     isObject = require('../lang/isObject');
@@ -16305,7 +16314,7 @@ function isIterateeCall(value, index, object) {
 
 module.exports = isIterateeCall;
 
-},{"../lang/isObject":74,"./isArrayLike":59,"./isIndex":60}],62:[function(require,module,exports){
+},{"../lang/isObject":75,"./isArrayLike":60,"./isIndex":61}],63:[function(require,module,exports){
 var isArray = require('../lang/isArray'),
     toObject = require('./toObject');
 
@@ -16335,7 +16344,7 @@ function isKey(value, object) {
 
 module.exports = isKey;
 
-},{"../lang/isArray":71,"./toObject":67}],63:[function(require,module,exports){
+},{"../lang/isArray":72,"./toObject":68}],64:[function(require,module,exports){
 /**
  * Used as the [maximum length](http://ecma-international.org/ecma-262/6.0/#sec-number.max_safe_integer)
  * of an array-like value.
@@ -16357,7 +16366,7 @@ function isLength(value) {
 
 module.exports = isLength;
 
-},{}],64:[function(require,module,exports){
+},{}],65:[function(require,module,exports){
 /**
  * Checks if `value` is object-like.
  *
@@ -16371,7 +16380,7 @@ function isObjectLike(value) {
 
 module.exports = isObjectLike;
 
-},{}],65:[function(require,module,exports){
+},{}],66:[function(require,module,exports){
 var isObject = require('../lang/isObject');
 
 /**
@@ -16388,7 +16397,7 @@ function isStrictComparable(value) {
 
 module.exports = isStrictComparable;
 
-},{"../lang/isObject":74}],66:[function(require,module,exports){
+},{"../lang/isObject":75}],67:[function(require,module,exports){
 var isArguments = require('../lang/isArguments'),
     isArray = require('../lang/isArray'),
     isIndex = require('./isIndex'),
@@ -16431,7 +16440,7 @@ function shimKeys(object) {
 
 module.exports = shimKeys;
 
-},{"../lang/isArguments":70,"../lang/isArray":71,"../object/keysIn":80,"./isIndex":60,"./isLength":63}],67:[function(require,module,exports){
+},{"../lang/isArguments":71,"../lang/isArray":72,"../object/keysIn":81,"./isIndex":61,"./isLength":64}],68:[function(require,module,exports){
 var isObject = require('../lang/isObject');
 
 /**
@@ -16447,7 +16456,7 @@ function toObject(value) {
 
 module.exports = toObject;
 
-},{"../lang/isObject":74}],68:[function(require,module,exports){
+},{"../lang/isObject":75}],69:[function(require,module,exports){
 var baseToString = require('./baseToString'),
     isArray = require('../lang/isArray');
 
@@ -16477,7 +16486,7 @@ function toPath(value) {
 
 module.exports = toPath;
 
-},{"../lang/isArray":71,"./baseToString":40}],69:[function(require,module,exports){
+},{"../lang/isArray":72,"./baseToString":41}],70:[function(require,module,exports){
 var baseClone = require('../internal/baseClone'),
     bindCallback = require('../internal/bindCallback'),
     isIterateeCall = require('../internal/isIterateeCall');
@@ -16549,7 +16558,7 @@ function clone(value, isDeep, customizer, thisArg) {
 
 module.exports = clone;
 
-},{"../internal/baseClone":23,"../internal/bindCallback":42,"../internal/isIterateeCall":61}],70:[function(require,module,exports){
+},{"../internal/baseClone":24,"../internal/bindCallback":43,"../internal/isIterateeCall":62}],71:[function(require,module,exports){
 var isArrayLike = require('../internal/isArrayLike'),
     isObjectLike = require('../internal/isObjectLike');
 
@@ -16585,7 +16594,7 @@ function isArguments(value) {
 
 module.exports = isArguments;
 
-},{"../internal/isArrayLike":59,"../internal/isObjectLike":64}],71:[function(require,module,exports){
+},{"../internal/isArrayLike":60,"../internal/isObjectLike":65}],72:[function(require,module,exports){
 var getNative = require('../internal/getNative'),
     isLength = require('../internal/isLength'),
     isObjectLike = require('../internal/isObjectLike');
@@ -16627,7 +16636,7 @@ var isArray = nativeIsArray || function(value) {
 
 module.exports = isArray;
 
-},{"../internal/getNative":54,"../internal/isLength":63,"../internal/isObjectLike":64}],72:[function(require,module,exports){
+},{"../internal/getNative":55,"../internal/isLength":64,"../internal/isObjectLike":65}],73:[function(require,module,exports){
 var isObject = require('./isObject');
 
 /** `Object#toString` result references. */
@@ -16667,7 +16676,7 @@ function isFunction(value) {
 
 module.exports = isFunction;
 
-},{"./isObject":74}],73:[function(require,module,exports){
+},{"./isObject":75}],74:[function(require,module,exports){
 var isFunction = require('./isFunction'),
     isObjectLike = require('../internal/isObjectLike');
 
@@ -16717,7 +16726,7 @@ function isNative(value) {
 
 module.exports = isNative;
 
-},{"../internal/isObjectLike":64,"./isFunction":72}],74:[function(require,module,exports){
+},{"../internal/isObjectLike":65,"./isFunction":73}],75:[function(require,module,exports){
 /**
  * Checks if `value` is the [language type](https://es5.github.io/#x8) of `Object`.
  * (e.g. arrays, functions, objects, regexes, `new Number(0)`, and `new String('')`)
@@ -16747,7 +16756,7 @@ function isObject(value) {
 
 module.exports = isObject;
 
-},{}],75:[function(require,module,exports){
+},{}],76:[function(require,module,exports){
 var isObjectLike = require('../internal/isObjectLike');
 
 /** `Object#toString` result references. */
@@ -16784,7 +16793,7 @@ function isString(value) {
 
 module.exports = isString;
 
-},{"../internal/isObjectLike":64}],76:[function(require,module,exports){
+},{"../internal/isObjectLike":65}],77:[function(require,module,exports){
 var isLength = require('../internal/isLength'),
     isObjectLike = require('../internal/isObjectLike');
 
@@ -16860,7 +16869,7 @@ function isTypedArray(value) {
 
 module.exports = isTypedArray;
 
-},{"../internal/isLength":63,"../internal/isObjectLike":64}],77:[function(require,module,exports){
+},{"../internal/isLength":64,"../internal/isObjectLike":65}],78:[function(require,module,exports){
 var createRound = require('../internal/createRound');
 
 /**
@@ -16887,7 +16896,7 @@ var round = createRound('round');
 
 module.exports = round;
 
-},{"../internal/createRound":48}],78:[function(require,module,exports){
+},{"../internal/createRound":49}],79:[function(require,module,exports){
 var baseGet = require('../internal/baseGet'),
     toPath = require('../internal/toPath');
 
@@ -16922,7 +16931,7 @@ function get(object, path, defaultValue) {
 
 module.exports = get;
 
-},{"../internal/baseGet":30,"../internal/toPath":68}],79:[function(require,module,exports){
+},{"../internal/baseGet":31,"../internal/toPath":69}],80:[function(require,module,exports){
 var getNative = require('../internal/getNative'),
     isArrayLike = require('../internal/isArrayLike'),
     isObject = require('../lang/isObject'),
@@ -16969,7 +16978,7 @@ var keys = !nativeKeys ? shimKeys : function(object) {
 
 module.exports = keys;
 
-},{"../internal/getNative":54,"../internal/isArrayLike":59,"../internal/shimKeys":66,"../lang/isObject":74}],80:[function(require,module,exports){
+},{"../internal/getNative":55,"../internal/isArrayLike":60,"../internal/shimKeys":67,"../lang/isObject":75}],81:[function(require,module,exports){
 var isArguments = require('../lang/isArguments'),
     isArray = require('../lang/isArray'),
     isIndex = require('../internal/isIndex'),
@@ -17035,7 +17044,7 @@ function keysIn(object) {
 
 module.exports = keysIn;
 
-},{"../internal/isIndex":60,"../internal/isLength":63,"../lang/isArguments":70,"../lang/isArray":71,"../lang/isObject":74}],81:[function(require,module,exports){
+},{"../internal/isIndex":61,"../internal/isLength":64,"../lang/isArguments":71,"../lang/isArray":72,"../lang/isObject":75}],82:[function(require,module,exports){
 var keys = require('./keys'),
     toObject = require('../internal/toObject');
 
@@ -17070,7 +17079,7 @@ function pairs(object) {
 
 module.exports = pairs;
 
-},{"../internal/toObject":67,"./keys":79}],82:[function(require,module,exports){
+},{"../internal/toObject":68,"./keys":80}],83:[function(require,module,exports){
 var baseValues = require('../internal/baseValues'),
     keys = require('./keys');
 
@@ -17105,7 +17114,7 @@ function values(object) {
 
 module.exports = values;
 
-},{"../internal/baseValues":41,"./keys":79}],83:[function(require,module,exports){
+},{"../internal/baseValues":42,"./keys":80}],84:[function(require,module,exports){
 /**
  * This method returns the first argument provided to it.
  *
@@ -17127,7 +17136,7 @@ function identity(value) {
 
 module.exports = identity;
 
-},{}],84:[function(require,module,exports){
+},{}],85:[function(require,module,exports){
 var baseProperty = require('../internal/baseProperty'),
     basePropertyDeep = require('../internal/basePropertyDeep'),
     isKey = require('../internal/isKey');
@@ -17160,7 +17169,7 @@ function property(path) {
 
 module.exports = property;
 
-},{"../internal/baseProperty":37,"../internal/basePropertyDeep":38,"../internal/isKey":62}],85:[function(require,module,exports){
+},{"../internal/baseProperty":38,"../internal/basePropertyDeep":39,"../internal/isKey":63}],86:[function(require,module,exports){
 function calc(m) {
     return function(n) { return Math.round(n * m); };
 };
@@ -17174,7 +17183,7 @@ module.exports = {
     years: calc(315576e5)
 };
 
-},{}],86:[function(require,module,exports){
+},{}],87:[function(require,module,exports){
 //! moment.js
 //! version : 2.10.6
 //! authors : Tim Wood, Iskren Chernev, Moment.js contributors
@@ -20370,7 +20379,7 @@ module.exports = {
     return _moment;
 
 }));
-},{}],87:[function(require,module,exports){
+},{}],88:[function(require,module,exports){
 exports.remove = removeDiacritics;
 
 var replacementList = [
@@ -20685,7 +20694,7 @@ function removeDiacritics(str) {
   });
 }
 
-},{}],88:[function(require,module,exports){
+},{}],89:[function(require,module,exports){
 (function() {
   'use strict';
 
@@ -20885,7 +20894,7 @@ function removeDiacritics(str) {
 }());
 
 
-},{}],89:[function(require,module,exports){
+},{}],90:[function(require,module,exports){
 'use strict';
 
 var stripDiacritics = require('diacritics').remove;
@@ -20961,5 +20970,5 @@ function compareObjects (a, b, weights) {
   return resemblance / totalWeight;
 }
 
-},{"diacritics":87,"fast-levenshtein":88,"lodash":17}]},{},[1,2,3,4,5,6,7,8,9,10,11])
+},{"diacritics":88,"fast-levenshtein":89,"lodash":18}]},{},[5,6,7,8,9,10,11,1,2,3,4,12])
 

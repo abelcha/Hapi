@@ -22,3 +22,6 @@ angular.module('browserify', [])
     .factory('Description', [function() {
         return require('./Description');
     }])
+    .factory('Combo', [function() {
+        return require('./combo-produits');
+    }])
