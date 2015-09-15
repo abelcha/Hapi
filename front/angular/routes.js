@@ -25,37 +25,16 @@ var getArtisanList = function(edisonAPI) {
     });
 };
 
+
 var getArtisan = function($route, $q, edisonAPI) {
     "use strict";
     var id = $route.current.params.id;
-
     if (id.length > 10) {
-        return $q(function(resolve) {
-            resolve({
-                data: {
-                    origin: 'DEM',
-                    telephone: {},
-                    pourcentage: {
-                        deplacement: 50,
-                        maindOeuvre: 30,
-                        fourniture: 30
-                    },
-                    zoneChalandise: 30,
-                    add: {},
-                    categories: [],
-                    representant: {
-                        civilite: 'M.'
-                    },
-                }
-            });
-        });
+        return edisonAPI.artisan.getTmp(id);
     } else {
-        return edisonAPI.artisan.get(id, {
-            cache: true,
-            extend: true
-        });
+        return edisonAPI.artisan.get(id);
     }
-};
+}
 
 var getIntervention = function($route, $q, edisonAPI) {
     "use strict";
@@ -95,14 +74,14 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
         })
         .when('/intervention/list', {
             templateUrl: "Pages/ListeInterventions/listeInterventions.html",
-            controller: "InterventionsController",
+            controller: "ListeInterventionController",
             controllerAs: 'vm',
             reloadOnSearch: false
 
         })
         .when('/intervention/list/:fltr', {
             templateUrl: "Pages/ListeInterventions/listeInterventions.html",
-            controller: "InterventionsController",
+            controller: "ListeInterventionController",
             controllerAs: 'vm',
             reloadOnSearch: false
 

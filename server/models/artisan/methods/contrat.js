@@ -1,30 +1,23 @@
 module.exports = function(schema) {
-
-    schema.statics.getContrat = function(artisan, html, contratSigne) {
-        return edison.pdf({
-            html: html,
-            buffer: true,
-            template: 'contrat',
-            args: {
-                contratSigne:contratSigne,
-                data: artisan
-            },
-        })
-    }
-
+    var PDF = require('edsx-mail')
+    var _ = require('lodash')
     schema.statics.contrat = {
         unique: true,
         findBefore: true,
         method: 'GET',
         fn: function(artisan, req, res) {
-            return new Promise(function(resolve, reject) {
-                db.model('artisan').getContrat(artisan, req.query.html)
-                    .then(function(resp) {
-                        if (!req.query.html)
-                            res.contentType("application/pdf");
-                        res.send(resp);
-                    }, reject)
-            })
+            artisan = JSON.parse(JSON.stringify(artisan));
+            if (req.query.signe) {
+                artisan.signe = true;
+            }
+            if (req.query.html) {
+                res.send(PDF('contract', artisan).getHTML())
+            } else {
+                PDF('contract', artisan).buffer(function(err, resp) {
+                    res.pdf(resp);
+                })
+            }
+
         }
     }
 
@@ -33,20 +26,41 @@ module.exports = function(schema) {
         findBefore: true,
         method: 'POST',
         fn: function(artisan, req, res) {
-            console.log(req.session.email)
-            var text = req.body.text.replaceAll('\n', '<br>')
+            params = JSON.parse(JSON.stringify(artisan));
+            if (req.body.signe === 'true') {
+                params.signe = true;
+            }
             return new Promise(function(resolve, reject) {
-                db.model('artisan').getContrat(artisan, false, req.body.signe).then(function(buffer) {
-                    mail.sendContrat(artisan, buffer, req.session.email, text).then(function() {
+
+                PDF('contract', params).buffer(function(err, buffer) {
+                    var communication = {
+                        mailDest: envProd ? artisan.email : (req.session.email ||  'intervention@edison-services.fr'),
+                        mailBcc: envProd ? (req.session.email ||  'intervention@edison-services.fr') : undefined,
+                        mailReply: (req.session.email ||  'intervention@edison-services.fr')
+                    }
+                    console.log(communication);
+                    mail.send({
+                        From: "intervention@edison-services.fr",
+                        ReplyTo: communication.mailReply,
+                        To: communication.mailDest,
+                        Bcc: communication.mailBcc,
+                        Subject: req.body.rappel ? "En attente de vos documents" : "Proposition de partenariat",
+                        HtmlBody: req.body.text.replaceAll('\n', '<br>'),
+                        Attachments: [{
+                            Content: buffer.toString('base64'),
+                            Name: 'Declaration de sous-traitance.pdf',
+                            ContentType: 'application/pdf'
+                        }]
+                    }).then(function() {
                         artisan.historique.contrat.push({
                             login: req.session.login,
-                            signe: req.body.signe,
-                            date: new Date(),
-                        });
-                        artisan.save().then(resolve, reject);
-                    }, reject);
-                }, reject);
-            });
+                            signe: params.signe,
+                            date: Date.now()
+                        })
+                    }, reject)
+                })
+            })
+
         }
     }
 }

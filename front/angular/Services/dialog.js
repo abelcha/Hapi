@@ -47,9 +47,10 @@ angular.module('edison').factory('dialog', function($mdDialog, edisonAPI, config
             $mdDialog.show({
                 controller: function DialogController($scope, $mdDialog, config) {
                     $scope.sst = artisan
+                    $scope.deviseur = true;
+                    $scope.facturier = true;
                     $scope.answer = function(cancel) {
                         $mdDialog.hide();
-
                         if (!cancel) {
                             cb($scope.facturier, $scope.deviseur);
                         }

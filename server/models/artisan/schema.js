@@ -154,19 +154,13 @@ module.exports = function(db) {
             date: Date
         }],
         historique: {
-            facturier: [{
+            pack: [{
                 date: {
                     type: Date,
                     default: Date.now
                 },
-                text: String,
-                login: String,
-            }],
-            deviseur: [{
-                date: {
-                    type: Date,
-                    default: Date.now
-                },
+                facturier: Boolean,
+                deviseur: Boolean,
                 text: String,
                 login: String,
             }],

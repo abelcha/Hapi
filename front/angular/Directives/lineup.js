@@ -33,15 +33,15 @@
      }
 
      var actualiseUrl = _.throttle(function(fltrs) {
-        console.log('actual')
+         console.log('actual')
          _.each(fltrs, function(e, k) {
              // console.log(e, k)
              if (!e) e = undefined;
              if (e !== "hashModel") {
-             $location.search(k, e);
-                
-             }else 
-             console.log(e)
+                 $location.search(k, e);
+
+             } else
+                 console.log(e)
          })
      }, 250)
 
@@ -149,6 +149,23 @@
          },
          controller: function($scope) {
              $scope.model = 'devis'
+             Controller.apply($scope, arg)
+         }
+     }
+ });
+
+ angular.module('edison').directive('lineupArtisan', function(tabContainer, FiltersFactory, ContextMenu, LxProgressService, edisonAPI, DataProvider, $routeParams, $location, $rootScope, $filter, config, ngTableParams) {
+     "use strict";
+     var arg = arguments;
+     return {
+         replace: false,
+         restrict: 'E',
+         templateUrl: '/Templates/lineup-artisan.html',
+         scope: {
+             filter: '=',
+         },
+         controller: function($scope) {
+             $scope.model = 'artisan'
              Controller.apply($scope, arg)
          }
      }

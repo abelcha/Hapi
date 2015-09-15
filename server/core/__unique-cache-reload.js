@@ -1,5 +1,4 @@
     module.exports = function(core) {
-        var async = require('async');
         var _ = require('lodash');
 
         _.mixin({

@@ -22,12 +22,11 @@
 
     module.exports.multiDumpUrl = function(limit) {
         var key = requireLocal('config/_keys');
-        return key.alvin.url + "/dumpArtisan.php?key=" + key.alvin.pass
+        return key.alvin.url + "/dumpArtisan.php?key=" + key.alvin.pass + "&limit=" + (limit || 0)
     }
 
 
     module.exports.defaultDoc = function(timestamp) {
-        var ms = require('milliseconds')
         return {
             origin: 'DEM',
             telephone: {},
@@ -37,7 +36,7 @@
                 fourniture: 30
             },
             zoneChalandise: 30,
-            add: {},
+            address: {},
             categories: [],
             representant: {
                 civilite: 'M.'
@@ -145,26 +144,22 @@
             loc: [parseFloat(d.lat), parseFloat(d.lng)],
         };
 
-        if (d.num_facturier) {
-            rtn.historique.facturier = [{
+        if (d.num_facturier || d.num_deviseur) {
+            rtn.historique.pack = [{
                 text: d.num_facturier,
-                login: 'yohann_r'
+                login: 'yohann_r',
+                deviseur: d.num_deviseur,
+                facturier: d.num_facturier,
             }]
         }
-        if (d.num_deviseur) {
-            rtn.historique.deviseur = [{
-                text: d.num_deviseur,
-                login: 'yohann_r'
-            }]
-        }
-        if (d.date_envoi_contrat) {
+        if (d.date_envoi_contrat && d.date_envoi_contrat.length >= 8) {
             var months = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "aout", "septembre", "octobre", "novembre", "décembre"]
             var x = d.date_envoi_contrat.split(' ');
             rtn.historique.contrat = [{
-                date: new Date(parseInt(x[5]), months.indexOf(x[4]), parseInt(x[3])),
+                date: new Date(parseInt(x[5]), months.indexOf(x[4]), parseInt(x[3]), 12),
                 text: d.date_envoi_contrat,
                 login: 'yohann_r',
-                signe: true
+                signe: x[8] !== 'NON'
             }]
         }
 

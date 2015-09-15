@@ -19,7 +19,7 @@ module.exports = function(core) {
                 id: data.id
             }).then(function(doc) {
                 if (!doc)
-                    reject("Unkown Document ", id);
+                   return reject("ERROR => unkown " + core.name + " '" + id + "'");
 
                 if (_.isFunction(core.preUpdate))
                     core.preUpdate(doc, data, req.session);

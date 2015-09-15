@@ -1,4 +1,4 @@
-var ArtisanCtrl = function($rootScope, $location, $routeParams, ContextMenu, LxNotificationService, tabContainer, config, dialog, artisanPrm, Artisan) {
+var ArtisanCtrl = function($rootScope, $scope, edisonAPI, $location, $routeParams, ContextMenu, LxNotificationService, tabContainer, config, dialog, artisanPrm, Artisan) {
     "use strict";
     var _this = this;
     _this.config = config;
@@ -8,6 +8,7 @@ var ArtisanCtrl = function($rootScope, $location, $routeParams, ContextMenu, LxN
 
     var tab = tabContainer.getCurrentTab();
     if (!tab.data) {
+        console.log('-->', artisanPrm.data)
         var artisan = new Artisan(artisanPrm.data)
         tab.setData(artisan);
         if ($routeParams.id.length > 12) {
@@ -52,13 +53,6 @@ var ArtisanCtrl = function($rootScope, $location, $routeParams, ContextMenu, LxN
         _this.contextMenu.open();
     }
 
-    _this.leftClick = function($event, inter) {
-        console.log('leftClick')
-
-        if (_this.contextMenu.active)
-            return _this.contextMenu.close();
-    }
-
     _this.addComment = function() {
         artisan.comments.push({
             login: $rootScope.user.login,
@@ -66,6 +60,16 @@ var ArtisanCtrl = function($rootScope, $location, $routeParams, ContextMenu, LxN
             date: new Date()
         })
         _this.commentText = "";
+    }
+    var updateTmpArtisan = _.after(5, _.throttle(function() {
+        edisonAPI.artisan.saveTmp(artisan);
+
+    }, 2000))
+
+    if (!artisan.id) {
+        $scope.$watch(function() {
+            return artisan;
+        }, updateTmpArtisan, true)
     }
 }
 angular.module('edison').controller('ArtisanController', ArtisanCtrl);

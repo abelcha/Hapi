@@ -18,7 +18,13 @@ module.exports = {
         title: "Envoyer Contrat",
         action: 'envoiContrat',
         hide: function(artisan) {
-            return artisan.document && artisan.document.cni && artisan.document.kbis && artisan.document.contrat;
+            return (artisan.document && artisan.document.cni && artisan.document.kbis && artisan.document.contrat);
+        }
+    }, {
+        title: "Rappel Contrat",
+        action: 'rappelContrat',
+        hide: function(artisan) {
+            return !artisan.historique.contrat.length || (artisan.document && artisan.document.cni && artisan.document.kbis && artisan.document.contrat);
         }
     }, {
         title: "Facturier/deviseur",

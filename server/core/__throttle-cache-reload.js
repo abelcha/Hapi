@@ -1,10 +1,9 @@
     module.exports = function(core) {
-        var async = require('async');
         var _ = require('lodash');
-
 
         return function(id_list) {
             return new Promise(function(resolve, reject) {
+                var async = require('async');
                 async.series({
                     reloadFilter: function(cb) {
                         core.model().reloadFilters({
@@ -25,7 +24,7 @@
                             cache: true
                         }, cb)
                     },
-            
+
                 }, function(err, resp) {
 
                     try {

@@ -73,7 +73,9 @@ module.exports = function(schema) {
                 db.model('artisan').findOne({
                     id: doc.artisan.id
                 }).then(function(sst) {
-                    sst.save().then();
+                    if (sst) {
+                        sst.save().then();
+                    }
                 })
             }
             db.model('intervention').uniqueCacheReload(doc)

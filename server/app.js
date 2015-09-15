@@ -22,6 +22,11 @@ var fs = require('fs')
 global.io = require('socket.io')(http);
 require('./shared.js')(express);
 global.jobs = edison.worker.initJobQueue();
+// var memwatch = require('memwatch');
+
+// memwatch.on('leak', function(info) {
+//     console.log('LEAK', info)
+// });
 
 global.isWorker = false;
 
@@ -120,10 +125,10 @@ app.use(function(req, res, next) {
     if (_.includes(req.url, '.'))
         return next();
     if (req.session && !req.session.id && (!req.query.x)) {
-        if (req.url.startsWith('/api/')) {
+        if (_.startsWith(req.url, '/api/')) {
             return res.status(401).send("Unauthorized");
         } else {
-            return res.status(401).sendFile(process.cwd() + '/front/views/login.html');
+            return res.sendFile(process.cwd() + '/front/views/login.html');
         }
     } else {
 
@@ -143,7 +148,7 @@ app.use(function(req, res, next) {
 
 
 
-require('./routes')(app);
+require('./routes.js')(app);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

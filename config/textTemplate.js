@@ -10,7 +10,7 @@ module.exports = {
                 sms += "\nMerci de prendre rdv avec le client au " + this.client.telephone.tel1;
                 sms += this.client.telephone.tel2 ? " ou au " + this.client.telephone.tel2 : "";
                 sms += '\n' + (_.startCase(user.pseudo) ||  "Arnaud") + ',\n';
-                sms += "Ligne directe: " + (user.ligne  ? (user.ligne.match(/.{2}|.{1,2}/g).join('.')) : "09.72.42.30.00") + "\n";
+                sms += "Ligne directe: " + (user.ligne ? (user.ligne.match(/.{2}|.{1,2}/g).join('.')) :  "09.72.42.30.00") + "\n";
                 return sms + "Edison Services."
             },
             annulation: "L'intervention {{id}} chez {{client.civilite}} {{client.nom}} à {{client.address.v}} le {{datePlain}} a été annulé. \nMerci de ne pas intervenir. \nEdison Services",
@@ -20,7 +20,7 @@ module.exports = {
                     "Merci de nous contacter au plus vite au 09.72.42.30.00.\n" +
                     "Merci d'avance pour votre réponse.\n" +
                     "\nM." + (_.startCase(user.pseudo) ||  "Arnaud") + "\n" +
-                    "Ligne Directe " + (user.ligne  ? (user.ligne.match(/.{2}|.{1,2}/g).join('.')) : "09.72.42.30.00") + "\n" +
+                    "Ligne Directe " + (user.ligne ? (user.ligne.match(/.{2}|.{1,2}/g).join('.')) :  "09.72.42.30.00") + "\n" +
                     "Edison Services"
             }
         }
@@ -59,6 +59,20 @@ module.exports = {
                     "<li>Ci-joint la facture</li>" +
                     "</ul>" +
                     "<p>Cordialement.</p>"
+            }
+        },
+        artisan: {
+            envoiFacturier: function() {
+                return "<p>Cher Monsieur {{representant.nom}},</p>" +
+                    "<p>Bienvenue au sein du réseau partenaire Edison Services.</p>" +
+                    "<p>Nous mettons à votre disposition un facturier et un deviseur qui vous permettra d’intervenir chez nos clients</p>" +
+                    "<p>Vous trouverez également ci-joint un manuel d’utilisation qui vous aideras à compléter les factures, devis, et attestation de T.V.A. simplifié</p>" +
+                    "<p>Merci de prendre le temps de lire cette brochure attentivement.</p>" +
+                    "<p>Ces documents resterons à votre disposition durant la durée de notre partenariat, mais restent la propriété intellectuelle de la société EDISON Services et devront nous être renvoyé en cas de fin de partenariat.</p>" +
+                    "<p>Vous en souhaitant bonne réception.</p>" +
+                    "<p><i>Bienvenue dans l’équipe EDISON Services.</i></p>" +
+                    "<p class='align-right'><b>Yohann RHOUM</b></p>" +
+                    "<p class='align-right'>Service Partenariat</p>"
             }
         }
     },
@@ -210,7 +224,7 @@ module.exports = {
                 console.log('-->', user)
                 var outro = "Cordialement, \n\n" +
                     (user.pseudo ||  "Arnaud,") + '\n' +
-                    "<strong>Ligne Directe : " + (user.ligne  ? (user.ligne.match(/.{2}|.{1,2}/g).join('.')) : "09.72.42.30.00") + "</strong>\n" +
+                    "<strong>Ligne Directe : " + (user.ligne ? (user.ligne.match(/.{2}|.{1,2}/g).join('.')) :  "09.72.42.30.00") + "</strong>\n" +
                     "<strong>Ligne Atelier : " + "09.72.42.30.00" + "</strong>\n";
 
                 return intro + text + outro;
@@ -218,8 +232,117 @@ module.exports = {
         },
         artisan: {
             envoiContrat: function(user) {
-                return "Bonjour M. " + this.representant.nom + ' ' + this.representant.prenom + '\n' +
-                    'voici le contrat\n' + user.prenom;
+                return "Monsieur {{representant.nom}},\n" +
+                    "\n" +
+                    "Comme expliqué lors de notre conversation téléphonique, nous sommes une entreprise générale du bâtiment situé dans la région d'île de France.\n" +
+                    "\n" +
+                    "Notre entreprise intervient de manière régulière dans plusieurs villes en France pour des interventions de dépannage spécialisé dans le second œuvre (plomberie sanitaire, génie climatique, serrurerie, vitrerie et l'électricité générale).\n" +
+                    "\n" +
+                    "Nos clients sont des particuliers, des réseaux d'entreprises, des commerces, des administrateurs de bien et des agences immobilières.\n" +
+                    "\n" +
+                    "Je suis actuellement à la <u><b>recherche d'un partenaire</b></u> pouvant intervenir auprès de nos clients dans votre région pour des prestations de dépannage.\n" +
+                    "Vous trouverez ci-joint une brochure expliquant notre fonctionnement pour une éventuelle collaboration.\n" +
+                    "Je vous transmets également un contrat de partenariat permettant d'établir les conditions de travail entre nos deux entreprises.\n" +
+                    "\n" +
+                    "Pour chaque intervention, vous recevez au préalable un ordre de service par mail et par téléphone,<u><b> l'ordre de service n'est validé que sous votre accord.</b></u>\n" +
+                    "\n" +
+                    "Concernant les rémunérations, voici un bref récapitulatif, en suivant l'exemple du forfait de dépannage classique à 150 euros H.T, dont je vous ai parlé.\n" +
+                    "\n" +
+                    "Exemple : Recherche de panne sur un ballon ECS\n" +
+                    "Déplacement = 65.00 € H.T x 50% = 32.50 € H.T\n" +
+                    "Recherche de panne = 85.00 € H.T x 30% = 25.50 € H.T\n" +
+                    "\n" +
+                    "Soit un total minimum de 58.00 € H.T, pour une intervention maximum d'une heure avec un déplacement. Votre rémunération se fera dans un délai de 7 jours au maximum.\n" +
+                    "\n" +
+                    "Une fois chez notre client, vous restez totalement autonome sur le montant à facturer et si nécessaire vous pouvez ajuster le montant de la prestation tout en ayant préalablement prévenu notre client.\n" +
+                    "\n" +
+                    "Lors des interventions, vous représentez notre entreprise c'est pourquoi vous disposez des documents fournis à tous nos partenaires en France.\n" +
+                    "\n" +
+                    "<u><b>Vous avez à votre disposition :</u></b>\n" +
+                    "\n" +
+                    "• Un bloc facturier au nom de Edison Services\n" +
+                    "• Un bloc devis au nom de Edison Services\n" +
+                    "• Un catalogue de prix de vente du matériel\n" +
+                    "• Un accès à tous nos fournisseurs\n" +
+                    "\n" +
+                    "Si vous souhaitez rejoindre notre réseau, vous trouverez les documents à nous transmettre :\n" +
+                    "\n" +
+                    "• Le contrat de partenariat signé\n" +
+                    "• Immatriculation ou KBIS\n" +
+                    "• Pièce d'identité du responsable de l'entreprise\n" +
+                    "• Attestation d'assurance (si disponible)\n" +
+                    "\n" +
+                    "Je tiens à vous rappelez que cette future collaboration ne vous oblige jamais à intervenir pour nous. Il s'agit simplement de rajouter à votre quotidien des interventions en plus.\n" +
+                    "\n" +
+                    "Cependant, j'attire votre attention sur le fait que nous recherchons des personnes de confiances, maîtrisant parfaitement l'aspect technique du travail à effectuer tout en sachant être à l'aise avec la clientèle.\n" +
+                    "\n" +
+                    "Je reste à votre entière disposition pour toutes les questions ou les remarques que vous pourriez avoir.\n" +
+                    "\n" +
+                    "En vous remerciant d'avance pour l'attention que vous porterez à ma demande et aux documents transmis.\n" +
+                    "\n" +
+                    "Dans l'attente d'un retour de votre part.\n" +
+                    "\n" +
+                    "PS : Si vous souhaitez faire un test avant de travailler régulièrement avec notre entreprise et dans le but de comprendre le fonctionnement global de notre structure, n'hésitez pas à nous le faire savoir.\n" +
+                    "\n" +
+                    "Cordialement\n" +
+                    "\n" +
+                    "<b>Yohann RHOUM</b>\n" +
+                    "Service partenariat\n" +
+                    "Port : 06.37.37.59.45 Fax : 09.72.39.33.46\n" +
+                    "yohann.rhoum@edison-services.fr\n" +
+                    "\n" +
+                    "<b>Edison Services</b>\n" +
+                    "Dépannage - Entretien - Installation - Rénovation\n" +
+                    "Siège social : 75, rue des dames - 75017 Paris\n" +
+                    "contact@edison-services.fr - www.edison-services.fr"
+            },
+            rappelContrat: function(user) {
+                return "Bonjour Monsieur {{representant.nom}}\n" +
+                    "\n" +
+                    "Suite à notre conversation téléphonique du {{datePlain}} concernant la signature d'un contrat de partenariat entre nos deux entreprises.\n" +
+                    "\n" +
+                    "Vous trouverez donc ci-joint la déclaration de sous-traitance à remplir.\n" +
+                    "\n" +
+                    "Merci de joindre également à cette déclaration les éléments suivants :\n" +
+                    "\n" +
+                    "• Extrait KBIS ou INSEE\n" +
+                    "• Photocopie R/V de la pièce d'identité du gérant\n" +
+                    "\n" +
+                    "Vous pouvez nous transmettre ces pièces administratives par mail à :\n" +
+                    "\n" +
+                    "yohann.rhoum@edison-services.fr\n" +
+                    "\n" +
+                    "\n" +
+                    "Ou par voie postal :\n" +
+                    "\n" +
+                    "<u><b>" +
+                    "Edison Services\n" +
+                    "Service Partenariat\n" +
+                    "75 rue des dames - 75017 PARIS\n" +
+                    "</b></u>" +
+                    "\n" +
+                    "\n" +
+                    "Dès réception de ces documents et validation par nos services, vous recevrez par voie postal:\n" +
+                    "\n" +
+                    "• Un bloc facture Edison Services\n" +
+                    "• Un bloc devis Edison Services\n" +
+                    "• Un catalogue de prix de vente du matériel\n" +
+                    "• Un accès à tous nos fournisseurs\n" +
+                    "Je reste à votre entière disposition pour toutes les questions ou les remarques que vous pourriez avoir.\n" +
+                    "\n" +
+                    "Dans l'attente d'une réponse favorable de votre part,\n" +
+                    "\n" +
+                    "Cordialement\n" +
+                    "\n" +
+                    "<b>Yohann RHOUM</b>\n" +
+                    "Service Partenariat\n" +
+                    "Port : 06.37.37.59.45 Fax : 09.72.39.33.46\n" +
+                    "yohann.rhoum@edison-services.fr\n" +
+                    "\n" +
+                    "<b>Edison Services</b>\n" +
+                    "Dépannage - Entretien - Installation - Rénovation\n" +
+                    "Siège social : 75 rue des Dames, 75017, Paris\n" +
+                    "contact@edison-services.fr - www.edison-services.fr\n"
             }
         }
     },

@@ -1,6 +1,5 @@
 module.exports = function(core) {
     var _ = require('lodash')
-    var async = require('async')
     return function(query, cb, a, b) {
         var updateFactory = function(obj) {
             return function(cb) {
@@ -46,6 +45,7 @@ module.exports = function(core) {
             }, {
                 multi: true
             }).exec(function(err, resp) {
+                var async = require('async')
                 async.parallel(updates, function(err, result) {
                     if (typeof cb === 'function')
                         cb(err, result)

@@ -73,13 +73,14 @@
                                                 </div>
                                             </li>
                                         </ul>
+                                        <input placeholder="Commentaire..." ng-model="commentText" ng-enter="addComment()" class="form-control"/>
                                     </div>
                                 </md-content>
                             </md-tab>
                             <md-tab label="Stats" data-position="2">
                                 <md-content class="md-padding">
                                     <h1 class="md-display-2">Stats</h1>
-                                    <artisan-recap id="vm.sst.id"></artisan-recap>
+                                   <!--  <artisan-recap id="vm.sst.id"></artisan-recap> -->
                                 </md-content>
                             </md-tab>
                             <md-tab label="Paiements">

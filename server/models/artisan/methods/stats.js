@@ -107,9 +107,6 @@ module.exports = function(schema) {
                                 montant: 0
                             };
                         }));
-                        rtn.facturier = artisan.historique.facturier.length ? artisan.historique.facturier[0].text : undefined;
-                        rtn.kbis = artisan.document.kbis.file;
-                        rtn.contrat = artisan.document.contrat.file
                         resolve(rtn)
                     });
 

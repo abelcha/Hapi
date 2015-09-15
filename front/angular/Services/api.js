@@ -15,6 +15,9 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
             }
         },
         users: {
+            logout: function() {
+                return $http.get('/logout');
+            },
             save: function(data) {
                 return $http.post('/api/user/__save', data);
             },
@@ -85,6 +88,7 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
             },
         },
         intervention: {
+
             getTelMatch: function(text) {
                 return $http.post('/api/intervention/telMatches', text);
             },
@@ -157,6 +161,24 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
             }
         },
         artisan: {
+            comment: function(id, text) {
+                return $http.post('/api/artisan/' + id + '/comment', {
+                    text: text
+                })
+            },
+            sendFacturier: function(id, facturier, deviseur) {
+                console.log('==>', facturier, deviseur)
+                return $http.post('/api/artisan/' + id + '/sendFacturier', {
+                    facturier: facturier,
+                    deviseur: deviseur,
+                });
+            },
+            saveTmp: function(data) {
+                return $http.post('/api/artisan/temporarySaving', data);
+            },
+            getTmp: function(id) {
+                return $http.get('/api/artisan/temporarySaving?id=' + id);
+            },
             getCompteTiers: function(id_sst) {
                 return $http.get(['/api/artisan', id_sst, 'compteTiers'].join('/'));
             },
@@ -180,16 +202,15 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
                 return $http.get('/api/artisan/' + id + "/extendedStats")
             },
             save: function(params) {
-                return $http.post("/api/artisan/__save", params);
+                if (!params.id) {
+                    return $http.post("/api/artisan", params)
+                } else {
+                    return $http.post("/api/artisan/" + params.id, params)
+
+                }
             },
             list: function(options) {
-                return $http({
-                    method: 'GET',
-                    cache: options && options.cache,
-                    url: '/api/artisan/list'
-                }).success(function(result) {
-                    return result;
-                })
+                return $http.get('api/artisan/getCacheList')
             },
             lastInters: function(id) {
                 return $http({
@@ -227,13 +248,6 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
                     url: "/api/artisan/" + id_sst + "/stats"
                 });
             },
-            setAbsence: function(id, options) {
-                return $http({
-                    method: 'POST',
-                    url: '/api/artisan/' + id + '/absence',
-                    params: options
-                })
-            },
         },
         task: {
             get: function(params) {
@@ -266,7 +280,7 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
                     file: file
                 })
             },
-            scan:function(options) {
+            scan: function(options) {
                 return $http.post('/api/document/scan', options);
             }
         },

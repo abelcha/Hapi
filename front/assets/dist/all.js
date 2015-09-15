@@ -63,6 +63,12 @@ angular.module('edison').controller('MainController', function($timeout, $q, Dat
     checkResize();
 
 
+    $scope.logout = function() {
+        edisonAPI.users.logout().then(function() {
+            $window.location.reload()
+        })
+    }
+
     $scope.toggleSidebar = function(open) {
         if (open && !$rootScope.smallWin)
             return 0;
@@ -222,37 +228,16 @@ var getArtisanList = function(edisonAPI) {
     });
 };
 
+
 var getArtisan = function($route, $q, edisonAPI) {
     "use strict";
     var id = $route.current.params.id;
-
     if (id.length > 10) {
-        return $q(function(resolve) {
-            resolve({
-                data: {
-                    origin: 'DEM',
-                    telephone: {},
-                    pourcentage: {
-                        deplacement: 50,
-                        maindOeuvre: 30,
-                        fourniture: 30
-                    },
-                    zoneChalandise: 30,
-                    add: {},
-                    categories: [],
-                    representant: {
-                        civilite: 'M.'
-                    },
-                }
-            });
-        });
+        return edisonAPI.artisan.getTmp(id);
     } else {
-        return edisonAPI.artisan.get(id, {
-            cache: true,
-            extend: true
-        });
+        return edisonAPI.artisan.get(id);
     }
-};
+}
 
 var getIntervention = function($route, $q, edisonAPI) {
     "use strict";
@@ -292,14 +277,14 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
         })
         .when('/intervention/list', {
             templateUrl: "Pages/ListeInterventions/listeInterventions.html",
-            controller: "InterventionsController",
+            controller: "ListeInterventionController",
             controllerAs: 'vm',
             reloadOnSearch: false
 
         })
         .when('/intervention/list/:fltr', {
             templateUrl: "Pages/ListeInterventions/listeInterventions.html",
-            controller: "InterventionsController",
+            controller: "ListeInterventionController",
             controllerAs: 'vm',
             reloadOnSearch: false
 
@@ -442,147 +427,6 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
     // use the HTML5 History API
     $locationProvider.html5Mode(true);
 });
-
-angular.module("edison").filter('contactFilter', ['config', function(config) {
-    "use strict";
-
-    var clean = function(str) {
-        return _.deburr(str).toLowerCase();
-    }
-
-    var compare = function(a, b, strictMode) {
-        if (typeof a === "string") {
-            return clean(a).includes(b);
-        } else if (!strictMode) {
-            return clean(String(a)).startsWith(b);
-        } else {
-            return a === parseInt(b);
-        }
-    }
-    return function(dataContainer, input) {
-        var rtn = [];
-        input = clean(input);
-        _.each(dataContainer, function(data) {
-            if (!data.stringify)
-                data.stringify = clean(JSON.stringify(data))
-            if (!input || data.stringify.indexOf(input) >= 0) {
-                rtn.push(data);
-            } else {
-            }
-        })
-        return rtn;
-    }
-}]);
-
-angular.module('edison').filter('crlf', function() {
-	"use strict";
-    return function(text) {
-        return text.split(/\n/g).join('<br>');
-    };
-});
-
-angular.module('edison').filter('loginify', function() {
-    "use strict";
-    return function(obj) {
-        if (!obj)
-            return "";
-        return obj.slice(0, 1).toUpperCase() + obj.slice(1, -2)
-    };
-});
-
-angular.module('edison').filter('relativeDate', function() {
-    "use strict";
-    return function(date, smallWin) {
-        var d = moment((date + 1370000000) * 1000);
-        var l = moment().subtract(4, 'days');
-        if (d < l) {
-            return d.format('DD/MM/YY')
-        } else {
-            var x = d.fromNow().toString()
-            /*if (smallWin) {
-                x = x.replace('heures', 'H')
-                    .replace('heures', 'H')
-                    .replace('jours', 'J')
-                    .replace('jour', 'J')
-                    .replace('il y a ', '- ')
-                    .replace('dans ', '+ ')
-                    .replace('un ', '1 ')
-            }*/
-            return x;
-        }
-        // return moment((date + 1370000000) * 1000).fromNow(no).toString()
-    };
-});
-
-angular.module('edison').filter('reverse', function() {
-    "use strict";
-    return function(items) {
-        if (!items)
-            return [];
-        return items.slice().reverse();
-    };
-});
-
-angular.module("edison").filter('tableFilter', ['config', function(config) {
-    "use strict";
-
-    var clean = function(str) {
-        return _.deburr(str).toLowerCase();
-    }
-
-    var compare = function(a, b, strictMode) {
-        if (typeof a === "string") {
-            return clean(a).includes(b);
-        } else if (!strictMode){
-            return clean(String(a)).startsWith(b);
-        } else {
-            return a === parseInt(b);
-        }
-    }
-    var compareCustom = function(key, data, input) {
-        if (key === '_categorie') {
-            var cell = config.categoriesHash()[data.c].long_name;
-            return compare(cell, input);
-        }
-        if (key === '_etat') {
-            var cell = config.etatsHash()[data.s].long_name
-            return compare(cell, input);
-        }
-        return true;
-    }
-
-    return function(dataContainer, inputs, strictMode) {
-        var rtn = [];
-        //console.time('fltr')
-        inputs = _.mapValues(inputs, clean);
-        _.each(dataContainer, function(data) {
-            if (data.id) {
-                var psh = true;
-                _.each(inputs, function(input, k) {
-                    if (input && input.length > 0) {
-                        if (k.charAt(0) === '_') {
-                            if (!compareCustom(k, data, input)) {
-                                psh = false;
-                                return false
-                            }
-                        } else {
-                            if (!compare(data[k], input, strictMode)) {
-                                psh = false;
-                                return false
-                            }
-                        }
-                    }
-                });
-                if (psh === true) {
-                    rtn.push(data);
-                }
-            }
-        })
-        //console.timeEnd('fltr')
-
-        return rtn;
-    }
-}]);
 
 angular.module('edison').directive('allowPattern', [allowPatternDirective]);
 
@@ -801,15 +645,15 @@ angular.module('edison').directive('ngEnter', function () {
      }
 
      var actualiseUrl = _.throttle(function(fltrs) {
-        console.log('actual')
+         console.log('actual')
          _.each(fltrs, function(e, k) {
              // console.log(e, k)
              if (!e) e = undefined;
              if (e !== "hashModel") {
-             $location.search(k, e);
-                
-             }else 
-             console.log(e)
+                 $location.search(k, e);
+
+             } else
+                 console.log(e)
          })
      }, 250)
 
@@ -917,6 +761,23 @@ angular.module('edison').directive('ngEnter', function () {
          },
          controller: function($scope) {
              $scope.model = 'devis'
+             Controller.apply($scope, arg)
+         }
+     }
+ });
+
+ angular.module('edison').directive('lineupArtisan', function(tabContainer, FiltersFactory, ContextMenu, LxProgressService, edisonAPI, DataProvider, $routeParams, $location, $rootScope, $filter, config, ngTableParams) {
+     "use strict";
+     var arg = arguments;
+     return {
+         replace: false,
+         restrict: 'E',
+         templateUrl: '/Templates/lineup-artisan.html',
+         scope: {
+             filter: '=',
+         },
+         controller: function($scope) {
+             $scope.model = 'artisan'
              Controller.apply($scope, arg)
          }
      }
@@ -1124,6 +985,147 @@ angular.module('edison').directive('ngRightClick', function($parse) {
      };
  }]);
 
+angular.module("edison").filter('contactFilter', ['config', function(config) {
+    "use strict";
+
+    var clean = function(str) {
+        return _.deburr(str).toLowerCase();
+    }
+
+    var compare = function(a, b, strictMode) {
+        if (typeof a === "string") {
+            return clean(a).includes(b);
+        } else if (!strictMode) {
+            return clean(String(a)).startsWith(b);
+        } else {
+            return a === parseInt(b);
+        }
+    }
+    return function(dataContainer, input) {
+        var rtn = [];
+        input = clean(input);
+        _.each(dataContainer, function(data) {
+            if (!data.stringify)
+                data.stringify = clean(JSON.stringify(data))
+            if (!input || data.stringify.indexOf(input) >= 0) {
+                rtn.push(data);
+            } else {
+            }
+        })
+        return rtn;
+    }
+}]);
+
+angular.module('edison').filter('crlf', function() {
+	"use strict";
+    return function(text) {
+        return text.split(/\n/g).join('<br>');
+    };
+});
+
+angular.module('edison').filter('loginify', function() {
+    "use strict";
+    return function(obj) {
+        if (!obj)
+            return "";
+        return obj.slice(0, 1).toUpperCase() + obj.slice(1, -2)
+    };
+});
+
+angular.module('edison').filter('relativeDate', function() {
+    "use strict";
+    return function(date, smallWin) {
+        var d = moment((date + 1370000000) * 1000);
+        var l = moment().subtract(4, 'days');
+        if (d < l) {
+            return d.format('DD/MM/YY')
+        } else {
+            var x = d.fromNow().toString()
+            /*if (smallWin) {
+                x = x.replace('heures', 'H')
+                    .replace('heures', 'H')
+                    .replace('jours', 'J')
+                    .replace('jour', 'J')
+                    .replace('il y a ', '- ')
+                    .replace('dans ', '+ ')
+                    .replace('un ', '1 ')
+            }*/
+            return x;
+        }
+        // return moment((date + 1370000000) * 1000).fromNow(no).toString()
+    };
+});
+
+angular.module('edison').filter('reverse', function() {
+    "use strict";
+    return function(items) {
+        if (!items)
+            return [];
+        return items.slice().reverse();
+    };
+});
+
+angular.module("edison").filter('tableFilter', ['config', function(config) {
+    "use strict";
+
+    var clean = function(str) {
+        return _.deburr(str).toLowerCase();
+    }
+
+    var compare = function(a, b, strictMode) {
+        if (typeof a === "string") {
+            return clean(a).includes(b);
+        } else if (!strictMode){
+            return clean(String(a)).startsWith(b);
+        } else {
+            return a === parseInt(b);
+        }
+    }
+    var compareCustom = function(key, data, input) {
+        if (key === '_categorie') {
+            var cell = config.categoriesHash()[data.c].long_name;
+            return compare(cell, input);
+        }
+        if (key === '_etat') {
+            var cell = config.etatsHash()[data.s].long_name
+            return compare(cell, input);
+        }
+        return true;
+    }
+
+    return function(dataContainer, inputs, strictMode) {
+        var rtn = [];
+        //console.time('fltr')
+        inputs = _.mapValues(inputs, clean);
+        _.each(dataContainer, function(data) {
+            if (data.id) {
+                var psh = true;
+                _.each(inputs, function(input, k) {
+                    if (input && input.length > 0) {
+                        if (k.charAt(0) === '_') {
+                            if (!compareCustom(k, data, input)) {
+                                psh = false;
+                                return false
+                            }
+                        } else {
+                            if (!compare(data[k], input, strictMode)) {
+                                psh = false;
+                                return false
+                            }
+                        }
+                    }
+                });
+                if (psh === true) {
+                    rtn.push(data);
+                }
+            }
+        })
+        //console.timeEnd('fltr')
+
+        return rtn;
+    }
+}]);
+
 angular.module('edison').factory('Signalement', function() {
     "use strict";
 
@@ -1310,6 +1312,9 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
             }
         },
         users: {
+            logout: function() {
+                return $http.get('/logout');
+            },
             save: function(data) {
                 return $http.post('/api/user/__save', data);
             },
@@ -1380,6 +1385,7 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
             },
         },
         intervention: {
+
             getTelMatch: function(text) {
                 return $http.post('/api/intervention/telMatches', text);
             },
@@ -1452,6 +1458,24 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
             }
         },
         artisan: {
+            comment: function(id, text) {
+                return $http.post('/api/artisan/' + id + '/comment', {
+                    text: text
+                })
+            },
+            sendFacturier: function(id, facturier, deviseur) {
+                console.log('==>', facturier, deviseur)
+                return $http.post('/api/artisan/' + id + '/sendFacturier', {
+                    facturier: facturier,
+                    deviseur: deviseur,
+                });
+            },
+            saveTmp: function(data) {
+                return $http.post('/api/artisan/temporarySaving', data);
+            },
+            getTmp: function(id) {
+                return $http.get('/api/artisan/temporarySaving?id=' + id);
+            },
             getCompteTiers: function(id_sst) {
                 return $http.get(['/api/artisan', id_sst, 'compteTiers'].join('/'));
             },
@@ -1475,16 +1499,15 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
                 return $http.get('/api/artisan/' + id + "/extendedStats")
             },
             save: function(params) {
-                return $http.post("/api/artisan/__save", params);
+                if (!params.id) {
+                    return $http.post("/api/artisan", params)
+                } else {
+                    return $http.post("/api/artisan/" + params.id, params)
+
+                }
             },
             list: function(options) {
-                return $http({
-                    method: 'GET',
-                    cache: options && options.cache,
-                    url: '/api/artisan/list'
-                }).success(function(result) {
-                    return result;
-                })
+                return $http.get('api/artisan/getCacheList')
             },
             lastInters: function(id) {
                 return $http({
@@ -1522,13 +1545,6 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
                     url: "/api/artisan/" + id_sst + "/stats"
                 });
             },
-            setAbsence: function(id, options) {
-                return $http({
-                    method: 'POST',
-                    url: '/api/artisan/' + id + '/absence',
-                    params: options
-                })
-            },
         },
         task: {
             get: function(params) {
@@ -1561,7 +1577,7 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
                     file: file
                 })
             },
-            scan:function(options) {
+            scan: function(options) {
                 return $http.post('/api/document/scan', options);
             }
         },
@@ -1661,33 +1677,34 @@ angular.module('edison')
                 $location.url("/artisan/" + this.id + '/recap');
             }
             Artisan.prototype.facturierDeviseur = function() {
+                var _this = this;
                 dialog.facturierDeviseur(this, function(facturier, deviseur) {
-                    console.log(facturier, deviseur)
+                    edisonAPI.artisan.sendFacturier(_this.id, facturier, deviseur);
                 })
             }
             Artisan.prototype.call = function(cb) {
                 var _this = this;
                 var now = Date.now();
                 $window.open('callto:' + _this.telephone.tel1, '_self', false)
-/*                dialog.choiceText({
-                    title: 'Nouvel Appel',
-                    subTitle: _this.telephone.tel1
-                }, function(response, text) {
-                    edisonAPI.call.save({
-                        date: now,
-                        to: _this.telephone.tel1,
-                        link: _this.id,
-                        origin: _this.id || _this.tmpID || 0,
-                        description: text,
-                        response: response
-                    }).success(function(resp) {
-                        if (typeof cb === 'function')
-                            cb(null, resp);
-                    }).catch(function(err) {
-                        if (typeof cb === 'function')
-                            cb(err);
-                    })
-                })*/
+                    /*                dialog.choiceText({
+                                        title: 'Nouvel Appel',
+                                        subTitle: _this.telephone.tel1
+                                    }, function(response, text) {
+                                        edisonAPI.call.save({
+                                            date: now,
+                                            to: _this.telephone.tel1,
+                                            link: _this.id,
+                                            origin: _this.id || _this.tmpID || 0,
+                                            description: text,
+                                            response: response
+                                        }).success(function(resp) {
+                                            if (typeof cb === 'function')
+                                                cb(null, resp);
+                                        }).catch(function(err) {
+                                            if (typeof cb === 'function')
+                                                cb(err);
+                                        })
+                                    })*/
             };
 
             Artisan.prototype.save = function(cb) {
@@ -1727,22 +1744,36 @@ angular.module('edison')
             Artisan.prototype.envoiContrat = function(cb) {
                 var _this = this;
                 dialog.sendContrat({
-                    title: "Texte envoi devis",
-                    text: textTemplate.mail.artisan.envoiContrat.bind(_this)($rootScope.user),
-                    width: "60%",
-                    height: "80%"
+                    data: _this,
+                    text: _.template(textTemplate.mail.artisan.envoiContrat())(_this),
                 }, function(options) {
+                    LxProgressService.circular.show('#5fa2db', '#globalProgress');
                     edisonAPI.artisan.envoiContrat(_this.id, {
                         text: options.text,
                         signe: options.signe
                     }).success(function(resp) {
-                        LxNotificationService.success("le contrat a été envoyé");
+                        LxProgressService.circular.hide()
                         if (typeof cb === 'function')
                             cb(null, resp);
-                    }).catch(function(err) {
-                        LxNotificationService.error("L'envoi du contrat à échoué\n");
+                    });
+                });
+            }
+            Artisan.prototype.rappelContrat = function(cb) {
+                var _this = this;
+                _this.datePlain = moment(_this.date.ajout).format('ll')
+                dialog.sendContrat({
+                    data: _this,
+                    text: _.template(textTemplate.mail.artisan.rappelContrat())(_this),
+                }, function(options) {
+                    LxProgressService.circular.show('#5fa2db', '#globalProgress');
+                    edisonAPI.artisan.envoiContrat(_this.id, {
+                        text: options.text,
+                        signe: options.signe,
+                        rappel: true
+                    }).success(function(resp) {
+                        LxProgressService.circular.hide()
                         if (typeof cb === 'function')
-                            cb(err);
+                            cb(null, resp);
                     });
                 });
             }
@@ -2207,9 +2238,10 @@ angular.module('edison').factory('dialog', function($mdDialog, edisonAPI, config
             $mdDialog.show({
                 controller: function DialogController($scope, $mdDialog, config) {
                     $scope.sst = artisan
+                    $scope.deviseur = true;
+                    $scope.facturier = true;
                     $scope.answer = function(cancel) {
                         $mdDialog.hide();
-
                         if (!cancel) {
                             cb($scope.facturier, $scope.deviseur);
                         }
@@ -2704,15 +2736,6 @@ angular.module('edison')
                 })
             })
         };
-        Intervention.prototype.absenceArtisan = function(cb) {
-            var _this = this;
-            dialog.absence(function(start, end) {
-                edisonAPI.artisan.setAbsence(_this.artisan.id, {
-                    start: start,
-                    end: end
-                }).success(cb)
-            })
-        }
         Intervention.prototype.save = function(cb) {
             var _this = this;
             edisonAPI.intervention.save(_this)
@@ -3271,7 +3294,7 @@ angular.module('edison').factory('tabContainer', ['$location', '$window', '$q', 
         if (this.noClose) {
             tab = this._tabs[0]
         }
-        else if ((_.includes(url, '/list') || _.startsWith(url, '/search')  || _.startsWith(url, '/artisan/contact')) && this.getTabSimple(url)) {
+        else if ((_.includes(url, '/list') || _.startsWith(url, '/search')  || _.includes(url, '/recap') || _.startsWith(url, '/artisan/contact')) && this.getTabSimple(url)) {
             tab = this.getTabSimple(url);
         }
         else if (this.noClose || this.isOpen(url, options)) {
@@ -3376,44 +3399,6 @@ angular.module('edison').directive('infoFourniture', ['config', 'fourniture',
 ]);
 
 
-var archiveReglementController = function(edisonAPI, tabContainer, $routeParams, $location, LxProgressService) {
-
-    var tab = tabContainer.getCurrentTab();
-    var _this = this;
-    _this.title = 'Archives Reglements'
-    tab.setTitle('archives RGL')
-    LxProgressService.circular.show('#5fa2db', '#globalProgress');
-    edisonAPI.compta.archivesReglement().success(function(resp) {
-        LxProgressService.circular.hide()
-        _this.data = resp
-    })
-    _this.moment = moment;
-    _this.openLink = function(link) {
-        $location.url(link)
-    }
-}
-
-angular.module('edison').controller('archivesReglementController', archiveReglementController);
-
-var archivesPaiementController = function(edisonAPI, tabContainer, $routeParams, $location, LxProgressService) {
-    var _this = this;
-    var tab = tabContainer.getCurrentTab();
-    _this.type = 'paiement'
-    _this.title = 'Archives Paiements'
-    tab.setTitle('archives PAY')
-    LxProgressService.circular.show('#5fa2db', '#globalProgress');
-    edisonAPI.compta.archivesPaiement().success(function(resp) {
-        LxProgressService.circular.hide()
-        _this.data = resp
-    })
-    _this.moment = moment;
-    _this.openLink = function(link) {
-        $location.url(link)
-    }
-}
-
-angular.module('edison').controller('archivesPaiementController', archivesPaiementController);
-
  angular.module('edison').directive('artisanCategorie', ['config', function(config) {
      "use strict";
      return {
@@ -3446,7 +3431,7 @@ angular.module('edison').controller('archivesPaiementController', archivesPaieme
 
  }]);
 
-var ArtisanCtrl = function($rootScope, $location, $routeParams, ContextMenu, LxNotificationService, tabContainer, config, dialog, artisanPrm, Artisan) {
+var ArtisanCtrl = function($rootScope, $scope, edisonAPI, $location, $routeParams, ContextMenu, LxNotificationService, tabContainer, config, dialog, artisanPrm, Artisan) {
     "use strict";
     var _this = this;
     _this.config = config;
@@ -3456,6 +3441,7 @@ var ArtisanCtrl = function($rootScope, $location, $routeParams, ContextMenu, LxN
 
     var tab = tabContainer.getCurrentTab();
     if (!tab.data) {
+        console.log('-->', artisanPrm.data)
         var artisan = new Artisan(artisanPrm.data)
         tab.setData(artisan);
         if ($routeParams.id.length > 12) {
@@ -3500,13 +3486,6 @@ var ArtisanCtrl = function($rootScope, $location, $routeParams, ContextMenu, LxN
         _this.contextMenu.open();
     }
 
-    _this.leftClick = function($event, inter) {
-        console.log('leftClick')
-
-        if (_this.contextMenu.active)
-            return _this.contextMenu.close();
-    }
-
     _this.addComment = function() {
         artisan.comments.push({
             login: $rootScope.user.login,
@@ -3515,8 +3494,56 @@ var ArtisanCtrl = function($rootScope, $location, $routeParams, ContextMenu, LxN
         })
         _this.commentText = "";
     }
+    var updateTmpArtisan = _.after(5, _.throttle(function() {
+        edisonAPI.artisan.saveTmp(artisan);
+
+    }, 2000))
+
+    if (!artisan.id) {
+        $scope.$watch(function() {
+            return artisan;
+        }, updateTmpArtisan, true)
+    }
 }
 angular.module('edison').controller('ArtisanController', ArtisanCtrl);
+
+var archiveReglementController = function(edisonAPI, tabContainer, $routeParams, $location, LxProgressService) {
+
+    var tab = tabContainer.getCurrentTab();
+    var _this = this;
+    _this.title = 'Archives Reglements'
+    tab.setTitle('archives RGL')
+    LxProgressService.circular.show('#5fa2db', '#globalProgress');
+    edisonAPI.compta.archivesReglement().success(function(resp) {
+        LxProgressService.circular.hide()
+        _this.data = resp
+    })
+    _this.moment = moment;
+    _this.openLink = function(link) {
+        $location.url(link)
+    }
+}
+
+angular.module('edison').controller('archivesReglementController', archiveReglementController);
+
+var archivesPaiementController = function(edisonAPI, tabContainer, $routeParams, $location, LxProgressService) {
+    var _this = this;
+    var tab = tabContainer.getCurrentTab();
+    _this.type = 'paiement'
+    _this.title = 'Archives Paiements'
+    tab.setTitle('archives PAY')
+    LxProgressService.circular.show('#5fa2db', '#globalProgress');
+    edisonAPI.compta.archivesPaiement().success(function(resp) {
+        LxProgressService.circular.hide()
+        _this.data = resp
+    })
+    _this.moment = moment;
+    _this.openLink = function(link) {
+        $location.url(link)
+    }
+}
+
+angular.module('edison').controller('archivesPaiementController', archivesPaiementController);
 
 var AvoirsController = function(tabContainer, edisonAPI, $rootScope, LxProgressService, LxNotificationService, FlushList) {
     "use strict";
@@ -3565,43 +3592,39 @@ var ContactArtisanController = function($scope, $timeout, tabContainer, LxProgre
 
             })
     }
+    _this.tbz = ['informations', 'interventions', 'historique', 'stats', 'paiements'];
+    var ind = _this.tbz.indexOf($location.hash());
+    $scope.selectedIndex = ind >= 0 ? ind : 0
+    _this.tab = tabContainer.getCurrentTab();
 
-    if ($location.hash() === 'interventions') {
-        $scope.selectedIndex = 1
+    _this.recap = $location.url().includes('recap') ? $routeParams.sstid : undefined
+
+    if (_this.recap) {
+        _this.loadPanel(_this.recap)
+    } else {
+        LxProgressService.circular.show('#5fa2db', '#globalProgress');
+        var dataProvider = new DataProvider('artisan');
+        dataProvider.init(function(err, resp) {
+            var filtersFactory = new FiltersFactory('artisan')
+            _this.config = config;
+            _this.moment = moment;
+            if (!dataProvider.isInit()) {
+                dataProvider.setData(resp);
+            }
+
+            _this.tableFilter = "";
+            _this.tableLimit = 20;
+            $rootScope.expendedRow = $routeParams.sstid || 45
+            console.log(_this.recap, $location.url())
+                // if (_this.recap) {
+                //     $scope.selectedIndex = 1;
+                // }
+            _this.loadPanel($rootScope.expendedRow)
+            _this.tableData = dataProvider.filteredData;
+            LxProgressService.circular.hide();
+        });
     }
-    var dataProvider = new DataProvider('artisan');
-    var filtersFactory = new FiltersFactory('artisan')
-    var currentFilter;
-    if ($routeParams.fltr) {
-        currentFilter = filtersFactory.getFilterByUrl($routeParams.fltr)
-    }
-    var currentHash = $location.hash();
-    var title = currentFilter ? currentFilter.long_name : "Artisan";
 
-    LxProgressService.circular.show('#5fa2db', '#globalProgress');
-    dataProvider.init(function(err, resp) {
-
-        _this.tab = tabContainer.getCurrentTab();
-        _this.tab.setTitle(title, currentHash);
-        _this.tab.hash = currentHash;
-        _this.config = config;
-        _this.moment = moment;
-        if (!dataProvider.isInit()) {
-            dataProvider.setData(resp);
-        }
-
-        dataProvider.applyFilter(currentFilter, _this.tab.hash);
-        _this.tableFilter = "";
-        _this.tableLimit = 20;
-        $rootScope.expendedRow = $routeParams.id || 45
-        _this.recap = $location.url().includes('recap') ? $routeParams.id : undefined
-            // if (_this.recap) {
-            //     $scope.selectedIndex = 1;
-            // }
-        _this.loadPanel($rootScope.expendedRow)
-        _this.tableData = dataProvider.filteredData;
-        LxProgressService.circular.hide();
-    });
     _this.getStaticMap = function(address) {
         if (_this.sst && this.sst.address)
             return "/api/mapGetStatic?width=500&height=400&precision=0&zoom=6&origin=" + _this.sst.address.lt + ", " + _this.sst.address.lg;
@@ -3636,6 +3659,15 @@ var ContactArtisanController = function($scope, $timeout, tabContainer, LxProgre
             })
     }
 
+    $scope.addComment = function() {
+        edisonAPI.artisan.comment(_this.sst.id, $scope.commentText).then(function() {
+            _this.loadPanel(_this.sst.id);
+            $scope.commentText = "";
+            $('.paragraph').click();
+            console.log('lala')
+        })
+    }
+
     _this.rowClick = function($event, inter) {
         if (_this.contextMenu.active)
             return _this.contextMenu.close();
@@ -3658,13 +3690,24 @@ var ContactArtisanController = function($scope, $timeout, tabContainer, LxProgre
 
 
     $scope.$watchCollection('[selectedIndex, expendedRow]', function(current, prev) {
-        if (prev[1] && $scope.selectedIndex == 4) {
-            $scope.compteTiers = undefined
-            edisonAPI.artisan.getCompteTiers($rootScope.expendedRow).success(function(resp) {
-                $scope.compteTiers = resp;
-            })
-        }
-    })
+            if (current && current[0] !== void(0)) {
+                $location.hash(_this.tbz[current[0]]);
+            }
+            if (prev[1] && $scope.selectedIndex == 4) {
+                $scope.compteTiers = undefined
+                edisonAPI.artisan.getCompteTiers($rootScope.expendedRow).success(function(resp) {
+                    $scope.compteTiers = resp;
+                })
+            }
+        })
+        /*
+            $scope.$on('$locationChangeSuccess', function(event) {
+                if ($route.current.$$route.controller === 'CurrencyConvertCtrl') {
+                    // Will not load only if my view use the same controller
+                    $route.current = lastRoute;
+                }
+            });
+        */
     $scope.$watch('selectedIndex', function(current, prev) {
         if (current !== void(0) && prev !== current)  {
             $('md-tabs-content-wrapper').hide()
@@ -3744,7 +3787,7 @@ angular.module('edison').controller('DashboardController', DashboardController);
                  }
 
                  scope.getStaticMap = function() {
-                     if (!_.get(scope, 'data.client.address.lt'))
+                     if (!_.get(scope, 'data.client.address.lt') && !_.get(scope, 'data.address.lt'))
                          return 0
                      var q = "?width=" + Math.round($window.outerWidth * (scope.height === "small" ? 0.8 : 1.2));
                      if (scope.client && scope.client.address && scope.client.address.latLng)
@@ -4450,182 +4493,11 @@ var LpaController = function(openPost, $window, tabContainer, edisonAPI, $rootSc
 
 angular.module('edison').controller('LpaController', LpaController);
 
-var ArtisanController = function($timeout, tabContainer, LxProgressService, FiltersFactory, ContextMenu, edisonAPI, DataProvider, $routeParams, $location, $q, $rootScope, $filter, config, ngTableParams) {
-    "use strict";
-    var _this = this;
-    var dataProvider = new DataProvider('artisan');
-    var filtersFactory = new FiltersFactory('artisan')
-    var currentFilter;
-    if ($routeParams.fltr) {
-        currentFilter = filtersFactory.getFilterByUrl($routeParams.fltr)
-    }
-    var currentHash = $location.hash();
-    var title = currentFilter ? currentFilter.long_name : "Artisan";
+angular.module('edison').controller('ListeArtisanController', _.noop);
 
-    LxProgressService.circular.show('#5fa2db', '#globalProgress');
-    dataProvider.init(function(err, resp) {
+angular.module('edison').controller('ListeDevisController', _.noop);
 
-        _this.tab = tabContainer.getCurrentTab();
-        _this.tab.setTitle(title, currentHash);
-        _this.tab.hash = currentHash;
-        _this.config = config;
-        _this.moment = moment;
-        if (!dataProvider.isInit()) {
-            dataProvider.setData(resp);
-        }
-        dataProvider.applyFilter(currentFilter, _this.tab.hash);
-        var tableParameters = {
-            page: 1, // show first page
-            total: dataProvider.filteredData.length,
-            filter: {},
-            sorting: {
-                id: 'desc'
-            },
-            count: 100 // count per page
-        };
-        var tableSettings = {
-            //groupBy:$rootScope.config.selectedGrouping,
-            total: dataProvider.filteredData,
-            getData: function($defer, params) {
-                var data = dataProvider.filteredData;
-                data = $filter('tableFilter')(data, params.filter());
-                params.total(data.length);
-                data = $filter('orderBy')(data, params.orderBy());
-                $defer.resolve(data.slice((params.page() - 1) * params.count(), params.page() * params.count()));
-            },
-            filterDelay: 100
-        }
-        _this.tableParams = new ngTableParams(tableParameters, tableSettings);
-        LxProgressService.circular.hide();
-    });
-
-    $rootScope.$on('ARTISAN_CACHE_LIST_CHANGE', function() {
-        if (_this.tab.fullUrl === tabContainer.getCurrentTab().fullUrl) {
-            dataProvider.applyFilter(currentFilter, _this.tab.hash);
-            _this.tableParams.reload();
-        }
-    })
-
-    _this.contextMenu = new ContextMenu('artisan')
-
-    _this.rowRightClick = function($event, inter) {
-        _this.contextMenu.setPosition($event.pageX, $event.pageY)
-        edisonAPI.artisan.get(inter.id)
-            .then(function(resp) {
-                _this.contextMenu.setData(resp.data);
-                _this.contextMenu.open();
-            })
-    }
-
-    _this.rowClick = function($event, inter) {
-        if (_this.contextMenu.active)
-            return _this.contextMenu.close();
-        if ($event.metaKey || $event.ctrlKey) {
-            tabContainer.addTab('/artisan/' + inter.id, {
-                title: ('#' + inter.id),
-                setFocus: false,
-                allowDuplicates: false
-            });
-        } else {
-            if ($rootScope.expendedRow === inter.id) {
-                $rootScope.expendedRow = undefined;
-            } else {
-                $rootScope.expendedRow = inter.id
-            }
-        }
-    }
-
-}
-angular.module('edison').controller('ListeArtisanController', ArtisanController);
-
-var DevisController = function($timeout, tabContainer, FiltersFactory, ContextMenu, edisonAPI, DataProvider, $routeParams, $location, $q, $rootScope, $filter, config, ngTableParams, LxProgressService) {
-    "use strict";
-    var _this = this;
-    var dataProvider = new DataProvider('devis');
-    var filtersFactory = new FiltersFactory('devis')
-    var currentFilter;
-    if ($routeParams.fltr) {
-        currentFilter = filtersFactory.getFilterByUrl($routeParams.fltr)
-    }
-    var currentHash = $location.hash();
-    var title = currentFilter ? currentFilter.long_name : "Devis";
-
-    LxProgressService.circular.show('#5fa2db', '#globalProgress');
-    dataProvider.init(function(err, resp) {
-        _this.tab = tabContainer.getCurrentTab();
-        _this.recap = $routeParams.artisanID;
-        _this.tab.setTitle(title, currentHash);
-        _this.tab.hash = currentHash;
-        _this.config = config;
-        _this.moment = moment;
-        dataProvider.applyFilter(currentFilter, _this.tab.hash);
-        var tableParameters = {
-            page: 1, // show first page
-            total: dataProvider.filteredData.length,
-            filter: {},
-            sorting: {
-                id: 'desc'
-            },
-            count: 100 // count per page
-        };
-        var tableSettings = {
-            //groupBy:$rootScope.config.selectedGrouping,
-            total: dataProvider.filteredData,
-            getData: function($defer, params) {
-                var data = dataProvider.filteredData;
-                data = $filter('tableFilter')(data, params.filter());
-                params.total(data.length);
-                data = $filter('orderBy')(data, params.orderBy());
-                $defer.resolve(data.slice((params.page() - 1) * params.count(), params.page() * params.count()));
-            },
-            filterDelay: 100
-        }
-        _this.tableParams = new ngTableParams(tableParameters, tableSettings);
-        LxProgressService.circular.hide();
-    });
-
-    $rootScope.$on('DEVIS_CACHE_LIST_CHANGE', function() {
-        if (_this.tab.fullUrl === tabContainer.getCurrentTab().fullUrl) {
-            dataProvider.applyFilter(currentFilter, _this.tab.hash);
-            _this.tableParams.reload();
-        }
-    })
-
-    _this.contextMenu = new ContextMenu('devis')
-
-    _this.rowRightClick = function($event, inter) {
-        console.log('yay');
-
-        edisonAPI.devis.get(inter.id)
-            .then(function(resp) {
-                _this.contextMenu.setPosition($event.pageX, $event.pageY)
-                _this.contextMenu.setData(resp.data);
-                _this.contextMenu.open();
-            })
-    }
-
-    _this.rowClick = function($event, inter) {
-        if (_this.contextMenu.active)
-            return _this.contextMenu.close();
-        if ($event.metaKey || $event.ctrlKey) {
-            tabContainer.addTab('/devis/' + inter.id, {
-                title: ('#' + inter.id),
-                setFocus: false,
-                allowDuplicates: false
-            });
-        } else {
-            if ($rootScope.expendedRow === inter.id) {
-                $rootScope.expendedRow = undefined;
-            } else {
-                $rootScope.expendedRow = inter.id
-            }
-        }
-    }
-
-}
-angular.module('edison').controller('ListeDevisController', DevisController);
-
-angular.module('edison').controller('InterventionsController', _.noop);
+angular.module('edison').controller('ListeInterventionController', _.noop);
 
 var SearchController = function(edisonAPI, tabContainer, $routeParams, $location, LxProgressService) {
     var tab = tabContainer.getCurrentTab();

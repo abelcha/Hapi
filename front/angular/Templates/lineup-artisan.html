@@ -1,0 +1,48 @@
+<div class="shadow-box listeInterventions">
+    <table style="background:white;cursor:pointer" ng-table="tableParams" class="table table-bordered table-hover table-hover table-striped" id="table-list" show-filter="true">
+        <tbody id="tbody-list">
+            <tr data-id="{{artisan.id}}" ng-repeat-start="artisan in $data" ng-right-click="rowRightClick($event, artisan)" ng-click="rowClick($event, artisan, false)" ng-class="{success : contextMenu.active && contextMenu.data.id === artisan.id, 'warning' : artisan.cnd === 1}">
+                <td data-title="'Os'" sortable="'id'" filter="{ 'id': 'text' }">
+                    <strong>{{artisan.id}}</strong>
+                </td>
+                <td data-title="'Ajout'" sortable="'t'" filter="{ 't': 'text' }">
+                    <strong>{{artisan.t}}</strong>
+                </td>
+                <td data-title="'Ajout'" sortable="'da'" filter="{ 'da': 'text' }">
+                    {{artisan.da|relativeDate}}
+                </td>
+                <td data-title="'Categorie'" sortable="'c'" filter="{ 'c': 'text' }">
+                    <span ng-repeat="c in artisan.c" style="width:40px;margin-right:2px" class="label {{::config.categories[c].color}}">{{c}}</span>
+                </td>
+                <td variable-length data-title="'Nom Société'" sortable="'n'" filter="{ 'n': 'text' }">
+                    <strong>{{artisan.n}}</strong>
+                </td>
+                <td variable-length data-title="'Ville'" sortable="'v'" filter="{ 'v': 'text' }">
+                    {{artisan.v}}
+                </td>
+                <td data-title="'Code_P.'" sortable="'cp'" filter="{ 'cp': 'text' }">
+                    {{artisan.cp}}
+                </td>
+                <td data-title="'Status'" sortable="'s'" filter="{ 's': 'text' }">
+                    <span style="width:80px;" class="label {{::config.etatsArtisan[artisan.s].color}}">{{::config.etatsArtisan[artisan.s].long_name}}</span>
+                </td>
+            </tr>
+            <tr ng-repeat-end ng-if="expendedRow && expendedRow === artisan.id">
+                <td colspan="42" style="background-color:white!important">
+                    <dropdown-row model="artisan" row="artisan" expendedRow="expendedRow"></dropdown-row>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div class="dropdown-menu--no-conflicts dropdown-menu--right dropdown__menu--is-dropped" style="margin-top: -215px;width: auto; height: auto; opacity: 1;" ng-style="contextMenu.style">
+    <div class="dropdown-menu__content ng-scope">
+        <ul class="ng-scope">
+            <li ng-hide="item.hidden" ng-repeat="item in contextMenu.list">
+                <a ng-mouseover="contextMenu.closeSub()" ng-if="!item.subs" class="dropdown-link" ng-style="item.style" tabindex="0" ng-click="contextMenu.close();contextMenu.click(item)">{{item.title}}</a>
+                <a ng-style="item.style" ng-mouseover="contextMenu.openSub(300)" ng-if="item.subs" class="dropdown-link" tabindex="0"><i no-margin align-left class="fa fa-angle-right"></i>{{item.title}}</a>
+                <a ng-style="sub.style" ng-repeat="sub in item.subs" ng-click="contextMenu.close();contextMenu.click(sub)" ng-hide="sub.hidden" ng-if="contextMenu.mouseOverCM && item.subs" class="dropdown-link"><i no-margin align-left class=" fa fa-angle-double-right"></i>{{sub.title}}</a>
+            </li>
+        </ul>
+    </div>
+</div>

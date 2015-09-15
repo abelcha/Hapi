@@ -24,6 +24,12 @@ angular.module('edison').controller('MainController', function($timeout, $q, Dat
     checkResize();
 
 
+    $scope.logout = function() {
+        edisonAPI.users.logout().then(function() {
+            $window.location.reload()
+        })
+    }
+
     $scope.toggleSidebar = function(open) {
         if (open && !$rootScope.smallWin)
             return 0;

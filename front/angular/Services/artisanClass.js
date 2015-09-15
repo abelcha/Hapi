@@ -20,33 +20,34 @@ angular.module('edison')
                 $location.url("/artisan/" + this.id + '/recap');
             }
             Artisan.prototype.facturierDeviseur = function() {
+                var _this = this;
                 dialog.facturierDeviseur(this, function(facturier, deviseur) {
-                    console.log(facturier, deviseur)
+                    edisonAPI.artisan.sendFacturier(_this.id, facturier, deviseur);
                 })
             }
             Artisan.prototype.call = function(cb) {
                 var _this = this;
                 var now = Date.now();
                 $window.open('callto:' + _this.telephone.tel1, '_self', false)
-/*                dialog.choiceText({
-                    title: 'Nouvel Appel',
-                    subTitle: _this.telephone.tel1
-                }, function(response, text) {
-                    edisonAPI.call.save({
-                        date: now,
-                        to: _this.telephone.tel1,
-                        link: _this.id,
-                        origin: _this.id || _this.tmpID || 0,
-                        description: text,
-                        response: response
-                    }).success(function(resp) {
-                        if (typeof cb === 'function')
-                            cb(null, resp);
-                    }).catch(function(err) {
-                        if (typeof cb === 'function')
-                            cb(err);
-                    })
-                })*/
+                    /*                dialog.choiceText({
+                                        title: 'Nouvel Appel',
+                                        subTitle: _this.telephone.tel1
+                                    }, function(response, text) {
+                                        edisonAPI.call.save({
+                                            date: now,
+                                            to: _this.telephone.tel1,
+                                            link: _this.id,
+                                            origin: _this.id || _this.tmpID || 0,
+                                            description: text,
+                                            response: response
+                                        }).success(function(resp) {
+                                            if (typeof cb === 'function')
+                                                cb(null, resp);
+                                        }).catch(function(err) {
+                                            if (typeof cb === 'function')
+                                                cb(err);
+                                        })
+                                    })*/
             };
 
             Artisan.prototype.save = function(cb) {
@@ -86,22 +87,36 @@ angular.module('edison')
             Artisan.prototype.envoiContrat = function(cb) {
                 var _this = this;
                 dialog.sendContrat({
-                    title: "Texte envoi devis",
-                    text: textTemplate.mail.artisan.envoiContrat.bind(_this)($rootScope.user),
-                    width: "60%",
-                    height: "80%"
+                    data: _this,
+                    text: _.template(textTemplate.mail.artisan.envoiContrat())(_this),
                 }, function(options) {
+                    LxProgressService.circular.show('#5fa2db', '#globalProgress');
                     edisonAPI.artisan.envoiContrat(_this.id, {
                         text: options.text,
                         signe: options.signe
                     }).success(function(resp) {
-                        LxNotificationService.success("le contrat a été envoyé");
+                        LxProgressService.circular.hide()
                         if (typeof cb === 'function')
                             cb(null, resp);
-                    }).catch(function(err) {
-                        LxNotificationService.error("L'envoi du contrat à échoué\n");
+                    });
+                });
+            }
+            Artisan.prototype.rappelContrat = function(cb) {
+                var _this = this;
+                _this.datePlain = moment(_this.date.ajout).format('ll')
+                dialog.sendContrat({
+                    data: _this,
+                    text: _.template(textTemplate.mail.artisan.rappelContrat())(_this),
+                }, function(options) {
+                    LxProgressService.circular.show('#5fa2db', '#globalProgress');
+                    edisonAPI.artisan.envoiContrat(_this.id, {
+                        text: options.text,
+                        signe: options.signe,
+                        rappel: true
+                    }).success(function(resp) {
+                        LxProgressService.circular.hide()
                         if (typeof cb === 'function')
-                            cb(err);
+                            cb(null, resp);
                     });
                 });
             }

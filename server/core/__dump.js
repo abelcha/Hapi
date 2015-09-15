@@ -1,8 +1,4 @@
-    var config = requireLocal('config/dataList');
-    var request = require("request");
     var _ = require('lodash');
-    var V1 = requireLocal('config/_convert_V1');
-    var async = require('async')
 
     module.exports = function(core) {
 
@@ -25,10 +21,14 @@
 
 
         var multiDump = function(limit) {
+            if (limit)
+                console.log('LIMIT=', limit)
             return new Promise(function(resolve, reject) {
                 core.model().remove({}, function() {
+                    var request = require("request");
                     console.time('request')
                     request(core.multiDumpUrl(limit), function(err, rest, body) {
+                        var async = require('async')
                         console.timeEnd('request')
                         var data = JSON.parse(body);
                         var i = 0;
@@ -54,6 +54,8 @@
         var singleDump = function(id, login, convert) {
             console.log('dumpOne', id)
             return new Promise(function(resolve, reject) {
+                var V1 = requireLocal('config/_convert_V1');
+                var request = require("request");
                 request.get(core.singleDumpUrl(id), function(err, resp, body) {
                     if (err || resp.statusCode !== 200 || !body || body == 'null') {
                         new edison.event("DUMP_ONE", login, id, {

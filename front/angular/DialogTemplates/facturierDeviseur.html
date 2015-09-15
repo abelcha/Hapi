@@ -1,14 +1,14 @@
-<md-dialog aria-label="Mango (Fruit)" style="  width: 78%;height: 500px;">
+<md-dialog aria-label="Mango (Fruit)" style="  width: 800px;height: 500px;">
     <md-dialog-content class="sticky-container" style="height: 100%;">
         <md-subheader class="md-sticky-no-effect">Liste des Envois facturier/deviseur</md-subheader>
         <div style="padding:15px">
-        <md-checkbox ng-model="deviseur" aria-label="Checkbox 1">
+            <md-checkbox ng-model="deviseur" aria-label="Checkbox 1">
                 Facturier
             </md-checkbox>
             <md-checkbox ng-model="facturier" aria-label="Checkbox 1">
-                Deviseur 
+                Deviseur
             </md-checkbox>
-            <div style="max-height: 370px;overflow:scroll" >
+            <div style="max-height: 370px;overflow:scroll">
                 <div class="data-table-container">
                     <table class="data-table data-table--has-primary data-table--has-secondary">
                         <thead>
@@ -17,25 +17,13 @@
                                 <th>Login</th>
                                 <th>Date</th>
                             </tr>
-                            <tr>
-                                <td colspan="6" class="divider divider--dark"></td>
-                            </tr>
                         </thead>
                         <tbody>
-                            <tr class="data-table__clickable-row" ng-repeat="f in sst.historique.facturier">
+                            <tr class="data-table__clickable-row" ng-repeat="f in sst.historique.pack|reverse">
                                 <td>
-                                    <span>Facturier</span>
-                                </td>
-                                <td>
-                                    <span>{{f.login}}</span>
-                                </td>
-                                <td>
-                                    <span>{{f.date| date:"dd/MM/yyyy 'à' HH'h'mm"}}</span>
-                                </td>
-                            </tr>
-                            <tr class="data-table__clickable-row" ng-repeat="f in sst.historique.deviseur">
-                                <td>
-                                    <span>Deviseur</span>
+                                    <span ng-if="f.facturier">Facturier</span>
+                                    <span ng-if="f.facturier && f.deviseur"> + </span>
+                                    <span ng-if="f.deviseur">Deviseur</span>
                                 </td>
                                 <td>
                                     <span>{{f.login}}</span>
@@ -54,6 +42,11 @@
         <md-button ng-click="answer(true);" class="md-primary black-text">
             Annuler
         </md-button>
+        <a href="/api/artisan/{{sst.id}}/facturier" target="_blank">
+            <md-button class="md-primary black-text">
+                Imprimer
+            </md-button>
+        </a>
         <md-button ng-click="answer(null);" class="md-primary black-text">
             Envoyer
         </md-button>

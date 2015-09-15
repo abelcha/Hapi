@@ -1,1 +1,1 @@
-angular.module('edison').controller('InterventionsController', _.noop);
+angular.module('edison').controller('ListeInterventionController', _.noop);

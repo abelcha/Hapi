@@ -227,15 +227,6 @@ angular.module('edison')
                 })
             })
         };
-        Intervention.prototype.absenceArtisan = function(cb) {
-            var _this = this;
-            dialog.absence(function(start, end) {
-                edisonAPI.artisan.setAbsence(_this.artisan.id, {
-                    start: start,
-                    end: end
-                }).success(cb)
-            })
-        }
         Intervention.prototype.save = function(cb) {
             var _this = this;
             edisonAPI.intervention.save(_this)

@@ -18,6 +18,7 @@ module.exports = function(schema) {
     schema.pre('save', function(next) {
         var _this = this;
         _this.loc = [_this.address.lt, _this.address.lg]
+         _this.cache = db.model('artisan').Core.minify(_this);
         if (_this.status !== 'ARC') {
             db.model("intervention").find({
                 'artisan.id': _this.id
@@ -33,7 +34,7 @@ module.exports = function(schema) {
     });
     schema.post('save', function(doc) {
         if (!isWorker) {
-            db.model('artisan').cacheActualise(doc);
+            db.model('artisan').uniqueCacheReload(doc)
         }
     })
 }

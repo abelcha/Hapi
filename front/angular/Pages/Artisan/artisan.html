@@ -214,12 +214,11 @@
             </div>
             <div class="fab" style="float: right;position: fixed;right: 70px;z-index: 999;top: 87%;">
                 <button ng-click="vm.saveArtisan({})" class="fab__primary btn--no-conflicts btn--xl btn--blue btn--fab" lx-ripple lx-tooltip="Enregistrer" tooltip-position="top">
-                    <i class="mdi" ng-class="vm.data.id ? 'mdi-camera-iris' : 'mdi-plus'"></i>
-                    <i class="mdi mdi-checkbox-marked-circle-outline"></i>
+                    <i class="fa fa-cloud-upload"></i>
                 </button>
                 <div class="fab__actions fab__actions--left">
-                    <button ng-click="vm.saveArtisan({contrat:true, signe:true})" class="btn--no-conflicts btn--l btn--black btn--fab" lx-ripple lx-tooltip="Contrat Signé" tooltip-position="top"><i class="fa fa-send"></i></button>
-                    <button ng-click="vm.saveArtisan({contrat:true})" class="btn--no-conflicts btn--l btn--black btn--fab" lx-ripple lx-tooltip="Envoyer Contrat" tooltip-position="top"><i class="fa fa-send-o"></i></button>
+                    <button ng-click="vm.saveArtisan({contrat:true, signe:true})" class="btn--no-conflicts btn--l btn--black btn--fab green" lx-ripple lx-tooltip="Contrat Signé" tooltip-position="top"><i class="fa fa-send"></i></button>
+                    <button ng-click="vm.saveArtisan({contrat:true})" class="btn--no-conflicts btn--l btn--black btn--fab orange" lx-ripple lx-tooltip="Envoyer Contrat" tooltip-position="top"><i class="fa fa-send-o"></i></button>
                 </div>
             </div>
         </div>
