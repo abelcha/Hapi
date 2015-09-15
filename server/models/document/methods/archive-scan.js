@@ -49,7 +49,7 @@ module.exports = function(schema) {
                 datab = JSON.parse(datab)
                 forEach(datab, function(e) {
                     var done = this.async();
-                    setTimeout(done, 220);
+                    setTimeout(done, req.query.timeout || 220);
                    // console.log('/SCAN/' + e.name, '/V2_PRODUCTION/intervention/' + e.id_inter+ '/' + e.name)
                    console.log(e.id_inter)
                     document.copy('/SCAN/' + e.name, '/V2_PRODUCTION/intervention/' + e.id_inter + '/' + e.name)
