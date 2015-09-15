@@ -6,6 +6,8 @@ var Dropbox = function() {
     this.client = new DropboxAPI.Client({
         token: key.dropbox
     });
+    var dbox = require("dbox")
+    this.dbox = dbox.app({}).client(key.dropbox);
 }
 Dropbox.prototype.getFilename = function(p) {
     return '/V2/' + p.model + '/' + p.link + '/' + p._id + '.' + p.extension;
@@ -54,10 +56,21 @@ Dropbox.prototype.list = function(dir) {
 Dropbox.prototype.move = function(from, to) {
     var _this = this;
     return new Promise(function(resolve, reject) {
-        console.log("move", from, to);
         _this.client.move(from, to, function(err, stats) {
-            console.log(err, stats)
+            if (err)
+                reject(err);
+            resolve(stats);
+        })
 
+    })
+}
+
+Dropbox.prototype.copy = function(from, to) {
+    var _this = this;
+    return new Promise(function(resolve, reject) {
+    console.log('-->', from, to)
+        _this.client.copy(from, to, function(err, stats) {
+            console.log(err, stats)
             if (err)
                 reject(err);
             resolve(stats);

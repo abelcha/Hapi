@@ -11,8 +11,10 @@
   "dependencies": {
     "argx": "^1.3.0",
     "async": "^1.4.2",
+    "async-foreach": "^0.1.3",
     "body-parser": "^1.13.3",
     "chai": "^3.2.0",
+    "closest-to": "^0.1.0",
     "co": "^4.6.0",
     "colors": "^1.1.0",
     "compression": "^1.5.2",
@@ -23,6 +25,7 @@
     "cron-emitter": "^0.2.2",
     "cron-parser": "^1.0.0",
     "crypto-js": "^3.1.5",
+    "dbox": "^0.6.4",
     "dropbox": "^0.10.3",
     "edsx-api-produits": "^2.0.2",
     "edsx-mail": "^2.1.10",
