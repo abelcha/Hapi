@@ -44,8 +44,10 @@ angular.module('edison').directive('infoCompta', ['config', 'Paiement',
                     'data.compta.paiement.pourcentage.fourniture',
                     'data.compta.paiement.pourcentage.maindOeuvre'
                 ], function(newValues, oldValues, scope) {
+                    console.log('here')
                     if (!_.isEqual(newValues, oldValues)) {
                         scope.compta = new Paiement(scope.data)
+                        console.log('===>', scope.compta)
                         paiement.montant = scope.compta.montantTotal
                     }
                 }, true);

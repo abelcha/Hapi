@@ -1,39 +1,39 @@
 <div>
-    <div class="card margin" ng-if="displayReglement !== 'false'" ng-init="reglement = data.compta.reglement;paiement = data.compta.paiement;info = data.compta.info">
+    <div class="card margin" ng-if="displayReglement !== 'false'" >
         <div class="p+">
             <strong class="fs-headline display-block">Reglement Client <span ng-if="dialog" text-sm> (Prix Final: {{data.prixFinal}} €)</span></strong>
             <div class="paragraph fs-body-1 mt+">
                 <div class="row">
                     <div ng-class="dialog ? 'col-md-4' : 'col-md-2'">
                         <lx-text-field label="Montant Recu TTC">
-                            <input ng-model="reglement.montantTTC" type="number" ng-disabled="reglement.recu">
+                            <input ng-model="data.compta.reglement.montantTTC" type="number" ng-disabled="data.compta.reglement.recu">
                         </lx-text-field>
                     </div>
                     <div ng-class="dialog ? 'col-md-4' : 'col-md-2'">
-                        <select class="form-control" ng-model="data.tva" ng-disabled="reglement.recu" ng-options="tva.short_name as tva.long_name for tva in config.tva"></select>
+                        <select class="form-control" ng-model="data.tva" ng-disabled="data.compta.reglement.recu" ng-options="tva.short_name as tva.long_name for tva in config.tva"></select>
                     </div>
                     <div ng-class="dialog ? 'col-md-4' : 'col-md-2'">
                         <lx-text-field label="Montant Recu HT">
-                            <input ng-model="reglement.montant" type="number" disabled="true">
+                            <input ng-model="data.compta.reglement.montant" type="number" disabled="true">
                         </lx-text-field>
                     </div>
                     <div ng-if="!dialog" class="switch" style="float:right;margin-right:30px">
-                        <input type="checkbox" id="switch2" ng-model="reglement.recu" class="switch__input">
+                        <input type="checkbox" id="switch2" ng-model="data.compta.reglement.recu" class="switch__input">
                         <label for="switch2" class="switch__label">Encaissé</label>
                     </div>
                 </div>
                 <div class="row">
-                    <div ng-class="dialog ? 'col-md-4' : 'col-md-2'" ng-if="reglement.recu && reglement.historique.length">
+                    <div ng-class="dialog ? 'col-md-4' : 'col-md-2'" ng-if="data.compta.reglement.recu && data.compta.reglement.historique.length">
                         <lx-text-field label="Avoir">
-                            <input min="0" ng-disabled="reglement.avoir.effectue" ng-model="reglement.avoir.montant" type="number">
+                            <input min="0" ng-disabled="data.compta.reglement.avoir.effectue" ng-model="data.compta.reglement.avoir.montant" type="number">
                         </lx-text-field>
                     </div>
-                    <div ng-if="reglement.avoir._type" class="switch" style="float:right;margin-right:30px">
-                        <input type="checkbox" id="flav" ng-model="reglement.avoir.effectue" disabled="true" class="switch__input">
+                    <div ng-if="data.compta.reglement.avoir._type" class="switch" style="float:right;margin-right:30px">
+                        <input type="checkbox" id="flav" ng-model="data.compta.reglement.avoir.effectue" disabled="true" class="switch__input">
                         <label for="flav" class="switch__label">Effectué</label>
                     </div>
-                    <div ng-if="reglement.avoir.montant > 0 && reglement.historique.length" ng-class="dialog ? 'col-md-4' : 'col-md-2'" >
-                        <select class="form-control" ng-disabled="reglement.avoir.effectue" ng-model="reglement.avoir._type" ng-options="ta.short_name as ta.long_name for ta in config.typeAvoir"></select>
+                    <div ng-if="data.compta.reglement.avoir.montant > 0 && data.compta.reglement.historique.length" ng-class="dialog ? 'col-md-4' : 'col-md-2'" >
+                        <select class="form-control" ng-disabled="data.compta.reglement.avoir.effectue" ng-model="data.compta.reglement.avoir._type" ng-options="ta.short_name as ta.long_name for ta in config.typeAvoir"></select>
                     </div>
                 </div>
             </div>
@@ -43,7 +43,7 @@
                         Facture non conforme
                     </md-checkbox>
                 </div>
-                <div class="col-md-3" ng-if="paiement.tva == 10">
+                <div class="col-md-3" ng-if="data.compta.paiement.tva == 10">
                     <md-checkbox ng-model="data.compta.info.attestationTva" aria-label="_" class="md-warn">
                         Attestation de TVA
                     </md-checkbox>
@@ -60,11 +60,18 @@
                 </div>
             </div>
             <br>
-            <h4 ng-click="regdisplayHistorique = !regdisplayHistorique"> > Historique ({{reglement.historique.length}})</h4>
-            <pre ng-if="regdisplayHistorique"><h4>{{reglement.historique|json}}</h4></pre>
+            <h4 ng-click="regdisplayHistorique = !regdisplayHistorique"> > Historique ({{data.compta.reglement.historique.length}})</h4>
+            <pre ng-if="regdisplayHistorique"><h4>{{data.compta.reglement.historique|json}}</h4></pre>
             <br>
         </div>
     </div>
+
+
+
+
+
+
+
     <div class="card margin" ng-if="displayPaiement !== 'false'" >
         <div class="p+">
             <strong class="fs-headline display-block">Paiement Sous-Traitant</strong>
@@ -73,36 +80,36 @@
                 <div class="row">
                     <div class="col-md-2">
                         <lx-text-field label="Base Paiement SST">
-                            <input ng-model="paiement.base" type="number">
+                            <input ng-model="data.compta.paiement.base" type="number">
                         </lx-text-field>
                     </div>
                     <div class="col-md-3">
                         <select class="form-control" ng-model="data.compta.paiement.mode" ng-options="modePaiement.short_name as modePaiement.long_name for modePaiement in config.modePaiement"></select>
                     </div>
                     <div class="col-md-2">
-                        <select class="form-control" ng-model="paiement.tva" ng-options="tva.short_name as tva.long_name for tva in config.tvaSST"></select>
+                        <select class="form-control" ng-model="data.compta.paiement.tva" ng-options="tva.short_name as tva.long_name for tva in config.tvaSST"></select>
                     </div>
                 </div>
                 <br>
                 <div class="row">
                     <div class="col-md-3">
                         <lx-text-field label="Déplacement">
-                            <input type="number" min="0" max="100" ng-model="paiement.pourcentage.deplacement">
+                            <input type="number" min="0" max="100" ng-model="data.compta.paiement.pourcentage.deplacement">
                         </lx-text-field>
                     </div>
                     <div class="col-md-3">
                         <lx-text-field label="Main D'oeuvre">
-                            <input type="number" min="0" max="100" ng-model="paiement.pourcentage.maindOeuvre">
+                            <input type="number" min="0" max="100" ng-model="data.compta.paiement.pourcentage.maindOeuvre">
                         </lx-text-field>
                     </div>
                     <div class="col-md-3">
                         <lx-text-field label="Fourniture">
-                            <input type="number" min="0" max="100" ng-model="paiement.pourcentage.fourniture">
+                            <input type="number" min="0" max="100" ng-model="data.compta.paiement.pourcentage.fourniture">
                         </lx-text-field>
                     </div>
                     <div class="col-md-3">
                         <div class="switch" style="float:right;margin-right:30px">
-                            <input type="checkbox" id="switch1" ng-model="paiement.ready" class="switch__input">
+                            <input type="checkbox" id="switch1" ng-model="data.compta.paiement.ready" class="switch__input">
                             <label for="switch1" class="switch__label">Flush</label>
                             <span class="switch__help"></span>
                         </div>
@@ -112,12 +119,12 @@
                 <div class="row">
                     <div class="col-md-3 col-md-offset-9">
                         <div class="switch" style="float:right;margin-right:30px">
-                            <input type="checkbox" id="switch3" ng-model="paiement.dette" class="switch__input">
+                            <input type="checkbox" id="switch3" ng-model="data.compta.paiement.dette" class="switch__input">
                             <label for="switch3" class="switch__label switch_red">Dette</label>
                         </div>
                     </div>
                 </div>
-                <h2 ng-if="paiement.montant">Montant payé : {{paiement.montant}} €</h2>
+                <h2 ng-if="data.compta.paiement.montant">Montant payé : {{data.compta.paiement.montant}} €</h2>
                 <br>
                 <h4 ng-click="displaySimulation = !displaySimulation"> > Simulation</h4>
                 <pre ng-if="displaySimulation"><h4>{{compta|json}}</h4></pre>

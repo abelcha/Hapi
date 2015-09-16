@@ -163,7 +163,10 @@
             }]
         }
 
-
+        rtn.info = {
+            travailSamedi: d.travail_samedi,
+            pasFiable: d.pas_fiable
+        }
 
         var fj = _.find(config.formeJuridiqueHash(), function(e) {
             return e.long_name.toUpperCase() === d.forme_juridique;

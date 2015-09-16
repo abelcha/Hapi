@@ -11,6 +11,7 @@ module.exports = function(schema) {
             var resend = function() {
                 if (req.query.pdf ||true) {
                     console.log('yaypdf')
+                    console.log(op)
                     PDF(op).toBuffer(function(err, buffer) {
                         res.contentType('application/pdf')
                         res.send(buffer);

@@ -174,6 +174,14 @@ module.exports = function(db) {
                 signe: Boolean
             }],
         },
+
+        info: {
+            travailSamedi: Boolean,
+            pasFiable: Boolean
+        },
+        RIB: String,
+        IBAN: String,
+
         nbrIntervention: Number,
         siret: String,
         cache: {}
