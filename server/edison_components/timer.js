@@ -7,7 +7,8 @@ var Timer = module.exports = function() {
     //    this.emitter.add("*/120 * * * *", "every hour");
     //    this.emitter.add("*/5 * * * *", "every 5 minutes");
     // this.emitter.add("*/2 * * * *", "every minute");
-    this.emitter.add("0 3 * * *", "midnight");
+    this.emitter.add("0 3 * * *", "3pm");
+    this.emitter.add("0 20 * * *", "20h");
     this.emitter.add("*/60 * * * *", "30 minutes")
         /*    this.emitter.on("every 10 minutes", function() {
                 edison.worker.createJob({
@@ -26,8 +27,7 @@ var Timer = module.exports = function() {
     })
 
 
-    this.emitter.on("midnight", function() {
-        console.log('midnight');
+    this.emitter.on("3pm", function() {
         redis.delWildcard("rs*")
     })
 
@@ -53,19 +53,20 @@ var Timer = module.exports = function() {
                 })
             })
         })*/
-    var test = function(cronString, iterations) {
-        console.log('sweg')
+    var test = function() {
         var parser = require('cron-parser');
-
-        var interval = parser.parseExpression(cronString, {
-            currentDate: new Date,
-            iterator: true
-        });
-        for (var i = 0; i < 10; i++) {
-            console.log(interval.next())
-        };
+        try {
+            var interval = parser.parseExpression("0 20 * * *");
+            console.log('Date: ', interval.next().toString()); // Sat Dec 29 2012 00:42:00 GMT+0200 (EET) 
+            console.log('Date: ', interval.next().toString()); // Sat Dec 29 2012 00:44:00 GMT+0200 (EET) 
+            console.log('Date: ', interval.next().toString()); // Sat Dec 29 2012 00:44:00 GMT+0200 (EET) 
+            console.log('Date: ', interval.next().toString()); // Sat Dec 29 2012 00:44:00 GMT+0200 (EET) 
+        } catch (err) {
+            console.log('Error: ' + err.message);
+        }
 
     }
+    test();
 
 
 
