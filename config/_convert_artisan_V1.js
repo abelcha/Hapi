@@ -79,7 +79,7 @@ var V1 = function(d) {
     if (x.num_deviseur) {
         x.num_deviseur = d.historique.pack[0].text ||  moment(x.num_deviseur.date).format('L')
     }
-    if (d.historique.contrat.length) {
+    if (d.historique.contrat && d.historique.contrat.length) {
         x.date_envoi_contrat = moment(d.historique.contrat[0].date).format('dddd DD MMMM YYYY');
         x.date_envoi_contrat = "Paris, le " + _.capitalize(x.date_envoi_contrat)
         if (!d.historique.contrat[0].signe) {
