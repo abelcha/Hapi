@@ -51,7 +51,7 @@
          var tableParameters = {
              page: $location.search()['page'] ||  1,
              total: dataProvider.filteredData.length,
-             filter: _.omit($location.search(), 'hashModel', 'page'),
+             filter: _.omit($location.search(), 'hashModel', 'page', 'sstid'),
              sorting: {
                  id: 'desc'
              },

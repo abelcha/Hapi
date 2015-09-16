@@ -19,10 +19,11 @@ var ContactArtisanController = function($scope, $timeout, tabContainer, LxProgre
     if (_this.recap) {
         _this.loadPanel(_this.recap)
     } else {
+        console.log('-->', 'yay')
         LxProgressService.circular.show('#5fa2db', '#globalProgress');
         var dataProvider = new DataProvider('artisan');
         dataProvider.init(function(err, resp) {
-            var filtersFactory = new FiltersFactory('artisan')
+            console.log('init')
             _this.config = config;
             _this.moment = moment;
             if (!dataProvider.isInit()) {
@@ -36,8 +37,8 @@ var ContactArtisanController = function($scope, $timeout, tabContainer, LxProgre
                 // if (_this.recap) {
                 //     $scope.selectedIndex = 1;
                 // }
-            _this.loadPanel($rootScope.expendedRow)
-            _this.tableData = dataProvider.filteredData;
+            _this.tableData = dataProvider.getData()
+            _this.loadPanel(_this.tableData[0].id)
             LxProgressService.circular.hide();
         });
     }
@@ -48,7 +49,7 @@ var ContactArtisanController = function($scope, $timeout, tabContainer, LxProgre
     }
 
     _this.reloadData = function() {
-        _this.tableData = $filter('contactFilter')(dataProvider.filteredData, _this.tableFilter);
+        _this.tableData = $filter('contactFilter')(dataProvider.getData(), _this.tableFilter);
     }
 
     _this.loadMore = function() {
@@ -80,8 +81,6 @@ var ContactArtisanController = function($scope, $timeout, tabContainer, LxProgre
         edisonAPI.artisan.comment(_this.sst.id, $scope.commentText).then(function() {
             _this.loadPanel(_this.sst.id);
             $scope.commentText = "";
-            $('.paragraph').click();
-            console.log('lala')
         })
     }
 
@@ -100,7 +99,7 @@ var ContactArtisanController = function($scope, $timeout, tabContainer, LxProgre
             } else {
                 $rootScope.expendedRow = inter.id
                 _this.loadPanel(inter.id)
-                $location.search('id', inter.id);
+                $location.search('sst_id', inter.id);
             }
         }
     }

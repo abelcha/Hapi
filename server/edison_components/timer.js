@@ -25,8 +25,11 @@ var Timer = module.exports = function() {
             console.log('devis ok')
         })
     })
-
-
+/*
+    this.emitter.on("20h", function() {
+        redis.delWildcard("rs*")
+    })
+*/
     this.emitter.on("3pm", function() {
         redis.delWildcard("rs*")
     })
