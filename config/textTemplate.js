@@ -335,6 +335,38 @@ module.exports = {
                     "Dépannage - Entretien - Installation - Rénovation\n" +
                     "Siège social : 75 rue des Dames, 75017, Paris\n" +
                     "contact@edison-services.fr - www.edison-services.fr\n"
+            },
+            dossierComplet: function() {
+                return "Monsieur <b>{{representant.nom}}</b>,\n" +
+                    "\n" +
+                    "Nous avons le plaisir de vous annoncer que vous êtes dès à présent <b>membre du réseau partenaire Edison Services.</b>\n" +
+                    "\n" +
+                    "Le service partenariat a validé votre dossier.\n" +
+                    "\n" +
+                    "Vous allez recevoir très prochainement les pièces administratives vous permettant d'intervenir directement auprès de nos clients.\n" +
+                    "\n" +
+                    "Ces documents seront transmis par voie postale à cette adresse :\n" +
+                    "<p strong center>" +
+                    "Monsieur {{representant.nom}},\n" +
+                    "{{address.n}} {{address.r}}\n" +
+                    "{{address.cp}} {{address.v}}</b>\n" +
+                    "</p>" +
+                    "Nous pouvons désormais vous proposez d'intervenir auprès de nos clients dans les domaines suivants :\n" +
+                    "<p strong center>électricité - plomberie - chauffage - climatisation - serrurerie</p>" +
+                    "Vous trouverez ci-joint, votre fiche d'identification récapitulative.\n" +
+                    "\n" +
+                    "Le service intervention de notre société devrait faire appel à vous dans les plus brefs délais.\n" +
+                    "Cordialement,\n" +
+                    "\n" +
+                    "Yohann RHOUM\n" +
+                    "Service partenariat\n" +
+                    "Port : 06.45.57.87.66 Fax : 09.72.39.33.46\n" +
+                    "yohann.rhoum@edison-services.fr\n" +
+                    "\n" +
+                    "Edison Services\n" +
+                    "Dépannage - Entretien - Installation - Rénovation\n" +
+                    "Siège social : 75, rue des dames - 75010 Paris\n" +
+                    "contact@edison-services.fr - www.edison-services.fr\n"
             }
         }
     },
