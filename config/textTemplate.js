@@ -107,8 +107,8 @@ module.exports = {
                     "Tél. 09.72.51.08.01 (Ouvert de 09h00 à 12h30 / 14h00 à 16h30)\n" +
                     "Fax. 09.72.39.33.46\n";
             },
-            os: function() {
-
+            os: function(user) {
+                xxx
                 return "A l'attention de l’entreprise {{sst.nomSociete}}\n" +
                     "\n" +
                     "Monsieur <strong>{{sst.representant.nom}}</strong>,\n" +
@@ -146,7 +146,9 @@ module.exports = {
                     "<% if (fileSupp) {%> • {{textfileSupp}} <%}%>\n" +
                     "</strong>" +
                     "\n" +
-                    "<strong>Pour tous renseignements supplémentaires, vous pouvez joindre {{__login}} au 09.72.42.30.00</strong>\n" +
+                    "<strong>Pour tous renseignements supplémentaires, vous pouvez joindre " + (_.startCase(user.pseudo) ||  "Arnaud") +
+                    " au " +
+                    (user.ligne ? (user.ligne.match(/.{2}|.{1,2}/g).join('.')) :  "09.72.42.30.00") + "</strong>\n" +
                     "\n" +
                     "L’équipe <strong>Edison Services</strong>\n"
             }
