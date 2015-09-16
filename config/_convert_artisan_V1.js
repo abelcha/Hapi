@@ -69,16 +69,15 @@ var V1 = function(d) {
         }
     })
 
-    x.num_facturier = d.historique.pack.length && d.historique.pack[0].facturier
-
-    if (x.num_facturier) {
-        x.num_facturier = d.historique.pack[0].text ||  moment(x.num_facturier.date).format('L')
+    if (d.historique.pack.length && d.historique.pack[0].facturier) {
+        x.num_facturier = d.historique.pack[0].text ||  moment(d.historique.pack[0].date).format('L')
     }
 
-    x.num_deviseur = d.historique.pack.length && d.historique.pack[0].deviseur
-    if (x.num_deviseur) {
-        x.num_deviseur = d.historique.pack[0].text ||  moment(x.num_deviseur.date).format('L')
+    if (d.historique.pack.length && d.historique.pack[0].deviseur) {
+        x.num_deviseur = d.historique.pack[0].text ||  moment(d.historique.pack[0].date).format('L')
     }
+
+
     if (d.historique.contrat && d.historique.contrat.length) {
         x.date_envoi_contrat = moment(d.historique.contrat[0].date).format('dddd DD MMMM YYYY');
         x.date_envoi_contrat = "Paris, le " + _.capitalize(x.date_envoi_contrat)

@@ -246,14 +246,6 @@ module.exports = {
                     "\n" +
                     "Pour chaque intervention, vous recevez au préalable un ordre de service par mail et par téléphone,<u><b> l'ordre de service n'est validé que sous votre accord.</b></u>\n" +
                     "\n" +
-                    "Concernant les rémunérations, voici un bref récapitulatif, en suivant l'exemple du forfait de dépannage classique à 150 euros H.T, dont je vous ai parlé.\n" +
-                    "\n" +
-                    "Exemple : Recherche de panne sur un ballon ECS\n" +
-                    "Déplacement = 65.00 € H.T x 50% = 32.50 € H.T\n" +
-                    "Recherche de panne = 85.00 € H.T x 30% = 25.50 € H.T\n" +
-                    "\n" +
-                    "Soit un total minimum de 58.00 € H.T, pour une intervention maximum d'une heure avec un déplacement. Votre rémunération se fera dans un délai de 7 jours au maximum.\n" +
-                    "\n" +
                     "Une fois chez notre client, vous restez totalement autonome sur le montant à facturer et si nécessaire vous pouvez ajuster le montant de la prestation tout en ayant préalablement prévenu notre client.\n" +
                     "\n" +
                     "Lors des interventions, vous représentez notre entreprise c'est pourquoi vous disposez des documents fournis à tous nos partenaires en France.\n" +
