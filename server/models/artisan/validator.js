@@ -1,4 +1,5 @@
 module.exports = function(schema) {
+    var V1 = requireLocal('config/_artisan_convert_V1');
 
     var getSubStatus = function() {
         var _ = require('lodash');
@@ -18,7 +19,7 @@ module.exports = function(schema) {
     schema.pre('save', function(next) {
         var _this = this;
         _this.loc = [_this.address.lt, _this.address.lg]
-         _this.cache = db.model('artisan').Core.minify(_this);
+        _this.cache = db.model('artisan').Core.minify(_this);
         if (_this.status !== 'ARC') {
             db.model("intervention").find({
                 'artisan.id': _this.id
@@ -35,6 +36,12 @@ module.exports = function(schema) {
     schema.post('save', function(doc) {
         if (!isWorker) {
             db.model('artisan').uniqueCacheReload(doc)
+            if (envDev || envProd && (!doc.date.dump || moment().subtract(5000).isAfter(doc.date.dump))) {
+                var v1 = new V1(doc);
+                v1.send(function(resp) {
+                    console.log(resp)
+                });
+            }
         }
     })
 }

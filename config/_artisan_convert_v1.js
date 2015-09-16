@@ -32,7 +32,7 @@ var V1 = function(d) {
     _.each(d.categories, function(e) {
         x.categorie.push(config.categories[e].long_name)
     })
-    x.categorie = x.categorie.join(', ').toUpperCase()
+    x.categorie = _.deburr(x.categorie.join(', ')).toUpperCase()
 
     x.nom_representant = d.representant.nom;
     x.prenom_representant = d.representant.prenom;
@@ -79,9 +79,21 @@ var V1 = function(d) {
     if (x.num_deviseur) {
         x.num_deviseur = d.historique.pack[0].text ||  moment(x.num_deviseur.date).format('L')
     }
-    x.date_envoi_contrat = d.historique.contrat.length
-    if (x.date_envoi_contrat)
-        x.num_contrat = moment(d.historique.contrat[0].date).format('L');
+    if (d.historique.contrat.length) {
+        x.date_envoi_contrat = moment(d.historique.contrat[0].date).format('dddd DD MMMM YYYY');
+        x.date_envoi_contrat = "Paris, le " + _.capitalize(x.date_envoi_contrat)
+        if (!d.historique.contrat[0].signe) {
+            x.date_envoi_contrat += ' - CONTRAT NON SIGNE';
+        } else {
+            x.date_envoi_contrat += ' - CONTRAT SIGNE';
+        }
+        //console.log('-->', x.num_contrat)
+    }
+    x.pas_fiable = String(Boolean(d.info.pasFiable))
+    x.travail_samedi = String(Boolean(d.info.travailSamedi));
+
+    x.BIC = d.BIC ||  "aucun BIC";
+    x.IBAN = d.IBAN ||  "aucun IBAN";
 
     x.siret = d.siret;
     /*    } catch (e) {
@@ -93,16 +105,19 @@ var V1 = function(d) {
 
 V1.prototype.compare = function(legacy) {
     var noComp = [
-      /*  "contrat_2014",
-        "contrat",
-        "kbis",
-        "autofacturation",
-        "cni",
-        "assurance",
-        "rib",
-        "ursaff",
-        "autres",*/
-        "coms"
+        /*  "contrat_2014",
+          "contrat",
+          "kbis",
+          "autofacturation",
+          "cni",
+          "assurance",
+          "rib",
+          "ursaff",
+          "autres",*/
+        "coms",
+        "rappel_inter",
+        "jours_intervention",
+        "facturier_num_manuel"
     ]
     var _this = this;
     _.each(this.data, function(e, k) {
@@ -117,17 +132,18 @@ V1.prototype.send = function(cb) {
     var _this = this;
     try {
         request.get({
-            url: 'http://electricien13003.com/alvin/postData.php',
+            url: 'http://electricien13003.com/alvin/postDataArtisan.php',
             qs: this.data
         }, function(err, resp, body) {
             if (!err && resp.statusCode === 200) {
-                console.log('send', _this.data.id);
+                console.log('sendArtisan', _this.data.id);
                 cb(null, body)
             } else {
-                console.log("ERR", body)
+                //  console.log("ERR", body)
                 cb("err")
             }
-            new edison.event("SEND_INTER", _this.data.id, {
+            console.log(body)
+            new edison.event("SEND_ARTISAN", _this.data.id, {
                 sended: this.data,
                 resp: body
             });
@@ -166,12 +182,12 @@ V1.prototype.___data = {
     "disponibilite": "",
     "mode_vac": "0",
     "contrat_2014": "",
-    "contrat": "contrat/contrat_ancien_000007.pdf",
-    "kbis": "kbis/kbis_000007.txt",
-    "autofacturation": "autofacturation/autofacturation_000007.png",
-    "cni": "cni/cni_000007.txt",
+    "contrat": "",
+    "kbis": "",
+    "autofacturation": "",
+    "cni": "",
     "assurance": "",
-    "rib": "rib/rib_000007.txt",
+    "rib": "",
     "ursaff": "",
     "autres": "",
     "siret": "753985985",
@@ -199,7 +215,7 @@ V1.prototype.___data = {
     "categorie": "PLOMBERIE, CHAUFFAGE, CLIMATISATION, SERRURERIE",
     "cout_fourniture": "0",
     "distance": "0",
-    "facturier_num_manuel": "15533",
+    "facturier_num_manuel": "",
     "date_envoi_contrat": "",
     "tarif_prix_h": "0",
     "tarif_deplacement": "0",
@@ -216,7 +232,7 @@ V1.prototype.___data = {
     "ajoute_par": "yohann",
     "IBAN": "aucun IBAN",
     "BIC": "aucun BIC",
-    "pas_fiable": "1",
+    "pas_fiable": "0",
     "rappel_inter": "0"
 }
 

@@ -179,7 +179,7 @@ module.exports = function(db) {
             travailSamedi: Boolean,
             pasFiable: Boolean
         },
-        RIB: String,
+        BIC: String,
         IBAN: String,
 
         nbrIntervention: Number,

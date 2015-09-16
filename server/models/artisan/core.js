@@ -100,6 +100,7 @@
             })
         }
 
+        try {
 
 
 
@@ -168,6 +169,12 @@
             pasFiable: d.pas_fiable
         }
 
+        if (d.BIC && d.BIC !== "aucun  BIC") {
+            rtn.BIC = d.BIC
+        }
+        if (d.IBAN && d.IBAN !== "aucun IBAN") {
+            rtn.IBAN = d.IBAN
+        }
         var fj = _.find(config.formeJuridiqueHash(), function(e) {
             return e.long_name.toUpperCase() === d.forme_juridique;
             //       console.log(e.long_name.toUpperCase(), d.forme_juridique)
@@ -202,5 +209,8 @@
                 text: e.comment
             })
         })
+        } catch(e) {
+            __catch(e)
+        }
         return rtn;
     }

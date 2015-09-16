@@ -32,8 +32,8 @@
          }
      }
 
-     var actualiseUrl = _.throttle(function(fltrs) {
-         console.log('actual')
+     var actualiseUrl = _.throttle(function(fltrs, page) {
+         $location.search('page', page !== 1 ? page : undefined);
          _.each(fltrs, function(e, k) {
              // console.log(e, k)
              if (!e) e = undefined;
@@ -49,9 +49,9 @@
 
          dataProvider.applyFilter(currentFilter, _this.tab.hash, _this.customFilter);
          var tableParameters = {
-             page: 1,
+             page: $location.search()['page'] ||  1,
              total: dataProvider.filteredData.length,
-             filter: $location.search(),
+             filter: _.omit($location.search(), 'hashModel', 'page'),
              sorting: {
                  id: 'desc'
              },
@@ -60,7 +60,8 @@
          var tableSettings = {
              total: dataProvider.filteredData,
              getData: function($defer, params) {
-                 actualiseUrl(params.filter())
+                 console.log(params.filter())
+                 actualiseUrl(params.filter(), params.page())
                  var data = dataProvider.filteredData;
                  data = $filter('tableFilter')(data, params.filter());
                  _this.currentFilter = _.clone(params.filter());

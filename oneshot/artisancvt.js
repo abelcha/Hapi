@@ -10,7 +10,8 @@ var _ = require('lodash');
 var moment = require('moment')
 
 var V1 = requireLocal('config/_artisan_convert_v1');
-var id = _.random(0, 1000);
+var id = process.argv[2] || _.random(0, 1000);
+console.log('ID=', id)
 db.model('artisan').findOne({
         id: id
     })
