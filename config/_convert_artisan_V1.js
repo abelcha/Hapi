@@ -50,7 +50,7 @@ var V1 = function(d) {
 
     x.email = d.email;
 
-    x.archive = (d.status === 'ARC')
+    x.archive = Number(d.status === 'ARC')
 
     var login = _.find(users, 'login', d.login.ajout)
     x.ajoute_par = login && login.oldLogin ? login.oldLogin : d.login.ajout;
@@ -88,8 +88,8 @@ var V1 = function(d) {
         }
         //console.log('-->', x.num_contrat)
     }
-    x.pas_fiable = String(Boolean(d.info.pasFiable))
-    x.travail_samedi = String(Boolean(d.info.travailSamedi));
+    x.pas_fiable = Number(Boolean(d.info.pasFiable))
+    x.travail_samedi = Number(Boolean(d.info.travailSamedi));
 
     x.BIC = d.BIC ||  "aucun BIC";
     x.IBAN = d.IBAN ||  "aucun IBAN";
