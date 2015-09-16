@@ -99,7 +99,7 @@ var ContactArtisanController = function($scope, $timeout, tabContainer, LxProgre
             } else {
                 $rootScope.expendedRow = inter.id
                 _this.loadPanel(inter.id)
-                $location.search('sst_id', inter.id);
+                $location.search('sstid', inter.id);
             }
         }
     }
