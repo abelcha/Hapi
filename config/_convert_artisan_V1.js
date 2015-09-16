@@ -20,13 +20,13 @@ var V1 = function(d) {
     x.nom_societe = d.nomSociete;
     x.forme_juridique = config.formeJuridique[d.formeJuridique].long_name
 
-    x.plomberie = _.includes(d.categories, "PL");
-    x.chauffage = _.includes(d.categories, "CH");
-    x.electricite = _.includes(d.categories, "EL");
-    x.serrurerie = _.includes(d.categories, "SR");
-    x.vitrerie = _.includes(d.categories, "VT");
-    x.climatisation = _.includes(d.categories, "CL");
-    x.peinture = _.includes(d.categories, "PT");
+    x.plomberie = Number(_.includes(d.categories, "PL"));
+    x.chauffage = Number(_.includes(d.categories, "CH"));
+    x.electricite = Number(_.includes(d.categories, "EL"));
+    x.serrurerie = Number(_.includes(d.categories, "SR"));
+    x.vitrerie = Number(_.includes(d.categories, "VT"));
+    x.climatisation = Number(_.includes(d.categories, "CL"));
+    x.peinture = Number(_.includes(d.categories, "PT"));
 
     x.categorie = []
     _.each(d.categories, function(e) {

@@ -9,7 +9,7 @@ global.db = require(process.cwd() + '/server/edison_components/db.js')()
 var _ = require('lodash');
 var moment = require('moment')
 
-var V1 = requireLocal('config/_artisan_convert_v1');
+var V1 = requireLocal('config/_convert_artisan_V1');
 var id = process.argv[2] || _.random(0, 1000);
 console.log('ID=', id)
 db.model('artisan').findOne({
