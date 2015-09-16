@@ -114,7 +114,7 @@
                 ajout: _.get(getUser(d.ajoute_par), 'login') || "yohann_r"
             },
             date: {
-                ajout: d.date_ajout ? (d.date_ajout * 1000) : Date.now()
+                ajout: d.date_ajout ? ((d.date_ajout + 60 * 12) * 1000) : Date.now()
             },
             telephone: {
                 tel1: d.tel1,

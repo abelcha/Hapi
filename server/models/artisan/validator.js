@@ -1,6 +1,6 @@
 module.exports = function(schema) {
     var V1 = requireLocal('config/_convert_artisan_V1.js');
-
+    var moment = require('moment');
     var getSubStatus = function() {
         var _ = require('lodash');
         var d = this.document;

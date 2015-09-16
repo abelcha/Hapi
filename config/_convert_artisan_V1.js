@@ -214,7 +214,6 @@ V1.prototype.___data = {
     "categorie": "PLOMBERIE, CHAUFFAGE, CLIMATISATION, SERRURERIE",
     "cout_fourniture": "0",
     "distance": "0",
-    "facturier_num_manuel": "",
     "date_envoi_contrat": "",
     "tarif_prix_h": "0",
     "tarif_deplacement": "0",
