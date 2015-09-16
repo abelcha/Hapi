@@ -56,31 +56,34 @@
             return new Promise(function(resolve, reject) {
                 var V1 = requireLocal('config/_convert_V1');
                 var request = require("request");
-                request.get(core.singleDumpUrl(id), function(err, resp, body) {
-                    if (err || resp.statusCode !== 200 || !body || body == 'null') {
-                        new edison.event("DUMP_ONE", login, id, {
-                            rejected: true,
-                        })
-                        console.log('rejected', id)
-                        return reject('nope')
-                    }
-                    var v1 = JSON.parse(body)
-                    var v2 = core.toV2(v1)
-                    if (!convert)
-                        v2.date.dump = Date.now();
-                    new edison.event("DUMP_ONE" + core.NAME, login, parseInt(id), {
-                        v1: v1,
-                        v2: v2
-                    })
-                    core.model().findById(parseInt(id), function(err, doc) {
-                        if (doc) {
-                            doc = _.assign(doc, v2);
-                        } else {
-                            doc = core.model()(v2);
+                console.log(login)
+                _.delay(function() {
+                    request.get(core.singleDumpUrl(id), function(err, resp, body) {
+                        if (err || resp.statusCode !== 200 || !body || body == 'null') {
+                            new edison.event("DUMP_ONE", login, id, {
+                                rejected: true,
+                            })
+                            console.log('rejected', id)
+                            return reject('nope')
                         }
-                        doc.save().then(resolve, reject);
-                    })
-                });
+                        var v1 = JSON.parse(body)
+                        var v2 = core.toV2(v1)
+                        if (!convert)
+                            v2.date.dump = Date.now();
+                        new edison.event("DUMP_ONE" + core.NAME, login, parseInt(id), {
+                            v1: v1,
+                            v2: v2
+                        })
+                        core.model().findById(parseInt(id), function(err, doc) {
+                            if (doc) {
+                                doc = _.assign(doc, v2);
+                            } else {
+                                doc = core.model()(v2);
+                            }
+                            doc.save().then(resolve, reject);
+                        })
+                    });
+                }, login === "CMD" || 1000)
             })
         }
         return Dump;
