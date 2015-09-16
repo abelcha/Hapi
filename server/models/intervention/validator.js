@@ -74,6 +74,7 @@ module.exports = function(schema) {
                     id: doc.artisan.id
                 }).then(function(sst) {
                     if (sst) {
+                        sst.date.dump = Date.now();
                         sst.save().then();
                     }
                 })
