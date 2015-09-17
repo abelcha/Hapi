@@ -13,11 +13,25 @@ module.exports = function(core) {
         }
         return new Promise(function(resolve, reject) {
             core.model().find({}, {}).then(function(resp) {
+                var i = 0;
                 async.each(resp, function(e, cb) {
-                    e.save(function(err) {
-                        console.log(e.id);
-                        cb(null)
-                    })
+                    if (i++ % 100 === 0) {
+                        console.log(Math.round(i * 100 / resp.length) + '%')
+                    }
+                    var conditions = {
+                            _id: e.id
+                        },
+                        update = {
+                            $set: {
+                          //      sms:"lol"
+                                cache: core.minify(e)
+                            }
+                        },
+                        options = {
+                            multi: true
+                        };
+
+                    core.model().update(conditions, update, options, cb);
                 }, function(err) {
                     if (err) {
                         return reject(err);

@@ -40,7 +40,7 @@
                     <!-- 
                     <li><a href="#"><i class="dropdown-icon fa fa-cog"></i>&nbsp;&nbsp;Settings</a></li> -->
                     <li class="divider"></li>
-                    <li ><a ng-click="logout()"><i class="dropdown-icon fa fa-power-off"></i>&nbsp;&nbsp;Log Out</a></li>
+                    <li><a ng-click="logout()"><i class="dropdown-icon fa fa-power-off"></i>&nbsp;&nbsp;Log Out</a></li>
                 </ul>
                 </li>
                 </span>
@@ -59,7 +59,7 @@
                 <link fltr="i_all" icon="th-list" title="Tous les Interventions"></link>
                 <drop-down title="Mes Interventions" icon="calendar" open-default="user.service === 'INTERVENTION'">
                     <link fltr="i_tall" icon="th-list" color="default" text-white="true" bold="true" title="{{dateFormat}}" login="{{user.login}}"></link>
-                    <link fltr="i_tenv" icon="th-list" login="{{user.login}}"></link>
+                    <link fltr="i_tenv" icon="th-list" hash-model="en" login="{{user.login}}"></link>
                     <link fltr="i_apr" icon="th-list" color="primary" login="{{user.login}}"></link>
                     <link fltr="i_avr" icon="th-list" color="warning" login="{{user.login}}"></link>
                     <link fltr="i_fact" icon="th-list" color="danger" login="{{user.login}}"></link>
@@ -104,6 +104,11 @@
                 </drop-down>
                 <drop-down icon="suitcase" title="Management">
                     <link fltr="i_sarl" icon="th-list" login="{{user.login}}" hash-model="dm" title="Relances cheques"></link>
+                </drop-down>
+                <drop-down icon="calendar" title="Interventions">
+                    <link fltr="i_tenv" icon="th-list" login="{{user.login}}" hash-model="en" title="Envoyés"></link>
+                    <link fltr="i_avr" icon="th-list" color="warning" hash-model="en" login="{{user.login}}"></link>
+                    
                 </drop-down>
             </drop-down>
             <drop-down title="Service Comptabilité" icon="circle" open-default="user.service === 'COMPTABILITE'">

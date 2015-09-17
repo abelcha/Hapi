@@ -58,6 +58,7 @@ angular.module('edison').factory('ContextMenu', function($rootScope, $location, 
         });
         this.style.display = "block";
         this.active = true;
+        console.log('active')
     }
 
     ContextMenu.prototype.close = function() {

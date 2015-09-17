@@ -318,15 +318,16 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
             },
 
         },
-        getDistance: function(options) {
+        getDistance: function(origin, destination) {
             return $http({
                 method: 'GET',
                 cache: true,
                 url: '/api/mapGetDistance',
-                params: options
-            }).success(function(result) {
-                return result;
-            });
+                params: {
+                    origin: origin,
+                    destination: destination
+                }
+            })
         },
         request: function(options) {
             return $http({

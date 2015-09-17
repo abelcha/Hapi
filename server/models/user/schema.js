@@ -8,7 +8,10 @@ module.exports = function(db) {
         nom: String,
         prenom: String,
         pseudo: String,
-        login: String,
+        login: {
+            type: String,
+            required: true
+        },
         _id: String,
         service: String,
         ligne: String,

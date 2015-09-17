@@ -10,6 +10,8 @@ md-switch.md-checked.md-primary .md-bar {
     padding: 3px;
 }
 
+.hide-sidebar {}
+
 .spacer,
 .spacer-md {
     height: 0.5cm;
@@ -144,6 +146,7 @@ body {
 }
 
 .listeInterventions {
+    overflow: hidden;
     padding: 12px;
     padding-bottom: 21px;
     min-height: 700px;

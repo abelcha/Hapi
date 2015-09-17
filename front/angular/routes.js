@@ -96,6 +96,7 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
             templateUrl: "Pages/Intervention/intervention.html",
             controller: "InterventionController",
             controllerAs: "vm",
+            reloadOnSearch: false,
             resolve: {
                 interventionPrm: getIntervention,
             }

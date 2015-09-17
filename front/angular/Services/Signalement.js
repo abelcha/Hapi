@@ -34,13 +34,7 @@ angular.module('edison').factory('Signalement', function() {
                 console.log('PLAINTE')
             }
         }],
-        compta: [{
-            name: 'Régulation',
-            id: 'REGULATION',
-            fn: function() {
-                console.log('REGULATION')
-            }
-        }]
+        compta: []
     }
     return Signalement;
 });

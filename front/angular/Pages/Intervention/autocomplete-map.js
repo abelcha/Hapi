@@ -10,7 +10,7 @@
                  client: "=",
                  height: "@",
                  xmarkers: "=",
-                 addressChange: '&',
+                 markerClick: '&',
                  isNew: "=",
                  firstAddress: "="
              },
@@ -43,9 +43,6 @@
                          scope.map.setZoom(12);
                          scope.map.setCenter(addr)
                          scope.client.address = addr;
-                         scope.addressChange({
-                             test: 123
-                         });
                      });
                  }
 
@@ -63,7 +60,9 @@
                      return scope.client.address && scope.client.address.latLng;
                  }
                  scope.clickOnArtisanMarker = function(event, sst) {
-                     scope.data.sst = sst.id;
+                    scope.markerClick({
+                        sst:sst
+                    })
                  }
              }
          }

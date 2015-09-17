@@ -52,8 +52,8 @@
                  scope.exFltr = filtersFactory.getFilterByName(scope.fltr);
                  scope.total = findTotal();
                  scope._url = scope.exFltr.url.length ? "/" + scope.exFltr.url : scope.exFltr.url;
-                 scope._login = scope.login ? ("#" + scope.login) : '';
-                 scope._hashModel = scope.hashModel ? ("?hashModel=" + scope.hashModel) : '';
+                 scope._login = scope.login && !scope.hashModel ? ("#" + scope.login) : '';
+                 scope._hashModel = scope.hashModel ? ("?" + scope.hashModel + "=" + scope.login) : '';
                  scope.fullUrl = scope.url ||  ('/' + scope._model + '/list' + scope._url + scope._hashModel + scope._login)
              })
 
@@ -116,10 +116,12 @@
 
  });
 
+
+
  angular.module('edison').directive('sideBar', ['sidebarSM', function(sidebarSM) {
      "use strict";
      return {
-         replace: true,
+         replace: false,
          restrict: 'E',
          templateUrl: '/Directives/side-bar.html',
          transclude: true,

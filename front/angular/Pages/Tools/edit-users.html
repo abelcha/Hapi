@@ -13,9 +13,6 @@
             <thead>
                 <tr>
                     <th>Login</th>
-                    <th>Nom</th>
-                    <th>Prenom</th>
-                    <th>Portable</th>
                     <th>Email</th>
                     <th>Pseudo</th>
                     <th>Service</th>
@@ -32,22 +29,18 @@
                         <input type="text" class="form-control" ng-model="p.login">
                     </td>
                     <td>
-                        <input type="text" class="form-control" ng-model="p.nom">
-                    </td>
-                    <td>
-                        <input type="text" class="form-control" ng-model="p.prenom">
-                    </td>
-                    <td>
-                        <input type="text" class="form-control" ng-model="p.portable">
-                    </td>
-                    <td>
                         <input type="text" class="form-control" ng-model="p.email">
                     </td>
                     <td>
                         <input type="text" class="form-control" ng-model="p.pseudo">
                     </td>
                     <td>
-                        <input type="text" class="form-control" ng-model="p.service">
+                        <select class="form-control" ng-model="p.service">
+                            <option value="INTERVENTION">INTERVENTION</option>
+                            <option value="PARTENARIAT">PARTENARIAT</option>
+                            <option value="INFORMATIQUE">INFORMATIQUE</option>
+                            <option value="COMPTABILITE">COMPTABILITE</option>
+                        </select>
                     </td>
                     <td>
                         <input type="text" class="form-control" ng-model="p.ligne">

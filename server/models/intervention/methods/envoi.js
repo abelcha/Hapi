@@ -27,7 +27,7 @@ module.exports = function(schema) {
             var path = [process.cwd(), 'front', 'assets', 'pdf', file].join('/')
             fs.readFile(path, function(err, buffer) {
                 if (err)
-                    return reject( err );
+                    return reject(err);
                 return resolve({
                     data: buffer,
                     name: String(file),
@@ -212,6 +212,7 @@ module.exports = function(schema) {
                     var filesPromises = [
                         getOS(inter)
                     ]
+                    console.log('uau')
                     if (!envDev) {
 
                         filesPromises.push(getFacturier(inter));
@@ -248,13 +249,14 @@ module.exports = function(schema) {
                         inter.fileSupp = req.body.file;
                         inter.__login = req.session.pseudo || 'Arnaud';
                         inter.datePlain = moment.tz(new Date(inter.date.intervention), "Europe/Paris").format('DD/MM/YYYY à HH\\hmm')
-                        var text = _.template(template.mail.intervention.os())(inter).replaceAll('\n', '<br>')
+                        var text = template.mail.intervention.os(req.session)
+                        text = _.template(text)(inter).replaceAll('\n', '<br>')
 
                         var communication = {
                             telephone: envProd ? inter.sst.telephone.tel1 : req.session.portable,
-                            mailDest: envProd ? inter.sst.email : (req.session.email || 'contact@edison-services.fr'),
-                            mailBcc: envProd ? (req.session.email || 'contact@edison-services.fr') : undefined,
-                            mailReply: (req.session.email || 'contact@edison-services.fr')
+                            mailDest: envProd ? inter.sst.email : (req.session.email ||  'contact@edison-services.fr'),
+                            mailBcc: envProd ? (req.session.email ||  'contact@edison-services.fr') : undefined,
+                            mailReply: (req.session.email ||  'contact@edison-services.fr')
                         }
 
                         var mailOptions = {

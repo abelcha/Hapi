@@ -408,6 +408,7 @@ FiltersFactory.prototype.list = {
     }, {
         short_name: 'i_tenv',
         long_name: 'Envoyé',
+        group: '$login.envoi',
         url: 'envoyeAjd',
         aggregate: function() {
             return [{
@@ -2117,7 +2118,7 @@ module.exports = {
                 sms += this.prixAnnonce ? this.prixAnnonce + "€ HT. " : "Pas de prix annoncé. ";
                 sms += "\nMerci de prendre rdv avec le client au " + this.client.telephone.tel1;
                 sms += this.client.telephone.tel2 ? " ou au " + this.client.telephone.tel2 : "";
-                sms += '\n' + (_.startCase(user.pseudo) ||  "Arnaud") + ',\n';
+                sms += '\nM. ' + (user.pseudo ||  "Arnaud") + ',\n';
                 sms += "Ligne directe: " + (user.ligne ? (user.ligne.match(/.{2}|.{1,2}/g).join('.')) :  "09.72.42.30.00") + "\n";
                 return sms + "Edison Services."
             },
@@ -2127,7 +2128,7 @@ module.exports = {
                     "Pourriez-vous vous rendre disponible ?\n" +
                     "Merci de nous contacter au plus vite au 09.72.42.30.00.\n" +
                     "Merci d'avance pour votre réponse.\n" +
-                    "\nM." + (_.startCase(user.pseudo) ||  "Arnaud") + "\n" +
+                    "\nM." + (user.pseudo ||  "Arnaud") + "\n" +
                     "Ligne Directe " + (user.ligne ? (user.ligne.match(/.{2}|.{1,2}/g).join('.')) :  "09.72.42.30.00") + "\n" +
                     "Edison Services"
             }
@@ -2216,7 +2217,6 @@ module.exports = {
                     "Fax. 09.72.39.33.46\n";
             },
             os: function(user) {
-                xxx
                 return "A l'attention de l’entreprise {{sst.nomSociete}}\n" +
                     "\n" +
                     "Monsieur <strong>{{sst.representant.nom}}</strong>,\n" +
@@ -2254,7 +2254,7 @@ module.exports = {
                     "<% if (fileSupp) {%> • {{textfileSupp}} <%}%>\n" +
                     "</strong>" +
                     "\n" +
-                    "<strong>Pour tous renseignements supplémentaires, vous pouvez joindre " + (_.startCase(user.pseudo) ||  "Arnaud") +
+                    "<strong>Pour tous renseignements supplémentaires, vous pouvez joindre " + (user.pseudo ||  "Arnaud") +
                     " au " +
                     (user.ligne ? (user.ligne.match(/.{2}|.{1,2}/g).join('.')) :  "09.72.42.30.00") + "</strong>\n" +
                     "\n" +
@@ -2265,7 +2265,7 @@ module.exports = {
             envoi: function(user) {
                 var config = require('./dataList.js')
                 var categorieClean = config.categories[this.categorie].suffix + " " + config.categories[this.categorie].long_name.toLowerCase()
-                var pseudo = _.startCase(user.pseudo)
+                var pseudo = user.pseudo
                 var intro;
                 if (this.client.civilite === "Soc.") {
                     intro = _.template("À l'intention du responsable de la société {{_.startCase(client.nom.toLowerCase())}},\n\n")(this);
@@ -2331,7 +2331,6 @@ module.exports = {
                         "Merci de me tenir au courant de la suite que vous donnerez à ce devis. \n\n";
 
                 }
-                console.log('-->', user)
                 var outro = "Cordialement, \n\n" +
                     (user.pseudo ||  "Arnaud,") + '\n' +
                     "<strong>Ligne Directe : " + (user.ligne ? (user.ligne.match(/.{2}|.{1,2}/g).join('.')) :  "09.72.42.30.00") + "</strong>\n" +

@@ -9,6 +9,26 @@
          currentFilter = filtersFactory.getFilterByUrl($routeParams.fltr)
      }
 
+
+     if (_this.embedded) {
+         _this.$watch('filter', function() {
+             if (_.size(_this.filter)) {
+                 _this.customFilter = function(inter) {
+                     for (var i in _this.filter) {
+                         if (_this.filter[i] !== inter[i])
+                             return false
+                     }
+                     return true
+                 }
+                 if (_this.tableParams) {
+                     dataProvider.applyFilter(currentFilter, _this.tab.hash, _this.customFilter);
+                     _this.tableParams.reload();
+                 }
+             }
+         })
+
+     }
+
      _this.smallWin = window.innerWidth < 1200
      $(window).resize(function() {
          _this.smallWin = window.innerWidth < 1200
@@ -40,8 +60,9 @@
              if (e !== "hashModel") {
                  $location.search(k, e);
 
-             } else
-                 console.log(e)
+             } else {
+                 //console.log(e)
+             }
          })
      }, 250)
 
@@ -55,12 +76,11 @@
              sorting: {
                  id: 'desc'
              },
-             count: 100
+             count: _this.limit || 100
          };
          var tableSettings = {
              total: dataProvider.filteredData,
              getData: function($defer, params) {
-                 console.log(params.filter())
                  actualiseUrl(params.filter(), params.page())
                  var data = dataProvider.filteredData;
                  data = $filter('tableFilter')(data, params.filter());
@@ -129,9 +149,12 @@
          restrict: 'E',
          templateUrl: '/Templates/lineup-intervention.html',
          scope: {
+             limit: '=',
+             embedded: '=',
              filter: '=',
          },
          controller: function($scope) {
+
              $scope.model = 'intervention'
              Controller.apply($scope, arg)
          }
@@ -163,10 +186,11 @@
          restrict: 'E',
          templateUrl: '/Templates/lineup-artisan.html',
          scope: {
-             filter: '=',
+
          },
          controller: function($scope) {
              $scope.model = 'artisan'
+
              Controller.apply($scope, arg)
          }
      }
