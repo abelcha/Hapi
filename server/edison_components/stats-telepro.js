@@ -69,7 +69,7 @@ var mergeFilters = function(allFilters, model) {
 
 
 module.exports = {
-    reload: function() {
+    reload: _.throttle(function() {
         return new Promise(function(resolve, reject) {
 
             try {
@@ -111,7 +111,7 @@ module.exports = {
                 __catch(e)
             }
         });
-    },
+    }, 5000),
     get: function(req, res) {
         var _this = this;
 
