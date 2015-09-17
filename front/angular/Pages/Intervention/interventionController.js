@@ -200,8 +200,8 @@ var InterventionCtrl = function(Description, Signalement, ContextMenu, $window, 
     }
 
     _this.showInterList = function() {
-        console.log('uauau')
-        $scope.interList = true;
+        //console.log('uauau')
+        //$scope.interList = true;
     }
 
     if (intervention.sst) {
