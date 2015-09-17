@@ -1013,6 +1013,7 @@ module.exports = [{
         desc: "Remise en conformité électrique NF C15-100\n" +
             "Identification des circuits électriques\n" +
             "Schéma électrique\n",
+        pu: 0
     }, {
         desc: "TABLEAU ELECTRIQUE 1 RANGEE - 13 MODULES",
         title: "TABLEAU ELECTRIQUE 1 RANGEE - 13 MODULES",
@@ -1129,7 +1130,7 @@ module.exports = [{
     title: "Devis chauffe-eau gaz ELM LEBLANC",
     ref: "DEVIS_CHF_EAU_ELM",
     text: "<u>devis de remplacement de votre chauffe-eau gaz</u>",
-        produits: [{
+    produits: [{
         title: "Installation d’un chauffe-eau gaz (eau chaude sanitaire)",
         desc: "Installation d’un chauffe-eau gaz (eau chaude sanitaire)\n" +
             "Dépose complète de l’existant\n" +
@@ -1171,7 +1172,7 @@ module.exports = [{
     title: "Devis chaudière gaz mural ELM LEBLANC avec ECS",
     ref: "DEVIS_CHD_GM_ELM",
     text: "<u>devis de remplacement de votre chaudière gaz</u>",
-        produits: [{
+    produits: [{
         title: "Installation d’une chaudière gaz (chauffage + eau chaude sanitaire)\n" +
             "Dépose complète de l’existant\n" +
             "Mise à la décharge de l’unité de chauffage existante" +
