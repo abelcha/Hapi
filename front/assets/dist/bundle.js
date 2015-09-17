@@ -1013,7 +1013,8 @@ module.exports = [{
         desc: "Remise en conformité électrique NF C15-100\n" +
             "Identification des circuits électriques\n" +
             "Schéma électrique\n",
-        pu: 0
+        pu: 0,
+        quantite:1
     }, {
         desc: "TABLEAU ELECTRIQUE 1 RANGEE - 13 MODULES",
         title: "TABLEAU ELECTRIQUE 1 RANGEE - 13 MODULES",
