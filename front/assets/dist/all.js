@@ -625,6 +625,7 @@ angular.module('edison').directive('ngEnter', function () {
 
      if (_this.embedded) {
          _this.$watch('filter', function() {
+            console.log('FILTER_CHANGE')
              if (_.size(_this.filter)) {
                  _this.customFilter = function(inter) {
                      for (var i in _this.filter) {
@@ -4223,6 +4224,7 @@ var InterventionCtrl = function(Description, Signalement, ContextMenu, $window, 
     _this.contextMenu = new ContextMenu('intervention')
     _this.contextMenu.setData(intervention);
     _this.rowRightClick = function($event, inter) {
+        console.log($event.target)
         _this.contextMenu.setPosition($event.pageX, $event.pageY + 150)
         _this.contextMenu.open();
     }
@@ -4355,12 +4357,14 @@ var InterventionCtrl = function(Description, Signalement, ContextMenu, $window, 
             }),
             edisonAPI.artisan.getStats(sst.id, {
                 cache: true
-            }),
-            edisonAPI.getDistance(latLng(sst.address), latLng(intervention.client.address))
+            })
         ]).then(function(result) {
             intervention.sst = intervention.artisan = result[0].data;
             intervention.sst.stats = result[1].data
-            intervention.sst.stats.direction = result[2].data;
+            edisonAPI.getDistance(latLng(sst.address), latLng(intervention.client.address))
+                .then(function(dir) {
+                    intervention.sst.stats.direction = dir.data;
+                })
             _this.recapFltr = {
                 ai: intervention.sst.id
             }

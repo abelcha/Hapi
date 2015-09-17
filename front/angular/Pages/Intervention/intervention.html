@@ -95,7 +95,7 @@
                                 <a href="/artisan/{{vm.data.sst.id}}/recap#interventions">
                                     <button class="btn--no-conflicts btn--m btn--orange btn--flat" lx-ripple>Recap'</button>
                                 </a>
-                                <button class="btn--no-conflicts btn--m btn--black btn--flat" ng-click="showInterList = !showInterList" lx-ripple>Interventions</button>
+                                <button class="btn--no-conflicts btn--m btn--black btn--flat {{showInterList ? 'grey lighten-3' : ''}}" ng-click="showInterList = !showInterList" lx-ripple>Interventions</button>
                                 <lx-dropdown position="right" from-top="true" style="float:right" ng-if="vm.data.sst.id">
                                     <button class="btn--no-conflicts btn--m btn--black btn--flat" lx-ripple lx-dropdown-toggle>
                                         Signalement

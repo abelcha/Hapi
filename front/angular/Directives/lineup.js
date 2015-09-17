@@ -12,6 +12,7 @@
 
      if (_this.embedded) {
          _this.$watch('filter', function() {
+            console.log('FILTER_CHANGE')
              if (_.size(_this.filter)) {
                  _this.customFilter = function(inter) {
                      for (var i in _this.filter) {
