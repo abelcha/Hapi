@@ -67,6 +67,10 @@ var InterventionCtrl = function(Description, Signalement, ContextMenu, $window, 
         return false;
     });
 
+    $scope.hideSignalements = function() {
+        $scope.showSignalement = false;
+    }
+
     $scope.calculPrixFinal = function() {
         intervention.prixFinal = 0;
         _.each(intervention.produits, function(e)  {
@@ -170,7 +174,6 @@ var InterventionCtrl = function(Description, Signalement, ContextMenu, $window, 
     var latLng = function(add) {
         return add.lt + ', ' + add.lg
     }
-
     _this.selectArtisan = function(sst) {
         if (!sst) {
             intervention.sst = intervention.artisan = null
@@ -194,6 +197,11 @@ var InterventionCtrl = function(Description, Signalement, ContextMenu, $window, 
                 ai: intervention.sst.id
             }
         });
+    }
+
+    _this.showInterList = function() {
+        console.log('uauau')
+        $scope.interList = true;
     }
 
     if (intervention.sst) {

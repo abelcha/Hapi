@@ -22,12 +22,13 @@
                                 <span class="fs-headline display-block">
          <button ng-click="vm.data.categorie = undefined" style="float:left" class="btn--no-conflicts btn--m {{config.categories[vm.data.categorie].color}} btn--flat" lx-ripple> {{config.categories[vm.data.categorie].long_name}}</button></span>
                                 <div class="fs-body-1 mt+" style="padding-top:10px">
-                                    <edison-map first-address="firstAddress" is-new="vm.isNew" data="vm.data" client="vm.data.client" xmarkers="vm.nearestArtisans" marker-click="vm.selectArtisan(sst)" height="small"></edison-map>
+                                    <signalement exit="hideSignalements()" sst="vm.data.sst" ng-if="vm.data.sst && showSignalement"></signalement>
+                                    <edison-map ng-show="!showSignalement" first-address="firstAddress" is-new="vm.isNew" data="vm.data" client="vm.data.client" xmarkers="vm.nearestArtisans" marker-click="vm.selectArtisan(sst);vm.showInterList()" height="small"></edison-map>
                                 </div>
                                 <div class="p+" ng-if="!vm.data.sst.id">
                                     <h1 center style="font-size: 40px;margin-top:55px">A PROGRAMMER</h1>
                                 </div>
-                                <div class="p+" ng-if="vm.data.sst.id">
+                                <div class="p+" ng-if="vm.data.sst.id" ng-show="!showSignalement">
                                     <span class="fs-subhead tc-black-2 display-block">
                                     {{vm.data.sst.nomSociete}} - M. {{vm.data.sst.representant.nom}} {{vm.data.sst.representant.prenom}}</span>
                                     <div class="paragraph fs-body-1" style="height:90px;">
@@ -59,111 +60,31 @@
                                 </div>
                             </div>
                             <div class="card__actions" style="border-bottom: 2px solid rgba(0, 0, 0, .12);">
-                                <lx-dropdown position="right" from-top="true" style="float:right" ng-if="vm.data.sst.id">
-                                    <lx-dropdown-menu>
-                                        <ul>
-                                            <li ng-repeat="p in vm.phones()">
-                                                <a class="dropdown-link dropdown-link--is-large">
-                                                    <i class="mdi mdi-cloud"></i>
-                                                    <span>{{p}}</span>
-                                                </a>
-                                            </li>
-                                            <!--    <li ng-click="vm.signalement.get('intervention')">
-                                                <a class="dropdown-link dropdown-link--is-large">
-                                                    <i class="mdi mdi-eye"></i>
-                                                    <span>Service Intervention</span>
-                                                </a>
-                                            </li>
-                                            <li><span class="dropdown-link dropdown-link--is-header">Header</span></li>
-                                            <li ng-click="vm.signalement.get('partenariat')">
-                                                <a class="dropdown-link dropdown-link--is-large">
-                                                    <i class="mdi mdi-account-plus"></i>
-                                                    <span>Service Partenariat</span>
-                                                </a>
-                                            </li>
-                                            <li><span class="dropdown-link dropdown-link--is-header">Header</span></li>
-                                            <li ng-click="vm.signalement.get('compta')">
-                                                <a class="dropdown-link dropdown-link--is-large">
-                                                    <i class="mdi mdi-link"></i>
-                                                    <span>Service Comptabilité</span>
-                                                </a>
-                                            </li> -->
-                                        </ul>
-                                    </lx-dropdown-menu>
-                                </lx-dropdown>
+                            
                                 <button class="btn--no-conflicts btn--m btn--blue btn--flat" lx-ripple ng-click="smsArtisan(vm.data.sst)">SMS</button>
                                 <a href="/artisan/{{vm.data.sst.id}}/recap#interventions">
                                     <button class="btn--no-conflicts btn--m btn--orange btn--flat" lx-ripple>Recap'</button>
                                 </a>
-                                <button class="btn--no-conflicts btn--m btn--black btn--flat {{showInterList ? 'grey lighten-3' : ''}}" ng-click="showInterList = !showInterList" lx-ripple>Interventions</button>
-                                <lx-dropdown position="right" from-top="true" style="float:right" ng-if="vm.data.sst.id">
-                                    <button class="btn--no-conflicts btn--m btn--black btn--flat" lx-ripple lx-dropdown-toggle>
-                                        Signalement
-                                    </button>
-                                    <lx-dropdown-menu>
-                                        <ul>
-                                            <li ng-repeat="sign in vm.signalement.list.intervention">
-                                                <a class="dropdown-link dropdown-link--is-large">
-                                                    <i class="mdi mdi-cloud"></i>
-                                                    <span>{{sign.name}}</span>
-                                                </a>
-                                            </li>
-                                            <li class="dropdown-divider"></li>
-                                            <li ng-repeat="sign in vm.signalement.list.partenariat">
-                                                <a class="dropdown-link dropdown-link--is-large">
-                                                    <i class="mdi mdi-account"></i>
-                                                    <span>{{sign.name}}</span>
-                                                </a>
-                                            </li>
-                                            <li class="dropdown-divider"></li>
-                                            </li>
-                                            <li ng-repeat="sign in vm.signalement.list.compta">
-                                                <a class="dropdown-link dropdown-link--is-large">
-                                                    <i class="mdi mdi-coin"></i>
-                                                    <span>{{sign.name}}</span>
-                                                </a>
-                                            </li>
-                                            <!--    <li ng-click="vm.signalement.get('intervention')">
-                                                <a class="dropdown-link dropdown-link--is-large">
-                                                    <i class="mdi mdi-eye"></i>
-                                                    <span>Service Intervention</span>
-                                                </a>
-                                            </li>
-                                            <li><span class="dropdown-link dropdown-link--is-header">Header</span></li>
-                                            <li ng-click="vm.signalement.get('partenariat')">
-                                                <a class="dropdown-link dropdown-link--is-large">
-                                                    <i class="mdi mdi-account-plus"></i>
-                                                    <span>Service Partenariat</span>
-                                                </a>
-                                            </li>
-                                            <li><span class="dropdown-link dropdown-link--is-header">Header</span></li>
-                                            <li ng-click="vm.signalement.get('compta')">
-                                                <a class="dropdown-link dropdown-link--is-large">
-                                                    <i class="mdi mdi-link"></i>
-                                                    <span>Service Comptabilité</span>
-                                                </a>
-                                            </li> -->
-                                        </ul>
-                                    </lx-dropdown-menu>
-                                </lx-dropdown>
+                                <button class="btn--no-conflicts btn--m btn--black btn--flat {{interList ? 'grey lighten-3' : ''}}" ng-click="interList = !interList" lx-ripple>Interventions</button>
+                                <button style="float:right" class="btn--no-conflicts btn--m btn--black btn--flat {{showSignalement ? 'grey lighten-3' : ''}}" ng-click="showSignalement = !showSignalement" lx-ripple>Signalement</button>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-4" style="padding: 0;">
                         <div class="card">
                             <div class="p+" style='overflow:hidden;'>
-                                <strong class="fs-headline display-block">Artisans <button class="btn" ng-click="vm.selectArtisan(sst)">Reinit</button></strong>
+                                <strong class="fs-headline display-block">Artisans <button class="btn" ng-click="vm.selectArtisan(null);">Reinit</button></strong>
                                 <span class="fs-subhead tc-black-2 display-block select-style-neutral">
                                 <div  class="paragraph fs-body-1 mt+" slimscroll="{height:474}" style="height: 474px;">
                                     <table ng-if="vm.nearestArtisans.length" class="table table-condensed" style="padding:0;color:black">
                                         <tbody>
                                          <tr><td colspan="12" style="text-align:center;border-top: 0px;"><h4 style="margin: 0;">Actifs</h4></td></tr>
-                                            <tr ng-repeat="sst in vm.nearestArtisans"  ng-if="sst.status == 'ACT'" ng-class="sst.id == vm.data.sst.id ? 'success' : ''" ng-click="vm.selectArtisan(sst)">
+                                            <tr ng-repeat="sst in vm.nearestArtisans" ng-if="sst.status == 'ACT'" ng-class="sst.id == vm.data.sst.id ? 'success' : ''" ng-click="vm.selectArtisan(sst);vm.showInterList()">
                                                 <td variable-length style="text-align:left">{{sst.nomSociete}} <small class="{{config.artisanSubStatus[sst.subStatus].color}}-text">{{config.artisanSubStatus[sst.subStatus].long_name}}</small></td>
                                                 <td ng-class="{'red-text': sst.zoneChalandise < sst.distance}">{{sst.distance}} km</td>
                                             </tr>
                                          <tr><td colspan="12" style="text-align:center;border-top: 0px;"><h4 style="margin: 0;">Potentiels</h4></td></tr>
-                                         <tr ng-repeat="sst in vm.nearestArtisans" ng-if="sst.status == 'POT'" ng-class="sst.id == vm.data.sst.id ? 'success' : ''" ng-click="vm.selectArtisan(sst)">
+                                         <tr ng-repeat="sst in vm.nearestArtisans" ng-if="sst.status == 'POT'" ng-class="sst.id == vm.data.sst.id ? 'success' : ''" ng-click="vm.selectArtisan(sst);vm.showInterList()">
                                                 <td variable-length style="text-align:left">{{sst.nomSociete}} <small class="{{config.artisanSubStatus[sst.subStatus].color}}-text">{{config.artisanSubStatus[sst.subStatus].long_name}}</small></td>
                                                 <td ng-class="{'red-text': sst.zoneChalandise < sst.distance}">{{sst.distance}} km</td>
                                             </tr>
@@ -185,7 +106,7 @@
                     </div>
                 </div>
                 <div class="card-margin">
-                 <lineup-intervention ng-if="vm.recapFltr && showInterList" embedded="true" limit="10" filter="vm.recapFltr"></lineup-intervention>
+                 <lineup-intervention ng-if="vm.recapFltr && interList" embedded="true" limit="10" filter="vm.recapFltr"></lineup-intervention>
                  </div>
                  <br>
                  <br>
