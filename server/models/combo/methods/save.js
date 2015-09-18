@@ -13,7 +13,7 @@ module.exports = function(schema) {
                     return reject('Veuillez rentrer un text pour le mail') && false;
                 }
                 if (!combo.ref) {
-                    combo.ref = combo.title.toUpperCase().slice(0, 10);
+                    combo.ref = _.snakeCase(combo.title).toUpperCase().slice(0, 10);
                 }
                 _.each(combo.produits, function(e) {
                     if (!e.ref) {

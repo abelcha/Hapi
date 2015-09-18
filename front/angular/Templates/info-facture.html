@@ -22,7 +22,7 @@
                     </div>
                     <div class="col-md-3 col-md-offset-1" ng-if="data.facture.payeur === 'GRN'">
                         <div class="select-style text-field">
-                            <select ng-model="data.facture.compte" ng-change="changeGrandCompte()" ng-options="f.short_name as f.long_name for f in config.compteFacturation">
+                            <select ng-model="data.facture.compte" ng-change="changeGrandCompte()" ng-options="f.ref as f.nom for f in grndComptes">
                             </select>
                             <label ng-class="{'selected' : data.facture.compte}">Compte</label>
                         </div>

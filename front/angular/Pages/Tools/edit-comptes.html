@@ -1,0 +1,42 @@
+<div class="card margin">
+    <div class="p+" style="width:95%">
+        <div class="row">
+            <div class="col-sm-4">
+                <input placeholder="Rechercher..." type="text" ng-model="search" class="form-control">
+            </div>
+        </div>
+        <br>
+        <table class="table table-bordered produits">
+            <thead>
+                <tr>
+                    <th>Compte</th>
+                    <th>Supp.</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat-start="p in pl">
+                    <td ng-click="p.open = !p.open">
+                        <h3>{{p.nom}}</h3>
+                    </td>
+                    <td style="width:1%">
+                        <button class="btn--no-conflicts btn--l btn--red btn--icon" ng-click="usrs.splice($index, 1)">
+                            <i class="fa fa-remove"></i>
+                        </button>
+                    </td>
+                </tr>
+                <tr ng-repeat-end ng-if="p.open" class="grey lighten-3">
+                    <td   >
+                        <info-facture data="{facture:p}"></info-facture>
+                    </td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="fab" style="position: fixed;right: 40px;z-index: 999;top: 87%;">
+        <button ng-click="vm.save()" class="btn--no-conflicts btn--l btn--black btn--fab green"><i class="fa fa-check"></i></button>
+    </div>
+    <div class="fab" style="position: fixed;right: 100px;z-index: 999;top: 87%;">
+        <button ng-click="pl.push({open:true})" class="btn--no-conflicts btn--l btn--black btn--fab blue"><i class="fa fa-plus"></i></button>
+    </div>
+</div>

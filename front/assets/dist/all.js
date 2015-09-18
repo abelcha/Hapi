@@ -411,6 +411,11 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
             controller: "editProducts",
             controllerAs: "vm",
         })
+        .when('/tools/editComptes', {
+            templateUrl: "Pages/Tools/edit-comptes.html",
+            controller: "editComptes",
+            controllerAs: "vm",
+        })
         .when('/tools/editCombos', {
             templateUrl: "Pages/Tools/edit-combos.html",
             controller: "editCombos",
@@ -1393,6 +1398,14 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
             },
             save: function(data) {
                 return $http.post('/api/product/__save', data);
+            }
+        },
+        compte: {
+            list: function() {
+                return $http.get('/api/compte/list');
+            },
+            save: function(data) {
+                return $http.post('/api/compte/__save', data);
             }
         },
          combo: {
@@ -3443,37 +3456,40 @@ angular.module('edison').factory('user', function($window) {
     return $window.app_session;
 });
 
- angular.module('edison').directive('infoFacture', ['config', 'mapAutocomplete',
-     function(config, mapAutocomplete) {
-         "use strict";
-         return {
-             restrict: 'E',
-             templateUrl: '/Templates/info-facture.html',
-             scope: {
-                 data: "=",
-             },
-             link: function(scope, element, attrs) {
-                 var model = scope.data;
-                 scope.config = config
-                 scope.autocomplete = mapAutocomplete;
-                 scope.changeAddressFacture = function(place) {
-                     mapAutocomplete.getPlaceAddress(place).then(function(addr) {
-                         scope.data.facture = scope.data.facture ||  {}
-                         scope.data.facture.address = addr;
-                     });
-                 }
-                 scope.changeGrandCompte = function() {
-                     // var x = _.clone(config.compteFacturation[scope.data.facture.compte])
-                     scope.data.facture = _.find(config.compteFacturation, {
-                         short_name: scope.data.facture.compte
-                     });
-                     scope.data.facture.payeur = "GRN";
-                 }
-             },
-         }
+ angular.module('edison').directive('infoFacture', function(mapAutocomplete, edisonAPI,config) {
+     "use strict";
+     return {
+         restrict: 'E',
+         templateUrl: '/Templates/info-facture.html',
+         scope: {
+             data: "=",
+         },
+         link: function(scope, element, attrs) {
+             var model = scope.data;
+             scope.config = config;
+             scope.autocomplete = mapAutocomplete;
+             scope.changeAddressFacture = function(place) {
+                 mapAutocomplete.getPlaceAddress(place).then(function(addr) {
+                     scope.data.facture = scope.data.facture ||  {}
+                     scope.data.facture.address = addr;
+                 });
+             }
+             edisonAPI.compte.list().then(function(resp) {
+                console.log(resp.data)
+                 scope.grndComptes = resp.data
+             })
 
+             scope.changeGrandCompte = function() {
+                 // var x = _.clone(config.compteFacturation[scope.data.facture.compte])
+                 var x  = scope.data.facture.compte
+                 scope.data.facture = _.find(scope.grndComptes, 'ref', scope.data.facture.compte);
+                 scope.data.facture.payeur = "GRN";
+                 scope.data.facture.compte = x;
+             }
+         },
      }
- ]);
+
+ });
 
 angular.module('edison').directive('infoFourniture', ['config', 'fourniture',
     function(config, fourniture) {
@@ -3497,44 +3513,6 @@ angular.module('edison').directive('infoFourniture', ['config', 'fourniture',
     }
 ]);
 
-
-var archiveReglementController = function(edisonAPI, tabContainer, $routeParams, $location, LxProgressService) {
-
-    var tab = tabContainer.getCurrentTab();
-    var _this = this;
-    _this.title = 'Archives Reglements'
-    tab.setTitle('archives RGL')
-    LxProgressService.circular.show('#5fa2db', '#globalProgress');
-    edisonAPI.compta.archivesReglement().success(function(resp) {
-        LxProgressService.circular.hide()
-        _this.data = resp
-    })
-    _this.moment = moment;
-    _this.openLink = function(link) {
-        $location.url(link)
-    }
-}
-
-angular.module('edison').controller('archivesReglementController', archiveReglementController);
-
-var archivesPaiementController = function(edisonAPI, tabContainer, $routeParams, $location, LxProgressService) {
-    var _this = this;
-    var tab = tabContainer.getCurrentTab();
-    _this.type = 'paiement'
-    _this.title = 'Archives Paiements'
-    tab.setTitle('archives PAY')
-    LxProgressService.circular.show('#5fa2db', '#globalProgress');
-    edisonAPI.compta.archivesPaiement().success(function(resp) {
-        LxProgressService.circular.hide()
-        _this.data = resp
-    })
-    _this.moment = moment;
-    _this.openLink = function(link) {
-        $location.url(link)
-    }
-}
-
-angular.module('edison').controller('archivesPaiementController', archivesPaiementController);
 
  angular.module('edison').directive('artisanCategorie', ['config', function(config) {
      "use strict";
@@ -3643,6 +3621,44 @@ var ArtisanCtrl = function($rootScope, $scope, edisonAPI, $location, $routeParam
     }
 }
 angular.module('edison').controller('ArtisanController', ArtisanCtrl);
+
+var archiveReglementController = function(edisonAPI, tabContainer, $routeParams, $location, LxProgressService) {
+
+    var tab = tabContainer.getCurrentTab();
+    var _this = this;
+    _this.title = 'Archives Reglements'
+    tab.setTitle('archives RGL')
+    LxProgressService.circular.show('#5fa2db', '#globalProgress');
+    edisonAPI.compta.archivesReglement().success(function(resp) {
+        LxProgressService.circular.hide()
+        _this.data = resp
+    })
+    _this.moment = moment;
+    _this.openLink = function(link) {
+        $location.url(link)
+    }
+}
+
+angular.module('edison').controller('archivesReglementController', archiveReglementController);
+
+var archivesPaiementController = function(edisonAPI, tabContainer, $routeParams, $location, LxProgressService) {
+    var _this = this;
+    var tab = tabContainer.getCurrentTab();
+    _this.type = 'paiement'
+    _this.title = 'Archives Paiements'
+    tab.setTitle('archives PAY')
+    LxProgressService.circular.show('#5fa2db', '#globalProgress');
+    edisonAPI.compta.archivesPaiement().success(function(resp) {
+        LxProgressService.circular.hide()
+        _this.data = resp
+    })
+    _this.moment = moment;
+    _this.openLink = function(link) {
+        $location.url(link)
+    }
+}
+
+angular.module('edison').controller('archivesPaiementController', archivesPaiementController);
 
 var AvoirsController = function(tabContainer, edisonAPI, $rootScope, LxProgressService, LxNotificationService, FlushList) {
     "use strict";
@@ -4126,9 +4142,9 @@ angular.module('edison').directive('infoCompta', ['config', 'Paiement',
                  model.produits = model.produits || [];
                  scope.config = config;
                  scope.produits = new productsList(model.produits);
-                /* edisonAPI.combo.list().then(function(resp) {
+                 edisonAPI.combo.list().then(function(resp) {
                      scope.combo = resp.data
-                 })*/
+                 })
 
                  scope.Intervention = Intervention;
                  scope.Devis = Devis;
@@ -4152,10 +4168,9 @@ angular.module('edison').directive('infoCompta', ['config', 'Paiement',
 
                  scope.$watch('data.combo', function(curr, prev) {
                      if (curr && !_.isEqual(curr, prev)) {
-                         var prod = _.find(Combo, function(e) {
-                             return e.title === curr;
+                         var prod = _.find(scope.combo, function(e) {
+                             return e.ref === curr;
                          })
-                         console.log(prod)
                          _.each(prod.produits, function(e) {
                              if (!e.ref) {
                                  e.ref = e.desc.toUpperCase().slice(0, 3) + '0' + _.random(9, 99)
@@ -4762,6 +4777,29 @@ var editCombos = function(tabContainer, edisonAPI, $rootScope, $scope, $location
 }
 angular.module('edison').controller('editCombos', editCombos);
 
+var editComptes = function(tabContainer, edisonAPI, $rootScope, $scope, $location, LxNotificationService, socket) {
+    "use strict";
+    var _this = this;
+    _this.tab = tabContainer.getCurrentTab();
+    _this.tab.setTitle('grand Comptes');
+
+    edisonAPI.compte.list().then(function(resp) {
+        $scope.pl = resp.data
+        console.log($scope.pl)
+    })
+
+
+    _this.save = function() {
+        edisonAPI.compte.save($scope.pl).then(function(resp) {
+            LxNotificationService.success("Les comptes on été mis a jour");
+        }, function(err) {
+            LxNotificationService.error("Une erreur est survenu (" + JSON.stringify(err.data) + ')');
+        })
+    }
+}
+
+angular.module('edison').controller('editComptes', editComptes);
+
 var editProducts = function(tabContainer, edisonAPI, $rootScope, $scope, $location, LxNotificationService, socket) {
     "use strict";
     var _this = this;
@@ -4801,7 +4839,7 @@ var editUsers = function(tabContainer, edisonAPI, $rootScope, $scope, $location,
     "use strict";
     var _this = this;
     _this.tab = tabContainer.getCurrentTab();
-    _this.tab.setTitle('Produits');
+    _this.tab.setTitle('Utilisateurs');
 
 
 
@@ -4809,16 +4847,13 @@ var editUsers = function(tabContainer, edisonAPI, $rootScope, $scope, $location,
         $scope.usrs = resp.data
     })
 
-    var save = _.throttle(function() {
+    _this.save = function() {
         edisonAPI.users.save($scope.usrs).then(function() {
+            LxNotificationService.success("Les utilisateurs on été mis a jour");
+        }, function(err) {
+            LxNotificationService.error("Une erreur est survenu (" + JSON.stringify(err.data) + ')');
         })
-    }, 500)
-
-    $scope.$watch('usrs', function(curr, prev) {
-        if (curr && prev && !_.isEqual(prev, curr)) {
-            save()
-        }
-    }, true)
+    }
 
 
 }

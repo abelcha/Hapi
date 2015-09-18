@@ -2,7 +2,7 @@ var editUsers = function(tabContainer, edisonAPI, $rootScope, $scope, $location,
     "use strict";
     var _this = this;
     _this.tab = tabContainer.getCurrentTab();
-    _this.tab.setTitle('Produits');
+    _this.tab.setTitle('Utilisateurs');
 
 
 
@@ -10,16 +10,13 @@ var editUsers = function(tabContainer, edisonAPI, $rootScope, $scope, $location,
         $scope.usrs = resp.data
     })
 
-    var save = _.throttle(function() {
+    _this.save = function() {
         edisonAPI.users.save($scope.usrs).then(function() {
+            LxNotificationService.success("Les utilisateurs on été mis a jour");
+        }, function(err) {
+            LxNotificationService.error("Une erreur est survenu (" + JSON.stringify(err.data) + ')');
         })
-    }, 500)
-
-    $scope.$watch('usrs', function(curr, prev) {
-        if (curr && prev && !_.isEqual(prev, curr)) {
-            save()
-        }
-    }, true)
+    }
 
 
 }

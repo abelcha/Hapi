@@ -9,6 +9,14 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
                 return $http.post('/api/product/__save', data);
             }
         },
+        compte: {
+            list: function() {
+                return $http.get('/api/compte/list');
+            },
+            save: function(data) {
+                return $http.post('/api/compte/__save', data);
+            }
+        },
          combo: {
             list: function() {
                 return $http.get('/api/combo/list');

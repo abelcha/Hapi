@@ -17,9 +17,9 @@
                  model.produits = model.produits || [];
                  scope.config = config;
                  scope.produits = new productsList(model.produits);
-                /* edisonAPI.combo.list().then(function(resp) {
+                 edisonAPI.combo.list().then(function(resp) {
                      scope.combo = resp.data
-                 })*/
+                 })
 
                  scope.Intervention = Intervention;
                  scope.Devis = Devis;
@@ -43,10 +43,9 @@
 
                  scope.$watch('data.combo', function(curr, prev) {
                      if (curr && !_.isEqual(curr, prev)) {
-                         var prod = _.find(Combo, function(e) {
-                             return e.title === curr;
+                         var prod = _.find(scope.combo, function(e) {
+                             return e.ref === curr;
                          })
-                         console.log(prod)
                          _.each(prod.produits, function(e) {
                              if (!e.ref) {
                                  e.ref = e.desc.toUpperCase().slice(0, 3) + '0' + _.random(9, 99)
