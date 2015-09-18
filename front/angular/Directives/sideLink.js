@@ -67,7 +67,7 @@
          restrict: 'AE',
          replace: true,
          template: '<li>' +
-             '      <a href="{{url}}" >' +
+             '      <a href="{{url}}"  target="{{target}}">' +
              '            <i ng-if="icon" class = "menu-icon fa fa-{{icon}}"> </i>' +
              '            <span class="mm-text">{{title}}</span>' +
              '        </a>' +
@@ -77,7 +77,9 @@
              title: '@',
              url: '@',
          },
-         link: function(scope, element, attrs) {}
+         link: function(scope, element, attrs) {
+             scope.target = (typeof attrs.extern === 'string' ? '_blank' : '')
+         }
      };
  }]);
 

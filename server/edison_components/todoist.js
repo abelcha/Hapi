@@ -13,23 +13,21 @@ var Todoist = function() {
 }
 
 
-Todoist.prototype.applyRequest = argumentor(function(url, options) {
-        console.log(url, options)
-               /* var _this = this;
-                var params = {
-                    // commands: opts,
-                    seq_no: '0',
-                    seq_no_global: '0',
-                    resource_types: '["all"]',
-                    token: _this.token
-                }
-                console.log(params)
-                return request.post('https://todoist.com/API/v6' + url, params)*/
-
-    })
-    .a('url').default(_.noop)
-    .a('options').default({})
-    .combinations([['url', 'options'], ['url'], ['options']])
+Todoist.prototype.applyRequest = function(url, options) {
+    var params = {}
+    if (typeof url === 'string' && typeof options === 'object') {
+        params.url = url;
+        params.options = options;
+    } else if (typeof url === 'string' && typeof options === 'undefined') {
+        params.url = url;
+        params.options = {};
+    } else if (typeof url === 'object' && typeof options === 'undefined') {
+        params.url = options;
+        params.options = {};
+    }
+    console.log(params)
+    return request.post('https://todoist.com/API/v6' + params.url).form(params.options)
+}
 
 Todoist.prototype.request = function() {
     var _this = this;
@@ -60,23 +58,41 @@ Todoist.prototype.request = function() {
 
 */
 //module.exports = Todoist;
-
-var todoist = new Todoist()
-/*todoist.request().then(function(resp) {
-    console.log('sweg')
-    console.log(resp)
+/*
+request.post({
+    url: 'https://todoist.com/API/v6/sync',
+    form: {
+        token: '0d4c2aaf41f9cd4a62f3a8e4ac0b5ca725cf54b3',
+        seq_no: 0,
+        seq_no_global: 0,
+        resource_types: ['all']
+    }
+}).then(function(resp) {
+    console.log('-->', resp)
+}, function(err) {
+    console.log('==>', err)
+})
+*/
+/*var todoist = new Todoist()
+todoist.request('/sync', {
+    seq_no: 0,
+    seq_no_global: 0,
+    resource_types: ["all"],
+}).then(function(resp) {
+    console.log('ok=>', (resp))
 }, function(err)  {
     console.log('ERRR-->', err)
 })
 */
 
-todoist.request('sync', {
+/*todoist.request('sync', {
 	lol:'totto'
 })
+
 
 
 todoist.request('swag');
 
 todoist.request({
-	lol:'totto'
-})
+	yaya:'only'
+})*/

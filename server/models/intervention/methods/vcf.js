@@ -8,13 +8,13 @@ module.exports = function(schema) {
         return new Promise(function(resolve, reject) {
             db.model('intervention').find()
             .select('id client categorie')
-            .limit(req.query.limit || 3000).sort('-id').then(function(docs) {
+            .limit(req.query.limit || 2000).sort('-id').then(function(docs) {
                 console.log('-->', docs.length)
                 res.setHeader('Content-disposition', 'attachment; filename=' + "exportClientsV2.vcf");
                 res.setHeader('Content-type', "text/vcard");
                 var i = 0;
                 _.each(docs, function(e) {
-                    console.log(++i);
+                    //console.log(++i);
                     e.__cat = config.categories[e.categorie].long_name
                     var rtn = "BEGIN:VCARD\n";
                     rtn += "VERSION:3.0\n" +
