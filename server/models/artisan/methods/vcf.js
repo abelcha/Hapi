@@ -19,31 +19,40 @@ module.exports = function(schema) {
             })
         }
         return new Promise(function(resolve, reject) {
-            db.model('artisan').find({
-                status: {
-                    $ne: 'ARC'
+
+            redis.get('vcfArtisans'.envify(), function(err, reply) {
+                if (!err && reply && !req.query.cache) {
+                    console.log('cache');
+                    return resolve(reply)
                 }
-            }).sort('-id').select('id representant address telephone').limit(req.query.limit ||  3000).then(function(docs) {
-                console.log('->', docs.length)
-                var rtn = "";
-                _.each(docs, function(e) {
-                    rtn += "BEGIN:VCARD\n";
-                    rtn += "VERSION:3.0\n" +
-                        _.template("N: {{id}} {{representant.nom}} {{representant.prenom}} - {{address.cp}} {{address.v}}\n")(e) +
-                        _.template("N: {{id}} {{representant.nom}} {{representant.prenom}} - {{address.cp}} {{address.v}}\n")(e) +
-                        "TEL;WORK;VOICE: " + e.telephone.tel1 + "\n";
-
-                    if (e.telephone.tel2) {
-                        rtn += "TEL;WORK;VOICE: " + e.telephone.tel2 + "\n";
+                db.model('artisan').find({
+                    status: {
+                        $ne: 'ARC'
                     }
-                    if (e.telephone.tel3) {
-                        rtn += "TEL;WORK;VOICE: " + e.telephone.tel3 + "\n";
-                    }
-                    rtn += "END:VCARD\n";
+                }).sort('-id').select('id representant address telephone').limit(req.query.limit ||  3000).then(function(docs) {
+                    console.log('->', docs.length)
+                    var rtn = "";
+                    _.each(docs, function(e) {
+                        rtn += "BEGIN:VCARD\n";
+                        rtn += "VERSION:3.0\n" +
+                            _.template("N: {{id}} {{representant.nom}} {{representant.prenom}} - {{address.cp}} {{address.v}}\n")(e) +
+                            _.template("N: {{id}} {{representant.nom}} {{representant.prenom}} - {{address.cp}} {{address.v}}\n")(e) +
+                            "TEL;WORK;VOICE: " + e.telephone.tel1 + "\n";
 
+                        if (e.telephone.tel2) {
+                            rtn += "TEL;WORK;VOICE: " + e.telephone.tel2 + "\n";
+                        }
+                        if (e.telephone.tel3) {
+                            rtn += "TEL;WORK;VOICE: " + e.telephone.tel3 + "\n";
+                        }
+                        rtn += "END:VCARD\n";
+
+                    })
+                    resolve(rtn);
+                    redis.setex('vcfArtisans'.envify(), 600, rtn);
                 })
-                resolve(rtn);
             })
+
         })
     }
 }
