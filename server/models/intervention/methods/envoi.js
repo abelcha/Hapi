@@ -134,7 +134,6 @@ module.exports = function(schema) {
                 p1.toBuffer.bind(p1),
                 p2.toBuffer.bind(p2),
             ], function(err, resp) {
-                console.log(resp);
                 var now = Date.now();
                 var f1 = '/tmp/f1-' + now + '.pdf';
                 var f2 = '/tmp/f2-' + now + '.pdf';
@@ -142,7 +141,6 @@ module.exports = function(schema) {
                 fs.writeFileSync(f2, resp[1])
                 var pdfMerge = new PDFMerge([f1, f2]);
                 pdfMerge.asBuffer().merge(function(err, buffer) {
-                    console.log('==>', err, buffer)
                     resolve({
                         data: buffer,
                         extension: '.pdf',
@@ -166,16 +164,21 @@ module.exports = function(schema) {
                 var prm = getOS(inter);
             } else if (req.query.q === 'facturier') {
                 var prm = getFacturier(inter)
+            } else if (req.query.q === 'manuel') {
+                var prm = getStaticFile.bind("Manuel d'utilisation.pdf")()
+           /* } else if (req.query.q === 'notice') {
+                var prm = getStaticFile.bind("Notice d'intervention.pdf")()*/
             } else if (req.query.q === 'deviseur') {
                 var prm = getDeviseur(inter, req.session);
-            } else if (req.query.q === 'notice') {
-                console.log('notice')
-                var prm = getNotice(inter);
-            } else if (req.query.q === 'devis') {
-                var prm = getDevis(inter, req.session)
-            } else {
-                return res.status(400).send("unknown file")
             }
+            else if(req.query.q === 'notice') {
+                    console.log('notice')
+                    var prm = getNotice(inter);
+                } else if (req.query.q === 'devis') {
+                    var prm = getDevis(inter, req.session)
+                } else {
+                    return res.status(400).send("unknown file")
+                }
             prm.then(function(resp) {
                 res.pdf(resp.data);
             }, function(err) {
@@ -221,9 +224,7 @@ module.exports = function(schema) {
                     var filesPromises = [
                         getOS(inter)
                     ]
-                    console.log('uau')
-                    console.log(inter.sst.subStatus , inter.sst.subStatus === 'NEW' )
-                  //  if (!envDev) {
+                    if (!envDev) {
                         if (inter.devisOrigine) {
                             filesPromises.push(getDevis(inter, req.session));
                         }
@@ -232,18 +233,18 @@ module.exports = function(schema) {
                         filesPromises.push(getDeviseur(inter));
 
                         if (inter.sst.subStatus === 'NEW' || inter.sst.status === 'POT') {
-                            console.log('lol')
+                            console.log('NEW')
                             filesPromises.push(getStaticFile.bind("Manuel d'utilisation.pdf")(),
                                 getStaticFile.bind("Notice d'intervention.pdf")())
                         }
                         if (req.body.file) {
                             filesPromises.push(document.download(req.body.file))
                         }
-                    //}
+                    }
                     console.time('getFiles')
                     Promise.all(filesPromises).then(function(result) {
                         console.timeEnd('getFiles')
-                        console.log(result)
+
                         var files = _(result).compact().map(function(file) {
                             return {
                                 ContentType: file.mimeType ||  mime.lookup(file.extension),
