@@ -5,6 +5,19 @@ module.exports = function(schema) {
         var fs = require('fs')
         var config = requireLocal('config/dataList')
         var _ = require('lodash')
+        if (!isWorker) {
+            return edison.worker.createJob({
+                name: 'db',
+                model: 'artisan',
+                method: 'vcf',
+                req: _.pick(req, 'query', 'session')
+            }).then(function(resp) {
+                res.setHeader('Content-disposition', 'attachment; filename=' + "exportArtisansV2.vcf");
+                res.setHeader('Content-type', "text/vcard");
+                res.write(resp);
+                res.end();
+            })
+        }
         return new Promise(function(resolve, reject) {
             db.model('artisan').find({
                 status: {
@@ -12,10 +25,8 @@ module.exports = function(schema) {
                 }
             }).sort('-id').select('id representant address telephone').limit(req.query.limit ||  3000).then(function(docs) {
                 console.log('->', docs.length)
-                res.setHeader('Content-disposition', 'attachment; filename=' + "exportArtisanV2.vcf");
-                res.setHeader('Content-type', "text/vcard");
+                var rtn = "";
                 _.each(docs, function(e) {
-                    var rtn = "";
                     rtn += "BEGIN:VCARD\n";
                     rtn += "VERSION:3.0\n" +
                         _.template("N: {{id}} {{representant.nom}} {{representant.prenom}} - {{address.cp}} {{address.v}}\n")(e) +
@@ -31,7 +42,7 @@ module.exports = function(schema) {
                     rtn += "END:VCARD\n";
 
                 })
-                res.end();
+                resolve(rtn);
             })
         })
     }
