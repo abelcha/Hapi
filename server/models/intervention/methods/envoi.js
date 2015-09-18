@@ -76,7 +76,6 @@ module.exports = function(schema) {
             doc.facture.tel = doc.client.telephone.tel1;
             doc.datePlain = moment.tz('Europe/Paris').format('LL');
             doc.user = user;
-            console.log('ENVOI:>', doc.user)
             doc.acquitte = false;
             doc.type = "devis"
             PDF('facture', doc).buffer(function(err, buff) {
@@ -222,6 +221,9 @@ module.exports = function(schema) {
                     ]
                     console.log('uau')
                     if (!envDev) {
+                        if (inter.devisOrigine) {
+                            filesPromises.push(getDevis(inter, req.session));
+                        }
 
                         filesPromises.push(getFacturier(inter));
                         filesPromises.push(getDeviseur(inter));
@@ -229,9 +231,6 @@ module.exports = function(schema) {
                         if (inter.sst.subStatus === 'NEW' || inter.sst.status === 'POT') {
                             filesPromises.push(getStaticFile.bind("Manuel d'utilisation.pdf")(),
                                 getStaticFile.bind("Notice d'intervention.pdf")())
-                        }
-                        if (inter.devisOrigine) {
-                            filesPromises.push(getDevis(inter));
                         }
                         if (req.body.file) {
                             filesPromises.push(document.download(req.body.file))
