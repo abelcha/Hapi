@@ -68,9 +68,17 @@ module.exports = function(schema) {
     }
 
 
-    var getDevis = function(doc) {
+
+
+    var getDevis = function(doc, user) {
         return new Promise(function(resolve, reject) {
-            doc.type = 'DEVIS'
+            doc.facture = doc.client;
+            doc.facture.tel = doc.client.telephone.tel1;
+            doc.datePlain = moment.tz('Europe/Paris').format('LL');
+            doc.user = user;
+            console.log('ENVOI:>', doc.user)
+            doc.acquitte = false;
+            doc.type = "devis"
             PDF('facture', doc).buffer(function(err, buff) {
                 if (err)
                     return reject(err);
@@ -158,12 +166,12 @@ module.exports = function(schema) {
             } else if (req.query.q === 'facturier') {
                 var prm = getFacturier(inter)
             } else if (req.query.q === 'deviseur') {
-                var prm = getDeviseur(inter);
+                var prm = getDeviseur(inter, req.session);
             } else if (req.query.q === 'notice') {
                 console.log('notice')
                 var prm = getNotice(inter);
             } else if (req.query.q === 'devis') {
-                var prm = getDevis(inter)
+                var prm = getDevis(inter, req.session)
             } else {
                 return res.status(400).send("unknown file")
             }
