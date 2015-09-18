@@ -70,7 +70,7 @@ module.exports = function(schema) {
                     console.log('getBuffer');
                     try {
                         var communication = {
-                            mailDest: envProd ? devis.client.email : (req.session.email ||  'contact@edison-services.fr'),
+                            mailDest: envProd ? devis.client.email : ('contact@edison-services.fr'),
                             mailBcc: envProd ? (req.session.email ||  'contact@edison-services.fr') : undefined,
                             mailReply: (req.session.email ||  'contact@edison-services.fr')
                         }

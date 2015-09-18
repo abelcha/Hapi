@@ -134,6 +134,7 @@ module.exports = function(schema) {
                 p1.toBuffer.bind(p1),
                 p2.toBuffer.bind(p2),
             ], function(err, resp) {
+                console.log(resp);
                 var now = Date.now();
                 var f1 = '/tmp/f1-' + now + '.pdf';
                 var f2 = '/tmp/f2-' + now + '.pdf';
@@ -141,6 +142,7 @@ module.exports = function(schema) {
                 fs.writeFileSync(f2, resp[1])
                 var pdfMerge = new PDFMerge([f1, f2]);
                 pdfMerge.asBuffer().merge(function(err, buffer) {
+                    console.log('==>', err, buffer)
                     resolve({
                         data: buffer,
                         extension: '.pdf',
@@ -220,7 +222,8 @@ module.exports = function(schema) {
                         getOS(inter)
                     ]
                     console.log('uau')
-                    if (!envDev) {
+                    console.log(inter.sst.subStatus , inter.sst.subStatus === 'NEW' )
+                  //  if (!envDev) {
                         if (inter.devisOrigine) {
                             filesPromises.push(getDevis(inter, req.session));
                         }
@@ -229,17 +232,18 @@ module.exports = function(schema) {
                         filesPromises.push(getDeviseur(inter));
 
                         if (inter.sst.subStatus === 'NEW' || inter.sst.status === 'POT') {
+                            console.log('lol')
                             filesPromises.push(getStaticFile.bind("Manuel d'utilisation.pdf")(),
                                 getStaticFile.bind("Notice d'intervention.pdf")())
                         }
                         if (req.body.file) {
                             filesPromises.push(document.download(req.body.file))
                         }
-                    }
+                    //}
                     console.time('getFiles')
                     Promise.all(filesPromises).then(function(result) {
                         console.timeEnd('getFiles')
-
+                        console.log(result)
                         var files = _(result).compact().map(function(file) {
                             return {
                                 ContentType: file.mimeType ||  mime.lookup(file.extension),

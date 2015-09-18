@@ -734,7 +734,7 @@ angular.module('edison').directive('ngEnter', function () {
              })
              .then(function(resp) {
                  _this.contextMenu.setData(resp.data);
-                 _this.contextMenu.setPosition($event.pageX - ($routeParams.sstid ? 50 : 0), $event.pageY + ($routeParams.sstid ? 0 : 200))
+                 _this.contextMenu.setPosition($event.pageX - (($routeParams.sstid || _this.embedded)  ? 50 : 0), $event.pageY + ($routeParams.sstid || _this.embedded ? 0 : 200))
                  _this.contextMenu.open();
              })
      }
@@ -4258,9 +4258,10 @@ var InterventionCtrl = function(Description, Signalement, ContextMenu, $window, 
     _this.contextMenu = new ContextMenu('intervention')
     _this.contextMenu.setData(intervention);
     _this.rowRightClick = function($event, inter) {
-        console.log($event.target)
-        _this.contextMenu.setPosition($event.pageX, $event.pageY + 150)
-        _this.contextMenu.open();
+        if ($('.listeInterventions').has($event.target).length == 0) {
+            _this.contextMenu.setPosition($event.pageX, $event.pageY + 150)
+            _this.contextMenu.open();
+        }
     }
 
     Mousetrap.bind(['command+k', 'ctrl+k'], function() {

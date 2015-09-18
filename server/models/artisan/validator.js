@@ -1,17 +1,18 @@
 module.exports = function(schema) {
     var V1 = requireLocal('config/_convert_artisan_V1.js');
     var moment = require('moment');
-    var getSubStatus = function() {
+
+    var getSubStatus = function(sst) {
         var _ = require('lodash');
-        var d = this.document;
-        if (this.status === "POT" && _.get(d.contrat.file) && _.get(d.cni.file) && _.get(d.kbis.file)) {
-            this.subStatus = 'HOT';
+        var d = sst.document;
+        if (sst.status === "POT" && _.get(d.contrat.file) && _.get(d.cni.file) && _.get(d.kbis.file)) {
+            return'HOT';
         }
-        if (this.nbrIntervention < 5 && this.nbrIntervention > 0) {
-            this.subStatus = "NEW";
+        if (sst.nbrIntervention < 5 && sst.nbrIntervention > 0) {
+            return "NEW";
         }
-        if (this.nbrIntervention > 15) {
-            this.subStatus = "REG";
+        if (sst.nbrIntervention > 15) {
+            return  "REG";
         }
     }
 
@@ -26,7 +27,7 @@ module.exports = function(schema) {
             }).then(function(docs) {
                 _this.nbrIntervention = docs.length;
                 _this.status = docs.length ? "ACT" : "POT";
-                getSubStatus.bind(_this)();
+                _this.subStatus = getSubStatus(_this);
                 next();
             }, next)
         } else {

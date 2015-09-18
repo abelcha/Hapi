@@ -49,9 +49,10 @@ var InterventionCtrl = function(Description, Signalement, ContextMenu, $window, 
     _this.contextMenu = new ContextMenu('intervention')
     _this.contextMenu.setData(intervention);
     _this.rowRightClick = function($event, inter) {
-        console.log($event.target)
-        _this.contextMenu.setPosition($event.pageX, $event.pageY + 150)
-        _this.contextMenu.open();
+        if ($('.listeInterventions').has($event.target).length == 0) {
+            _this.contextMenu.setPosition($event.pageX, $event.pageY + 150)
+            _this.contextMenu.open();
+        }
     }
 
     Mousetrap.bind(['command+k', 'ctrl+k'], function() {
