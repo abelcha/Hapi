@@ -29,7 +29,7 @@
     "dbox": "^0.6.4",
     "dropbox": "^0.10.3",
     "edsx-api-produits": "^2.0.2",
-    "edsx-mail": "^2.1.11",
+    "edsx-mail": "^2.1.12",
     "ejs": "^2.2.4",
     "email-existence": "^0.1.5",
     "express": "^4.13.3",
