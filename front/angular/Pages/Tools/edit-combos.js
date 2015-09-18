@@ -94,16 +94,22 @@ var editCombos = function(tabContainer, edisonAPI, $rootScope, $scope, $location
 
     edisonAPI.combo.list().then(function(resp) {
         $scope.plSave = resp.data
-        $scope.pl = _.clone(resp.data);
+        $scope.pl = _.map(resp.data, _this.extend);
     })
+
+    _this.extend = function(e) {
+        var z = _.assign(_.clone(base), e)
+        console.log(z, e);
+        return z;
+    }
 
     _this.save = function() {
         edisonAPI.combo.save($scope.pl).then(function(resp) {
-            $scope.pl = resp.data
+            $scope.pl = _.map(resp.data, _this.extend);
             LxNotificationService.success("Les produits on été mis a jour");
         }, function(err) {
             LxNotificationService.error("Une erreur est survenu (" + JSON.stringify(err.data) + ')');
-          //  edisonAPI.combo.save($scope.plSave);
+            //  edisonAPI.combo.save($scope.plSave);
         })
     }
 

@@ -34,8 +34,10 @@
                 </tr>
                 <tr ng-repeat-end class="grey lighten-3">
                     <td ng-if="p.open"></td>
-                    <td ng-if="p.open" colspan="20" ng-init="pro = vm.getInter(p)">
-                        <produits ng-if="p.open && pro" data="pro"></produits>
+                    <td ng-if="p.open" colspan="2">
+                        <produits embedded="true" ng-if="p.open" data="p"></produits>
+                    </td>
+                    <td ng-if="p.open" >
                     </td>
                 </tr>
             </tbody>
@@ -45,6 +47,6 @@
         <button ng-click="vm.save()" class="btn--no-conflicts btn--l btn--black btn--fab green"><i class="fa fa-check"></i></button>
     </div>
     <div class="fab" style="position: fixed;right: 100px;z-index: 999;top: 87%;">
-        <button ng-click="pl.push({open:true})" class="btn--no-conflicts btn--l btn--black btn--fab blue"><i class="fa fa-plus"></i></button>
+        <button ng-click="pl.push(vm.extend({open:true}))" class="btn--no-conflicts btn--l btn--black btn--fab blue"><i class="fa fa-plus"></i></button>
     </div>
 </div>

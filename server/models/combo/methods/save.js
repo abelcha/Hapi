@@ -16,7 +16,6 @@ module.exports = function(schema) {
                     combo.ref = combo.title.toUpperCase().slice(0, 10);
                 }
                 _.each(combo.produits, function(e) {
-                    console.log("==>", e)
                     if (!e.ref) {
                         e.ref = _.deburr(e.title).toUpperCase().slice(0, 3) + "0" + String(_.random(10, 100))
                         return reject("La référence '" + e.ref + "' est invalide") && false;

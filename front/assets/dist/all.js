@@ -4108,7 +4108,7 @@ angular.module('edison').directive('infoCompta', ['config', 'Paiement',
 ]);
 
  angular.module('edison').directive('produits',
-     function(config, productsList, dialog, openPost, LxNotificationService, Intervention, Devis, Combo) {
+     function(config, productsList, dialog, openPost, LxNotificationService, Intervention, Devis, Combo, edisonAPI) {
          "use strict";
          return {
              restrict: 'E',
@@ -4117,15 +4117,19 @@ angular.module('edison').directive('infoCompta', ['config', 'Paiement',
                  data: "=",
                  tva: '=',
                  display: '@',
-                 model: "@"
+                 model: "@",
+                 embedded: "="
              },
              link: function(scope, element, attrs) {
                  var model = scope.data;
-                 scope.combo = Combo;
                  scope.config = config
                  model.produits = model.produits || [];
                  scope.config = config;
                  scope.produits = new productsList(model.produits);
+                /* edisonAPI.combo.list().then(function(resp) {
+                     scope.combo = resp.data
+                 })*/
+
                  scope.Intervention = Intervention;
                  scope.Devis = Devis;
 
@@ -4148,10 +4152,10 @@ angular.module('edison').directive('infoCompta', ['config', 'Paiement',
 
                  scope.$watch('data.combo', function(curr, prev) {
                      if (curr && !_.isEqual(curr, prev)) {
-                        var prod = _.find(Combo, function(e) {
-                            return e.title === curr;
-                        })
-                        console.log(prod)
+                         var prod = _.find(Combo, function(e) {
+                             return e.title === curr;
+                         })
+                         console.log(prod)
                          _.each(prod.produits, function(e) {
                              if (!e.ref) {
                                  e.ref = e.desc.toUpperCase().slice(0, 3) + '0' + _.random(9, 99)
@@ -4719,16 +4723,22 @@ var editCombos = function(tabContainer, edisonAPI, $rootScope, $scope, $location
 
     edisonAPI.combo.list().then(function(resp) {
         $scope.plSave = resp.data
-        $scope.pl = _.clone(resp.data);
+        $scope.pl = _.map(resp.data, _this.extend);
     })
+
+    _this.extend = function(e) {
+        var z = _.assign(_.clone(base), e)
+        console.log(z, e);
+        return z;
+    }
 
     _this.save = function() {
         edisonAPI.combo.save($scope.pl).then(function(resp) {
-            $scope.pl = resp.data
+            $scope.pl = _.map(resp.data, _this.extend);
             LxNotificationService.success("Les produits on été mis a jour");
         }, function(err) {
             LxNotificationService.error("Une erreur est survenu (" + JSON.stringify(err.data) + ')');
-          //  edisonAPI.combo.save($scope.plSave);
+            //  edisonAPI.combo.save($scope.plSave);
         })
     }
 

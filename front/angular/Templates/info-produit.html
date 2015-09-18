@@ -1,7 +1,7 @@
 <div class="card margin">
     <div class="p+" ng-init="displayfact = (!data.reglementSurPlace||data.produits.length)">
         <strong ng-click="displayfact = !displayfact" class="fs-headline displayfact-block">Facture / Devis </strong><a ng-if="data.devisOrigine" href="/devis/{{data.devisOrigine}}"> Devis Original</a>
-        <md-content class="autocomplete" style="width: 40%;margin-top: -22px;margin-left: 54%;float: left;" layout-padding layout="column" md-input-container flex>
+        <md-content class="autocomplete" style="width: {{embedded ? '27' : '40'}}%;margin-top: -22px;margin-left: 54%;float: left;" layout-padding layout="column" md-input-container flex>
             <md-autocomplete ng-if="displayfact" md-search-text-change="null" md-selected-item-change="produits.add(selectedProduct)" md-selected-item="selectedProduct" md-search-text="produits.searchText" md-items="item in produits.search(produits.searchText)" md-item-text="item.title" placeholder="Rechercher un produit...">
                 <span md-highlight-text="produits.searchText"> 
                 {{item.ref}} -  {{item.title}} - {{item.pu}}€</span>
