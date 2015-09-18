@@ -1,5 +1,6 @@
 var request = require('request-promise');
 var _ = require('lodash');
+var argumentator = require('argumentator');
 
 var Todoist = function() {
     var _this = this;
@@ -13,31 +14,32 @@ var Todoist = function() {
 
 
 Todoist.prototype.applyRequest = function(opts, url) {
-    var _this = this;
-    var params = {
-        // commands: opts,
-        seq_no: '0',
-        seq_no_global: '0',
-        resource_types: '["all"]',
-        token: _this.token
-    }
-    console.log(params)
-    return request.post('https://todoist.com/API/v6' + url, params)
+    console.log()
+        /*    var _this = this;
+            var params = {
+                // commands: opts,
+                seq_no: '0',
+                seq_no_global: '0',
+                resource_types: '["all"]',
+                token: _this.token
+            }
+            console.log(params)
+            return request.post('https://todoist.com/API/v6' + url, params)*/
 
 }
 
-Todoist.prototype.request = function(opts, url) {
+Todoist.prototype.request = function() {
     var _this = this;
+    var args = arguments;
     return new Promise(function(resolve, reject) {
         if (!this.token) {
             _this.loginRequest
                 .then(function(resp) {
-                    console.log('uau')
                     _this.token = JSON.parse(resp).token;
-                    _this.applyRequest(opts, url).then(resolve, reject)
+                    _this.applyRequest.apply(_this, args).then(resolve, reject)
                 })
         } else {
-            _this.applyRequest(opts, url).then(resolve, reject)
+            _this.applyRequest.apply(_this, args).then(resolve, reject)
         }
     })
 }
