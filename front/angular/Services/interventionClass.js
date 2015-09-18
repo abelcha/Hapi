@@ -156,7 +156,7 @@ angular.module('edison')
         }
         Intervention.prototype.smsArtisan = function(cb) {
             var _this = this;
-            var text = textTemplate.sms.intervention.demande.bind(_this)($rootScope.user)
+            var text = textTemplate.sms.intervention.demande.bind(_this)(app_session)
             dialog.getFileAndText(_this, text, [], function(err, text) {
                 if (err) {
                     return cb(err)
