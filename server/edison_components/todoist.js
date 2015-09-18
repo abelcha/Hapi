@@ -1,6 +1,6 @@
 var request = require('request-promise');
 var _ = require('lodash');
-var argumentator = require('argumentor');
+var argumentor = require('argumentor');
 
 var Todoist = function() {
     var _this = this;
@@ -12,10 +12,10 @@ var Todoist = function() {
     })
 }
 
-/*
+
 Todoist.prototype.applyRequest = argumentor(function(url, options) {
         console.log(url, options)
-                var _this = this;
+               /* var _this = this;
                 var params = {
                     // commands: opts,
                     seq_no: '0',
@@ -24,12 +24,12 @@ Todoist.prototype.applyRequest = argumentor(function(url, options) {
                     token: _this.token
                 }
                 console.log(params)
-                return request.post('https://todoist.com/API/v6' + url, params)
+                return request.post('https://todoist.com/API/v6' + url, params)*/
 
     })
-    .a('url').default(_.noop);
-    .a('options')
-    .*/
+    .a('url').default(_.noop)
+    .a('options').default({})
+    .combinations([['url', 'options'], ['url'], ['options']])
 
 Todoist.prototype.request = function() {
     var _this = this;
@@ -61,10 +61,22 @@ Todoist.prototype.request = function() {
 */
 //module.exports = Todoist;
 
-/*var todoist = new Todoist()
-todoist.request().then(function(resp) {
+var todoist = new Todoist()
+/*todoist.request().then(function(resp) {
     console.log('sweg')
     console.log(resp)
 }, function(err)  {
     console.log('ERRR-->', err)
-})*/
+})
+*/
+
+todoist.request('sync', {
+	lol:'totto'
+})
+
+
+todoist.request('swag');
+
+todoist.request({
+	lol:'totto'
+})
