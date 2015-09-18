@@ -209,7 +209,7 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
             controllerAs: "vm",
         })
         .when('/tools/editCombos', {
-            templateUrl: "Pages/Tools/edit-Combos.html",
+            templateUrl: "Pages/Tools/edit-combos.html",
             controller: "editCombos",
             controllerAs: "vm",
         })
