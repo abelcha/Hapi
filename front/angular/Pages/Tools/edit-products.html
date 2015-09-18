@@ -49,7 +49,10 @@
             </tbody>
         </table>
     </div>
-    <div class="fab" style="position: fixed;right: 70px;z-index: 999;top: 87%;">
-        <button ng-click="pl.push({single:false, open:true})" class="btn--no-conflicts btn--l btn--black btn--fab green"><i class="fa fa-plus"></i></button>
+      <div class="fab" style="position: fixed;right: 40px;z-index: 999;top: 87%;">
+        <button ng-click="vm.save()" class="btn--no-conflicts btn--l btn--black btn--fab green"><i class="fa fa-check"></i></button>
+    </div>
+    <div class="fab" style="position: fixed;right: 100px;z-index: 999;top: 87%;">
+        <button ng-click="pl.push({single:false, open:false})" class="btn--no-conflicts btn--l btn--black btn--fab blue"><i class="fa fa-plus"></i></button>
     </div>
 </div>

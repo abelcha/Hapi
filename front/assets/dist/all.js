@@ -411,6 +411,11 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
             controller: "editProducts",
             controllerAs: "vm",
         })
+        .when('/tools/editCombos', {
+            templateUrl: "Pages/Tools/edit-Combos.html",
+            controller: "editCombos",
+            controllerAs: "vm",
+        })
         .when('/tools/editUsers', {
             templateUrl: "Pages/Tools/edit-users.html",
             controller: "editUsers",
@@ -1388,6 +1393,14 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
             },
             save: function(data) {
                 return $http.post('/api/product/__save', data);
+            }
+        },
+         combo: {
+            list: function() {
+                return $http.get('/api/combo/list');
+            },
+            save: function(data) {
+                return $http.post('/api/combo/__save', data);
             }
         },
         stats: {
@@ -3819,6 +3832,83 @@ var DashboardController = function(edisonAPI, tabContainer, $routeParams, $locat
 angular.module('edison').controller('DashboardController', DashboardController);
 
 
+var LpaController = function(openPost, $window, tabContainer, edisonAPI, $rootScope, LxProgressService, LxNotificationService, FlushList) {
+    "use strict";
+    var _this = this
+    var tab = tabContainer.getCurrentTab();
+    tab.setTitle('LPA')
+    _this.loadData = function(prevChecked) {
+        LxProgressService.circular.show('#5fa2db', '#globalProgress');
+        edisonAPI.compta.lpa().then(function(result) {
+            _.each(result.data, function(sst) {
+                sst.list = new FlushList(sst.list, prevChecked);
+                _this.reloadList(sst)
+            })
+            $rootScope.lpa = result.data
+            LxProgressService.circular.hide()
+        })
+    }
+    if (!$rootScope.lpa)
+        _this.loadData()
+    _this.checkArtisan = function(sst) {
+        sst.checked = !sst.checked
+        _.each(sst.list.getList(), function(e) {
+            e.checked = sst.checked;
+        })
+    }
+    _this.updateNumeroCheque = function(index) {
+        var base = $rootScope.lpa[index].numeroCheque;
+        if (base) {
+            for (var i = index; i < $rootScope.lpa.length; i++) {
+                $rootScope.lpa[i].numeroCheque = ++base
+            };
+        }
+    }
+    _this.flush = function() {
+        var rtn = [];
+        _.each($rootScope.lpa, function(sst) {
+            _.each(sst.list.getList(), function(e) {
+                if (e.checked) {
+                    e.numeroCheque = sst.numeroCheque
+                    rtn.push(e);
+                }
+            })
+        })
+        edisonAPI.compta.flush(rtn).then(function(resp) {
+            LxNotificationService.success(resp.data);
+            _this.reloadLPA()
+        }).catch(function(err) {
+            LxNotificationService.error(err.data);
+        })
+    }
+    _this.reloadList = function(artisan) {
+        artisan.total = artisan.list.getTotal()
+        artisan.total = artisan.list.getTotal(true)
+        artisan.total = artisan.list.getTotal()
+    }
+    _this.reloadLPA = function() {
+        var rtn = [];
+        _.each($rootScope.lpa, function(sst) {
+            _.each(sst.list.getList(), function(e) {
+                if (e.checked) {
+                    rtn.push(e.id);
+                }
+            })
+        })
+        _this.loadData(rtn)
+    }
+
+    _this.print = function(type) {
+        openPost('/api/intervention/print', {
+            type: type,
+            data: $rootScope.lpa
+        });
+    }
+}
+
+
+angular.module('edison').controller('LpaController', LpaController);
+
 
  angular.module('edison').directive('edisonMap', ['$window', 'Map', 'mapAutocomplete', 'Address',
      function($window, Map, mapAutocomplete, Address) {
@@ -4442,83 +4532,6 @@ var InterventionCtrl = function(Description, Signalement, ContextMenu, $window, 
 
 angular.module('edison').controller('InterventionController', InterventionCtrl);
 
-var LpaController = function(openPost, $window, tabContainer, edisonAPI, $rootScope, LxProgressService, LxNotificationService, FlushList) {
-    "use strict";
-    var _this = this
-    var tab = tabContainer.getCurrentTab();
-    tab.setTitle('LPA')
-    _this.loadData = function(prevChecked) {
-        LxProgressService.circular.show('#5fa2db', '#globalProgress');
-        edisonAPI.compta.lpa().then(function(result) {
-            _.each(result.data, function(sst) {
-                sst.list = new FlushList(sst.list, prevChecked);
-                _this.reloadList(sst)
-            })
-            $rootScope.lpa = result.data
-            LxProgressService.circular.hide()
-        })
-    }
-    if (!$rootScope.lpa)
-        _this.loadData()
-    _this.checkArtisan = function(sst) {
-        sst.checked = !sst.checked
-        _.each(sst.list.getList(), function(e) {
-            e.checked = sst.checked;
-        })
-    }
-    _this.updateNumeroCheque = function(index) {
-        var base = $rootScope.lpa[index].numeroCheque;
-        if (base) {
-            for (var i = index; i < $rootScope.lpa.length; i++) {
-                $rootScope.lpa[i].numeroCheque = ++base
-            };
-        }
-    }
-    _this.flush = function() {
-        var rtn = [];
-        _.each($rootScope.lpa, function(sst) {
-            _.each(sst.list.getList(), function(e) {
-                if (e.checked) {
-                    e.numeroCheque = sst.numeroCheque
-                    rtn.push(e);
-                }
-            })
-        })
-        edisonAPI.compta.flush(rtn).then(function(resp) {
-            LxNotificationService.success(resp.data);
-            _this.reloadLPA()
-        }).catch(function(err) {
-            LxNotificationService.error(err.data);
-        })
-    }
-    _this.reloadList = function(artisan) {
-        artisan.total = artisan.list.getTotal()
-        artisan.total = artisan.list.getTotal(true)
-        artisan.total = artisan.list.getTotal()
-    }
-    _this.reloadLPA = function() {
-        var rtn = [];
-        _.each($rootScope.lpa, function(sst) {
-            _.each(sst.list.getList(), function(e) {
-                if (e.checked) {
-                    rtn.push(e.id);
-                }
-            })
-        })
-        _this.loadData(rtn)
-    }
-
-    _this.print = function(type) {
-        openPost('/api/intervention/print', {
-            type: type,
-            data: $rootScope.lpa
-        });
-    }
-}
-
-
-angular.module('edison').controller('LpaController', LpaController);
-
 angular.module('edison').controller('ListeArtisanController', _.noop);
 
 angular.module('edison').controller('ListeDevisController', _.noop);
@@ -4609,6 +4622,135 @@ var StatsController = function(tabContainer, $routeParams, edisonAPI, $rootScope
 }
 angular.module('edison').controller('StatsController', StatsController);
 
+var editCombos = function(tabContainer, edisonAPI, $rootScope, $scope, $location, LxNotificationService, socket) {
+    "use strict";
+    var _this = this;
+    _this.tab = tabContainer.getCurrentTab();
+    _this.tab.setTitle('Produits');
+
+
+    var base = {
+        "id": 29300,
+        "categorie": "EL",
+        "description": "RECHERCHE DE PANNE ELCTRIQUE",
+        "sst": 31,
+        "file": [],
+        "tva": 10,
+        "coutFourniture": 0,
+        "enDemarchage": false,
+        "aDemarcher": false,
+        "reglementSurPlace": false,
+        "prixFinal": 0,
+        "prixAnnonce": 130,
+        "modeReglement": "CH",
+        "fourniture": [],
+        "produits": [],
+        "remarque": "Pas de remarque(s)",
+        "descriptionTags": [],
+        "artisan": {
+            "id": 31,
+            "nomSociete": "SODESEN"
+        },
+        "savEnCours": true,
+        "litigesEnCours": true,
+        "litiges": [],
+        "sav": [],
+        "client": {
+            "civilite": "M.",
+            "nom": "DELORME",
+            "email": "",
+            "location": [
+                45.7592,
+                4.77779
+            ],
+            "address": {
+                "n": "19",
+                "r": "RUE DES CERISIERS",
+                "v": "TASSIN-LA-DEMI-LUNE",
+                "cp": "69160",
+                "lt": 45.7592,
+                "lg": 4.77779
+            },
+            "telephone": {
+                "tel1": "0478346059",
+                "origine": "0478346059"
+            },
+            "prenom": "CHRISTIAN"
+        },
+        "facture": {
+            "civilite": "M.",
+            "nom": "DELORME",
+            "email": "",
+            "location": [
+                45.7592,
+                4.77779
+            ],
+            "address": {
+                "n": "19",
+                "r": "RUE DES CERISIERS",
+                "v": "TASSIN-LA-DEMI-LUNE",
+                "cp": "69160",
+                "lt": 45.7592,
+                "lg": 4.77779
+            },
+            "telephone": {
+                "tel1": "0478346059",
+                "origine": "0478346059"
+            },
+            "prenom": "CHRISTIAN"
+        },
+        "produits": [],
+        "historique": [],
+        "comments": [],
+        "date": {
+            "intervention": "2015-09-17T11:00:00.000Z",
+            "envoi": "2015-09-17T09:11:14.000Z",
+            "ajout": "2015-09-17T09:11:14.000Z"
+        },
+        "login": {
+            "ajout": "clement_b",
+            "envoi": "clement_b"
+        },
+        "status": "ENC"
+    }
+
+
+
+    edisonAPI.combo.list().then(function(resp) {
+        $scope.plSave = resp.data
+        $scope.pl = _.clone(resp.data);
+    })
+
+    _this.save = function() {
+        edisonAPI.combo.save($scope.pl).then(function(resp) {
+            $scope.pl = resp.data
+            LxNotificationService.success("Les produits on été mis a jour");
+        }, function(err) {
+            LxNotificationService.error("Une erreur est survenu (" + JSON.stringify(err.data) + ')');
+          //  edisonAPI.combo.save($scope.plSave);
+        })
+    }
+
+    _this.getInter = function(prods)  {
+        var x = _.clone(base)
+        x.produits = prods.produits;
+        return x;
+    }
+
+    _this.add = function() {
+        $scope.pl.push({
+            produits: [],
+            title: '',
+            open: true,
+            text: ""
+        })
+    }
+
+
+
+}
+angular.module('edison').controller('editCombos', editCombos);
+
 var editProducts = function(tabContainer, edisonAPI, $rootScope, $scope, $location, LxNotificationService, socket) {
     "use strict";
     var _this = this;
@@ -4625,17 +4767,20 @@ var editProducts = function(tabContainer, edisonAPI, $rootScope, $scope, $locati
         $scope.pl = _.map(resp.data, single);
     })
 
-    var save = _.throttle(function() {
-        edisonAPI.product.save($scope.pl).then(function() {
-            //  LxNotificationService.success("Les produits on été mis a jour");
+    _this.save = function() {
+        edisonAPI.product.save($scope.pl).then(function(resp) {
+            $scope.pl = _.map(resp.data, single);
+            LxNotificationService.success("Les produits on été mis a jour");
+        }, function(err) {
+            LxNotificationService.error("Une erreur est survenu (" + JSON.stringify(err.data) + ')');
         })
-    }, 500)
+    }
 
-    $scope.$watch('pl', function(curr, prev) {
-        if (curr && prev && !_.isEqual(prev, curr)) {
-            save()
-        }
-    }, true)
+    /* $scope.$watch('pl', function(curr, prev) {
+         if (curr && prev && !_.isEqual(prev, curr)) {
+             save()
+         }
+     }, true)*/
 
 
 }

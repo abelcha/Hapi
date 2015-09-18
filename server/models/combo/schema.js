@@ -1,19 +1,19 @@
 module.exports = function(db) {
 
     return new db.Schema({
-        pu: {
-            type: Number,
-            required: true
-        },
         title: {
             type: String,
             required: true
         },
-        desc: {
+        ref: {
             type: String,
             required: true
         },
-        ref: {
+        produits: {
+            type: Array,
+            required: true
+        },
+        text: {
             type: String,
             required: true
         }

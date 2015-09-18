@@ -14,17 +14,20 @@ var editProducts = function(tabContainer, edisonAPI, $rootScope, $scope, $locati
         $scope.pl = _.map(resp.data, single);
     })
 
-    var save = _.throttle(function() {
-        edisonAPI.product.save($scope.pl).then(function() {
-            //  LxNotificationService.success("Les produits on été mis a jour");
+    _this.save = function() {
+        edisonAPI.product.save($scope.pl).then(function(resp) {
+            $scope.pl = _.map(resp.data, single);
+            LxNotificationService.success("Les produits on été mis a jour");
+        }, function(err) {
+            LxNotificationService.error("Une erreur est survenu (" + JSON.stringify(err.data) + ')');
         })
-    }, 500)
+    }
 
-    $scope.$watch('pl', function(curr, prev) {
-        if (curr && prev && !_.isEqual(prev, curr)) {
-            save()
-        }
-    }, true)
+    /* $scope.$watch('pl', function(curr, prev) {
+         if (curr && prev && !_.isEqual(prev, curr)) {
+             save()
+         }
+     }, true)*/
 
 
 }

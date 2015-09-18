@@ -147,7 +147,7 @@ module.exports = [{
         quantite: 1,
         pu: 0
     }, {
-        title: "Remise en conformité électrique NF C15-100",
+        title: "TABLEAU ELECTRIQUE 1 RANGEE - 13 MODULES",
         desc: "TABLEAU ELECTRIQUE 1 RANGEE - 13 MODULES",
         quantite: 1,
         pu: 139.10
@@ -245,12 +245,12 @@ module.exports = [{
     ref: "DEVIS_CHD_GM_ELM",
     text: "<u>devis de remplacement de votre chaudière gaz</u>",
     produits: [{
-        title: "Installation d’une chaudière gaz (chauffage + eau chaude sanitaire)\n" +
+        desc: "Installation d’une chaudière gaz (chauffage + eau chaude sanitaire)\n" +
             "Dépose complète de l’existant\n" +
             "Mise à la décharge de l’unité de chauffage existante" +
             "Mise en conformité des raccordements gaz\n" +
             "Installation et mise en service inclus\n",
-        desc: "Installation d’une chaudière gaz (chauffage + eau chaude sanitaire)",
+        title: "Installation d’une chaudière gaz",
         quantite: 1,
         pu: 0
     }, {
