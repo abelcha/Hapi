@@ -41,7 +41,9 @@ global.isWorker = false;
 
 new edison.timer();
 
-app.get('/api/client/:id/telephone', edison.axialis.get)
+app.get('/api/client/:id/svi/contact', edison.axialis.contact)
+app.get('/api/client/:id/svi/callback', edison.axialis.callback)
+
 app.get('/favicon.ico', function(req, res) {
     res.sendFile(process.cwd() + '/front/assets/img/favicon.ico')
 })

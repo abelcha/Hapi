@@ -26,6 +26,7 @@ module.exports = function(app) {
 
     app.get('/api/search/:text', edison.search)
 
+
     var uniqueModel = function(model, method, req, res) {
         return new Promise(function(resolve, reject) {
             var idIsNumber = model.schema.paths._id.instance === 'Number'

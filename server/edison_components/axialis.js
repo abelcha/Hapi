@@ -1,11 +1,50 @@
+var ok = function(telephone) {
+    return ({
+        status_code: 200,
+        description: 'OK',
+        redirect_to: telephone
+    });
+}
+
 module.exports = {
-    get: function(req, res) {
+    callback: function(req, res) {
+        var _ = require('lodash');
+        var q = req.query;
+        if (req.query.api_key !== '79dl5hSkApZF9p407307T0AVmPV4W7sD') {
+            return res.sendStatus(401)
+        }
+
+        if (!req.query.call_origin) {
+            return res.json({
+                status_code: 401,
+                description: 'Invalid Request'
+            });
+        }
+        db.model('intervention').findOne({
+            $or: [{
+                'client.telephone.tel1': req.query.call_origin
+            }, {
+                'client.telephone.tel2': req.query.call_origin
+            }, {
+                'client.telephone.tel3': req.query.call_origin
+            }]
+        }).populate('sst').then(function(resp) {
+            if (!resp) {
+                return res.json({
+                    status_code: 402,
+                    description: 'partenaire inconnu'
+                })
+            }
+            res.json(ok(resp.sst.telephone.tel1))
+        })
+    },
+    contact: function(req, res) {
         var _ = require('lodash');
         var q = req.query;
         var resps = [{
             status_code: 200,
             description: "OK",
-            telephone_client: "0633138868"
+            telephone_redirect: "0633138868"
         }, {
             status_code: 401,
             description: "Client inconnu"
@@ -21,13 +60,8 @@ module.exports = {
         }]
 
 
-        var ok = function(telephone) {
-            var rtn = resps[0];
-            rtn.telephone_client = telephone
-            res.json(rtn);
-        }
         if (req.query.api_key !== '79dl5hSkApZF9p407307T0AVmPV4W7sD') {
-        	return res.sendStatus(401)
+            return res.sendStatus(401)
         }
         if (!req.params.id.match(/^\d+$/)) {
             return res.json(resps[1]);
@@ -41,16 +75,15 @@ module.exports = {
                 return res.json(resps[1])
             var artisan = doc.artisan.id
             if (q.call_origin !== artisan.telephone.tel1 && q.call_origin !== artisan.telephone.tel2) {
-            	if (!req.query.sst_id) {
-            		return res.json(resps[2])
-            	}
-                else if (parseInt(req.query.sst_id) === artisan.id) {
-                    return ok(doc.client.telephone.tel1);
+                if (!req.query.sst_id) {
+                    return res.json(resps[2])
+                } else if (parseInt(req.query.sst_id) === artisan.id) {
+                    return res.json(ok(doc.client.telephone.tel1));
                 } else {
                     return res.json(resps[4])
                 }
             } else {
-                return ok(doc.client.telephone.tel1);
+                return res.json(ok(doc.client.telephone.tel1))
             }
         }, function() {
             res.sendStatus(500)

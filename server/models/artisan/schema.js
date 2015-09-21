@@ -14,6 +14,7 @@ module.exports = function(db) {
         },
         subStatus: String,
         date: {
+            dump: Date,
             ajout: {
                 type: Date,
                 default: Date.now
