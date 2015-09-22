@@ -16,7 +16,6 @@ module.exports = function(schema) {
                 doc.facture.tel = doc.client.telephone.tel1;
                 doc.datePlain = moment.tz('Europe/Paris').format('LL');
                 doc.user = req.session;
-                console.log('ENVOI:>', doc.user)
                 doc.acquitte = false;
                 doc.type = "devis"
                 return PDF([{

@@ -26,15 +26,15 @@
 
 
     module.exports.postSave = function(doc, data, session) {
-        db.model('document').changeLink({
+/*        db.model('document').changeLink({
             oldID: data.tmpID,
             newID: doc.id,
             model: 'intervention'
-        });
-        db.model('calls').changeLink({
+        });*/
+/*        db.model('calls').changeLink({
             oldID: data.tmpID,
             newID: doc.id,
-        })
+        })*/
         if (data.devisOrigine) {
             db.model('devis').findOne({
                     id: data.devisOrigine
