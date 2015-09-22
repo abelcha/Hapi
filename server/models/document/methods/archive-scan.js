@@ -27,50 +27,35 @@ module.exports = function(schema) {
                 /*  edison.v1.set("update ecritures set t_stasmp='" + _.random(10, 100) + "' WHERE 1=1",function(err, resp) {
                       console.log(err, resp)
                   });*/
+            var i = 0;
+            var limit = req.query.limit || 100;
+            var archiveFile = function(file, cb) {
+                console.log(String(i++) + '/' + String(limit))
+                document.move('/SCAN/' + file.name, '/SCAN_ARCHIVES/' + file.name)
+                    .then(function(resp) {
+                        console.log('MV', file.name)
+                        edison.v1.set("UPDATE scanner SET archived='1' WHERE id='" + file.id + "'", function() {
+                            console.log('SAVED', file.name)
+                            cb(null)
+                        })
+                    }, function(err) {
+                        console.log('ERR', file.name, err)
 
-            var archiveFile = function(file) {
-                return new Promise(function(resolve, reject) {
-                    document.move('/SCAN/' + file.name, '/SCAN_ARCHIVES/' + file.name)
-                        .then(function(resp) {
-                            edison.v1.set("UPDATE scanner SET archived='1' WHERE id='" + file.id + "'", resolve)
-                        }, reject);
-                })
+                        cb(null)
+                    });
             }
 
 
             var i = 0;
-            var __archiveLoop = function() {
-                console.log('archiveloop')
-                edison.v1.get("SELECT * FROM scanner WHERE checked='1' AND name!='' AND archived='0' AND moved='1' LIMIT " + req.query.limit || 100  , function(err, resp) {
+            edison.v1.get("SELECT * FROM scanner WHERE checked='1' AND archived='0' AND moved='1' LIMIT " + limit, function(err, resp) {
                     /* for (var i = 0; i < resp.length; i+= 5) {
                          requestP
                      };*/
-                    async.each(resp, function(e, cb) {
-                        archiveFile(e).then(function(err, resp) {
-                            console.log('OK', err, resp)
-                            cb()
-                        }, function(err)  {
-                            console.log('ERR', err)
-                            cb()
-                        })
-                    }, function() {
-                        if (++i < (req.query.iteration ||  10)) {
-                            _.delay(__archiveLoop, req.query.delay || 5000)
-                        } else {
-                            resolve('okfinal')
-                        }
+                    async.eachLimit(resp, 4, archiveFile, function(err, resp) {
+                        console.log(err, resp)
+                        resolve('ok')
                     })
-
-                    /* document.move('/SCAN/' + e.name, '/SCAN_ARCHIVES/' + e.name)
-                         .then(function(resp) {
-                             console.log('yay moved')
-                         }, function(err) {
-                             console.log('ERR', err)
-                         });*/
-                    //console.log(resp);
                 })
-            }
-            __archiveLoop()
                 /*            var convert = function(ts) {
                                 var dt = ts.replace('.', '-').split('-').slice(0, -4).join('-');
                                 var hr = ts.replace('.', '-').split('-').slice(3, 6).join(':');

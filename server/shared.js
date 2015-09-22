@@ -11,6 +11,7 @@ module.exports = function() {
         console.log((new prettyError().render(e)));
     }
 
+    require('nodeify').extend();
     var key = requireLocal('config/_keys');
     var dep = require(process.cwd() + '/server/loadDependencies');
     global.edison = dep.loadDir(process.cwd() + "/server/edison_components");

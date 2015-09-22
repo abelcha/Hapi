@@ -10,10 +10,10 @@ module.exports = {
                 key: key.alvin.pass
             }
         }, function(err, resp, body) {
-            if (resp.statusCode === 200) {
+            if (resp && resp.statusCode === 200) {
                 cb(null, parseInt(body));
             } else {
-                cb(body)
+                cb(body || 'ERR')
             }
         })
     },
@@ -28,10 +28,10 @@ module.exports = {
                 key: key.alvin.pass
             }
         }, function(err, resp, body) {
-            if (resp.statusCode === 200) {
+            if (resp && resp.statusCode === 200) {
                 cb(null, JSON.parse(body));
             } else {
-                cb(body)
+                cb(body || 'ERR')
             }
         })
     }
