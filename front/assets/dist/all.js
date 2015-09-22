@@ -439,6 +439,793 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
     $locationProvider.html5Mode(true);
 });
 
+angular.module('edison').directive('allowPattern', [allowPatternDirective]);
+
+function allowPatternDirective() {
+    return {
+        restrict: "A",
+        compile: function(tElement, tAttrs) {
+            return function(scope, element, attrs) {
+                // I handle key events
+                element.bind("keypress", function(event) {
+                    var keyCode = event.which || event.keyCode; // I safely get the keyCode pressed from the event.
+                    var keyCodeChar = String.fromCharCode(keyCode); // I determine the char from the keyCode.
+
+                    // If the keyCode char does not match the allowed Regex Pattern, then don't allow the input into the field.
+                    if (!keyCodeChar.match(new RegExp(attrs.allowPattern, "i"))) {
+                        event.preventDefault();
+                        return false;
+                    }
+
+                });
+            };
+        }
+    };
+}
+
+angular.module('edison').directive('capitalize', function() {
+    "use strict";
+    return {
+        require: 'ngModel',
+        link: function(scope, element, attrs, modelCtrl) {
+            modelCtrl.$parsers.push(function(input) {
+                return typeof input === "string" ? input.toUpperCase() : "";
+            });
+            element.css("text-transform", "uppercase");
+        }
+    };
+});
+
+
+angular.module('edison').directive('creditcard', function() {
+    "use strict";
+    return {
+        require: 'ngModel',
+        scope: {
+            inline: "=",
+        },
+        link: function(scope, element, attrs, modelCtrl) {
+            modelCtrl.$parsers.push(function(input) {
+                return input.replace('x', 'AAA')
+            });
+        }
+    };
+});
+
+angular.module('edison').directive('dropdownRow', function(Devis, productsList, edisonAPI, config, $q, $timeout, Intervention) {
+    "use strict";
+
+    return {
+        restrict: 'E',
+        replace: true,
+        templateUrl: '/Directives/dropdown-row.html',
+        scope: {
+            model: "@",
+            row: '=',
+        },
+        link: function(scope, element, attrs) {
+            scope._ = _;
+            scope.Intervention = Intervention
+            scope.Devis = Devis
+            scope._model = scope.model || "intervention"
+
+            scope.expendedStyle = {
+                height: 0,
+                overflow: 'hidden'
+            };
+            scope.expendedReady = false;
+            scope.data = {};
+            scope.config = config
+            if (scope._model === "intervention") {
+                edisonAPI.intervention.get(scope.row.id, {
+                    populate: ['sst', 'devisOrigine'].join(',')
+                }).then(function(result) {
+                    scope.data = result.data;
+                    if (scope.data.produits) {
+                        scope.produits = new productsList(scope.data.produits);
+                    }
+                    scope.client = scope.data.client;
+                    scope.address = scope.client.address;
+
+                })
+
+            } else if (scope._model === "devis") {
+                var pAll = [
+                    edisonAPI.devis.get(scope.row.id, {
+                        populate: 'transfertId'
+                    }),
+                ]
+                var pThen = function(result) {
+                    scope.data = result[0].data;
+                    scope.produits = new productsList(scope.data.produits);
+                    scope.hist = scope.data.historique
+                    scope.client = scope.data.client;
+                    scope.address = scope.client.address;
+                }
+            } else if (scope._model === 'artisan') {
+                pAll = [
+                    edisonAPI.artisan.get(scope.row.id),
+                    edisonAPI.artisan.getStats(scope.row.id)
+                ]
+                pThen = function(result) {
+                    scope.data = result[0].data;
+                    scope.artisan = scope.data;
+                    scope.artisan.stats = result[1].data;
+                    scope.address = scope.artisan.address
+                }
+            }
+
+            $q.all(pAll).then(pThen)
+            scope.getStaticMap = function() {
+                var q = "?format=jpg&width=411&height=210px&precision=0&origin=" + scope.address.lt + ", " + scope.address.lg;
+                if (_.get(scope, 'data.artisan.address.lt'))
+                    q += "&destination=" + scope.data.artisan.address.lt + ", " + scope.data.artisan.address.lg;
+                else
+                    q += "&zoom=15";
+                return "/api/mapGetStatic" + q;
+            }
+
+        }
+    };
+});
+
+angular.module('edison').directive('elastic', [
+    '$timeout',
+    function($timeout) {
+        return {
+            restrict: 'A',
+            link: function($scope, element) {
+                $scope.initialHeight = $scope.initialHeight || element[0].style.height;
+                var resize = function() {
+                    element[0].style.height = $scope.initialHeight;
+                    element[0].style.height = "" + element[0].scrollHeight + "px";
+                };
+                element.on("input change", resize);
+                $timeout(resize, 0);
+            }
+        };
+    }
+]);
+angular.module('edison').directive('ngEnter', function () {
+    "use strict";
+    return function (scope, element, attrs) {
+        element.bind("keydown keypress", function (event) {
+            if(event.which === 13) {
+                scope.$apply(function (){
+                    scope.$eval(attrs.ngEnter);
+                });
+
+                event.preventDefault();
+            }
+        });
+    };
+});
+ angular.module('edison').directive('infoLitige', function() {
+     "use strict";
+     return {
+         replace: false,
+         restrict: 'E',
+         templateUrl: '/Templates/info-litige.html',
+         scope: {
+             data: '=',
+         },
+         link: function(scope, elem) {
+             scope.$watch('data.litige.description', function(curr, prev) {
+                 if (scope.data.litige && !scope.data.litige.closed && scope.data.litige.description)
+                     scope.data.litige.open = true
+                 if (!scope.data.litige.description) {
+                     scope.data.litige.open = false
+                 }
+             })
+         }
+     }
+ });
+
+ var Controller = function(tabContainer, FiltersFactory, ContextMenu, LxProgressService, edisonAPI, DataProvider, $routeParams, $location, $rootScope, $filter, config, ngTableParams) {
+     var _this = this;
+     LxProgressService.circular.show('#5fa2db', '#globalProgress');
+     var currentFilter;
+     var currentHash = $location.hash();
+     var dataProvider = new DataProvider(_this.model, $routeParams.hashModel);
+     var filtersFactory = new FiltersFactory(_this.model)
+     if ($routeParams.fltr) {
+         currentFilter = filtersFactory.getFilterByUrl($routeParams.fltr)
+     }
+
+
+     if (_this.embedded) {
+         _this.$watch('filter', function() {
+            console.log('FILTER_CHANGE')
+             if (_.size(_this.filter)) {
+                 _this.customFilter = function(inter) {
+                     for (var i in _this.filter) {
+                         if (_this.filter[i] !== inter[i])
+                             return false
+                     }
+                     return true
+                 }
+                 if (_this.tableParams) {
+                     dataProvider.applyFilter(currentFilter, _this.tab.hash, _this.customFilter);
+                     _this.tableParams.reload();
+                 }
+             }
+         })
+
+     }
+
+     _this.smallWin = window.innerWidth < 1200
+     $(window).resize(function() {
+         _this.smallWin = window.innerWidth < 1200
+     })
+
+     _this.tab = tabContainer.getCurrentTab();
+     _this.tab.hash = currentHash;
+     _this.config = config;
+     var title = currentFilter ? currentFilter.long_name : _this.model;
+     if ($routeParams.sstid) {
+         var id = parseInt($routeParams.sstid)
+         _this.customFilter = function(inter) {
+             return inter.ai === id;
+         }
+     } else {
+         _this.tab.setTitle(title, currentHash);
+     }
+     if ($routeParams.sstids_in) {
+         _this.customFilter = function(inter) {
+             return _.contains($routeParams.sstids_in, inter.id);
+         }
+     }
+
+     var actualiseUrl = _.throttle(function(fltrs, page) {
+         $location.search('page', page !== 1 ? page : undefined);
+         _.each(fltrs, function(e, k) {
+             // console.log(e, k)
+             if (!e) e = undefined;
+             if (e !== "hashModel") {
+                 $location.search(k, e);
+
+             } else {
+                 //console.log(e)
+             }
+         })
+     }, 250)
+
+     dataProvider.init(function(err, resp) {
+
+         dataProvider.applyFilter(currentFilter, _this.tab.hash, _this.customFilter);
+         var tableParameters = {
+             page: $location.search()['page'] ||  1,
+             total: dataProvider.filteredData.length,
+             filter: _.omit($location.search(), 'hashModel', 'page', 'sstid'),
+             sorting: {
+                 id: 'desc'
+             },
+             count: _this.limit || 100
+         };
+         var tableSettings = {
+             total: dataProvider.filteredData,
+             getData: function($defer, params) {
+                 actualiseUrl(params.filter(), params.page())
+                 var data = dataProvider.filteredData;
+                 data = $filter('tableFilter')(data, params.filter());
+                 _this.currentFilter = _.clone(params.filter());
+                 params.total(data.length);
+                 data = $filter('orderBy')(data, params.orderBy());
+                 $defer.resolve(data.slice((params.page() - 1) * params.count(), params.page() * params.count()));
+             },
+             filterDelay: 100
+         }
+         _this.tableParams = new ngTableParams(tableParameters, tableSettings);
+         LxProgressService.circular.hide()
+     })
+
+     var lastChange = 0;
+     $rootScope.$on(_this.model.toUpperCase() + '_CACHE_LIST_CHANGE', function(event, newData) {
+         if (tabContainer.getCurrentTab() && _this.tab.fullUrl === tabContainer.getCurrentTab().fullUrl) {
+             dataProvider.applyFilter(currentFilter, _this.tab.hash, _this.customFilter);
+             _this.tableParams.reload();
+             //_this.tableParams.orderBy(_this.tableParams.$params.sorting)
+             //_this.tableParams.filter(_this.tableParams.$params.filter)
+         }
+     })
+
+
+     _this.contextMenu = new ContextMenu(_this.model)
+
+
+     _this.rowRightClick = function($event, inter) {
+         edisonAPI[_this.model].get(inter.id, {
+                 populate: 'sst'
+             })
+             .then(function(resp) {
+                 _this.contextMenu.setData(resp.data);
+                 _this.contextMenu.setPosition($event.pageX - (($routeParams.sstid || _this.embedded)  ? 50 : 0), $event.pageY + ($routeParams.sstid || _this.embedded ? 0 : 200))
+                 _this.contextMenu.open();
+             })
+     }
+
+     _this.rowClick = function($event, inter) {
+         if (_this.contextMenu.active)
+             return _this.contextMenu.close();
+         if ($event.metaKey || $event.ctrlKey) {
+             tabContainer.addTab('/' + _this.model + '/' + inter.id, {
+                 title: ('#' + inter.id),
+                 setFocus: false,
+                 allowDuplicates: false
+             });
+         } else {
+             if (_this.expendedRow === inter.id) {
+                 _this.expendedRow = undefined;
+             } else {
+                 _this.expendedRow = inter.id
+             }
+         }
+     }
+ }
+
+
+
+ angular.module('edison').directive('lineupIntervention', function(tabContainer, FiltersFactory, ContextMenu, LxProgressService, edisonAPI, DataProvider, $routeParams, $location, $rootScope, $filter, config, ngTableParams) {
+     "use strict";
+     var arg = arguments;
+     return {
+         replace: false,
+         restrict: 'E',
+         templateUrl: '/Templates/lineup-intervention.html',
+         scope: {
+             limit: '=',
+             embedded: '=',
+             filter: '=',
+         },
+         controller: function($scope) {
+
+             $scope.model = 'intervention'
+             Controller.apply($scope, arg)
+         }
+     }
+ });
+
+ angular.module('edison').directive('lineupDevis', function(tabContainer, FiltersFactory, ContextMenu, LxProgressService, edisonAPI, DataProvider, $routeParams, $location, $rootScope, $filter, config, ngTableParams) {
+     "use strict";
+     var arg = arguments;
+     return {
+         replace: false,
+         restrict: 'E',
+         templateUrl: '/Templates/lineup-devis.html',
+         scope: {
+             filter: '=',
+         },
+         controller: function($scope) {
+             $scope.model = 'devis'
+             Controller.apply($scope, arg)
+         }
+     }
+ });
+
+ angular.module('edison').directive('lineupArtisan', function(tabContainer, FiltersFactory, ContextMenu, LxProgressService, edisonAPI, DataProvider, $routeParams, $location, $rootScope, $filter, config, ngTableParams) {
+     "use strict";
+     var arg = arguments;
+     return {
+         replace: false,
+         restrict: 'E',
+         templateUrl: '/Templates/lineup-artisan.html',
+         scope: {
+
+         },
+         controller: function($scope) {
+             $scope.model = 'artisan'
+
+             Controller.apply($scope, arg)
+         }
+     }
+ });
+
+angular.module('edison').directive('ngRightClick', function($parse) {
+    "use strict";
+    return function(scope, element, attrs) {
+        element.bind('contextmenu', function(event) {
+            if (!(event.altKey ||  event.ctrlKey || event.shiftKey ||  ["INPUT", "TEXTAREA"].indexOf(event.target.nodeName) >= 0)) {
+                scope.$apply(function() {
+                    event.preventDefault();
+                    $parse(attrs.ngRightClick)(scope, {
+                        $event: event
+                    });
+                });
+            }
+        });
+    };
+});
+
+ angular.module('edison').directive('link', ['FiltersFactory', '$rootScope', function(FiltersFactory, $rootScope) {
+     "use strict";
+     return {
+         restrict: 'AE',
+         replace: true,
+         template: '<li>' +
+             '      <a href="{{fullUrl}}" >' +
+             '            <i ng-if="icon" class = "menu-icon fa fa-{{icon}}"> </i>' +
+             '            <span ng-class="{bold : bold, textWhite: textWhite}" class="mm-text">{{title || exFltr.long_name}}</span>' +
+             '            <span ng-if="total"class="label label-{{_color}}">{{total}}</span>' +
+             '        </a>' +
+             '      </li>',
+         scope: {
+             fltr: '@',
+             login: '@',
+             today: '@',
+             icon: '@',
+             title: '@',
+             url: '@',
+             textWhite: '@',
+             model: '@',
+             bold: '@',
+             count: '@',
+             noCounter: '@',
+             color: '@',
+             hashModel: '@'
+         },
+         link: function(scope, element, attrs) {
+             var findTotal = function() {
+                 if (scope.noCounter)
+                     return undefined;
+                 var total = 0;
+                 if (scope.login) {
+                     var t = _.find($rootScope.interventionsStats, function(e) {
+                         return e.login === scope.login;
+                     })
+                     total += _.get(t, scope.fltr + '.total', 0);
+                 } else {
+                     _.each($rootScope.interventionsStats, function(t) {
+                         total += _.get(t, scope.fltr + '.total', 0);
+                     })
+                 }
+                 return total;
+             }
+             $rootScope.$watch('interventionsStats', function() {
+                 scope.total = findTotal();
+             })
+             scope.$watch('login', function(current, prev) {
+                 scope._color = (scope.color || 'success')
+                 scope._model = scope.model || 'intervention';
+                 var filtersFactory = new FiltersFactory(scope._model);
+                 scope.exFltr = filtersFactory.getFilterByName(scope.fltr);
+                 scope.total = findTotal();
+                 scope._url = scope.exFltr.url.length ? "/" + scope.exFltr.url : scope.exFltr.url;
+                 scope._login = scope.login && !scope.hashModel ? ("#" + scope.login) : '';
+                 scope._hashModel = scope.hashModel ? ("?" + scope.hashModel + "=" + scope.login) : '';
+                 scope.fullUrl = scope.url ||  ('/' + scope._model + '/list' + scope._url + scope._hashModel + scope._login)
+             })
+
+         }
+     };
+ }]);
+
+ angular.module('edison').directive('simpleLink', ['FiltersFactory', '$rootScope', function(FiltersFactory, $rootScope) {
+     "use strict";
+     return {
+         restrict: 'AE',
+         replace: true,
+         template: '<li>' +
+             '      <a href="{{url}}"  target="{{target}}">' +
+             '            <i ng-if="icon" class = "menu-icon fa fa-{{icon}}"> </i>' +
+             '            <span class="mm-text">{{title}}</span>' +
+             '        </a>' +
+             '      </li>',
+         scope: {
+             icon: '@',
+             title: '@',
+             url: '@',
+         },
+         link: function(scope, element, attrs) {
+             scope.target = (typeof attrs.extern === 'string' ? '_blank' : '')
+         }
+     };
+ }]);
+
+
+ angular.module('edison').directive('linkSeparator', [function() {
+     "use strict";
+     return {
+         restrict: 'AE',
+         replace: true,
+         template: '<li>' +
+             '      <a>' +
+             '            <i ng-if="icon" class = "menu-icon fa fa-{{icon}}"> </i>' +
+             '            <strong><span class="mm-text">{{title}}</span></strong>' +
+             '        </a>' +
+             '      </li>',
+         scope: {
+             icon: '@',
+             title: '@',
+         },
+         link: function(scope, element, attrs) {
+
+         }
+     };
+ }]);
+
+
+ angular.module('edison').service('sidebarSM', function() {
+
+     var C = function() {
+         this.display = false;
+     };
+     C.prototype.set = function(name, value) {
+         this[name] = value;
+     }
+     return new C();
+
+ });
+
+
+
+ angular.module('edison').directive('sideBar', ['sidebarSM', function(sidebarSM) {
+     "use strict";
+     return {
+         replace: false,
+         restrict: 'E',
+         templateUrl: '/Directives/side-bar.html',
+         transclude: true,
+         scope: {},
+         link: function(scope, element, attrs) {
+             scope.sidebarSM = sidebarSM;
+         }
+     }
+ }]);
+
+ angular.module('edison').directive('dropDown', ['config', 'sidebarSM', '$timeout', function(config, sidebarSM, $timeout) {
+     "use strict";
+
+
+     return {
+         replace: true,
+         restrict: 'E',
+         templateUrl: '/Directives/dropdown.html',
+         transclude: true,
+         scope: {
+             title: '@',
+             icon: '@',
+             isOpen: '@',
+             openDefault: '&'
+         },
+         link: function(scope, element, attrs) {
+             scope.openDefault = scope.$eval(scope.openDefault)
+             scope.isopen = scope.openDefault
+             scope.toggleSidebar = function($event, $elem) {
+                 var $ul = $(element).find('>ul')
+                 if ($('#main-menu').width() > 200) {
+                     if (scope.isopen) {
+                         $ul.velocity({
+                             height: 0
+                         }, 200, function() {
+                             scope.$apply(function() {
+                                 scope.isopen = false;
+                             })
+                         });
+                     } else {
+                         $ul.css('height', '100%')
+                         scope.isopen = true
+                     }
+                 } else {
+
+                     $('#mmc-ul > .mmc-wrapper').html($ul.find('> *'));
+                     sidebarSM.set("display", true);
+                     $timeout(function checkHover() {
+                         if (!$('#mmc-ul').is(":hover")) {
+                             sidebarSM.set("display", false);
+                             $ul.html($('#mmc-ul > .mmc-wrapper').find(">*"))
+                             $('#mmc-ul > .mmc-wrapper').html('');
+                         } else {
+                             $timeout(checkHover, 1000);
+                         }
+                     }, 1000)
+                 }
+             }
+         }
+     };
+ }]);
+
+ angular.module('edison').directive('signalement', function() {
+     "use strict";
+     return {
+         replace: false,
+         restrict: 'E',
+         templateUrl: '/Templates/signalement.html',
+         scope: {
+             sst: '=',
+             exit: '&',
+         },
+         link: function(scope, elem) {
+             console.log('==>', scope.exit);
+             scope.hide = function() {
+                scope.exit()
+             }
+         }
+     }
+ });
+
+angular.module("edison").filter('contactFilter', ['config', function(config) {
+    "use strict";
+
+    var clean = function(str) {
+        return _.deburr(str).toLowerCase();
+    }
+
+    var compare = function(a, b, strictMode) {
+        if (typeof a === "string") {
+            return clean(a).includes(b);
+        } else if (!strictMode) {
+            return clean(String(a)).startsWith(b);
+        } else {
+            return a === parseInt(b);
+        }
+    }
+    return function(dataContainer, input) {
+        var rtn = [];
+        input = clean(input);
+        _.each(dataContainer, function(data) {
+            if (!data.stringify)
+                data.stringify = clean(JSON.stringify(data))
+            if (!input || data.stringify.indexOf(input) >= 0) {
+                rtn.push(data);
+            } else {
+            }
+        })
+        return rtn;
+    }
+}]);
+
+angular.module('edison').filter('crlf', function() {
+	"use strict";
+    return function(text) {
+        return text.split(/\n/g).join('<br>');
+    };
+});
+
+angular.module('edison').filter('loginify', function() {
+    "use strict";
+    return function(obj) {
+        if (!obj)
+            return "";
+        return obj.slice(0, 1).toUpperCase() + obj.slice(1, -2)
+    };
+});
+
+angular.module('edison').filter('relativeDate', function() {
+    "use strict";
+    return function(date, smallWin) {
+        var d = moment((date + 1370000000) * 1000);
+        var l = moment().subtract(4, 'days');
+        if (d < l) {
+            return d.format('DD/MM/YY')
+        } else {
+            var x = d.fromNow().toString()
+            /*if (smallWin) {
+                x = x.replace('heures', 'H')
+                    .replace('heures', 'H')
+                    .replace('jours', 'J')
+                    .replace('jour', 'J')
+                    .replace('il y a ', '- ')
+                    .replace('dans ', '+ ')
+                    .replace('un ', '1 ')
+            }*/
+            return x;
+        }
+        // return moment((date + 1370000000) * 1000).fromNow(no).toString()
+    };
+});
+
+angular.module('edison').filter('reverse', function() {
+    "use strict";
+    return function(items) {
+        if (!items)
+            return [];
+        return items.slice().reverse();
+    };
+});
+
+angular.module("edison").filter('tableFilter', ['config', function(config) {
+    "use strict";
+
+    var clean = function(str) {
+        return _.deburr(str).toLowerCase();
+    }
+
+    var compare = function(a, b, strictMode) {
+        if (typeof a === "string") {
+            return clean(a).includes(b);
+        } else if (!strictMode) {
+            return clean(String(a)).startsWith(b);
+        } else {
+            return a === parseInt(b);
+        }
+    }
+    var compareCustom = function(key, data, input) {
+        if (key === '_categorie') {
+            var cell = config.categoriesHash()[data.c].long_name;
+            return compare(cell, input);
+        }
+        if (key === '_etat') {
+            var cell = config.etatsHash()[data.s].long_name
+            return compare(cell, input);
+        }
+        return true;
+
+    }
+    var compareDate = function(key, data, input) {
+        var md = (data[key] + 1370000000) * 1000;
+        //console.log( input.start, input.end);
+        if (md > input.start.getTime() && md < input.end.getTime()) {
+            return true
+        }
+        return false;
+    }
+
+    var parseDate = function(e) {
+        if (!(/^[0-9\/]+$/).test(e) ||  _.endsWith(e, '/')) {
+            return undefined;
+        }
+        var x = e.split('/');
+        if (x.length === 1) {
+            var month = parseInt(x[0]);
+            return {
+                start: new Date(2015, month - 1),
+                end: new Date(2015, month)
+            }
+        } else if (x.length === 2)  {
+            var day = parseInt(x[0]);
+            var month = parseInt(x[1]);
+            return {
+                start: new Date(2015, month - 1, day),
+                end: new Date(2015, month - 1, day + 1)
+            }
+        }
+        return undefined;
+    }
+
+
+    return function(dataContainer, inputs, strictMode) {
+        var rtn = [];
+        //console.time('fltr')
+        inputs = _.mapValues(inputs, clean);
+        _.each(inputs, function(e, k) {
+            if (k.charAt(0) === '∆') {
+                inputs[k] = parseDate(e);
+            }
+        })
+        _.each(dataContainer, function(data) {
+                if (data.id) {
+                    var psh = true;
+                    _.each(inputs, function(input, k) {
+                        if (input && _.size(input) > 0) {
+                            if (k.charAt(0) === '_') {
+                                if (!compareCustom(k, data, input)) {
+                                    psh = false;
+                                    return false
+                                }
+                            } else if (k.charAt(0) === '∆') {
+                                if (!compareDate(k.slice(1), data, input)) {
+                                    psh = false;
+                                    return false
+                                }
+                            } else {
+                                if (!compare(data[k], input, strictMode)) {
+                                    psh = false;
+                                    return false
+                                }
+                            }
+                        }
+                    });
+                    if (psh === true) {
+                        rtn.push(data);
+                    }
+                }
+            })
+            //console.timeEnd('fltr')
+
+        return rtn;
+    }
+}]);
+
 angular.module('edison').factory('Signalement', function() {
     "use strict";
 
@@ -2727,793 +3514,6 @@ angular.module('edison').directive('infoFourniture', ['config', 'fourniture',
 ]);
 
 
-angular.module("edison").filter('contactFilter', ['config', function(config) {
-    "use strict";
-
-    var clean = function(str) {
-        return _.deburr(str).toLowerCase();
-    }
-
-    var compare = function(a, b, strictMode) {
-        if (typeof a === "string") {
-            return clean(a).includes(b);
-        } else if (!strictMode) {
-            return clean(String(a)).startsWith(b);
-        } else {
-            return a === parseInt(b);
-        }
-    }
-    return function(dataContainer, input) {
-        var rtn = [];
-        input = clean(input);
-        _.each(dataContainer, function(data) {
-            if (!data.stringify)
-                data.stringify = clean(JSON.stringify(data))
-            if (!input || data.stringify.indexOf(input) >= 0) {
-                rtn.push(data);
-            } else {
-            }
-        })
-        return rtn;
-    }
-}]);
-
-angular.module('edison').filter('crlf', function() {
-	"use strict";
-    return function(text) {
-        return text.split(/\n/g).join('<br>');
-    };
-});
-
-angular.module('edison').filter('loginify', function() {
-    "use strict";
-    return function(obj) {
-        if (!obj)
-            return "";
-        return obj.slice(0, 1).toUpperCase() + obj.slice(1, -2)
-    };
-});
-
-angular.module('edison').filter('relativeDate', function() {
-    "use strict";
-    return function(date, smallWin) {
-        var d = moment((date + 1370000000) * 1000);
-        var l = moment().subtract(4, 'days');
-        if (d < l) {
-            return d.format('DD/MM/YY')
-        } else {
-            var x = d.fromNow().toString()
-            /*if (smallWin) {
-                x = x.replace('heures', 'H')
-                    .replace('heures', 'H')
-                    .replace('jours', 'J')
-                    .replace('jour', 'J')
-                    .replace('il y a ', '- ')
-                    .replace('dans ', '+ ')
-                    .replace('un ', '1 ')
-            }*/
-            return x;
-        }
-        // return moment((date + 1370000000) * 1000).fromNow(no).toString()
-    };
-});
-
-angular.module('edison').filter('reverse', function() {
-    "use strict";
-    return function(items) {
-        if (!items)
-            return [];
-        return items.slice().reverse();
-    };
-});
-
-angular.module("edison").filter('tableFilter', ['config', function(config) {
-    "use strict";
-
-    var clean = function(str) {
-        return _.deburr(str).toLowerCase();
-    }
-
-    var compare = function(a, b, strictMode) {
-        if (typeof a === "string") {
-            return clean(a).includes(b);
-        } else if (!strictMode) {
-            return clean(String(a)).startsWith(b);
-        } else {
-            return a === parseInt(b);
-        }
-    }
-    var compareCustom = function(key, data, input) {
-        if (key === '_categorie') {
-            var cell = config.categoriesHash()[data.c].long_name;
-            return compare(cell, input);
-        }
-        if (key === '_etat') {
-            var cell = config.etatsHash()[data.s].long_name
-            return compare(cell, input);
-        }
-        return true;
-
-    }
-    var compareDate = function(key, data, input) {
-        var md = (data[key] + 1370000000) * 1000;
-        //console.log( input.start, input.end);
-        if (md > input.start.getTime() && md < input.end.getTime()) {
-            return true
-        }
-        return false;
-    }
-
-    var parseDate = function(e) {
-        if (!(/^[0-9\/]+$/).test(e) ||  _.endsWith(e, '/')) {
-            return undefined;
-        }
-        var x = e.split('/');
-        if (x.length === 1) {
-            var month = parseInt(x[0]);
-            return {
-                start: new Date(2015, month - 1),
-                end: new Date(2015, month)
-            }
-        } else if (x.length === 2)  {
-            var day = parseInt(x[0]);
-            var month = parseInt(x[1]);
-            return {
-                start: new Date(2015, month - 1, day),
-                end: new Date(2015, month - 1, day + 1)
-            }
-        }
-        return undefined;
-    }
-
-
-    return function(dataContainer, inputs, strictMode) {
-        var rtn = [];
-        //console.time('fltr')
-        inputs = _.mapValues(inputs, clean);
-        _.each(inputs, function(e, k) {
-            if (k.charAt(0) === '∆') {
-                inputs[k] = parseDate(e);
-            }
-        })
-        _.each(dataContainer, function(data) {
-                if (data.id) {
-                    var psh = true;
-                    _.each(inputs, function(input, k) {
-                        if (input && _.size(input) > 0) {
-                            if (k.charAt(0) === '_') {
-                                if (!compareCustom(k, data, input)) {
-                                    psh = false;
-                                    return false
-                                }
-                            } else if (k.charAt(0) === '∆') {
-                                if (!compareDate(k.slice(1), data, input)) {
-                                    psh = false;
-                                    return false
-                                }
-                            } else {
-                                if (!compare(data[k], input, strictMode)) {
-                                    psh = false;
-                                    return false
-                                }
-                            }
-                        }
-                    });
-                    if (psh === true) {
-                        rtn.push(data);
-                    }
-                }
-            })
-            //console.timeEnd('fltr')
-
-        return rtn;
-    }
-}]);
-
-angular.module('edison').directive('allowPattern', [allowPatternDirective]);
-
-function allowPatternDirective() {
-    return {
-        restrict: "A",
-        compile: function(tElement, tAttrs) {
-            return function(scope, element, attrs) {
-                // I handle key events
-                element.bind("keypress", function(event) {
-                    var keyCode = event.which || event.keyCode; // I safely get the keyCode pressed from the event.
-                    var keyCodeChar = String.fromCharCode(keyCode); // I determine the char from the keyCode.
-
-                    // If the keyCode char does not match the allowed Regex Pattern, then don't allow the input into the field.
-                    if (!keyCodeChar.match(new RegExp(attrs.allowPattern, "i"))) {
-                        event.preventDefault();
-                        return false;
-                    }
-
-                });
-            };
-        }
-    };
-}
-
-angular.module('edison').directive('capitalize', function() {
-    "use strict";
-    return {
-        require: 'ngModel',
-        link: function(scope, element, attrs, modelCtrl) {
-            modelCtrl.$parsers.push(function(input) {
-                return typeof input === "string" ? input.toUpperCase() : "";
-            });
-            element.css("text-transform", "uppercase");
-        }
-    };
-});
-
-
-angular.module('edison').directive('creditcard', function() {
-    "use strict";
-    return {
-        require: 'ngModel',
-        scope: {
-            inline: "=",
-        },
-        link: function(scope, element, attrs, modelCtrl) {
-            modelCtrl.$parsers.push(function(input) {
-                return input.replace('x', 'AAA')
-            });
-        }
-    };
-});
-
-angular.module('edison').directive('dropdownRow', function(Devis, productsList, edisonAPI, config, $q, $timeout, Intervention) {
-    "use strict";
-
-    return {
-        restrict: 'E',
-        replace: true,
-        templateUrl: '/Directives/dropdown-row.html',
-        scope: {
-            model: "@",
-            row: '=',
-        },
-        link: function(scope, element, attrs) {
-            scope._ = _;
-            scope.Intervention = Intervention
-            scope.Devis = Devis
-            scope._model = scope.model || "intervention"
-
-            scope.expendedStyle = {
-                height: 0,
-                overflow: 'hidden'
-            };
-            scope.expendedReady = false;
-            scope.data = {};
-            scope.config = config
-            if (scope._model === "intervention") {
-                edisonAPI.intervention.get(scope.row.id, {
-                    populate: ['sst', 'devisOrigine'].join(',')
-                }).then(function(result) {
-                    scope.data = result.data;
-                    if (scope.data.produits) {
-                        scope.produits = new productsList(scope.data.produits);
-                    }
-                    scope.client = scope.data.client;
-                    scope.address = scope.client.address;
-
-                })
-
-            } else if (scope._model === "devis") {
-                var pAll = [
-                    edisonAPI.devis.get(scope.row.id, {
-                        populate: 'transfertId'
-                    }),
-                ]
-                var pThen = function(result) {
-                    scope.data = result[0].data;
-                    scope.produits = new productsList(scope.data.produits);
-                    scope.hist = scope.data.historique
-                    scope.client = scope.data.client;
-                    scope.address = scope.client.address;
-                }
-            } else if (scope._model === 'artisan') {
-                pAll = [
-                    edisonAPI.artisan.get(scope.row.id),
-                    edisonAPI.artisan.getStats(scope.row.id)
-                ]
-                pThen = function(result) {
-                    scope.data = result[0].data;
-                    scope.artisan = scope.data;
-                    scope.artisan.stats = result[1].data;
-                    scope.address = scope.artisan.address
-                }
-            }
-
-            $q.all(pAll).then(pThen)
-            scope.getStaticMap = function() {
-                var q = "?format=jpg&width=411&height=210px&precision=0&origin=" + scope.address.lt + ", " + scope.address.lg;
-                if (_.get(scope, 'data.artisan.address.lt'))
-                    q += "&destination=" + scope.data.artisan.address.lt + ", " + scope.data.artisan.address.lg;
-                else
-                    q += "&zoom=15";
-                return "/api/mapGetStatic" + q;
-            }
-
-        }
-    };
-});
-
-angular.module('edison').directive('elastic', [
-    '$timeout',
-    function($timeout) {
-        return {
-            restrict: 'A',
-            link: function($scope, element) {
-                $scope.initialHeight = $scope.initialHeight || element[0].style.height;
-                var resize = function() {
-                    element[0].style.height = $scope.initialHeight;
-                    element[0].style.height = "" + element[0].scrollHeight + "px";
-                };
-                element.on("input change", resize);
-                $timeout(resize, 0);
-            }
-        };
-    }
-]);
-angular.module('edison').directive('ngEnter', function () {
-    "use strict";
-    return function (scope, element, attrs) {
-        element.bind("keydown keypress", function (event) {
-            if(event.which === 13) {
-                scope.$apply(function (){
-                    scope.$eval(attrs.ngEnter);
-                });
-
-                event.preventDefault();
-            }
-        });
-    };
-});
- angular.module('edison').directive('infoLitige', function() {
-     "use strict";
-     return {
-         replace: false,
-         restrict: 'E',
-         templateUrl: '/Templates/info-litige.html',
-         scope: {
-             data: '=',
-         },
-         link: function(scope, elem) {
-             scope.$watch('data.litige.description', function(curr, prev) {
-                 if (scope.data.litige && !scope.data.litige.closed && scope.data.litige.description)
-                     scope.data.litige.open = true
-                 if (!scope.data.litige.description) {
-                     scope.data.litige.open = false
-                 }
-             })
-         }
-     }
- });
-
- var Controller = function(tabContainer, FiltersFactory, ContextMenu, LxProgressService, edisonAPI, DataProvider, $routeParams, $location, $rootScope, $filter, config, ngTableParams) {
-     var _this = this;
-     LxProgressService.circular.show('#5fa2db', '#globalProgress');
-     var currentFilter;
-     var currentHash = $location.hash();
-     var dataProvider = new DataProvider(_this.model, $routeParams.hashModel);
-     var filtersFactory = new FiltersFactory(_this.model)
-     if ($routeParams.fltr) {
-         currentFilter = filtersFactory.getFilterByUrl($routeParams.fltr)
-     }
-
-
-     if (_this.embedded) {
-         _this.$watch('filter', function() {
-            console.log('FILTER_CHANGE')
-             if (_.size(_this.filter)) {
-                 _this.customFilter = function(inter) {
-                     for (var i in _this.filter) {
-                         if (_this.filter[i] !== inter[i])
-                             return false
-                     }
-                     return true
-                 }
-                 if (_this.tableParams) {
-                     dataProvider.applyFilter(currentFilter, _this.tab.hash, _this.customFilter);
-                     _this.tableParams.reload();
-                 }
-             }
-         })
-
-     }
-
-     _this.smallWin = window.innerWidth < 1200
-     $(window).resize(function() {
-         _this.smallWin = window.innerWidth < 1200
-     })
-
-     _this.tab = tabContainer.getCurrentTab();
-     _this.tab.hash = currentHash;
-     _this.config = config;
-     var title = currentFilter ? currentFilter.long_name : _this.model;
-     if ($routeParams.sstid) {
-         var id = parseInt($routeParams.sstid)
-         _this.customFilter = function(inter) {
-             return inter.ai === id;
-         }
-     } else {
-         _this.tab.setTitle(title, currentHash);
-     }
-     if ($routeParams.sstids_in) {
-         _this.customFilter = function(inter) {
-             return _.contains($routeParams.sstids_in, inter.id);
-         }
-     }
-
-     var actualiseUrl = _.throttle(function(fltrs, page) {
-         $location.search('page', page !== 1 ? page : undefined);
-         _.each(fltrs, function(e, k) {
-             // console.log(e, k)
-             if (!e) e = undefined;
-             if (e !== "hashModel") {
-                 $location.search(k, e);
-
-             } else {
-                 //console.log(e)
-             }
-         })
-     }, 250)
-
-     dataProvider.init(function(err, resp) {
-
-         dataProvider.applyFilter(currentFilter, _this.tab.hash, _this.customFilter);
-         var tableParameters = {
-             page: $location.search()['page'] ||  1,
-             total: dataProvider.filteredData.length,
-             filter: _.omit($location.search(), 'hashModel', 'page', 'sstid'),
-             sorting: {
-                 id: 'desc'
-             },
-             count: _this.limit || 100
-         };
-         var tableSettings = {
-             total: dataProvider.filteredData,
-             getData: function($defer, params) {
-                 actualiseUrl(params.filter(), params.page())
-                 var data = dataProvider.filteredData;
-                 data = $filter('tableFilter')(data, params.filter());
-                 _this.currentFilter = _.clone(params.filter());
-                 params.total(data.length);
-                 data = $filter('orderBy')(data, params.orderBy());
-                 $defer.resolve(data.slice((params.page() - 1) * params.count(), params.page() * params.count()));
-             },
-             filterDelay: 100
-         }
-         _this.tableParams = new ngTableParams(tableParameters, tableSettings);
-         LxProgressService.circular.hide()
-     })
-
-     var lastChange = 0;
-     $rootScope.$on(_this.model.toUpperCase() + '_CACHE_LIST_CHANGE', function(event, newData) {
-         if (tabContainer.getCurrentTab() && _this.tab.fullUrl === tabContainer.getCurrentTab().fullUrl) {
-             dataProvider.applyFilter(currentFilter, _this.tab.hash, _this.customFilter);
-             _this.tableParams.reload();
-             //_this.tableParams.orderBy(_this.tableParams.$params.sorting)
-             //_this.tableParams.filter(_this.tableParams.$params.filter)
-         }
-     })
-
-
-     _this.contextMenu = new ContextMenu(_this.model)
-
-
-     _this.rowRightClick = function($event, inter) {
-         edisonAPI[_this.model].get(inter.id, {
-                 populate: 'sst'
-             })
-             .then(function(resp) {
-                 _this.contextMenu.setData(resp.data);
-                 _this.contextMenu.setPosition($event.pageX - (($routeParams.sstid || _this.embedded)  ? 50 : 0), $event.pageY + ($routeParams.sstid || _this.embedded ? 0 : 200))
-                 _this.contextMenu.open();
-             })
-     }
-
-     _this.rowClick = function($event, inter) {
-         if (_this.contextMenu.active)
-             return _this.contextMenu.close();
-         if ($event.metaKey || $event.ctrlKey) {
-             tabContainer.addTab('/' + _this.model + '/' + inter.id, {
-                 title: ('#' + inter.id),
-                 setFocus: false,
-                 allowDuplicates: false
-             });
-         } else {
-             if (_this.expendedRow === inter.id) {
-                 _this.expendedRow = undefined;
-             } else {
-                 _this.expendedRow = inter.id
-             }
-         }
-     }
- }
-
-
-
- angular.module('edison').directive('lineupIntervention', function(tabContainer, FiltersFactory, ContextMenu, LxProgressService, edisonAPI, DataProvider, $routeParams, $location, $rootScope, $filter, config, ngTableParams) {
-     "use strict";
-     var arg = arguments;
-     return {
-         replace: false,
-         restrict: 'E',
-         templateUrl: '/Templates/lineup-intervention.html',
-         scope: {
-             limit: '=',
-             embedded: '=',
-             filter: '=',
-         },
-         controller: function($scope) {
-
-             $scope.model = 'intervention'
-             Controller.apply($scope, arg)
-         }
-     }
- });
-
- angular.module('edison').directive('lineupDevis', function(tabContainer, FiltersFactory, ContextMenu, LxProgressService, edisonAPI, DataProvider, $routeParams, $location, $rootScope, $filter, config, ngTableParams) {
-     "use strict";
-     var arg = arguments;
-     return {
-         replace: false,
-         restrict: 'E',
-         templateUrl: '/Templates/lineup-devis.html',
-         scope: {
-             filter: '=',
-         },
-         controller: function($scope) {
-             $scope.model = 'devis'
-             Controller.apply($scope, arg)
-         }
-     }
- });
-
- angular.module('edison').directive('lineupArtisan', function(tabContainer, FiltersFactory, ContextMenu, LxProgressService, edisonAPI, DataProvider, $routeParams, $location, $rootScope, $filter, config, ngTableParams) {
-     "use strict";
-     var arg = arguments;
-     return {
-         replace: false,
-         restrict: 'E',
-         templateUrl: '/Templates/lineup-artisan.html',
-         scope: {
-
-         },
-         controller: function($scope) {
-             $scope.model = 'artisan'
-
-             Controller.apply($scope, arg)
-         }
-     }
- });
-
-angular.module('edison').directive('ngRightClick', function($parse) {
-    "use strict";
-    return function(scope, element, attrs) {
-        element.bind('contextmenu', function(event) {
-            if (!(event.altKey ||  event.ctrlKey || event.shiftKey ||  ["INPUT", "TEXTAREA"].indexOf(event.target.nodeName) >= 0)) {
-                scope.$apply(function() {
-                    event.preventDefault();
-                    $parse(attrs.ngRightClick)(scope, {
-                        $event: event
-                    });
-                });
-            }
-        });
-    };
-});
-
- angular.module('edison').directive('link', ['FiltersFactory', '$rootScope', function(FiltersFactory, $rootScope) {
-     "use strict";
-     return {
-         restrict: 'AE',
-         replace: true,
-         template: '<li>' +
-             '      <a href="{{fullUrl}}" >' +
-             '            <i ng-if="icon" class = "menu-icon fa fa-{{icon}}"> </i>' +
-             '            <span ng-class="{bold : bold, textWhite: textWhite}" class="mm-text">{{title || exFltr.long_name}}</span>' +
-             '            <span ng-if="total"class="label label-{{_color}}">{{total}}</span>' +
-             '        </a>' +
-             '      </li>',
-         scope: {
-             fltr: '@',
-             login: '@',
-             today: '@',
-             icon: '@',
-             title: '@',
-             url: '@',
-             textWhite: '@',
-             model: '@',
-             bold: '@',
-             count: '@',
-             noCounter: '@',
-             color: '@',
-             hashModel: '@'
-         },
-         link: function(scope, element, attrs) {
-             var findTotal = function() {
-                 if (scope.noCounter)
-                     return undefined;
-                 var total = 0;
-                 if (scope.login) {
-                     var t = _.find($rootScope.interventionsStats, function(e) {
-                         return e.login === scope.login;
-                     })
-                     total += _.get(t, scope.fltr + '.total', 0);
-                 } else {
-                     _.each($rootScope.interventionsStats, function(t) {
-                         total += _.get(t, scope.fltr + '.total', 0);
-                     })
-                 }
-                 return total;
-             }
-             $rootScope.$watch('interventionsStats', function() {
-                 scope.total = findTotal();
-             })
-             scope.$watch('login', function(current, prev) {
-                 scope._color = (scope.color || 'success')
-                 scope._model = scope.model || 'intervention';
-                 var filtersFactory = new FiltersFactory(scope._model);
-                 scope.exFltr = filtersFactory.getFilterByName(scope.fltr);
-                 scope.total = findTotal();
-                 scope._url = scope.exFltr.url.length ? "/" + scope.exFltr.url : scope.exFltr.url;
-                 scope._login = scope.login && !scope.hashModel ? ("#" + scope.login) : '';
-                 scope._hashModel = scope.hashModel ? ("?" + scope.hashModel + "=" + scope.login) : '';
-                 scope.fullUrl = scope.url ||  ('/' + scope._model + '/list' + scope._url + scope._hashModel + scope._login)
-             })
-
-         }
-     };
- }]);
-
- angular.module('edison').directive('simpleLink', ['FiltersFactory', '$rootScope', function(FiltersFactory, $rootScope) {
-     "use strict";
-     return {
-         restrict: 'AE',
-         replace: true,
-         template: '<li>' +
-             '      <a href="{{url}}"  target="{{target}}">' +
-             '            <i ng-if="icon" class = "menu-icon fa fa-{{icon}}"> </i>' +
-             '            <span class="mm-text">{{title}}</span>' +
-             '        </a>' +
-             '      </li>',
-         scope: {
-             icon: '@',
-             title: '@',
-             url: '@',
-         },
-         link: function(scope, element, attrs) {
-             scope.target = (typeof attrs.extern === 'string' ? '_blank' : '')
-         }
-     };
- }]);
-
-
- angular.module('edison').directive('linkSeparator', [function() {
-     "use strict";
-     return {
-         restrict: 'AE',
-         replace: true,
-         template: '<li>' +
-             '      <a>' +
-             '            <i ng-if="icon" class = "menu-icon fa fa-{{icon}}"> </i>' +
-             '            <strong><span class="mm-text">{{title}}</span></strong>' +
-             '        </a>' +
-             '      </li>',
-         scope: {
-             icon: '@',
-             title: '@',
-         },
-         link: function(scope, element, attrs) {
-
-         }
-     };
- }]);
-
-
- angular.module('edison').service('sidebarSM', function() {
-
-     var C = function() {
-         this.display = false;
-     };
-     C.prototype.set = function(name, value) {
-         this[name] = value;
-     }
-     return new C();
-
- });
-
-
-
- angular.module('edison').directive('sideBar', ['sidebarSM', function(sidebarSM) {
-     "use strict";
-     return {
-         replace: false,
-         restrict: 'E',
-         templateUrl: '/Directives/side-bar.html',
-         transclude: true,
-         scope: {},
-         link: function(scope, element, attrs) {
-             scope.sidebarSM = sidebarSM;
-         }
-     }
- }]);
-
- angular.module('edison').directive('dropDown', ['config', 'sidebarSM', '$timeout', function(config, sidebarSM, $timeout) {
-     "use strict";
-
-
-     return {
-         replace: true,
-         restrict: 'E',
-         templateUrl: '/Directives/dropdown.html',
-         transclude: true,
-         scope: {
-             title: '@',
-             icon: '@',
-             isOpen: '@',
-             openDefault: '&'
-         },
-         link: function(scope, element, attrs) {
-             scope.openDefault = scope.$eval(scope.openDefault)
-             scope.isopen = scope.openDefault
-             scope.toggleSidebar = function($event, $elem) {
-                 var $ul = $(element).find('>ul')
-                 if ($('#main-menu').width() > 200) {
-                     if (scope.isopen) {
-                         $ul.velocity({
-                             height: 0
-                         }, 200, function() {
-                             scope.$apply(function() {
-                                 scope.isopen = false;
-                             })
-                         });
-                     } else {
-                         $ul.css('height', '100%')
-                         scope.isopen = true
-                     }
-                 } else {
-
-                     $('#mmc-ul > .mmc-wrapper').html($ul.find('> *'));
-                     sidebarSM.set("display", true);
-                     $timeout(function checkHover() {
-                         if (!$('#mmc-ul').is(":hover")) {
-                             sidebarSM.set("display", false);
-                             $ul.html($('#mmc-ul > .mmc-wrapper').find(">*"))
-                             $('#mmc-ul > .mmc-wrapper').html('');
-                         } else {
-                             $timeout(checkHover, 1000);
-                         }
-                     }, 1000)
-                 }
-             }
-         }
-     };
- }]);
-
- angular.module('edison').directive('signalement', function() {
-     "use strict";
-     return {
-         replace: false,
-         restrict: 'E',
-         templateUrl: '/Templates/signalement.html',
-         scope: {
-             sst: '=',
-             exit: '&',
-         },
-         link: function(scope, elem) {
-             console.log('==>', scope.exit);
-             scope.hide = function() {
-                scope.exit()
-             }
-         }
-     }
- });
-
 var archiveReglementController = function(edisonAPI, tabContainer, $routeParams, $location, LxProgressService) {
 
     var tab = tabContainer.getCurrentTab();
@@ -4162,7 +4162,7 @@ angular.module('edison').directive('infoCompta', ['config', 'Paiement',
 
                  scope.$watch('data.produits', function(curr, prev) {
                      if (!_.isEqual(curr, prev)) {
-                         scope.data.prixFinal = scope.produits.total()
+                         //scope.data.prixFinal = scope.produits.total()
                          scope.data.prixAnnonce = scope.produits.total()
                      }
                  }, true)
