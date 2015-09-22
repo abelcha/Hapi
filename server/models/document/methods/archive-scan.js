@@ -3,6 +3,7 @@ module.exports = function(schema) {
     schema.statics.archiveScan = function(req, res) {
         return new Promise(function(resolve, reject) {
             var request = require('request');
+            var requestP = require('request-promise');
             var async = require('async');
             var forEach = require('async-foreach').forEach;
             var moment = require('moment');
@@ -11,10 +12,50 @@ module.exports = function(schema) {
                 /*  edison.v1.set("update ecritures set t_stasmp='" + _.random(10, 100) + "' WHERE 1=1",function(err, resp) {
                       console.log(err, resp)
                   });*/
-            edison.v1.get("SELECT * FROM scanner LIMIT 1000", function(err, resp) {
-                    console.log(err, resp)
-                    resolve('lol')
+
+            var archiveFile = function(file) {
+                return new Promise(function(resolve, reject) {
+                    document.move('/SCAN/' + file.name, '/SCAN_ARCHIVES/' + file.name)
+                        .then(function(resp) {
+                            edison.v1.set("UPDATE scanner SET archived='1' WHERE id='" + file.id + "'", resolve)
+                        }, reject);
                 })
+            }
+
+
+            var i = 0;
+            var __archiveLoop = function() {
+                console.log('archiveloop')
+                edison.v1.get("SELECT * FROM scanner WHERE checked='1' AND name!='' AND archived='0' AND moved='1' LIMIT 100", function(err, resp) {
+                    /* for (var i = 0; i < resp.length; i+= 5) {
+                         requestP
+                     };*/
+                    async.each(resp, function(e, cb) {
+                        archiveFile(e).then(function(err, resp) {
+                            console.log('OK', err, resp)
+                            cb()
+                        }, function(err)  {
+                            console.log('ERR', err)
+                            cb()
+                        })
+                    }, function() {
+                        if (++i < (req.query.iteration || 10)) {
+                            __archiveLoop()
+                        } else {
+                            resolve('okfinal')
+                        }
+                    })
+
+                    /* document.move('/SCAN/' + e.name, '/SCAN_ARCHIVES/' + e.name)
+                         .then(function(resp) {
+                             console.log('yay moved')
+                         }, function(err) {
+                             console.log('ERR', err)
+                         });*/
+                    //console.log(resp);
+                })
+            }
+            __archiveLoop()
                 /*            var convert = function(ts) {
                                 var dt = ts.replace('.', '-').split('-').slice(0, -4).join('-');
                                 var hr = ts.replace('.', '-').split('-').slice(3, 6).join(':');

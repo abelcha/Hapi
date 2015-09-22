@@ -12,7 +12,7 @@ module.exports = {
 
         var _ = require('lodash');
         var q = req.query;
-        if (req.query.api_key !== '79dl5hSkApZF9p407307T0AVmPV4W7sD') {
+        if (req.query.api_key !== 'F8v0x13ftadh89rm0e9x18b62ZqgEl47') {
             return res.sendStatus(401)
         }
 
@@ -63,7 +63,7 @@ module.exports = {
         }]
 
 
-        if (req.query.api_key !== '79dl5hSkApZF9p407307T0AVmPV4W7sD') {
+        if (req.query.api_key !== 'F8v0x13ftadh89rm0e9x18b62ZqgEl47') {
             return res.sendStatus(401)
         }
         if (!req.params.id.match(/^\d+$/)) {
