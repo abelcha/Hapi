@@ -29,7 +29,7 @@ module.exports = {
     lettre: {
         intervention: {
             envoiFacture: function() {
-                return "Madame, Monsieur,\n" +
+                return "<p>Madame, Monsieur,</p>" +
                     "<p>Suite à notre intervention le {{datePlain}} dans vos locaux:\n" +
                     "<p strong center>{{client.civilite}} {{client.nom}} {{client.prenom}}\n" +
                     "{{client.address.n}} {{client.address.r}}, {{client.address.cp}} {{client.address.v}}\n" +

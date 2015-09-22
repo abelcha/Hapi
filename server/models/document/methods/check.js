@@ -14,7 +14,7 @@
            var dbl = requireLocal('config/dropbox-list')
 
            dbl = _(dbl).filter(function(e) {
-           	return e.length === 23 && _.endsWith(e, '.pdf')
+               return e.length === 23 && _.endsWith(e, '.pdf')
            }).map(function(e) {
                return {
                    name: e,
@@ -22,11 +22,11 @@
                }
            }).value()
 
-            edison.v1.get("SELECT * FROM scanner WHERE checked='0' LIMIT 10", function(err, resp)  {
-                
-            })
+           edison.v1.get("SELECT * FROM scanner WHERE checked='0' LIMIT 10", function(err, resp)  {
 
-           
+           })
+
+
 
 
            /*          _.each(_.filter(dbl, 'length', 23).slice(0, 10), function(e) {
