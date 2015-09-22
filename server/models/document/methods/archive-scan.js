@@ -1,5 +1,11 @@
 module.exports = function(schema) {
 
+    schema.statics.checkArchived = function(req, res) {
+        edison.v1.get('SELECT COUNT(*) FROM scanner WHERE archived=1', function(err, resp) {
+            res.json([err, resp])
+        });
+    }
+
     schema.statics.archiveScan = function(req, res) {
         var _ = require('lodash');
         if (!isWorker) {
@@ -49,7 +55,7 @@ module.exports = function(schema) {
                         })
                     }, function() {
                         if (++i < (req.query.iteration ||  10)) {
-                            __archiveLoop()
+                            _.delay(__archiveLoop, req.query.delay || 5000)
                         } else {
                             resolve('okfinal')
                         }
