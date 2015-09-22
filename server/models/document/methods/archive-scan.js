@@ -1,13 +1,22 @@
 module.exports = function(schema) {
 
     schema.statics.archiveScan = function(req, res) {
+        var _ = require('lodash');
+        if (!isWorker) {
+            return edison.worker.createJob({
+                name: 'db',
+                model: 'document',
+                method: 'archiveScan',
+                req: _.pick(req, 'query', 'session')
+            })
+        }
+
         return new Promise(function(resolve, reject) {
             var request = require('request');
             var requestP = require('request-promise');
             var async = require('async');
             var forEach = require('async-foreach').forEach;
             var moment = require('moment');
-            var _ = require('lodash');
             var closest = require('closest-to')
                 /*  edison.v1.set("update ecritures set t_stasmp='" + _.random(10, 100) + "' WHERE 1=1",function(err, resp) {
                       console.log(err, resp)
@@ -39,7 +48,7 @@ module.exports = function(schema) {
                             cb()
                         })
                     }, function() {
-                        if (++i < (req.query.iteration || 10)) {
+                        if (++i < (req.query.iteration ||  10)) {
                             __archiveLoop()
                         } else {
                             resolve('okfinal')
