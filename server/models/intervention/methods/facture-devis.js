@@ -11,6 +11,13 @@ module.exports = function(schema) {
 
         doc.datePlain = moment(date).format('LL');
         doc.acquitte = acquitte;
+/*        doc.produits.unshift({
+            pu: 0,
+            quantite: 1,
+            title: "",
+            ref: "",
+            desc: String
+        })*/
         var text = textTemplate.lettre.intervention.envoiFacture();
         var lettre = {
             address: doc.facture.address,

@@ -80,7 +80,7 @@ module.exports = {
         intervention: {
             factureAcquitte: function() {
                 return "Bonjour,\n" +
-                    "Vous trouverez ci-joint la facture acquitté de l'intervention {{id}}\n" +
+                    "Vous trouverez ci-joint la facture acquitté de l'intervention n°{{id}}\n" +
                     "Cordialement\n" +
                     "\n" +
                     "Service Comptabilité - Edison Services\n" +
