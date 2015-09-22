@@ -37,7 +37,7 @@
 
                  scope.$watch('data.produits', function(curr, prev) {
                      if (!_.isEqual(curr, prev)) {
-                         //scope.data.prixFinal = scope.produits.total()
+                         scope.data.prixFinal = scope.produits.total()
                          scope.data.prixAnnonce = scope.produits.total()
                      }
                  }, true)
