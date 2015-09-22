@@ -9,6 +9,9 @@ module.exports = function(schema) {
                     return reject('Les coordonées de facturations de ' + e.nom + ' sont incompletes')
                 }
                 e.nom = e.nom.toUpperCase();
+                e.email = e.email.toUpperCase();
+                e.address.r = e.address.r.toUpperCase();
+                e.address.v = e.address.v.toUpperCase();
                 e.ref = _.snakeCase(e.nom).slice(0, 10);
             })
             db.model('compte').remove({}, function() {
