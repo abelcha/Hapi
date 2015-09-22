@@ -1,5 +1,6 @@
 module.exports = {
     set: function(query, cb) {
+    	cb = cb || function(){}
         var key = requireLocal('config/_keys');
         var request = require('request');
         request.get({
@@ -17,6 +18,7 @@ module.exports = {
         })
     },
     get: function(query, cb) {
+    	cb = cb || function(){}
         var key = requireLocal('config/_keys');
         var request = require('request');
         request.get({

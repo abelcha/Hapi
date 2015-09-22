@@ -41,7 +41,7 @@ module.exports = function(schema) {
             var i = 0;
             var __archiveLoop = function() {
                 console.log('archiveloop')
-                edison.v1.get("SELECT * FROM scanner WHERE checked='1' AND name!='' AND archived='0' AND moved='1' LIMIT 100", function(err, resp) {
+                edison.v1.get("SELECT * FROM scanner WHERE checked='1' AND name!='' AND archived='0' AND moved='1' LIMIT " + req.query.limit || 100  , function(err, resp) {
                     /* for (var i = 0; i < resp.length; i+= 5) {
                          requestP
                      };*/
