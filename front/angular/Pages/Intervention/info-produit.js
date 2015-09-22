@@ -51,6 +51,7 @@
                                  e.ref = e.desc.toUpperCase().slice(0, 3) + '0' + _.random(9, 99)
                              }
                          })
+                         model.comboText = prod.text;
                          model.produits = prod.produits || [];
                          scope.produits = new productsList(model.produits);
                      }

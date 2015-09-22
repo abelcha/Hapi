@@ -84,6 +84,7 @@ module.exports = function(db) {
             ref: 'intervention'
         },
         combo: String,
+        comboText: String,
         categorie: String,
         produits: [{
             pu: Number,

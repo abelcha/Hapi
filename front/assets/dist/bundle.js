@@ -2403,10 +2403,8 @@ module.exports = {
                     "Je n'ai pas eu de retour de votre part, devons nous planifier une intervention ?\n\n" +
                     "Merci de revenir vers moi pour me tenir au courant de la suite que vous donnerez à ce devis.\n\n" +
                     "Je reste à votre disposition pour toutes les demandes de renseignement\n\n";
-                if (this.combo) {
-                    var combos = require('./combo-produits.js')
-                    this.combo = _.find(combos, 'title', this.combo)
-                    var text = "Suite à notre dernier échange téléphonique concernant la réalisation d'un " + this.combo.text + ".\n" +
+                if (this.combo && this.comboText) {
+                    var text = "Suite à notre dernier échange téléphonique concernant la réalisation d'un " + this.comboText + ".\n" +
                         "\n" +
                         "Vous trouverez ci-joint <strong>le devis n°" + this.id + " </strong>qui correspond à ce que nous avons vu ensemble.\n" +
                         "\n" +
@@ -2608,7 +2606,7 @@ module.exports = {
 
 };
 
-},{"./combo-produits.js":6,"./dataList.js":9}],15:[function(require,module,exports){
+},{"./dataList.js":9}],15:[function(require,module,exports){
 /**
  * Gets the last element of `array`.
  *
