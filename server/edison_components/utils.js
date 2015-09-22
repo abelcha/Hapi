@@ -1,7 +1,5 @@
 module.exports = {
-
     date: {
-
         firstDayOfThisWeek: function(dateObj) {
             var tmp = new Date;
             tmp = tmp.setHours(0);

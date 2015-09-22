@@ -8,6 +8,8 @@ var ok = function(telephone) {
 
 module.exports = {
     callback: function(req, res) {
+        console.log('callback')
+
         var _ = require('lodash');
         var q = req.query;
         if (req.query.api_key !== '79dl5hSkApZF9p407307T0AVmPV4W7sD') {
@@ -39,6 +41,7 @@ module.exports = {
         })
     },
     contact: function(req, res) {
+        console.log('contact')
         var _ = require('lodash');
         var q = req.query;
         var resps = [{
@@ -53,10 +56,10 @@ module.exports = {
             description: "telephone d'origine inconnu + pas de sst_id"
         }, {
             status_code: 404,
-            description: "partenaire inconnu"
+            description: "intervenant inconnu"
         }, {
             status_code: 403,
-            description: "le partenaire n'a pas les droits"
+            description: "le intervenant n'a pas les droits"
         }]
 
 

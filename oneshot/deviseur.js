@@ -1,0 +1,763 @@
+var x = [{
+    "id": 5,
+    "facturier": "130576",
+    "deviseur": "130576"
+}, {
+    "id": 7,
+    "facturier": "28/08",
+    "deviseur": "28/08"
+}, {
+    "id": 8,
+    "facturier": "131026",
+    "deviseur": "131026"
+}, {
+    "id": 14,
+    "facturier": "17/4",
+    "deviseur": "17/4"
+}, {
+    "id": 15,
+    "facturier": "131176",
+    "deviseur": "131176"
+}, {
+    "id": 17,
+    "facturier": "31/03",
+    "deviseur": "31/03"
+}, {
+    "id": 18,
+    "facturier": "141326",
+    "deviseur": "141326"
+}, {
+    "id": 19,
+    "facturier": "130151",
+    "deviseur": "130151"
+}, {
+    "id": 21,
+    "facturier": "133676",
+    "deviseur": "133676"
+}, {
+    "id": 22,
+    "facturier": "131951",
+    "deviseur": "131951"
+}, {
+    "id": 23,
+    "facturier": "131301",
+    "deviseur": "131301"
+}, {
+    "id": 25,
+    "facturier": "131126",
+    "deviseur": "131126"
+}, {
+    "id": 28,
+    "facturier": "131726",
+    "deviseur": "131726"
+}, {
+    "id": 29,
+    "facturier": "22/5",
+    "deviseur": "22/5"
+}, {
+    "id": 30,
+    "facturier": "07/07/2015",
+    "deviseur": "07/07/2015"
+}, {
+    "id": 31,
+    "facturier": "13/01",
+    "deviseur": "13/01"
+}, {
+    "id": 32,
+    "facturier": "140876",
+    "deviseur": "140876"
+}, {
+    "id": 35,
+    "facturier": "132551",
+    "deviseur": "132551"
+}, {
+    "id": 36,
+    "facturier": "19/12",
+    "deviseur": "19/12"
+}, {
+    "id": 37,
+    "facturier": "30/04",
+    "deviseur": "30/04"
+}, {
+    "id": 43,
+    "facturier": "141751",
+    "deviseur": "141751"
+}, {
+    "id": 44,
+    "facturier": "26/05",
+    "deviseur": "26/05"
+}, {
+    "id": 45,
+    "facturier": "133501",
+    "deviseur": "133501"
+}, {
+    "id": 46,
+    "facturier": "142051",
+    "deviseur": "142051"
+}, {
+    "id": 47,
+    "facturier": "140280",
+    "deviseur": "131126"
+}, {
+    "id": 49,
+    "facturier": "133526",
+    "deviseur": "133526"
+}, {
+    "id": 51,
+    "facturier": "133201",
+    "deviseur": "133201"
+}, {
+    "id": 52,
+    "facturier": "131251",
+    "deviseur": "131251"
+}, {
+    "id": 56,
+    "facturier": "140951",
+    "deviseur": "140951"
+}, {
+    "id": 61,
+    "facturier": "133551",
+    "deviseur": "133551"
+}, {
+    "id": 66,
+    "facturier": "141201",
+    "deviseur": "141201"
+}, {
+    "id": 67,
+    "facturier": "131200",
+    "deviseur": "131200"
+}, {
+    "id": 69,
+    "facturier": "133576",
+    "deviseur": "133576"
+}, {
+    "id": 72,
+    "facturier": "133626",
+    "deviseur": "133626"
+}, {
+    "id": 75,
+    "facturier": "31/03",
+    "deviseur": "31/03"
+}, {
+    "id": 78,
+    "facturier": "21/01",
+    "deviseur": "21/01"
+}, {
+    "id": 79,
+    "facturier": "130451",
+    "deviseur": "130451"
+}, {
+    "id": 82,
+    "facturier": "131750",
+    "deviseur": "131750"
+}, {
+    "id": 85,
+    "facturier": "142326",
+    "deviseur": "142326"
+}, {
+    "id": 86,
+    "facturier": "133601",
+    "deviseur": "133601"
+}, {
+    "id": 88,
+    "facturier": "133651",
+    "deviseur": "133651"
+}, {
+    "id": 90,
+    "facturier": "131151",
+    "deviseur": "131151"
+}, {
+    "id": 91,
+    "facturier": "133426",
+    "deviseur": "133426"
+}, {
+    "id": 97,
+    "facturier": "30/04",
+    "deviseur": "30/04"
+}, {
+    "id": 102,
+    "facturier": "133726",
+    "deviseur": "133726"
+}, {
+    "id": 105,
+    "facturier": "140351",
+    "deviseur": "140351"
+}, {
+    "id": 106,
+    "facturier": "07/07/2015",
+    "deviseur": "16/03"
+}, {
+    "id": 110,
+    "facturier": "130101",
+    "deviseur": "130026"
+}, {
+    "id": 114,
+    "facturier": "132801",
+    "deviseur": "132801"
+}, {
+    "id": 115,
+    "facturier": "19/05/2015",
+    "deviseur": "19/05/2015"
+}, {
+    "id": 135,
+    "facturier": "12/12",
+    "deviseur": "12/12"
+}, {
+    "id": 139,
+    "facturier": "133176",
+    "deviseur": "133176"
+}, {
+    "id": 142,
+    "facturier": "132926",
+    "deviseur": "132926"
+}, {
+    "id": 149,
+    "facturier": "1",
+    "deviseur": "1"
+}, {
+    "id": 150,
+    "facturier": "21/07",
+    "deviseur": "21/07"
+}, {
+    "id": 158,
+    "facturier": "130710-133",
+    "deviseur": "130710-133"
+}, {
+    "id": 168,
+    "facturier": "141076",
+    "deviseur": "141076"
+}, {
+    "id": 181,
+    "facturier": "131976",
+    "deviseur": "131976"
+}, {
+    "id": 190,
+    "facturier": "22/5",
+    "deviseur": "22/5"
+}, {
+    "id": 198,
+    "facturier": "141501",
+    "deviseur": "141501"
+}, {
+    "id": 209,
+    "facturier": "133001",
+    "deviseur": "133001"
+}, {
+    "id": 215,
+    "facturier": "141026",
+    "deviseur": "141026"
+}, {
+    "id": 216,
+    "facturier": "140701",
+    "deviseur": "140701"
+}, {
+    "id": 225,
+    "facturier": "24/06",
+    "deviseur": "24/06"
+}, {
+    "id": 234,
+    "facturier": "140976",
+    "deviseur": "140976"
+}, {
+    "id": 236,
+    "facturier": "130476",
+    "deviseur": "130476"
+}, {
+    "id": 238,
+    "facturier": "8/4",
+    "deviseur": "8/4"
+}, {
+    "id": 242,
+    "facturier": "141226",
+    "deviseur": "141226"
+}, {
+    "id": 244,
+    "facturier": "22/01",
+    "deviseur": "22/01"
+}, {
+    "id": 252,
+    "facturier": "140776",
+    "deviseur": "140776"
+}, {
+    "id": 256,
+    "facturier": "sur repond",
+    "deviseur": "sur repond"
+}, {
+    "id": 259,
+    "facturier": "29/05/2015",
+    "deviseur": "29/05/2015"
+}, {
+    "id": 278,
+    "facturier": "24/06",
+    "deviseur": "24/06"
+}, {
+    "id": 293,
+    "facturier": "140476",
+    "deviseur": "140476"
+}, {
+    "id": 302,
+    "facturier": "141276",
+    "deviseur": "141276"
+}, {
+    "id": 309,
+    "facturier": "141251",
+    "deviseur": "141251"
+}, {
+    "id": 310,
+    "facturier": "140601",
+    "deviseur": "140601"
+}, {
+    "id": 352,
+    "facturier": "140376",
+    "deviseur": "140376"
+}, {
+    "id": 357,
+    "facturier": "141126",
+    "deviseur": "141126"
+}, {
+    "id": 359,
+    "facturier": "140651",
+    "deviseur": "140651"
+}, {
+    "id": 370,
+    "facturier": "140326",
+    "deviseur": "140326"
+}, {
+    "id": 375,
+    "facturier": "141051",
+    "deviseur": "141051"
+}, {
+    "id": 383,
+    "facturier": "07/07/2015",
+    "deviseur": "19/05/2015"
+}, {
+    "id": 392,
+    "facturier": "140426",
+    "deviseur": "140426"
+}, {
+    "id": 395,
+    "facturier": "140401",
+    "deviseur": "140401"
+}, {
+    "id": 396,
+    "facturier": "1",
+    "deviseur": "1"
+}, {
+    "id": 422,
+    "facturier": "02/09",
+    "deviseur": "02/09"
+}, {
+    "id": 424,
+    "facturier": "21/07",
+    "deviseur": "21/07"
+}, {
+    "id": 431,
+    "facturier": "4/3",
+    "deviseur": "4/3"
+}, {
+    "id": 438,
+    "facturier": "140626",
+    "deviseur": "140626"
+}, {
+    "id": 445,
+    "facturier": "21/07",
+    "deviseur": "21/07"
+}, {
+    "id": 462,
+    "facturier": "envoyé",
+    "deviseur": "envoyé"
+}, {
+    "id": 489,
+    "facturier": "1",
+    "deviseur": "1"
+}, {
+    "id": 520,
+    "facturier": "141451",
+    "deviseur": "141451"
+}, {
+    "id": 541,
+    "facturier": "142251",
+    "deviseur": "142251"
+}, {
+    "id": 555,
+    "facturier": "142276-24/",
+    "deviseur": "142276-24/"
+}, {
+    "id": 559,
+    "facturier": "19/05/2015",
+    "deviseur": "19/05/2015"
+}, {
+    "id": 571,
+    "facturier": "05/06",
+    "deviseur": "05/06"
+}, {
+    "id": 604,
+    "facturier": "142001",
+    "deviseur": "142001"
+}, {
+    "id": 617,
+    "facturier": "141776",
+    "deviseur": "141776"
+}, {
+    "id": 619,
+    "facturier": "05/06",
+    "deviseur": "05/06"
+}, {
+    "id": 622,
+    "facturier": "28/08",
+    "deviseur": "28/08"
+}, {
+    "id": 644,
+    "facturier": "4/3",
+    "deviseur": "4/3"
+}, {
+    "id": 647,
+    "facturier": "142401",
+    "deviseur": "142401"
+}, {
+    "id": 652,
+    "facturier": "1",
+    "deviseur": "1"
+}, {
+    "id": 661,
+    "facturier": "10/02",
+    "deviseur": "10/02"
+}, {
+    "id": 665,
+    "facturier": "12/12",
+    "deviseur": "12/12"
+}, {
+    "id": 670,
+    "facturier": "1",
+    "deviseur": "1"
+}, {
+    "id": 684,
+    "facturier": "29/05/2015",
+    "deviseur": "29/05/2015"
+}, {
+    "id": 693,
+    "facturier": "17/4",
+    "deviseur": "17/4"
+}, {
+    "id": 713,
+    "facturier": "4/3",
+    "deviseur": "4/3"
+}, {
+    "id": 714,
+    "facturier": "envoyé",
+    "deviseur": "envoyé"
+}, {
+    "id": 759,
+    "facturier": "22/07",
+    "deviseur": "22/07"
+}, {
+    "id": 760,
+    "facturier": "21/07",
+    "deviseur": "21/07"
+}, {
+    "id": 768,
+    "facturier": "16/03",
+    "deviseur": "16/03"
+}, {
+    "id": 771,
+    "facturier": "23/12",
+    "deviseur": "23/12"
+}, {
+    "id": 774,
+    "facturier": "16/03",
+    "deviseur": "16/03"
+}, {
+    "id": 781,
+    "facturier": "13/01",
+    "deviseur": "13/01"
+}, {
+    "id": 785,
+    "facturier": "envoyé",
+    "deviseur": "envoyé"
+}, {
+    "id": 794,
+    "facturier": "28/08",
+    "deviseur": "28/08"
+}, {
+    "id": 806,
+    "facturier": "10/02",
+    "deviseur": "10/02"
+}, {
+    "id": 812,
+    "facturier": "31/03",
+    "deviseur": "31/03"
+}, {
+    "id": 844,
+    "facturier": "13/01",
+    "deviseur": "13/01"
+}, {
+    "id": 861,
+    "facturier": "10/02",
+    "deviseur": "10/02"
+}, {
+    "id": 864,
+    "facturier": "31/12",
+    "deviseur": "31/12"
+}, {
+    "id": 873,
+    "facturier": "12/02",
+    "deviseur": "12/02"
+}, {
+    "id": 900,
+    "facturier": "envoyé",
+    "deviseur": "envoyé"
+}, {
+    "id": 904,
+    "facturier": "02/09",
+    "deviseur": "02/09"
+}, {
+    "id": 905,
+    "facturier": "16/03",
+    "deviseur": "16/03"
+}, {
+    "id": 916,
+    "facturier": "29/01",
+    "deviseur": "29/01"
+}, {
+    "id": 917,
+    "facturier": "31/03",
+    "deviseur": "31/03"
+}, {
+    "id": 924,
+    "facturier": "28/01-24/0",
+    "deviseur": "28/01-24/0"
+}, {
+    "id": 933,
+    "facturier": "15/06",
+    "deviseur": "15/06"
+}, {
+    "id": 959,
+    "facturier": "8/4",
+    "deviseur": "8/4"
+}, {
+    "id": 962,
+    "facturier": "28/08",
+    "deviseur": "28/08"
+}, {
+    "id": 964,
+    "facturier": "16/02",
+    "deviseur": "16/02"
+}, {
+    "id": 965,
+    "facturier": "16/03",
+    "deviseur": "16/03"
+}, {
+    "id": 994,
+    "facturier": "21/07",
+    "deviseur": "21/07"
+}, {
+    "id": 1002,
+    "facturier": "30/04",
+    "deviseur": "30/04"
+}, {
+    "id": 1026,
+    "facturier": "21/07",
+    "deviseur": "21/07"
+}, {
+    "id": 1038,
+    "facturier": "30/04",
+    "deviseur": "30/04"
+}, {
+    "id": 1047,
+    "facturier": "17/04",
+    "deviseur": "17/04"
+}, {
+    "id": 1050,
+    "facturier": "30/04",
+    "deviseur": "30/04"
+}, {
+    "id": 1059,
+    "facturier": "30/04",
+    "deviseur": "30/04"
+}, {
+    "id": 1064,
+    "facturier": "30/04",
+    "deviseur": "30/04"
+}, {
+    "id": 1065,
+    "facturier": "8/4",
+    "deviseur": "8/4"
+}, {
+    "id": 1083,
+    "facturier": "4/3",
+    "deviseur": "4/3"
+}, {
+    "id": 1084,
+    "facturier": "07/07/2015",
+    "deviseur": "07/07/2015"
+}, {
+    "id": 1089,
+    "facturier": "16/03",
+    "deviseur": "16/03"
+}, {
+    "id": 1111,
+    "facturier": "15/06",
+    "deviseur": "15/06"
+}, {
+    "id": 1113,
+    "facturier": "29/05/2015",
+    "deviseur": "29/05/2015"
+}, {
+    "id": 1118,
+    "facturier": "30/04",
+    "deviseur": "30/04"
+}, {
+    "id": 1133,
+    "facturier": "4/3",
+    "deviseur": "4/3"
+}, {
+    "id": 1143,
+    "facturier": "31/03",
+    "deviseur": "31/03"
+}, {
+    "id": 1154,
+    "facturier": "30/04",
+    "deviseur": "30/04"
+}, {
+    "id": 1157,
+    "facturier": "envoyé",
+    "deviseur": "envoyé"
+}, {
+    "id": 1166,
+    "facturier": "05/06",
+    "deviseur": "05/06"
+}, {
+    "id": 1168,
+    "facturier": "21/07",
+    "deviseur": "21/07"
+}, {
+    "id": 1174,
+    "facturier": "envoyé",
+    "deviseur": "envoyé"
+}, {
+    "id": 1180,
+    "facturier": "21/07",
+    "deviseur": "21/07"
+}, {
+    "id": 1204,
+    "facturier": "22/5",
+    "deviseur": "22/5"
+}, {
+    "id": 1206,
+    "facturier": "02/09",
+    "deviseur": "02/09"
+}, {
+    "id": 1211,
+    "facturier": "24/06",
+    "deviseur": "24/06"
+}, {
+    "id": 1217,
+    "facturier": "29/05/2015",
+    "deviseur": "29/05/2015"
+}, {
+    "id": 1255,
+    "facturier": "30/04",
+    "deviseur": "30/04"
+}, {
+    "id": 1260,
+    "facturier": "24/06",
+    "deviseur": "24/06"
+}, {
+    "id": 1308,
+    "facturier": "24/06",
+    "deviseur": "24/06"
+}, {
+    "id": 1337,
+    "facturier": "24/06",
+    "deviseur": "24/06"
+}, {
+    "id": 1363,
+    "facturier": "07/07/2015",
+    "deviseur": "07/07/2015"
+}, {
+    "id": 1367,
+    "facturier": "15/06",
+    "deviseur": "15/06"
+}, {
+    "id": 1385,
+    "facturier": "19/05/2015",
+    "deviseur": "19/05/2015"
+}, {
+    "id": 1404,
+    "facturier": "19/05/2015",
+    "deviseur": "19/05/2015"
+}, {
+    "id": 1416,
+    "facturier": "15/06",
+    "deviseur": "15/06"
+}, {
+    "id": 1418,
+    "facturier": "28/08",
+    "deviseur": "28/08"
+}, {
+    "id": 1425,
+    "facturier": "28/08",
+    "deviseur": "28/08"
+}, {
+    "id": 1428,
+    "facturier": "18/05",
+    "deviseur": "18/05"
+}, {
+    "id": 1436,
+    "facturier": "15/06",
+    "deviseur": "15/06"
+}, {
+    "id": 1447,
+    "facturier": "15/06",
+    "deviseur": "15/06"
+}, {
+    "id": 1456,
+    "facturier": "29/05/2015",
+    "deviseur": "29/05/2015"
+}, {
+    "id": 1463,
+    "facturier": "21/07",
+    "deviseur": "21/07"
+}, {
+    "id": 1469,
+    "facturier": "21/07",
+    "deviseur": "21/07"
+}, {
+    "id": 1485,
+    "facturier": "05/06",
+    "deviseur": "05/06"
+}, {
+    "id": 1517,
+    "facturier": "29/05/2015",
+    "deviseur": "29/05/2015"
+}, {
+    "id": 1556,
+    "facturier": "02/09",
+    "deviseur": "02/09"
+}, {
+    "id": 1560,
+    "facturier": "21/07",
+    "deviseur": "21/07"
+}, {
+    "id": 1565,
+    "facturier": "07/07/2015",
+    "deviseur": "07/07/2015"
+}, {
+    "id": 1568,
+    "facturier": "24/06",
+    "deviseur": "24/06"
+}, {
+    "id": 1632,
+    "facturier": "07/07/2015",
+    "deviseur": "07/07/2015"
+}, {
+    "id": 1736,
+    "facturier": "28/08",
+    "deviseur": "28/08"
+}]
+
+var _ = require('lodash');
+
+_.each(x, function(e) {
+	console.log("UPDATE infosst SET num_facturier='" + e.facturier + "', "+"num_deviseur='" + e.deviseur + "'" + "WHERE id='" + e.id + "';");
+})

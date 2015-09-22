@@ -1,5 +1,9 @@
 module.exports = function(schema) {
     schema.statics.add = function(req, res) {
-        db.model('sms')(params).save().then(Promise.resolve, Promise.reject);
+        return new Promise(function(resolve, reject)  {
+            var params = req.query;
+            params.date = Date.now();
+            db.model('task')(params).save().then(resolve, reject);
+        })
     }
 }

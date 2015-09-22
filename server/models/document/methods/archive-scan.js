@@ -8,66 +8,72 @@ module.exports = function(schema) {
             var moment = require('moment');
             var _ = require('lodash');
             var closest = require('closest-to')
-
-            /*            var convert = function(ts) {
-                            var dt = ts.replace('.', '-').split('-').slice(0, -4).join('-');
-                            var hr = ts.replace('.', '-').split('-').slice(3, 6).join(':');
-                            var z = moment(dt + " " + hr).unix() * 1000
-                            return z;
-                        }
-
-
-                        var locals = requireLocal('config/scan-dump')._locals;
-                        var dtb = requireLocal('config/scan-dump')._dtb;
-                        var dataBaseTs = _(dtb).pluck('start').map(function(e) {
-                            return Number(e)
-                        }).value();
-                        locals = _.filter(locals, function(e) {
-                            return e.endsWith('.pdf') && e.length === 23
-                        }).reverse()
+                /*  edison.v1.set("update ecritures set t_stasmp='" + _.random(10, 100) + "' WHERE 1=1",function(err, resp) {
+                      console.log(err, resp)
+                  });*/
+            edison.v1.get("SELECT * FROM scanner LIMIT 1000", function(err, resp) {
+                    console.log(err, resp)
+                    resolve('lol')
+                })
+                /*            var convert = function(ts) {
+                                var dt = ts.replace('.', '-').split('-').slice(0, -4).join('-');
+                                var hr = ts.replace('.', '-').split('-').slice(3, 6).join(':');
+                                var z = moment(dt + " " + hr).unix() * 1000
+                                return z;
+                            }
 
 
-                        var rnd = _.random(0, 4000);
-
-                        _.each(locals.slice(rnd, rnd + 500), function(e) {
-                            var x = convert(e);
-                            var cls = closest(x, dataBaseTs);
-                            var diff = x - cls
-                            var query = "UPDATE scanner SET checked='1', diff='" + diff + "', name='" + e + "' WHERE start='" + cls + "'";
-                            console.log(query);
-                            request.get("http://electricien13003.com/alvin/query.php?q=" + query,
-                                    function(err, resp, body) {
-                                        console.log('-->', body);
-                                    })
-                        })
-                        resolve('ok')*/
+                            var locals = requireLocal('config/scan-dump')._locals;
+                            var dtb = requireLocal('config/scan-dump')._dtb;
+                            var dataBaseTs = _(dtb).pluck('start').map(function(e) {
+                                return Number(e)
+                            }).value();
+                            locals = _.filter(locals, function(e) {
+                                return e.endsWith('.pdf') && e.length === 23
+                            }).reverse()
 
 
+                            var rnd = _.random(0, 4000);
 
-
-            request.get('http://electricien13003.com/alvin/dumpScanner.php', function(err, resp, datab) {
-                datab = JSON.parse(datab)
-                forEach(datab, function(e) {
-                    var done = this.async();
-                    setTimeout(done, req.query.timeout || 220);
-                   // console.log('/SCAN/' + e.name, '/V2_PRODUCTION/intervention/' + e.id_inter+ '/' + e.name)
-                   console.log(e.id_inter)
-                    document.copy('/SCAN/' + e.name, '/V2_PRODUCTION/intervention/' + e.id_inter + '/' + e.name)
-                    .then(function(x) {
-                        console.log('OK=>');
-                        var query = "UPDATE scanner SET moved='1' WHERE id='" + e.id + "'";
-                        console.log(query);
-                        request.get("http://electricien13003.com/alvin/query.php?q=" + query,
-                            function(err, resp, body) {
-                                console.log('-->', body);
+                            _.each(locals.slice(rnd, rnd + 500), function(e) {
+                                var x = convert(e);
+                                var cls = closest(x, dataBaseTs);
+                                var diff = x - cls
+                                var query = "UPDATE scanner SET checked='1', diff='" + diff + "', name='" + e + "' WHERE start='" + cls + "'";
+                                console.log(query);
+                                request.get("http://electricien13003.com/alvin/query.php?q=" + query,
+                                        function(err, resp, body) {
+                                            console.log('-->', body);
+                                        })
                             })
-                    }, function() {
-                        console.log('ERRROROROR')
-                    })
-                });
-            }, function() {
-                resolve('ok')
-            });
+                            resolve('ok')*/
+
+
+            /*
+
+                        request.get('http://electricien13003.com/alvin/dumpScanner.php', function(err, resp, datab) {
+                            datab = JSON.parse(datab)
+                            forEach(datab, function(e) {
+                                var done = this.async();
+                                setTimeout(done, req.query.timeout || 220);
+                               // console.log('/SCAN/' + e.name, '/V2_PRODUCTION/intervention/' + e.id_inter+ '/' + e.name)
+                               console.log(e.id_inter)
+                                document.copy('/SCAN/' + e.name, '/V2_PRODUCTION/intervention/' + e.id_inter + '/' + e.name)
+                                .then(function(x) {
+                                    console.log('OK=>');
+                                    var query = "UPDATE scanner SET moved='1' WHERE id='" + e.id + "'";
+                                    console.log(query);
+                                    request.get("http://electricien13003.com/alvin/query.php?q=" + query,
+                                        function(err, resp, body) {
+                                            console.log('-->', body);
+                                        })
+                                }, function() {
+                                    console.log('ERRROROROR')
+                                })
+                            });
+                        }, function() {
+                            resolve('ok')
+                        });*/
 
 
 

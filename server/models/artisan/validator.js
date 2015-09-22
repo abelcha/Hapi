@@ -37,7 +37,7 @@ module.exports = function(schema) {
     schema.post('save', function(doc) {
         if (!isWorker) {
             db.model('artisan').uniqueCacheReload(doc)
-            console.log(envProd, doc.date.dump, Date.now(), moment().subtract(5000).isAfter(doc.date.dump))
+        //    console.log(envProd, doc.date.dump, Date.now(), moment().subtract(5000).isAfter(doc.date.dump))
             if (envProd && (!doc.date.dump || moment().subtract(5000).isAfter(doc.date.dump))) {
                 var v1 = new V1(doc);
                 v1.send(function(resp) {

@@ -17,10 +17,6 @@ module.exports = function(db) {
             type: String,
             required: true
         },
-        done: {
-            type: Boolean,
-            default: false
-        }
+        done: Date
     });
-
 }

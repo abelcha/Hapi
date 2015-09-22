@@ -175,7 +175,10 @@ module.exports = function(db) {
                 signe: Boolean
             }],
         },
-
+        signalements: [{
+            login: String,
+            type: String,
+        }],
         info: {
             travailSamedi: Boolean,
             pasFiable: Boolean

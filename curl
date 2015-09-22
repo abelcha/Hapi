@@ -1,5 +1,0 @@
-curl https://todoist.com/API/v6/sync \
-    -d token=0d4c2aaf41f9cd4a62f3a8e4ac0b5ca725cf54b3 \
-    -d seq_no=0 \
-    -d seq_no_global=0 \
-    -d resource_types='["all"]'

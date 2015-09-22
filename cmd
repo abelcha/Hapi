@@ -2,7 +2,7 @@
 
 import requests
 import optparse
-
+import time
 parser = optparse.OptionParser()
 
 parser.add_option('-l', '--live', action="store_true", dest="live", default=False)
@@ -28,6 +28,7 @@ if (options.cache):
 	q['cache'] = True
 q['x'] = "true"
 q['login'] = "CMD"
+ts = time.time()
 res = requests.get(baseUrl + args[0], params=q)
-print(res)
+print(res,  '<Time [' +str(round(time.time() - ts, 3)) + ']>')
 print(res.text)

@@ -174,7 +174,6 @@
                 rtn.transfertId = rtn.id;
             }
             rtn.produits = devis.devisTab;
-            console.log('==>', rtn.id, rtn.produits)
             rtn.tva = devis.tva || 20;
             rtn.produits.map(function(p) {
                 p.desc = sanitizeHtml(entities.decode(p.desc))
