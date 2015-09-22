@@ -19,7 +19,7 @@ module.exports = function(req, res) {
                 .then(function(resp) {
                     var mapFunc = options.mapFunc || function(e) {
                         e.mmt = moment.tz(e.date.intervention, 'Europe/Paris').format("DD/MM")
-                        //console.log(options.pre ||  '#')
+                            //console.log(options.pre ||  '#')
                         _.set(e, 'artisan.nomSociete', _.get(e, 'artisan.nomSociete', 'A Programmer'))
                         e.artisan.nomSociete = e.artisan.nomSociete ||  'A Programmer'
                         return {
@@ -62,6 +62,7 @@ module.exports = function(req, res) {
             regexp: new RegExp('^[0-9]+$'),
             mapFunc: function(inter) {
                 var t = inter.client.telephone;
+                inter.mmt = moment.tz(inter.date.intervention, 'Europe/Paris').format("DD/MM")
                 inter.telMatch = t.tel1.startsWith(query) ? t.tel1 : t.tel2.startsWith(query) ? t.tel2 : t.tel3;
                 return {
                     link: '/intervention/' + inter.id,

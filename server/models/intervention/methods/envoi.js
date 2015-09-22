@@ -267,7 +267,7 @@ module.exports = function(schema) {
                         var communication = {
                             telephone: envProd ? inter.sst.telephone.tel1 : req.session.portable,
                             mailDest: envProd ? inter.sst.email : (req.session.email ||  'contact@edison-services.fr'),
-                            mailBcc: envProd ? (req.session.email ||  'contact@edison-services.fr') : undefined,
+                            mailBcc: envProd ? ('contact@edison-services.fr') : undefined,
                             mailReply: (req.session.email ||  'contact@edison-services.fr')
                         }
 
