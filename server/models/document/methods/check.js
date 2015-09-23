@@ -42,7 +42,10 @@
        schema.statics.check = function(req, res) {
 
 
-
+           edison.v1.get('SELECT * FROM scanner', function(err, resp) {
+               res.send(resp)
+           })
+           return 0
            if (!isWorker) {
                return edison.worker.createJob({
                    name: 'db',
@@ -72,10 +75,10 @@
                    console.log('query')
                    edison.v1.get("SELECT * FROM scanner WHERE checked='0' AND moved='0' ORDER BY id ASC LIMIT " + limit, function(err, resp)  {
                        limit = resp.length;
-                       _.each(resp, function(e) {
-                           console.log(moment(new Date(parseInt(e.start))).format('YYYY-MM-DD-HH-mm-ss'), e.id_inter)
-                       })
-                       return null;
+                       /*                       _.each(resp, function(e) {
+                                                  console.log(moment(new Date(parseInt(e.start))).format('YYYY-MM-DD-HH-mm-ss'), e.id_inter)
+                                              })
+                                              return null;*/
                        async.eachLimit(resp, 20, function(row, cb) {
                            console.log(String(i++) + '/' + String(limit))
                            var closest = findClosest(row, dbl)

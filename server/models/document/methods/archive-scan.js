@@ -8,14 +8,14 @@ module.exports = function(schema) {
 
     schema.statics.archiveScan = function(req, res) {
         var _ = require('lodash');
-        // if (!isWorker) {
-        //     return edison.worker.createJob({
-        //         name: 'db',
-        //         model: 'document',
-        //         method: 'archiveScan',
-        //         req: _.pick(req, 'query', 'session')
-        //     })
-        // }
+        if (!isWorker) {
+            return edison.worker.createJob({
+                name: 'db',
+                model: 'document',
+                method: 'archiveScan',
+                req: _.pick(req, 'query', 'session')
+            })
+        }
 
         return new Promise(function(resolve, reject) {
             var request = require('request');
@@ -60,7 +60,7 @@ module.exports = function(schema) {
                     /* for (var i = 0; i < resp.length; i+= 5) {
                          requestP
                      };*/
-                    async.eachLimit(resp, 4, archiveFile, function(err, resp) {
+                    async.eachLimit(resp, 3, archiveFile, function(err, resp) {
                         console.log(err, resp)
                         resolve('ok')
                     })
