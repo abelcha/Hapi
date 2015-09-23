@@ -8,14 +8,14 @@ module.exports = function(schema) {
 
     schema.statics.archiveScan = function(req, res) {
         var _ = require('lodash');
-        if (!isWorker) {
-            return edison.worker.createJob({
-                name: 'db',
-                model: 'document',
-                method: 'archiveScan',
-                req: _.pick(req, 'query', 'session')
-            })
-        }
+        // if (!isWorker) {
+        //     return edison.worker.createJob({
+        //         name: 'db',
+        //         model: 'document',
+        //         method: 'archiveScan',
+        //         req: _.pick(req, 'query', 'session')
+        //     })
+        // }
 
         return new Promise(function(resolve, reject) {
             var request = require('request');
@@ -40,14 +40,23 @@ module.exports = function(schema) {
                         })
                     }, function(err) {
                         console.log('ERR', file.name, err)
-
-                        cb(null)
+                        if (_.includes(String(err), '404')) {
+                            document.move('/SCAN_ARCHIVES/' + file.name, '/SCAN/' + file.name).then(function(resp) {
+                                console.log('YEPYEPYEP')
+                                cb(null)
+                            }, function() {
+                                console.log('SECERR')
+                                cb(null);
+                            })
+                        }
                     });
             }
 
 
             var i = 0;
             edison.v1.get("SELECT * FROM scanner WHERE checked='1' AND archived='0' AND moved='1' LIMIT " + limit, function(err, resp) {
+                    limit = resp.length;
+
                     /* for (var i = 0; i < resp.length; i+= 5) {
                          requestP
                      };*/
