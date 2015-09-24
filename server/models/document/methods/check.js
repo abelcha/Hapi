@@ -28,6 +28,7 @@
                    min = e;
                }
            })
+           console.log('==>', min)
            if ((min.diff > 0 && min.diff < 15000) || (min.diff < 0 && min.diff > -1000)) {
                return min
            }
@@ -83,7 +84,7 @@
                    var i = 0;
                    var limit = req.query.limit || 100;
                    console.log('query')
-                   edison.v1.get("SELECT * FROM scanner WHERE checked='0' ORDER BY id ASC LIMIT " + limit, function(err, resp)  {
+                   edison.v1.get("SELECT * FROM scanner WHERE moved='0' ORDER BY id ASC LIMIT " + limit, function(err, resp)  {
                        limit = resp.length;
                        /*                       _.each(resp, function(e) {
                                                   console.log(moment(new Date(parseInt(e.start))).format('YYYY-MM-DD-HH-mm-ss'), e.id_inter)
@@ -106,7 +107,7 @@
                                    })
                                })
                            } else {
-                               console.log('NOT FOUND', row)
+                               console.log('NOT FOUND', row.id_inter)
                                edison.v1.set(_.template("UPDATE scanner SET checked='1' WHERE id='{{id}}'")(row), cb)
                            }
                        }, function(resp) {
