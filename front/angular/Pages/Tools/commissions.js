@@ -1,4 +1,4 @@
-var StatsController = function(DateSelect, tabContainer, $routeParams, edisonAPI, $rootScope, $scope, $location, LxProgressService, socket) {
+var CommissionsController = function(DateSelect, tabContainer, $routeParams, edisonAPI, $rootScope, $scope, $location, LxProgressService, socket) {
     "use strict";
     var _this = this;
     _this.tab = tabContainer.getCurrentTab();
@@ -49,4 +49,4 @@ var StatsController = function(DateSelect, tabContainer, $routeParams, edisonAPI
     _this.dateSelect = dateSelect.list()
     $scope.selectedDate = _.find(dateSelect.list(), dateSelect.current)
 }
-angular.module('edison').controller('StatsController', StatsController);
+angular.module('edison').controller('CommissionsController', CommissionsController);

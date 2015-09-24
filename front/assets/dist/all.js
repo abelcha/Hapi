@@ -426,6 +426,11 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
             controller: "editUsers",
             controllerAs: "vm",
         })
+        .when('/tools/commissions', {
+            templateUrl: "Pages/Tools/commissions.html",
+            controller: "CommissionsController",
+            controllerAs: "vm",
+        })
         .when('/stats/:type', {
             templateUrl: "Pages/Stats/stats.html",
             controller: "StatsController",
@@ -2066,10 +2071,7 @@ angular.module('edison').factory('ContextMenu', function($rootScope, $location, 
     }
 
     ContextMenu.prototype.tooltip = function(link) {
-        if (link.binding) {
-            return _.get(this.data, link.binding, '');
-        }
-        return '';
+        return _.get(this.data, link.binding, '');
     }
 
     ContextMenu.prototype.click = function(link) {
@@ -2188,6 +2190,40 @@ angular.module('edison').factory('DataProvider', ['edisonAPI', 'socket', '$rootS
     return DataProvider;
 
 }]);
+
+angular.module('edison').factory('DateSelect', function() {
+    "use strict";
+    var DateSelect = function() {
+
+        var _this = this;
+        var d = new Date();
+        _this.start = {
+            m: 9,
+            y: 2013
+        }
+        _this.current = {
+            m: d.getMonth() + 1,
+            y: d.getFullYear()
+        }
+
+        var frenchMonths = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Aout', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
+        _this._list = [];
+        _.times(_this.current.y - _this.start.y + 1, function(yr) {
+            _.times(12, function(mth) {
+                _this._list.push({
+                    m: mth + 1,
+                    y: _this.start.y + yr,
+                    t: frenchMonths[mth] + ' ' + (_this.start.y + yr)
+                })
+            })
+        })
+        _this._list.splice(_this.current.m - 12)
+    }
+    DateSelect.prototype.list = function() {
+        return this._list;
+    }
+    return DateSelect;
+});
 
 angular.module('edison')
     .factory('Devis', function(openPost, $window, $rootScope, $location, LxNotificationService, LxProgressService, dialog, edisonAPI, textTemplate) {
@@ -3530,6 +3566,44 @@ angular.module('edison').directive('infoFourniture', ['config', 'fourniture',
 ]);
 
 
+var archiveReglementController = function(edisonAPI, tabContainer, $routeParams, $location, LxProgressService) {
+
+    var tab = tabContainer.getCurrentTab();
+    var _this = this;
+    _this.title = 'Archives Reglements'
+    tab.setTitle('archives RGL')
+    LxProgressService.circular.show('#5fa2db', '#globalProgress');
+    edisonAPI.compta.archivesReglement().success(function(resp) {
+        LxProgressService.circular.hide()
+        _this.data = resp
+    })
+    _this.moment = moment;
+    _this.openLink = function(link) {
+        $location.url(link)
+    }
+}
+
+angular.module('edison').controller('archivesReglementController', archiveReglementController);
+
+var archivesPaiementController = function(edisonAPI, tabContainer, $routeParams, $location, LxProgressService) {
+    var _this = this;
+    var tab = tabContainer.getCurrentTab();
+    _this.type = 'paiement'
+    _this.title = 'Archives Paiements'
+    tab.setTitle('archives PAY')
+    LxProgressService.circular.show('#5fa2db', '#globalProgress');
+    edisonAPI.compta.archivesPaiement().success(function(resp) {
+        LxProgressService.circular.hide()
+        _this.data = resp
+    })
+    _this.moment = moment;
+    _this.openLink = function(link) {
+        $location.url(link)
+    }
+}
+
+angular.module('edison').controller('archivesPaiementController', archivesPaiementController);
+
  angular.module('edison').directive('artisanCategorie', ['config', function(config) {
      "use strict";
      return {
@@ -3638,44 +3712,6 @@ var ArtisanCtrl = function($rootScope, $scope, edisonAPI, $location, $routeParam
 }
 angular.module('edison').controller('ArtisanController', ArtisanCtrl);
 
-var archiveReglementController = function(edisonAPI, tabContainer, $routeParams, $location, LxProgressService) {
-
-    var tab = tabContainer.getCurrentTab();
-    var _this = this;
-    _this.title = 'Archives Reglements'
-    tab.setTitle('archives RGL')
-    LxProgressService.circular.show('#5fa2db', '#globalProgress');
-    edisonAPI.compta.archivesReglement().success(function(resp) {
-        LxProgressService.circular.hide()
-        _this.data = resp
-    })
-    _this.moment = moment;
-    _this.openLink = function(link) {
-        $location.url(link)
-    }
-}
-
-angular.module('edison').controller('archivesReglementController', archiveReglementController);
-
-var archivesPaiementController = function(edisonAPI, tabContainer, $routeParams, $location, LxProgressService) {
-    var _this = this;
-    var tab = tabContainer.getCurrentTab();
-    _this.type = 'paiement'
-    _this.title = 'Archives Paiements'
-    tab.setTitle('archives PAY')
-    LxProgressService.circular.show('#5fa2db', '#globalProgress');
-    edisonAPI.compta.archivesPaiement().success(function(resp) {
-        LxProgressService.circular.hide()
-        _this.data = resp
-    })
-    _this.moment = moment;
-    _this.openLink = function(link) {
-        $location.url(link)
-    }
-}
-
-angular.module('edison').controller('archivesPaiementController', archivesPaiementController);
-
 var AvoirsController = function(tabContainer, edisonAPI, $rootScope, LxProgressService, LxNotificationService, FlushList) {
     "use strict";
     var _this = this
@@ -3711,20 +3747,6 @@ var AvoirsController = function(tabContainer, edisonAPI, $rootScope, LxProgressS
 
 
 angular.module('edison').controller('avoirsController', AvoirsController);
-
-var DashboardController = function(edisonAPI, tabContainer, $routeParams, $location, LxProgressService) {
-    var tab = tabContainer.getCurrentTab();
-    tab.setTitle('Dashboard')
-    var _this = this;
-    //LxProgressService.circular.show('#5fa2db', '#globalProgress');
-
-    _this.openLink = function(link) {
-        $location.url(link)
-    }
-}
-
-angular.module('edison').controller('DashboardController', DashboardController);
-
 
 var ContactArtisanController = function($scope, $timeout, tabContainer, LxProgressService, FiltersFactory, ContextMenu, edisonAPI, DataProvider, $routeParams, $location, $q, $rootScope, $filter, config, ngTableParams) {
     "use strict";
@@ -3797,7 +3819,7 @@ var ContactArtisanController = function($scope, $timeout, tabContainer, LxProgre
 
     _this.rowRightClick = function($event, inter) {
         console.log('contactclick')
-        _this.contextMenu.setPosition($event.pageX, $event.pageY)
+        _this.contextMenu.setPosition($event.pageX, $event.pageY + 200)
         edisonAPI.artisan.get(inter.id)
             .then(function(resp) {
                 _this.contextMenu.setData(resp.data);
@@ -3863,6 +3885,20 @@ var ContactArtisanController = function($scope, $timeout, tabContainer, LxProgre
 
 }
 angular.module('edison').controller('ContactArtisanController', ContactArtisanController);
+
+var DashboardController = function(edisonAPI, tabContainer, $routeParams, $location, LxProgressService) {
+    var tab = tabContainer.getCurrentTab();
+    tab.setTitle('Dashboard')
+    var _this = this;
+    //LxProgressService.circular.show('#5fa2db', '#globalProgress');
+
+    _this.openLink = function(link) {
+        $location.url(link)
+    }
+}
+
+angular.module('edison').controller('DashboardController', DashboardController);
+
 
 
  angular.module('edison').directive('edisonMap', ['$window', 'Map', 'mapAutocomplete', 'Address',
@@ -4592,39 +4628,20 @@ var SearchController = function(edisonAPI, tabContainer, $routeParams, $location
 
 angular.module('edison').controller('SearchController', SearchController);
 
-var StatsController = function(tabContainer, $routeParams, edisonAPI, $rootScope, $scope, $location, LxProgressService, socket) {
+var StatsController = function(DateSelect, tabContainer, $routeParams, edisonAPI, $rootScope, $scope, $location, LxProgressService, socket) {
     "use strict";
     var _this = this;
     _this.tab = tabContainer.getCurrentTab();
     _this.tab.setTitle('Stats');
 
-    var d = new Date();
-    var start = {
-        month: 9,
-        year: 2013
-    }
-    var current = {
-        month: d.getMonth(),
-        year: d.getFullYear()
-    }
 
-    var frenchMonths = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Aout', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
-
-    _this.dateSelect = [];
-
-    _.times(current.year - start.year + 1, function(yr) {
-        _.times(12, function(mth) {
-            _this.dateSelect.push({
-                m: mth + 1,
-                y: start.year + yr,
-                t: frenchMonths[mth] + ' ' + (start.year + yr)
-            })
-        })
-    })
-    _this.dateSelect.splice(current.month - 11)
+    var dateSelect = new DateSelect;
+    console.log("==>",  dateSelect.current);
 
 
     $scope.$watch("selectedDate", function(curr) {
+        if (!curr ||  !curr.m || !curr.y)
+            return false;
         $location.search('m', curr.m);
         $location.search('y', curr.y);
         edisonAPI.intervention.statsBen(curr).then(function(resp) {
@@ -4653,12 +4670,69 @@ var StatsController = function(tabContainer, $routeParams, edisonAPI, $rootScope
 
         })
     })
-
-    $scope.selectedDate = _this.dateSelect[_this.dateSelect.length - 1];
-
-
+    if ($location.search().m)  {
+        dateSelect.current.m = parseInt($location.search().m)
+    }
+    if ($location.search().y)  {
+        dateSelect.current.y = parseInt($location.search().y)
+    }
+    _this.dateSelect = dateSelect.list()
+    $scope.selectedDate = _.find(dateSelect.list(), dateSelect.current)
 }
 angular.module('edison').controller('StatsController', StatsController);
+
+var CommissionsController = function(DateSelect, tabContainer, $routeParams, edisonAPI, $rootScope, $scope, $location, LxProgressService, socket) {
+    "use strict";
+    var _this = this;
+    _this.tab = tabContainer.getCurrentTab();
+    _this.tab.setTitle('Stats');
+
+
+    var dateSelect = new DateSelect;
+    console.log("==>",  dateSelect.current);
+
+
+    $scope.$watch("selectedDate", function(curr) {
+        if (!curr ||  !curr.m || !curr.y)
+            return false;
+        $location.search('m', curr.m);
+        $location.search('y', curr.y);
+        edisonAPI.intervention.statsBen(curr).then(function(resp) {
+            $('#chartContainer > *').remove()
+            var svg = dimple.newSvg("#chartContainer", 1300, 400);
+            var myChart = new dimple.chart(svg, resp.data);
+            myChart.defaultColors = [
+                new dimple.color("#4CAF50"), //RGL
+                new dimple.color("#2196F3"), //ANN
+                new dimple.color("#FDD835"), //ATT
+                new dimple.color("#F44336"), //ENV
+                new dimple.color("#0091EA"), //PAY
+                new dimple.color("black"),
+            ];
+            myChart.setBounds(60, 30, 1000, 300)
+            var x = myChart.addCategoryAxis("x", "day");
+            //x.addOrderRule("dt");
+            var y = myChart.addMeasureAxis("y", "prix");
+            //y.tickFormat = ',.0f';
+            myChart.addSeries("recu", dimple.plot.bar);
+            //myChart.addPctAxis("y", "paye");
+            myChart.assignColor("En Attente", "#2196F3");
+            myChart.assignColor("Encaissé", "#4CAF50");
+            myChart.addLegend(60, 10, 410, 20, "right");
+            myChart.draw();
+
+        })
+    })
+    if ($location.search().m)  {
+        dateSelect.current.m = parseInt($location.search().m)
+    }
+    if ($location.search().y)  {
+        dateSelect.current.y = parseInt($location.search().y)
+    }
+    _this.dateSelect = dateSelect.list()
+    $scope.selectedDate = _.find(dateSelect.list(), dateSelect.current)
+}
+angular.module('edison').controller('CommissionsController', CommissionsController);
 
 var editCombos = function(tabContainer, edisonAPI, $rootScope, $scope, $location, LxNotificationService, socket) {
     "use strict";

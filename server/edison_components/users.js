@@ -15,8 +15,10 @@ Users.prototype.search = function(oldLogin) {
         return 'auto_x';
     }
     var rtn = _.find(this.data, function(e) {
+        console.log(e, oldLogin)
         return e.oldLogin === oldLogin;
     })
+    console.log(rtn)
     if (!rtn) {
         return oldLogin;
     } else {

@@ -74,10 +74,7 @@ angular.module('edison').factory('ContextMenu', function($rootScope, $location, 
     }
 
     ContextMenu.prototype.tooltip = function(link) {
-        if (link.binding) {
-            return _.get(this.data, link.binding, '');
-        }
-        return '';
+        return _.get(this.data, link.binding, '');
     }
 
     ContextMenu.prototype.click = function(link) {

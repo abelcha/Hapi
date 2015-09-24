@@ -69,7 +69,7 @@ var ContactArtisanController = function($scope, $timeout, tabContainer, LxProgre
 
     _this.rowRightClick = function($event, inter) {
         console.log('contactclick')
-        _this.contextMenu.setPosition($event.pageX, $event.pageY)
+        _this.contextMenu.setPosition($event.pageX, $event.pageY + 200)
         edisonAPI.artisan.get(inter.id)
             .then(function(resp) {
                 _this.contextMenu.setData(resp.data);

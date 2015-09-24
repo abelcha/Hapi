@@ -1304,15 +1304,14 @@ module.exports = {
         subs: [{
             title: 'Telephone 1',
             action: 'callTel1',
-            href: function(artisan) {
-                return artisan.telephone.tel1
-            },
+            binding: 'telephone.tel1',
             hide: function(artisan) {
                 return !artisan.telephone.tel1
             }
         }, {
             title: 'Telephone 2',
             action: 'callTel2',
+            binding: 'telephone.tel2',
             hide: function(artisan) {
                 return !artisan.telephone.tel2
             }
@@ -1332,21 +1331,20 @@ module.exports = {
         subs: [{
             title: 'Client tel1',
             action: 'callTel1',
-            href: function(inter) {
-                console.log('-->sqdqds')
-                return inter.client.telephone.tel1
-            },
+            binding: 'client.telephone.tel1',
             hide: function(inter) {
                 return !inter.client.telephone.tel1
             }
         }, {
             title: 'Client tel2',
             action: 'callTel2',
+            binding: 'client.telephone.tel2',
             hide: function(inter) {
                 return !inter.client.telephone.tel2
             }
         }, {
             title: 'Client tel3',
+            binding: 'client.telephone.tel3',
             action: 'callTel3',
             hide: function(inter) {
                 return !inter.client.telephone.tel3
