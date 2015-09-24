@@ -11,13 +11,13 @@ module.exports = function(schema) {
 
         doc.datePlain = moment(date).format('LL');
         doc.acquitte = acquitte;
-/*        doc.produits.unshift({
-            pu: 0,
-            quantite: 1,
-            title: "",
-            ref: "",
-            desc: String
-        })*/
+        /*        doc.produits.unshift({
+                    pu: 0,
+                    quantite: 1,
+                    title: "",
+                    ref: "",
+                    desc: String
+                })*/
         var text = textTemplate.lettre.intervention.envoiFacture();
         var lettre = {
             address: doc.facture.address,
@@ -25,6 +25,13 @@ module.exports = function(schema) {
             text: _.template(text)(doc),
             title: "OBJET : Facture n°" + doc.id + " en attente de reglement"
         }
+        doc.produits.unshift({
+            desc: _.template("Suite à notre intervention chez {{client.civilite}} {{client.nom}} " +
+                "{{client.prenom}},\n {{client.address.n}} {{client.address.r}}, {{client.address.cp}} " +
+                "{{client.address.v}}\n le ")(doc) + moment(doc.date.intervention).format('DD[/]MM/YYYY[ à ]HH[h]mm'),
+            pu: 0,
+            quantite: 1
+        })
         doc.type = 'facture'
         if (!acquitte) {
             var l = [{

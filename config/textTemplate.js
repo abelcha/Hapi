@@ -3,13 +3,15 @@ module.exports = {
         intervention: {
             demande: function(user) {
                 var config = require('./dataList.js')
+                var mmt = moment(this.date.intervention);
+                var format = mmt.isSame(moment(), 'day') ? "[aujourd'hui à ]HH[h]mm" : "[le ]DD[/]MM[ à ]HH[h]mm"
+                var datePlain = mmt.format(format)
                 var categorieClean = config.categories[this.categorie].suffix + " " + config.categories[this.categorie].long_name.toLowerCase()
                 return "Bonjour M. BOUKRIS, nous cherchons a vous joindre pour une intervention de " + categorieClean +
-                    " à faire le " + moment(this.date.intervention).format("LLLL") +
-                    "Pourriez - vous vous rendre disponible ?\n" +
+                    " à faire " + datePlain + ". Pourriez-vous vous rendre disponible ?\n" +
                     "Merci de nous contacter au plus vite au 09.72.42.30.00.\n" +
                     "Merci d 'avance pour votre réponse.\n" +
-                    (user.pseudo ||  "Arnaud") +
+                    (user.pseudo ||  "Arnaud") + "\n" +
                     "Ligne Directe " + (user.ligne ? (user.ligne.match(/.{2}|.{1,2}/g).join('.')) :  "09.72.44.16.63") + "\n" +
                     "Edison Services\n"
 
@@ -27,15 +29,15 @@ module.exports = {
                 return sms + "Edison Services."
             },
             annulation: "L'intervention {{id}} chez {{client.civilite}} {{client.nom}} à {{client.address.v}} le {{datePlain}} a été annulé. \nMerci de ne pas intervenir. \nEdison Services",
-/*            demande: function(user) {
-                return "Bonjour M. " + _.get(this, 'sst.representant.nom', '') + ", nous cherchons a vous joindre pour une intervention de vitrerie à faire aujourd'hui.\n" +
-                    "Pourriez-vous vous rendre disponible ?\n" +
-                    "Merci de nous contacter au plus vite au 09.72.42.30.00.\n" +
-                    "Merci d'avance pour votre réponse.\n" +
-                    "\n" + (user.pseudo ||  "Arnaud") + "\n" +
-                    "Ligne Directe " + (user.ligne ? (user.ligne.match(/.{2}|.{1,2}/g).join('.')) :  "09.72.42.30.00") + "\n" +
-                    "Edison Services"
-            }*/
+            /*            demande: function(user) {
+                            return "Bonjour M. " + _.get(this, 'sst.representant.nom', '') + ", nous cherchons a vous joindre pour une intervention de vitrerie à faire aujourd'hui.\n" +
+                                "Pourriez-vous vous rendre disponible ?\n" +
+                                "Merci de nous contacter au plus vite au 09.72.42.30.00.\n" +
+                                "Merci d'avance pour votre réponse.\n" +
+                                "\n" + (user.pseudo ||  "Arnaud") + "\n" +
+                                "Ligne Directe " + (user.ligne ? (user.ligne.match(/.{2}|.{1,2}/g).join('.')) :  "09.72.42.30.00") + "\n" +
+                                "Edison Services"
+                        }*/
         }
     },
 
