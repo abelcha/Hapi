@@ -166,19 +166,18 @@ module.exports = function(schema) {
                 var prm = getFacturier(inter)
             } else if (req.query.q === 'manuel') {
                 var prm = getStaticFile.bind("Manuel d'utilisation.pdf")()
-           /* } else if (req.query.q === 'notice') {
-                var prm = getStaticFile.bind("Notice d'intervention.pdf")()*/
+                    /* } else if (req.query.q === 'notice') {
+                         var prm = getStaticFile.bind("Notice d'intervention.pdf")()*/
             } else if (req.query.q === 'deviseur') {
                 var prm = getDeviseur(inter, req.session);
+            } else if (req.query.q === 'notice') {
+                console.log('notice')
+                var prm = getNotice(inter);
+            } else if (req.query.q === 'devis') {
+                var prm = getDevis(inter, req.session)
+            } else {
+                return res.status(400).send("unknown file")
             }
-            else if(req.query.q === 'notice') {
-                    console.log('notice')
-                    var prm = getNotice(inter);
-                } else if (req.query.q === 'devis') {
-                    var prm = getDevis(inter, req.session)
-                } else {
-                    return res.status(400).send("unknown file")
-                }
             prm.then(function(resp) {
                 res.pdf(resp.data);
             }, function(err) {
@@ -212,6 +211,10 @@ module.exports = function(schema) {
                             inter.status = "ENC";
                             inter.date.envoi = new Date();
                             inter.login.envoi = req.session.login;
+                            if (req.session.service === 'PARTENARIAT') {
+                                inter.date.demarchage = new Date();
+                                inter.login.demarchage = req.session.login;
+                            }
                             inter.save().then(resolve, reject)
                         })
                     }

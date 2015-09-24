@@ -84,7 +84,7 @@ var Timer = module.exports = function() {
         }
 
     }
-/*    test();*/
+   // test();
 
 
 }

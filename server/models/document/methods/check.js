@@ -106,7 +106,7 @@
                                    })
                                })
                            } else {
-                               console.log('NOT FOUND', row.inter_id)
+                               console.log('NOT FOUND', row)
                                edison.v1.set(_.template("UPDATE scanner SET checked='1' WHERE id='{{id}}'")(row), cb)
                            }
                        }, function(resp) {

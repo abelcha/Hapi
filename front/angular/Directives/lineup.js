@@ -66,7 +66,7 @@
              }
          })
      }, 250)
-
+     console.log('--->', _this.limit)
      dataProvider.init(function(err, resp) {
 
          dataProvider.applyFilter(currentFilter, _this.tab.hash, _this.customFilter);
@@ -77,7 +77,7 @@
              sorting: {
                  id: 'desc'
              },
-             count: 10
+             count: _this.limit || 100
          };
          var tableSettings = {
              total: dataProvider.filteredData,
