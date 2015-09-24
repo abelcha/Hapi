@@ -1850,6 +1850,14 @@ module.exports = {
         short_name: "CLI_REP_P",
         long_name: "Le client ne répond pas"
     }, {
+        type: "client",
+        short_name: "CLI_PAS_PAYE",
+        long_name: "Le client n'a pas voulu payer le sous-traitant"
+    }, {
+        type: "client",
+        short_name: "CLI_ANN_RDV",
+        long_name: "Le client a annulé juste avant le rendez-vous"
+    }, {
         type: "sous-traitant",
         short_name: "SST_P_DSP",
         oldId: '4',
@@ -1868,14 +1876,30 @@ module.exports = {
         short_name: "SST_PS_APL",
         long_name: "Le sous-traitant n'a jamais appelé le client"
     }, {
-        type: "partenariat",
-        short_name: "PS_SST",
-        oldId: '5',
-        long_name: "Il n'y a pas de sst dans la zone"
+        type: "sous-traitant",
+        short_name: "RETARD_SST",
+        long_name: "Retard du sous-traitant"
+    }, {
+        type: "sous-traitant",
+        short_name: "SST_PS_CMPT",
+        long_name: "Le sous-traitant n'est pas compétent pour cette intervention"
     }, {
         type: "partenariat",
+        short_name: "PS_SST_DISPO",
+        long_name: "Il n'y a pas de sous-traitant disponible dans la zone"
+    }, {
+        type: "partenariat",
+        oldId: '5',
         short_name: "PS_SST",
-        long_name: "Il n'y a pas de sst dans la zone"
+        long_name: "Il n'y a pas de sous-traitant dans la zone"
+    }, {
+        type: "partenariat",
+        short_name: "RVL_LIENS_SST",
+        long_name: "Le sous-traitant a dévoilé les liens de sous-traitance au client"
+    }, {
+        type: "partenariat",
+        short_name: "PS_BON",
+        long_name: "Le sous-traitant démarché n'est pas bon"
     }],
     getCauseAnnulation: function(short_name) {
         var _find = require('lodash/collection/find');
@@ -2242,6 +2266,19 @@ module.exports = {
 module.exports = {
     sms: {
         intervention: {
+            demande: function(user) {
+                var config = require('./dataList.js')
+                var categorieClean = config.categories[this.categorie].suffix + " " + config.categories[this.categorie].long_name.toLowerCase()
+                return "Bonjour M. BOUKRIS, nous cherchons a vous joindre pour une intervention de " + categorieClean +
+                    " à faire le " + moment(this.date.intervention).format("LLLL") +
+                    "Pourriez - vous vous rendre disponible ?\n" +
+                    "Merci de nous contacter au plus vite au 09.72.42.30.00.\n" +
+                    "Merci d 'avance pour votre réponse.\n" +
+                    (user.pseudo ||  "Arnaud") +
+                    "Ligne Directe " + (user.ligne ? (user.ligne.match(/.{2}|.{1,2}/g).join('.')) :  "09.72.44.16.63") + "\n" +
+                    "Edison Services\n"
+
+            },
             envoi: function(user) {
                 var sms = _.template("OS {{id}}\n" +
                     "Intervention chez {{client.civilite}} {{client.prenom}} {{client.nom}} au " +
@@ -2250,20 +2287,20 @@ module.exports = {
                 sms += this.prixAnnonce ? this.prixAnnonce + "€ HT. " : "Pas de prix annoncé. ";
                 sms += "\nMerci de prendre rdv avec le client au " + this.client.telephone.tel1;
                 sms += this.client.telephone.tel2 ? " ou au " + this.client.telephone.tel2 : "";
-                sms += '\nM. ' + (user.pseudo ||  "Arnaud") + ',\n';
+                sms += '\n' + (user.pseudo ||  "Arnaud") + ',\n';
                 sms += "Ligne directe: " + (user.ligne ? (user.ligne.match(/.{2}|.{1,2}/g).join('.')) :  "09.72.42.30.00") + "\n";
                 return sms + "Edison Services."
             },
             annulation: "L'intervention {{id}} chez {{client.civilite}} {{client.nom}} à {{client.address.v}} le {{datePlain}} a été annulé. \nMerci de ne pas intervenir. \nEdison Services",
-            demande: function(user) {
+/*            demande: function(user) {
                 return "Bonjour M. " + _.get(this, 'sst.representant.nom', '') + ", nous cherchons a vous joindre pour une intervention de vitrerie à faire aujourd'hui.\n" +
                     "Pourriez-vous vous rendre disponible ?\n" +
                     "Merci de nous contacter au plus vite au 09.72.42.30.00.\n" +
                     "Merci d'avance pour votre réponse.\n" +
-                    "\nM." + (user.pseudo ||  "Arnaud") + "\n" +
+                    "\n" + (user.pseudo ||  "Arnaud") + "\n" +
                     "Ligne Directe " + (user.ligne ? (user.ligne.match(/.{2}|.{1,2}/g).join('.')) :  "09.72.42.30.00") + "\n" +
                     "Edison Services"
-            }
+            }*/
         }
     },
 

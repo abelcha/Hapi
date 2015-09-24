@@ -77,7 +77,7 @@
              sorting: {
                  id: 'desc'
              },
-             count: _this.limit || 100
+             count: 10
          };
          var tableSettings = {
              total: dataProvider.filteredData,

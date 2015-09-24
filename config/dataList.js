@@ -367,6 +367,14 @@ module.exports = {
         short_name: "CLI_REP_P",
         long_name: "Le client ne répond pas"
     }, {
+        type: "client",
+        short_name: "CLI_PAS_PAYE",
+        long_name: "Le client n'a pas voulu payer le sous-traitant"
+    }, {
+        type: "client",
+        short_name: "CLI_ANN_RDV",
+        long_name: "Le client a annulé juste avant le rendez-vous"
+    }, {
         type: "sous-traitant",
         short_name: "SST_P_DSP",
         oldId: '4',
@@ -385,14 +393,30 @@ module.exports = {
         short_name: "SST_PS_APL",
         long_name: "Le sous-traitant n'a jamais appelé le client"
     }, {
-        type: "partenariat",
-        short_name: "PS_SST",
-        oldId: '5',
-        long_name: "Il n'y a pas de sst dans la zone"
+        type: "sous-traitant",
+        short_name: "RETARD_SST",
+        long_name: "Retard du sous-traitant"
+    }, {
+        type: "sous-traitant",
+        short_name: "SST_PS_CMPT",
+        long_name: "Le sous-traitant n'est pas compétent pour cette intervention"
     }, {
         type: "partenariat",
+        short_name: "PS_SST_DISPO",
+        long_name: "Il n'y a pas de sous-traitant disponible dans la zone"
+    }, {
+        type: "partenariat",
+        oldId: '5',
         short_name: "PS_SST",
-        long_name: "Il n'y a pas de sst dans la zone"
+        long_name: "Il n'y a pas de sous-traitant dans la zone"
+    }, {
+        type: "partenariat",
+        short_name: "RVL_LIENS_SST",
+        long_name: "Le sous-traitant a dévoilé les liens de sous-traitance au client"
+    }, {
+        type: "partenariat",
+        short_name: "PS_BON",
+        long_name: "Le sous-traitant démarché n'est pas bon"
     }],
     getCauseAnnulation: function(short_name) {
         var _find = require('lodash/collection/find');

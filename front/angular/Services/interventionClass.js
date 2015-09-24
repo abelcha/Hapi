@@ -101,7 +101,7 @@ angular.module('edison')
                     text: text,
                     acquitte: acquitte,
                     date: date,
-                    data:_this
+                    data: _this
                 }).success(function(resp) {
                     LxProgressService.circular.hide();
                     var validationMessage = _.template("La facture de l'intervention {{id}} à été envoyé")(_this)
@@ -161,13 +161,14 @@ angular.module('edison')
                 if (err) {
                     return cb(err)
                 }
+                console.log(_this.sst.telephone.tel1);
                 edisonAPI.sms.send({
-                    link: _this.artisan.id,
+                    link: _this.sst.id,
                     origin: _this.id || _this.tmpID,
                     text: text,
-                    to: $rootScope.user.portable || "0633138868"
+                    to: 0633138868,
                 }).success(function(resp) {
-                    var validationMessage = _.template("Un sms a été envoyé à M. {{artisan.representant.nom}}")(_this)
+                    var validationMessage = _.template("Un sms a été envoyé à M. {{sst.representant.nom}}")(_this)
                     LxNotificationService.success(validationMessage);
                     if (typeof cb === 'function')
                         cb(null, resp);

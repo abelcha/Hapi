@@ -33,7 +33,7 @@
                         var data = JSON.parse(body);
                         var i = 0;
                         console.time('dump')
-                        async.eachSeries(data, function(e, callback) {
+                        async.eachLimit(data, 20, function(e, callback) {
                             if (++i % 100 == 0)
                                 console.log(_.round(i / data.length * 100, 2), "%")
                             core.model()(core.toV2(e)).save(callback);

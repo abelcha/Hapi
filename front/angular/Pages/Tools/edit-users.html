@@ -12,6 +12,7 @@
             <thead>
                 <tr>
                     <th>Login</th>
+                    <th>Login V1</th>
                     <th>Email</th>
                     <th>Pseudo</th>
                     <th>Service</th>
@@ -26,6 +27,9 @@
                 <tr ng-repeat="p in usrs | filter:search track by $index">
                     <td>
                         <input type="text" class="form-control" ng-model="p.login">
+                    </td>
+                     <td>
+                        <input type="text" class="form-control" ng-model="p.oldLogin">
                     </td>
                     <td>
                         <input type="text" class="form-control" ng-model="p.email">
