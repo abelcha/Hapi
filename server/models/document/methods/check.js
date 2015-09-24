@@ -1,13 +1,13 @@
    module.exports = function(schema) {
        var _ = require('lodash')
-       var moment = require('moment')
+       var moment = require('moment-timezone')
        var request = require('request')
        var async = require('async')
 
        var convert = function(ts, offset) {
            var dt = ts.replace('.', '-').split('-').slice(0, -4).join('-');
            var hr = ts.replace('.', '-').split('-').slice(3, 6).join(':');
-           return moment(dt + " " + hr).unix() * 1000 + (offset || 0)
+           return moment.tz(dt + " " + hr, 'Europe/Paris').unix() * 1000 + (offset || 0)
        }
 
 
@@ -24,13 +24,10 @@
            }
            _.each(dbl, function(e) {
                e.diff = e.ts - x.start;
-               console.log(e.ts, e.start, e.diff)
                if (Math.abs(e.diff) < Math.abs(min.diff)) {
                    min = e;
                }
-               console.log('->', min.diff)
            })
-           console.log('==>', min)
            if ((min.diff > 0 && min.diff < 15000) || (min.diff < 0 && min.diff > -1000)) {
                return min
            }
@@ -86,7 +83,7 @@
                    var i = 0;
                    var limit = req.query.limit || 100;
                    console.log('query')
-                   edison.v1.get("SELECT * FROM scanner WHERE name='2015-09-24-14-45-55.pdf' ORDER BY id ASC LIMIT " + limit, function(err, resp)  {
+                   edison.v1.get("SELECT * FROM scanner WHERE checked='0' ORDER BY id ASC LIMIT " + limit, function(err, resp)  {
                        limit = resp.length;
                        /*                       _.each(resp, function(e) {
                                                   console.log(moment(new Date(parseInt(e.start))).format('YYYY-MM-DD-HH-mm-ss'), e.id_inter)
