@@ -6,7 +6,7 @@ var Users = function() {
 }
 Users.prototype.data = null;
 Users.prototype.list = function() {
-    return this.resp
+    return this.data
 }
 
 Users.prototype.search = function(oldLogin) {

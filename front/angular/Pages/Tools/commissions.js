@@ -2,43 +2,58 @@ var CommissionsController = function(DateSelect, tabContainer, $routeParams, edi
     "use strict";
     var _this = this;
     _this.tab = tabContainer.getCurrentTab();
-    _this.tab.setTitle('Stats');
+    _this.tab.setTitle('Coms.');
 
+    _this.xcalc = function(e) {
+        return e.categorie === 'VT' ? 1 : _.round(e.compta.reglement.montant * 0.01, 2);
+    }
+
+    _this.getTotal = function() {
+        var rtn = {
+            com: 0,
+            all: 0
+        }
+        _.each($scope.list, function(x) {
+            rtn.com += _this.xcalc(x);
+            rtn.all += x.compta.reglement.montant || 0
+        })
+        return rtn;
+    }
 
     var dateSelect = new DateSelect;
-    console.log("==>",  dateSelect.current);
 
+    $scope.usrs = _.filter(window.app_users, 'service', 'INTERVENTION');
 
-    $scope.$watch("selectedDate", function(curr) {
-        if (!curr ||  !curr.m || !curr.y)
-            return false;
+    $scope.selectedUser = $location.search().l ||  $scope.usrs[0].login
+
+    var actualise = _.debounce(function() {
+        LxProgressService.circular.show('#5fa2db', '#globalProgress');
+
+        edisonAPI.intervention.commissions(_.merge($scope.selectedDate, {
+            l: $scope.selectedUser
+        })).then(function(resp) {
+            LxProgressService.circular.hide();
+            $scope.list = resp.data
+            $scope.total = _this.getTotal()
+        })
+    }, 50)
+
+    $scope.$watch("selectedUser", function(curr, prev) {
+        console.log("USER", curr)
+        $location.search('l', curr);
+        actualise();
+        /* */
+    })
+    $scope.$watch("selectedDate", function(curr, prev) {
+        console.log('datechange', curr, prev)
         $location.search('m', curr.m);
         $location.search('y', curr.y);
-        edisonAPI.intervention.statsBen(curr).then(function(resp) {
-            $('#chartContainer > *').remove()
-            var svg = dimple.newSvg("#chartContainer", 1300, 400);
-            var myChart = new dimple.chart(svg, resp.data);
-            myChart.defaultColors = [
-                new dimple.color("#4CAF50"), //RGL
-                new dimple.color("#2196F3"), //ANN
-                new dimple.color("#FDD835"), //ATT
-                new dimple.color("#F44336"), //ENV
-                new dimple.color("#0091EA"), //PAY
-                new dimple.color("black"),
-            ];
-            myChart.setBounds(60, 30, 1000, 300)
-            var x = myChart.addCategoryAxis("x", "day");
-            //x.addOrderRule("dt");
-            var y = myChart.addMeasureAxis("y", "prix");
-            //y.tickFormat = ',.0f';
-            myChart.addSeries("recu", dimple.plot.bar);
-            //myChart.addPctAxis("y", "paye");
-            myChart.assignColor("En Attente", "#2196F3");
-            myChart.assignColor("Encaissé", "#4CAF50");
-            myChart.addLegend(60, 10, 410, 20, "right");
-            myChart.draw();
-
-        })
+        actualise();
+        /* $location.search('m', curr.m);
+         $location.search('y', curr.y);
+         edisonAPI.intervention.commissions(curr).then(function(resp) {
+             console.log('==>', resp.data)
+         })*/
     })
     if ($location.search().m)  {
         dateSelect.current.m = parseInt($location.search().m)

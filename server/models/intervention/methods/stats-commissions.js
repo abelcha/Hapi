@@ -1,5 +1,6 @@
 module.exports = function(schema) {
     var moment = require('moment')
+    var async = require('async')
     var _ = require('lodash')
     schema.statics.commissions = function(req, res) {
         return new Promise(function(resolve, reject) {
@@ -11,30 +12,12 @@ module.exports = function(schema) {
                 }
             }
             var dateRange = getMonthRange(req.query.m - 1, req.query.y)
-            db.model('intervention').fing({
+            db.model('intervention').find({
                     'date.ajout': dateRange,
-                    'compta.reglement.recu': true,
-                    'login.ajout':'benjamin_b'
-                })
-               .exec(function(err, resp) {
-                    console.log(resp);
-                    /*if (err) {
-                        reject(err);
-                    }
-                    resp = _.map(resp, function(e) {
-                        return {
-                            prix: e.prixFinal ||  e.prixAnnonce ||  0,
-                            day: e.day,
-                            recu: e.recu ? 'Encaissé' : 'En Attente'
-                        }
-                    })
-                    _.times(31, function(i) {
-                        resp.push({
-                            day: i + 1,
-                            prix: 0,
-                            recu:'En Attente'
-                        })
-                    })*/
+                    'login.ajout': req.query.l,
+                    'compta.paiement.effectue':true
+                }).select('id categorie compta.reglement compta.paiement.effectue')
+                .exec(function(err, resp) {
                     resolve(resp);
                 })
         })

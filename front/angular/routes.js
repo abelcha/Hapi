@@ -227,6 +227,8 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
             templateUrl: "Pages/Tools/commissions.html",
             controller: "CommissionsController",
             controllerAs: "vm",
+            reloadOnSearch: false
+            
         })
         .when('/stats/:type', {
             templateUrl: "Pages/Stats/stats.html",

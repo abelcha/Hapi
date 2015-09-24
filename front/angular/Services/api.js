@@ -17,7 +17,7 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
                 return $http.post('/api/compte/__save', data);
             }
         },
-         combo: {
+        combo: {
             list: function() {
                 return $http.get('/api/combo/list');
             },
@@ -172,6 +172,13 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
                 return $http({
                     method: 'GET',
                     url: "/api/intervention/statsBen",
+                    params: options
+                });
+            },
+            commissions: function(options) {
+                return $http({
+                    method: 'GET',
+                    url: "/api/intervention/commissions",
                     params: options
                 });
             }
