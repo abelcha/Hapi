@@ -112,6 +112,7 @@ app.post('/login', function(req, res) {
 
 
 app.get("/ping", function(req, res)  {
+    console.log(edison.users)
     res.json(Date.now());
 })
 
