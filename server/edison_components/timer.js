@@ -32,7 +32,7 @@ var Timer = module.exports = function() {
         var req = {
             query: {}
         }
-        if (!envProd) {
+        if (envProd) {
             db.model('document').check(req).then(function() {
                 db.model('document').archiveScan(req).then(function() {
                     db.model('document').order(req).then(function() {
