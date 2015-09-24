@@ -208,17 +208,7 @@
         var Entities = require('html-entities').XmlEntities;
         var entities = new Entities();
 
-        var getLogin = function(oldLogin) {
-            var rtn = _.find(users, function(e) {
-                return e.oldLogin === oldLogin;
-            })
-            if (!rtn) {
-                return oldLogin;
-            } else {
-                return rtn.login
-            }
 
-        }
 
 
         var addProp = function(obj, prop, name) {
@@ -270,7 +260,7 @@
             client.telephone.tel2 = d.tel2.replace(/[^0-9]/g, '');
         client.telephone.origine = d.numero_origine
             /* COMMENTS */
-        var user = getLogin(d.ajoute_par)
+        var user = edison.users.search(d.ajoute_par)
         var comments = [];
         if (d.remarque_interne) {
             comments.push({
@@ -340,7 +330,7 @@
         if (rtn.status === "INT") {
             rtn.login.verification = rtn.login.ajout
             if (!rtn.reglementSurPlace) {
-                rtn.login.envoiFacture = getLogin(d.facture_editee_par ||  'boukris_b')
+                rtn.login.envoiFacture = edison.users.search(d.facture_editee_par ||  'boukris_b')
                 rtn.login.verification = rtn.login.envoiFacture
             }
             rtn.date.verification = rtn.date.intervention || rtn.date.ajout;

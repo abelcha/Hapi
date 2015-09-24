@@ -12,22 +12,11 @@ module.exports = function(schema) {
                 e._id = e.login;
             })
             db.model('user').remove({}, function() {
-                db.model('user').create(userList).then(resolve, reject)
+                db.model('user').create(userList).then(function(resp) {
+                    edison.users.data = resp;
+                    resolve(resp)
+                }, reject)
             })
-
-            /*        async.each(userList, function(e, cb) {
-                        if (e.login) {
-                            e.pseudo = _.startCase(e.pseudo);
-                            db.model('user').findOneAndUpdate({
-                                login: e.login
-                            }, _.omit(e, '__v'), {
-                                upsert: true,
-                                'new': true
-                            }, cb);
-                        }
-                    }, function(err) {
-                        res.json(err)
-                    })*/
         })
     }
 }

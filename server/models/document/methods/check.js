@@ -64,13 +64,8 @@
                    req: _.pick(req, 'query', 'session')
                })
            }
-           console.log('==>', edison.users.data)
-
            return new Promise(function(resolve, reject) {
-               console.log('getlist')
                document.list('/SCAN').then(function(dbl) {
-                   console.log('getlistXX')
-
                    dbl = _(dbl).filter(function(e) {
                        return e.length === 23 && _.endsWith(e, '.pdf') && e[4] === '-'
                    }).map(function(e) {

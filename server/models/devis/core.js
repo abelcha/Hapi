@@ -139,11 +139,7 @@
                 client.telephone.tel2 = d.tel2.replace(/[^0-9]/g, '');
             client.telephone.appel = d.numero_appel ||  undefined
                 /* COMMENTS */
-            var user = _.find(users, function(e) {
-                return e.oldLogin === d.ajoute_par;
-            })
-
-            user = user ? user.login : d.ajoute_par;
+            var user = edison.users.search(d.ajoute_par);
             var rtn = {
                 tva: 20,
                 id: d.id,

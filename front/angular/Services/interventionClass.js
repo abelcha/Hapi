@@ -161,7 +161,6 @@ angular.module('edison')
                 if (err) {
                     return cb(err)
                 }
-                console.log();
                 edisonAPI.sms.send({
                     link: _this.sst.id,
                     origin: _this.id || _this.tmpID,
