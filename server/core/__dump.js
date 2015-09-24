@@ -21,55 +21,30 @@
 
 
         var multiDump = function(limit) {
-            var async = require('async')
-            var request = require('request')
             return new Promise(function(resolve, reject) {
-                async.series([
-                    function(cb) {
-                        request(core.multiDumpUrl(limit), cb)
-                    },
-                    function(err, rest, body) {
+                core.model().remove({}, function() {
+                    var request = require("request");
+                    console.time('request')
+                    request(core.multiDumpUrl(limit), function(err, rest, body) {
+                        var async = require('async')
+                        console.timeEnd('request')
                         var data = JSON.parse(body);
+                        var i = 0;
+                        console.time('dump')
                         async.eachLimit(data, 20, function(e, callback) {
+                            if (++i % 100 == 0)
+                                console.log(_.round(i / data.length * 100, 2), "%")
                             core.model()(core.toV2(e)).save(callback);
-                        }, cb)
-                    },
-                    function(err, resp) {
-                        console.timeEnd('dump')
-                        if (err) {
-                            return resolve(err);
-                        }
-                        core.model().fullReload().then(resolve, reject)
-                    }
-                ])
+                        }, function(err, resp) {
+                            console.timeEnd('dump')
+                            if (err) {
+                                return resolve(err);
+                            }
+                            core.model().fullReload().then(resolve, reject)
+                        })
+                    });
+                });
 
-
-
-
-
-                /*                core.model().remove({}, function() {
-                                    var request = require("request");
-                                    console.time('request')
-                                    request(core.multiDumpUrl(limit), function(err, rest, body) {
-                                        var async = require('async')
-                                        console.timeEnd('request')
-                                        var data = JSON.parse(body);
-                                        var i = 0;
-                                        console.time('dump')
-                                        async.eachLimit(data, 20, function(e, callback) {
-                                            if (++i % 100 == 0)
-                                                console.log(_.round(i / data.length * 100, 2), "%")
-                                            core.model()(core.toV2(e)).save(callback);
-                                        }, function(err, resp) {
-                                            console.timeEnd('dump')
-                                            if (err) {
-                                                return resolve(err);
-                                            }
-                                            core.model().fullReload().then(resolve, reject)
-                                        })
-                                    });
-                                });
-                */
 
             });
         }
