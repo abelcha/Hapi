@@ -24,7 +24,7 @@
            }
            _.each(dbl, function(e) {
                e.diff = e.ts - x.start;
-               if (Math.abs(e.diff) < min.diff) {
+               if (Math.abs(e.diff) < Math.abs(min.diff)) {
                    min = e;
                }
            })
