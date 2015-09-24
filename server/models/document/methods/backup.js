@@ -1167,25 +1167,27 @@
                    "id_inter": 28796
                }]
 
-
+               var rtn = ""
                _.each(backup, function(e) {
-                   console.log(e);
+                   var insert = _.template("INSERT INTO scanner (id, start, id_inter) VALUES ('{{id}}', '{{start}}', '{{id_inter}}');")(e);
+                   rtn += (insert);
                })
 
-               /*var lol = [];
-               edison.v1.get("SELECT * FROM scanner ", function(err, resp) {
-                   _.times(11543, function(n) {
-                       var x = _.find(resp, function(e) {
-                           //if (n % 100 == 0)
-                           //  console.log(e.id, n)
-                           return e.id == n
-                       });
-                       if (!x) {
-                           lol.push(n);
-                       }
-                   })
-                   console.log("'" + lol.join("', '") + "'")
-               })*/
+               console.log(rtn)
+                   /*var lol = [];
+                   edison.v1.get("SELECT * FROM scanner ", function(err, resp) {
+                       _.times(11543, function(n) {
+                           var x = _.find(resp, function(e) {
+                               //if (n % 100 == 0)
+                               //  console.log(e.id, n)
+                               return e.id == n
+                           });
+                           if (!x) {
+                               lol.push(n);
+                           }
+                       })
+                       console.log("'" + lol.join("', '") + "'")
+                   })*/
            })
        }
    }

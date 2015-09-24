@@ -68,9 +68,7 @@ Dropbox.prototype.move = function(from, to) {
 Dropbox.prototype.copy = function(from, to) {
     var _this = this;
     return new Promise(function(resolve, reject) {
-    console.log('-->', from, to)
         _this.client.copy(from, to, function(err, stats) {
-            console.log(err, stats)
             if (err)
                 reject(err);
             resolve(stats);

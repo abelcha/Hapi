@@ -19,11 +19,24 @@
 
 
        var findClosest = function(x, dbl) {
-           return _.find(dbl, function(e) {
+           var min = {
+               diff: Math.pow(9, 9)
+           }
+           _.each(dbl, function(e) {
                e.diff = e.ts - x.start;
-               //console.log(e.diff, moment(new Date(parseInt(x.start))).format('YYYY-MM-DD-HH-mm-ss'), e.name)
-               return (e.diff > 0 && e.diff < 5000) || (e.diff < 0 && e.diff > -1000)
+               if (Math.abs(e.diff) < min.diff) {
+                   min = e;
+               }
            })
+           if ((min.diff > 0 && min.diff < 15000) || (min.diff < 0 && min.diff > -1000)) {
+               return min
+           }
+           return null
+               /*return _.find(dbl, function(e) {
+                   e.diff = e.ts - x.start;
+                   console.log(e.diff, moment(new Date(parseInt(x.start))).format('YYYY-MM-DD-HH-mm-ss'), e.name)
+                   return (e.diff > 0 && e.diff < 5000) || (e.diff < 0 && e.diff > -1000)
+               })*/
        }
 
 
@@ -42,10 +55,7 @@
        schema.statics.check = function(req, res) {
 
 
-           edison.v1.get('SELECT * FROM scanner', function(err, resp) {
-               res.send(resp)
-           })
-           return 0
+
            if (!isWorker) {
                return edison.worker.createJob({
                    name: 'db',
@@ -65,7 +75,7 @@
                    }).map(function(e) {
                        return {
                            name: e,
-                           ts: convert(e, 3600000)
+                           ts: convert(e, 0)
                        }
                    }).value();
 
@@ -73,7 +83,7 @@
                    var i = 0;
                    var limit = req.query.limit || 100;
                    console.log('query')
-                   edison.v1.get("SELECT * FROM scanner WHERE checked='0' AND moved='0' ORDER BY id ASC LIMIT " + limit, function(err, resp)  {
+                   edison.v1.get("SELECT * FROM scanner WHERE checked='0' ORDER BY id ASC LIMIT " + limit, function(err, resp)  {
                        limit = resp.length;
                        /*                       _.each(resp, function(e) {
                                                   console.log(moment(new Date(parseInt(e.start))).format('YYYY-MM-DD-HH-mm-ss'), e.id_inter)
@@ -85,7 +95,6 @@
                            if (closest) {
                                var mrg = _.merge(row, closest)
                                moveV1(closest, function(err, resp) {
-                                   console.log('movev1')
                                    if (err || !resp) {
                                        console.log("ERR", '<', err, ">", mrg.name, mrg.id);
                                        return cb(null, 'ERR')
@@ -98,8 +107,7 @@
                                })
                            } else {
                                console.log('NOT FOUND', row.inter_id)
-                               cb(null);
-                               // edison.v1.set(_.template("UPDATE scanner SET checked='1' WHERE id='{{id}}'")(row), cb)
+                               edison.v1.set(_.template("UPDATE scanner SET checked='1' WHERE id='{{id}}'")(row), cb)
                            }
                        }, function(resp) {
                            resolve('ok')
