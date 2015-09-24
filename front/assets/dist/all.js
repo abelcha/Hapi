@@ -2782,12 +2782,12 @@ angular.module('edison')
                 if (err) {
                     return cb(err)
                 }
-                console.log(_this.sst.telephone.tel1);
+                console.log();
                 edisonAPI.sms.send({
                     link: _this.sst.id,
                     origin: _this.id || _this.tmpID,
                     text: text,
-                    to: 0633138868,
+                    to: _this.sst.telephone.tel1,
                 }).success(function(resp) {
                     var validationMessage = _.template("Un sms a été envoyé à M. {{sst.representant.nom}}")(_this)
                     LxNotificationService.success(validationMessage);

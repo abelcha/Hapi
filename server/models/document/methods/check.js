@@ -64,6 +64,7 @@
                    req: _.pick(req, 'query', 'session')
                })
            }
+           console.log('==>', edison.users.data)
 
            return new Promise(function(resolve, reject) {
                console.log('getlist')

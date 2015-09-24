@@ -10,7 +10,7 @@ module.exports = function(schema) {
     schema.statics.__save = function(req, res) {
         var options = req.body
         options.login = req.session.login;
-        console.log('===>', options)
+        console.log(options)
         return this.send(options);
     }
 

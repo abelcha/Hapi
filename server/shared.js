@@ -24,5 +24,5 @@ module.exports = function() {
     global.mail = new edison.mail;
     global.document = new edison.dropbox();
     edison.extendPrototypes();
-
+    edison.users = new edison.users();
 }
