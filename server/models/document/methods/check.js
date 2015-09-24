@@ -24,9 +24,11 @@
            }
            _.each(dbl, function(e) {
                e.diff = e.ts - x.start;
+               console.log(e.ts, e.start, e.diff)
                if (Math.abs(e.diff) < Math.abs(min.diff)) {
                    min = e;
                }
+               console.log('->', min.diff)
            })
            console.log('==>', min)
            if ((min.diff > 0 && min.diff < 15000) || (min.diff < 0 && min.diff > -1000)) {
@@ -84,7 +86,7 @@
                    var i = 0;
                    var limit = req.query.limit || 100;
                    console.log('query')
-                   edison.v1.get("SELECT * FROM scanner WHERE moved='0' ORDER BY id ASC LIMIT " + limit, function(err, resp)  {
+                   edison.v1.get("SELECT * FROM scanner WHERE name='2015-09-24-14-45-55.pdf' ORDER BY id ASC LIMIT " + limit, function(err, resp)  {
                        limit = resp.length;
                        /*                       _.each(resp, function(e) {
                                                   console.log(moment(new Date(parseInt(e.start))).format('YYYY-MM-DD-HH-mm-ss'), e.id_inter)
