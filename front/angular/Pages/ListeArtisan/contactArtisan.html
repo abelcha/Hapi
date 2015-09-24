@@ -7,7 +7,7 @@
                 <br>
                 <div when-scroll-ends="vm.loadMore()">
                     <ul class="list mt++">
-                        <li class="list-row list-row--has-separator" ng-repeat="artisan in vm.tableData | orderBy:'-da' | limitTo:vm.tableLimit " ng-right-click="vm.rowRightClick($event, artisan)" ng-click="vm.rowClick($event, artisan, false)" ng-class="{success : vm.contextMenu.active && vm.contextMenu.data.id === artisan.id, greyed : expendedRow === artisan.id}">
+                        <li class="list-row list-row--has-separator" ng-repeat="artisan in vm.tableData | orderBy:'-da' | limitTo:vm.tableLimit " ng-right-click="vm.rowRightClick($event, artisan)" ng-click="vm.rowClick($event, artisan, false)" ng-class="{success : vm.vm.contextMenu.active && vm.vm.contextMenu.data.id === artisan.id, greyed : expendedRow === artisan.id}">
                             <div class="list-row__content">
                                 <span><strong>{{artisan.n}}</strong> - {{artisan.r}}</span>
                             </div>
@@ -58,7 +58,7 @@
                             <md-tab label="Interventions" data-position="0">
                                 <md-content class="md-padding">
                                     <h1 class="md-display-2">Liste des Interventions</h1>
-                                    <lineup-intervention ng-if="selectedIndex === 1" ></lineup-intervention>
+                                    <lineup-intervention ng-if="selectedIndex === 1"></lineup-intervention>
                                 </md-content>
                             </md-tab>
                             <md-tab label="Historique" data-position="1">
@@ -73,14 +73,14 @@
                                                 </div>
                                             </li>
                                         </ul>
-                                        <input placeholder="Commentaire..." ng-model="commentText" ng-enter="addComment()" class="form-control"/>
+                                        <input placeholder="Commentaire..." ng-model="commentText" ng-enter="addComment()" class="form-control" />
                                     </div>
                                 </md-content>
                             </md-tab>
                             <md-tab label="Stats" data-position="2">
                                 <md-content class="md-padding">
                                     <h1 class="md-display-2">Stats</h1>
-                                   <!--  <artisan-recap id="vm.sst.id"></artisan-recap> -->
+                                    <!--  <artisan-recap id="vm.sst.id"></artisan-recap> -->
                                 </md-content>
                             </md-tab>
                             <md-tab label="Paiements">
@@ -115,11 +115,13 @@
                     </md-content>
                 </div>
             </div>
-            <div class="dropdown-menu--no-conflicts dropdown-menu--right dropdown__menu--is-dropped" style="width: auto; height: auto; opacity: 1;" ng-style="vm.contextMenu.style">
+            <div class="dropdown-menu--no-conflicts dropdown-menu--right dropdown__menu--is-dropped" style="margin-top: -215px;width: auto; height: auto; opacity: 1;" ng-style="vm.contextMenu.style">
                 <div class="dropdown-menu__content ng-scope">
                     <ul class="ng-scope">
-                        <li ng-repeat="item in vm.contextMenu.list" ng-click="vm.contextMenu.close();vm.contextMenu.click(item)">
-                            <a class="dropdown-link" tabindex="0">{{item.title}}</a>
+                        <li ng-hide="item.hidden" ng-repeat="item in vm.contextMenu.list">
+                            <a ng-mouseover="vm.contextMenu.closeSub()" ng-if="!item.subs" class="dropdown-link" ng-style="item.style" tabindex="0" ng-click="vm.contextMenu.close();vm.contextMenu.click(item)">{{item.title}}</a>
+                            <a ng-style="item.style" ng-mouseover="vm.contextMenu.openSub(300)" ng-if="item.subs" class="dropdown-link" tabindex="0"><i no-margin align-left class="fa fa-angle-right"></i>{{item.title}}</a>
+                            <a ng-style="sub.style" ng-repeat="sub in item.subs" ng-click="vm.contextMenu.close();vm.contextMenu.click(sub)" ng-hide="sub.hidden" ng-if="vm.contextMenu.mouseOverCM && item.subs" class="dropdown-link"><i no-margin align-left class=" fa fa-angle-double-right"></i>{{sub.title}}</a>
                         </li>
                     </ul>
                 </div>

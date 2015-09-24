@@ -10,6 +10,22 @@ angular.module('edison')
                     this[k] = data[k];
                 }
             }
+
+            var appelLocal = function(tel) {
+                console.log('---->', tel);
+                if (tel) {
+                    $window.open('callto:' + tel, '_self', false);
+                }
+            }
+
+            Artisan.prototype.callTel1 = function() {
+                appelLocal(this.telephone.tel1)
+            }
+            Artisan.prototype.callTel2 = function() {
+                appelLocal(this.telephone.tel2)
+            }
+
+
             Artisan.prototype.typeOf = function() {
                 return 'Artisan';
             }

@@ -1297,8 +1297,26 @@ module.exports = {
         title: "Facturier/deviseur",
         action: 'facturierDeviseur',
     }, {
-        title: "Appeler",
-        action: 'call',
+        title: 'Appels',
+        style: {
+            fontWeight: 'bold'
+        },
+        subs: [{
+            title: 'Telephone 1',
+            action: 'callTel1',
+            href: function(artisan) {
+                return artisan.telephone.tel1
+            },
+            hide: function(artisan) {
+                return !artisan.telephone.tel1
+            }
+        }, {
+            title: 'Telephone 2',
+            action: 'callTel2',
+            hide: function(artisan) {
+                return !artisan.telephone.tel2
+            }
+        }]
     }],
     devis: [{
         title: 'Modifier le devis',
