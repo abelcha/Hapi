@@ -30,10 +30,16 @@
                                })
                            }, function(err) {
                                console.log('ERR <', e.name, err, '>')
-                               cb(null);
+                               if (_.includes(String(err), '403')) {
+                                   edison.v1.set("UPDATE scanner SET ordered='1' WHERE id='" + e.id + "'", function() {
+                                       console.log('ARCHIVED', e.name)
+                                       cb(null)
+                                   })
+                               } else {
+                                   cb(null);
+                               }
                            });
-                   }, function() {
-                       console.log('yay')
+                   }, function(err) {
                        resolve('ok')
                    })
                })
