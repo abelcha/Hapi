@@ -10,7 +10,10 @@ Users.prototype.list = function() {
 }
 
 Users.prototype.search = function(oldLogin) {
-	var _ = require('lodash')
+    var _ = require('lodash')
+    if (!this.data) {
+        return 'auto_x';
+    }
     var rtn = _.find(this.data, function(e) {
         return e.oldLogin === oldLogin;
     })
