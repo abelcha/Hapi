@@ -10,13 +10,15 @@ var Timer = module.exports = function() {
     this.emitter.add("0 3 * * *", "3pm");
     this.emitter.add("0 20 * * *", "20h");
     this.emitter.add("*/60 * * * *", "30 minutes")
-        /*    this.emitter.on("every 10 minutes", function() {
-                edison.worker.createJob({
-                    name: 'db',
-                    model: 'intervention',
-                    method: 'cacheReload'
-                })
-            });*/
+    this.emitter.add("*/20 * * * *", "20 minutes")
+
+    /*    this.emitter.on("every 10 minutes", function() {
+            edison.worker.createJob({
+                name: 'db',
+                model: 'intervention',
+                method: 'cacheReload'
+            })
+        });*/
     this.emitter.on("30 minutes", function() {
         db.model('intervention').fullReload().then(function() {
             console.log('inter ok')
@@ -25,11 +27,22 @@ var Timer = module.exports = function() {
             console.log('devis ok')
         })
     })
-/*
-    this.emitter.on("20h", function() {
-        redis.delWildcard("rs*")
+    this.emitter.on("20 minutes", function() {
+
+        var req = {
+            query: {}
+        }
+        if (!envProd) {
+            db.model('document').check(req).then(function() {
+                db.model('document').archiveScan(req).then(function() {
+                    db.model('document').order(req).then(function() {
+                        console.log('DocumentFullCheck [DONE]')
+                    })
+                })
+            })
+        }
+
     })
-*/
     this.emitter.on("3pm", function() {
         redis.delWildcard("rs*")
     })
@@ -59,8 +72,10 @@ var Timer = module.exports = function() {
     var test = function() {
         var parser = require('cron-parser');
         try {
-            var interval = parser.parseExpression("0 20 * * *");
-            console.log('Date: ', interval.next().toString()); // Sat Dec 29 2012 00:42:00 GMT+0200 (EET) 
+            var interval = parser.parseExpression("*/20 * * * *");
+            console.log('Date: ', interval.next().toString()); // Sat Dec 29 2012 00:44:00 GMT+0200 (EET) 
+            console.log('Date: ', interval.next().toString()); // Sat Dec 29 2012 00:44:00 GMT+0200 (EET) 
+            console.log('Date: ', interval.next().toString()); // Sat Dec 29 2012 00:44:00 GMT+0200 (EET) 
             console.log('Date: ', interval.next().toString()); // Sat Dec 29 2012 00:44:00 GMT+0200 (EET) 
             console.log('Date: ', interval.next().toString()); // Sat Dec 29 2012 00:44:00 GMT+0200 (EET) 
             console.log('Date: ', interval.next().toString()); // Sat Dec 29 2012 00:44:00 GMT+0200 (EET) 
@@ -69,7 +84,6 @@ var Timer = module.exports = function() {
         }
 
     }
-   // test();
 
 
 
