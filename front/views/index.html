@@ -163,6 +163,9 @@
     </div>
     <script type="text/javascript">
     //  window.PixelAdmin.start(init);
+    String.prototype.replaceAll = function(target, replacement) {
+        return this.split(target).join(replacement);
+    }
     var searchInput = 'md-autocomplete.searchBar>md-autocomplete-wrap>input'
     $(searchInput).ready(function() {
         $(searchInput).focus(function() {

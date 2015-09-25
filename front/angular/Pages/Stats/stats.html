@@ -21,8 +21,8 @@
             </div>
         </div>
         <div class="col-sm-2">
-            RECU: {{totalYear.recu}} €<br>
-            POTENTIEL: {{totalYear.potentiel}} €
+            RECU: {{totalYear.recu.toLocaleString('en-US').replaceAll(',', ' ')}} €<br>
+            POTENTIEL: {{totalYear.potentiel.toLocaleString('en-US').replace(',', ' ')}} €
         </div>
     </div>
 </div>
