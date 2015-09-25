@@ -114,8 +114,6 @@ module.exports = function(schema) {
             },
 
             function(buffer, callback) {
-                console.timeEnd('getFiles')
-                console.time('sendMail')
                 mail.send({
                     From: "comptabilite@edison-services.fr",
                     ReplyTo: "comptabilite@edison-services.fr",
@@ -133,16 +131,38 @@ module.exports = function(schema) {
                 });
             },
             function(buffer, callback) {
-                console.timeEnd('sendMail')
-                console.time('uploadFile')
+                var fs = require('fs')
+                var uuid = require('uuid')
+                var filename = '/tmp/' + uuid.v4() + '.pdf';
+                fs.writeFile(filename, buffer, function(err) {
+                    callback(err, buffer, filename);
+                })
+            },
+            function(buffer, filename, callback) {
+                var fs = require('fs')
+                var scissors = require('scissors');
+                var pageNumber = PDF('facture', e).getHTML().split('</page>').length
+                var p1 = scissors(filename).pages(1) // select or reorder individual pages 
+                var p2 = scissors(filename).range(2, pageNumber + 1);
+                var blank = scissors(process.cwd() + '/front/assets/pdf/blank.pdf').pages(1);
+                var stream = scissors.join(p1, blank, p2).pdfStream()
+                var finalBuffer = [];
+                stream.on('data', function(data) {
+                    finalBuffer.push(data);
+                }).on('end', function() {
+                    callback(null, Buffer.concat(finalBuffer))
+
+                })
+
+            },
+            function(buffer, callback) {
                 document.stack(buffer, 'RELANCE2 - ' + e.id, "AUTO")
                     .then(function(resp) {
                         callback(null, callback)
                     })
             }
         ], function(err, result) {
-            console.timeEnd('uploadFile')
-            callback(null, result);
+            callback(result);
         })
     }
 
@@ -164,9 +184,17 @@ module.exports = function(schema) {
                 'date.intervention': {
                     $gt: moment().subtract(14, 'days').toDate()
                 },
+                'date.envoiFacture': {
+                    $exists: true
+                },
                 'status': 'VRF'
             }).then(function(resp, cb) {
-                async.each(resp.slice(0, 1), relance2);
+                async.each(resp.slice(0, 1), relance2, function(err, resp) {
+                    if (req.query.preview) {
+                        res.pdf(err)
+                    }
+                    resolve('ok')
+                });
             }, resolve)
         }).catch(__catch)
     }
