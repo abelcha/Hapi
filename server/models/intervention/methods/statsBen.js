@@ -62,7 +62,6 @@ module.exports = function(schema) {
                 }
             }
             var dateRange = getYearRange(parseInt(req.query.y))
-            console.log(req.query.y, dateRange)
             db.model('intervention').aggregate()
                 .match({
                     'date.ajout': dateRange,
@@ -109,11 +108,13 @@ module.exports = function(schema) {
                     var rtn = [];
                     _.each(base, function(e, k) {
                         rtn.push({
+                            y:parseInt(req.query.y),
                             montant: _.round(e.recu, 2),
                             mth: k + 1,
                             potentiel: false
                         })
                         rtn.push({
+                            y:parseInt(req.query.y),
                             montant: _.round(e.potentiel, 2),
                             mth: k + 1,
                             potentiel: true

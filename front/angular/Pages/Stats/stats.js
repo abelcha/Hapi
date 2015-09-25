@@ -18,21 +18,30 @@ var StatsController = function(DateSelect, tabContainer, $routeParams, edisonAPI
         }).then(function(resp) {
             console.log(resp.data)
             $('#chartContainer2 > *').remove()
-            var svg = dimple.newSvg("#chartContainer2", 1300, 400);
+            var svg = dimple.newSvg("#chartContainer2", 1070, 400);
             var myChart = new dimple.chart(svg, resp.data);
             myChart.setBounds(60, 30, 1000, 300)
             var x = myChart.addCategoryAxis("x", "mth");
-            //x.addOrderRule("dt");
             var y = myChart.addMeasureAxis("y", "montant");
-           // var y = myChart.addMeasureAxis("y", "recu");
-            //y.tickFormat = ',.0f';
-           myChart.addSeries("potentiel", dimple.plot.bar);
-            //myChart.addPctAxis("y", "paye");
-           /* myChart.assignColor("En Attente", "#2196F3");
-            myChart.assignColor("Encaissé", "#4CAF50");*/
+            myChart.addSeries("potentiel", dimple.plot.bar);
             myChart.addLegend(60, 10, 410, 20, "right");
             myChart.draw();
 
+            $scope.totalYear = {
+                potentiel: 0,
+                recu: 0
+            }
+
+            _.each(resp.data, function(e) {
+                $scope.totalYear[e.potentiel ? 'potentiel' : 'recu'] += e.montant
+            })
+            console.log($scope.totalYear);
+            /*
+                        $('#chartContainer3 > *').remove()
+                        var svg2 = dimple.newSvg("#chartContainer3", 100, 400);
+                        var myChart2 = new dimple.chart(svg2, resp.data);
+                        myChart.setBounds(60, 30, 50, 300)
+            */
         })
     });
 
