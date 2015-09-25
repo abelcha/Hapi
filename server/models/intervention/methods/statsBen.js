@@ -62,6 +62,12 @@ module.exports = function(schema) {
                 }
             }
             var dateRange = getYearRange(parseInt(req.query.y))
+
+            var lol = {
+                $cond: [{
+                    $gt: ['$prixFinal', 0]
+                }, '$prixFinal', '$prixAnnonce']
+            }
             db.model('intervention').aggregate()
                 .match({
                     'date.ajout': dateRange,
@@ -81,7 +87,7 @@ module.exports = function(schema) {
                     potentiel: { // Set to 1 if value < 10
                         $cond: [{
                             $ne: ['$compta.reglement.recu', true]
-                        }, '$prixFinal', 0]
+                        }, lol, 0]
                     },
                     prixFinal: "$prixFinal",
                     prixAnnonce: "$prixAnnonce",
@@ -108,13 +114,13 @@ module.exports = function(schema) {
                     var rtn = [];
                     _.each(base, function(e, k) {
                         rtn.push({
-                            y:parseInt(req.query.y),
+                            y: parseInt(req.query.y),
                             montant: _.round(e.recu, 2),
                             mth: k + 1,
                             potentiel: false
                         })
                         rtn.push({
-                            y:parseInt(req.query.y),
+                            y: parseInt(req.query.y),
                             montant: _.round(e.potentiel, 2),
                             mth: k + 1,
                             potentiel: true
