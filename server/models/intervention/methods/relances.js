@@ -129,13 +129,12 @@ module.exports = function(schema) {
                         ContentType: 'application/pdf'
                     }]
                 }, function(resp) {
-                    callback(resp, buffer)
+                    callback(null, buffer)
                 });
             },
-            function(resp, buffer, callback) {
+            function(buffer, callback) {
                 console.timeEnd('sendMail')
                 console.time('uploadFile')
-                console.log('stack', buffer && buffer.length)
                 document.stack(buffer, 'RELANCE2 - ' + e.id, "AUTO")
                     .then(function(resp) {
                         callback(null, callback)
