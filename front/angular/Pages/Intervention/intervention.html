@@ -241,6 +241,7 @@
 
                                 <button ng-show="vm.data.status === 'ENC'  && vm.data.reglementSurPlace" ng-click="saveInter({verification:true})" class="btn--no-conflicts btn--l btn--black btn--fab  green" lx-ripple lx-tooltip="Verifier" tooltip-position="top"><i class="fa fa-check"></i></button>
                                 <button ng-show="vm.data.status === 'ENC' && !vm.data.reglementSurPlace" ng-click="calculPrixFinal();saveInter({verification:true, envoiFacture:true})" class="btn--no-conflicts btn--l btn--black btn--fab green" lx-ripple lx-tooltip="Envoyer facture + vérifier" tooltip-position="top"><i class="fa fa-check"></i></button>
+                                  <button ng-show="vm.data.status === 'ENC' && !vm.data.reglementSurPlace" ng-click="calculPrixFinal();saveInter({envoiFacture:true})" class="btn--no-conflicts btn--l btn--black btn--fab green" lx-ripple lx-tooltip="Envoyer facture" tooltip-position="top"><i class="fa fa-check"></i></button>
                             </div>
                         </div>
                     </div>

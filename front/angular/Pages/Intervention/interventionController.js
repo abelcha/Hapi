@@ -139,6 +139,8 @@ var InterventionCtrl = function(Description, Signalement, ContextMenu, $window, 
     var postSave = function(options, resp, cb) {
         if (options && options.envoiFacture && options.verification) {
             intervention.envoiFactureVerif(cb)
+        } else if (options && options.envoiFacture) {
+            intervention.sendFacture(cb)
         } else if (options && options.envoi === true) {
             resp.files = intervention.files;
             intervention.envoi.bind(resp)(cb);
