@@ -4662,6 +4662,7 @@ var StatsController = function(DateSelect, tabContainer, $routeParams, edisonAPI
             myChart.setBounds(60, 30, 1000, 300)
             var x = myChart.addCategoryAxis("x", "mth");
             var y = myChart.addMeasureAxis("y", "montant");
+            y.tickFormat = ',.0f';
             myChart.addSeries("potentiel", dimple.plot.bar);
             myChart.addLegend(60, 10, 410, 20, "right");
             myChart.draw();
@@ -4700,7 +4701,7 @@ var StatsController = function(DateSelect, tabContainer, $routeParams, edisonAPI
             var x = myChart.addCategoryAxis("x", "day");
             //x.addOrderRule("dt");
             var y = myChart.addMeasureAxis("y", "prix");
-            //y.tickFormat = ',.0f';
+            y.tickFormat = ',.0f';
             myChart.addSeries("recu", dimple.plot.bar);
             //myChart.addPctAxis("y", "paye");
             myChart.assignColor("En Attente", "#2196F3");
