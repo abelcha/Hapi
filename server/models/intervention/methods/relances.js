@@ -135,6 +135,7 @@ module.exports = function(schema) {
             function(resp, buffer, callback) {
                 console.timeEnd('sendMail')
                 console.time('uploadFile')
+                console.log('stack', buffer && buffer.length)
                 document.stack(buffer, 'RELANCE2 - ' + e.id, "AUTO")
                     .then(function(resp) {
                         callback(null, callback)
