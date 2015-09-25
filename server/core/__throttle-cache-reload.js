@@ -26,9 +26,10 @@
                     },
 
                 }, function(err, resp) {
-
+                    if (err) {
+                        reject(err);
+                    }
                     try {
-
                         console.log('NBS ==> ', resp.data.length, id_list)
                         if (resp.cacheList && resp.data) {
                             var cache = JSON.parse(resp.cacheList);
