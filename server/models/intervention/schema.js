@@ -366,6 +366,11 @@ module.exports = function(db) {
 
             },
         },
+        relance: {
+            r1: Date,
+            r2: Date,
+            r3: Date,
+        },
         sms: {
             ref: 'sms',
             type: String

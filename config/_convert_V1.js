@@ -94,6 +94,9 @@ var V1 = function(d, devis, legacy) {
             x.type_client = _.findIndex(config.typePayeur, 'short_name', d.facture.payeur)
             x.relance_facture = d.facture.relance
         }
+        if (d.relance) {
+            x.relance = JSON.stringify(d.relance)
+        }
         if (d.fourniture.length) {
             x.cout_fourniture = 0; //d.fourniture[0].pu;
             _.each(d.fourniture, function(e) {
@@ -102,7 +105,7 @@ var V1 = function(d, devis, legacy) {
             x.fournisseur = d.fourniture[0].fournisseur
             x.fourniture_sst = Number(d.fourniture[0].fournisseur !== "ARTISAN") + 1;
             console.log('FFF-->', x.fournisseur, x.fourniture_sst)
-            //x.fourniture_edison = Number(d.fourniture[0].fournisseur != "")
+                //x.fourniture_edison = Number(d.fourniture[0].fournisseur != "")
             x.tva_facture = d.tva;
         }
         x.taux_tva = d.tva ||  10

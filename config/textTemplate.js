@@ -1,6 +1,7 @@
 module.exports = {
     sms: {
         intervention: {
+
             demande: function(user) {
                 var config = require('./dataList.js')
                 var mmt = moment(this.date.intervention);
@@ -43,6 +44,85 @@ module.exports = {
 
     lettre: {
         intervention: {
+            relance2: function() {
+                return "<p> Réf: {{os}} <br> Pièce jointe: Facture n°{{os}} </p>" +
+                    "<div class='spacer'></div>" +
+                    "<strong> OBJET: Deuxième relance pour facture impayée </strong>" +
+                    "<p>Madame, Monsieur, <br>" +
+
+                    "<p> Sauf erreur de notre part, nous constatons que votre compte client présente à ce jour un solde débiteur. <br> Ce montant correspond à nos factures suivantes restées impayées: <p>" +
+
+                    "<table cellspacing='0' cellpadding='8'>" +
+                    "<tr class='bg-green'>" +
+                    "<th style='width: 70px;'> DATE </th>" +
+                    "<th class='align-left'> N° FACTURE </th>" +
+                    "<th class='align-left'> LIEU </th>" +
+                    "<th class='align-right'> MONTANT T.T.C. </th>" +
+                    "</tr>" +
+                    "<tr>" +
+                    "<th> {{datePlain}} </th>" +
+                    "<th> {{os}} </th>" +
+                    "<th> {{client.address.v}}, {{client.address.cp}} </th>" +
+                    "<th class='align-right'> {{prixFinalTTC}} € </th>" +
+                    "</tr>" +
+                    "<tr>" +
+                    "<th colspan='3'> <b> TOTAL </b> </th>" +
+                    "<th class='align-right'> {{prixFinalTTC}} € T.T.C. </th>" +
+                    "</tr>" +
+                    "</table>" +
+
+                    "<p> L'échéance étant dépassée, nous vous demandons de bien vouloir régulariser cette situation par retour de courrier. </p>" +
+
+                    "<p>A l'organisme qui gère notre comptabilité:</p>" +
+                    "<p strong center> EDISON SERVICES FRANCE<br>" +
+                    "Service comptabilité<br>" +
+                    "75 rue des dames, 75017 Paris<br>" +
+                    "Tél. 09.72.51.08.01 (Ouvert de 09h00 à 12h30 / 14h00 à 16h30)</p>" +
+                    "<p>" +
+                    "Pour un reglement par virement :<br>" +
+                    "<br>" +
+                    "RIB: 30004 01557 00010041423 30<br>" +
+                    "IBAN: FR76 3000 4015 5700 0100 4142 330<br>" +
+                    "BIC: BNPAFRPPPRG" +
+                    "</p>" +
+                    "<p> Merci d'indiquer la référence de la facture ({{os}}) dans le règlement. </p>" +
+                    "<p> Nous vous prions d'agréer, Madame, Monsieur, nos salutations distinguées. </p>" +
+                    "<header style='margin-top: 25px;'>" +
+                    "<b> <u> Service comptabilité </u> </b>" +
+                    "<p> Lionel Durand </p>" +
+                    "<p> Tél: 09.72.51.08.01 </p>" +
+                    "</header>"
+            },
+            relance1: function() {
+                return "<p> Réf: {{os}} <br> Pièce jointe: Facture n°{{os}} </p>" +
+                    "<div class='spacer'></div>" +
+                    "<strong> OBJET: Première relance pour facture n°{{os}} impayée </strong>" +
+                    "<p>Madame, Monsieur, <br>" +
+                    "Suite a l'intervention que nous avons réalisée en date du {{datePlain}}, <p>" +
+                    "<p>A ce jour, nous <b> <u> sommes toujours dans l'attente d'un règlement de cette facture </u> </b>. <br>" +
+                    "Nous vous prions de bien vouloir transmettre le règlement par chèque à l'ordre de:</p>" +
+                    "<p strong center> S.A.R.L EDISON SERVICES</p>" +
+                    "<p>A l'organisme qui gère notre comptabilité:</p>" +
+                    "<p strong center> EDISON SERVICES FRANCE<br>" +
+                    "Service comptabilité<br>" +
+                    "75 rue des dames, 75017 Paris<br>" +
+                    "Tél. 09.72.51.08.01 (Ouvert de 09h00 à 12h30 / 14h00 à 16h30)</p>" +
+                    "<p>" +
+                    "Pour un reglement par virement :<br>" +
+                    "<br>" +
+                    "RIB: 30004 01557 00010041423 30<br>" +
+                    "IBAN: FR76 3000 4015 5700 0100 4142 330<br>" +
+                    "BIC: BNPAFRPPPRG" +
+                    "</p>" +
+                    "<p> Merci d'indiquer la référence de la facture ({{os}}) dans le règlement. </p>" +
+                    "<p> Nous vous prions d'agréer, Madame, Monsieur, nos salutations distinguées. </p>" +
+                    "<div class='spacer'></div>" +
+                    "<header>" +
+                    "<b> <u> Service comptabilité </u> </b>" +
+                    "<p> Lionel Durand </p>" +
+                    "<p> Tél: 09.72.51.08.01 </p>" +
+                    "</header>"
+            },
             envoiFacture: function() {
                 return "<p>Madame, Monsieur,</p>" +
                     "<p>Suite à notre intervention le {{datePlain}} dans vos locaux:\n" +
@@ -93,6 +173,75 @@ module.exports = {
     },
     mail: {
         intervention: {
+            relance2: function() {
+                return "<style> table { border-collapse: collapse;}\n table, td, th {border: 1px solid black;}</style>" +
+                "<p>Madame, Monsieur, <br>" +
+                "<p> Sauf erreur de notre part, nous constatons que votre compte client présente à ce jour un solde débiteur. <br> Ce montant correspond à nos factures suivantes restées impayées: <p>" +
+                "<table cellspacing='0' cellpadding='8'>" +
+                "<tr style='background: #85C82B !important;'>" +
+                "<th style='width: 70px;'> DATE </th>" +
+                "<th style='text-align:left'> N° FACTURE </th>" +
+                "<th style='text-align:left'> LIEU </th>" +
+                "<th style='text-align:right'> MONTANT T.T.C. </th>" +
+                "</tr>" +
+                "<tr>" +
+                "<th> {{datePlain}} </th>" +
+                "<th> {{os}} </th>" +
+                "<th> {{client.address.v}}, {{client.address.cp}} </th>" +
+                "<th style='text-align:right'> {{prixFinalTTC}} € </th>" +
+                "</tr>" +
+                "<tr>" +
+                "<th colspan='3'> <b> TOTAL </b> </th>" +
+                "<th style='text-align:right'> {{prixFinalTTC}} € T.T.C. </th>" +
+                "</tr>" +
+                "</table>" +
+
+                "<p> L'échéance étant dépassée, nous vous demandons de bien vouloir régulariser cette situation par retour de courrier. </p>" +
+
+                "<p>A l'organisme qui gère notre comptabilité:</p>" +
+                "<p strong center> EDISON SERVICES FRANCE<br>" +
+                "Service comptabilité<br>" +
+                "75 rue des dames, 75017 Paris<br>" +
+                "Tél. 09.72.51.08.01 (Ouvert de 09h00 à 12h30 / 14h00 à 16h30)</p>" +
+                "<p>" +
+                "Pour un reglement par virement :<br>" +
+                "<br>" +
+                "RIB: 30004 01557 00010041423 30<br>" +
+                "IBAN: FR76 3000 4015 5700 0100 4142 330<br>" +
+                "BIC: BNPAFRPPPRG" +
+                "</p>" +
+                "<p> Merci d'indiquer la référence de la facture ({{os}}) dans le règlement. </p>" +
+                "<p> Nous vous prions d'agréer, Madame, Monsieur, nos salutations distinguées. </p>" +
+                "<header style='margin-top: 25px;'>" +
+                "<b> <u> Service comptabilité </u> </b>" +
+                "<p> Lionel Durand </p>" +
+                "<p> Tél: 09.72.51.08.01 </p>" +
+                "</header>"
+            },
+            relance1: function() {
+                return "<p>Madame, Monsieur,<br>" +
+                    "Suite à l'intervention que nous avons réalisé en date du {{datePlain}}</p>" +
+                    "<p>A ce jour, <u><b>nous sommes toujours dans l'attente du règlement de cette facture</b></u><br>" +
+                    "Nous vous prions de bien vouloir transmettre le règlement par chèque à l'ordre de:</p>" +
+                    "<p><strong><center> S.A.R.L EDISON SERVICES</strong></center></p>" +
+                    "<p>A l'organisme qui gère notre comptabilité:</p>" +
+                    "<p><strong><center> EDISON SERVICES FRANCE<br>" +
+                    "Service comptabilité<br>" +
+                    "75 rue des dames, 75017 Paris<br>" +
+                    "Tél. 09.72.51.08.01 (Ouvert de 09h00 à 12h30 / 14h00 à 16h30)</strong></center></p>" +
+                    "<p>" +
+                    "Pour un reglement par virement :<br>" +
+                    "<br>" +
+                    "RIB: 30004 01557 00010041423 30<br>" +
+                    "IBAN: FR76 3000 4015 5700 0100 4142 330<br>" +
+                    "BIC: BNPAFRPPPRG" +
+                    "</p>" +
+                    "<p>Merci d'indiquer la réference de la facture (<strong>{{os}}</strong>) dans le réglement. </p>" +
+                    "<ul>" +
+                    "<li>Ci-joint la facture</li>" +
+                    "</ul>" +
+                    "<p>Cordialement.</p>"
+            },
             factureAcquitte: function() {
                 return "Bonjour,\n" +
                     "Vous trouverez ci-joint la facture acquitté de l'intervention n°{{id}}\n" +

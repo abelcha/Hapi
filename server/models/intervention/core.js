@@ -26,15 +26,15 @@
 
 
     module.exports.postSave = function(doc, data, session) {
-/*        db.model('document').changeLink({
-            oldID: data.tmpID,
-            newID: doc.id,
-            model: 'intervention'
-        });*/
-/*        db.model('calls').changeLink({
-            oldID: data.tmpID,
-            newID: doc.id,
-        })*/
+        /*        db.model('document').changeLink({
+                    oldID: data.tmpID,
+                    newID: doc.id,
+                    model: 'intervention'
+                });*/
+        /*        db.model('calls').changeLink({
+                    oldID: data.tmpID,
+                    newID: doc.id,
+                })*/
         if (data.devisOrigine) {
             db.model('devis').findOne({
                     id: data.devisOrigine
@@ -133,7 +133,7 @@
                 return 1;
             } else if (e.compta.reglement.recu) {
                 return 2
-            } else if (e.compta.paiement.ready){
+            } else if (e.compta.paiement.ready) {
                 return 3
             } else {
                 return 0
@@ -284,6 +284,12 @@
             client: client,
             sms: d.id_sms || null,
             smsStatus: d.status_sms || 0,
+        }
+
+        var isJson = require('is-json');
+        
+        if (d.relance && isJson(d.relance)) {
+            rtn.relance = JSON.parse(d.relance);
         }
 
         if (d.devis && d.id > 13740) {
