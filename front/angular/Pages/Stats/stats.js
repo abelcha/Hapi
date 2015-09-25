@@ -6,7 +6,37 @@ var StatsController = function(DateSelect, tabContainer, $routeParams, edisonAPI
 
 
     var dateSelect = new DateSelect;
-    console.log("==>",  dateSelect.current);
+    _this.yearSelect = [];
+    _.times(dateSelect.current.y - dateSelect.start.y + 1, function(k) {
+        _this.yearSelect.push(dateSelect.start.y + k);
+    })
+    $scope.selectedYear = dateSelect.current.y
+
+    $scope.$watch("selectedYear", function(curr) {
+        edisonAPI.intervention.statsBen({
+            y: curr
+        }).then(function(resp) {
+            console.log(resp.data)
+            $('#chartContainer2 > *').remove()
+            var svg = dimple.newSvg("#chartContainer2", 1300, 400);
+            var myChart = new dimple.chart(svg, resp.data);
+            myChart.setBounds(60, 30, 1000, 300)
+            var x = myChart.addCategoryAxis("x", "mth");
+            //x.addOrderRule("dt");
+            var y = myChart.addMeasureAxis("y", "montant");
+           // var y = myChart.addMeasureAxis("y", "recu");
+            //y.tickFormat = ',.0f';
+           myChart.addSeries("potentiel", dimple.plot.bar);
+            //myChart.addPctAxis("y", "paye");
+           /* myChart.assignColor("En Attente", "#2196F3");
+            myChart.assignColor("Encaissé", "#4CAF50");*/
+            myChart.addLegend(60, 10, 410, 20, "right");
+            myChart.draw();
+
+        })
+    });
+
+
 
 
     $scope.$watch("selectedDate", function(curr) {
@@ -18,14 +48,6 @@ var StatsController = function(DateSelect, tabContainer, $routeParams, edisonAPI
             $('#chartContainer > *').remove()
             var svg = dimple.newSvg("#chartContainer", 1300, 400);
             var myChart = new dimple.chart(svg, resp.data);
-            myChart.defaultColors = [
-                new dimple.color("#4CAF50"), //RGL
-                new dimple.color("#2196F3"), //ANN
-                new dimple.color("#FDD835"), //ATT
-                new dimple.color("#F44336"), //ENV
-                new dimple.color("#0091EA"), //PAY
-                new dimple.color("black"),
-            ];
             myChart.setBounds(60, 30, 1000, 300)
             var x = myChart.addCategoryAxis("x", "day");
             //x.addOrderRule("dt");
