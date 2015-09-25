@@ -189,12 +189,19 @@ module.exports = function(schema) {
                 },
                 'status': 'VRF'
             }).then(function(resp, cb) {
-                async.each(resp.slice(0, 1), relance2, function(err, resp) {
-                    if (req.query.preview) {
-                        res.pdf(err)
-                    }
-                    resolve('ok')
-                });
+                console.log(resp.length)
+                relance2(resp[_.random(0, resp.length - 1)], function() {
+                        if (req.query.preview) {
+                            res.pdf(err)
+                        }
+                        resolve('ok')
+                    })
+                    /* async.each(resp.slice(0, 1), relance2, function(err, resp) {
+                         if (req.query.preview) {
+                             res.pdf(err)
+                         }
+                         resolve('ok')
+                     });*/
             }, resolve)
         }).catch(__catch)
     }
