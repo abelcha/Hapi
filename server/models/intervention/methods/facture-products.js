@@ -19,7 +19,10 @@ module.exports = function(schema) {
                         });
             */
             console.time('get');
-            db.model('intervention').find({
+            db.model('devis').find({
+                status: {
+                    $ne: 'TRA'
+                },
                 id: {
                     $gt: 13000
                 },
