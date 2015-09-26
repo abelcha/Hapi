@@ -5,6 +5,14 @@ module.exports = function(schema) {
             var async = require('async');
             var V1 = requireLocal('config/_convert_V1');
 
+            if (!isWorker) {
+                return edison.worker.createJob({
+                    name: 'db',
+                    model: core.name,
+                    method: 'getFact',
+                    req: _.pick(req, 'query', 'session')
+                })
+            }
 
             /*            edison.v1.get("SELECT devis FROM infointervention WHERE devis!='' LIMIT 100", function(err, resp) {
                         	console.log(resp[42])
@@ -12,6 +20,9 @@ module.exports = function(schema) {
             */
             console.time('get');
             db.model('intervention').find({
+                id: {
+                    $gt: 13000
+                },
                 $where: 'this.produits.length'
             }).then(function(resp) {
                 console.timeEnd('get');
