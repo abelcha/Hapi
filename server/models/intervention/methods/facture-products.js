@@ -19,9 +19,9 @@ module.exports = function(schema) {
                         });
             */
             console.time('get');
-            db.model('intervention').find({
+            db.model('devis').find({
                 id: {
-                    $gt: 13000
+                    $gt: 30000
                 },
                 $where: 'this.produits.length'
             }).then(function(resp) {
