@@ -29,7 +29,7 @@ module.exports = function(schema) {
                 var i = 0;
                 async.eachLimit(resp, 20, function(e, callback) {
                     console.log(String(++i) + '/' + String(resp.length))
-                    var v1 = new V1(doc);
+                    var v1 = new V1(e);
                     v1.send(function(resp) {
                         console.log(resp)
                         callback(null);
