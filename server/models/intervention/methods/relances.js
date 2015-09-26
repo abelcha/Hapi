@@ -73,8 +73,6 @@ module.exports = function(schema) {
 
 
 
-
-
     var relance2 = function(e, callback) {
 
         e.os = _.padLeft(e.id, 6, '0')
@@ -182,7 +180,7 @@ module.exports = function(schema) {
             db.model('intervention').find({
                 'compta.reglement.recu': false,
                 'date.intervention': {
-                    $gt: moment().subtract(14, 'days').toDate()
+                    $lt: moment().subtract(21, 'days').toDate()
                 },
                 'date.envoiFacture': {
                     $exists: true
@@ -190,10 +188,16 @@ module.exports = function(schema) {
                 'status': 'VRF'
             }).then(function(resp, cb) {
                 console.log(resp.length)
-                relance2(resp[_.random(0, resp.length - 1)], function() {
-                        if (req.query.preview) {
-                            res.pdf(err)
-                        }
+                var rnd = resp[_.random(0, resp.length - 1)];
+                //   console.log(rnd)
+                return resolve('ok')
+                var Relance = requireLocal('config/Relance');
+                var rl = Relance(rnd, 'relance1')
+                rl.send(function(err, resp) {
+                        console.log(err, resp);
+                        /*                        if (req.query.preview) {
+                                                    res.pdf(err)
+                                                }*/
                         resolve('ok')
                     })
                     /* async.each(resp.slice(0, 1), relance2, function(err, resp) {

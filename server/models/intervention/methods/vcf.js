@@ -1,7 +1,6 @@
 module.exports = function(schema) {
 
     schema.statics.vcf = function(req, res) {
-        var vCard = require('cozy-vcard')
         var fs = require('fs')
         var config = requireLocal('config/dataList')
         var _ = require('lodash')

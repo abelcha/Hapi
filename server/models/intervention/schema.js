@@ -94,7 +94,6 @@ module.exports = function(db) {
             location: [],
         },
         facture: {
-            relance: String,
             compte: String,
             payeur: String,
             nom: String,

@@ -37,23 +37,5 @@ module.exports = {
         u = _.map(u, prettyBytes);
         console.log(u)
         res.send(u)
-    },
-    scaleUp: function(req, res) {
-        var Heroku = require('heroku-client'),
-            heroku = new Heroku({
-                token: process.env.HEROKU_API_TOKEN
-            });
-    },
-    scaleDown: function(req, res) {
-        var Heroku = require('heroku-client'),
-            heroku = new Heroku({
-                token: process.env.HEROKU_API_TOKEN
-            });
-            res.send('ok')
-    },
-    scale: function(req, res) {
-        app.dynos().list(function(err, dynos) {
-            console.log(err, dynos)
-        });
     }
 }

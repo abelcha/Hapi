@@ -23,8 +23,6 @@ module.exports = function(app) {
     app.get('/api/stats/telepro', edison.statsTelepro.get.bind(edison.statsTelepro));
     app.get('/api/stats/day', edison.statsDay);
 
-    app.get('/api/products/search', edison.products.search);
-
     app.get('/api/search/:text', edison.search)
 
 

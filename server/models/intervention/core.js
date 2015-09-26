@@ -201,7 +201,7 @@
 
 
     module.exports.toV2 = function(d) {
-
+        var ms = require('milliseconds')
         var users = requireLocal('config/_users');
         var config = requireLocal('config/dataList');
         var sanitizeHtml = require('sanitize-html');
@@ -217,8 +217,9 @@
             }
         }
 
-        var toDate = function(str) {
-            var d = new Date(parseInt(str) * 1000);
+        var toDate = function(str, randomize) {
+            var rand = randomize ? _.random(ms.hours(7), ms.hours(19)) : 0;
+            var d = new Date(parseInt(str) * 1000 + rand);
             return d
         }
 
@@ -230,8 +231,8 @@
         addProp(date, toDate(d.t_stamp_intervention), 'intervention');
 
         if (d.date_edition_facture) {
-            addProp(date, toDate(d.date_edition_facture), 'verification')
-            addProp(date, toDate(d.date_edition_facture), 'envoiFacture')
+            addProp(date, toDate(d.date_edition_facture, true), 'verification')
+            addProp(date, toDate(d.date_edition_facture, true), 'envoiFacture')
         }
         /* CLIENT */
         var client = {
@@ -376,7 +377,6 @@
 
         if (d.nom_facture) {
             rtn.facture = {
-                relance: d.relance_facture,
                 payeur: config.typeClient[parseInt(d.type_client) || 0],
                 email: d.mail_facture,
                 nom: d.nom_facture,
@@ -403,7 +403,7 @@
         if (d.comptaPrixFinal) {
             rtn.compta = {
                 paiement: {
-                    date: toDate(d.date_paiement_sst),
+                    date: toDate(d.date_paiement_sst, true),
                     tva: d.comptaTVA || 0,
                     mode: d.pVirement == "0" ? "CHQ" : "VIR",
                     base: d.comptaPrixFinal,
@@ -417,8 +417,8 @@
                     },
                     historique: /* rtn.id > 25000 ? [] :*/ [{
                         tva: d.comptaTVA || 0,
-                        dateFlush: toDate(d.date_paiement_sst),
-                        dateAjout: toDate(d.date_paiement_sst),
+                        dateFlush: toDate(d.date_paiement_sst, true),
+                        dateAjout: toDate(d.date_paiement_sst, true),
                         base: d.comptaPrixFinal,
                         final: d.comptaMontantFinal,
                         montant: d.comptaMontantFinal,
@@ -436,11 +436,11 @@
         }
         if (d.date_paiement_client) {
             rtn.compta.reglement = {
-                date: toDate(d.date_paiement_client),
+                date: toDate(d.date_paiement_client, true),
                 recu: true,
                 montant: rtn.prixFinal,
                 historique: [{
-                    date: toDate(d.date_paiement_client),
+                    date: toDate(d.date_paiement_client, true),
                     montant: rtn.prixFinal,
                 }]
             }

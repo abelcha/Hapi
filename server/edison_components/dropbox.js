@@ -6,8 +6,6 @@ var Dropbox = function() {
     this.client = new DropboxAPI.Client({
         token: key.dropbox
     });
-    var dbox = require("dbox")
-    this.dbox = dbox.app({}).client(key.dropbox);
 }
 Dropbox.prototype.getFilename = function(p) {
     return '/V2/' + p.model + '/' + p.link + '/' + p._id + '.' + p.extension;

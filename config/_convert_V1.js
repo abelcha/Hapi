@@ -3,7 +3,6 @@ var config = requireLocal('config/dataList.js');
 var users = requireLocal('config/_users.js');
 var _ = require('lodash')
 var htmlencode = require('htmlencode');
-var unicode = require('unicode-escape');
 var ms = require('milliseconds')
 var request = require('request');
 
