@@ -8,7 +8,7 @@ module.exports = function(schema) {
             if (!isWorker) {
                 return edison.worker.createJob({
                     name: 'db',
-                    model: core.name,
+                    model: 'intervention',
                     method: 'getFact',
                     req: _.pick(req, 'query', 'session')
                 })
