@@ -21,6 +21,7 @@ module.exports = function(schema) {
                     var v1 = new V1(doc);
                     v1.send(function(resp) {
                         console.log(resp)
+                        callback(null);
                     });
                 })
             }, resolve)
