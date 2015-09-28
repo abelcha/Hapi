@@ -65,10 +65,7 @@ module.exports = {
             color: 'deep-orange white-text'
         }
     },
-    paiementArtisan: [{
-        title: '',
-        id: ''
-    }, {
+    paiementArtisan: [{}, {
         title: 'Payé',
         color: 'green',
         icon: 'check',
@@ -76,13 +73,8 @@ module.exports = {
     }, {
         title: 'En Cours',
         color: 'orange',
-        icon: 'refresh fa-spin',
-        id: 2
-    }, {
-        title: 'Imminent',
-        color: 'orange',
-        icon: ' ellipsis-h',
-        id: 3
+        icon: 'ellipsis-h',
+        id: 1
     }],
     reglementClient: [{
         title: '',
