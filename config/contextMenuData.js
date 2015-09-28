@@ -118,6 +118,12 @@ module.exports = {
         }
     }],
     intervention: [{
+        title: "Modifier l'intervention",
+        action: "ouvrirFiche",
+        style: {
+            fontWeight: 'bold'
+        }
+    }, {
         title: 'Appels',
         style: {
             fontWeight: 'bold'
@@ -173,12 +179,6 @@ module.exports = {
             }
         }]
     }, {
-        title: "Modifier l'intervention",
-        action: "ouvrirFiche",
-        style: {
-            fontWeight: 'bold'
-        }
-    }, {
         title: 'Recap sous-traitant',
         action: "ouvrirRecapSST",
         hide: function(inter) {
@@ -226,5 +226,5 @@ module.exports = {
         hide: function(inter) {
             return !inter.aDemarcher || inter.login.demarchage;
         }
-    }, ]
+    }]
 }
