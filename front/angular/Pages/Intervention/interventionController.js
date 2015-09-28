@@ -123,6 +123,7 @@ var InterventionCtrl = function(Description, Signalement, ContextMenu, $window, 
             intervention.files = result.data;
         }, console.log)
     }
+
     $scope.loadFilesList();
 
     _this.searchArtisans = function(sst) {
