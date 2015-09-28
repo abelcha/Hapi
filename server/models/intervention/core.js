@@ -113,33 +113,15 @@
         var ms = require('milliseconds')
         var _ = require("lodash")
 
-
-        var getReglementClient = function(e) {
-            if (e.compta.reglement.recu) {
-                return 1;
-            } else if (e._status === "VRF") {
-                if (e.reglementSurPlace) {
-                    return 3
-                } else {
-                    return 5
-                }
-            } else {
-                return 0
-            }
-        }
-
         var getPaiementArtisan = function(e) {
             if (e.compta.paiement.effectue) {
-                return 1;
-            } else if (e.compta.reglement.recu) {
-                return 2
+                return 2;
             } else if (e.compta.paiement.ready) {
-                return 3
+                return 1;
             } else {
-                return 0
+                return undefined
             }
         }
-
 
         try {
             if (e.status === "ENC" && Date.now() > (new Date(e.date.intervention)).getTime() + ms.hours(1)) {
@@ -158,8 +140,8 @@
                 pa: e.prixFinal || e.prixAnnonce,
                 da: d(e.date.ajout),
                 di: d(e.date.intervention),
-                rc: getReglementClient(e) ||  undefined,
-                ps: getPaiementArtisan(e) ||  undefined,
+                rc: e.compta.reglement.recu ? 1 : undefined,
+                ps: getPaiementArtisan(e),
                 ad: e.client.address.cp + ', ' + e.client.address.v,
                 dm: e.login.demarchage || undefined,
                 en: e.login.envoi || undefined,
@@ -288,7 +270,7 @@
         }
 
         var isJson = require('is-json');
-        
+
         if (d.relance && isJson(d.relance)) {
             rtn.relance = JSON.parse(d.relance);
         }

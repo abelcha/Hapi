@@ -2,7 +2,7 @@
     <div class="shadow-box listeInterventions">
         <table style="background:white;cursor:pointer" ng-table="tableParams" class="table table-bordered table-hover table-hover table-striped" id="table-list" show-filter="true">
             <tbody id="tbody-list">
-                <tr data-id="{{inter.id}}" ng-repeat-start="inter in $data" ng-right-click="rowRightClick($event, inter)" ng-click="rowClick($event, inter, false)" ng-class="{success : contextMenu.active && contextMenu.data.id === inter.id, flash:inter.flash === true}">
+                <tr data-id="{{inter.id}}" ng-repeat-start="inter in $data" ng-right-click="rowRightClick($event, inter)" ng-click="rowClick($event, inter, false)" ng-class="{info : contextMenu.active && contextMenu.data.id === inter.id, flash:inter.flash === true, success:inter.rc}">
                     <td data-title="'OS'" sortable="'id'" filter="{ 'id': 'text' }">
                         <strong>{{inter.id}}</strong>
                     </td>
@@ -39,11 +39,6 @@
                         {{config.etatsHash()[inter.s].long_name}}</span>
                         <span ng-if="smallWin" style="width:34px" class="label {{config.etatsHash()[inter.s].color}} display-block"> 
                         {{config.etatsHash()[inter.s].short_name}}</span>
-                    </td>
-                    <td ng-if="!smallWin" data-title="'rCli'" sortable="'rc'" filter="{ 'rc': 'select' }" filter-data="config.reglementClient">
-                        <span ng-if="inter.rc" style="width:30px" class="label display-block {{config.reglementClient[inter.rc].color}}">
-                        <i class="fa fa-{{config.reglementClient[inter.rc].icon}}"></i>
-                    </span>
                     </td>
                     <td ng-if="!smallWin" data-title="'rSST'" sortable="'ps'" filter="{ 'ps': 'select' }" filter-data="config.paiementArtisan">
                         <span ng-if="inter.ps" style="width:30px" class="label display-block {{config.paiementArtisan[inter.ps].color}}">
