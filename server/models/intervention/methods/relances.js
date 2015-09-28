@@ -191,7 +191,7 @@ module.exports = function(schema) {
                 var rnd = resp[_.random(0, resp.length - 1)];
                 //   console.log(rnd)
                 return resolve('ok')
-                var Relance = requireLocal('config/Relance');
+                var Relance = requireLocal('config/_Relance');
                 var rl = Relance(rnd, 'relance1')
                 rl.send(function(err, resp) {
                         console.log(err, resp);

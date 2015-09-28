@@ -111,6 +111,7 @@ var V1 = function(d, devis, legacy) {
         if (d.compta.paiement.dette) {
             x.etat_reglement = 'DETTE'
         } else if (d.compta.paiement.effectue) {
+            x.etat_intervention = "INTERVENU";
             x.etat_reglement = 'PAIEMENT EFFECTUE'
         } else if (d.status === 'VRF') {
             x.etat_reglement = 'CHEQUE RECUPERE'

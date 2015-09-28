@@ -56,7 +56,7 @@
         </div>
         <side-bar ng-if="user.login && interventionsStats" ng-mouseenter="toggleSidebar(false)" ng-mouseleave="toggleSidebar(true)">
             <drop-down id="service-intervention" title="Service Intervention" icon="circle" open-default="user.service === 'INTERVENTION'">
-                <link fltr="i_all" icon="th-list" title="Tous les Interventions"></link>
+                <link fltr="i_all" icon="th-list" title="Toutes les Interventions"></link>
                 <drop-down title="Mes Interventions" icon="calendar" open-default="user.service === 'INTERVENTION'">
                     <link fltr="i_tall" icon="th-list" color="default" text-white="true" bold="true" title="{{dateFormat}}" login="{{user.login}}"></link>
                     <link fltr="i_tenv" icon="th-list" hash-model="en" login="{{user.login}}"></link>
