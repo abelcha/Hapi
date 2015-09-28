@@ -110,14 +110,7 @@ var InterventionCtrl = function(Description, Signalement, ContextMenu, $window, 
         angular.element(elem).trigger('click');
     }
 
-    $scope.addComment = function() {
-        intervention.comments.push({
-            login: $rootScope.user.login,
-            text: $scope.commentText,
-            date: new Date()
-        })
-        $scope.commentText = "";
-    }
+
 
     $scope.onFileUpload = function(file) {
         intervention.fileUpload(file, function(err, resp) {

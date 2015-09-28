@@ -212,22 +212,7 @@
                                 </div>
                             </div>
                             <div class="card margin" style="width:48%;float:right">
-                                <div class="p+" s>
-                                    <strong class="fs-headline display-block">Commentaires</strong>
-                                    <div class="paragraph fs-body-1 mt+" style="height:216px;" slimscroll="{height:216}">
-                                        <ul style="padding-bottom:20px;margin-left: 0px;">
-                                            <li class="list-row" ng-repeat="com in vm.data.comments | reverse">
-                                                <div class="list-row__content">
-                                                    <span class="display-block">{{com.text}}</span>
-                                                    <span class="display-block fs-body-1 tc-black-2">{{com.date  |  date:"dd/MM/yy"}} - {{com.login}}</span>
-                                                </div>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                                <div class="card__actions" style="height: 53px;">
-                                    <input style="border: 0;width:100%;height: 100%;" type="text" placeholder="Commentaire..." ng-model="commentText" ng-enter="addComment()">
-                                </div>
+                                <info-comment data="vm.data"></info-comment>
                             </div>
                         </div>
                         <br>
