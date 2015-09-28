@@ -1,5 +1,5 @@
 <div>
-    <div class="card margin" ng-if="displayReglement !== 'false'" >
+    <div class="card margin" ng-if="displayReglement !== 'false'">
         <div class="p+">
             <strong class="fs-headline display-block">Reglement Client <span ng-if="dialog" text-sm> (Prix Final: {{data.prixFinal}} €)</span></strong>
             <div class="paragraph fs-body-1 mt+">
@@ -32,32 +32,33 @@
                         <input type="checkbox" id="flav" ng-model="data.compta.reglement.avoir.effectue" disabled="true" class="switch__input">
                         <label for="flav" class="switch__label">Effectué</label>
                     </div>
-                    <div ng-if="data.compta.reglement.avoir.montant > 0 && data.compta.reglement.historique.length" ng-class="dialog ? 'col-md-4' : 'col-md-2'" >
+                    <div ng-if="data.compta.reglement.avoir.montant > 0 && data.compta.reglement.historique.length" ng-class="dialog ? 'col-md-4' : 'col-md-2'">
                         <select class="form-control" ng-disabled="data.compta.reglement.avoir.effectue" ng-model="data.compta.reglement.avoir._type" ng-options="ta.short_name as ta.long_name for ta in config.typeAvoir"></select>
                     </div>
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-3" ng-if="data.reglementSurPlace">
-                    <md-checkbox  ng-model="data.compta.info.facture" aria-label="_" class="md-warn">
-                        Facture non conforme
+                <div class="col-md-3" ng-if="data.prixFinal > 125">
+                    <md-checkbox ng-model="data.compta.info.devisNC" aria-label="_" class="md-warn">
+                        Devis non conforme
                     </md-checkbox>
                 </div>
-                <div class="col-md-3" ng-if="data.compta.paiement.tva == 10">
-                    <md-checkbox ng-model="data.compta.info.attestationTva" aria-label="_" class="md-warn">
-                        Attestation de TVA
-                    </md-checkbox>
-                </div>
-                <div class="col-md-3" ng-if="data.devis.length > 0">
-                    <md-checkbox ng-model="data.compta.info.devis" aria-label="_" class="md-warn">
-                       Devis non conforme
+                <div class="col-md-3" ng-if="data.compta.civilite !== 'Soc.'">
+                    <md-checkbox ng-model="data.compta.info.tvaNC" aria-label="_" class="md-warn">
+                        Attestation de TVA Non-conforme
                     </md-checkbox>
                 </div>
                 <div class="col-md-3" ng-if="data.fourniture.length > 0">
-                    <md-checkbox ng-model="data.compta.info.fourniture" aria-label="_" class="md-warn">
-                        Cout de fourniture
+                    <md-checkbox ng-model="data.compta.info.fournitureNC" aria-label="_" class="md-warn">
+                        Cout de fourniture Non Conforme
                     </md-checkbox>
                 </div>
+                <div class="col-md-3" ng-if="data.reglementSurPlace">
+                    <md-checkbox ng-model="data.info.factureNC" aria-label="_" class="md-warn">
+                        Facture non conforme
+                    </md-checkbox>
+                </div>
+                
             </div>
             <br>
             <h4 ng-click="regdisplayHistorique = !regdisplayHistorique"> > Historique ({{data.compta.reglement.historique.length}})</h4>
@@ -65,14 +66,7 @@
             <br>
         </div>
     </div>
-
-
-
-
-
-
-
-    <div class="card margin" ng-if="displayPaiement !== 'false'" >
+    <div class="card margin" ng-if="displayPaiement !== 'false'">
         <div class="p+">
             <strong class="fs-headline display-block">Paiement Sous-Traitant</strong>
             <br>
