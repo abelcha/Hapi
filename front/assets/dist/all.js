@@ -4210,7 +4210,7 @@ angular.module('edison').directive('infoCompta', ['config', 'Paiement',
                     scope.data.tva = (scope.data.client.civilite == 'Soc.' ? 20 : 10)
                 }
                 if (!paiement.mode) {
-                    paiement.mode = _.get(scope.data.artisan, 'document.rib.file') ? "VIR" : "CHQ"
+                    paiement.mode = _.get(scope.data.sst, 'document.rib.file') ? "VIR" : "CHQ"
                 }
                 if (!scope.data.compta.paiement.base && scope.data.compta.reglement.montant) {
                     scope.data.compta.paiement.base = scope.data.compta.reglement.montant;
