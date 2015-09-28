@@ -116,7 +116,7 @@
              })
              .then(function(resp) {
                  _this.contextMenu.setData(resp.data);
-                 _this.contextMenu.setPosition($event.pageX - (($routeParams.sstid || _this.embedded)  ? 50 : 0), $event.pageY + ($routeParams.sstid || _this.embedded ? 0 : 200))
+                 _this.contextMenu.setPosition($event.pageX - (($routeParams.sstid || _this.embedded)  ? 50 : 0), $event.pageY + ($routeParams.sstid || _this.embedded ? 0 : 200) - 55)
                  _this.contextMenu.open();
              })
      }
