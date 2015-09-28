@@ -2411,11 +2411,27 @@ angular.module('edison').factory('dialog', function($mdDialog, edisonAPI, config
                             return cb('nope')
                         }
                         $scope.data.compta.reglement.recu = resp;
-                        console.log('-->', resp)
                         return cb(null, $scope.data);
                     }
                 },
                 templateUrl: '/DialogTemplates/validationReglement.html',
+            });
+        },
+         validationPaiement: function(inter, cb) {
+            $mdDialog.show({
+                controller: function DialogController($scope, $mdDialog) {
+                    $scope.data = inter
+                    $scope.answer = function(resp) {
+                        $scope.data = inter;
+                        $mdDialog.hide();
+                        if (resp === null) {
+                            return cb('nope')
+                        }
+                        $scope.data.compta.reglement.recu = resp;
+                        return cb(null, $scope.data);
+                    }
+                },
+                templateUrl: '/DialogTemplates/validationPaiement.html',
             });
         },
         facturierDeviseur: function(artisan, cb) {
@@ -2750,7 +2766,22 @@ angular.module('edison')
                     return cb(err);
                 }
                 edisonAPI.intervention.save(_this).then(function(resp) {
-                    LxNotificationService.success("L'intervention " + _this.id + " est payé");
+                    LxNotificationService.success("L'intervention " + _this.id + " est modifié");
+                }, function(err) {
+                    LxNotificationService.error("Une erreur est survenu (" + err.data + ")");
+                });
+            })
+        };
+
+
+        Intervention.prototype.validerPaiement = function(cb) {
+            var _this = this;
+            dialog.validationPaiement(this, function(err, resp) {
+                if (err) {
+                    return cb(err);
+                }
+                edisonAPI.intervention.save(_this).then(function(resp) {
+                    LxNotificationService.success("L'intervention " + _this.id + " est modifié");
                 }, function(err) {
                     LxNotificationService.error("Une erreur est survenu (" + err.data + ")");
                 });

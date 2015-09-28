@@ -188,6 +188,12 @@ module.exports = {
         title: 'Reglement Client',
         action: "validerReglement",
         hide: function(inter) {
+            return !((app_session.root ||  app_session.service === 'COMPTABILITE'));
+        }
+    }, {
+        title: 'Paiement SST',
+        action: "validerPaiement",
+        hide: function(inter) {
             return !((app_session.root ||  app_session.service === 'COMPTABILITE') && inter.status === 'VRF');
         }
     }, {

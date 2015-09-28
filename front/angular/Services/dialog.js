@@ -36,11 +36,27 @@ angular.module('edison').factory('dialog', function($mdDialog, edisonAPI, config
                             return cb('nope')
                         }
                         $scope.data.compta.reglement.recu = resp;
-                        console.log('-->', resp)
                         return cb(null, $scope.data);
                     }
                 },
                 templateUrl: '/DialogTemplates/validationReglement.html',
+            });
+        },
+         validationPaiement: function(inter, cb) {
+            $mdDialog.show({
+                controller: function DialogController($scope, $mdDialog) {
+                    $scope.data = inter
+                    $scope.answer = function(resp) {
+                        $scope.data = inter;
+                        $mdDialog.hide();
+                        if (resp === null) {
+                            return cb('nope')
+                        }
+                        $scope.data.compta.reglement.recu = resp;
+                        return cb(null, $scope.data);
+                    }
+                },
+                templateUrl: '/DialogTemplates/validationPaiement.html',
             });
         },
         facturierDeviseur: function(artisan, cb) {

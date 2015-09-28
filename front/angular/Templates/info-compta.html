@@ -48,7 +48,7 @@
                         Attestation de TVA Non-conforme
                     </md-checkbox>
                 </div>
-                <div class="col-md-3" ng-if="data.fourniture.length > 0">
+                <div class="col-md-3" >
                     <md-checkbox ng-model="data.compta.info.fournitureNC" aria-label="_" class="md-warn">
                         Cout de fourniture Non Conforme
                     </md-checkbox>
@@ -69,6 +69,7 @@
     <div class="card margin" ng-if="displayPaiement !== 'false'">
         <div class="p+">
             <strong class="fs-headline display-block">Paiement Sous-Traitant</strong>
+            <span ng-if="dialog" text-sm> (Prix Final: {{data.prixFinal}} €)</span>
             <br>
             <div class="paragraph fs-body-1 mt+">
                 <div class="row">

@@ -57,7 +57,22 @@ angular.module('edison')
                     return cb(err);
                 }
                 edisonAPI.intervention.save(_this).then(function(resp) {
-                    LxNotificationService.success("L'intervention " + _this.id + " est payé");
+                    LxNotificationService.success("L'intervention " + _this.id + " est modifié");
+                }, function(err) {
+                    LxNotificationService.error("Une erreur est survenu (" + err.data + ")");
+                });
+            })
+        };
+
+
+        Intervention.prototype.validerPaiement = function(cb) {
+            var _this = this;
+            dialog.validationPaiement(this, function(err, resp) {
+                if (err) {
+                    return cb(err);
+                }
+                edisonAPI.intervention.save(_this).then(function(resp) {
+                    LxNotificationService.success("L'intervention " + _this.id + " est modifié");
                 }, function(err) {
                     LxNotificationService.error("Une erreur est survenu (" + err.data + ")");
                 });
