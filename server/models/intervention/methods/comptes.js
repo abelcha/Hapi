@@ -16,9 +16,9 @@ module.exports = function(schema) {
                         e.address.r,
                         e.address.v,
                         e.address.cp
-                    ].join(';')
+                    ]
                 });
-                resolve(rtn.join('<br>'));
+                return res.sage(rtn);
             });
         });
     };
@@ -38,9 +38,9 @@ module.exports = function(schema) {
                         e.client.address.r,
                         e.client.address.v,
                         e.client.address.cp,
-                    ].join(';')
+                    ]
                 })
-                resolve(rtn.join('<br>'))
+                return res.sage(rtn);
             })
         })
     }

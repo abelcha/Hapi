@@ -64,6 +64,10 @@
                    req: _.pick(req, 'query', 'session')
                })
            }
+
+
+
+
            return new Promise(function(resolve, reject) {
                document.list('/SCAN').then(function(dbl) {
                    dbl = _(dbl).filter(function(e) {
