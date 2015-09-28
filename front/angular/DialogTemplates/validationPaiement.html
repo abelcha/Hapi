@@ -9,17 +9,20 @@
             </div>
         </div>
         <div class="row">
-            <info-fourniture data="data" small="false" display="true"></info-fourniture>
+            <info-fourniture ng-if="displayFourniture === true" data="data" small="false" display="true"></info-fourniture>
         </div>
     </md-dialog-content>
     <div class="md-actions card" layout="row">
-        <md-button ng-click="answer(null);" class="md-primary black-text red">
+        <md-button ng-click="displayFourniture = !displayFourniture" class="md-primary black-text">
+            + Fourniture
+        </md-button>
+        <md-button ng-click="answer(null);" class="md-primary white-text red">
             Annuler
         </md-button>
-        <md-button ng-click="answer(false);" ng-if="data.compta.reglement.recu" class="md-primary black-text orange">
+        <md-button ng-click="answer(false);" ng-if="data.compta.reglement.recu" class="md-primary white-text orange">
             dé-valider
         </md-button>
-        <md-button ng-click="answer(true);" class="md-primary black-text green">
+        <md-button ng-click="answer(true);" class="md-primary white-text green">
             Valider
         </md-button>
     </div>
