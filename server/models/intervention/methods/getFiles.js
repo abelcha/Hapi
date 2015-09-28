@@ -9,14 +9,7 @@ module.exports = function(schema) {
                 id = parseInt(id);
                 if (isNaN(id))
                     return reject("Invalid id")
-
-                db.model('document')
-                    .find({
-                        model: 'intervention',
-                        link: id,
-                        deleted: false
-                    })
-                    .then(resolve, reject)
+                document.list('/V2_PRODUCTION/' + id).then(resolve, reject);
 
             })
         }

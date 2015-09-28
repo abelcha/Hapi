@@ -196,9 +196,7 @@
                                             <ul class="list mt++" style="padding-bottom:20px;margin-left: 0px">
                                                 <li class="list-row" ng-repeat="file in vm.data.files | reverse">
                                                     <div class="list-row__content">
-                                                        <a ng-if="!file.virtual" target="_blank" href="/api/document/{{file._id}}"> <span class="display-block">{{file.name || "Fichier" + $index}}</span></a>
-                                                        <span ng-if="file.virtual" class="display-block">{{file.name}}</span>
-                                                        <span class="display-block fs-body-1 tc-black-2">{{file.date | date:"dd/MM/yy"}} - {{file.type}} - {{file.login}}</span>
+                                                        <a  target="_blank" href="/api/document/preview?name={{vm.data.id}}/{{file}}"> <span class="display-block">{{file}}</span></a>
                                                     </div>
                                                 </li>
                                             </ul>
