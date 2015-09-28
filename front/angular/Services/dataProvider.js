@@ -1,4 +1,4 @@
-angular.module('edison').factory('DataProvider', ['edisonAPI', 'socket', '$rootScope', 'config', function(edisonAPI, socket, $rootScope, config) {
+angular.module('edison').factory('DataProvider',function($timeout, edisonAPI, socket, $rootScope, config) {
     "use strict";
     var DataProvider = function(model, hashModel) {
         var _this = this;
@@ -64,6 +64,13 @@ angular.module('edison').factory('DataProvider', ['edisonAPI', 'socket', '$rootS
         }
     }
 
+    DataProvider.prototype.flash = function(row) {
+        row.flash = true;
+        $timeout(function() {
+            row.flash = false;
+        }, 1000)
+    }
+
     DataProvider.prototype.updateData = function(newRows) {
         var _this = this;
         if (this.getData()) {
@@ -71,15 +78,19 @@ angular.module('edison').factory('DataProvider', ['edisonAPI', 'socket', '$rootS
             for (var i = 0; i < _this.getData().length && id_list.length; i++) {
                 var pos = id_list.indexOf(_this.getData()[i].id)
                 if (pos >= 0) {
+                    console.log('UPDATE DATA')
                     _this.getData()[i] = newRows[pos]
+                    _this.flash(newRows[pos])
                     id_list.splice(pos, 1);
                 }
             };
             if (id_list.length) {
+                console.log('lol')
                 var z = _.filter(newRows, function(e) {
                     return _.includes(id_list, e.id);
                 })
                 _.each(z, function(x) {
+                    console.log('NEW DATA')
                     _this.getData().unshift(x)
                 })
             }
@@ -98,4 +109,4 @@ angular.module('edison').factory('DataProvider', ['edisonAPI', 'socket', '$rootS
     }
     return DataProvider;
 
-}]);
+});
