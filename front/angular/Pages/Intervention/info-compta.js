@@ -6,9 +6,9 @@ angular.module('edison').directive('infoCompta', ['config', 'Paiement',
             templateUrl: '/Templates/info-compta.html',
             scope: {
                 data: "=",
-                displayReglement:'@',
-                dialog:'@',
-                displayPaiement:'@',
+                displayReglement: '@',
+                dialog: '@',
+                displayPaiement: '@',
             },
             link: function(scope, element, attrs) {
                 scope.config = config
@@ -18,10 +18,11 @@ angular.module('edison').directive('infoCompta', ['config', 'Paiement',
                     scope.data.tva = (scope.data.client.civilite == 'Soc.' ? 20 : 10)
                 }
                 if (!paiement.mode) {
-                    console.log('-->', scope.data.artisan)
                     paiement.mode = _.get(scope.data.artisan, 'document.rib.file') ? "VIR" : "CHQ"
                 }
-                console.log('==<', paiement.mode)
+                if (!scope.data.compta.paiement.base && scope.data.compta.reglement.montant) {
+                    scope.data.compta.paiement.base = scope.data.compta.reglement.montant;
+                }
                 scope.compta = new Paiement(scope.data)
                 reglement.montantTTC = scope.compta.getMontantTTC()
 
