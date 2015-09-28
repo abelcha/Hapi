@@ -48,7 +48,7 @@
                         Attestation de TVA Non-conforme
                     </md-checkbox>
                 </div>
-                <div class="col-md-3" >
+                <div class="col-md-3">
                     <md-checkbox ng-model="data.compta.info.fournitureNC" aria-label="_" class="md-warn">
                         Cout de fourniture Non Conforme
                     </md-checkbox>
@@ -58,7 +58,6 @@
                         Facture non conforme
                     </md-checkbox>
                 </div>
-                
             </div>
             <br>
             <h4 ng-click="regdisplayHistorique = !regdisplayHistorique"> > Historique ({{data.compta.reglement.historique.length}})</h4>
@@ -108,6 +107,23 @@
                             <label for="switch1" class="switch__label">Flush</label>
                             <span class="switch__help"></span>
                         </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3">
+                        <lx-text-field label="Déplacement">
+                            <input disabled ng-model="compta.remunerationDeplacement">
+                        </lx-text-field>
+                    </div>
+                    <div class="col-md-3">
+                        <lx-text-field label="Main D'oeuvre">
+                            <input disabled ng-model="compta.remunerationMaindOeuvre">
+                        </lx-text-field>
+                    </div>
+                    <div class="col-md-3">
+                        <lx-text-field label="Fourniture">
+                            <input disabled ng-model="compta.remunerationMargeFourniture">
+                        </lx-text-field>
                     </div>
                 </div>
                 <br>

@@ -41,7 +41,8 @@ angular.module('edison').directive('infoCompta', ['config', 'Paiement',
                     'data.compta.paiement.tva',
                     'data.compta.paiement.pourcentage.deplacement',
                     'data.compta.paiement.pourcentage.fourniture',
-                    'data.compta.paiement.pourcentage.maindOeuvre'
+                    'data.compta.paiement.pourcentage.maindOeuvre',
+                    'data.fourniture',
                 ], function(newValues, oldValues, scope) {
                     console.log('CHANGE')
                     if (!_.isEqual(newValues, oldValues)) {
