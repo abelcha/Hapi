@@ -115,6 +115,21 @@ module.exports = function(schema) {
         })
     }
 
+
+    var getLocalFile = function(filePath) {
+        return new Promise(function(resolve, reject) {
+            var path = require('path')
+            document.get(filePath,
+                function(err, buffer) {
+                    resolve({
+                        data: buffer,
+                        name: "Pièce Jointe." + path.extname(filePath),
+                        extension: '.' + path.extname(filePath)
+                    })
+                })
+        })
+    }
+
     var getFacturier = function(doc) {
         return new Promise(function(resolve, reject) {
             doc.type = "FACTURE"
@@ -236,12 +251,11 @@ module.exports = function(schema) {
                         filesPromises.push(getDeviseur(inter));
 
                         if (inter.sst.subStatus === 'NEW' || inter.sst.status === 'POT') {
-                            console.log('NEW')
                             filesPromises.push(getStaticFile.bind("Manuel d'utilisation.pdf")(),
                                 getStaticFile.bind("Notice d'intervention.pdf")())
                         }
                         if (req.body.file) {
-                            filesPromises.push(document.download(req.body.file))
+                            filesPromises.push(getLocalFile('/V2_PRODUCTION/' + inter.id + '/' + req.body.file))
                         }
                     }
                     console.time('getFiles')
@@ -257,7 +271,7 @@ module.exports = function(schema) {
                         }).value();
 
                         if (req.body.file) {
-                            inter.textfileSupp = (files[files.length - 1].ContentType === 'application/pdf' ? 'un document supplementaine' : 'une photo transmises par le client');
+                            inter.textfileSupp = (_.endsWith(files[files.length - 1], 'pdf') ? 'un document supplementaine' : 'une photo transmises par le client');
                         }
                         var c = config.categories[inter.categorie]
                         inter.categoriePlain = c.suffix + ' ' + c.long_name.toLowerCase();
