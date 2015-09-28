@@ -2337,6 +2337,10 @@ md-switch.md-checked.md-primary .md-bar {
     background-color: rgba(65, 140, 228, 0.5)!important;
 }
 
+.table-xstriped>tbody>tr:nth-of-type(odd) {
+    background-color: rgba(232, 232, 232, 0.75);
+}
+
 #table-list>thead>tr>th.filter {
     padding: 3px;
 }

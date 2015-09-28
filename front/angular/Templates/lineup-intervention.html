@@ -1,8 +1,8 @@
 <div>
     <div class="shadow-box listeInterventions">
-        <table style="background:white;cursor:pointer" ng-table="tableParams" class="table table-bordered table-hover table-hover table-striped" id="table-list" show-filter="true">
+        <table style="background:white;cursor:pointer" ng-table="tableParams" class="table table-bordered table-hover table-hover table-xstriped" id="table-list" show-filter="true">
             <tbody id="tbody-list">
-                <tr data-id="{{inter.id}}" ng-repeat-start="inter in $data" ng-right-click="rowRightClick($event, inter)" ng-click="rowClick($event, inter, false)" ng-class="{info : contextMenu.active && contextMenu.data.id === inter.id, flash:inter.flash === true, ' light-green lighten-3':inter.rc}">
+                <tr data-id="{{inter.id}}" ng-repeat-start="inter in $data" ng-right-click="rowRightClick($event, inter)" ng-click="rowClick($event, inter, false)" ng-class="{info : contextMenu.active && contextMenu.data.id === inter.id,'light-green lighten-3':inter.rc}">
                     <td data-title="'OS'" sortable="'id'" filter="{ 'id': 'text' }">
                         <strong>{{inter.id}}</strong>
                     </td>
@@ -45,8 +45,8 @@
                     </span>
                     </td>
                 </tr>
-                <tr ng-repeat-end ng-if="expendedRow && expendedRow === inter.id" ng-right-click="rowRightClick($event, inter)">
-                    <td colspan="42" style="background-color:white!important">
+                <tr ng-repeat-end ng-if="displaySubRow(inter)" ng-right-click="rowRightClick($event, inter)">
+                    <td class="loltest" colspan="42" style="background-color:white!important">
                         <dropdown-row row="inter" expendedRow="expendedRow"></dropdown-row>
                     </td>
                 </tr>

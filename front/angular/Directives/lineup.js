@@ -31,6 +31,9 @@
 
      }
 
+     _this.displaySubRow = function(inter) {
+         return _this.expendedRow && _this.expendedRow === inter.id;
+     }
 
      _this.smallWin = window.innerWidth < 1200
      $(window).resize(function() {
@@ -142,6 +145,7 @@
                  allowDuplicates: false
              });
          } else {
+                $('.loltest').remove();
              if (_this.expendedRow === inter.id) {
                  _this.expendedRow = undefined;
              } else {

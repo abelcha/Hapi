@@ -497,6 +497,17 @@ FiltersFactory.prototype.list = {
             return inter.status === 'VRF'
         }
     }, {
+        short_name: 'i_iar',
+        long_name: 'Intervenant à régler',
+        url: 'iar',
+        match: function() {
+            return {
+                "compta.reglement.recu": true,
+                "compta.paiement.effectue": false
+            }
+        },
+        stats: true,
+    }, {
         short_name: 'i_sarl',
         long_name: 'Relance sous-traitant',
         url: 'relanceArtisan',
