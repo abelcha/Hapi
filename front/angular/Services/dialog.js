@@ -1,4 +1,4 @@
-angular.module('edison').factory('dialog', function($mdDialog, edisonAPI, config, $window, LxNotificationService) {
+angular.module('edison').factory('dialog', function(openPost, $mdDialog, edisonAPI, config, $window, LxNotificationService) {
     "use strict";
 
     return {
@@ -48,6 +48,12 @@ angular.module('edison').factory('dialog', function($mdDialog, edisonAPI, config
             $mdDialog.show({
                 controller: function DialogController($scope, $mdDialog) {
                     $scope.data = inter
+                    $scope.preview = function() {
+                        openPost('/api/intervention/autofacture', {
+                            data: JSON.stringify($scope.data),
+                            html: true
+                        });
+                    }
                     $scope.answer = function(resp) {
                         $scope.data = inter;
                         $mdDialog.hide();
