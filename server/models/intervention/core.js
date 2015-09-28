@@ -403,7 +403,7 @@
         if (d.comptaPrixFinal) {
             rtn.compta = {
                 paiement: {
-                    date: toDate(d.date_paiement_sst, true),
+                    date: toDate(d.date_paiement_sst),
                     tva: d.comptaTVA || 0,
                     mode: d.pVirement == "0" ? "CHQ" : "VIR",
                     base: d.comptaPrixFinal,
@@ -417,8 +417,8 @@
                     },
                     historique: /* rtn.id > 25000 ? [] :*/ [{
                         tva: d.comptaTVA || 0,
-                        dateFlush: toDate(d.date_paiement_sst, true),
-                        dateAjout: toDate(d.date_paiement_sst, true),
+                        dateFlush: toDate(d.date_paiement_sst),
+                        dateAjout: toDate(d.date_paiement_sst),
                         base: d.comptaPrixFinal,
                         final: d.comptaMontantFinal,
                         montant: d.comptaMontantFinal,
@@ -436,11 +436,11 @@
         }
         if (d.date_paiement_client) {
             rtn.compta.reglement = {
-                date: toDate(d.date_paiement_client, true),
+                date: toDate(d.date_paiement_client),
                 recu: true,
                 montant: rtn.prixFinal,
                 historique: [{
-                    date: toDate(d.date_paiement_client, true),
+                    date: toDate(d.date_paiement_client),
                     montant: rtn.prixFinal,
                 }]
             }
