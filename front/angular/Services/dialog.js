@@ -54,7 +54,6 @@ angular.module('edison').factory('dialog', function($mdDialog, edisonAPI, config
                         if (resp === null) {
                             return cb('nope')
                         }
-                        $scope.data.compta.reglement.recu = resp;
                         return cb(null, $scope.data);
                     }
                 },

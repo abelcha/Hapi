@@ -20,9 +20,7 @@ angular.module('edison').directive('infoCompta', ['config', 'Paiement',
                 if (!paiement.mode) {
                     paiement.mode = _.get(scope.data.sst, 'document.rib.file') ? "VIR" : "CHQ"
                 }
-                if (!scope.data.compta.paiement.base && scope.data.compta.reglement.montant) {
-                    scope.data.compta.paiement.base = scope.data.compta.reglement.montant;
-                }
+
                 scope.compta = new Paiement(scope.data)
                 reglement.montantTTC = scope.compta.getMontantTTC()
 
@@ -45,14 +43,19 @@ angular.module('edison').directive('infoCompta', ['config', 'Paiement',
                     'data.compta.paiement.pourcentage.fourniture',
                     'data.compta.paiement.pourcentage.maindOeuvre'
                 ], function(newValues, oldValues, scope) {
-                    console.log('here')
+                    console.log('CHANGE')
                     if (!_.isEqual(newValues, oldValues)) {
                         scope.compta = new Paiement(scope.data)
-                        console.log('===>', scope.compta)
                         paiement.montant = scope.compta.montantTotal
                     }
                 }, true);
+                if (!scope.data.compta.paiement.base && scope.data.compta.reglement.montant) {
+                    scope.data.compta.paiement.base = scope.data.compta.reglement.montant;
+                    scope.compta = new Paiement(scope.data)
+                    paiement.montant = scope.compta.montantTotal
+                }
             },
+
         }
 
     }
