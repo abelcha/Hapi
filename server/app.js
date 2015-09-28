@@ -6,6 +6,18 @@ express.response.pdf = function(obj, headers, status) {
     return this.send(obj, headers, status);
 };
 
+express.response.sage = function(obj, headers, status) {
+    var _this = this;
+    this.contentType('text/csv');
+    this.setHeader('Content-disposition', 'attachment; filename=' + "Ecritures.txt");
+    var rtn = "";
+    _.each(obj, function(e) {
+        _this.write(e.join(';') + "\r\n");
+    })
+    return this.end();
+};
+
+
 express.response.jsonStr = function(obj, headers, status) {
     this.header('Content-Type', 'application/json');
     return this.send(obj, headers, status);

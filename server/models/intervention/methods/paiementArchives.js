@@ -55,24 +55,24 @@ module.exports = function(schema) {
                 var numeroCompteAchat = '604' + _.padLeft(config.categories[e.categorie].id_compta, 5, '0')
                 var libelleAC = ['TRAVAUX', _.deburr(config.categories[e.categorie].long_name.toUpperCase()), e.artisan.nomSociete].join(' ')
                 var libelleNumeroFacture = config.libellePaiement[paiement._type].short_name;
-                BQ1 = ['BQ1', dateFormat, '40100000', '401' + padIdSST, padIdSST, libelle, format(montantTotal), '']
-                BQ2 = ['BQ2', dateFormat, '51210000', '', padIdSST, libelle, '', format(montantTotal)]
-                var AC1 = ['AC1', dateFormat, numeroCompteAchat, '', libelleNumeroFacture + padIdOS, libelleAC, format(montant), '']
+                BQ1 = ['BQ', dateFormat, '40100000', '401' + padIdSST, padIdSST, libelle, format(montantTotal), '']
+                BQ2 = ['BQ', dateFormat, '51210000', '', padIdSST, libelle, '', format(montantTotal)]
+                var AC1 = ['AC', dateFormat, numeroCompteAchat, '', libelleNumeroFacture + padIdOS, libelleAC, format(montant), '']
                 if (paiement._type == 'AVOIR') {
                     AC1.swap(6, 7);
                 }
                 _this.dump(AC1)
                 if (formeJuridique !== 'AUT') {
                     if (paiement.tva) {
-                        var AC2a = ['AC2a', dateFormat, '44566200', '', libelleNumeroFacture + padIdOS, libelleAC, format(montant * (paiement.tva / 100)), '']
+                        var AC2a = ['AC', dateFormat, '44566200', '', libelleNumeroFacture + padIdOS, libelleAC, format(montant * (paiement.tva / 100)), '']
                         if (paiement._type == 'AVOIR') {
                             AC2a.swap(6, 7);
                         }
                         _this.dump(AC2a)
                     } else {
 
-                        var AC2b = ['AC2b', dateFormat, '44566300', '', libelleNumeroFacture + padIdOS, libelleAC, format(montant * 20 / 100), '']
-                        var AC2c = ['AC2c', dateFormat, '44521000', '', libelleNumeroFacture + padIdOS, libelleAC, '', format(montant * 20 / 100)]
+                        var AC2b = ['AC', dateFormat, '44566300', '', libelleNumeroFacture + padIdOS, libelleAC, format(montant * 20 / 100), '']
+                        var AC2c = ['AC', dateFormat, '44521000', '', libelleNumeroFacture + padIdOS, libelleAC, '', format(montant * 20 / 100)]
                         if (paiement._type == 'AVOIR') {
                             AC2b.swap(6, 7);
                             AC2c.swap(6, 7);
@@ -82,7 +82,7 @@ module.exports = function(schema) {
                     }
                 }
                 var AC3 = [
-                    'AC3',
+                    'AC',
                     dateFormat,
                     '40100000',
                     '401' + padIdSST,
@@ -127,7 +127,7 @@ module.exports = function(schema) {
                     if (err)
                         resolve(err);
                     if (req.query.download) {
-                        res.csv(rtn)
+                        res.sage(rtn)
                     } else if (req.query.json) {
                         resolve(rtn)
                     } else {
@@ -193,9 +193,9 @@ module.exports = function(schema) {
                     if (moment(R.date).isBetween(dateRange.$gte, dateRange.$lt)) {
                         var libelleVT = ['VENTE', e.client.civilite.replaceAll('.', ''), e.client.nom].join(' ');
                         var libelleAV = ['AVOIR', e.client.civilite.replaceAll('.', ''), e.client.nom].join(' ');
-                        var VT1 = ['VT1', dateFormat, compte.VT1, CLTOS, FOS, libelleVT, montant.TTC]
-                        var VT2 = ['VT2', dateFormat, compte.VT2, '', FOS, libelleVT, '', montant.HT]
-                        var VT3 = ['VT3', dateFormat, compte.VT3, '', FOS, libelleVT, '', montant.TVA]
+                        var VT1 = ['VT', dateFormat, compte.VT1, CLTOS, FOS, libelleVT, montant.TTC]
+                        var VT2 = ['VT', dateFormat, compte.VT2, '', FOS, libelleVT, '', montant.HT]
+                        var VT3 = ['VT', dateFormat, compte.VT3, '', FOS, libelleVT, '', montant.TVA]
                         rtn.push(VT1, VT2, VT3)
                     }
                     if (R.avoir.effectue && moment(R.avoir.date).isBetween(dateRange.$gte, dateRange.$lt)) {
@@ -211,18 +211,18 @@ module.exports = function(schema) {
                         }
                         if (R.avoir._type === 'TROP_PERCU') {
                             var dateAvoir = moment(new Date(R.avoir.date)).format('L');
-                            var VTA1 = ['VTA1', dateAvoir, compte.VT1, CLTOS, AOS, libelleAV, '', montantAvoir.TTC]
-                            var VTA2 = ['VTA2', dateAvoir, compte.VT2, '', AOS, libelleAV, montantAvoir.HT, '']
-                            var VTA3 = ['VTA3', dateAvoir, compte.VT3, '', AOS, libelleAV, montantAvoir.TVA, '']
+                            var VTA1 = ['VT', dateAvoir, compte.VT1, CLTOS, AOS, libelleAV, '', montantAvoir.TTC]
+                            var VTA2 = ['VT', dateAvoir, compte.VT2, '', AOS, libelleAV, montantAvoir.HT, '']
+                            var VTA3 = ['VT', dateAvoir, compte.VT3, '', AOS, libelleAV, montantAvoir.TVA, '']
                             rtn.push(VTA1, VTA2, VTA3)
                         }
-                        var BQA1 = ['BQA1', dateAvoir, compte.VT1, CLTOS, 'numero cheque', libelleAV, montantAvoir.TTC, '']
-                        var BQA2 = ['BQA2', dateAvoir, compte.BQA2, '', 'numero cheque', '', libelleAV, '', montantAvoir.TTC]
+                        var BQA1 = ['BQ', dateAvoir, compte.VT1, CLTOS, 'numero cheque', libelleAV, montantAvoir.TTC, '']
+                        var BQA2 = ['BQ', dateAvoir, compte.BQA2, '', 'numero cheque', '', libelleAV, '', montantAvoir.TTC]
                     }
                 });
 
                 if (req.query.download) {
-                    res.csv(rtn)
+                    res.sage(rtn)
                 } else if (req.query.json) {
                     resolve(rtn)
                 } else {
