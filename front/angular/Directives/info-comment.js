@@ -9,7 +9,7 @@
          },
          link: function(scope, elem) {
              scope.addComment = function() {
-                 intervention.comments.push({
+                 scope.data.comments.push({
                      login: user.login,
                      text: scope.commentText,
                      date: new Date()

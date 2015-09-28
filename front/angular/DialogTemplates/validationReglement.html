@@ -1,8 +1,13 @@
-<md-dialog aria-label="Mango (Fruit)" style=";height: 530px;">
+<md-dialog aria-label="Mango (Fruit)" style=";height: 430px;">
     <md-dialog-content class="sticky-container" style="height: 100%;background:#C4C4C4;overflow:scroll;width: 950px">
-        <div class="" style="padding-left: 15px;padding-right: 15px;">
-            <br>
-            <info-compta dialog="true" display-paiement="false" data="data"></info-compta>
+        <div class="row" style="margin-top: 21px;">
+            <div class="col-sm-9">
+                <info-compta dialog="true" display-paiement="false" data="data"></info-compta>
+            </div>
+            <div class="col-sm-3">
+                <info-comment data="data"></info-comment>
+            </div>
+        </div>
     </md-dialog-content>
     <div class="md-actions card" layout="row">
         <md-button ng-click="answer(null);" class="md-primary black-text red">
@@ -11,7 +16,7 @@
         <md-button ng-click="answer(false);" ng-if="data.compta.reglement.recu" class="md-primary black-text orange">
             dé-valider
         </md-button>
-        <md-button ng-click="answer(true);"  class="md-primary black-text green">
+        <md-button ng-click="answer(true);" class="md-primary black-text green">
             Valider
         </md-button>
     </div>
