@@ -1,4 +1,4 @@
-var AvoirsController = function(tabContainer, edisonAPI, $rootScope, LxProgressService, LxNotificationService, FlushList) {
+var AvoirsController = function(tabContainer, openPost, edisonAPI, $rootScope, LxProgressService, LxNotificationService, FlushList) {
     "use strict";
     var _this = this
     var tab = tabContainer.getCurrentTab();
@@ -17,6 +17,14 @@ var AvoirsController = function(tabContainer, edisonAPI, $rootScope, LxProgressS
     _this.reloadAvoir = function() {
         _this.loadData()
     }
+
+    _this.print = function(type) {
+        console.log($rootScope.avoirs);
+        openPost('/api/intervention/printAvoir', {
+            data: $rootScope.avoirs
+        });
+    }
+
     _this.flush = function() {
         var list = _.filter($rootScope.avoirs, {
             checked: true

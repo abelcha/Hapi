@@ -4,14 +4,36 @@ module.exports = function(schema) {
     var Paiement = requireLocal('config/Paiement.js')
     var async = require('async')
 
+    schema.statics.printAvoir = function(req, res) {
+        return new Promise(function(resolve, reject) {
+            var op = [];
+            var data = JSON.parse(req.body.data);
+            async.each(data, function(e, callback) {
+                db.model('intervention').findOne({
+                    id: e.id
+                }).populate('sst').then(function(doc) {
+                    doc = doc.toObject();
+                    doc.paiement = new Paiement(doc);
+                    callback()
+                })
+            }, function(err, result) {
+                //  resend(op, req.query.pdf)
+                console.log(op)
+                resolve('ok')
+            })
+        })
+    };
+
     schema.statics.print = function(req, res) {
         var _this = this;
 
         return new Promise(function(resolve, reject) {
             var resend = function() {
-                if (req.query.pdf ||true) {
+                if (req.query.pdf || true) {
                     console.log('yaypdf')
-                    console.log(op)
+                    if (!op.length) {
+                        return resolve('Pas de documents')
+                    }
                     PDF(op).toBuffer(function(err, buffer) {
                         res.contentType('application/pdf')
                         res.send(buffer);
@@ -66,6 +88,7 @@ module.exports = function(schema) {
                             doc = doc.toObject();
                             doc.paiement = new Paiement(doc);
                             var __pos = _(op).findIndex('options.id', doc.artisan.id, 'model', 'recap')
+                            console.log(x)
                             if (__pos >= 0) {
                                 op.splice(__pos + 1, 0, {
                                     model: 'auto-facture',

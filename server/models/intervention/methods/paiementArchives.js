@@ -150,6 +150,26 @@ module.exports = function(schema) {
     }
 
     schema.statics.ecritureReglements = function(req, res) {
+
+        if (!isWorker) {
+            return edison.worker.createJob({
+                name: 'db',
+                model: 'intervention',
+                method: 'ecritureReglements',
+                req: _.pick(req, 'query', 'session')
+            }).then(function(rtn) {
+                if (req.query.download) {
+                    res.sage(rtn)
+                } else if (req.query.json) {
+                    res.json(rtn)
+                } else {
+                    res.send(tableify(rtn))
+                }
+            }, function() {
+                res.send("UNE ERREUR EST SURVENU")
+            })
+        }
+
         var getMonthRange = function(m, y) {
             var date = new Date(y, m);
             return {
@@ -167,67 +187,70 @@ module.exports = function(schema) {
                 }, {
                     'compta.reglement.avoir.date': dateRange,
                     'compta.reglement.avoir.effectue': true,
-                }],
+                }, ],
+                id: 30083
             }).then(function(docs) {
                 var rtn = [];
-                _.each(docs, function(e) {
-                    var R = e.compta.reglement;
-                    var P = e.compta.paiement;
-                    var montant = {
-                        HT: format(e.compta.reglement.montant),
-                        TTC: format(R.montant * (1 + (e.tva / 100))),
-                        TVA: format(R.montant * (e.tva / 100))
-                    }
-                    var compte = {
-                        VT1: _.padRight('4110' + e.tva, 8, '0'),
-                        VT2: ['7040', e.tva, '0', config.categories[e.categorie].id_compta].join(''),
-                        VT3: ['445870', _.padLeft(e.tva, 2, '0')].join(''),
-                        BQA2: '51210000'
-                    }
+                async.eachLimit(docs, 20, function(e, cb) {
+                    console.log(e.id)
+                    _.delay(function() {
 
-                    var OS = _.padLeft(e.id, 6, '0');
-                    var FOS = 'F' + OS;
-                    var AOS = 'A' + OS;
-                    var CLTOS = 'CLT' + OS;
-                    var dateFormat = moment(new Date(e.date.intervention)).format('L');
-                    if (moment(R.date).isBetween(dateRange.$gte, dateRange.$lt)) {
-                        var libelleVT = ['VENTE', e.client.civilite.replaceAll('.', ''), e.client.nom].join(' ');
-                        var libelleAV = ['AVOIR', e.client.civilite.replaceAll('.', ''), e.client.nom].join(' ');
-                        var VT1 = ['VT', dateFormat, compte.VT1, CLTOS, FOS, libelleVT, montant.TTC]
-                        var VT2 = ['VT', dateFormat, compte.VT2, '', FOS, libelleVT, '', montant.HT]
-                        var VT3 = ['VT', dateFormat, compte.VT3, '', FOS, libelleVT, '', montant.TVA]
-                        rtn.push(VT1, VT2, VT3)
-                    }
-                    if (R.avoir.effectue && moment(R.avoir.date).isBetween(dateRange.$gte, dateRange.$lt)) {
-                        var montantAvoir = {
-                            HT: format(R.avoir.montant),
-                            TTC: format(R.avoir.montant * (1 + (e.tva / 100))),
-                            TVA: format(R.avoir.montant * (e.tva / 100))
-                        };
-                        if (R.avoir._type === 'REM_COM') {
-                            var compteVTA2 = '70900000'
-                        } else if (R.avoir._type === 'ERR_FACT') {
-                            var comptaVTA2 = compte.VT2;
+                        var R = e.compta.reglement;
+                        var P = e.compta.paiement;
+                        var montant = {
+                            HT: format(e.compta.reglement.montant),
+                            TTC: format(R.montant * (1 + (e.tva / 100))),
+                            TVA: format(R.montant * (e.tva / 100))
                         }
-                        if (R.avoir._type === 'TROP_PERCU') {
+                        var compte = {
+                            VT1: _.padRight('4110' + e.tva, 8, '0'),
+                            VT2: ['7040', e.tva, '0', config.categories[e.categorie].id_compta].join(''),
+                            VT3: ['445870', _.padLeft(e.tva, 2, '0')].join(''),
+                            BQA2: '51210000'
+                        }
+
+                        var OS = _.padLeft(e.id, 6, '0');
+                        var FOS = 'F' + OS;
+                        var AOS = 'A' + OS;
+                        var CLTOS = 'CLT' + OS;
+                        var dateFormat = moment(new Date(e.date.intervention)).format('L');
+                        if (moment(R.date).isBetween(dateRange.$gte, dateRange.$lt)) {
+                            var libelleVT = ['VENTE', e.client.civilite.replaceAll('.', ''), e.client.nom].join(' ');
+                            var libelleAV = ['AVOIR', e.client.civilite.replaceAll('.', ''), e.client.nom].join(' ');
+                            var VT1 = ['VT', dateFormat, compte.VT1, CLTOS, FOS, libelleVT, montant.TTC]
+                            var VT2 = ['VT', dateFormat, compte.VT2, '', FOS, libelleVT, '', montant.HT]
+                            var VT3 = ['VT', dateFormat, compte.VT3, '', FOS, libelleVT, '', montant.TVA]
+                            rtn.push(VT1, VT2, VT3)
+                        }
+                        if (R.avoir.effectue && moment(R.avoir.date).isBetween(dateRange.$gte, dateRange.$lt)) {
+                            console.log("yay")
+                            var montantAvoir = {
+                                HT: format(R.avoir.montant),
+                                TTC: format(R.avoir.montant * (1 + (e.tva / 100))),
+                                TVA: format(R.avoir.montant * (e.tva / 100))
+                            };
                             var dateAvoir = moment(new Date(R.avoir.date)).format('L');
-                            var VTA1 = ['VT', dateAvoir, compte.VT1, CLTOS, AOS, libelleAV, '', montantAvoir.TTC]
-                            var VTA2 = ['VT', dateAvoir, compte.VT2, '', AOS, libelleAV, montantAvoir.HT, '']
-                            var VTA3 = ['VT', dateAvoir, compte.VT3, '', AOS, libelleAV, montantAvoir.TVA, '']
-                            rtn.push(VTA1, VTA2, VTA3)
+                            if (R.avoir._type === 'REM_COM') {
+                                var compteVTA2 = '70900000'
+                            } else if (R.avoir._type === 'ERR_FACT') {
+                                var comptaVTA2 = compte.VT2;
+                            }
+                            if (R.avoir._type === 'TROP_PERCU') {
+                                var VTA1 = ['VT', dateAvoir, compte.VT1, CLTOS, AOS, libelleAV, '', montantAvoir.TTC]
+                                var VTA2 = ['VT', dateAvoir, compte.VT2, '', AOS, libelleAV, montantAvoir.HT, '']
+                                var VTA3 = ['VT', dateAvoir, compte.VT3, '', AOS, libelleAV, montantAvoir.TVA, '']
+                                rtn.push(VTA1, VTA2, VTA3)
+                            }
+                            var BQA1 = ['BQ', dateAvoir, compte.VT1, CLTOS, 'numero cheque', libelleAV, montantAvoir.TTC, '']
+                            var BQA2 = ['BQ', dateAvoir, compte.BQA2, '', 'numero cheque', '', libelleAV, '', montantAvoir.TTC]
+                            rtn.push(BQA1, BQA2)
                         }
-                        var BQA1 = ['BQ', dateAvoir, compte.VT1, CLTOS, 'numero cheque', libelleAV, montantAvoir.TTC, '']
-                        var BQA2 = ['BQ', dateAvoir, compte.BQA2, '', 'numero cheque', '', libelleAV, '', montantAvoir.TTC]
-                    }
-                });
-
-                if (req.query.download) {
-                    res.sage(rtn)
-                } else if (req.query.json) {
+                        cb(null)
+                    }, 1);
+                }, function() {
+                     console.log(rtn);
                     resolve(rtn)
-                } else {
-                    res.send(tableify(rtn))
-                }
+                })
             });
         });
     };
@@ -240,6 +263,7 @@ module.exports = function(schema) {
     }
 
     schema.statics.archiveReglement = function(req, res) {
+
         var _this = this;
         console.log('hey')
         return new Promise(function(resolve, reject) {

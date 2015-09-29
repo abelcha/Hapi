@@ -26,7 +26,6 @@
             rtn.checked = _includes(prevChecked, rtn.id)
             rtn.mode = e.compta.paiement.mode
             rtn.type = rtn.montant.legacy !== 0 ? (rtn.montant.balance > 0 ? 'COMPLEMENT' : 'AVOIR') : 'AUTO-FACT'
-
             list.push(rtn)
         })
         this.__list = list
