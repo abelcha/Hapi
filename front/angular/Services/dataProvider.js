@@ -79,8 +79,8 @@ angular.module('edison').factory('DataProvider',function($timeout, edisonAPI, so
                 var pos = id_list.indexOf(_this.getData()[i].id)
                 if (pos >= 0) {
                     console.log('UPDATE DATA')
-                    _this.getData()[i] = newRows[pos]
-                    _this.flash(newRows[pos])
+                    _.merge(_this.getData()[i], newRows[pos]);
+                  //  _this.flash(newRows[pos])
                     id_list.splice(pos, 1);
                 }
             };
