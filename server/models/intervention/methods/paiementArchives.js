@@ -188,7 +188,6 @@ module.exports = function(schema) {
                     'compta.reglement.avoir.date': dateRange,
                     'compta.reglement.avoir.effectue': true,
                 }, ],
-                id: 30083
             }).then(function(docs) {
                 var rtn = [];
                 async.eachLimit(docs, 20, function(e, cb) {
