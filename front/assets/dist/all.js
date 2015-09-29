@@ -2807,7 +2807,7 @@ angular.module('edison')
             var _this = this;
             dialog.validationReglement(this, function(err, resp) {
                 if (err) {
-                    return cb(err);
+                    return cb && cb(err);
                 }
                 edisonAPI.intervention.save(_this).then(function(resp) {
                     LxNotificationService.success("L'intervention " + _this.id + " est modifié");
@@ -2822,7 +2822,7 @@ angular.module('edison')
             var _this = this;
             dialog.validationPaiement(this, function(err, resp) {
                 if (err) {
-                    return cb(err);
+                    return cb && cb(err);
                 }
                 edisonAPI.intervention.save(_this).then(function(resp) {
                     LxNotificationService.success("L'intervention " + _this.id + " est modifié");
@@ -3660,6 +3660,44 @@ angular.module('edison').directive('infoFourniture', ['config', 'fourniture',
     }
 ]);
 
+var archiveReglementController = function(edisonAPI, tabContainer, $routeParams, $location, LxProgressService) {
+
+    var tab = tabContainer.getCurrentTab();
+    var _this = this;
+    _this.title = 'Archives Reglements'
+    tab.setTitle('archives RGL')
+    LxProgressService.circular.show('#5fa2db', '#globalProgress');
+    edisonAPI.compta.archivesReglement().success(function(resp) {
+        LxProgressService.circular.hide()
+        _this.data = resp
+    })
+    _this.moment = moment;
+    _this.openLink = function(link) {
+        $location.url(link)
+    }
+}
+
+angular.module('edison').controller('archivesReglementController', archiveReglementController);
+
+var archivesPaiementController = function(edisonAPI, tabContainer, $routeParams, $location, LxProgressService) {
+    var _this = this;
+    var tab = tabContainer.getCurrentTab();
+    _this.type = 'paiement'
+    _this.title = 'Archives Paiements'
+    tab.setTitle('archives PAY')
+    LxProgressService.circular.show('#5fa2db', '#globalProgress');
+    edisonAPI.compta.archivesPaiement().success(function(resp) {
+        LxProgressService.circular.hide()
+        _this.data = resp
+    })
+    _this.moment = moment;
+    _this.openLink = function(link) {
+        $location.url(link)
+    }
+}
+
+angular.module('edison').controller('archivesPaiementController', archivesPaiementController);
+
  angular.module('edison').directive('artisanCategorie', ['config', function(config) {
      "use strict";
      return {
@@ -3767,44 +3805,6 @@ var ArtisanCtrl = function($rootScope, $scope, edisonAPI, $location, $routeParam
     }
 }
 angular.module('edison').controller('ArtisanController', ArtisanCtrl);
-
-var archiveReglementController = function(edisonAPI, tabContainer, $routeParams, $location, LxProgressService) {
-
-    var tab = tabContainer.getCurrentTab();
-    var _this = this;
-    _this.title = 'Archives Reglements'
-    tab.setTitle('archives RGL')
-    LxProgressService.circular.show('#5fa2db', '#globalProgress');
-    edisonAPI.compta.archivesReglement().success(function(resp) {
-        LxProgressService.circular.hide()
-        _this.data = resp
-    })
-    _this.moment = moment;
-    _this.openLink = function(link) {
-        $location.url(link)
-    }
-}
-
-angular.module('edison').controller('archivesReglementController', archiveReglementController);
-
-var archivesPaiementController = function(edisonAPI, tabContainer, $routeParams, $location, LxProgressService) {
-    var _this = this;
-    var tab = tabContainer.getCurrentTab();
-    _this.type = 'paiement'
-    _this.title = 'Archives Paiements'
-    tab.setTitle('archives PAY')
-    LxProgressService.circular.show('#5fa2db', '#globalProgress');
-    edisonAPI.compta.archivesPaiement().success(function(resp) {
-        LxProgressService.circular.hide()
-        _this.data = resp
-    })
-    _this.moment = moment;
-    _this.openLink = function(link) {
-        $location.url(link)
-    }
-}
-
-angular.module('edison').controller('archivesPaiementController', archivesPaiementController);
 
 var AvoirsController = function(tabContainer, edisonAPI, $rootScope, LxProgressService, LxNotificationService, FlushList) {
     "use strict";
@@ -4248,20 +4248,22 @@ angular.module('edison').directive('infoCompta', ['config', 'Paiement',
                     }
                 })
 
+                var change = function(newValues, oldValues, scope) {
+                    if (!_.isEqual(newValues, oldValues)) {
+                        scope.compta = new Paiement(scope.data)
+                        paiement.montant = scope.compta.montantTotal
+                    }
+                }
+
+                scope.$watch('data.fourniture', change, true)
+
                 scope.$watchGroup(['data.compta.reglement.montant',
                     'data.compta.paiement.base',
                     'data.compta.paiement.tva',
                     'data.compta.paiement.pourcentage.deplacement',
                     'data.compta.paiement.pourcentage.fourniture',
                     'data.compta.paiement.pourcentage.maindOeuvre',
-                    'data.fourniture',
-                ], function(newValues, oldValues, scope) {
-                    console.log('CHANGE')
-                    if (!_.isEqual(newValues, oldValues)) {
-                        scope.compta = new Paiement(scope.data)
-                        paiement.montant = scope.compta.montantTotal
-                    }
-                }, true);
+                ], change, true);
                 if (!scope.data.compta.paiement.base && scope.data.compta.reglement.montant) {
                     scope.data.compta.paiement.base = scope.data.compta.reglement.montant;
                     scope.compta = new Paiement(scope.data)

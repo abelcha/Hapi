@@ -36,20 +36,22 @@ angular.module('edison').directive('infoCompta', ['config', 'Paiement',
                     }
                 })
 
+                var change = function(newValues, oldValues, scope) {
+                    if (!_.isEqual(newValues, oldValues)) {
+                        scope.compta = new Paiement(scope.data)
+                        paiement.montant = scope.compta.montantTotal
+                    }
+                }
+
+                scope.$watch('data.fourniture', change, true)
+
                 scope.$watchGroup(['data.compta.reglement.montant',
                     'data.compta.paiement.base',
                     'data.compta.paiement.tva',
                     'data.compta.paiement.pourcentage.deplacement',
                     'data.compta.paiement.pourcentage.fourniture',
                     'data.compta.paiement.pourcentage.maindOeuvre',
-                    'data.fourniture',
-                ], function(newValues, oldValues, scope) {
-                    console.log('CHANGE')
-                    if (!_.isEqual(newValues, oldValues)) {
-                        scope.compta = new Paiement(scope.data)
-                        paiement.montant = scope.compta.montantTotal
-                    }
-                }, true);
+                ], change, true);
                 if (!scope.data.compta.paiement.base && scope.data.compta.reglement.montant) {
                     scope.data.compta.paiement.base = scope.data.compta.reglement.montant;
                     scope.compta = new Paiement(scope.data)

@@ -54,7 +54,7 @@ angular.module('edison')
             var _this = this;
             dialog.validationReglement(this, function(err, resp) {
                 if (err) {
-                    return cb(err);
+                    return cb && cb(err);
                 }
                 edisonAPI.intervention.save(_this).then(function(resp) {
                     LxNotificationService.success("L'intervention " + _this.id + " est modifié");
@@ -69,7 +69,7 @@ angular.module('edison')
             var _this = this;
             dialog.validationPaiement(this, function(err, resp) {
                 if (err) {
-                    return cb(err);
+                    return cb && cb(err);
                 }
                 edisonAPI.intervention.save(_this).then(function(resp) {
                     LxNotificationService.success("L'intervention " + _this.id + " est modifié");
