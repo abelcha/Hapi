@@ -27,6 +27,7 @@
                         <td>{{vm.moment(remise.timestamp).format('llll')}}</td>
                         <td><a target="_blank" href="/api/intervention/ecritureSST?d={{remise.timestamp}}" >Voir Ecriture</a></td>
                         <td><a target="_blank" href="/api/intervention/ecritureSST?d={{remise.timestamp}}&download=true" download >Telecharger Ecriture</a></td>
+                        <td><a target="_blank" href="/compta/lpa?d={{remise.timestamp}}" >Flush History</a></td>
                     </tr>
                 </tbody>
                 <tbody ng-if="vm.type !== 'paiement'">

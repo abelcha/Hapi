@@ -23,15 +23,18 @@ module.exports = function(schema) {
                     $in: lol
                 }
             }).then(function(resp) {
-                console.log(_.pluck(resp, 'id').join(','))
-                var i = 0;
-                async.eachLimit(resp, 5, function(e, cb) {
-                    console.log(i++, resp.length)
-                    var v1 = new V1(e);
-                    v1.send(function() {
-                        cb(null);
-                    });
-                }, resolve)
+                _.each(resp, function() {
+
+                    })
+                    /*console.log(_.pluck(resp, 'id').join(','))
+                    var i = 0;
+                    async.eachLimit(resp, 5, function(e, cb) {
+                        console.log(i++, resp.length)
+                        var v1 = new V1(e);
+                        v1.send(function() {
+                            cb(null);
+                        });
+                    }, resolve)*/
             })
         })
     }

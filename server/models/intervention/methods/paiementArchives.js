@@ -191,7 +191,6 @@ module.exports = function(schema) {
             }).then(function(docs) {
                 var rtn = [];
                 async.eachLimit(docs, 20, function(e, cb) {
-                    console.log(e.id)
                     _.delay(function() {
 
                         var R = e.compta.reglement;
@@ -222,7 +221,6 @@ module.exports = function(schema) {
                             rtn.push(VT1, VT2, VT3)
                         }
                         if (R.avoir.effectue && moment(R.avoir.date).isBetween(dateRange.$gte, dateRange.$lt)) {
-                            console.log("yay")
                             var montantAvoir = {
                                 HT: format(R.avoir.montant),
                                 TTC: format(R.avoir.montant * (1 + (e.tva / 100))),
@@ -247,7 +245,6 @@ module.exports = function(schema) {
                         cb(null)
                     }, 1);
                 }, function() {
-                     console.log(rtn);
                     resolve(rtn)
                 })
             });

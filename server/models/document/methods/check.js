@@ -69,54 +69,55 @@
 
 
            return new Promise(function(resolve, reject) {
-               document.list('/SCAN').then(function(dbl) {
-                   dbl = _(dbl).filter(function(e) {
-                       return e.length === 23 && _.endsWith(e, '.pdf') && e[4] === '-'
-                   }).map(function(e) {
-                       return {
-                           name: e,
-                           ts: convert(e, 0)
-                       }
-                   }).value();
-
-
-                   var i = 0;
-                   var limit = req.query.limit || 100;
-                   console.log('query')
-                   edison.v1.get("SELECT * FROM scanner WHERE moved='0' ORDER BY id ASC LIMIT " + limit, function(err, resp)  {
-                       limit = resp.length;
-                       /*                       _.each(resp, function(e) {
-                                                  console.log(moment(new Date(parseInt(e.start))).format('YYYY-MM-DD-HH-mm-ss'), e.id_inter)
-                                              })
-                                              return null;*/
-                       async.eachLimit(resp, 20, function(row, cb) {
-                           console.log(String(i++) + '/' + String(limit))
-                           var closest = findClosest(row, dbl)
-                           if (closest) {
-                               var mrg = _.merge(row, closest)
-                               moveV1(closest, function(err, resp) {
-                                   if (err || !resp) {
-                                       console.log("ERR", '<', err, ">", mrg.name, mrg.id);
-                                       return cb(null, 'ERR')
-                                   }
-                                   var q = _.template("UPDATE scanner SET diff='{{diff}}', name='{{name}}', checked='1',  moved='1' WHERE id='{{id}}'")(mrg)
-                                   edison.v1.set(q, function(err, resp) {
-                                       console.log('OK', mrg.name, mrg.id);
-                                       cb(null, 'ok')
-                                   })
-                               })
-                           } else {
-                               console.log('NOT FOUND', row.id_inter)
-                               edison.v1.set(_.template("UPDATE scanner SET checked='1' WHERE id='{{id}}'")(row), cb)
+                   document.list('/SCAN').then(function(dbl) {
+                       dbl = _(dbl).filter(function(e) {
+                           return e.length === 23 && _.endsWith(e, '.pdf') && e[4] === '-'
+                       }).map(function(e) {
+                           return {
+                               name: e,
+                               ts: convert(e, 0)
                            }
-                       }, function(resp) {
-                           resolve('ok')
+                       }).value();
+
+
+                       var i = 0;
+                       var limit = req.query.limit || 100;
+                       console.log('query')
+                       edison.v1.get("SELECT * FROM scanner WHERE moved='0' ORDER BY id ASC LIMIT " + limit, function(err, resp)  {
+                           limit = resp.length;
+                           /*                       _.each(resp, function(e) {
+                                                      console.log(moment(new Date(parseInt(e.start))).format('YYYY-MM-DD-HH-mm-ss'), e.id_inter)
+                                                  })
+                                                  return null;*/
+                           async.eachLimit(resp, 20, function(row, cb) {
+                               console.log(String(i++) + '/' + String(limit))
+                               var closest = findClosest(row, dbl)
+                               if (closest) {
+                                   var mrg = _.merge(row, closest)
+                                   moveV1(closest, function(err, resp) {
+                                       if (err || !resp) {
+                                           console.log("ERR", '<', err, ">", mrg.name, mrg.id);
+                                           return cb(null, 'ERR')
+                                       }
+                                       var q = _.template("UPDATE scanner SET diff='{{diff}}', name='{{name}}', checked='1',  moved='1' WHERE id='{{id}}'")(mrg)
+                                       edison.v1.set(q, function(err, resp) {
+                                           console.log('OK', mrg.name, mrg.id);
+                                           cb(null, 'ok')
+                                       })
+                                   })
+                               } else {
+                                   console.log('NOT FOUND', row.id_inter)
+                                   edison.v1.set(_.template("UPDATE scanner SET checked='1' WHERE id='{{id}}'")(row), cb)
+                               }
+                           }, function(resp) {
+                               resolve('ok');
+                           })
                        })
+                   }, function(err) {
+                       console.log('-->', err)
                    })
-               }, function(err) {
-                   console.log('-->', err)
                })
-           }).catch(__catch)
+               .catch(__catch);
 
 
 

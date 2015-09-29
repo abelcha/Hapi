@@ -1,11 +1,11 @@
-var LpaController = function(openPost, $window, tabContainer, edisonAPI, $rootScope, LxProgressService, LxNotificationService, FlushList) {
+var LpaController = function(openPost, $location, $window, tabContainer, edisonAPI, $rootScope, LxProgressService, LxNotificationService, FlushList) {
     "use strict";
     var _this = this
     var tab = tabContainer.getCurrentTab();
     tab.setTitle('LPA')
     _this.loadData = function(prevChecked) {
         LxProgressService.circular.show('#5fa2db', '#globalProgress');
-        edisonAPI.compta.lpa().then(function(result) {
+        edisonAPI.compta.lpa($location.search()).then(function(result) {
             _.each(result.data, function(sst) {
                 sst.list = new FlushList(sst.list, prevChecked);
                 _this.reloadList(sst)

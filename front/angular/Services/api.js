@@ -42,14 +42,8 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
             }
         },
         compta: {
-            lpa: function() {
-                return $http({
-                    method: 'GET',
-                    cache: false,
-                    url: '/api/intervention/lpa',
-                }).success(function(result) {
-                    return result;
-                });
+            lpa: function(data) {
+                return $http.get('/api/intervention/lpa?d=' + data.d);
             },
             flush: function(data) {
                 return $http.post('/api/intervention/flush', data);
