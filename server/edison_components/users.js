@@ -22,6 +22,21 @@ Users.prototype.search = function(oldLogin) {
     } else {
         return rtn.login
     }
-
 }
+
+Users.prototype.find = function(login) {
+    var _ = require('lodash')
+    if (!this.data) {
+        return 'auto_x';
+    }
+    var rtn = _.find(this.data, function(e) {
+        return e.login === login;
+    })
+    if (!rtn) {
+        return login;
+    } else {
+        return rtn.oldLogin
+    }
+}
+
 module.exports = Users;

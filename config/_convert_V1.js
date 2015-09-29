@@ -1,6 +1,5 @@
 var moment = require('moment')
 var config = requireLocal('config/dataList.js');
-var users = requireLocal('config/_users.js');
 var _ = require('lodash')
 var htmlencode = require('htmlencode');
 var ms = require('milliseconds')
@@ -38,8 +37,7 @@ var V1 = function(d, devis, legacy) {
             x.date_edition_facture = moment(new Date(d.date.envoiFacture)).format('YYYY-MM-DD')
         }
         if (d.login.envoiFacture) {
-            var loginEnvoiFacture = _.find(users, 'login', d.login.envoiFacture)
-            x.facture_editee_par = _.get(_.find(users, 'login', d.login.envoiFacture), 'oldLogin', d.login.envoiFacture);
+            x.facture_editee_par = edison.users.find(d.login.envoiFacture);
         }
         x.id_sms = d.sms ||  undefined;
         x.sms_status = d.sms_status;
@@ -65,8 +63,7 @@ var V1 = function(d, devis, legacy) {
         x.prix_ht_annonce = d.prixAnnonce;
         x.prix_ht_final = d.prixFinal;
         x.id_sst_selectionne = _.get(d, 'artisan.id', 0);
-        var login = _.find(users, 'login', d.login.ajout)
-        x.ajoute_par = login && login.oldLogin ? login.oldLogin : d.login.ajout;
+        x.ajoute_par = edison.users.find(d.login.ajout);
         //0 => pas de facture, 1 => facture a faire, 2 => facture effectué, 3 => facture payé (reglement recu)
         if (!d.reglementSurPlace) {
             x.reglement_sur_place = 0
@@ -103,7 +100,7 @@ var V1 = function(d, devis, legacy) {
             })
             x.fournisseur = d.fourniture[0].fournisseur
             x.fourniture_sst = Number(d.fourniture[0].fournisseur !== "ARTISAN") + 1;
-                //x.fourniture_edison = Number(d.fourniture[0].fournisseur != "")
+            //x.fourniture_edison = Number(d.fourniture[0].fournisseur != "")
             x.tva_facture = d.tva;
         }
         x.taux_tva = d.tva ||  10
