@@ -24,6 +24,13 @@ module.exports = function(app) {
     app.get('/api/stats/day', edison.statsDay);
 
     app.get('/api/search/:text', edison.search)
+    app.get('/api/v1/get', function(req, res) {
+        edison.v1.get(req.query.q, function(err, resp) {
+            console.log(err, resp);
+            if (err) return res.status(500).json(err);
+            res.json(resp)
+        })
+    })
 
 
     var uniqueModel = function(model, method, req, res) {

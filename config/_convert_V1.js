@@ -130,7 +130,8 @@ var V1 = function(d, devis, legacy) {
                 devisTab: devisTab,
                 sous_total: _.round(sous_total, 2),
                 total: _.round(sous_total * 0.01 * x.tva, 2),
-                envoyer: d.historique.length
+                envoyer: d.historique.length,
+                tva: x.tva
             });
         } else {
             x.devis = "";
