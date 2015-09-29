@@ -114,12 +114,16 @@
         var _ = require("lodash")
 
         var getPaiementArtisan = function(e) {
+            console.log(e.compta.paiement);
             if (e.compta.paiement.effectue) {
+                console.log("2")
                 return 2;
             } else if (e.compta.paiement.ready) {
+                console.log("1")
                 return 1;
             } else {
-                return undefined
+                console.log("0")
+                return 0
             }
         }
 
@@ -140,7 +144,7 @@
                 pa: e.prixFinal || e.prixAnnonce,
                 da: d(e.date.ajout),
                 di: d(e.date.intervention),
-                rc: e.compta.reglement.recu ? 1 : undefined,
+                rc: e.compta.reglement.recu ? 1 : 0,
                 ps: getPaiementArtisan(e),
                 ad: e.client.address.cp + ', ' + e.client.address.v,
                 dm: e.login.demarchage || undefined,

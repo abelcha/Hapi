@@ -88,7 +88,6 @@ module.exports = function(schema) {
                             doc = doc.toObject();
                             doc.paiement = new Paiement(doc);
                             var __pos = _(op).findIndex('options.id', doc.artisan.id, 'model', 'recap')
-                            console.log(x)
                             if (__pos >= 0) {
                                 op.splice(__pos + 1, 0, {
                                     model: 'auto-facture',
