@@ -131,7 +131,7 @@ module.exports = function(schema) {
                     } else if (req.query.json) {
                         resolve(rtn)
                     } else {
-                        res.send(tableify(rtn))
+                        res.table(rtn)
                     }
                 });
             }, function(err) {
@@ -139,14 +139,6 @@ module.exports = function(schema) {
             })
 
         })
-    }
-
-    var tableify = function(rtn) {
-        var row = _.map(rtn, function(e) {
-            return '<td>' + e.join('</td><td>') + '</td>';
-        })
-        var css = '<style> table, td, th {padding: 1px 10px;border: 1px solid black;}</style>'
-        return (css + '<table><tr>' + row.join('</tr><tr>') + '</tr></table')
     }
 
     schema.statics.ecritureReglements = function(req, res) {
@@ -163,7 +155,7 @@ module.exports = function(schema) {
                 } else if (req.query.json) {
                     res.json(rtn)
                 } else {
-                    res.send(tableify(rtn))
+                    res.table(rtn)
                 }
             }, function() {
                 res.send("UNE ERREUR EST SURVENU")

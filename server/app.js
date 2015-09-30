@@ -6,6 +6,14 @@ express.response.pdf = function(obj, headers, status) {
     return this.send(obj, headers, status);
 };
 
+express.response.table = function(obj, headers, status) {
+    var row = _.map(obj, function(e) {
+        return '<td>' + e.join('</td><td>') + '</td>';
+    })
+    var css = '<style> table, td, th {padding: 1px 10px;border: 1px solid black;}</style>'
+    this.send(css + '<table><tr>' + row.join('</tr><tr>') + '</tr></table');
+}
+
 express.response.sage = function(obj, headers, status) {
     var _this = this;
     this.contentType('text/csv');

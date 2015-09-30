@@ -184,7 +184,7 @@
                         <produits ng-if="vm.data.id || vm.data.devisOrigine" data="vm.data"></produits>
                         <credit-card inline="true" class="margin" model="vm.data" ng-if="vm.data.modeReglement === 'CB'"></credit-card>
                         <info-fourniture ng-if="vm.data.id" data="vm.data"></info-fourniture>
-                        <info-compta ng-if="vm.data.status === 'VRF' && vm.data.sst.document" data="vm.data"></info-compta>
+                        <info-compta ng-if="vm.data.status === 'VRF'" data="vm.data"></info-compta>
                         <info-litige ng-if="vm.data.id && vm.data.date.envoi" data="vm.data"></info-litige>
                         <div class="row" style="margin:0">
                             <div style="width:48%;float:left;" class="card" id="fileUpload">

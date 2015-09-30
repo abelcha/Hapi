@@ -24,8 +24,101 @@ module.exports = function(schema) {
         })
     };
 
+
+    var getDocs = function(data) {
+        return new Promise(function(resolve, reject) {
+            var op = [];
+            var blank = {
+                model: 'blank',
+                options: {}
+            }
+            console.log('==>', data.length)
+            db.model('artisan').find({
+                id: {
+                    $in: _.pluck(data, 'id')
+                }
+            }).then(function(docs) {
+                _.each(docs, function(e) {
+                    if (!e.document.rib.file) {
+                        op.push({
+                            model: 'letter',
+                            options: {
+                                address: e.address,
+                                dest: e.representant,
+                                text: 'Bonjour, veuillez nous communiquer votre rib stp',
+                                title: "Demande de transmission de rib"
+                            }
+                        }, blank)
+                    }
+                    console.log('==>', e.document.contrat.file)
+                    if (!e.document.contrat.file) {
+                        op.push({
+                            model: 'letter',
+                            options: {
+                                address: e.address,
+                                dest: e.representant,
+                                text: 'Bonjour, veuillez nous communiquer votre contrat stp',
+                                title: "Demande de transmission de contrat"
+                            }
+                        }, blank, {
+                            model: 'contract',
+                            options: e
+                        }, blank)
+                    }
+
+                });
+                resolve(PDF(op).html())
+                    // resolve('ok')
+            }, reject)
+        })
+    }
+
+
+    var clean = function(e, mode) {
+
+        e.total = e.total.final
+        e.mode = mode;
+        e.interventions = _.map(_.filter(e.list.__list, {
+            checked: true
+        }), function(x) {
+            return {
+                type: x.type,
+                id: x.id,
+                montant: x.montant.final,
+                description: x.description
+            }
+        });
+        e.list = undefined;
+    }
+
+    var getVirements = function(data) {
+        var rtn = [];
+        _.each(data, function(sst) {
+            var tmp = [];
+            tmp.push(sst.nomSociete + ' ' + sst.id);
+            tmp.push("30002 00550 0000157845Z 02");
+            clean(sst);
+            var total = _.reduce(sst.interventions, function(total, x) {
+                return total + x.montant;
+            }, 0)
+            tmp.push(_.round(total, 2))
+            rtn.push(tmp);
+        })
+        return rtn;
+    }
+
+
+
     schema.statics.print = function(req, res) {
         var _this = this;
+        var data = JSON.parse(req.body.data);
+
+        if (req.body.type === 'documents') {
+            return getDocs(data).then(res.send.bind(res), res.json.bind(res));
+        } else if (req.body.type === 'virement') {
+            console.log('jdqsjdsqj')
+            return res.table(getVirements(data))
+        }
 
         return new Promise(function(resolve, reject) {
             var resend = function() {
@@ -45,30 +138,17 @@ module.exports = function(schema) {
             }
 
 
-            var data = JSON.parse(req.body.data);
             var op = [];
             _.each(data, function(e, k) {
-                var mode = _.find(e.list.__list, {
-                    mode: 'CHQ'
-                }) ? 'CHQ' : 'VIR';
 
                 if (!e.total.final)
                     return 0;
-                e.total = e.total.final
-                e.mode = mode;
-                e.interventions = _.map(_.filter(e.list.__list, {
-                    checked: true
-                }), function(x) {
-                    return {
-                        type:x.type,
-                        id: x.id,
-                        montant: x.montant.final,
-                        description: x.description
-                    }
-                });
-                e.list = undefined;
+                var mode = _.find(e.list.__list, {
+                    mode: 'CHQ'
+                }) ? 'CHQ' : 'VIR';
+                clean(e, mode);
 
-                if ((req.body.type === 'documents' && mode !== 'CHQ') ||
+                if ((req.body.type === 'recap' && mode !== 'CHQ') ||
                     (req.body.type === 'lettreCheques' && mode == 'CHQ')) {
                     op.push({
                         model: 'recap',
@@ -76,7 +156,7 @@ module.exports = function(schema) {
                     })
                 }
             })
-            if (req.body.type === 'documents') {
+            if (req.body.type === 'recap') {
                 var it = 0;
                 async.each(data, function(e, callback) {
                     async.each(e.interventions, function(x, cb2) {

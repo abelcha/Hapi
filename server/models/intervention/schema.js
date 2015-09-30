@@ -323,7 +323,6 @@ module.exports = function(db) {
                     fourniture: {
                         artisan: Number,
                         edison: Number,
-                        total: Number
                     },
                     dateAjout: Date,
                     dateFlush: Date,

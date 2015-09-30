@@ -38,7 +38,7 @@ module.exports = function(schema) {
     schema.statics.updateAddress = function(req, res) {
 
         return new Promise(function(resolve, reject) {
-            db.model(req.query.model || 'devis').find({
+            db.model(req.query.model || 'intervention').find({
                 'client.address.lt': 0,
                 'client.address.lg': 0
                     //id: 26237

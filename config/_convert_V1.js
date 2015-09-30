@@ -180,7 +180,7 @@ V1.prototype.send = function(cb) {
                 cb("err")
             }
             new edison.event("SEND_INTER", _this.data.id, {
-                sended: this.data,
+                sended: _this.data,
                 resp: body
             });
 

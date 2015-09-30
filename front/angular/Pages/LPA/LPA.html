@@ -4,10 +4,13 @@
             <table class="table table-condensed  table-hover table-bordered">
 
                 <body>
-                    <tr ng-repeat-start="artisan in lpa">
-                        <td colspan="1" variable-length>
+                    <tr ng-repeat-start="artisan in lpa" class="orange lighten-5">
+                        <td colspan="2" variable-length>
                             <h2><a style="color:black" href="/artisan/{{artisan.id}}/recap#interventions">{{artisan.id}} - {{artisan.nomSociete}}</a></h2></td>
-                        <td><input colspan="3"  type="text" class="form-control" ng-model="artisan.numeroCheque" ng-change="vm.updateNumeroCheque($index, artisan.id)"></td>
+                        <td colspan="3">
+                            <input  ng-if="artisan.list.getList()[0].mode === 'CHQ'" type="text" class="form-control" ng-model="artisan.numeroCheque" ng-change="vm.updateNumeroCheque($index, artisan.id)">
+                        </td>
+                        <td colspan="12"></td>
                     </tr>
                     <tr>
                         <td><i>Numero OS</i></td>
@@ -21,7 +24,8 @@
                         <td variable-length><i>Final</i></td>
                         <td variable-length><i>Payer</i></td>
                     </tr>
-                    <tr ng-repeat="item in artisan.list.getList()" ng-click="item.checked = !item.checked;vm.reloadList(artisan)">
+                    <tr ng-repeat="item in artisan.list.getList()" ng-click="item.checked = !item.checked;vm.reloadList(artisan)" ng-right-click="vm.rowRightClick($event, item)"
+                    ng-class="{info : vm.contextMenu && vm.contextMenu.active && vm.contextMenu.data.id === item.id}">
                         <td ng-click="item.checked = !item.checked;"><a style="color:black" href="/intervention/{{item.id}}">{{ item.id }}</a></td>
                         <td>{{ item.login}} ({{item.date|date:"dd/MM/yy à H'h'mm"}})</td>
                         <td>{{ item.mode }}</td>
@@ -57,11 +61,23 @@
         </div>
         <div style="margin-top: 19px;">
             <md-button ng-click="vm.print('documents')" class="md-raised">Documents</md-button>
+            <md-button ng-click="vm.print('recap')" class="md-raised">Auto-Factures</md-button>
             <md-button ng-click="vm.print('lettreCheques')" class="md-raised">Lettre Cheques</md-button>
             <md-button ng-click="vm.print('virement')" class="md-raised">Virements</md-button>
             <md-button class="md-raised">Upload Scan</md-button>
             <md-button class="md-raised md-warn" ng-click="vm.flush()">FLUSH</md-button>
             <md-button class="md-raised md-primary" ng-click="vm.reloadLPA()">Reload</md-button>
+        </div>
+    </div>
+    <div class="dropdown-menu--no-conflicts dropdown-menu--right dropdown__menu--is-dropped" style="margin-top: -215px;width: auto; height: auto; opacity: 1;" ng-style="vm.contextMenu.style">
+        <div class="dropdown-menu__content ng-scope">
+            <ul class="ng-scope">
+                <li ng-hide="item.hidden" ng-repeat="item in vm.contextMenu.list">
+                    <a ng-mouseover="vm.contextMenu.closeSub()" ng-if="!item.subs" class="dropdown-link" ng-style="item.style" tabindex="0" ng-click="vm.contextMenu.close();vm.contextMenu.click(item)">{{item.title}}</a>
+                    <a ng-style="item.style" ng-mouseover="vm.contextMenu.openSub(200)" ng-if="item.subs" class="dropdown-link" tabindex="0"><i no-margin align-left class="fa fa-angle-right"></i>{{item.title}}</a>
+                    <a lx-tooltip="{{vm.contextMenu.tooltip(sub)}}" tooltip-position="right" ng-style="sub.style" ng-repeat="sub in item.subs" ng-click="vm.contextMenu.close();vm.contextMenu.click(sub)" ng-hide="sub.hidden" ng-if="vm.contextMenu.mouseOverCM && item.subs" class="dropdown-link"><i no-margin align-left class=" fa fa-angle-double-right"></i>{{sub.title}}</a>
+                </li>
+            </ul>
         </div>
     </div>
 </div>

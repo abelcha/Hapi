@@ -29,7 +29,6 @@ module.exports = function(schema) {
     var lol = function(inter, date) {
 
         var index = _.findIndex(inter.compta.paiement.historique, 'dateFlush', date)
-        console.log(index, inter.compta.paiement)
         inter.compta.paiement.base = inter.compta.paiement.historique[index].base
         inter.compta.paiement.montant = inter.compta.paiement.historique[index].montant
         inter.compta.paiement.pourcentage = inter.compta.paiement.historique[index].pourcentage
@@ -44,6 +43,7 @@ module.exports = function(schema) {
         return new Promise(function(resolve, reject) {
 
             var date = new Date(parseInt(ts));
+            console.log(date)
             db.model('intervention')
                 .find({
                     'compta.paiement.historique': {
@@ -71,7 +71,6 @@ module.exports = function(schema) {
     }
 
     schema.statics.lpa = function(req, res) {
-        console.log(req.query, req.body)
         if (req.query.d) {
             return gtf(req.query.d)
         }

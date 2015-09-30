@@ -66,14 +66,14 @@ module.exports = {
         }
     },
     paiementArtisan: [{}, {
-        title: 'Payé',
-        color: 'green',
-        icon: 'check',
-        id: 1
-    }, {
         title: 'En Cours',
         color: 'orange',
         icon: 'ellipsis-h',
+        id: 1
+    }, {
+        title: 'Payé',
+        color: 'green',
+        icon: 'check',
         id: 1
     }],
     reglementClient: [{

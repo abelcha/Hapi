@@ -1,9 +1,11 @@
-var LpaController = function(openPost, $location, $window, tabContainer, edisonAPI, $rootScope, LxProgressService, LxNotificationService, FlushList) {
+var LpaController = function(openPost, socket, ContextMenu, $location, $window, tabContainer, edisonAPI, $rootScope, LxProgressService, LxNotificationService, FlushList) {
     "use strict";
     var _this = this
     var tab = tabContainer.getCurrentTab();
     tab.setTitle('LPA')
     _this.search = $location.search();
+    _this.contextMenu = new ContextMenu('intervention')
+
     _this.loadData = function(prevChecked) {
         LxProgressService.circular.show('#5fa2db', '#globalProgress');
         edisonAPI.compta.lpa($location.search()).then(function(result) {
@@ -18,6 +20,21 @@ var LpaController = function(openPost, $location, $window, tabContainer, edisonA
             LxProgressService.circular.hide()
         })
     }
+
+
+    _this.rowRightClick = function($event, inter) {
+        edisonAPI.intervention.get(inter.id, {
+                populate: 'sst'
+            })
+            .then(function(resp) {
+                _this.contextMenu.setData(resp.data);
+                _this.contextMenu.setPosition($event.pageX, $event.pageY + 200)
+                _this.contextMenu.open();
+            })
+    }
+
+
+
     if (!$rootScope.lpa)
         _this.loadData()
     _this.checkArtisan = function(sst) {
@@ -30,27 +47,42 @@ var LpaController = function(openPost, $location, $window, tabContainer, edisonA
         var base = $rootScope.lpa[index].numeroCheque;
         if (base) {
             for (var i = index; i < $rootScope.lpa.length; i++) {
-                $rootScope.lpa[i].numeroCheque = ++base
+                if ($rootScope.lpa[i].list.getList()[0].mode === 'CHQ') {
+                    $rootScope.lpa[i].numeroCheque = ++base
+                }
             };
         }
     }
     _this.flush = function() {
         var rtn = [];
-        _.each($rootScope.lpa, function(sst) {
-            _.each(sst.list.getList(), function(e) {
-                if (e.checked) {
-                    e.numeroCheque = sst.numeroCheque
-                    rtn.push(e);
-                }
-            })
+
+        var lpa = [];
+        _.each(_.cloneDeep($rootScope.lpa), function(e) {
+            e.list.__list = _.filter(e.list.__list, 'checked', true);
+            if (e.list.__list.length) {
+                lpa.push(e);
+            }
         })
-        edisonAPI.compta.flush(rtn).then(function(resp) {
-            LxNotificationService.success(resp.data);
-            _this.reloadLPA()
-        }).catch(function(err) {
-            LxNotificationService.error(err.data);
+        console.log(lpa);
+        LxProgressService.circular.show('#5fa2db', '#globalProgress');
+        edisonAPI.compta.flush(lpa).then(function(resp) {
+            edisonAPI.compta.flushMail(lpa).then(function(resp) {
+                console.log('yayaya')
+            });
         })
     }
+
+    socket.on('intervention_db_flushMail', function(data) {
+        if (data === 100) {
+            $rootScope.globalProgressCounter = "";
+            LxProgressService.circular.hide();
+            _this.reloadLPA()
+        } else {
+            $rootScope.globalProgressCounter = data + '%';
+        }
+
+    })
+
     _this.reloadList = function(artisan) {
         artisan.total = artisan.list.getTotal()
         artisan.total = artisan.list.getTotal(true)
