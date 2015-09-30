@@ -32,9 +32,13 @@
                         var i = 0;
                         console.time('dump')
                         async.eachLimit(data, 50, function(e, callback) {
+                            console.log(e.id)
                             if (++i % 100 == 0)
                                 console.log(_.round(i / data.length * 100, 2), "%")
-                            core.model()(core.toV2(e)).save(callback);
+                            core.model()(core.toV2(e)).save(function(err, resp) {
+                                if (err) console.log('=>', e.id, err);
+                                callback(null);
+                            });
                         }, function(err, resp) {
                             console.timeEnd('dump')
                             if (err) {

@@ -174,7 +174,7 @@
                 p.desc = sanitizeHtml(entities.decode(p.desc))
                 p.ref = sanitizeHtml(entities.decode(p.ref || 'EDI141'))
                 p.pu = p.pu || 0
-                p.pu = p.quantite || 0
+                p.quantite = p.quantite || 0
                 p.pu = typeof p.pu === 'number' ? p.pu : (parseFloat(p.pu.replace(/[^\d.-]/g, '')) || 0)
                 p.ref = p.ref.replace(' ', '');
                 if (p.ref.startsWith("CAM"))
