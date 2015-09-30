@@ -65,7 +65,7 @@
             <md-button ng-click="vm.print('lettreCheques')" class="md-raised">Lettre Cheques</md-button>
             <md-button ng-click="vm.print('virement')" class="md-raised">Virements</md-button>
             <md-button class="md-raised">Upload Scan</md-button>
-            <md-button class="md-raised md-warn" ng-click="vm.flush()">FLUSH</md-button>
+            <md-button ng-if="!vm.search.d" class="md-raised md-warn" ng-click="vm.flush()">FLUSH</md-button>
             <md-button class="md-raised md-primary" ng-click="vm.reloadLPA()">Reload</md-button>
         </div>
     </div>
