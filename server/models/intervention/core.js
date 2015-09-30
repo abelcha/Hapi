@@ -114,15 +114,11 @@
         var _ = require("lodash")
 
         var getPaiementArtisan = function(e) {
-            console.log(e.compta.paiement);
             if (e.compta.paiement.effectue) {
-                console.log("2")
                 return 2;
             } else if (e.compta.paiement.ready) {
-                console.log("1")
                 return 1;
             } else {
-                console.log("0")
                 return 0
             }
         }
@@ -381,56 +377,9 @@
             rtn.login.annulation = rtn.login.ajout
             rtn.date.annulation = rtn.date.ajout
         }
-        rtn.compta = {
-            paiement: {
-                dette: d.etat_reglement === "DETTE"
-            }
-        }
-        if (d.comptaPrixFinal) {
-            rtn.compta = {
-                paiement: {
-                    date: toDate(d.date_paiement_sst),
-                    tva: d.comptaTVA || 0,
-                    mode: d.pVirement == "0" ? "CHQ" : "VIR",
-                    base: d.comptaPrixFinal,
-                    montant: d.comptaMontantFinal,
-                    ready: false /*rtn.id > 25000*/ ,
-                    effectue: true /*rtn.id <= 25000*/ ,
-                    pourcentage: {
-                        deplacement: d.pDeplacement,
-                        maindOeuvre: d.pMaindOeuvre,
-                        fourniture: d.pFourniture
-                    },
-                    historique: /* rtn.id > 25000 ? [] :*/ [{
-                        tva: d.comptaTVA || 0,
-                        dateFlush: toDate(d.date_paiement_sst),
-                        dateAjout: toDate(d.date_paiement_sst),
-                        base: d.comptaPrixFinal,
-                        final: d.comptaMontantFinal,
-                        montant: d.comptaMontantFinal,
-                        payed: d.comptaMontantFinal,
-                        mode: (d.pVirement == "0" ? "CHQ" : "VIR"),
-                        pourcentage: {
-                            deplacement: d.pDeplacement,
-                            maindOeuvre: d.pMaindOeuvre,
-                            fourniture: d.pFourniture
-                        },
-                        numeroCheque: d.comptaNumeroCheque ||  undefined,
-                    }]
-                },
-            }
-        }
-        if (d.date_paiement_client) {
-            rtn.compta.reglement = {
-                date: toDate(d.date_paiement_client),
-                recu: true,
-                montant: rtn.prixFinal,
-                historique: [{
-                    date: toDate(d.date_paiement_client),
-                    montant: rtn.prixFinal,
-                }]
-            }
-        }
+
+
+
 
         var fournitureArtisan = parseFloat(d.comptaFournitureArtisan)
         var fournitureEdison = parseFloat(d.comptaTotalFourniture) - fournitureArtisan
@@ -463,5 +412,66 @@
                 quantite: 1
             });
         }
+
+
+
+
+
+        rtn.compta = {
+            paiement: {
+                dette: d.etat_reglement === "DETTE"
+            }
+        }
+        if (d.comptaPrixFinal) {
+            rtn.compta = {
+                paiement: {
+                    date: toDate(d.date_paiement_sst),
+                    tva: d.comptaTVA || 0,
+                    mode: d.pVirement == "0" ? "CHQ" : "VIR",
+                    base: d.comptaPrixFinal,
+                    montant: d.comptaMontantFinal,
+                    ready: false /*rtn.id > 25000*/ ,
+                    effectue: true /*rtn.id <= 25000*/ ,
+                    pourcentage: {
+                        deplacement: d.pDeplacement,
+                        maindOeuvre: d.pMaindOeuvre,
+                        fourniture: d.pFourniture
+                    },
+                    historique: /* rtn.id > 25000 ? [] :*/ [{
+                        tva: d.comptaTVA || 0,
+                        dateFlush: toDate(d.date_paiement_sst),
+                        dateAjout: toDate(d.date_paiement_sst),
+                        base: d.comptaPrixFinal,
+                        final: d.comptaMontantFinal,
+                        montant: d.comptaMontantFinal,
+                        fourniture: {
+                            artisan: fournitureArtisan,
+                            edison: fournitureEdison,
+                            total: fournitureArtisan + fournitureEdison
+                        },
+                        payed: d.comptaMontantFinal,
+                        mode: (d.pVirement == "0" ? "CHQ" : "VIR"),
+                        pourcentage: {
+                            deplacement: d.pDeplacement,
+                            maindOeuvre: d.pMaindOeuvre,
+                            fourniture: d.pFourniture
+                        },
+                        numeroCheque: d.comptaNumeroCheque ||  undefined,
+                    }]
+                },
+            }
+        }
+        if (d.date_paiement_client) {
+            rtn.compta.reglement = {
+                date: toDate(d.date_paiement_client),
+                recu: true,
+                montant: rtn.prixFinal,
+                historique: [{
+                    date: toDate(d.date_paiement_client),
+                    montant: rtn.prixFinal,
+                }]
+            }
+        }
+
         return rtn;
     }

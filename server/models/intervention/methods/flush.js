@@ -19,6 +19,7 @@ module.exports = function(schema) {
                         loginFlush: req.session.login,
                         pourcentage: doc.compta.paiement.pourcentage,
                         _type: e.type,
+                        fourniture: e.fourniture,
                         mode: doc.compta.paiement.mode,
                         numeroCheque: e.numeroCheque,
                         montant: e.montant.total,

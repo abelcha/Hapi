@@ -320,6 +320,11 @@ module.exports = function(db) {
                         type: Number,
                         default: 0
                     },
+                    fourniture: {
+                        artisan: Number,
+                        edison: Number,
+                        total: Number
+                    },
                     dateAjout: Date,
                     dateFlush: Date,
                     loginAjout: {
@@ -352,7 +357,7 @@ module.exports = function(db) {
                     base: Number,
                     montant: Number,
                     payed: Number,
-                    final: Number,
+                    'final': Number,
                     numeroCheque: String
                 }]
             },

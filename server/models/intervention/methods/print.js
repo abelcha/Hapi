@@ -60,6 +60,7 @@ module.exports = function(schema) {
                     checked: true
                 }), function(x) {
                     return {
+                        type:x.type,
                         id: x.id,
                         montant: x.montant.final,
                         description: x.description

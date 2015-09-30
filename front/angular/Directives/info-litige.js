@@ -11,7 +11,7 @@
              scope.$watch('data.litige.description', function(curr, prev) {
                  if (scope.data.litige && !scope.data.litige.closed && scope.data.litige.description)
                      scope.data.litige.open = true
-                 if (!scope.data.litige.description) {
+                 if (scope.data.litige && !scope.data.litige.description) {
                      scope.data.litige.open = false
                  }
              })

@@ -3,11 +3,15 @@ var LpaController = function(openPost, $location, $window, tabContainer, edisonA
     var _this = this
     var tab = tabContainer.getCurrentTab();
     tab.setTitle('LPA')
+    _this.search = $location.search();
     _this.loadData = function(prevChecked) {
         LxProgressService.circular.show('#5fa2db', '#globalProgress');
         edisonAPI.compta.lpa($location.search()).then(function(result) {
             _.each(result.data, function(sst) {
                 sst.list = new FlushList(sst.list, prevChecked);
+                if (_this.search.d) {
+                    _this.checkArtisan(sst);
+                }
                 _this.reloadList(sst)
             })
             $rootScope.lpa = result.data

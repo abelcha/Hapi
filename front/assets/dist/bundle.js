@@ -770,6 +770,8 @@ module.exports = FiltersFactory;
             rtn.checked = _includes(prevChecked, rtn.id)
             rtn.mode = e.compta.paiement.mode
             rtn.type = rtn.montant.legacy !== 0 ? (rtn.montant.balance > 0 ? 'COMPLEMENT' : 'AVOIR') : 'AUTO-FACT'
+            console.log(e)
+            console.log(rtn);
             list.push(rtn)
         })
         this.__list = list
@@ -838,7 +840,7 @@ module.exports = FiltersFactory;
              return inter;
          }
 
-         var reglement = inter.compta.reglement || {}
+         var reglement = inter.compta.reglement ||  {}
          var paiement = inter.compta.paiement
          if (!_get(inter, 'compta.paiement.pourcentage.deplacement')) {
              paiement.pourcentage = _clone(inter.artisan.pourcentage)
@@ -856,11 +858,15 @@ module.exports = FiltersFactory;
          _this.venteFourniture = _this.base - (_this.baseDeplacement + _this.baseMaindOeuvre);
          _this.coutFourniture = _this.fourniture.total;
          _this.baseMargeFourniture = _this.venteFourniture - _this.coutFourniture;
+/*         if (_this.baseMargeFourniture < 0) {
+             _this.baseMaindOeuvre += _this.baseMargeFourniture;
+             _this.baseMargeFourniture = 0;
+         }*/
          _this.remunerationMargeFourniture = _this.applyCoeff(_this.baseMargeFourniture, _this.pourcentage.fourniture);
          _this.remboursementFourniture = _this.fourniture.artisan;
          _this.montantTotal = _round(_this.remunerationDeplacement + _this.remunerationMargeFourniture + _this.remunerationMaindOeuvre + _this.remboursementFourniture, 2);
          _this.montantTotalTVA = _round(_this.montantTotal * (paiement.tva / 100), 2);
-        _this.montantTotalTTC = _round(_this.montantTotal + _this.montantTotalTVA, 2);
+         _this.montantTotalTTC = _round(_this.montantTotal + _this.montantTotalTVA, 2);
      }
  }
 
@@ -890,6 +896,9 @@ module.exports = FiltersFactory;
      },
      getFourniture: function(inter) {
          var _this = this;
+         if (_get(inter, 'compta.paiement.fourniture.total')) {
+            return inter.compta.paiement.fourniture;
+         }
          var fourniture = {
              artisan: 0,
              edison: 0,

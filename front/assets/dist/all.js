@@ -642,7 +642,7 @@ angular.module('edison').directive('ngEnter', function () {
              scope.$watch('data.litige.description', function(curr, prev) {
                  if (scope.data.litige && !scope.data.litige.closed && scope.data.litige.description)
                      scope.data.litige.open = true
-                 if (!scope.data.litige.description) {
+                 if (scope.data.litige && !scope.data.litige.description) {
                      scope.data.litige.open = false
                  }
              })
@@ -1478,7 +1478,7 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
         },
         compta: {
             lpa: function(data) {
-                return $http.get('/api/intervention/lpa?d=' + data.d);
+                return $http.get('/api/intervention/lpa?d=' + (data.d || ''));
             },
             flush: function(data) {
                 return $http.post('/api/intervention/flush', data);
@@ -4633,11 +4633,15 @@ var LpaController = function(openPost, $location, $window, tabContainer, edisonA
     var _this = this
     var tab = tabContainer.getCurrentTab();
     tab.setTitle('LPA')
+    _this.search = $location.search();
     _this.loadData = function(prevChecked) {
         LxProgressService.circular.show('#5fa2db', '#globalProgress');
         edisonAPI.compta.lpa($location.search()).then(function(result) {
             _.each(result.data, function(sst) {
                 sst.list = new FlushList(sst.list, prevChecked);
+                if (_this.search.d) {
+                    _this.checkArtisan(sst);
+                }
                 _this.reloadList(sst)
             })
             $rootScope.lpa = result.data

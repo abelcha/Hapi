@@ -6,7 +6,7 @@
                 <body>
                     <tr ng-repeat-start="artisan in lpa">
                         <td colspan="1" variable-length>
-                            <h2><a style="color:black" href="/artisan/{{artisan.id}}/recap">{{artisan.id}} - {{artisan.nomSociete}}</a></h2></td>
+                            <h2><a style="color:black" href="/artisan/{{artisan.id}}/recap#interventions">{{artisan.id}} - {{artisan.nomSociete}}</a></h2></td>
                         <td><input colspan="3"  type="text" class="form-control" ng-model="artisan.numeroCheque" ng-change="vm.updateNumeroCheque($index, artisan.id)"></td>
                     </tr>
                     <tr>
