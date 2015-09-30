@@ -46,7 +46,6 @@
         var config = requireLocal('config/dataList')
         var d = requireLocal('config/dates.js')
         var ms = require('milliseconds')
-        console.log(e.id, e.categorie, e.login.ajout)
         return {
             da: d(e.date.ajout),
             t: e.login.ajout,
