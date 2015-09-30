@@ -11,7 +11,7 @@ module.exports = function(schema) {
         var add = e.client.address.n + ' ' + e.client.address.r + ', ' + e.client.address.cp + ' ' + e.client.address.v;
         geocoder.geocode(add, function(err, data) {
             if (!err && !data.error_message && data.results[0]) {
-                console.log('first')
+               // console.log('first')
                 var obj = data.results[0].geometry.location;
                 obj.id = e.id;
                 e.client.address.lt = obj.lat;
@@ -21,13 +21,13 @@ module.exports = function(schema) {
             } else {
                 geocoder.geocode(e.client.address.cp + ", France", function(err, data) {
                     if (!err && !data.error_message && data.results[0]) {
-                        console.log('second')
+                      //  console.log('second')
                         var obj = data.results[0].geometry.location;
                         e.client.address.lt = obj.lat;
                         e.client.address.lg = obj.lng;
                         e.save(cb);
                     } else {
-                        console.log('noop')
+                        //console.log('noop')
                         cb(null)
                     }
                 })

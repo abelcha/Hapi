@@ -174,7 +174,7 @@ module.exports = function(schema) {
             var date = new Date(y, m);
             return {
                 $gte: new Date(date.getFullYear(), date.getMonth(), 1, -1),
-                $lt: new Date(date.getFullYear(), date.getMonth() + 1, 0)
+                $lt: new Date(date.getFullYear(), date.getMonth() + 1, 1)
             }
         }
         return new Promise(function(resolve, reject) {

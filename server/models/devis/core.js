@@ -46,12 +46,12 @@
         var config = requireLocal('config/dataList')
         var d = requireLocal('config/dates.js')
         var ms = require('milliseconds')
-
+        console.log(e.id, e.categorie, e.login.ajout)
         return {
             da: d(e.date.ajout),
             t: e.login.ajout,
             c: e.categorie,
-            cx: config.categories[e.categorie].long_name,
+            cx: config.categories[e.categorie || 'PL'].long_name,
             id: e._id,
             n: e.client.civilite + " " + e.client.nom + ' ' + e.client.prenom,
             s: e.status,
@@ -173,7 +173,8 @@
             rtn.tva = devis.tva || 20;
             rtn.produits.map(function(p) {
                 p.desc = sanitizeHtml(entities.decode(p.desc))
-                p.ref = sanitizeHtml(entities.decode(p.ref))
+                p.ref = sanitizeHtml(entities.decode(p.ref || 'EDI141'))
+                p.pu = p.pu || 0
                 p.pu = typeof p.pu === 'number' ? p.pu : (parseFloat(p.pu.replace(/[^\d.-]/g, '')) || 0)
                 p.ref = p.ref.replace(' ', '');
                 if (p.ref.startsWith("CAM"))
