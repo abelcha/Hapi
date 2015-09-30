@@ -56,7 +56,7 @@ module.exports = function(schema) {
                 .select('id client description compta.paiement date.intervention sst artisan fourniture')
                 .exec(function(err, docs) {
                     docs = _.clone(docs)
-                    var rtn = _(docs.slice(0, 1)).groupBy('sst.id').values().map(function(e) {
+                    var rtn = _(docs).groupBy('sst.id').values().map(function(e) {
                         return {
                             address: e[0].sst.address,
                             nomSociete: e[0].sst.nomSociete,
