@@ -132,6 +132,7 @@
             var rtn = {
                 t: e.login.ajout,
                 id: e.id,
+                f: !e.reglementSurPlace ? 1 : undefined,
                 ai: e.artisan.id,
                 s: config.etats[e._status].order,
                 c: config.categories[e.categorie].order,

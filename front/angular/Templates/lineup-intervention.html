@@ -32,6 +32,7 @@
                         </div>
                     </td>
                     <td data-title="'Prix'" sortable="'pa'" filter="{ 'pa': 'text' }">
+                        <span ng-if="inter.f === 1" class="fa fa-list"></span>
                         {{(inter.pa | number:2) || 0}} €
                     </td>
                     <td ng-init="inter._status = config.etatsHash()[inter.s];inter._etat = inter._status.long_name" data-title="smallWin ? 'S' : 'Status'" sortable="'s'" filter="{ '_etat': 'text' }">
@@ -40,7 +41,7 @@
                         <span ng-if="smallWin" style="width:34px" class="label {{config.etatsHash()[inter.s].color}} display-block"> 
                         {{config.etatsHash()[inter.s].short_name}}</span>
                     </td>
-                    <td ng-if="!smallWin" data-title="'rSST'" sortable="'ps'" >
+                    <td ng-if="!smallWin" data-title="'rSST'" sortable="'ps'">
                         <span ng-if="inter.ps" style="width:70px" class="label display-block {{config.paiementArtisan[inter.ps].color}}">{{config.paiementArtisan[inter.ps].title}}
                     </span>
                     </td>

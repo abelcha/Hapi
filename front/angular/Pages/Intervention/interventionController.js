@@ -171,7 +171,8 @@ var InterventionCtrl = function(Description, Signalement, ContextMenu, $window, 
     var latLng = function(add) {
         return add.lt + ', ' + add.lg
     }
-    _this.selectArtisan = function(sst) {
+    _this.selectArtisan = function(sst, first) {
+
         if (!sst) {
             intervention.sst = intervention.artisan = null
             return false;
@@ -186,6 +187,11 @@ var InterventionCtrl = function(Description, Signalement, ContextMenu, $window, 
         ]).then(function(result) {
             intervention.sst = intervention.artisan = result[0].data;
             intervention.sst.stats = result[1].data
+            console.log(result[0].data.pourcentage)
+            if (!first) {
+                intervention.compta.paiement.pourcentage = _.clone(intervention.sst.pourcentage);
+                console.log('==>', intervention.compta.paiement.pourcentage);
+            }
             edisonAPI.getDistance(latLng(sst.address), latLng(intervention.client.address))
                 .then(function(dir) {
                     intervention.sst.stats.direction = dir.data;
@@ -202,7 +208,7 @@ var InterventionCtrl = function(Description, Signalement, ContextMenu, $window, 
     }
 
     if (intervention.sst) {
-        _this.selectArtisan(intervention.sst);
+        _this.selectArtisan(intervention.sst, true);
     }
 
     _this.searchArtisans = function(categorie) {

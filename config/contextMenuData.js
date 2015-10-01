@@ -188,7 +188,7 @@ module.exports = {
         title: 'Reglement Client',
         action: "validerReglement",
         hide: function(inter) {
-            return !((app_session.root ||  app_session.service === 'COMPTABILITE'));
+            return !(app_session.root || app_session.service === 'COMPTABILITE') || inter.status === 'ANN';
         }
     }, {
         title: 'Paiement SST',

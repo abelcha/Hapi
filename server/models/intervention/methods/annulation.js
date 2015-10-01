@@ -11,6 +11,7 @@ module.exports = function(schema) {
             return new Promise(function(resolve, reject) {
                 inter.date.annulation = new Date;
                 inter.date.envoi = undefined;
+                inter.compta.paiement.ready = false;
                 inter.login.annulation = req.session.login;
                 inter.status = "ANN";
                 inter.causeAnnulation = req.body.causeAnnulation;

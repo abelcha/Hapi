@@ -14,8 +14,8 @@
 
          var reglement = inter.compta.reglement ||  {}
          var paiement = inter.compta.paiement
-         if (!_get(inter, 'compta.paiement.pourcentage.deplacement')) {
-             paiement.pourcentage = _clone(inter.artisan.pourcentage)
+         if (!inter.compta.paiement.pourcentage) {
+             paiement.pourcentage = _clone(inter.sst.pourcentage)
          }
          reglement.montant = _get(inter, 'compta.reglement.montant', 0);
          reglement.avoir = _get(inter, 'compta.reglement.avoir', 0)
@@ -30,10 +30,10 @@
          _this.venteFourniture = _this.base - (_this.baseDeplacement + _this.baseMaindOeuvre);
          _this.coutFourniture = _this.fourniture.total;
          _this.baseMargeFourniture = _this.venteFourniture - _this.coutFourniture;
-/*         if (_this.baseMargeFourniture < 0) {
-             _this.baseMaindOeuvre += _this.baseMargeFourniture;
-             _this.baseMargeFourniture = 0;
-         }*/
+         /*         if (_this.baseMargeFourniture < 0) {
+                      _this.baseMaindOeuvre += _this.baseMargeFourniture;
+                      _this.baseMargeFourniture = 0;
+                  }*/
          _this.remunerationMargeFourniture = _this.applyCoeff(_this.baseMargeFourniture, _this.pourcentage.fourniture);
          _this.remboursementFourniture = _this.fourniture.artisan;
          _this.montantTotal = _round(_this.remunerationDeplacement + _this.remunerationMargeFourniture + _this.remunerationMaindOeuvre + _this.remboursementFourniture, 2);
@@ -69,7 +69,7 @@
      getFourniture: function(inter) {
          var _this = this;
          if (_get(inter, 'compta.paiement.fourniture.total')) {
-            return inter.compta.paiement.fourniture;
+             return inter.compta.paiement.fourniture;
          }
          var fourniture = {
              artisan: 0,

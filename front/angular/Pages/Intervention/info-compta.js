@@ -42,9 +42,7 @@ angular.module('edison').directive('infoCompta', ['config', 'Paiement',
                         paiement.montant = scope.compta.montantTotal
                     }
                 }
-
                 scope.$watch('data.fourniture', change, true)
-
                 scope.$watchGroup(['data.compta.reglement.montant',
                     'data.compta.paiement.base',
                     'data.compta.paiement.tva',

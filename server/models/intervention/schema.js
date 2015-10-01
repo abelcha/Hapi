@@ -283,18 +283,9 @@ module.exports = function(db) {
                 base: Number,
                 montant: Number,
                 pourcentage: {
-                    deplacement: {
-                        type: Number,
-                        default: 50
-                    },
-                    maindOeuvre: {
-                        type: Number,
-                        default: 30
-                    },
-                    fourniture: {
-                        type: Number,
-                        default: 30
-                    }
+                    deplacement: Number,
+                    maindOeuvre: Number,
+                    fourniture: Number
                 },
                 dette: {
                     type: Boolean,
