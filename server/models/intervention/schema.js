@@ -112,13 +112,7 @@ module.exports = function(db) {
             status: String,
             description: String,
             login: String,
-            artisan: {
-                id: {
-                    type: Number,
-                    ref: 'artisan'
-                },
-                nomSociete: String,
-            },
+            sst: Number,
             date: Date,
         }],
         sst: {

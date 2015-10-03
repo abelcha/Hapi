@@ -78,7 +78,7 @@ module.exports = function(schema) {
                     }
                     console.log(communication);
                     mail.send({
-                        From: "intervention@edison-services.fr",
+                        From: "contact@edison-services.fr",
                         ReplyTo: communication.mailReply,
                         To: communication.mailDest,
                         Bcc: communication.mailBcc,
