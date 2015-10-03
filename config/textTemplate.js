@@ -2,26 +2,22 @@ module.exports = {
     sms: {
         intervention: {
 
-            demande: function(user) {
-                var config = require('./dataList.js')
-                var mmt = moment(this.date.intervention);
-                var format = mmt.isSame(moment(), 'day') ? "[aujourd'hui à ]HH[h]mm" : "[le ]DD[/]MM[ à ]HH[h]mm"
-                var datePlain = mmt.format(format)
-                var categorieClean = config.categories[this.categorie].suffix + " " + config.categories[this.categorie].long_name.toLowerCase()
-                return "Bonjour M. BOUKRIS, nous cherchons a vous joindre pour une intervention de " + categorieClean +
-                    " à faire " + datePlain + ". Pourriez-vous vous rendre disponible ?\n" +
+            demande: function() {
+                return "Bonjour M. {{sst.representant.nom}} , nous cherchons a vous joindre pour une intervention {{categorieClean}}" +
+                    " à faire {{datePlain}}, situé à {{client.address.cp}}, {{client.address.v}}.\n" +
+                    " Pourriez-vous vous rendre disponible ?\n" +
                     "Merci de nous contacter au plus vite au 09.72.42.30.00.\n" +
-                    "Merci d 'avance pour votre réponse.\n" +
-                    (user.pseudo ||  "Arnaud") + "\n" +
-                    "Ligne Directe " + (user.ligne ? (user.ligne.match(/.{2}|.{1,2}/g).join('.')) :  "09.72.44.16.63") + "\n" +
+                    "Merci d'avance pour votre réponse.\n" +
+                    "{{user.pseudo}}\n" +
+                    "Ligne Directe: {{ligneDirect}}\n" +
                     "Edison Services\n"
-
             },
             envoi: function(user) {
                 var sms = _.template("OS {{id}}\n" +
                     "Intervention chez {{client.civilite}} {{client.prenom}} {{client.nom}} au " +
                     "{{client.address.n}} {{client.address.r}} {{client.address.cp}}, {{client.address.v}} " +
-                    "le " + moment(this.date.intervention).format("LLLL") + ".\n")(this)
+                    "le " + moment(this.date.intervention).format("LLLL") + ".\n" +
+                    "Pour la raison suivante: {{description}}.\n")(this)
                 sms += this.prixAnnonce ? this.prixAnnonce + "€ HT. " : "Pas de prix annoncé. ";
                 sms += "\nMerci de prendre rdv avec le client au " + this.client.telephone.tel1;
                 sms += this.client.telephone.tel2 ? " ou au " + this.client.telephone.tel2 : "";
@@ -30,15 +26,6 @@ module.exports = {
                 return sms + "Edison Services."
             },
             annulation: "L'intervention {{id}} chez {{client.civilite}} {{client.nom}} à {{client.address.v}} le {{datePlain}} a été annulé. \nMerci de ne pas intervenir. \nEdison Services",
-            /*            demande: function(user) {
-                            return "Bonjour M. " + _.get(this, 'sst.representant.nom', '') + ", nous cherchons a vous joindre pour une intervention de vitrerie à faire aujourd'hui.\n" +
-                                "Pourriez-vous vous rendre disponible ?\n" +
-                                "Merci de nous contacter au plus vite au 09.72.42.30.00.\n" +
-                                "Merci d'avance pour votre réponse.\n" +
-                                "\n" + (user.pseudo ||  "Arnaud") + "\n" +
-                                "Ligne Directe " + (user.ligne ? (user.ligne.match(/.{2}|.{1,2}/g).join('.')) :  "09.72.42.30.00") + "\n" +
-                                "Edison Services"
-                        }*/
         }
     },
 
@@ -175,48 +162,48 @@ module.exports = {
         intervention: {
             relance2: function() {
                 return "<style> table { border-collapse: collapse;}\n table, td, th {border: 1px solid black;}</style>" +
-                "<p>Madame, Monsieur, <br>" +
-                "<p> Sauf erreur de notre part, nous constatons que votre compte client présente à ce jour un solde débiteur. <br> Ce montant correspond à nos factures suivantes restées impayées: <p>" +
-                "<table cellspacing='0' cellpadding='8'>" +
-                "<tr style='background: #85C82B !important;'>" +
-                "<th style='width: 70px;'> DATE </th>" +
-                "<th style='text-align:left'> N° FACTURE </th>" +
-                "<th style='text-align:left'> LIEU </th>" +
-                "<th style='text-align:right'> MONTANT T.T.C. </th>" +
-                "</tr>" +
-                "<tr>" +
-                "<th> {{datePlain}} </th>" +
-                "<th> {{os}} </th>" +
-                "<th> {{client.address.v}}, {{client.address.cp}} </th>" +
-                "<th style='text-align:right'> {{prixFinalTTC}} € </th>" +
-                "</tr>" +
-                "<tr>" +
-                "<th colspan='3'> <b> TOTAL </b> </th>" +
-                "<th style='text-align:right'> {{prixFinalTTC}} € T.T.C. </th>" +
-                "</tr>" +
-                "</table>" +
+                    "<p>Madame, Monsieur, <br>" +
+                    "<p> Sauf erreur de notre part, nous constatons que votre compte client présente à ce jour un solde débiteur. <br> Ce montant correspond à nos factures suivantes restées impayées: <p>" +
+                    "<table cellspacing='0' cellpadding='8'>" +
+                    "<tr style='background: #85C82B !important;'>" +
+                    "<th style='width: 70px;'> DATE </th>" +
+                    "<th style='text-align:left'> N° FACTURE </th>" +
+                    "<th style='text-align:left'> LIEU </th>" +
+                    "<th style='text-align:right'> MONTANT T.T.C. </th>" +
+                    "</tr>" +
+                    "<tr>" +
+                    "<th> {{datePlain}} </th>" +
+                    "<th> {{os}} </th>" +
+                    "<th> {{client.address.v}}, {{client.address.cp}} </th>" +
+                    "<th style='text-align:right'> {{prixFinalTTC}} € </th>" +
+                    "</tr>" +
+                    "<tr>" +
+                    "<th colspan='3'> <b> TOTAL </b> </th>" +
+                    "<th style='text-align:right'> {{prixFinalTTC}} € T.T.C. </th>" +
+                    "</tr>" +
+                    "</table>" +
 
-                "<p> L'échéance étant dépassée, nous vous demandons de bien vouloir régulariser cette situation par retour de courrier. </p>" +
+                    "<p> L'échéance étant dépassée, nous vous demandons de bien vouloir régulariser cette situation par retour de courrier. </p>" +
 
-                "<p>A l'organisme qui gère notre comptabilité:</p>" +
-                "<p strong center> EDISON SERVICES FRANCE<br>" +
-                "Service comptabilité<br>" +
-                "75 rue des dames, 75017 Paris<br>" +
-                "Tél. 09.72.51.08.01 (Ouvert de 09h00 à 12h30 / 14h00 à 16h30)</p>" +
-                "<p>" +
-                "Pour un reglement par virement :<br>" +
-                "<br>" +
-                "RIB: 30004 01557 00010041423 30<br>" +
-                "IBAN: FR76 3000 4015 5700 0100 4142 330<br>" +
-                "BIC: BNPAFRPPPRG" +
-                "</p>" +
-                "<p> Merci d'indiquer la référence de la facture ({{os}}) dans le règlement. </p>" +
-                "<p> Nous vous prions d'agréer, Madame, Monsieur, nos salutations distinguées. </p>" +
-                "<header style='margin-top: 25px;'>" +
-                "<b> <u> Service comptabilité </u> </b>" +
-                "<p> Lionel Durand </p>" +
-                "<p> Tél: 09.72.51.08.01 </p>" +
-                "</header>"
+                    "<p>A l'organisme qui gère notre comptabilité:</p>" +
+                    "<p strong center> EDISON SERVICES FRANCE<br>" +
+                    "Service comptabilité<br>" +
+                    "75 rue des dames, 75017 Paris<br>" +
+                    "Tél. 09.72.51.08.01 (Ouvert de 09h00 à 12h30 / 14h00 à 16h30)</p>" +
+                    "<p>" +
+                    "Pour un reglement par virement :<br>" +
+                    "<br>" +
+                    "RIB: 30004 01557 00010041423 30<br>" +
+                    "IBAN: FR76 3000 4015 5700 0100 4142 330<br>" +
+                    "BIC: BNPAFRPPPRG" +
+                    "</p>" +
+                    "<p> Merci d'indiquer la référence de la facture ({{os}}) dans le règlement. </p>" +
+                    "<p> Nous vous prions d'agréer, Madame, Monsieur, nos salutations distinguées. </p>" +
+                    "<header style='margin-top: 25px;'>" +
+                    "<b> <u> Service comptabilité </u> </b>" +
+                    "<p> Lionel Durand </p>" +
+                    "<p> Tél: 09.72.51.08.01 </p>" +
+                    "</header>"
             },
             relance1: function() {
                 return "<p>Madame, Monsieur,<br>" +

@@ -409,6 +409,10 @@ module.exports = {
         type: "partenariat",
         short_name: "PS_BON",
         long_name: "Le sous-traitant démarché n'est pas bon"
+    }, {
+        type: 'Autre',
+        short_name: 'AUTRE',
+        long_name: 'Autre'
     }],
     getCauseAnnulation: function(short_name) {
         var _find = require('lodash/collection/find');

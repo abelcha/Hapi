@@ -2,6 +2,7 @@ angular.module('edison').controller('MainController', function($timeout, $q, Dat
     "use strict";
 
     $rootScope.app_users = app_users;
+    $rootScope.displayUser = app_session
     $scope.sidebarHeight = $("#main-menu-bg").height();
     $scope.config = config;
     $rootScope.loadingData = true;
@@ -37,7 +38,7 @@ angular.module('edison').controller('MainController', function($timeout, $q, Dat
     }
 
     $scope.changeUser = function(usr) {
-        $rootScope.user = usr
+        $rootScope.displayUser = usr
     }
 
     $scope.shadowClick = function(url) {

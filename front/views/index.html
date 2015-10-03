@@ -28,7 +28,7 @@
                 <span right ng-click="userDropdown = !userDropdown" style="margin-right:80px"><li class="dropdown">
                                 <a href="#" class="dropdown-toggle user-menu" data-toggle="dropdown">
                                     <img src="/img/profile/default.jpg" alt="">
-                                    <span bold>{{user.login | uppercase}}</span>
+                                    <span bold>{{displayUser.login | uppercase}}</span>
                 </a>
                 <ul ng-class="{'display-block' : userDropdown}" class="dropdown-menu open">
                     <!--   <li><a href="#"><span class="label label-warning pull-right">New</span>Profile</a></li> -->
@@ -54,44 +54,50 @@
             </div>
             <!-- / .navbar-inner -->
         </div>
-        <side-bar ng-if="user.login && interventionsStats" ng-mouseenter="toggleSidebar(false)" ng-mouseleave="toggleSidebar(true)">
-            <drop-down id="service-intervention" title="Service Intervention" icon="circle" open-default="user.service === 'INTERVENTION'">
+        <side-bar ng-if="displayUser.login && interventionsStats" ng-mouseenter="toggleSidebar(false)" ng-mouseleave="toggleSidebar(true)">
+            <div style="padding: 11px 33px;" class="menu-content animated fadeIn">
+                <a href="/intervention" style="height: 31px;padding: 4px;" class="btn btn-primary btn-block btn-outline dark">Ajout d'une intervention</a>
+            </div>
+             <div style="padding: 11px 33px;" class="menu-content animated fadeIn">
+                <a href="/devis" style="height: 31px;padding: 4px;"  class="btn btn-primary btn-block btn-outline dark">Ajout d'un devis</a>
+            </div>
+            <drop-down id="service-intervention" title="Service Intervention" icon="circle" open-default="displayUser.service === 'INTERVENTION'">
                 <link fltr="i_all" icon="th-list" title="Toutes les Interventions"></link>
-                <drop-down title="Mes Interventions" icon="calendar" open-default="user.service === 'INTERVENTION'">
-                    <link fltr="i_tall" icon="th-list" color="default" text-white="true" bold="true" title="{{dateFormat}}" login="{{user.login}}"></link>
-                    <link fltr="i_tenv" icon="th-list" hash-model="en" login="{{user.login}}"></link>
-                    <link fltr="i_apr" icon="th-list" color="primary" login="{{user.login}}"></link>
-                    <link fltr="i_avr" icon="th-list" color="warning" login="{{user.login}}"></link>
-                    <link fltr="i_fact" icon="th-list" color="danger" login="{{user.login}}"></link>
+                <drop-down title="Mes Interventions" icon="calendar" open-default="displayUser.service === 'INTERVENTION'">
+                    <link fltr="i_tall" icon="th-list" color="default" text-white="true" bold="true" title="{{dateFormat}}" login="{{displayUser.login}}"></link>
+                    <link fltr="i_tenv" icon="th-list" hash-model="en" login="{{displayUser.login}}"></link>
+                    <link fltr="i_apr" icon="th-list" color="primary" login="{{displayUser.login}}"></link>
+                    <link fltr="i_avr" icon="th-list" color="warning" login="{{displayUser.login}}"></link>
+                    <link fltr="i_fact" icon="th-list" color="danger" login="{{displayUser.login}}"></link>
                 </drop-down>
                 <drop-down title="Mes Factures" icon="dollar">
-                    <link fltr="i_fall" icon="th-list" color="default" login="{{user.login}}"></link>
-                    <link fltr="i_fact" icon="th-list" color="danger" login="{{user.login}}"></link>
-                    <link fltr="i_carl" icon="th-list" color="warning" login="{{user.login}}"></link>
+                    <link fltr="i_fall" icon="th-list" color="default" login="{{displayUser.login}}"></link>
+                    <link fltr="i_fact" icon="th-list" color="danger" login="{{displayUser.login}}"></link>
+                    <link fltr="i_carl" icon="th-list" color="warning" login="{{displayUser.login}}"></link>
                 </drop-down>
-                <drop-down icon="hospital-o" title="Mes Devis" open-default="user.service === 'INTERVENTION'">
+                <drop-down icon="hospital-o" title="Mes Devis" open-default="displayUser.service === 'INTERVENTION'">
                     <link fltr="d_all" model="devis" icon="th-list" title="Tous les Devis" color="default"></link>
-                    <link fltr="d_tall" model="devis" text-white="true" bold="true" title="{{dateFormat}}" color="success" icon="th-list" login="{{user.login}}"></link>
-                    <link fltr="d_aev" model="devis" icon="th-list" color="danger" login="{{user.login}}"></link>
-                    <link fltr="d_att" model="devis" icon="th-list" color="warning" login="{{user.login}}"></link>
-                    <link fltr="d_ann" model="devis" icon="th-list" color="default" login="{{user.login}}"></link>
+                    <link fltr="d_tall" model="devis" text-white="true" bold="true" title="{{dateFormat}}" color="success" icon="th-list" login="{{displayUser.login}}"></link>
+                    <link fltr="d_aev" model="devis" icon="th-list" color="danger" login="{{displayUser.login}}"></link>
+                    <link fltr="d_att" model="devis" icon="th-list" color="warning" login="{{displayUser.login}}"></link>
+                    <link fltr="d_ann" model="devis" icon="th-list" color="default" login="{{displayUser.login}}"></link>
                 </drop-down>
                 <drop-down title="Mes Sous-Traitants" icon="truck">
-                    <link fltr="i_sarl" icon="th-list" login="{{user.login}}"></link>
+                    <link fltr="i_sarl" icon="th-list" login="{{displayUser.login}}"></link>
                 </drop-down>
                 <drop-down icon="share" open-default="userStats.i_savEnc.total" title="Mes S.A.V">
-                    <link fltr="i_sav" icon="th-list" login="{{user.login}}" color="primary"></link>
-                    <link fltr="i_savEnc" icon="th-list" login="{{user.login}}" color="danger"></link>
+                    <link fltr="i_sav" icon="th-list" login="{{displayUser.login}}" color="primary"></link>
+                    <link fltr="i_savEnc" icon="th-list" login="{{displayUser.login}}" color="danger"></link>
                 </drop-down>
                 <drop-down icon="bolt" open-default="userStats.i_litEnc.total" title="Mes Litiges">
-                    <link fltr="i_lit" login="{{user.login}}" icon="th-list"></link>
-                    <link fltr="i_litEnc" login="{{user.login}}" icon="th-list" color="danger"></link>
+                    <link fltr="i_lit" login="{{displayUser.login}}" icon="th-list"></link>
+                    <link fltr="i_litEnc" login="{{displayUser.login}}" icon="th-list" color="danger"></link>
                 </drop-down>
             </drop-down>
-            <drop-down title="Service Partenariat" icon="circle" open-default="user.service === 'PARTENARIAT'">
+            <drop-down title="Service Partenariat" icon="circle" open-default="displayUser.service === 'PARTENARIAT'">
                 <drop-down icon="truck" title="Artisans">
                     <link fltr="a_all" url="/artisan/contact" icon="th-list" model="artisan" title="Repertoire"></link>
-                    <link fltr="a_all" icon="th-list" model="artisan" login='{{user.login}}' title="Mes Artisans"></link>
+                    <link fltr="a_all" icon="th-list" model="artisan" login='{{displayUser.login}}' title="Mes Artisans"></link>
                     <link fltr="a_all" icon="th-list" model="artisan" title="Tous les Artisans" no-counter="true"></link>
                     <li>
                         <a href="/artisan"><i class="menu-icon fa fa-plus"></i><span class="mm-text">Nouvel Artisan</span></a>
@@ -99,18 +105,19 @@
                 </drop-down>
                 <drop-down icon="phone" title="Démarchage">
                     <link fltr="i_mar" icon="th-list" title="Market"></link>
-                    <link fltr="i_pan" icon="th-list" login="{{user.login}}" hash-model="dm" title="Mon Panier"></link>
-                    <link fltr="i_hist" icon="th-list" title="Mon Historique" login="{{user.login}}" hash-model="dm"></link>
+                    <link fltr="i_pan" icon="th-list" login="{{displayUser.login}}" hash-model="dm" title="Mon Panier"></link>
+                    <link fltr="i_hist" icon="th-list" title="Mon Historique" login="{{displayUser.login}}" hash-model="dm"></link>
                 </drop-down>
                 <drop-down icon="suitcase" title="Management">
-                    <link fltr="i_sarl" icon="th-list" login="{{user.login}}" hash-model="dm" title="Relances cheques"></link>
+                    <link fltr="i_sarl" icon="th-list" login="{{displayUser.login}}" hash-model="dm" title="Relances cheques"></link>
                 </drop-down>
                 <drop-down icon="calendar" title="Interventions">
-                    <link fltr="i_tenv" icon="th-list" login="{{user.login}}" hash-model="en" title="Envoyés"></link>
-                    <link fltr="i_avr" icon="th-list" color="warning" hash-model="en" login="{{user.login}}"></link>
+                    <link fltr="i_tenv" icon="th-list" login="{{displayUser.login}}" hash-model="en" title="Envoyés"></link>
+                    <link fltr="i_avr" icon="th-list" color="warning" hash-model="en" login="{{displayUser.login}}"></link>
                 </drop-down>
             </drop-down>
-            <drop-down title="Service Comptabilité" icon="circle" open-default="user.service === 'COMPTABILITE'">
+            <drop-down title="Service Comptabilité" icon="circle" open-default="displayUser.service === 'COMPTABILITE'">
+                <simple-link icon="credit-card" fltr="i_carl" title="Tableau des relances" url="/intervention/list/relanceClient"></simple-link>
                 <simple-link icon="credit-card" title="Liste Paiements Att." url="/compta/lpa"></simple-link>
                 <simple-link icon="tags" title="Avoirs" url="/compta/avoirs"></simple-link>
                 <simple-link icon="database" title="Archives Reglements Clt." url="/compta/archivesReglement"></simple-link>
@@ -128,14 +135,6 @@
                 <simple-link icon="wrench" title="VCF Clients" extern url="/api/intervention/vcf"></simple-link>
                 <simple-link icon="wrench" title="VCF Artisan" extern url="/api/artisan/vcf"></simple-link>
             </drop-down>
-            <br>
-            <br>
-            <li>
-                <a href="/intervention"><i class="menu-icon fa fa-table"></i><span class="mm-text">Ajout d'une intervention</span></a>
-            </li>
-            <li>
-                <a href="/devis"><i class="menu-icon fa fa-table"></i><span class="mm-text">Ajout d'un Devis</span></a>
-            </li>
         </side-bar>
         <div class="page-header" style="background: #f4f4f4 url(/img/mooning.png);">
             <div class="menu-tabs" style="width:{{sideBarIsOpen ? '95%' : '86%'}}">

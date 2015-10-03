@@ -1,0 +1,30 @@
+<md-dialog aria-label="Mango (Fruit)" style=";height: 640px;">
+    <md-dialog-content class="sticky-container" style="height: 100%;background:#C4C4C4;overflow:scroll;width: 1200px">
+        <div style="padding-left: 15px;padding-right: 15px;">
+            <br>
+            <div class="p+" style="padding-bottom: 55px!important;">
+                <div class="row" style="margin:0">
+                    <div class="col-sm-3">
+                        <div class="card margin" style="height:100%">
+                            <button style="display: block;width:100%" class="btn-no-conflicts btn--m btn--green btn--raised" lx-ripple>Pas de Contact</button>
+                            <button style="display: block;width:100%" class="btn-no-conflicts btn--m btn--green btn--raised" lx-ripple>Button</button>
+                            <button style="display: block;width:100%" class="btn-no-conflicts btn--m btn--green btn--raised" lx-ripple>Button</button>
+                            <button style="display: block;width:100%" class="btn-no-conflicts btn--m btn--green btn--raised" lx-ripple>Button</button>
+                        </div>
+                    </div>
+                    <div class="col-sm-9">
+                        <info-comment height="310" data="data"></info-comment>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </md-dialog-content>
+    <div class="md-actions" layout="row">
+        <md-button ng-click="answer(true);" class="md-primary black-text">
+            Annuler
+        </md-button>
+        <md-button ng-click="answer(false);" class="md-primary black-text">
+            Valider
+        </md-button>
+    </div>
+</md-dialog>

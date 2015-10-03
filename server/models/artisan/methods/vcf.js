@@ -28,14 +28,14 @@ module.exports = function(schema) {
                     status: {
                         $ne: 'ARC'
                     }
-                }).sort('-id').select('id representant address telephone').limit(req.query.limit ||  3000).then(function(docs) {
+                }).sort('-id').select('id nomSociete address telephone').limit(req.query.limit ||  3000).then(function(docs) {
                     console.log('->', docs.length)
                     var rtn = "";
                     _.each(docs, function(e) {
                         rtn += "BEGIN:VCARD\n";
                         rtn += "VERSION:3.0\n" +
-                            _.template("N: {{id}} {{representant.nom}} {{representant.prenom}} - {{address.cp}} {{address.v}}\n")(e) +
-                            _.template("N: {{id}} {{representant.nom}} {{representant.prenom}} - {{address.cp}} {{address.v}}\n")(e) +
+                            _.template("N: {{id}} {{nomSociete}} - {{address.cp}} {{address.v}}\n")(e) +
+                            _.template("N: {{id}} {{nomSociete}} - {{address.cp}} {{address.v}}\n")(e) +
                             "TEL;WORK;VOICE: " + e.telephone.tel1 + "\n";
 
                         if (e.telephone.tel2) {

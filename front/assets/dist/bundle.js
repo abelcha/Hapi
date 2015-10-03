@@ -452,9 +452,6 @@ FiltersFactory.prototype.list = {
                 status: 'VRF',
                 'compta.reglement.recu': false,
                 reglementSurPlace: false,
-                'date.intervention': {
-                    $lt: new Date(Date.now() - ms.weeks(2)),
-                }
             }
         },
     }, {
@@ -760,287 +757,452 @@ angular.module('browserify', [])
 
 },{"./Description":1,"./FiltersFactory":2,"./FlushList":3,"./Paiement":4,"./combo-produits":6,"./contextMenuData.js":7,"./dataList.js":8,"./textTemplate.js":12}],6:[function(require,module,exports){
 module.exports = [{
-    title: "Devis débouchage camion haute pression",
-    text: "devis d'<u>assainissement</u> pour <u>le débouchage haute pression de votre canalisation.</u>",
-    ref: 'DEVIS_DEBOUCHAGE_CHP',
-    produits: [{
-        title: "DEBOUCHAGE CAMION HAUTE PRESSION",
-        desc: "DEBOUCHAGE CAMION HAUTE PRESSION\n" +
-            "CAMION HYDRO-CUREUR\n" +
-            "DEGRAISSAGE CANALISATION\n" +
-            "PRESSION  >  400 BAR\n" +
-            "Remarques : Nettoyage de conduites domestiques et de l’égout principal jusqu’à un Ø de 300 mm",
-        quantite: 1,
-        pu: 496.25
+    "title": "Devis débouchage camion haute pression",
+    "text": "devis d'<u>assainissement</u> pour <u>le débouchage haute pression de votre canalisation.</u>",
+    "ref": "DEVIS_DEBOUCHAGE_CHP",
+    "__v": 0,
+    "produits": [{
+        "title": "DEBOUCHAGE CAMION HAUTE PRESSION",
+        "desc": "DEBOUCHAGE CAMION HAUTE PRESSION\nCAMION HYDRO-CUREUR\nDEGRAISSAGE CANALISATION\nPRESSION  >  400 BAR\nRemarques : Nettoyage de conduites domestiques et de l’égout principal jusqu’à un Ø de 300 mm",
+        "quantite": 1,
+        "pu": 496.25,
+        "ref": "DEB066"
     }, {
-        ref: 'EDI001',
-        desc: "MAIN D'OEUVRE",
-        title: "MAIN D'OEUVRE",
-        quantite: 1,
-        pu: 85
+        "ref": "EDI001",
+        "desc": "MAIN D'OEUVRE",
+        "title": "MAIN D'OEUVRE",
+        "quantite": 1,
+        "pu": 85
     }, {
-        ref: 'EDI002',
-        desc: "DEPLACEMENT",
-        title: "DEPLACEMENT",
-        quantite: 1,
-        pu: 65
+        "ref": "EDI002",
+        "desc": "DEPLACEMENT",
+        "title": "DEPLACEMENT",
+        "quantite": 1,
+        "pu": 65
     }]
 }, {
-    title: "Devis débouchage camion vidange fosse septique",
-    ref: 'DEVIS_DEBOUCHAGE_CVFS',
-    text: "devis d'<u>assainissement</u> pour <u>la vidange de votre fosse septique.</u>",
-    produits: [{
-        desc: "VIDANGE FOSSE SEPTIQUE\n" +
-            "CONTENANCE DE LA CUVE = 1 M3" +
-            "PRIX / M3",
-        title: "CONTENANCE DE LA CUVE = 1 M3",
-        quantite: 1,
-        pu: 156.25
+    "title": "Devis sany-broyeur",
+    "ref": "DEVIS_SANY_B",
+    "text": "devis de <u>plomberie</u> pour <u>l'installation d'un système de sani-broyeur</u>",
+    "__v": 0,
+    "produits": [{
+        "title": "SANIBROYEUR PRO WC",
+        "desc": "SANIBROYEUR PRO WCEN 12050-3 - Silence\nRégime moteur spécial : 2800 (tr/min)\nRefoulements 5m horizontal\nRefoulements 100m vertical\nAlimentation 220-240 / 50\nGarantie 2 ans constructeur * sous d’une utilisation conforme à la notice\n",
+        "quantite": 1,
+        "pu": 539.1,
+        "ref": "SAN063",
+        "showDesc": true
     }, {
-        desc: "TRAITEMENT DES DÉCHETS",
-        title: "TRAITEMENT DES DÉCHETS",
-        quantite: 1,
-        pu: 69.21
-    }, {
-        ref: 'EDI001',
-        desc: "MAIN D'OEUVRE",
-        title: "MAIN D'OEUVRE",
-        quantite: 1,
-        pu: 85
-    }, {
-        ref: 'EDI002',
-        desc: "DEPLACEMENT",
-        title: "DEPLACEMENT",
-        quantite: 1,
-        pu: 65
+        "ref": "EDI001",
+        "desc": "MAIN D’OEUVRE",
+        "title": "MAIN D’OEUVRE",
+        "quantite": 1,
+        "pu": 130
     }]
 }, {
-    title: "Devis sany-broyeur",
-    ref: "DEVIS_SANY_B",
-    text: "devis de <u>plomberie</u> pour <u>l'installation d'un système de sani-broyeur</u>",
-    produits: [{
-        title: "SANIBROYEUR PRO WC",
-        desc: "SANIBROYEUR PRO WC" +
-            "EN 12050-3 - Silence\n" +
-            "Régime moteur spécial : 2800 (tr/min)\n" +
-            "Refoulements 5m horizontal\n" +
-            "Refoulements 100m vertical\n" +
-            "Alimentation 220-240 / 50\n" +
-            "Garantie 2 ans constructeur * sous d’une utilisation conforme à la notice\n",
-        quantite: 1,
-        pu: 539.10
+    "title": "Devis de tableau électrique 2 rangée - 13 modules",
+    "ref": "DEVIS_TAB_ELEC_2_13",
+    "text": "devis de mise en conformité électrique NF C 15-100, nous vous proposons le remplacement  de votre tableau <strong>2 rangées - 13 modules</strong>",
+    "__v": 0,
+    "produits": [{
+        "title": "Remise en conformité électrique NF C15-100",
+        "desc": "Remise en conformité électrique NF C15-100\nIdentification des circuits électriques\nSchéma électrique\n",
+        "quantite": 1,
+        "pu": 0,
+        "ref": "REM089"
     }, {
-        ref: "EDI001",
-        desc: "MAIN D’OEUVRE",
-        title: "MAIN D’OEUVRE",
-        quantite: 1,
-        pu: 130
+        "title": "TABLEAU ELECTRIQUE 1 RANGEE - 13 MODULES",
+        "desc": "TABLEAU ELECTRIQUE 1 RANGEE - 13 MODULES",
+        "quantite": 1,
+        "pu": 139.1,
+        "ref": "TAB036"
+    }, {
+        "desc": "INTERUPTEUR DIFFERENTIEL 30 mA - 40A",
+        "title": "INTERUPTEUR DIFFERENTIEL 30 mA - 40A",
+        "quantite": 2,
+        "pu": 166.25,
+        "ref": "INT065"
+    }, {
+        "desc": "DISJONCTEUR DIFFERENTIEL 32 A",
+        "title": "DISJONCTEUR DIFFERENTIEL 32 A",
+        "quantite": 2,
+        "pu": 32.65,
+        "ref": "DIS017"
+    }, {
+        "desc": "DISJONCTEUR DIFFERENTIEL 20 A",
+        "title": "DISJONCTEUR DIFFERENTIEL 20 A",
+        "quantite": 4,
+        "pu": 29.31,
+        "ref": "DIS036"
+    }, {
+        "desc": "DISJONCTEUR DIFFERENTIEL 16 A",
+        "title": "DISJONCTEUR DIFFERENTIEL 16 A",
+        "quantite": 8,
+        "pu": 28.17,
+        "ref": "DIS012"
+    }, {
+        "desc": "DISJONCTEUR DIFFERENTIEL 10 A",
+        "title": "DISJONCTEUR DIFFERENTIEL 10 A",
+        "quantite": 8,
+        "pu": 27.34,
+        "ref": "DIS084"
+    }, {
+        "desc": "PEIGNE UNIPOLAIRE P+N",
+        "title": "PEIGNE UNIPOLAIRE P+N",
+        "quantite": 4,
+        "pu": 12.93,
+        "ref": "PEI090"
+    }, {
+        "desc": "CABLAGE EDF 10 mm²",
+        "title": "CABLAGE EDF 10 mm²",
+        "quantite": 4,
+        "pu": 28.67,
+        "ref": "CAB088"
+    }, {
+        "ref": "EDI001",
+        "desc": "MAIN D'OEUVRE",
+        "title": "MAIN D'OEUVRE",
+        "quantite": 1,
+        "pu": 280
+    }, {
+        "desc": "Dépose de l'existant et mise en service inclus",
+        "title": "Dépose de l'existant et mise en service inclus",
+        "quantite": 1,
+        "pu": 0,
+        "ref": "DEP045"
     }]
 }, {
-    title: "Devis de tableau électrique 1 rangée - 13 modules",
-    ref: "DEVIS_TAB_ELEC_1_13",
-    text: "devis de mise en conformité électrique NF C 15-100, nous vous proposons le remplacement  de votre tableau <strong>1 rangée - 13 modules</strong>",
-    produits: [{
-        title: "Remise en conformité électrique NF C15-100",
-        desc: "Remise en conformité électrique NF C15-100\n" +
-            "Identification des circuits électriques\n" +
-            "Schéma électrique\n",
-        pu: 0,
-        quantite:1
+    "title": "Devis chauffe-eau gaz ELM LEBLANC",
+    "ref": "DEVIS_CHF_EAU_ELM",
+    "text": "<u>devis de remplacement de votre chauffe-eau gaz</u>",
+    "__v": 0,
+    "produits": [{
+        "title": "Installation d’un chauffe-eau gaz (eau chaude sanitaire)",
+        "desc": "Installation d’un chauffe-eau gaz (eau chaude sanitaire)\nDépose complète de l’existant\nMise à la décharge de l’unité de chauffage existante\nMise en conformité des raccordements gaz\nInstallation et mise en service inclus\n",
+        "quantite": 1,
+        "pu": 0,
+        "ref": "INS058"
     }, {
-        desc: "TABLEAU ELECTRIQUE 1 RANGEE - 13 MODULES",
-        title: "TABLEAU ELECTRIQUE 1 RANGEE - 13 MODULES",
-        quantite: 1,
-        pu: 89.10
+        "title": "CHAUFFE-EAU GAZ A TIRAGE NATUREL",
+        "desc": "CHAUFFE-EAU GAZ A TIRAGE NATUREL\nMarque : ELM LEBLANC - ONDEA\nPuissance : 7 à 29,5 kW\nDébit : 8 à 17 litres / minute\nMode d’allumage par veilleuse\nDimensions (L x P x H ) : 425 x 334 x 655\nCapacité pour : Cuisine + Lavabos + Douche + Baignoire\nÉquipé du système S.P.O.T.T (sécurité gaz)\n",
+        "quantite": 1,
+        "pu": 938.52,
+        "ref": "CHA035"
     }, {
-        desc: "INTERUPTEUR DIFFERENTIEL 30 mA - 40A",
-        title: "INTERUPTEUR DIFFERENTIEL 30 mA - 40A",
-        quantite: 1,
-        pu: 166.25
+        "desc": "KIT MÉLANGEUR POUR ONDEA",
+        "title": "KIT MÉLANGEUR POUR ONDEA",
+        "quantite": 1,
+        "pu": 89.13,
+        "ref": "KIT043"
     }, {
-        desc: "DISJONCTEUR DIFFERENTIEL 32 A",
-        title: "DISJONCTEUR DIFFERENTIEL 32 A",
-        quantite: 1,
-        pu: 32.65
+        "desc": "CACHE INFERIEUR LC 17",
+        "title": "CACHE INFERIEUR LC 17",
+        "quantite": 1,
+        "pu": 63.21,
+        "ref": "CAC033"
     }, {
-        desc: "DISJONCTEUR DIFFERENTIEL 20 A",
-        title: "DISJONCTEUR DIFFERENTIEL 20 A",
-        quantite: 2,
-        pu: 29.31
-    }, {
-        desc: "DISJONCTEUR DIFFERENTIEL 16 A",
-        title: "DISJONCTEUR DIFFERENTIEL 16 A",
-        quantite: 4,
-        pu: 28.17
-    }, {
-        desc: "DISJONCTEUR DIFFERENTIEL 10 A",
-        title: "DISJONCTEUR DIFFERENTIEL 10 A",
-        quantite: 4,
-        pu: 27.34
-    }, {
-        desc: "PEIGNE UNIPOLAIRE P+N",
-        title: "PEIGNE UNIPOLAIRE P+N",
-        quantite: 2,
-        pu: 12.93
-    }, {
-        desc: "CABLAGE EDF 10 mm²",
-        title: "CABLAGE EDF 10 mm²",
-        quantite: 2,
-        pu: 28.67
-    }, {
-        ref: "EDI001",
-
-        desc: "MAIN D'OEUVRE\n" +
-            "Dépose de l'existant et mise en service inclus",
-        title: "MAIN D'OEUVRE",
-        quantite: 1,
-        pu: 280
+        "ref": "EDI001",
+        "desc": "MAIN D’OEUVRE",
+        "title": "MAIN D’OEUVRE",
+        "quantite": 1,
+        "pu": 330
     }]
 }, {
-    title: "Devis de tableau électrique 2 rangée - 13 modules",
-    ref: "DEVIS_TAB_ELEC_2_13",
-    text: "devis de mise en conformité électrique NF C 15-100, nous vous proposons le remplacement  de votre tableau <strong>2 rangées - 13 modules</strong>",
-    produits: [{
-        title: "Remise en conformité électrique NF C15-100",
-        desc: "Remise en conformité électrique NF C15-100\n" +
-            "Identification des circuits électriques\n" +
-            "Schéma électrique\n",
-        quantite: 1,
-        pu: 0
+    "title": "Devis débouchage camion vidange fosse septique",
+    "ref": "DEVIS_DEBOUCHAGE_CVFS",
+    "text": "devis d'<u>assainissement</u> pour <u>la vidange de votre fosse septique.</u>",
+    "__v": 0,
+    "produits": [{
+        "desc": "VIDANGE FOSSE SEPTIQUE\nCONTENANCE DE LA CUVE = 1 M3PRIX / M3",
+        "title": "CONTENANCE DE LA CUVE = 1 M3",
+        "quantite": 1,
+        "pu": 156.25,
+        "ref": "CON045"
     }, {
-        title: "TABLEAU ELECTRIQUE 1 RANGEE - 13 MODULES",
-        desc: "TABLEAU ELECTRIQUE 1 RANGEE - 13 MODULES",
-        quantite: 1,
-        pu: 139.10
+        "desc": "TRAITEMENT DES DÉCHETS",
+        "title": "TRAITEMENT DES DÉCHETS",
+        "quantite": 1,
+        "pu": 69.21,
+        "ref": "TRA080"
     }, {
-        desc: "INTERUPTEUR DIFFERENTIEL 30 mA - 40A",
-        title: "INTERUPTEUR DIFFERENTIEL 30 mA - 40A",
-        quantite: 2,
-        pu: 166.25
+        "ref": "EDI001",
+        "desc": "MAIN D'OEUVRE",
+        "title": "MAIN D'OEUVRE",
+        "quantite": 1,
+        "pu": 85
     }, {
-        desc: "DISJONCTEUR DIFFERENTIEL 32 A",
-        title: "DISJONCTEUR DIFFERENTIEL 32 A",
-        quantite: 2,
-        pu: 32.65
-    }, {
-        desc: "DISJONCTEUR DIFFERENTIEL 20 A",
-        title: "DISJONCTEUR DIFFERENTIEL 20 A",
-        quantite: 4,
-        pu: 29.31
-    }, {
-        desc: "DISJONCTEUR DIFFERENTIEL 16 A",
-        title: "DISJONCTEUR DIFFERENTIEL 16 A",
-        quantite: 8,
-        pu: 28.17
-    }, {
-        desc: "DISJONCTEUR DIFFERENTIEL 10 A",
-        title: "DISJONCTEUR DIFFERENTIEL 10 A",
-        quantite: 8,
-        pu: 27.34
-    }, {
-        desc: "PEIGNE UNIPOLAIRE P+N",
-        title: "PEIGNE UNIPOLAIRE P+N",
-        quantite: 4,
-        pu: 12.93
-    }, {
-        desc: "CABLAGE EDF 10 mm²",
-        title: "CABLAGE EDF 10 mm²",
-        quantite: 4,
-        pu: 28.67
-    }, {
-        ref: "EDI001",
-        desc: "MAIN D'OEUVRE",
-        title: "MAIN D'OEUVRE",
-        quantite: 1,
-        pu: 280
-    }, {
-        desc: "Dépose de l'existant et mise en service inclus",
-        title: "Dépose de l'existant et mise en service inclus",
-        quantite: 1,
-        pu: 0
+        "ref": "EDI002",
+        "desc": "DEPLACEMENT",
+        "title": "DEPLACEMENT",
+        "quantite": 1,
+        "pu": 65
     }]
 }, {
-    title: "Devis chauffe-eau gaz ELM LEBLANC",
-    ref: "DEVIS_CHF_EAU_ELM",
-    text: "<u>devis de remplacement de votre chauffe-eau gaz</u>",
-    produits: [{
-        title: "Installation d’un chauffe-eau gaz (eau chaude sanitaire)",
-        desc: "Installation d’un chauffe-eau gaz (eau chaude sanitaire)\n" +
-            "Dépose complète de l’existant\n" +
-            "Mise à la décharge de l’unité de chauffage existante\n" +
-            "Mise en conformité des raccordements gaz\n" +
-            "Installation et mise en service inclus\n",
-        quantite: 1,
-        pu: 0
+    "title": "Devis chaudière gaz mural ELM LEBLANC avec ECS",
+    "ref": "DEVIS_CHD_GM_ELM",
+    "text": "<u>devis de remplacement de votre chaudière gaz</u>",
+    "__v": 0,
+    "produits": [{
+        "desc": "Installation d’une chaudière gaz (chauffage + eau chaude sanitaire)\nDépose complète de l’existant\nMise à la décharge de l’unité de chauffage existanteMise en conformité des raccordements gaz\nInstallation et mise en service inclus\n",
+        "title": "Installation d’une chaudière gaz",
+        "quantite": 1,
+        "pu": 0,
+        "ref": "INS078"
     }, {
-        title: "CHAUFFE-EAU GAZ A TIRAGE NATUREL",
-        desc: "CHAUFFE-EAU GAZ A TIRAGE NATUREL\n" +
-            "Marque : ELM LEBLANC - ONDEA\n" +
-            "Puissance : 7 à 29,5 kW\n" +
-            "Débit : 8 à 17 litres / minute\n" +
-            "Mode d’allumage par veilleuse\n" +
-            "Dimensions (L x P x H ) : 425 x 334 x 655\n" +
-            "Capacité pour : Cuisine + Lavabos + Douche + Baignoire\n" +
-            "Équipé du système S.P.O.T.T (sécurité gaz)\n",
-        quantite: 1,
-        pu: 938.52
+        "desc": "CHAUDIERE GAZ A TIRAGE NATUREL",
+        "title": "CHAUDIERE GAZ A TIRAGE NATURELPuissance : 9.5 à 24 kW\nDébit : 11.5  litres / minute\nDiamètre évacuation : 125 mm\nMode d’allumage par veilleuse\nDimensions (L x P x H ) : 400 x 385 x 865\nÉquipé du système S.P.O.T.T (sécurité gaz)",
+        "quantite": 1,
+        "pu": 1438.52,
+        "ref": "CHA075"
     }, {
-        desc: "KIT MÉLANGEUR POUR ONDEA",
-        title: "KIT MÉLANGEUR POUR ONDEA",
-        quantite: 1,
-        pu: 89.13
+        "desc": "DOSSERET DE REMPLACEMENT CHAUDIÈRE",
+        "title": "DOSSERET DE REMPLACEMENT CHAUDIÈRE",
+        "quantite": 1,
+        "pu": 189.13,
+        "ref": "DOS068"
     }, {
-        desc: "CACHE INFERIEUR LC 17",
-        title: "CACHE INFERIEUR LC 17",
-        quantite: 1,
-        pu: 63.21
+        "desc": "SOUPAPE DE SÉCURITÉ 4BAR DN15",
+        "title": "SOUPAPE DE SÉCURITÉ 4BAR DN15",
+        "quantite": 1,
+        "pu": 119.21,
+        "ref": "SOU068"
     }, {
-        ref: "EDI001",
-        desc: "MAIN D’OEUVRE",
-        title: "MAIN D’OEUVRE",
-        quantite: 1,
-        pu: 330.00
+        "ref": "EDI001",
+        "desc": "MAIN D’OEUVRE",
+        "title": "MAIN D’OEUVRE",
+        "quantite": 1,
+        "pu": 380
     }]
 }, {
-    title: "Devis chaudière gaz mural ELM LEBLANC avec ECS",
-    ref: "DEVIS_CHD_GM_ELM",
-    text: "<u>devis de remplacement de votre chaudière gaz</u>",
-    produits: [{
-        desc: "Installation d’une chaudière gaz (chauffage + eau chaude sanitaire)\n" +
-            "Dépose complète de l’existant\n" +
-            "Mise à la décharge de l’unité de chauffage existante" +
-            "Mise en conformité des raccordements gaz\n" +
-            "Installation et mise en service inclus\n",
-        title: "Installation d’une chaudière gaz",
-        quantite: 1,
-        pu: 0
+    "title": "Chauffe eau électrique 200 L HM Blindée",
+    "text": "<u>devis de remplacement de votre chauffe-eau electrique</u>",
+    "ref": "CHAUFFE_EA",
+    "__v": 0,
+    "produits": [{
+        "desc": "Chauffe-eau électrique horizontale\nRésistance blindée anti-calcaire\nPuissance : 1800 W\nType de courant : monophasé\nV = 200L\nRACCORDEMENT ÉLECTRIQUE MONO 220V (HEURE CREUSE / PLEINE)\nMARQUE ATLANTIC CERTIFIE\n\nGarantie constructeur : Jusqu'à 5 ans\nGarante pièce d'origine : Jusqu'à 2 ans\nAssistance et dépannage constructeur inclus jusqu'à 2 ans\nESSAIS ET MISE EN SERVICE INCLUS",
+        "title": "CHAUFFE EAU HM BLINDEE 200L",
+        "ref": "CB200H",
+        "pu": 696.25,
+        "__v": 0,
+        "random": 0,
+        "quantite": 1
     }, {
-        desc: "CHAUDIERE GAZ A TIRAGE NATUREL",
-        title: "CHAUDIERE GAZ A TIRAGE NATUREL" +
-            "Puissance : 9.5 à 24 kW\n" +
-            "Débit : 11.5  litres / minute\n" +
-            "Diamètre évacuation : 125 mm\n" +
-            "Mode d’allumage par veilleuse\n" +
-            "Dimensions (L x P x H ) : 400 x 385 x 865\n" +
-            "Équipé du système S.P.O.T.T (sécurité gaz)",
-        quantite: 1,
-        pu: 1438.52
+        "ref": "BAL002",
+        "title": "groupe de securité",
+        "desc": "Groupe de securité",
+        "pu": 69.97,
+        "__v": 0,
+        "random": 0,
+        "quantite": 1
     }, {
-        desc: "DOSSERET DE REMPLACEMENT CHAUDIÈRE",
-        title: "DOSSERET DE REMPLACEMENT CHAUDIÈRE",
-        quantite: 1,
-        pu: 189.13
+        "ref": "BAL003",
+        "title": "Raccordement hydraulique",
+        "desc": "Raccordement hydraulique",
+        "pu": 16.33,
+        "__v": 0,
+        "random": 0,
+        "quantite": 2
     }, {
-        desc: "SOUPAPE DE SÉCURITÉ 4BAR DN15",
-        title: "SOUPAPE DE SÉCURITÉ 4BAR DN15",
-        quantite: 1,
-        pu: 119.21
+        "ref": "EDI001",
+        "title": "Main d'œuvre",
+        "desc": "Main d'œuvre",
+        "pu": 195,
+        "__v": 0,
+        "random": 1,
+        "quantite": 1
+    }]
+}, {
+    "title": "Chauffe eau électrique 200 L VM Blindée",
+    "text": "<u>devis de remplacement de votre chauffe-eau electrique</u>",
+    "ref": "MONCOMBO",
+    "__v": 0,
+    "produits": [{
+        "__v": 0,
+        "title": "CHAUFFE EAU VM BLINDEE 200L",
+        "ref": "CEB200",
+        "desc": "Chauffe-eau électrique mural vertical\nRésistance blindée anti-calcaire\nPuissance : 1800 W\nType de courant : monophasé\nV = 200L\nRACCORDEMENT ÉLECTRIQUE MONO 220V (HEURE CREUSE / PLEINE)\nMARQUE ATLANTIC CERTIFIE\n\nGarantie constructeur : Jusqu'à 5 ans\nGarante pièce d'origine : Jusqu'à 2 ans\nAssistance et dépannage constructeur inclus jusqu'à 2 ans\nESSAIS ET MISE EN SERVICE INCLUS",
+        "pu": 432.1,
+        "random": 0,
+        "quantite": 1
     }, {
-        ref: "EDI001",
-        desc: "MAIN D’OEUVRE",
-        title: "MAIN D’OEUVRE",
-        quantite: 1,
-        pu: 380.00
+        "ref": "BAL002",
+        "title": "groupe de securité",
+        "desc": "Groupe de securité",
+        "pu": 69.97,
+        "__v": 0,
+        "random": 0,
+        "quantite": 1
+    }, {
+        "ref": "BAL003",
+        "title": "Raccordement hydraulique",
+        "desc": "Raccordement hydraulique",
+        "pu": 16.33,
+        "__v": 0,
+        "random": 1,
+        "quantite": 2
+    }, {
+        "ref": "EDI001",
+        "title": "Main d'œuvre",
+        "desc": "Main d'œuvre",
+        "pu": 195,
+        "__v": 0,
+        "random": 0,
+        "quantite": 1
+    }]
+}, {
+    "__v": 0,
+    "title": "Chauffe eau électrique 200 L VM steatite",
+    "text": "<u>devis de remplacement de votre chauffe-eau électrique steatite</u>",
+    "ref": "CHAUFFE_EA",
+    "produits": [{
+        "quantite": 1,
+        "random": 1,
+        "pu": 593.21,
+        "desc": "Chauffe-eau électrique mural vertical\nRésistance stéatite\nPuissance : 1800 W\nType de courant : monophasé\nV = 200L\nRACCORDEMENT ÉLECTRIQUE MONO 220V (HEURE CREUSE / PLEINE)\nMARQUE ATLANTIC CERTIFIE\n\nGarantie constructeur : Jusqu'à 5 ans\nGarante pièce d'origine : Jusqu'à 5 ans\nAssistance et dépannage constructeur inclus jusqu'à 2 ans\nESSAIS ET MISE EN SERVICE INCLUS",
+        "title": "CHAUFFE EAU VM STEATITE 200L",
+        "ref": "CES200",
+        "__v": 0,
+    }, {
+        "quantite": 1,
+        "random": 0,
+        "__v": 0,
+        "pu": 69.97,
+        "desc": "Groupe de securité",
+        "title": "groupe de securité",
+        "ref": "BAL002",
+    }, {
+        "quantite": 2,
+        "random": 1,
+        "__v": 0,
+        "pu": 16.33,
+        "desc": "Raccordement hydraulique",
+        "title": "Raccordement hydraulique",
+        "ref": "BAL003",
+    }, {
+        "quantite": 1,
+        "random": 1,
+        "__v": 0,
+        "pu": 195,
+        "desc": "Main d'œuvre",
+        "title": "Main d'œuvre",
+        "ref": "EDI001",
+    }]
+}, {
+    "title": "Devis de tableau électrique 1 rangée - 13 modules",
+    "ref": "DEVIS_TAB_ELEC_1_13",
+    "text": "devis de mise en conformité électrique NF C 15-100, nous vous proposons le remplacement  de votre tableau <strong>1 rangée - 13 modules</strong>",
+    "__v": 0,
+    "produits": [{
+        "title": "Remise en conformité électrique NF C15-100",
+        "desc": "Remise en conformité électrique NF C15-100\nIdentification des circuits électriques\nSchéma électrique\n",
+        "pu": 0,
+        "quantite": 1,
+        "ref": "REM046"
+    }, {
+        "desc": "TABLEAU ELECTRIQUE 1 RANGEE - 13 MODULES",
+        "title": "TABLEAU ELECTRIQUE 1 RANGEE - 13 MODULES",
+        "quantite": 1,
+        "pu": 89.1,
+        "ref": "TAB066"
+    }, {
+        "desc": "INTERUPTEUR DIFFERENTIEL 30 mA - 40A",
+        "title": "INTERUPTEUR DIFFERENTIEL 30 mA - 40A",
+        "quantite": 1,
+        "pu": 166.25,
+        "ref": "INT034"
+    }, {
+        "desc": "DISJONCTEUR DIFFERENTIEL 32 A",
+        "title": "DISJONCTEUR DIFFERENTIEL 32 A",
+        "quantite": 1,
+        "pu": 32.65,
+        "ref": "DIS015"
+    }, {
+        "desc": "DISJONCTEUR DIFFERENTIEL 20 A",
+        "title": "DISJONCTEUR DIFFERENTIEL 20 A",
+        "quantite": 2,
+        "pu": 29.31,
+        "ref": "DIS032"
+    }, {
+        "desc": "DISJONCTEUR DIFFERENTIEL 16 A",
+        "title": "DISJONCTEUR DIFFERENTIEL 16 A",
+        "quantite": 4,
+        "pu": 28.17,
+        "ref": "DIS083"
+    }, {
+        "desc": "DISJONCTEUR DIFFERENTIEL 10 A",
+        "title": "DISJONCTEUR DIFFERENTIEL 10 A",
+        "quantite": 4,
+        "pu": 27.34,
+        "ref": "DIS016"
+    }, {
+        "desc": "PEIGNE UNIPOLAIRE P+N",
+        "title": "PEIGNE UNIPOLAIRE P+N",
+        "quantite": 2,
+        "pu": 12.93,
+        "ref": "PEI023"
+    }, {
+        "desc": "CABLAGE EDF 10 mm²",
+        "title": "CABLAGE EDF 10 mm²",
+        "quantite": 2,
+        "pu": 28.67,
+        "ref": "CAB032"
+    }, {
+        "ref": "EDI001",
+        "desc": "MAIN D'OEUVRE\nDépose de l'existant et mise en service inclus",
+        "title": "MAIN D'OEUVRE",
+        "quantite": 1,
+        "pu": 280
+    }]
+}, {
+    "title": "Devis wc supendu",
+    "text": "<u>devis du wc suspendu</u>",
+    "ref": "DEVIS_WC_S",
+    "__v": 0,
+    "produits": [{
+        "__v": 0,
+        "desc": "PACK WC SUSPENDU AVEC ABATTANT À FERMETURE\nRALENTIE LOVELY RIMFREE BLANC RÉF 08399600000100\nALLIA",
+        "pu": 571.5,
+        "title": "PACK WC SUSPENDU AVEC ABATTANT À FERMETURE",
+        "ref": "536295",
+        "random": 0,
+        "quantite": 1,
+        "showDesc": true
+    }, {
+        "__v": 0,
+        "desc": "BÂTI-SUPPORT AUTOPORTANT DUOFIX PLUS UP320 H :\n112 CM 111.333.00.5 GEBERIT",
+        "title": "BÂTI-SUPPORT AUTOPORTANT DUOFIX",
+        "ref": "659854",
+        "pu": 329.77,
+        "random": 1,
+        "quantite": 1,
+        "showDesc": true
+    }, {
+        "__v": 0,
+        "desc": "PLAQUE BA12 POUR HABILLAGE CARRELAGE",
+        "title": "PLAQUE BA12 POUR HABILLAGE CARRELAGE",
+        "ref": "458956",
+        "pu": 139.1,
+        "random": 0,
+        "quantite": 1,
+        "showDesc": true
+    }, {
+        "desc": "PIPE ÉVACUATION FLEXIBLE POUR WC SUSPENDU",
+        "pu": 113.21,
+        "ref": "698545",
+        "title": "PIPE ÉVACUATION FLEXIBLE POUR WC SUSPENDU",
+        "__v": 0,
+        "random": 0,
+        "quantite": 1,
+        "showDesc": true
+    }, {
+        "ref": "EDI001",
+        "title": "Main d'œuvre",
+        "desc": "Main d'œuvre",
+        "pu": 380,
+        "__v": 0,
+        "random": 1,
+        "quantite": 1,
+        "showDesc": true
     }]
 }]
 
@@ -1235,7 +1397,7 @@ module.exports = {
         title: 'Reglement Client',
         action: "validerReglement",
         hide: function(inter) {
-            return !(app_session.root || app_session.service === 'COMPTABILITE') || inter.status === 'ANN';
+            return !(app_session.root ||  app_session.service === 'COMPTABILITE') ||  inter.status === 'ANN';
         }
     }, {
         title: 'Paiement SST',
@@ -1272,6 +1434,12 @@ module.exports = {
         action: 'annulation',
         hide: function(inter) {
             return inter.status === 'ANN' || inter.status === 'VRF'
+        }
+    }, {
+        title: "Recouvrement",
+        action: 'recouvrement',
+        hide: function(inter) {
+            return inter.compta.reglement.recu || inter.status !== "VRF"
         }
     }, {
         title: "Je prend !",
@@ -1694,6 +1862,10 @@ module.exports = {
         type: "partenariat",
         short_name: "PS_BON",
         long_name: "Le sous-traitant démarché n'est pas bon"
+    }, {
+        type: 'Autre',
+        short_name: 'AUTRE',
+        long_name: 'Autre'
     }],
     getCauseAnnulation: function(short_name) {
         var _find = require('lodash/collection/find');
@@ -1852,195 +2024,386 @@ module.exports = function(d) {
 }
 },{}],10:[function(require,module,exports){
 module.exports = [{
-    long_name: 'France Loisir',
-    compte: 'FRN_LSR',
-    nom: 'France Loisir',
-    tel: '010101010101',
-    address: {
-        n: '1',
-        r: 'rue test',
-        v: 'PARIS',
-        cp: "75012"
-    },
-    email: "test@test.fr"
+    "payeur": "SOC",
+    "nom": "MONDIAL ASSISTANCE",
+    "tel": "0123212321",
+    "tel2": "",
+    "email": "QSDQSD@DQSD.DE",
+    "ref": "mondial_as",
+    "__v": 0,
+    "address": {
+        "n": "12",
+        "r": "RUE DU CHEVALIER DE LA BARRE",
+        "cp": "75018",
+        "v": "PARIS"
+    }
+}, {
+    "nom": "EDISON SERVICES",
+    "tel": "0618513199",
+    "email": "CONTACT@EDISON-SERVICES.FR",
+    "ref": "edison_ser",
+    "__v": 0,
+    "address": {
+        "n": "75",
+        "r": "RUE DES DAMES",
+        "cp": "75017",
+        "v": "PARIS"
+    }
+}, {
+    "nom": "FRANCE LOISIRS",
+    "prenom": "COMPTABILITE FOURNISSEUR",
+    "email": "AGNES.GEORGIN@FRANCE-LOISIRS.COM",
+    "tel": "0145686038",
+    "ref": "france_loi",
+    "__v": 0,
+    "address": {
+        "n": "123",
+        "r": "RUE DE GRENELLE",
+        "cp": "75007",
+        "v": "PARIS"
+    }
+}, {
+    "email": "FOURNISSEURS@BABILOU.COM",
+    "tel": "0141496784",
+    "nom": "EVANCIA SAS",
+    "ref": "evancia_sa",
+    "__v": 0,
+    "address": {
+        "n": "24",
+        "r": "RUE DU MOULIN DES BRUYÈRES",
+        "cp": "92400",
+        "v": "COURBEVOIE"
+    }
+}, {
+    "nom": "1001 CRÈCHES",
+    "email": "FOURNISSEURS@BABILOU.COM",
+    "tel": "0141490062",
+    "ref": "1001_crech",
+    "__v": 0,
+    "address": {
+        "n": "24",
+        "r": "RUE DU MOULIN DES BRUYÈRES",
+        "cp": "92400",
+        "v": "COURBEVOIE"
+    }
+}, {
+    "email": "CONTACT@BONAPART.FR",
+    "nom": "CABINET BONAPART GESTION",
+    "payeur": "SOC",
+    "prenom": "STEVEN ZAKIN",
+    "tel": "0171197565",
+    "tel2": "0667086698",
+    "ref": "cabinet_bo",
+    "__v": 0,
+    "address": {
+        "n": "1",
+        "r": "RUE CONTE",
+        "cp": "75003",
+        "v": "PARIS"
+    }
 }]
 
 },{}],11:[function(require,module,exports){
 module.exports = [{
-    ref: "EDI001",
-    title: "Main d'œuvre",
-    desc: "Main d'œuvre",
-    pu: 65,
+    "title": "Installation d’un chauffe-eau gaz (eau chaude sanitaire)",
+    "desc": "Installation d’un chauffe-eau gaz (eau chaude sanitaire)",
+    "pu": 0,
+    "ref": "INS050",
+    "__v": 0
 }, {
-    ref: "EDI002",
-    title: "Déplacement",
-    desc: "Déplacement",
-    pu: 65,
+    "title": "CHAUFFE-EAU GAZ A TIRAGE NATUREL",
+    "desc": "CHAUFFE-EAU GAZ A TIRAGE NATUREL",
+    "pu": 938.52,
+    "ref": "CHA090",
+    "__v": 0
 }, {
-    ref: "FRN001",
-    title: "Fourniture",
-    desc: "Fourniture",
-    pu: 0,
+    "desc": "KIT MÉLANGEUR POUR ONDEA",
+    "title": "KIT MÉLANGEUR POUR ONDEA",
+    "pu": 89.13,
+    "ref": "KIT095",
+    "__v": 0
 }, {
-    ref: "SAN001",
-    title: "Pack Sanibroyeur",
-    desc: "PACK COMPLET SANIBROYEUR PRO\nRefoulement horizontal < 100m\nRefoulement vertical > 5m\nRégime moteur > 2800 tr/min\nNorme européenne \nEN 12050-3\nRaccordement hydraulique\nRaccordement électrique\nGarantie constructeur",
-    pu: 672.21,
+    "desc": "CACHE INFERIEUR LC 17",
+    "title": "CACHE INFERIEUR LC 17",
+    "pu": 63.21,
+    "ref": "CAC079",
+    "__v": 0
 }, {
-    ref: "CAM001",
-    title: "Camion D'assainisement",
-    desc: "DÉGORGEMENT CANALISATION TRÈS HAUTE PRESSION PAR CAMION D’ASSAINISSEMENT : \nCurage et nettoyage complet de la canalisation jusqu'à 10M",
-    pu: 696.25,
+    "desc": "Installation d’une chaudière gaz",
+    "title": "Installation d’une chaudière gaz",
+    "pu": 0,
+    "ref": "INS027",
+    "__v": 0
 }, {
-    ref: "AUT001",
-    title: "Autre",
-    desc: "Autre",
-    pu: 0,
+    "desc": "DOSSERET DE REMPLACEMENT CHAUDIÈRE",
+    "title": "DOSSERET DE REMPLACEMENT CHAUDIÈRE",
+    "pu": 189.13,
+    "ref": "DOS040",
+    "__v": 0
 }, {
-    title: "DEBOUCHAGE CAMION HAUTE PRESSION",
-    desc: "DEBOUCHAGE CAMION HAUTE PRESSION\nCAMION HYDRO-CUREUR\nDEGRAISSAGE CANALISATION\nPRESSION  >  400 BAR\nRemarques : Nettoyage de conduites domestiques et de l’égout principal jusqu’à un Ø de 300 mm",
-    pu: 496.25,
-    ref: "DEB020",
+    "ref": "BAL004",
+    "title": "Trépied Ballon",
+    "desc": "Trépied Ballon",
+    "pu": 93.21,
+    "__v": 0
 }, {
-    title: "SANIBROYEUR PRO WC",
-    desc: "SANIBROYEUR PRO WCEN 12050-3 - Silence\nRégime moteur spécial : 2800 (tr/min)\nRefoulements 5m horizontal\nRefoulements 100m vertical\nAlimentation 220-240 / 50\nGarantie 2 ans constructeur * sous d’une utilisation conforme à la notice\n",
-    pu: 539.1,
-    ref: "SAN010",
+    "desc": "PIPE ÉVACUATION FLEXIBLE POUR WC SUSPENDU",
+    "pu": 113.21,
+    "ref": "698545",
+    "title": "PIPE ÉVACUATION FLEXIBLE POUR WC SUSPENDU",
+    "__v": 0
 }, {
-    desc: "DISJONCTEUR DIFFERENTIEL 32 A",
-    title: "DISJONCTEUR DIFFERENTIEL 32 A",
-    pu: 32.65,
-    ref: "DIS044",
+    "desc": "SOUPAPE DE SÉCURITÉ 4BAR DN15",
+    "title": "SOUPAPE DE SÉCURITÉ 4BAR DN15",
+    "pu": 119.21,
+    "ref": "SOU054",
+    "__v": 0
 }, {
-    desc: "DISJONCTEUR DIFFERENTIEL 20 A",
-    title: "DISJONCTEUR DIFFERENTIEL 20 A",
-    pu: 29.31,
-    ref: "DIS017",
+    "title": "Remise en conformité électrique NF C15-100",
+    "desc": "Remise en conformité électrique NF C15-100",
+    "pu": 0,
+    "ref": "REM078",
+    "__v": 0
 }, {
-    desc: "DISJONCTEUR DIFFERENTIEL 16 A",
-    title: "DISJONCTEUR DIFFERENTIEL 16 A",
-    pu: 28.17,
-    ref: "DIS095",
+    "ref": "VIT001",
+    "title": "Remplacement Vitrage",
+    "desc": "Remplacement Vitrage",
+    "pu": 297.13,
+    "__v": 0
 }, {
-    desc: "DISJONCTEUR DIFFERENTIEL 10 A",
-    title: "DISJONCTEUR DIFFERENTIEL 10 A",
-    pu: 27.34,
-    ref: "DIS061",
+    "ref": "CAM001",
+    "title": "Camion D'assainisement",
+    "desc": "Camion D'assainisement",
+    "pu": 696.25,
+    "__v": 0
 }, {
-    desc: "PEIGNE UNIPOLAIRE P+N",
-    title: "PEIGNE UNIPOLAIRE P+N",
-    pu: 12.93,
-    ref: "PEI062",
+    "desc": "TRAITEMENT DES DÉCHETS",
+    "title": "TRAITEMENT DES DÉCHETS",
+    "pu": 69.21,
+    "ref": "TRA088",
+    "__v": 0
 }, {
-    desc: "CABLAGE EDF 10 mm²",
-    title: "CABLAGE EDF 10 mm²",
-    pu: 28.67,
-    ref: "CAB046",
+    "desc": "INTERUPTEUR DIFFERENTIEL 30 mA - 40A",
+    "title": "INTERUPTEUR DIFFERENTIEL 30 mA - 40A",
+    "pu": 166.25,
+    "ref": "INT012",
+    "__v": 0
 }, {
-    desc: "Dépose de l'existant + mise en service",
-    title: "Dépose de l'existant et mise en service inclus",
-    pu: 0,
-    ref: "DEP017",
+    "desc": "TABLEAU ELECTRIQUE 1 RANGEE - 13 MODULES",
+    "title": "TABLEAU ELECTRIQUE 1 RANGEE - 13 MODULES",
+    "pu": 89.1,
+    "ref": "TAB093",
+    "__v": 0
 }, {
-    title: "Installation d’un chauffe-eau gaz (eau chaude sanitaire)",
-    desc: "Installation d’un chauffe-eau gaz (eau chaude sanitaire)\nDépose complète de l’existant\nMise à la décharge de l’unité de chauffage existante\nMise en conformité des raccordements gaz\nInstallation et mise en service inclus\n",
-    pu: 0,
-    ref: "INS050",
+    "title": "SANIBROYEUR PRO WC",
+    "desc": "SANIBROYEUR PRO WC",
+    "pu": 539.1,
+    "ref": "SAN010",
+    "__v": 0
 }, {
-    title: "CHAUFFE-EAU GAZ A TIRAGE NATUREL",
-    desc: "CHAUFFE-EAU GAZ A TIRAGE NATUREL\nMarque : ELM LEBLANC - ONDEA\nPuissance : 7 à 29,5 kW\nDébit : 8 à 17 litres / minute\nMode d’allumage par veilleuse\nDimensions (L x P x H ) : 425 x 334 x 655\nCapacité pour : Cuisine + Lavabos + Douche + Baignoire\nÉquipé du système S.P.O.T.T (sécurité gaz)\n",
-    pu: 938.52,
-    ref: "CHA090",
+    "desc": "DISJONCTEUR DIFFERENTIEL 32 A",
+    "title": "DISJONCTEUR DIFFERENTIEL 32 A",
+    "pu": 32.65,
+    "ref": "DIS044",
+    "__v": 0
 }, {
-    desc: "KIT MÉLANGEUR POUR ONDEA",
-    title: "KIT MÉLANGEUR POUR ONDEA",
-    pu: 89.13,
-    ref: "KIT095",
+    "desc": "VIDANGE FOSSE SEPTIQUE",
+    "title": "VIDANGE FOSSE SEPTIQUE",
+    "pu": 156.25,
+    "ref": "CON016",
+    "__v": 0
 }, {
-    desc: "CACHE INFERIEUR LC 17",
-    title: "CACHE INFERIEUR LC 17",
-    pu: 63.21,
-    ref: "CAC079",
+    "desc": "DISJONCTEUR DIFFERENTIEL 20 A",
+    "title": "DISJONCTEUR DIFFERENTIEL 20 A",
+    "pu": 29.31,
+    "ref": "DIS017",
+    "__v": 0
 }, {
-    desc: "Installation d’une chaudière gaz (chauffage + eau chaude sanitaire)\nDépose complète de l’existant\nMise à la décharge de l’unité de chauffage existanteMise en conformité des raccordements gaz\nInstallation et mise en service inclus\n",
-    title: "Installation d’une chaudière gaz",
-    pu: 0,
-    ref: "INS027",
+    "ref": "EDI001",
+    "title": "Main d'œuvre",
+    "desc": "Main d'œuvre",
+    "pu": 65,
+    "__v": 0
 }, {
-    title: "CHAUDIERE GAZ A TIRAGE NATUREL",
-    desc: "CHAUDIERE GAZ A TIRAGE NATURELPuissance : 9.5 à 24 kW\nDébit : 11.5  litres / minute\nDiamètre évacuation : 125 mm\nMode d’allumage par veilleuse\nDimensions (L x P x H ) : 400 x 385 x 865\nÉquipé du système S.P.O.T.T (sécurité gaz)",
-    pu: 1438.52,
-    ref: "CHA047",
+    "desc": "DISJONCTEUR DIFFERENTIEL 16 A",
+    "title": "DISJONCTEUR DIFFERENTIEL 16 A",
+    "pu": 28.17,
+    "ref": "DIS095",
+    "__v": 0
 }, {
-    desc: "DOSSERET DE REMPLACEMENT CHAUDIÈRE",
-    title: "DOSSERET DE REMPLACEMENT CHAUDIÈRE",
-    pu: 189.13,
-    ref: "DOS040",
+    "desc": "DISJONCTEUR DIFFERENTIEL 10 A",
+    "title": "DISJONCTEUR DIFFERENTIEL 10 A",
+    "pu": 27.34,
+    "ref": "DIS061",
+    "__v": 0
 }, {
-    desc: "SOUPAPE DE SÉCURITÉ 4BAR DN15",
-    title: "SOUPAPE DE SÉCURITÉ 4BAR DN15",
-    pu: 119.21,
-    ref: "SOU054",
+    "title": "SIMPLE VITRAGE LIVRAISON",
+    "ref": "LIV001",
+    "desc": "DÉPOSE / LIVRAISON et TRANSPORT",
+    "pu": 35,
+    "__v": 0
 }, {
-    ref: "EDI005",
-    title: "Forfait Intervention",
-    desc: "Forfait INSTALLATION / MAIN D'OUVRAGE\nEssais et mise en service inclus",
-    pu: 130,
+    "title": "DOUBLE VITRAGE LIVRAISON",
+    "desc": "DÉPOSE / LIVRAISON et TRANSPORT",
+    "ref": "LIV002",
+    "pu": 55,
+    "__v": 0
 }, {
-    ref: "BAL001",
-    title: "ballon mural vertical",
-    desc: "Chauffe-eau électrique mural vertical\nRésistance blindée anti-calcaire\nPuissance : 1800 W\nType de courant : monophasé\nV = 200L\n\nRACCORDEMENT ÉLECTRIQUE MONO 220V (HEURE CREUSE / PLEINE)\n\nMARQUE ATLANTIC CERTIFIE\n\nGarantie constructeur : Jusqu'à 5 ans\nGarante pièce d'origine : Jusqu'à 2 ans\n\nAssistance et dépannage constructeur inclus jusqu'à 2 ans\n\nESSAIS ET MISE EN SERVICE INCLUS",
-    pu: 432.1,
+    "title": "MAIN D'OEUVRE VITRERIE",
+    "ref": "VIT001",
+    "pu": 130,
+    "desc": "MAIN D'OEUVRE\nDEPLACEMENTS",
+    "__v": 0
 }, {
-    ref: "BAL002",
-    title: "groupe de securité",
-    desc: "Groupe de sécurité anti-calcaire 3/4.Robinet à sphère.\nClapet démontable\nRaccordement eau froide et chauffe eau : 20/27.Echappement 26/34.7 bars.\nEntonnoir siphon",
-    pu: 69.97,
+    "ref": "EDI002",
+    "title": "Déplacement",
+    "desc": "Déplacement",
+    "pu": 65,
+    "__v": 0
 }, {
-    ref: "BAL003",
-    title: "Raccordement hydraulique",
-    desc: "Raccordement hydraulique\nFlexibles inox de 50 cm F20/27 ø 16 mm",
-    pu: 16.33,
+    "title": "CYLINDRE PROFIL EURO",
+    "ref": "CYL001",
+    "desc": "CYLINDRE PROFIL EUROPÉEN\n30 X 40\nFOURNIS AVEC 3 CLES",
+    "pu": 96.25,
+    "__v": 0
 }, {
-    ref: "BAL004",
-    title: "Trépied Ballon",
-    desc: "Trépied pour chauffe-eau électrique.\nAccessoire obligatoire pour l'installation d'un chauffe-eau électrique de 100, 150, ou 200 litres sur un mur non porteur",
-    pu: 93.21,
+    "desc": "CYLINDRE PROFIL EUROPÉEN DE SÛRETÉ\n30 X 40\nFOURNIS AVEC CLÉS\nCARTE DE PROPRIÉTÉ\nREPRODUCTION INTERDITE",
+    "title": "CYLINDRE PROFIL EURO SECURITE",
+    "ref": "CYL002",
+    "pu": 169.1,
+    "__v": 0
 }, {
-    ref: "VIT001",
-    title: "Remplacement Vitrage",
-    desc: "Remplacement d'un vitrage suite a un bris de glace \nporte fenêtre\ndouble vitrage\nvitrage clair\n2000 x 1000\nchâssis pvc / alu / bois\n\ncommande spéciale sur mesure\nadaptation et fixation sur place\n\nremplacement a l'identique",
-    pu: 297.13,
+    "title": "SERRURE 1 POINT APPLIQUE",
+    "desc": "SERRURE 1 POINT APPLIQUE\nCYLINDRE PROFIL EUROPEEN\nHORIZONTAL / VERTICAL A FOUILLOT OU A TIRAGE\nFOURNIS AVEC CLES",
+    "pu": 139.1,
+    "ref": "SER001",
+    "__v": 0
 }, {
-    ref: "VIT002",
-    title: "Pack Vitrerie",
-    desc: "depose/livraison + mise a la decharge + taxe energie",
-    pu: 75,
+    "title": "SERRURE 3 POINTS APPLIQUE",
+    "ref": "SER004",
+    "desc": "SERRURE 3 POINTS APPLIQUE\nCYLINDRE PROFIL EUROPEEN\nHORIZONTAL / VERTICAL A FOUILLOT OU A TIRAGE\nFOURNIS AVEC CLÉS",
+    "pu": 246.25,
+    "__v": 0
 }, {
-    desc: "VIDANGE FOSSE SEPTIQUE\nCONTENANCE DE LA CUVE = 1 M3PRIX / M3",
-    title: "VIDANGE FOSSE SEPTIQUE",
-    pu: 156.25,
-    ref: "CON016",
+    "__v": 0,
+    "desc": "Ensemble mécanisme WC 3/6L ECO\nDouble volume\nJusqu'à -50% d'économie d'eau\nModèle adaptable",
+    "title": "MECANISME CHASSE WC 3/6L",
+    "ref": "MEC001",
+    "pu": 96.25
 }, {
-    desc: "TRAITEMENT DES DÉCHETS",
-    title: "TRAITEMENT DES DÉCHETS",
-    pu: 69.21,
-    ref: "TRA088",
+    "__v": 0,
+    "desc": "PACK WC SUSPENDU AVEC ABATTANT À FERMETURE\nRALENTIE LOVELY RIMFREE BLANC RÉF 08399600000100\nALLIA",
+    "pu": 571.5,
+    "title": "PACK WC SUSPENDU AVEC ABATTANT À FERMETURE",
+    "ref": "536295"
 }, {
-    title: "Remise en conformité électrique NF C15-100",
-    desc: "Remise en conformité électrique NF C15-100\nIdentification des circuits électriques\nSchéma électrique\n",
-    pu: 0,
-    ref: "REM078",
+    "__v": 0,
+    "desc": "BÂTI-SUPPORT AUTOPORTANT DUOFIX PLUS UP320 H :\n112 CM 111.333.00.5 GEBERIT",
+    "title": "BÂTI-SUPPORT AUTOPORTANT DUOFIX",
+    "ref": "659854",
+    "pu": 329.77
 }, {
-    desc: "TABLEAU ELECTRIQUE 1 RANGEE - 13 MODULES",
-    title: "TABLEAU ELECTRIQUE 1 RANGEE - 13 MODULES",
-    pu: 89.1,
-    ref: "TAB093",
+    "__v": 0,
+    "desc": "PLAQUE BA12 POUR HABILLAGE CARRELAGE",
+    "title": "PLAQUE BA12 POUR HABILLAGE CARRELAGE",
+    "ref": "458956",
+    "pu": 139.1
 }, {
-    desc: "INTERUPTEUR DIFFERENTIEL 30 mA - 40A",
-    title: "INTERUPTEUR DIFFERENTIEL 30 mA - 40A",
-    pu: 166.25,
-    ref: "INT012",
+    "desc": "PEIGNE UNIPOLAIRE P+N",
+    "title": "PEIGNE UNIPOLAIRE P+N",
+    "pu": 12.93,
+    "ref": "PEI062",
+    "__v": 0
+}, {
+    "desc": "CABLAGE EDF 10 mm²",
+    "title": "CABLAGE EDF 10 mm²",
+    "pu": 28.67,
+    "ref": "CAB046",
+    "__v": 0
+}, {
+    "desc": "Dépose de l'existant et mise en service inclus",
+    "title": "Dépose de l'existant et mise en service inclus",
+    "pu": 0,
+    "ref": "DEP017",
+    "__v": 0
+}, {
+    "title": "CHAUDIERE GAZ A TIRAGE NATUREL",
+    "desc": "CHAUDIERE GAZ A TIRAGE NATUREL\nPUISSANCE : 9.5 À 24 KW\nDÉBIT : 11.5  LITRES / MINUTE\nDIAMÈTRE ÉVACUATION : 125 MM\nMODE D’ALLUMAGE PAR VEILLEUSE\nDIMENSIONS (L X P X H ) : 400 X 385 X 865\nÉQUIPÉ DU SYSTÈME S.P.O.T.T (SÉCURITÉ GAZ)",
+    "pu": 1438.52,
+    "ref": "CHA047",
+    "__v": 0
+}, {
+    "__v": 0,
+    "title": "CHAUFFE EAU VM BLINDEE 200L",
+    "ref": "CEB200",
+    "desc": "Chauffe-eau électrique mural vertical\nRésistance blindée anti-calcaire\nPuissance : 1800 W\nType de courant : monophasé\nV = 200L\nRACCORDEMENT ÉLECTRIQUE MONO 220V (HEURE CREUSE / PLEINE)\nMARQUE ATLANTIC CERTIFIE\n\nGarantie constructeur : Jusqu'à 5 ans\nGarante pièce d'origine : Jusqu'à 2 ans\nAssistance et dépannage constructeur inclus jusqu'à 2 ans\nESSAIS ET MISE EN SERVICE INCLUS",
+    "pu": 432.1
+}, {
+    "__v": 0,
+    "ref": "CES200",
+    "title": "CHAUFFE EAU VM STEATITE 200L",
+    "desc": "Chauffe-eau électrique mural vertical\nRésistance stéatite\nPuissance : 1800 W\nType de courant : monophasé\nV = 200L\nRACCORDEMENT ÉLECTRIQUE MONO 220V (HEURE CREUSE / PLEINE)\nMARQUE ATLANTIC CERTIFIE\n\nGarantie constructeur : Jusqu'à 5 ans\nGarante pièce d'origine : Jusqu'à 5 ans\nAssistance et dépannage constructeur inclus jusqu'à 2 ans\nESSAIS ET MISE EN SERVICE INCLUS",
+    "pu": 593.21
+}, {
+    "__v": 0,
+    "ref": "ZEN200",
+    "title": "CHAUFFE EAU VM ZENEO 200L",
+    "desc": "Chauffe-eau électrique mural vertical\nRésistance stéatite\nPuissance : 2200 W\nType de courant : monophasé\nV = 200L\nRACCORDEMENT ÉLECTRIQUE MONO 220V (HEURE CREUSE / PLEINE)\nMARQUE ATLANTIC CERTIFIE\n\nGarantie constructeur : Jusqu'à 5 ans\nGarante pièce d'origine : Jusqu'à 5 ans\nAssistance et dépannage constructeur inclus jusqu'à 2 ans\nESSAIS ET MISE EN SERVICE INCLUS",
+    "pu": 696.25
+}, {
+    "desc": "Chauffe-eau électrique horizontale\nRésistance blindée anti-calcaire\nPuissance : 1800 W\nType de courant : monophasé\nV = 200L\nRACCORDEMENT ÉLECTRIQUE MONO 220V (HEURE CREUSE / PLEINE)\nMARQUE ATLANTIC CERTIFIE\n\nGarantie constructeur : Jusqu'à 5 ans\nGarante pièce d'origine : Jusqu'à 2 ans\nAssistance et dépannage constructeur inclus jusqu'à 2 ans\nESSAIS ET MISE EN SERVICE INCLUS",
+    "title": "CHAUFFE EAU HM BLINDEE 200L",
+    "ref": "CB200H",
+    "pu": 696.25,
+    "__v": 0
+}, {
+    "title": "CHAUFFE EAU HM STEATITE 200L",
+    "ref": "CS200H",
+    "pu": 739.1,
+    "desc": "Chauffe-eau électrique horizontale\nRésistance blindée anti-calcaire\nPuissance : 1800 W\nType de courant : monophasé\nV = 200L\nRACCORDEMENT ÉLECTRIQUE MONO 220V (HEURE CREUSE / PLEINE)\nMARQUE ATLANTIC CERTIFIE\n\nGarantie constructeur : Jusqu'à 5 ans\nGarante pièce d'origine : Jusqu'à 5 ans\nAssistance et dépannage constructeur inclus jusqu'à 2 ans\nESSAIS ET MISE EN SERVICE INCLUS",
+    "__v": 0
+}, {
+    "desc": "CYLINDRE PROFIL EUROPÉEN DE HAUTE SÛRETÉ\nCANON ANTI-EFFRACTION / ANTI-PERÇAGE\n30 X 40\nFOURNIS AVEC CLÉS\nCARTE DE PROPRIÉTÉ\nREPRODUCTION INTERDITE",
+    "title": "CYLINDRE PROFIL EURO DE HAUTE SURETE",
+    "pu": 269.1,
+    "ref": "CYL003",
+    "__v": 0
+}, {
+    "ref": "SER003",
+    "title": "SERRURE 1 POINT APPLIQU DE HAUTE SURETE",
+    "desc": "SERRURE 1 POINT APPLIQUE DE SÛRETÉ\nCYLINDRE PROFIL EUROPEEN DE HAUTE SURETE\nHORIZONTAL / VERTICAL A FOUILLOT OU A TIRAGE\nFOURNIS AVEC CLÉS BLINDE\nCARTE DE PROPRIÉTÉ / REPRODUCTION INTERDITE",
+    "pu": 296.25,
+    "__v": 0
+}, {
+    "ref": "SER005",
+    "desc": "SERRURE 3 POINTS APPLIQUE DE SÛRETÉ\nCYLINDRE PROFIL EUROPEEN\nHORIZONTAL / VERTICAL A FOUILLOT OU A TIRAGE\nFOURNIS AVEC CLÉS\nCARTE DE PROPRIÉTÉ / REPRODUCTION INTERDITE",
+    "title": "SERRURE 3 POINTS APPLIQUE DE SURETE",
+    "pu": 396.25,
+    "__v": 0
+}, {
+    "ref": "SER002",
+    "title": "SERRURE 1 POINT APPLIQUE SECURITE",
+    "desc": "SERRURE 1 POINT APPLIQUE DE SÛRETÉ\nCYLINDRE PROFIL EUROPEEN\nHORIZONTAL / VERTICAL A FOUILLOT OU A TIRAGE\nFOURNIS AVEC CLÉS\nCARTE DE PROPRIÉTÉ / REPRODUCTION INTERDITE",
+    "pu": 226.25,
+    "__v": 0
+}, {
+    "desc": "SERRURE 3 POINTS APPLIQUE DE SÛRETÉ\nCYLINDRE PROFIL EUROPEEN DE HAUTE SURETE\nHORIZONTAL / VERTICAL A FOUILLOT OU A TIRAGE\nFOURNIS AVEC CLÉS BLINDE\nCARTE DE PROPRIÉTÉ / REPRODUCTION INTERDITE",
+    "ref": "SER006",
+    "title": "SERRURE 3 POINTS APPLIQUE DE HAUTE SECURITE",
+    "pu": 596.2,
+    "__v": 0
+}, {
+    "ref": "SVI001",
+    "title": "SIMPLE VITRAGE",
+    "desc": "REMPLACEMENT D'UN VITRAGE SUITE A BRIS DE GLACE :\n\nPORTE FENÊTRE\nSIMPLE VITRAGE\nVITRAGE CLAIR\nHaut 2000 mm X Larg 1000 mm\nCHÂSSIS PVC / ALU / BOIS\n\nCOMMANDE SPÉCIALE SUR MESURE \nADAPTATION ET FIXATION SUR PLACE \nREMPLACEMENT A L'IDENTIQUE",
+    "pu": 197.13,
+    "__v": 0
+}, {
+    "ref": "DVI001",
+    "title": "DOUBLE VITRAGE",
+    "desc": "PORTE FENÊTRE\nDOUBLE VITRAGE\nVITRAGE CLAIR\nHaut 2000 mm X Larg 1000 mm\nCHÂSSIS PVC / ALU / BOIS\n\nCOMMANDE SPÉCIALE SUR MESURE \nADAPTATION ET FIXATION SUR PLACE \nREMPLACEMENT A L'IDENTIQUE",
+    "pu": 297.13,
+    "__v": 0
 }]
 
 },{}],12:[function(require,module,exports){
@@ -2048,26 +2411,22 @@ module.exports = {
     sms: {
         intervention: {
 
-            demande: function(user) {
-                var config = require('./dataList.js')
-                var mmt = moment(this.date.intervention);
-                var format = mmt.isSame(moment(), 'day') ? "[aujourd'hui à ]HH[h]mm" : "[le ]DD[/]MM[ à ]HH[h]mm"
-                var datePlain = mmt.format(format)
-                var categorieClean = config.categories[this.categorie].suffix + " " + config.categories[this.categorie].long_name.toLowerCase()
-                return "Bonjour M. BOUKRIS, nous cherchons a vous joindre pour une intervention de " + categorieClean +
-                    " à faire " + datePlain + ". Pourriez-vous vous rendre disponible ?\n" +
+            demande: function() {
+                return "Bonjour M. {{sst.representant.nom}} , nous cherchons a vous joindre pour une intervention {{categorieClean}}" +
+                    " à faire {{datePlain}}, situé à {{client.address.cp}}, {{client.address.v}}.\n" +
+                    " Pourriez-vous vous rendre disponible ?\n" +
                     "Merci de nous contacter au plus vite au 09.72.42.30.00.\n" +
-                    "Merci d 'avance pour votre réponse.\n" +
-                    (user.pseudo ||  "Arnaud") + "\n" +
-                    "Ligne Directe " + (user.ligne ? (user.ligne.match(/.{2}|.{1,2}/g).join('.')) :  "09.72.44.16.63") + "\n" +
+                    "Merci d'avance pour votre réponse.\n" +
+                    "{{user.pseudo}}\n" +
+                    "Ligne Directe: {{ligneDirect}}\n" +
                     "Edison Services\n"
-
             },
             envoi: function(user) {
                 var sms = _.template("OS {{id}}\n" +
                     "Intervention chez {{client.civilite}} {{client.prenom}} {{client.nom}} au " +
                     "{{client.address.n}} {{client.address.r}} {{client.address.cp}}, {{client.address.v}} " +
-                    "le " + moment(this.date.intervention).format("LLLL") + ".\n")(this)
+                    "le " + moment(this.date.intervention).format("LLLL") + ".\n" +
+                    "Pour la raison suivante: {{description}}.\n")(this)
                 sms += this.prixAnnonce ? this.prixAnnonce + "€ HT. " : "Pas de prix annoncé. ";
                 sms += "\nMerci de prendre rdv avec le client au " + this.client.telephone.tel1;
                 sms += this.client.telephone.tel2 ? " ou au " + this.client.telephone.tel2 : "";
@@ -2076,15 +2435,6 @@ module.exports = {
                 return sms + "Edison Services."
             },
             annulation: "L'intervention {{id}} chez {{client.civilite}} {{client.nom}} à {{client.address.v}} le {{datePlain}} a été annulé. \nMerci de ne pas intervenir. \nEdison Services",
-            /*            demande: function(user) {
-                            return "Bonjour M. " + _.get(this, 'sst.representant.nom', '') + ", nous cherchons a vous joindre pour une intervention de vitrerie à faire aujourd'hui.\n" +
-                                "Pourriez-vous vous rendre disponible ?\n" +
-                                "Merci de nous contacter au plus vite au 09.72.42.30.00.\n" +
-                                "Merci d'avance pour votre réponse.\n" +
-                                "\n" + (user.pseudo ||  "Arnaud") + "\n" +
-                                "Ligne Directe " + (user.ligne ? (user.ligne.match(/.{2}|.{1,2}/g).join('.')) :  "09.72.42.30.00") + "\n" +
-                                "Edison Services"
-                        }*/
         }
     },
 
@@ -2221,48 +2571,48 @@ module.exports = {
         intervention: {
             relance2: function() {
                 return "<style> table { border-collapse: collapse;}\n table, td, th {border: 1px solid black;}</style>" +
-                "<p>Madame, Monsieur, <br>" +
-                "<p> Sauf erreur de notre part, nous constatons que votre compte client présente à ce jour un solde débiteur. <br> Ce montant correspond à nos factures suivantes restées impayées: <p>" +
-                "<table cellspacing='0' cellpadding='8'>" +
-                "<tr style='background: #85C82B !important;'>" +
-                "<th style='width: 70px;'> DATE </th>" +
-                "<th style='text-align:left'> N° FACTURE </th>" +
-                "<th style='text-align:left'> LIEU </th>" +
-                "<th style='text-align:right'> MONTANT T.T.C. </th>" +
-                "</tr>" +
-                "<tr>" +
-                "<th> {{datePlain}} </th>" +
-                "<th> {{os}} </th>" +
-                "<th> {{client.address.v}}, {{client.address.cp}} </th>" +
-                "<th style='text-align:right'> {{prixFinalTTC}} € </th>" +
-                "</tr>" +
-                "<tr>" +
-                "<th colspan='3'> <b> TOTAL </b> </th>" +
-                "<th style='text-align:right'> {{prixFinalTTC}} € T.T.C. </th>" +
-                "</tr>" +
-                "</table>" +
+                    "<p>Madame, Monsieur, <br>" +
+                    "<p> Sauf erreur de notre part, nous constatons que votre compte client présente à ce jour un solde débiteur. <br> Ce montant correspond à nos factures suivantes restées impayées: <p>" +
+                    "<table cellspacing='0' cellpadding='8'>" +
+                    "<tr style='background: #85C82B !important;'>" +
+                    "<th style='width: 70px;'> DATE </th>" +
+                    "<th style='text-align:left'> N° FACTURE </th>" +
+                    "<th style='text-align:left'> LIEU </th>" +
+                    "<th style='text-align:right'> MONTANT T.T.C. </th>" +
+                    "</tr>" +
+                    "<tr>" +
+                    "<th> {{datePlain}} </th>" +
+                    "<th> {{os}} </th>" +
+                    "<th> {{client.address.v}}, {{client.address.cp}} </th>" +
+                    "<th style='text-align:right'> {{prixFinalTTC}} € </th>" +
+                    "</tr>" +
+                    "<tr>" +
+                    "<th colspan='3'> <b> TOTAL </b> </th>" +
+                    "<th style='text-align:right'> {{prixFinalTTC}} € T.T.C. </th>" +
+                    "</tr>" +
+                    "</table>" +
 
-                "<p> L'échéance étant dépassée, nous vous demandons de bien vouloir régulariser cette situation par retour de courrier. </p>" +
+                    "<p> L'échéance étant dépassée, nous vous demandons de bien vouloir régulariser cette situation par retour de courrier. </p>" +
 
-                "<p>A l'organisme qui gère notre comptabilité:</p>" +
-                "<p strong center> EDISON SERVICES FRANCE<br>" +
-                "Service comptabilité<br>" +
-                "75 rue des dames, 75017 Paris<br>" +
-                "Tél. 09.72.51.08.01 (Ouvert de 09h00 à 12h30 / 14h00 à 16h30)</p>" +
-                "<p>" +
-                "Pour un reglement par virement :<br>" +
-                "<br>" +
-                "RIB: 30004 01557 00010041423 30<br>" +
-                "IBAN: FR76 3000 4015 5700 0100 4142 330<br>" +
-                "BIC: BNPAFRPPPRG" +
-                "</p>" +
-                "<p> Merci d'indiquer la référence de la facture ({{os}}) dans le règlement. </p>" +
-                "<p> Nous vous prions d'agréer, Madame, Monsieur, nos salutations distinguées. </p>" +
-                "<header style='margin-top: 25px;'>" +
-                "<b> <u> Service comptabilité </u> </b>" +
-                "<p> Lionel Durand </p>" +
-                "<p> Tél: 09.72.51.08.01 </p>" +
-                "</header>"
+                    "<p>A l'organisme qui gère notre comptabilité:</p>" +
+                    "<p strong center> EDISON SERVICES FRANCE<br>" +
+                    "Service comptabilité<br>" +
+                    "75 rue des dames, 75017 Paris<br>" +
+                    "Tél. 09.72.51.08.01 (Ouvert de 09h00 à 12h30 / 14h00 à 16h30)</p>" +
+                    "<p>" +
+                    "Pour un reglement par virement :<br>" +
+                    "<br>" +
+                    "RIB: 30004 01557 00010041423 30<br>" +
+                    "IBAN: FR76 3000 4015 5700 0100 4142 330<br>" +
+                    "BIC: BNPAFRPPPRG" +
+                    "</p>" +
+                    "<p> Merci d'indiquer la référence de la facture ({{os}}) dans le règlement. </p>" +
+                    "<p> Nous vous prions d'agréer, Madame, Monsieur, nos salutations distinguées. </p>" +
+                    "<header style='margin-top: 25px;'>" +
+                    "<b> <u> Service comptabilité </u> </b>" +
+                    "<p> Lionel Durand </p>" +
+                    "<p> Tél: 09.72.51.08.01 </p>" +
+                    "</header>"
             },
             relance1: function() {
                 return "<p>Madame, Monsieur,<br>" +

@@ -263,9 +263,6 @@ FiltersFactory.prototype.list = {
                 status: 'VRF',
                 'compta.reglement.recu': false,
                 reglementSurPlace: false,
-                'date.intervention': {
-                    $lt: new Date(Date.now() - ms.weeks(2)),
-                }
             }
         },
     }, {

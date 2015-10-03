@@ -207,6 +207,7 @@ var InterventionCtrl = function(Description, Signalement, ContextMenu, $window, 
         //$scope.interList = true;
     }
 
+    _this.sstBase = intervention.sst;
     if (intervention.sst) {
         _this.selectArtisan(intervention.sst, true);
     }

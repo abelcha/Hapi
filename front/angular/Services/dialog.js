@@ -25,6 +25,20 @@ angular.module('edison').factory('dialog', function(openPost, $mdDialog, edisonA
                 templateUrl: '/DialogTemplates/verification.html',
             });
         },
+        recouvrement: function(inter, cb) {
+            $mdDialog.show({
+                controller: function DialogController($scope, $mdDialog, config) {
+                    $scope.data = inter
+                    $scope.answer = function(cancel) {
+                        $mdDialog.hide();
+                        if (!cancel) {
+                            cb(inter);
+                        }
+                    }
+                },
+                templateUrl: '/DialogTemplates/recouvrement.html',
+            });
+        },
         validationReglement: function(inter, cb) {
             $mdDialog.show({
                 controller: function DialogController($scope, $mdDialog) {
@@ -183,14 +197,12 @@ angular.module('edison').factory('dialog', function(openPost, $mdDialog, edisonA
                     inter.datePlain = moment(inter.date.intervention).format('DD/MM/YYYY')
                     $scope.textSms = _.template("L'intervention {{id}} chez {{client.civilite}} {{client.nom}} à {{client.address.v}} le {{datePlain}} a été annulé. \nMerci de ne pas intervenir. \nEdison Services")(inter)
                     $scope.answer = function(resp) {
-                        if (!resp && $scope.ca) {
+                        if (resp && !$scope.ca) {
                             return LxNotificationService.error("Veuillez renseigner une raison d'annulation");
                         }
                         $mdDialog.hide();
-                        if (!$scope.ca)
-                            return cb('nope');
                         if (resp)
-                            return cb(null, resp, $scope.reinit, $scope.sendSms, $scope.textSms);
+                            return cb(null, $scope.ca, $scope.reinit, $scope.sendSms, $scope.textSms);
                         return cb('nope');
                     }
                 },

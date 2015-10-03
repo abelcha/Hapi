@@ -41,6 +41,7 @@ angular.module('edison').controller('MainController', function($timeout, $q, Dat
     "use strict";
 
     $rootScope.app_users = app_users;
+    $rootScope.displayUser = app_session
     $scope.sidebarHeight = $("#main-menu-bg").height();
     $scope.config = config;
     $rootScope.loadingData = true;
@@ -76,7 +77,7 @@ angular.module('edison').controller('MainController', function($timeout, $q, Dat
     }
 
     $scope.changeUser = function(usr) {
-        $rootScope.user = usr
+        $rootScope.displayUser = usr
     }
 
     $scope.shadowClick = function(url) {
@@ -446,189 +447,6 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
     $locationProvider.html5Mode(true);
 });
 
-angular.module("edison").filter('contactFilter', ['config', function(config) {
-    "use strict";
-
-    var clean = function(str) {
-        return _.deburr(str).toLowerCase();
-    }
-
-    var compare = function(a, b, strictMode) {
-        if (typeof a === "string") {
-            return clean(a).includes(b);
-        } else if (!strictMode) {
-            return clean(String(a)).startsWith(b);
-        } else {
-            return a === parseInt(b);
-        }
-    }
-    return function(dataContainer, input) {
-        var rtn = [];
-        input = clean(input);
-        _.each(dataContainer, function(data) {
-            if (!data.stringify)
-                data.stringify = clean(JSON.stringify(data))
-            if (!input || data.stringify.indexOf(input) >= 0) {
-                rtn.push(data);
-            } else {
-            }
-        })
-        return rtn;
-    }
-}]);
-
-angular.module('edison').filter('crlf', function() {
-	"use strict";
-    return function(text) {
-        return text.split(/\n/g).join('<br>');
-    };
-});
-
-angular.module('edison').filter('loginify', function() {
-    "use strict";
-    return function(obj) {
-        if (!obj)
-            return "";
-        return obj.slice(0, 1).toUpperCase() + obj.slice(1, -2)
-    };
-});
-
-angular.module('edison').filter('relativeDate', function() {
-    "use strict";
-    return function(date, smallWin) {
-        var d = moment((date + 1370000000) * 1000);
-        var l = moment().subtract(4, 'days');
-        if (d < l) {
-            return d.format('DD/MM/YY')
-        } else {
-            var x = d.fromNow().toString()
-            /*if (smallWin) {
-                x = x.replace('heures', 'H')
-                    .replace('heures', 'H')
-                    .replace('jours', 'J')
-                    .replace('jour', 'J')
-                    .replace('il y a ', '- ')
-                    .replace('dans ', '+ ')
-                    .replace('un ', '1 ')
-            }*/
-            return x;
-        }
-        // return moment((date + 1370000000) * 1000).fromNow(no).toString()
-    };
-});
-
-angular.module('edison').filter('reverse', function() {
-    "use strict";
-    return function(items) {
-        if (!items)
-            return [];
-        return items.slice().reverse();
-    };
-});
-
-angular.module("edison").filter('tableFilter', ['config', function(config) {
-    "use strict";
-
-    var clean = function(str) {
-        return _.deburr(str).toLowerCase();
-    }
-
-    var compare = function(a, b, strictMode) {
-        if (typeof a === "string") {
-            return clean(a).includes(b);
-        } else if (!strictMode) {
-            return clean(String(a)).startsWith(b);
-        } else {
-            return a === parseInt(b);
-        }
-    }
-    var compareCustom = function(key, data, input) {
-        if (key === '_categorie') {
-            var cell = config.categoriesHash()[data.c].long_name;
-            return compare(cell, input);
-        }
-        if (key === '_etat') {
-            var cell = config.etatsHash()[data.s].long_name
-            return compare(cell, input);
-        }
-        return true;
-
-    }
-    var compareDate = function(key, data, input) {
-        var md = (data[key] + 1370000000) * 1000;
-        //console.log( input.start, input.end);
-        if (md > input.start.getTime() && md < input.end.getTime()) {
-            return true
-        }
-        return false;
-    }
-
-    var parseDate = function(e) {
-        if (!(/^[0-9\/]+$/).test(e) ||  _.endsWith(e, '/')) {
-            return undefined;
-        }
-        var x = e.split('/');
-        if (x.length === 1) {
-            var month = parseInt(x[0]);
-            return {
-                start: new Date(2015, month - 1),
-                end: new Date(2015, month)
-            }
-        } else if (x.length === 2)  {
-            var day = parseInt(x[0]);
-            var month = parseInt(x[1]);
-            return {
-                start: new Date(2015, month - 1, day),
-                end: new Date(2015, month - 1, day + 1)
-            }
-        }
-        return undefined;
-    }
-
-
-    return function(dataContainer, inputs, strictMode) {
-        var rtn = [];
-        //console.time('fltr')
-        inputs = _.mapValues(inputs, clean);
-        _.each(inputs, function(e, k) {
-            if (k.charAt(0) === '∆') {
-                inputs[k] = parseDate(e);
-            }
-        })
-        _.each(dataContainer, function(data) {
-                if (data.id) {
-                    var psh = true;
-                    _.each(inputs, function(input, k) {
-                        if (input && _.size(input) > 0) {
-                            if (k.charAt(0) === '_') {
-                                if (!compareCustom(k, data, input)) {
-                                    psh = false;
-                                    return false
-                                }
-                            } else if (k.charAt(0) === '∆') {
-                                if (!compareDate(k.slice(1), data, input)) {
-                                    psh = false;
-                                    return false
-                                }
-                            } else {
-                                if (!compare(data[k], input, strictMode)) {
-                                    psh = false;
-                                    return false
-                                }
-                            }
-                        }
-                    });
-                    if (psh === true) {
-                        rtn.push(data);
-                    }
-                }
-            })
-            //console.timeEnd('fltr')
-
-        return rtn;
-    }
-}]);
-
 angular.module('edison').directive('allowPattern', [allowPatternDirective]);
 
 function allowPatternDirective() {
@@ -799,7 +617,8 @@ angular.module('edison').directive('ngEnter', function () {
          scope: {
              data: '=',
          },
-         link: function(scope, elem) {
+         link: function(scope, elem, attr) {
+             scope.height = attr.height ||  216;
              scope.addComment = function() {
                  scope.data.comments.push({
                      login: user.login,
@@ -1269,6 +1088,189 @@ angular.module('edison').directive('ngRightClick', function($parse) {
          }
      }
  });
+
+angular.module("edison").filter('contactFilter', ['config', function(config) {
+    "use strict";
+
+    var clean = function(str) {
+        return _.deburr(str).toLowerCase();
+    }
+
+    var compare = function(a, b, strictMode) {
+        if (typeof a === "string") {
+            return clean(a).includes(b);
+        } else if (!strictMode) {
+            return clean(String(a)).startsWith(b);
+        } else {
+            return a === parseInt(b);
+        }
+    }
+    return function(dataContainer, input) {
+        var rtn = [];
+        input = clean(input);
+        _.each(dataContainer, function(data) {
+            if (!data.stringify)
+                data.stringify = clean(JSON.stringify(data))
+            if (!input || data.stringify.indexOf(input) >= 0) {
+                rtn.push(data);
+            } else {
+            }
+        })
+        return rtn;
+    }
+}]);
+
+angular.module('edison').filter('crlf', function() {
+	"use strict";
+    return function(text) {
+        return text.split(/\n/g).join('<br>');
+    };
+});
+
+angular.module('edison').filter('loginify', function() {
+    "use strict";
+    return function(obj) {
+        if (!obj)
+            return "";
+        return obj.slice(0, 1).toUpperCase() + obj.slice(1, -2)
+    };
+});
+
+angular.module('edison').filter('relativeDate', function() {
+    "use strict";
+    return function(date, smallWin) {
+        var d = moment((date + 1370000000) * 1000);
+        var l = moment().subtract(4, 'days');
+        if (d < l) {
+            return d.format('DD/MM/YY')
+        } else {
+            var x = d.fromNow().toString()
+            /*if (smallWin) {
+                x = x.replace('heures', 'H')
+                    .replace('heures', 'H')
+                    .replace('jours', 'J')
+                    .replace('jour', 'J')
+                    .replace('il y a ', '- ')
+                    .replace('dans ', '+ ')
+                    .replace('un ', '1 ')
+            }*/
+            return x;
+        }
+        // return moment((date + 1370000000) * 1000).fromNow(no).toString()
+    };
+});
+
+angular.module('edison').filter('reverse', function() {
+    "use strict";
+    return function(items) {
+        if (!items)
+            return [];
+        return items.slice().reverse();
+    };
+});
+
+angular.module("edison").filter('tableFilter', ['config', function(config) {
+    "use strict";
+
+    var clean = function(str) {
+        return _.deburr(str).toLowerCase();
+    }
+
+    var compare = function(a, b, strictMode) {
+        if (typeof a === "string") {
+            return clean(a).includes(b);
+        } else if (!strictMode) {
+            return clean(String(a)).startsWith(b);
+        } else {
+            return a === parseInt(b);
+        }
+    }
+    var compareCustom = function(key, data, input) {
+        if (key === '_categorie') {
+            var cell = config.categoriesHash()[data.c].long_name;
+            return compare(cell, input);
+        }
+        if (key === '_etat') {
+            var cell = config.etatsHash()[data.s].long_name
+            return compare(cell, input);
+        }
+        return true;
+
+    }
+    var compareDate = function(key, data, input) {
+        var md = (data[key] + 1370000000) * 1000;
+        //console.log( input.start, input.end);
+        if (md > input.start.getTime() && md < input.end.getTime()) {
+            return true
+        }
+        return false;
+    }
+
+    var parseDate = function(e) {
+        if (!(/^[0-9\/]+$/).test(e) ||  _.endsWith(e, '/')) {
+            return undefined;
+        }
+        var x = e.split('/');
+        if (x.length === 1) {
+            var month = parseInt(x[0]);
+            return {
+                start: new Date(2015, month - 1),
+                end: new Date(2015, month)
+            }
+        } else if (x.length === 2)  {
+            var day = parseInt(x[0]);
+            var month = parseInt(x[1]);
+            return {
+                start: new Date(2015, month - 1, day),
+                end: new Date(2015, month - 1, day + 1)
+            }
+        }
+        return undefined;
+    }
+
+
+    return function(dataContainer, inputs, strictMode) {
+        var rtn = [];
+        //console.time('fltr')
+        inputs = _.mapValues(inputs, clean);
+        _.each(inputs, function(e, k) {
+            if (k.charAt(0) === '∆') {
+                inputs[k] = parseDate(e);
+            }
+        })
+        _.each(dataContainer, function(data) {
+                if (data.id) {
+                    var psh = true;
+                    _.each(inputs, function(input, k) {
+                        if (input && _.size(input) > 0) {
+                            if (k.charAt(0) === '_') {
+                                if (!compareCustom(k, data, input)) {
+                                    psh = false;
+                                    return false
+                                }
+                            } else if (k.charAt(0) === '∆') {
+                                if (!compareDate(k.slice(1), data, input)) {
+                                    psh = false;
+                                    return false
+                                }
+                            } else {
+                                if (!compare(data[k], input, strictMode)) {
+                                    psh = false;
+                                    return false
+                                }
+                            }
+                        }
+                    });
+                    if (psh === true) {
+                        rtn.push(data);
+                    }
+                }
+            })
+            //console.timeEnd('fltr')
+
+        return rtn;
+    }
+}]);
 
 angular.module('edison').factory('Signalement', function() {
     "use strict";
@@ -2356,6 +2358,20 @@ angular.module('edison').factory('dialog', function(openPost, $mdDialog, edisonA
                 templateUrl: '/DialogTemplates/verification.html',
             });
         },
+        recouvrement: function(inter, cb) {
+            $mdDialog.show({
+                controller: function DialogController($scope, $mdDialog, config) {
+                    $scope.data = inter
+                    $scope.answer = function(cancel) {
+                        $mdDialog.hide();
+                        if (!cancel) {
+                            cb(inter);
+                        }
+                    }
+                },
+                templateUrl: '/DialogTemplates/recouvrement.html',
+            });
+        },
         validationReglement: function(inter, cb) {
             $mdDialog.show({
                 controller: function DialogController($scope, $mdDialog) {
@@ -2514,14 +2530,12 @@ angular.module('edison').factory('dialog', function(openPost, $mdDialog, edisonA
                     inter.datePlain = moment(inter.date.intervention).format('DD/MM/YYYY')
                     $scope.textSms = _.template("L'intervention {{id}} chez {{client.civilite}} {{client.nom}} à {{client.address.v}} le {{datePlain}} a été annulé. \nMerci de ne pas intervenir. \nEdison Services")(inter)
                     $scope.answer = function(resp) {
-                        if (!resp && $scope.ca) {
+                        if (resp && !$scope.ca) {
                             return LxNotificationService.error("Veuillez renseigner une raison d'annulation");
                         }
                         $mdDialog.hide();
-                        if (!$scope.ca)
-                            return cb('nope');
                         if (resp)
-                            return cb(null, resp, $scope.reinit, $scope.sendSms, $scope.textSms);
+                            return cb(null, $scope.ca, $scope.reinit, $scope.sendSms, $scope.textSms);
                         return cb('nope');
                     }
                 },
@@ -2671,7 +2685,7 @@ angular.module('edison').factory('fourniture', [function() {
 }]);
 
 angular.module('edison')
-    .factory('Intervention', function($location, $window, openPost, LxNotificationService, LxProgressService, dialog, edisonAPI, Devis, $rootScope, textTemplate) {
+    .factory('Intervention', function($location, $window, openPost, LxNotificationService, LxProgressService, dialog, user, config, edisonAPI, Devis, $rootScope, textTemplate) {
         "use strict";
 
         var Intervention = function(data) {
@@ -2843,7 +2857,15 @@ angular.module('edison')
         }
         Intervention.prototype.smsArtisan = function(cb) {
             var _this = this;
-            var text = textTemplate.sms.intervention.demande.bind(_this)(app_session)
+            this.mmt = moment(this.date.intervention);
+            this.format = this.mmt.isSame(moment(), 'day') ? "[aujourd'hui à ]HH[h]mm" : "[le ]DD[/]MM[ à ]HH[h]mm"
+            this.datePlain = this.mmt.format(this.format)
+            this.user = user
+            this.user.pseudo = this.user.pseudo ||  "Arnaud";
+            this.ligneDirect = user.ligne ? (user.ligne.match(/.{2}|.{1,2}/g).join('.')) :  "09.72.44.16.63";
+            this.categorieClean = config.categories[this.categorie].suffix + " " + config.categories[this.categorie].long_name.toLowerCase()
+            var text = textTemplate.sms.intervention.demande();
+            text = _.template(text)(this)
             dialog.getFileAndText(_this, text, [], function(err, text) {
                 if (err) {
                     return cb(err)
@@ -3032,6 +3054,19 @@ angular.module('edison')
                         return Intervention(resp).verificationSimple(cb);
                     }
                 });
+            });
+        }
+
+
+        Intervention.prototype.recouvrement = function(cb) {
+            var _this = this;
+            dialog.recouvrement(_this, function(inter) {
+                console.log('-->', inter);
+                /*Intervention(inter).save(function(err, resp) {
+                    if (!err) {
+                        return Intervention(resp).verificationSimple(cb);
+                    }
+                });*/
             });
         }
 
@@ -3579,6 +3614,44 @@ angular.module('edison').directive('infoFourniture', ['config', 'fourniture',
     }
 ]);
 
+var archiveReglementController = function(edisonAPI, tabContainer, $routeParams, $location, LxProgressService) {
+
+    var tab = tabContainer.getCurrentTab();
+    var _this = this;
+    _this.title = 'Archives Reglements'
+    tab.setTitle('archives RGL')
+    LxProgressService.circular.show('#5fa2db', '#globalProgress');
+    edisonAPI.compta.archivesReglement().success(function(resp) {
+        LxProgressService.circular.hide()
+        _this.data = resp
+    })
+    _this.moment = moment;
+    _this.openLink = function(link) {
+        $location.url(link)
+    }
+}
+
+angular.module('edison').controller('archivesReglementController', archiveReglementController);
+
+var archivesPaiementController = function(edisonAPI, tabContainer, $routeParams, $location, LxProgressService) {
+    var _this = this;
+    var tab = tabContainer.getCurrentTab();
+    _this.type = 'paiement'
+    _this.title = 'Archives Paiements'
+    tab.setTitle('archives PAY')
+    LxProgressService.circular.show('#5fa2db', '#globalProgress');
+    edisonAPI.compta.archivesPaiement().success(function(resp) {
+        LxProgressService.circular.hide()
+        _this.data = resp
+    })
+    _this.moment = moment;
+    _this.openLink = function(link) {
+        $location.url(link)
+    }
+}
+
+angular.module('edison').controller('archivesPaiementController', archivesPaiementController);
+
  angular.module('edison').directive('artisanCategorie', ['config', function(config) {
      "use strict";
      return {
@@ -3686,44 +3759,6 @@ var ArtisanCtrl = function($rootScope, $scope, edisonAPI, $location, $routeParam
     }
 }
 angular.module('edison').controller('ArtisanController', ArtisanCtrl);
-
-var archiveReglementController = function(edisonAPI, tabContainer, $routeParams, $location, LxProgressService) {
-
-    var tab = tabContainer.getCurrentTab();
-    var _this = this;
-    _this.title = 'Archives Reglements'
-    tab.setTitle('archives RGL')
-    LxProgressService.circular.show('#5fa2db', '#globalProgress');
-    edisonAPI.compta.archivesReglement().success(function(resp) {
-        LxProgressService.circular.hide()
-        _this.data = resp
-    })
-    _this.moment = moment;
-    _this.openLink = function(link) {
-        $location.url(link)
-    }
-}
-
-angular.module('edison').controller('archivesReglementController', archiveReglementController);
-
-var archivesPaiementController = function(edisonAPI, tabContainer, $routeParams, $location, LxProgressService) {
-    var _this = this;
-    var tab = tabContainer.getCurrentTab();
-    _this.type = 'paiement'
-    _this.title = 'Archives Paiements'
-    tab.setTitle('archives PAY')
-    LxProgressService.circular.show('#5fa2db', '#globalProgress');
-    edisonAPI.compta.archivesPaiement().success(function(resp) {
-        LxProgressService.circular.hide()
-        _this.data = resp
-    })
-    _this.moment = moment;
-    _this.openLink = function(link) {
-        $location.url(link)
-    }
-}
-
-angular.module('edison').controller('archivesPaiementController', archivesPaiementController);
 
 var AvoirsController = function(tabContainer, openPost, edisonAPI, $rootScope, LxProgressService, LxNotificationService, FlushList) {
     "use strict";
@@ -4044,7 +4079,7 @@ var DevisCtrl = function(edisonAPI, $scope, $rootScope, $location, $routeParams,
     }
 
     _this.saveDevis = function(options) {
-        if (!devis.produits || !devis.produits.length) {
+        if (!devis.produits ||  !devis.produits.length) {
             return LxNotificationService.error("Veuillez ajouter au moins 1 produit");
         }
         devis.save(function(err, resp) {
@@ -4062,13 +4097,14 @@ var DevisCtrl = function(edisonAPI, $scope, $rootScope, $location, $routeParams,
             }
         })
     }
+
     $scope.$watch(function() {
         return devis.client.civilite
     }, function(newVal, oldVal) {
-        if (oldVal !== newVal)
-            devis.tva = 20;
+        if (oldVal !== newVal) {
+            devis.tva = (newVal == 'Soc.' ? 20 : 10);
+        }
     })
-
 
     var updateTmpDevis = _.after(5, _.throttle(function() {
         edisonAPI.devis.saveTmp(devis);
@@ -4515,6 +4551,7 @@ var InterventionCtrl = function(Description, Signalement, ContextMenu, $window, 
         //$scope.interList = true;
     }
 
+    _this.sstBase = intervention.sst;
     if (intervention.sst) {
         _this.selectArtisan(intervention.sst, true);
     }

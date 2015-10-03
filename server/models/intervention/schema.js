@@ -359,6 +359,12 @@ module.exports = function(db) {
 
             },
         },
+        recouvrement: {
+            level: {
+                type: Number,
+                default: 0
+            }
+        },
         relance: {
             r1: Date,
             r2: Date,

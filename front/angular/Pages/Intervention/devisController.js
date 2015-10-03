@@ -33,7 +33,7 @@ var DevisCtrl = function(edisonAPI, $scope, $rootScope, $location, $routeParams,
     }
 
     _this.saveDevis = function(options) {
-        if (!devis.produits || !devis.produits.length) {
+        if (!devis.produits ||  !devis.produits.length) {
             return LxNotificationService.error("Veuillez ajouter au moins 1 produit");
         }
         devis.save(function(err, resp) {
@@ -51,13 +51,14 @@ var DevisCtrl = function(edisonAPI, $scope, $rootScope, $location, $routeParams,
             }
         })
     }
+
     $scope.$watch(function() {
         return devis.client.civilite
     }, function(newVal, oldVal) {
-        if (oldVal !== newVal)
-            devis.tva = 20;
+        if (oldVal !== newVal) {
+            devis.tva = (newVal == 'Soc.' ? 20 : 10);
+        }
     })
-
 
     var updateTmpDevis = _.after(5, _.throttle(function() {
         edisonAPI.devis.saveTmp(devis);
