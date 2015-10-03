@@ -113,7 +113,7 @@ angular.module('edison').factory('tabContainer', ['$location', '$window', '$q', 
         }
     };
 
-    TabContainer.prototype.close= function(tab) {
+    TabContainer.prototype.close = function(tab) {
         if (this.len() > 1) {
             console.log("multiple tabs")
             if (this.remove(tab)) {
@@ -158,13 +158,18 @@ angular.module('edison').factory('tabContainer', ['$location', '$window', '$q', 
     }
     TabContainer.prototype.addTab = function(url, options) {
         var tab;
+        var noOpen = [
+            '/list',
+            '/search',
+            '/recap',
+            '/artisan/contact',
+            '/tools/edit',
+        ]
         if (this.noClose) {
             tab = this._tabs[0]
-        }
-        else if ((_.includes(url, '/list') || _.startsWith(url, '/search')  || _.includes(url, '/recap') || _.startsWith(url, '/artisan/contact')) && this.getTabSimple(url)) {
+        } else if (_.find(noOpen, _.partial(_.includes, url)) && this.getTabSimple(url)) {
             tab = this.getTabSimple(url);
-        }
-        else if (this.noClose || this.isOpen(url, options)) {
+        } else if (this.noClose || this.isOpen(url, options)) {
             tab = this.getTab(url, options)
         } else {
             tab = this.createTab(url, options);
