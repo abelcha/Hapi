@@ -43,8 +43,6 @@ module.exports = function(schema) {
             UP(this.client.address)
             _this.sst = _this.artisan.id
             _this.enDemarchage = _this.login.demarchage;
-            _this.litigesEnCours = _.find(_this.litiges, 'regle', false);
-            _this.savEnCours = _.find(_this.sav, 'status', 'ENC');
             _this.cache = db.model('intervention').Core.minify(_this);
             if (isWorker) {
                 return next();

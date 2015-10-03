@@ -287,25 +287,10 @@ FiltersFactory.prototype.list = {
         },
     }, {
         short_name: 'i_sav',
-        long_name: 'Tous les S.A.V',
-        url: 'serviceApresVente',
-        match: {
-            sav: {
-                $gt: {
-                    $size: 0
-                }
-            }
-        },
-    }, {
-        short_name: 'i_savEnc',
         long_name: 'S.A.V En Cours',
-        url: 'serviceApresVenteEnCours',
+        url: 'savEnCours',
         match: {
-            sav: {
-                $elemMatch:  {
-                    status: 'ENC'
-                }
-            }
+            'sav.status': 'ENC'
         },
     }, {
         short_name: 'i_lit',

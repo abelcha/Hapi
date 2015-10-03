@@ -108,13 +108,11 @@ module.exports = function(db) {
                 cp: String,
             },
         },
-        sav: [{
+        sav: {
             status: String,
             description: String,
-            login: String,
             sst: Number,
-            date: Date,
-        }],
+        },
         sst: {
             type: Number,
             ref: 'artisan'

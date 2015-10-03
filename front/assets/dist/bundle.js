@@ -476,25 +476,10 @@ FiltersFactory.prototype.list = {
         },
     }, {
         short_name: 'i_sav',
-        long_name: 'Tous les S.A.V',
-        url: 'serviceApresVente',
-        match: {
-            sav: {
-                $gt: {
-                    $size: 0
-                }
-            }
-        },
-    }, {
-        short_name: 'i_savEnc',
         long_name: 'S.A.V En Cours',
-        url: 'serviceApresVenteEnCours',
+        url: 'savEnCours',
         match: {
-            sav: {
-                $elemMatch:  {
-                    status: 'ENC'
-                }
-            }
+            'sav.status': 'ENC'
         },
     }, {
         short_name: 'i_lit',
@@ -1999,6 +1984,13 @@ module.exports = {
             return e.short_name === short_name
         })
     },
+    savStatus: [{
+        short_name: 'ENC',
+        long_name: 'En Cours',
+    }, {
+        short_name: 'EFF',
+        long_name: 'Effectué'
+    }],
     artisanSubStatus: {
         NEW: {
             long_name: 'New',

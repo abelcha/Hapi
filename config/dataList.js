@@ -546,6 +546,13 @@ module.exports = {
             return e.short_name === short_name
         })
     },
+    savStatus: [{
+        short_name: 'ENC',
+        long_name: 'En Cours',
+    }, {
+        short_name: 'EFF',
+        long_name: 'Effectué'
+    }],
     artisanSubStatus: {
         NEW: {
             long_name: 'New',
