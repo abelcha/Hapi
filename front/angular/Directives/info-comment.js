@@ -9,6 +9,7 @@
          },
          link: function(scope, elem, attr) {
              scope.height = attr.height ||  216;
+             scope.user = user;
              scope.addComment = function() {
                  scope.data.comments.push({
                      login: user.login,

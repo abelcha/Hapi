@@ -4,10 +4,13 @@
         <div class="paragraph fs-body-1 mt+" style="{{height}}px;" slimscroll="{height:height}">
             <ul style="padding-bottom:20px;margin-left: 0px;">
                 <li class="list-row" ng-repeat="com in data.comments | reverse">
-                    <div class="list-row__content" style="margin: 0px;padding: 3px 0px;">
+                    <div ng-if="!com.deleted" class="list-row__content" style="margin: 0px;padding: 3px 0px;">
                         <span class="display-inline">
+                        <i ng-if="user.root === true" ng-click="com.deleted = true" class="fa fa-remove" style="color:red"></i>
                         <span class="display-inline fs-body-1 tc-black-2">
                         {{com.date  |  date:"dd/MM/yy hh:mm"}} - {{com.login}} -  </span>{{com.text}}</span>
+                        <span class="display-inline">
+                        </span>
                     </div>
                 </li>
             </ul>
