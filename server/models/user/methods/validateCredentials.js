@@ -56,7 +56,7 @@ module.exports = function(schema) {
                         //console.log(err, resp)
                     })
                 });
-                reject('okss')
+                resolve('ok')
             })
         })
     }

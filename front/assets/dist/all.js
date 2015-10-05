@@ -4916,7 +4916,7 @@ var editCombos = function(tabContainer, edisonAPI, $rootScope, $scope, $location
     "use strict";
     var _this = this;
     _this.tab = tabContainer.getCurrentTab();
-    _this.tab.setTitle('Produits');
+    _this.tab.setTitle('Combos');
 
 
     var base = {
