@@ -112,6 +112,9 @@ var editCombos = function(tabContainer, edisonAPI, $rootScope, $scope, $location
             //  edisonAPI.combo.save($scope.plSave);
         })
     }
+    _this.remove = function(obj) {
+        $scope.pl.splice(_.findIndex($scope.pl, '_id', obj._id), 1);
+    }
 
     _this.getInter = function(prods)  {
         var x = _.clone(base)

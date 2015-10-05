@@ -14,6 +14,10 @@ var editProducts = function(tabContainer, edisonAPI, $rootScope, $scope, $locati
         $scope.pl = _.map(resp.data, single);
     })
 
+    _this.remove = function(obj) {
+        $scope.pl.splice(_.findIndex($scope.pl, '_id', obj._id), 1);
+    }
+
     _this.save = function() {
         edisonAPI.product.save($scope.pl).then(function(resp) {
             $scope.pl = _.map(resp.data, single);

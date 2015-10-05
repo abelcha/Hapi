@@ -98,6 +98,11 @@
             litige: {
 
             },
+            compta: {
+                paiement: {
+
+                }
+            },
             reglementSurPlace: true,
             date: {
                 ajout: new Date(timestamp),

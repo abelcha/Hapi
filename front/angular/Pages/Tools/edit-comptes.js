@@ -17,6 +17,9 @@ var editComptes = function(tabContainer, edisonAPI, $rootScope, $scope, $locatio
             LxNotificationService.error("Une erreur est survenu (" + JSON.stringify(err.data) + ')');
         })
     }
+    _this.remove = function(obj) {
+        $scope.pl.splice(_.findIndex($scope.pl, '_id', obj._id), 1);
+    }
 }
 
 angular.module('edison').controller('editComptes', editComptes);

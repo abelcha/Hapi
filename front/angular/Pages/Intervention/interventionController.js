@@ -188,10 +188,8 @@ var InterventionCtrl = function(Description, Signalement, ContextMenu, $window, 
         ]).then(function(result) {
             intervention.sst = intervention.artisan = result[0].data;
             intervention.sst.stats = result[1].data
-            console.log(result[0].data.pourcentage)
             if (!first) {
                 intervention.compta.paiement.pourcentage = _.clone(intervention.sst.pourcentage);
-                console.log('==>', intervention.compta.paiement.pourcentage);
             }
             edisonAPI.getDistance(latLng(sst.address), latLng(intervention.client.address))
                 .then(function(dir) {

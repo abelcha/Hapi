@@ -17,6 +17,9 @@ var editUsers = function(tabContainer, edisonAPI, $rootScope, $scope, $location,
             LxNotificationService.error("Une erreur est survenu (" + JSON.stringify(err.data) + ')');
         })
     }
+    _this.remove = function(obj) {
+        $scope.usrs.splice(_.findIndex($scope.usrs, '_id', obj._id), 1);
+    }
 
 
 }
