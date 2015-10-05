@@ -12,7 +12,6 @@
      _this.routeParamsFilter = $routeParams.fltr;
      if (_this.embedded) {
          _this.$watch('filter', function() {
-             console.log('FILTER_CHANGE')
              if (_.size(_this.filter)) {
                  _this.customFilter = function(inter) {
                      for (var i in _this.filter) {
@@ -86,7 +85,6 @@
          var tableSettings = {
              total: dataProvider.filteredData,
              getData: function($defer, params) {
-                console.log('GETDATA')
                  actualiseUrl(params.filter(), params.page())
                  var data = dataProvider.filteredData;
                  data = $filter('tableFilter')(data, params.filter());
@@ -114,7 +112,6 @@
 
      _this.contextMenu = new ContextMenu(_this.model)
 
-     console.log(_this.contextMenu)
 
      if (user.service === 'COMPTABILITE') {
          var subs = _.findIndex(_this.contextMenu.list, "title", "Appels");
@@ -145,13 +142,12 @@
                  allowDuplicates: false
              });
          } else {
-             $timeout(function() {
-                 if (_this.expendedRow === inter.id) {
-                     _this.expendedRow = undefined;
-                 } else {
-                     _this.expendedRow = inter.id
-                 }
-             }, 10)
+             $('.drpdwn').remove()
+             if (_this.expendedRow === inter.id) {
+                 _this.expendedRow = undefined;
+             } else {
+                 _this.expendedRow = inter.id
+             }
          }
      }
  }

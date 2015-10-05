@@ -29,9 +29,9 @@
                 <td>{{expendedRow}} {{expendedRow && expendedRow === artisan.id}}</td>
             </tr>
             <tr ng-repeat-end ng-if="expendedRow && expendedRow === artisan.id">
-                <td colspan="42" style="background-color:white!important">
-                    lol
-                    <!-- <dropdown-row model="artisan" row="artisan" expendedRow="expendedRow"></dropdown-row> -->
+                <td class="drpdwn" colspan="42" style="background-color:white!important">
+                
+                    <dropdown-row model="artisan" row="artisan" expendedRow="expendedRow"></dropdown-row>
                 </td>
             </tr>
         </tbody>

@@ -262,6 +262,14 @@ FiltersFactory.prototype.list = {
             }
         },
     }, {
+        short_name: 'a_sur',
+        long_name: 'A Surveiller',
+        url: 'aSurveiller',
+        group: '$login.management',
+        match: {
+            'aSurveiller': true
+        },
+    }, {
         short_name: 'a_arc',
         long_name: 'archivés',
         url: 'archives',
@@ -1221,9 +1229,6 @@ module.exports = [{
 },{}],7:[function(require,module,exports){
 module.exports = {
     artisan: [{
-        title: "Manager",
-        action: 'manager',
-    }, {
         title: 'Ouvrir Fiche',
         action: "ouvrirFiche"
     }, {
@@ -1244,6 +1249,9 @@ module.exports = {
         hide: function(artisan) {
             return (artisan.document && artisan.document.cni && artisan.document.kbis && artisan.document.contrat);
         }
+    }, {
+        title: "Manager",
+        action: 'manager',
     }, {
         title: "Rappel Contrat",
         action: 'rappelContrat',

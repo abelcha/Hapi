@@ -53,6 +53,7 @@
         return {
             da: d(e.date.ajout),
             t: e.login.ajout,
+            mn: e.login.management,
             c: e.categories,
             id: e._id,
             n: e.nomSociete,

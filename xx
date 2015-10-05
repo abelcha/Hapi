@@ -1,0 +1,9 @@
+1) Tous les devis transformer sont enregistrer en tant que devis et non intervention
+2) On a perdu les information liés a l'interventions sur les inters concernés.
+3) J'ai repris dans un backup les informations de 90% des devis
+4) il reste ~70 interventions pour lequel on a pas d'informations
+5) operation tricksy pour recuperer les informations perdu
+6) ==> il reste ~40 interventions dont on sais qu'elles ont en cours, mais pas les informations de celles-ci
+
+
+ps: les devis transformer + qui n'ont jamais été envoyé n'ont pas été traité (whatever)

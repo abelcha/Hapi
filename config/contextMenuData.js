@@ -1,8 +1,5 @@
 module.exports = {
     artisan: [{
-        title: "Manager",
-        action: 'manager',
-    }, {
         title: 'Ouvrir Fiche',
         action: "ouvrirFiche"
     }, {
@@ -23,6 +20,9 @@ module.exports = {
         hide: function(artisan) {
             return (artisan.document && artisan.document.cni && artisan.document.kbis && artisan.document.contrat);
         }
+    }, {
+        title: "Manager",
+        action: 'manager',
     }, {
         title: "Rappel Contrat",
         action: 'rappelContrat',
