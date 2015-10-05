@@ -9,6 +9,7 @@
          currentFilter = filtersFactory.getFilterByUrl($routeParams.fltr)
      }
 
+
      _this.routeParamsFilter = $routeParams.fltr;
      if (_this.embedded) {
          _this.$watch('filter', function() {
@@ -69,18 +70,25 @@
              }
          })
      }, 250)
-     console.log('--->', _this.limit)
+     if (_this.routeParamsFilter === 'relanceClient') {
+         sorting = {
+             l: 'asc'
+         }
+     } else {
+         sorting = {
+             id: 'desc'
+         }
+     }
      dataProvider.init(function(err, resp) {
+
 
          dataProvider.applyFilter(currentFilter, _this.tab.hash, _this.customFilter);
          var tableParameters = {
              page: $location.search()['page'] ||  1,
              total: dataProvider.filteredData.length,
              filter: _.omit($location.search(), 'hashModel', 'page', 'sstid'),
-             sorting: {
-                 id: 'desc'
-             },
-             count: _this.limit || 30
+             sorting: sorting,
+             count: _this.limit || 100
          };
          var tableSettings = {
              total: dataProvider.filteredData,
@@ -142,7 +150,7 @@
                  allowDuplicates: false
              });
          } else {
-             $('.drpdwn').remove()
+             // $('.drpdwn').remove()
              if (_this.expendedRow === inter.id) {
                  _this.expendedRow = undefined;
              } else {

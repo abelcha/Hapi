@@ -14,9 +14,9 @@ md-switch.md-checked.md-primary .md-bar {
     padding: 3px;
 }
 
-#tbody-list>tr {
+/*#tbody-list>tr {
     transition: background 2s;
-}
+}*/
 
 .flash {
     background: rgba(125, 255, 125, 0.48)!important;
