@@ -8,13 +8,18 @@ angular.module('edison').filter('relativeDate', function() {
         } else {
             var x = d.fromNow().toString()
             if (smallWin) {
-                x = x.replace(' heures', 'H')
+                x = x
+                    .replace('quelques secondes', '')
+                    .replace(' minutes', 'mn')
+                    .replace(' minute', 'mn')
+                    .replace(' une', '1')
                     .replace(' heures', 'H')
+                    .replace(' heure', 'H')
                     .replace(' jours', 'J')
                     .replace(' jour', 'J')
-                    .replace('il y a ', '- ')
-                    .replace('dans ', '+ ')
-                    .replace('un ', '1 ')
+                    .replace('il y a', '-')
+                    .replace('dans ', '+')
+                    .replace('un ', '1')
             }
             return x;
         }
