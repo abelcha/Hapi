@@ -10,7 +10,7 @@
                         </div>
                         <div style="float:right;width:30%">
                             <button ng-if="!vm.data.id || vm.data.origin === 'DEM'" ng-click="vm.data.origin = 'DEM'" class="btn--no-conflicts btn--l {{vm.data.origin === 'DEM' ? 'blue' : 'grey' }} btn--flat" lx-ripple><strong>DÉMARCHÉ</strong></button>
-                               <button ng-if="!vm.data.id || vm.data.origin === 'CAND'"  ng-click="vm.data.origin = 'CAND'" class="btn--no-conflicts btn--l {{vm.data.origin === 'CAND' ? 'yellow darken' : 'grey' }} btn--flat" lx-ripple><strong>CANDIDAT</strong></button>
+                            <button ng-if="!vm.data.id || vm.data.origin === 'CAND'" ng-click="vm.data.origin = 'CAND'" class="btn--no-conflicts btn--l {{vm.data.origin === 'CAND' ? 'yellow darken' : 'grey' }} btn--flat" lx-ripple><strong>CANDIDAT</strong></button>
                         </div>
                     </div>
                 </div>
@@ -67,6 +67,13 @@
                             <div class="col-sm-3">
                                 <lx-text-field label="Téléphone 2">
                                     <input capitalize type="text" ng-model="vm.data.telephone.tel2">
+                                </lx-text-field>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <lx-text-field label="Siret">
+                                    <input type="text" ng-model="vm.data.siret">
                                 </lx-text-field>
                             </div>
                         </div>
@@ -134,15 +141,14 @@
                                 <input type="number" ng-model="vm.data.zoneChalandise">
                             </lx-text-field>
                         </div>
-                    </div>
-                    <br>
-                    <div class="row">
                         <div class="col-sm-3">
-                            <lx-text-field label="Siret">
-                                <input type="text" ng-model="vm.data.siret">
-                            </lx-text-field>
+                            <md-switch style="margin-top: 6px;" class="md-primary" md-no-ink aria-label="Switch No Ink" ng-model="vm.data.aSurveiller">
+                                A Surveiller
+                            </md-switch>
+                            <br>
                         </div>
                     </div>
+                    <br>
                 </div>
             </div>
             <br>
@@ -223,7 +229,7 @@
             </div>
         </div>
     </div>
-      <div class="dropdown-menu--no-conflicts dropdown-menu--right dropdown__menu--is-dropped" style=" width: auto; height: auto; opacity: 1;" ng-style="vm.contextMenu.style">
+    <div class="dropdown-menu--no-conflicts dropdown-menu--right dropdown__menu--is-dropped" style=" width: auto; height: auto; opacity: 1;" ng-style="vm.contextMenu.style">
         <div class="dropdown-menu__content ng-scope">
             <ul class="ng-scope">
                 <li ng-repeat="item in vm.contextMenu.list" ng-click="vm.contextMenu.close();vm.contextMenu.click(item)">

@@ -1,3 +1,145 @@
+<a name="0.8.3"></a>
+# 0.8.3 (2015-08-09)
+
+
+## Bug Fixes
+
+- **ngTableDefaultGetData:** should ignore null and undefined filter values
+  ([64a33a85](https://github.com/esvit/ng-table/commit/64a33a8573e913ab38849534e7cbf85a286f245c))
+
+
+## Features
+
+- **NgTableParams:**
+  - filter function option to remove insignificant values
+  ([2f5f3016](https://github.com/esvit/ng-table/commit/2f5f30161a9cdd2628b3e713fae922faa85db911))
+  - isSortBy direction parameter now optional
+  ([b3e02b92](https://github.com/esvit/ng-table/commit/b3e02b922064a73e302ad08a2b6f90678dcc18dc))
+  - add response error interception
+  ([5613d1e0](https://github.com/esvit/ng-table/commit/5613d1e00cca6b8027686806a341a8b64e89a552))
+- **number.html:** new filter template for numbers
+  ([78b02bbf](https://github.com/esvit/ng-table/commit/78b02bbfe4e00c395df70d9bef64ac0b20d01e4d))
+
+
+<a name="0.8.2"></a>
+# 0.8.2 (2015-08-06)
+
+
+## Bug Fixes
+
+- **NgTableParams:** datasetChanged event fires too early
+  ([9706a60b](https://github.com/esvit/ng-table/commit/9706a60bc77f787afb04f01e9769c896fc63c063))
+- **select-filter:** select lists should not display an empty and '-' option
+  ([1ee441be](https://github.com/esvit/ng-table/commit/1ee441bebf3e1f8fac260a38b8b82122714191d2))
+
+
+## Features
+
+- **NgTableParams:** generatePagesArray can be called without arguments
+  ([25fc82bd](https://github.com/esvit/ng-table/commit/25fc82bd051b07ee9b49f105e453e7a64b462bfc))
+
+
+<a name="0.8.1"></a>
+# 0.8.1 (2015-08-02)
+
+
+## Bug Fixes
+
+- **ngTableController:**
+  - table not reloaded when new NgTableParams bound to scope
+  ([d8cbd771](https://github.com/esvit/ng-table/commit/d8cbd771d11beb53cdb16e060c32cf633095d466))
+  - apply filter delay only when relevant
+  ([1ed42168](https://github.com/esvit/ng-table/commit/1ed42168d59933881f11ba36047459ddfe1af442))
+
+
+## Features
+
+- **NgTableController:** optimize calls to reload
+  ([e94ca5f7](https://github.com/esvit/ng-table/commit/e94ca5f7873673616e15a46ab8317595331ab6e1))
+- **NgTableParams:**
+  - allow getData to return an array of data
+  ([ab9ffdfa](https://github.com/esvit/ng-table/commit/ab9ffdfa09c64a10b4f955db21ed4de0a0bf7a9d))
+  - add hasFilter function
+  ([1163e22c](https://github.com/esvit/ng-table/commit/1163e22c9115515f3e9854769aa179895edfa550))
+  - add isDataReloadRequired and hasFilterChanges methods
+  ([95b0f2ba](https://github.com/esvit/ng-table/commit/95b0f2ba9e5073b5866c7c332c9556debe76495c))
+  - better default implementation of getData that filters and sorts
+  ([8d912609](https://github.com/esvit/ng-table/commit/8d912609f156d3722bba79ea53d5232576282ae8))
+  - extend getData with interceptor pipeline
+  ([f94c6357](https://github.com/esvit/ng-table/commit/f94c63572782b2e8a808beaf0c58a463e3fe50a4))
+- **ngTableController:** automatically reload table when settings data array changes
+  ([4817c203](https://github.com/esvit/ng-table/commit/4817c20359ee571c73e0edba89bf759a4f3b5aa2))
+- **ngTableDefaultGetData:** new service for applying NgTableParam filters (etc) to a data array
+  ([bdf5d9ee](https://github.com/esvit/ng-table/commit/bdf5d9ee3a71a441aba667d12bc5e48153fe32dc))
+- **ngTableEventsChannel:** publish strongly typed events using explicit service
+  ([1f3e7e4c](https://github.com/esvit/ng-table/commit/1f3e7e4cd797d6b96bb57473786eea64f805ce81))
+- **ngTableFilterConfig:** setConfig now merges with previous config values
+  ([155ef620](https://github.com/esvit/ng-table/commit/155ef6203baf228976d201e6757adf69a669d5c0))
+
+
+<a name="0.8.0"></a>
+# 0.8.0 (2015-07-25)
+
+
+## Bug Fixes
+
+- **ngTableController:** don't trigger reload whilst a reload is already in-flight
+  ([97d09ca4](https://github.com/esvit/ng-table/commit/97d09ca43501ea97a30e1afcd04f6ed81df4f97d))
+
+
+## Features
+
+- **ngTableFilterConfig:** allow template urls for filters to be customized
+  ([032f6ff6](https://github.com/esvit/ng-table/commit/032f6ff6aec0fcad7c4d84976aee8dc317c67a6c))
+
+
+## Breaking Changes
+
+- **header.html:** due to [47460d67](https://github.com/esvit/ng-table/commit/47460d67acb518a402a42329e6108a4e86e436d6),
+
+
+The sortBy function previously declared by `ngTableController` has been moved to the new controller
+- `ngTableSorterRowController`.
+
+- **ngTableController:** due to [97d09ca4](https://github.com/esvit/ng-table/commit/97d09ca43501ea97a30e1afcd04f6ed81df4f97d),
+
+
+Calls to `NgTableParams.filter`, `NgTableParams.sorting` (etc) made in the `then` method of
+the promise returned by `NgTableParams.reload` will NOT trigger a subsequent call to `NgTableParams.reload`;
+the call to `NgTableParams.reload` must now be explicitly be made.
+
+Previously:
+
+```js
+tableParams.reload().then(function(){
+  if (!tableParams.total() && _.size(tableParams.filter()) > 0) {
+        tableParams.filter({});
+  }
+});
+```
+
+Now:
+
+```js
+tableParams.reload().then(function(){
+  if (!tableParams.total() && _.size(tableParams.filter()) > 0) {
+        tableParams.filter({});
+        return tableParams.reload();
+  }
+});
+```
+
+
+<a name="0.7.1"></a>
+# 0.7.1 (2015-07-20)
+
+
+## Features
+
+- **ngTableController:** add function to parse the expression used to initialise ngTableDynamic
+  ([e9333f98](https://github.com/esvit/ng-table/commit/e9333f980764e48685477b93bb5031575b0963cf))
+
+
 <a name="0.7.0"></a>
 # 0.7.0 (2015-07-13)
 

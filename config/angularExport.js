@@ -25,3 +25,4 @@ angular.module('browserify', [])
     .factory('Combo', [function() {
         return require('./combo-produits');
     }])
+

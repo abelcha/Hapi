@@ -375,12 +375,9 @@ angular.module('edison')
         Intervention.prototype.recouvrement = function(cb) {
             var _this = this;
             dialog.recouvrement(_this, function(inter) {
-                console.log('-->', inter);
-                /*Intervention(inter).save(function(err, resp) {
-                    if (!err) {
-                        return Intervention(resp).verificationSimple(cb);
-                    }
-                });*/
+                Intervention(inter).save(function(err, resp) {
+                    return (cb || _.noop)()
+                });
             });
         }
 

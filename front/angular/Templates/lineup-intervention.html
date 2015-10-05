@@ -1,8 +1,15 @@
 <div>
-    <div class="shadow-box listeInterventions">
+    <div class="shadow-box listeInterventions" ng-init="rl = (routeParamsFilter === 'relanceClient')">
+        
         <table style="background:white;cursor:pointer" ng-table="tableParams" class="table table-bordered table-hover table-hover table-xstriped" id="table-list" show-filter="true">
             <tbody id="tbody-list">
-                <tr data-id="{{inter.id}}" ng-repeat-start="inter in $data" ng-right-click="rowRightClick($event, inter)" ng-click="rowClick($event, inter, false)" ng-class="{info : contextMenu.active && contextMenu.data.id === inter.id,'light-green lighten-3':inter.rc}">
+                <tr data-id="{{inter.id}}" ng-repeat-start="inter in $data" ng-right-click="rowRightClick($event, inter)" ng-click="rowClick($event, inter, false)" ng-class="{
+                info : contextMenu.active && contextMenu.data.id === inter.id,
+                'light-green lighten-4':inter.rc, 
+                'yellow': rl && inter.l === 1,
+                'red': rl && inter.l === 2,
+                'blue': rl && inter.l === 3
+                }">
                     <td data-title="'OS'" sortable="'id'" filter="{ 'id': 'text' }">
                         <strong>{{inter.id}}</strong>
                     </td>
@@ -32,8 +39,7 @@
                         </div>
                     </td>
                     <td data-title="'Prix'" sortable="'pa'" filter="{ 'pa': 'text' }">
-                        <span ng-if="inter.f === 1" class="fa fa-list"></span>
-                        {{(inter.pa | number:2) || 0}} €
+                        <span ng-if="inter.f === 1" class="fa fa-list"></span> {{(inter.pa | number:2) || 0}} €
                     </td>
                     <td ng-init="inter._status = config.etatsHash()[inter.s];inter._etat = inter._status.long_name" data-title="smallWin ? 'S' : 'Status'" sortable="'s'" filter="{ '_etat': 'text' }">
                         <span ng-if="!smallWin" style="width:75px" class="label {{config.etatsHash()[inter.s].color}} display-block"> 

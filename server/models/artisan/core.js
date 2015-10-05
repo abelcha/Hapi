@@ -56,6 +56,7 @@
             c: e.categories,
             id: e._id,
             n: e.nomSociete,
+            tl:e.telephone.tel1,
             r: e.representant.nom + " " + e.representant.prenom,
             s: e.status,
             cp: e.address.cp,
@@ -102,7 +103,8 @@
                 categories: [],
                 email: d.email || "test@test.me",
                 login: {
-                    ajout: edison.users.search(d.ajoute_par)
+                    ajout: edison.users.search(d.ajoute_par),
+                    management: edison.users.search(d.ajoute_par)
                 },
                 date: {
                     ajout: d.date_ajout ? ((d.date_ajout + 60 * 12) * 1000) : Date.now()

@@ -51,6 +51,9 @@
                  var filtersFactory = new FiltersFactory(scope._model);
                  scope.exFltr = filtersFactory.getFilterByName(scope.fltr);
                  scope.total = findTotal();
+                 scope.exFltr = scope.exFltr ||  {
+                     url: ''
+                 };
                  scope._url = scope.exFltr.url.length ? "/" + scope.exFltr.url : scope.exFltr.url;
                  scope._login = scope.login && !scope.hashModel ? ("#" + scope.login) : '';
                  scope._hashModel = scope.hashModel ? ("?" + scope.hashModel + "=" + scope.login) : '';

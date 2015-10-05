@@ -1,5 +1,8 @@
 module.exports = {
     artisan: [{
+        title: "Manager",
+        action: 'manager',
+    }, {
         title: 'Ouvrir Fiche',
         action: "ouvrirFiche"
     }, {

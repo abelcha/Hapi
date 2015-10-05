@@ -8,13 +8,16 @@ module.exports = function(core) {
                 name: 'db',
                 model: core.name,
                 method: 'iterator',
-                req: _.pick(req, 'body', 'session')
+                req: _.pick(req, 'query', 'session')
             })
         }
         return new Promise(function(resolve, reject) {
-            core.model().find({}, {}).then(function(resp) {
+            var q = req.query.id ? {
+                id: req.query.id
+            } : {}
+            core.model().find(q, {}).then(function(resp) {
                 var i = 0;
-                async.each(resp, function(e, cb) {
+                async.eachLimit(resp, 10, function(e, cb) {
                     if (i++ % 100 === 0) {
                         console.log(Math.round(i * 100 / resp.length) + '%')
                     }
@@ -23,7 +26,7 @@ module.exports = function(core) {
                         },
                         update = {
                             $set: {
-                          //      sms:"lol"
+                                //      sms:"lol"
                                 cache: core.minify(e)
                             }
                         },

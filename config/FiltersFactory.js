@@ -63,6 +63,16 @@ FiltersFactory.prototype.list = {
         match: {},
         noCache: true,
     }, {
+        short_name: 'a_man',
+        long_name: 'A Manager',
+        url: 'aManager',
+        group: '$login.management',
+        match: {
+            'login.management': {
+                $exists: true
+            }
+        },
+    }, {
         short_name: 'a_arc',
         long_name: 'archivés',
         url: 'archives',
@@ -246,6 +256,22 @@ FiltersFactory.prototype.list = {
         match: function() {
             return {
                 status: 'VRF',
+                reglementSurPlace: true,
+                'compta.reglement.recu': false,
+                'date.intervention': {
+                    $lt: new Date(Date.now() - ms.weeks(2)),
+                }
+            }
+        },
+        stats: true,
+    }, {
+        short_name: 'i_chq',
+        long_name: 'Relance Cheques',
+        url: 'relanceCheques',
+        match: function() {
+            return {
+                status: 'VRF',
+                modeReglement: 'CHQ',
                 reglementSurPlace: true,
                 'compta.reglement.recu': false,
                 'date.intervention': {

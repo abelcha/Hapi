@@ -1,6 +1,6 @@
 angular.module('edison')
     .factory('Artisan', ['$window', '$rootScope', '$location', 'LxNotificationService', 'LxProgressService', 'dialog', 'edisonAPI', 'textTemplate',
-        function($window, $rootScope, $location, LxNotificationService, LxProgressService, dialog, edisonAPI, textTemplate) {
+        function($window, $rootScope, user, $location, LxNotificationService, LxProgressService, dialog, edisonAPI, textTemplate) {
             "use strict";
             var Artisan = function(data) {
                 if (!(this instanceof Artisan)) {
@@ -29,6 +29,7 @@ angular.module('edison')
             Artisan.prototype.typeOf = function() {
                 return 'Artisan';
             }
+
             Artisan.prototype.ouvrirFiche = function() {
                 $location.url("/artisan/" + this.id);
             }
@@ -66,13 +67,13 @@ angular.module('edison')
                                     })*/
             };
 
-            Artisan.prototype.save = function(cb) {
+            Artisan.prototype.manager = function(cb) {
                 console.log('save')
                 var _this = this;
-
+                _this.login.management = user.login;
                 edisonAPI.artisan.save(_this)
                     .then(function(resp) {
-                        LxNotificationService.success("Les données ont à été enregistré");
+                        LxNotificationService.success("Vous manager désormais " + _this.nomSociete);
                         if (typeof cb === 'function')
                             cb(null, resp.data)
                     }).catch(function(error) {

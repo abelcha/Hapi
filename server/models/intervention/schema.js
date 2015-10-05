@@ -189,7 +189,7 @@ module.exports = function(db) {
         combo: String,
         modeReglement: {
             type: String,
-            default: 'CH'
+            default: 'CHQ'
         },
         prixAnnonce: {
             type: Number,

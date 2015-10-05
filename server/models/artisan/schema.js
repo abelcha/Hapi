@@ -21,6 +21,7 @@ module.exports = function(db) {
             }
         },
         login: {
+            management: String,
             ajout: String,
         },
         origine: String, //CND/PRP
@@ -154,6 +155,7 @@ module.exports = function(db) {
             text: String,
             date: Date
         }],
+        aSurveiller: Boolean,
         historique: {
             pack: [{
                 date: {

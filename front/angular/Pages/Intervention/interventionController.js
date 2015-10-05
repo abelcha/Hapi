@@ -153,6 +153,7 @@ var InterventionCtrl = function(Description, Signalement, ContextMenu, $window, 
         }
         intervention.save(function(err, resp) {
             if (!err) {
+                intervention = new Intervention(resp);
                 postSave(options, resp, function(err) {
                     if (!err) {
                         tabContainer.close(tab);

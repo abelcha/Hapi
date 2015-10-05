@@ -1,4 +1,4 @@
- var Controller = function(tabContainer, FiltersFactory, user, ContextMenu, LxProgressService, edisonAPI, DataProvider, $routeParams, $location, $rootScope, $filter, config, ngTableParams) {
+ var Controller = function($timeout, tabContainer, FiltersFactory, user, ContextMenu, LxProgressService, edisonAPI, DataProvider, $routeParams, $location, $rootScope, $filter, config, ngTableParams) {
      var _this = this;
      LxProgressService.circular.show('#5fa2db', '#globalProgress');
      var currentFilter;
@@ -9,8 +9,7 @@
          currentFilter = filtersFactory.getFilterByUrl($routeParams.fltr)
      }
 
-
-
+     _this.routeParamsFilter = $routeParams.fltr;
      if (_this.embedded) {
          _this.$watch('filter', function() {
              console.log('FILTER_CHANGE')
@@ -82,11 +81,12 @@
              sorting: {
                  id: 'desc'
              },
-             count: _this.limit || 100
+             count: _this.limit || 30
          };
          var tableSettings = {
              total: dataProvider.filteredData,
              getData: function($defer, params) {
+                console.log('GETDATA')
                  actualiseUrl(params.filter(), params.page())
                  var data = dataProvider.filteredData;
                  data = $filter('tableFilter')(data, params.filter());
@@ -145,19 +145,20 @@
                  allowDuplicates: false
              });
          } else {
-                $('.loltest').remove();
-             if (_this.expendedRow === inter.id) {
-                 _this.expendedRow = undefined;
-             } else {
-                 _this.expendedRow = inter.id
-             }
+             $timeout(function() {
+                 if (_this.expendedRow === inter.id) {
+                     _this.expendedRow = undefined;
+                 } else {
+                     _this.expendedRow = inter.id
+                 }
+             }, 10)
          }
      }
  }
 
 
 
- angular.module('edison').directive('lineupIntervention', function(tabContainer, FiltersFactory, user, ContextMenu, LxProgressService, edisonAPI, DataProvider, $routeParams, $location, $rootScope, $filter, config, ngTableParams) {
+ angular.module('edison').directive('lineupIntervention', function($timeout, tabContainer, FiltersFactory, user, ContextMenu, LxProgressService, edisonAPI, DataProvider, $routeParams, $location, $rootScope, $filter, config, ngTableParams) {
      "use strict";
      var arg = arguments;
      return {
@@ -177,7 +178,7 @@
      }
  });
 
- angular.module('edison').directive('lineupDevis', function(tabContainer, FiltersFactory, user, ContextMenu, LxProgressService, edisonAPI, DataProvider, $routeParams, $location, $rootScope, $filter, config, ngTableParams) {
+ angular.module('edison').directive('lineupDevis', function($timeout, tabContainer, FiltersFactory, user, ContextMenu, LxProgressService, edisonAPI, DataProvider, $routeParams, $location, $rootScope, $filter, config, ngTableParams) {
      "use strict";
      var arg = arguments;
      return {
@@ -194,7 +195,7 @@
      }
  });
 
- angular.module('edison').directive('lineupArtisan', function(tabContainer, FiltersFactory, user, ContextMenu, LxProgressService, edisonAPI, DataProvider, $routeParams, $location, $rootScope, $filter, config, ngTableParams) {
+ angular.module('edison').directive('lineupArtisan', function($timeout, tabContainer, FiltersFactory, user, ContextMenu, LxProgressService, edisonAPI, DataProvider, $routeParams, $location, $rootScope, $filter, config, ngTableParams) {
      "use strict";
      var arg = arguments;
      return {

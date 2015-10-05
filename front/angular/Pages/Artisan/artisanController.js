@@ -30,9 +30,11 @@ var ArtisanCtrl = function($rootScope, $scope, edisonAPI, $location, $routeParam
     _this.data = tab.data;
     _this.saveArtisan = function(options) {
         artisan.save(function(err, resp) {
+            console.log(resp)
             if (err) {
-                return false;
+                return false
             } else if (options.contrat) {
+                artisan = new Artisan(resp);
                 artisan.envoiContrat.bind(resp)(tabContainer.close);
             } else {
                 tabContainer.close(tab);

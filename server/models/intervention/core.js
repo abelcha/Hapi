@@ -134,6 +134,7 @@
                 id: e.id,
                 f: !e.reglementSurPlace ? 1 : undefined,
                 ai: e.artisan.id,
+                l: !e.compta.reglement.recu && e.recouvrement.level || undefined,
                 s: config.etats[e._status].order,
                 c: config.categories[e.categorie].order,
                 n: e.client.civilite + ' ' + e.client.nom + ' ' + e.client.prenom,
