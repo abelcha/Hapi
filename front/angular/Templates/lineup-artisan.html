@@ -17,11 +17,11 @@
                 <td variable-length data-title="'Nom Société'" sortable="'n'" filter="{ 'n': 'text' }">
                     <strong>{{::artisan.n}}</strong>
                 </td>
-                <td variable-length data-title="'Ville'" sortable="'v'" filter="{ 'v': 'text' }">
-                    {{::artisan.v}}
+                <td variable-length data-title="'Artisan'" sortable="'v'" filter="{ 'v': 'text' }">
+                    <strong>{{::artisan.r}}</strong> {{::artisan.p}}
                 </td>
-                <td data-title="'Code_P.'" sortable="'cp'" filter="{ 'cp': 'text' }">
-                    {{::artisan.cp}}
+                <td variable-length data-title="'Ville'" sortable="'v'" filter="{ 'v': 'text' }">
+                     {{::artisan.cp}} - {{::artisan.v}}
                 </td>
                 <td data-title="'Status'" sortable="'s'" filter="{ 's': 'text' }">
                     <span style="width:80px;" class="label {{::config.etatsArtisan[artisan.s].color}}">{{::config.etatsArtisan[artisan.s].long_name}}</span>
