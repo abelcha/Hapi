@@ -58,6 +58,10 @@
                      }
                  }, true)
 
+                 scope.displayfact = function() {
+                     return scope.data.produits.length > 0 || !scope.data.reglementSurPlace || scope.dsf;
+                 }
+
                  scope.changeElemTitle = function(elem) {
                      if (!elem.showDesc) {
                          elem.desc = elem.title
