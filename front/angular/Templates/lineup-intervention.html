@@ -14,14 +14,14 @@
                         <strong>{{inter.id}}</strong>
                     </td>
                     <td data-title="smallWin ? 'T' : 'Télépro'" sortable="'t'" filter="{ 't': 'text' }">
-                        <span ng-if="smallWin"> {{inter.t | limitTo: 3}}</span>
+                        <span ng-if="smallWin"> {{inter.t.slice(0, 1)}}_{{inter.t.slice(-1)}}</span>
                         <span ng-if="!smallWin"> {{inter.t}}</span>
                     </td>
                     <td ng-init="inter._categorie = config.categoriesHash()[inter.c].long_name" data-title="smallWin ? 'C' : 'Cat.'" sortable="'c'" filter="{ '_categorie': 'text' }">
                         <span ng-if="smallWin" style="width:80px" class="label {{config.categoriesHash()[inter.c].color}}">{{config.categoriesHash()[inter.c].short_name}}</span>
                         <span ng-if="!smallWin" style="width:40px" class="label {{config.categoriesHash()[inter.c].color}}">{{config.categoriesHash()[inter.c].long_name}}</span>
                     </td>
-                    <td data-title="'Ajout'" sortable="'da'" filter="{ '∆da': 'text' }">
+                    <td data-title="smallWin ? 'Aj' : 'Ajout'" sortable="'da'" filter="{ '∆da': 'text' }">
                         {{inter.da | relativeDate:smallWin}}
                     </td>
                     <td variable-length data-title="'Client'" sortable="'n'" filter="{ 'n': 'text' }">
@@ -33,13 +33,15 @@
                     <td variable-length class="variable-length one-liner" data-title="'Artisan'" sortable="'a'" filter="{ 'a': 'text' }">
                         <strong>{{inter.a}}</strong>
                     </td>
-                    <td data-title="'Prevu'" sortable="'di'" filter="{ 'di': 'text' }">
+                    <td data-title="smallWin ? 'P' : 'Prevu'" sortable="'di'" filter="{ 'di': 'text' }">
                         <div ng-show="inter.di[0] != 1">
                             {{inter.di | relativeDate:smallWin}}
                         </div>
                     </td>
-                    <td data-title="'Prix'" sortable="'pa'" filter="{ 'pa': 'text' }">
-                        <span ng-if="inter.f === 1" class="fa fa-list"></span> {{(inter.pa | number:2) || 0}} €
+                    <td data-title="smallWin ? 'Pr' : 'Prix'" sortable="'pa'" filter="{ 'pa': 'text' }">
+                        <span ng-if="inter.f === 1" class="fa fa-list"></span> 
+                        <span ng-if="!smallWin">{{(inter.pa | number:2) || 0}} €</span>
+                        <span ng-if="smallWin">{{(inter.pa | number:0) || 0}}€</span>
                     </td>
                     <td ng-init="inter._status = config.etatsHash()[inter.s];inter._etat = inter._status.long_name" data-title="smallWin ? 'S' : 'Status'" sortable="'s'" filter="{ '_etat': 'text' }">
                         <span ng-if="!smallWin" style="width:75px" class="label {{config.etatsHash()[inter.s].color}} display-block"> 
