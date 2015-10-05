@@ -18,8 +18,8 @@ angular.module('edison').filter('relativeDate', function() {
                     .replace(' jours', 'J')
                     .replace(' jour', 'J')
                     .replace('il y a', '-')
+                    .replace(' un', '1')
                     .replace('dans ', '+')
-                    .replace('un ', '1')
             }
             return x;
         }

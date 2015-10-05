@@ -34,9 +34,9 @@
          return _this.expendedRow && _this.expendedRow === inter.id;
      }
 
-     _this.smallWin = window.innerWidth < 1200
+     _this.smallWin = window.innerWidth < 1300
      $(window).resize(function() {
-         _this.smallWin = window.innerWidth < 1200
+         _this.smallWin = window.innerWidth < 1300
      })
 
      _this.tab = tabContainer.getCurrentTab();
