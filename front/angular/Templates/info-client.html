@@ -32,12 +32,12 @@
                         </lx-text-field>
                     </div>
                     <div class="col-md-3">
-                        <lx-text-field label="Téléphone 2">
+                        <lx-text-field label="Téléphone 2" ng-if="vm.data.client.address && vm.data.categorie">
                             <input capitalize type="text" allow-pattern="\d" ng-model="client.telephone.tel2">
                         </lx-text-field>
                     </div>
                     <div class="col-md-3">
-                        <lx-text-field label="Téléphone 3">
+                        <lx-text-field label="Téléphone 3" ng-if="vm.data.client.address && vm.data.categorie">
                             <input capitalize type="text" allow-pattern="\d" ng-model="client.telephone.tel3">
                         </lx-text-field>
                     </div>

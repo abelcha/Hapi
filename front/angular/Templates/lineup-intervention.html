@@ -1,6 +1,5 @@
 <div>
     <div class="shadow-box listeInterventions" ng-init="rl = (routeParamsFilter === 'relanceClient')">
-        
         <table style="background:white;cursor:pointer" ng-table="tableParams" class="table table-bordered table-hover table-hover table-xstriped" id="table-list" show-filter="true">
             <tbody id="tbody-list">
                 <tr data-id="{{inter.id}}" ng-repeat-start="inter in $data" ng-right-click="rowRightClick($event, inter)" ng-click="rowClick($event, inter, false)" ng-class="{
@@ -39,7 +38,7 @@
                         </div>
                     </td>
                     <td data-title="smallWin ? 'Pr' : 'Prix'" sortable="'pa'" filter="{ 'pa': 'text' }">
-                        <span ng-if="inter.f === 1" class="fa fa-list"></span> 
+                        <span ng-if="inter.f === 1" class="fa fa-list"></span>
                         <span ng-if="!smallWin">{{(inter.pa | number:2) || 0}} €</span>
                         <span ng-if="smallWin">{{(inter.pa | number:0) || 0}}€</span>
                     </td>
@@ -57,6 +56,9 @@
                 <tr ng-repeat-end ng-if="displaySubRow(inter)" ng-right-click="rowRightClick($event, inter)">
                     <td class="drpdwn" colspan="42" style="background-color:white!important">
                         <dropdown-row row="inter" expendedRow="expendedRow"></dropdown-row>
+                        --{{!embedded}}--
+                        <span ng-if="!embedded">lol</span>
+                     <!--    <lineup-intervention ng-if="!embedded" embedded="true" limit="10" filter="{ai:inter.ai}"></lineup-intervention> -->
                     </td>
                 </tr>
             </tbody>

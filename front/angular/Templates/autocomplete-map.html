@@ -1,5 +1,5 @@
 <div>
-    <md-content ng-if="map.display" class="autocomplete" style="margin-left: 20%;width: 70%;  margin-top: -36px;" layout-padding layout="column" md-input-container flex>
+    <md-content class="autocomplete" style="margin-left: 20%;width: 70%;  margin-top: -36px;" layout-padding layout="column" md-input-container flex>
         <md-autocomplete class="address-autocomplete" md-selected-item-change="changeAddress(selectedAddress)" md-selected-item="selectedAddress" 
                     md-search-text-change="null"
             placeholder="Addresse du client..."
@@ -8,14 +8,14 @@
         </md-autocomplete>
     </md-content>
     <br>
-    
-    <div ng-if="!map.display && height === 'small'" style="height:315px;width:100%;overflow:hidden;">
+<!--     
+    <div ng-if="height === 'small'" style="height:315px;width:100%;overflow:hidden;">
         <img id="static-map" style="width:100%;top: -9999px;bottom: -9999px;left: -9999px;right: -9999px;margin: auto;" ng-click="map.show()" src="{{getStaticMap()}}" />
-    </div>
+    </div> -->
     <div ng-if="!map.display && height === 'big'" style="height:400px;width:100%;overflow:hidden;">
         <img id="static-map" style="width:100%;top: -9999px;bottom: -9999px;left: -9999px;right: -9999px;margin: auto;" ng-click="map.show()" src="{{getStaticMap()}}" />
     </div>
-    <map ng-if="map.display && height === 'small'" zoom="{{map.zoom}}" pan-control="false" style="height:315px" center="{{map.center.latLng}}">
+    <map ng-if="height === 'small'" zoom="{{map.zoom}}" pan-control="false" style="height:315px" center="{{map.center.latLng}}">
         <directions ng-if="data.artisan" travel-mode="DRIVING" origin="{{data.artisan.address.lt}}, {{data.artisan.address.lg}}" destination="{{client.address.latLng}}">
         </directions>
         <marker ng-if="client.address.lt" position="{{client.address.lt}}, {{client.address.lg}}" color="grey"></marker>

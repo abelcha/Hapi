@@ -104,7 +104,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="card-margin">
+                <div class="card-margin" ng-init="interList = vm.data.status !== 'VRF'">
                  <lineup-intervention ng-if="vm.recapFltr && interList" embedded="true" limit="10" filter="vm.recapFltr"></lineup-intervention>
                  </div>
                  <br>
