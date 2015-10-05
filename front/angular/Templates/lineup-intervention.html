@@ -56,9 +56,10 @@
                 <tr ng-repeat-end ng-if="displaySubRow(inter)" ng-right-click="rowRightClick($event, inter)">
                     <td class="drpdwn" colspan="42" style="background-color:white!important">
                         <dropdown-row row="inter" expendedRow="expendedRow"></dropdown-row>
-                        --{{!embedded}}--
-                        <span ng-if="!embedded">lol</span>
-                     <!--    <lineup-intervention ng-if="!embedded" embedded="true" limit="10" filter="{ai:inter.ai}"></lineup-intervention> -->
+                      <!--   --{{!embedded}}--
+                        <span ng-if="!embedded">
+                        <lineup-intervention ng-if="!embedded" embedded="true" limit="10" filter="{ai:inter.ai}"></lineup-intervention>
+                        </span> -->
                     </td>
                 </tr>
             </tbody>
