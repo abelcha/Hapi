@@ -136,7 +136,7 @@
  Relance.prototype.printStack = function(buffer, callback) {
      console.log('printStack');
 
-     document.stack(buffer, this.type.toUpperCase() + ' - ' + this.doc.id, "AUTO")
+     document.stack(buffer, this.type + ' - ' + this.doc.id, "AUTO")
          .then(function(resp) {
              callback(null, callback)
          }, cb)
