@@ -77,8 +77,9 @@
  }
 
  Relance.prototype.sendMail = function(buffer, callback) {
-     console.log('sendMail', buffer)
-     return callback(null, buffer);
+    if (envDev) {
+        return callback(null, buffer);
+    }
      mail.send({
          From: "comptabilite@edison-services.fr",
          ReplyTo: "comptabilite@edison-services.fr",
@@ -106,6 +107,9 @@
  }
 
  Relance.prototype.insertBlankPage = function(buffer, filename, callback) {
+     if (envDev) {
+         return cb(null, buffer)
+     }
      var fs = require('fs')
      var scissors = require('scissors');
      var pageNumber = PDF('facture', this.doc).getHTML().split('</page>').length
@@ -114,19 +118,15 @@
      var blank = scissors(process.cwd() + '/front/assets/pdf/blank.pdf').pages(1);
      var stream = scissors.join(p1, blank, p2).pdfStream()
      var finalBuffer = [];
-     console.log('sweg', stream)
      stream.on('data', function(data) {
-         console.log('push')
          finalBuffer.push(data);
      }).on('end', function() {
-         console.log('end')
          callback(null, Buffer.concat(finalBuffer))
+
      })
-     console.log('uau')
  }
  Relance.prototype.printStack = function(buffer, callback) {
-     console.log('printstack', buffer);
-     document.stack(buffer, 'RELANCE2 - ' + this.doc.id, "AUTO")
+     document.stack(buffer, this.type.toUpperCase() + ' - ' + this.doc.id, "AUTO")
          .then(function(resp) {
              callback(null, callback)
          })
