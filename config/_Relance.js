@@ -139,7 +139,7 @@
      document.stack(buffer, this.type.toUpperCase() + ' - ' + this.doc.id, "AUTO")
          .then(function(resp) {
              callback(null, callback)
-         })
+         }, cb)
  }
 
  module.exports = Relance;
