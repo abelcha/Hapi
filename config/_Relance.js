@@ -66,7 +66,6 @@
 
          async.waterfall([
              this.createInjonction.bind(this),
-             this.insertBlankPage.bind(this),
              this.printStack.bind(this)
          ], callback)
 
@@ -85,6 +84,9 @@
              text: this.letterBody,
              title: ""
          }
+     }, {
+         model: 'blank',
+         options: {}
      }, {
          model: 'injonction',
          options: this.doc
