@@ -2737,12 +2737,12 @@ module.exports = {
 
                     "<p> L'échéance étant dépassée, nous vous demandons de bien vouloir régulariser cette situation par retour de courrier. </p>" +
 
-                    "<p>A l'organisme qui gère notre comptabilité:</p>" +
+                    "<strong><p>A l'organisme qui gère notre comptabilité:</p>" +
                     "<p strong center> EDISON SERVICES FRANCE<br>" +
                     "Service comptabilité<br>" +
                     "75 rue des dames, 75017 Paris<br>" +
                     "Tél. 09.72.51.08.01 (Ouvert de 09h00 à 12h30 / 14h00 à 16h30)</p>" +
-                    "<p>" +
+                    "</strong><p>" +
                     "Pour un reglement par virement :<br>" +
                     "<br>" +
                     "RIB: 30004 01557 00010041423 30<br>" +
