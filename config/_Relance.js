@@ -49,7 +49,7 @@
              this.writeTmpFile.bind(this),
              this.insertBlankPage.bind(this),
              this.printStack.bind(this)
-         ])
+         ], callback)
      } else if (this.type === 'relance3') {
          this.mailBody = _.template(textTemplate.mail.intervention.relance3())(this.doc);
          this.letterBody = _.template(textTemplate.lettre.intervention.relance3())(this.doc);
@@ -61,7 +61,7 @@
              this.writeTmpFile.bind(this),
              this.insertBlankPage.bind(this),
              this.printStack.bind(this)
-         ])
+         ], callback)
 
      }
  }
