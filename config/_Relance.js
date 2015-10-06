@@ -35,7 +35,7 @@
          this.letterBody = _.template(textTemplate.lettre.intervention.relance1())(this.doc);
          this.mailTitle = _.template("Première relance pour facture n°{{id}} impayée")(this.doc);
          async.waterfall([
-             this.createPdf.bind(this),
+             this.createFacture.bind(this),
              this.sendMail.bind(this),
          ], callback);
      } else if (this.type === 'relance2') {
@@ -43,7 +43,7 @@
          this.letterBody = _.template(textTemplate.lettre.intervention.relance2())(this.doc);
          this.mailTitle = _.template("Deuxieme relance pour facture n°{{id}} impayée")(this.doc);
          async.waterfall([
-             this.createPdf.bind(this),
+             this.createFacture.bind(this),
              this.sendMail.bind(this),
              this.writeTmpFile.bind(this),
              this.insertBlankPage.bind(this),
@@ -55,7 +55,7 @@
          this.mailTitle = _.template("Troisième relance pour facture n°{{id}} impayée")(this.doc);
 
          async.waterfall([
-             this.createPdf.bind(this),
+             this.createFacture.bind(this),
              this.sendMail.bind(this),
              this.writeTmpFile.bind(this),
              this.insertBlankPage.bind(this),
@@ -65,10 +65,7 @@
          this.letterBody = _.template(textTemplate.lettre.intervention.relance4())(this.doc);
 
          async.waterfall([
-             this.createPdf.bind(this),
-             this.sendMail.bind(this),
-             this.writeTmpFile.bind(this),
-             this.insertBlankPage.bind(this),
+             this.createInjonction.bind(this),
              this.printStack.bind(this)
          ], callback)
 
@@ -77,8 +74,31 @@
      }
  }
 
- Relance.prototype.createPdf = function(callback) {
-     console.log('createPdf');
+ Relance.prototype.createInjonction = function(callback) {
+     console.log('createInjonction');
+     PDF([{
+         model: 'letter',
+         options: {
+             address: this.doc.facture.address,
+             dest: this.doc.facture,
+             text: this.letterBody,
+             title: ""
+         }
+     }, {
+         model: 'injonction',
+         options: this.doc
+     }, {
+         model: 'facture',
+         options: this.doc
+     }, {
+         model: 'conditions',
+         options: this.doc
+     }]).toBuffer(callback)
+ }
+
+
+ Relance.prototype.createFacture = function(callback) {
+     console.log('createFacture');
      PDF([{
          model: 'letter',
          options: {
