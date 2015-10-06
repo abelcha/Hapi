@@ -41,7 +41,13 @@
      } else if (this.type === 'relance2') {
          this.mailBody = _.template(textTemplate.mail.intervention.relance1())(this.doc);
          this.letterBody = _.template(textTemplate.lettre.intervention.relance1())(this.doc);
-
+         async.waterfall([
+             this.createPdf.bind(this),
+             this.sendMail.bind(this),
+             this.writeTmpFile.bind(this),
+             this.insertBlankPage.bind(this),
+             this.printStack.bind(this)
+         ])
      }
  }
 
@@ -71,7 +77,8 @@
  }
 
  Relance.prototype.sendMail = function(buffer, callback) {
-    console.log('sendMail', buffer)
+     console.log('sendMail', buffer)
+     return callback(null, buffer);
      mail.send({
          From: "comptabilite@edison-services.fr",
          ReplyTo: "comptabilite@edison-services.fr",
@@ -84,7 +91,9 @@
              Name: "Facture n°" + this.doc.id + ".pdf",
              ContentType: 'application/pdf'
          }]
-     }, callback);
+     }, function(resp) {
+         callback(null, buffer)
+     });
  }
 
  Relance.prototype.writeTmpFile = function(buffer, callback) {
@@ -99,20 +108,24 @@
  Relance.prototype.insertBlankPage = function(buffer, filename, callback) {
      var fs = require('fs')
      var scissors = require('scissors');
-     var pageNumber = PDF('facture', e).getHTML().split('</page>').length
+     var pageNumber = PDF('facture', this.doc).getHTML().split('</page>').length
      var p1 = scissors(filename).pages(1) // select or reorder individual pages 
      var p2 = scissors(filename).range(2, pageNumber + 1);
      var blank = scissors(process.cwd() + '/front/assets/pdf/blank.pdf').pages(1);
      var stream = scissors.join(p1, blank, p2).pdfStream()
      var finalBuffer = [];
+     console.log('sweg', stream)
      stream.on('data', function(data) {
+         console.log('push')
          finalBuffer.push(data);
      }).on('end', function() {
+         console.log('end')
          callback(null, Buffer.concat(finalBuffer))
-
      })
+     console.log('uau')
  }
  Relance.prototype.printStack = function(buffer, callback) {
+     console.log('printstack', buffer);
      document.stack(buffer, 'RELANCE2 - ' + this.doc.id, "AUTO")
          .then(function(resp) {
              callback(null, callback)
