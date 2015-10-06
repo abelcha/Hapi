@@ -69,34 +69,27 @@
              this.printStack.bind(this)
          ], callback)
 
+     } else if (this.type === 'relance4') {
+         this.letterBody = _.template(textTemplate.lettre.intervention.relance4())(this.doc);
+
+         async.waterfall([
+             this.createAvisAvantPoursuites.bind(this),
+             this.printStack.bind(this)
+         ], callback)
+
      } else {
          callback(null);
      }
  }
 
+
+ Relance.prototype.createAvisAvantPoursuites = function(callback) {
+     PDF('recouvrement', this.doc).toBuffer(callback)
+ }
+
+
  Relance.prototype.createInjonction = function(callback) {
-     console.log('createInjonction');
-     PDF([{
-         model: 'letter',
-         options: {
-             address: this.doc.facture.address,
-             dest: this.doc.facture,
-             text: this.letterBody,
-             title: ""
-         }
-     }, {
-         model: 'blank',
-         options: {}
-     }, {
-         model: 'injonction',
-         options: this.doc
-     }, {
-         model: 'facture',
-         options: this.doc
-     }, {
-         model: 'conditions',
-         options: this.doc
-     }]).toBuffer(callback)
+     PDF('injonction', this.doc).toBuffer(callback)
  }
 
 
