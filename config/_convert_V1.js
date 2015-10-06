@@ -76,32 +76,35 @@ var V1 = function(d, devis, legacy) {
         if (d.compta && d.compta.reglement.recu) {
             x.reglement_sur_place = 3;
         }
-        x.mode_reglement = (!d.reglementSurPlace ? 'facture' : _.find(config.modeDeReglements, 'short_name', d.modeReglement).old_name);
-        x.remarque = d.remarque
-        if (d.facture) {
-            x.nom_facture = d.facture.nom
-            x.prenom_facture = d.facture.prenom
-            x.tel_facture = d.facture.telephone
-            x.mail_facture = d.facture.email
-            x.numero_facture = d.facture.address.n
-            x.adresse_facture = d.facture.address.r
-            x.code_postal_facture = d.facture.address.cp
-            x.ville_facture = d.facture.address.v
-            x.type_client = _.findIndex(config.typePayeur, 'short_name', d.facture.payeur)
-            x.relance_facture = d.facture.relance
-        }
-        if (d.relance) {
-            x.relance = JSON.stringify(d.relance)
-        }
-        if (d.fourniture.length) {
-            x.cout_fourniture = 0; //d.fourniture[0].pu;
-            _.each(d.fourniture, function(e) {
-                x.cout_fourniture += (e.quantite * e.pu)
-            })
-            x.fournisseur = d.fourniture[0].fournisseur
-            x.fourniture_sst = Number(d.fourniture[0].fournisseur !== "ARTISAN") + 1;
-            //x.fourniture_edison = Number(d.fourniture[0].fournisseur != "")
-            x.tva_facture = d.tva;
+        if (!devis) {
+
+            x.mode_reglement = (!d.reglementSurPlace ? 'facture' : _.find(config.modeDeReglements, 'short_name', d.modeReglement).old_name);
+            x.remarque = d.remarque
+            if (d.facture) {
+                x.nom_facture = d.facture.nom
+                x.prenom_facture = d.facture.prenom
+                x.tel_facture = d.facture.telephone
+                x.mail_facture = d.facture.email
+                x.numero_facture = d.facture.address.n
+                x.adresse_facture = d.facture.address.r
+                x.code_postal_facture = d.facture.address.cp
+                x.ville_facture = d.facture.address.v
+                x.type_client = _.findIndex(config.typePayeur, 'short_name', d.facture.payeur)
+                x.relance_facture = d.facture.relance
+            }
+            if (d.relance) {
+                x.relance = JSON.stringify(d.relance)
+            }
+            if (d.fourniture.length) {
+                x.cout_fourniture = 0; //d.fourniture[0].pu;
+                _.each(d.fourniture, function(e) {
+                    x.cout_fourniture += (e.quantite * e.pu)
+                })
+                x.fournisseur = d.fourniture[0].fournisseur
+                x.fourniture_sst = Number(d.fourniture[0].fournisseur !== "ARTISAN") + 1;
+                //x.fourniture_edison = Number(d.fourniture[0].fournisseur != "")
+                x.tva_facture = d.tva;
+            }
         }
         x.taux_tva = d.tva ||  10
         x.etat_intervention = devis ? 'DEVIS' : config.etats[d.status].old_name;
