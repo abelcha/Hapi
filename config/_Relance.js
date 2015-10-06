@@ -82,12 +82,12 @@
 
 
  Relance.prototype.createAvisAvantPoursuites = function(callback) {
-     PDF('recouvrement', this.doc).toBuffer(callback)
+     PDF('recouvrement', this.doc).buffer(callback)
  }
 
 
  Relance.prototype.createInjonction = function(callback) {
-     PDF('injonction', this.doc).toBuffer(callback)
+     PDF('injonction', this.doc).buffer(callback)
  }
 
 
