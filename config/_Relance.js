@@ -146,7 +146,7 @@
      document.stack(buffer, this.type + ' - ' + this.doc.id, "AUTO")
          .then(function(resp) {
              callback(null, callback)
-         }, cb)
+         }, callback)
  }
 
  module.exports = Relance;
