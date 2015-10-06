@@ -2477,9 +2477,24 @@ module.exports = {
                     "Edison Services\n"
             },
             envoi: function(user) {
+                this.precision = [];
+                if (this.client.address.batiment) {
+                    this.precision.push('bat. ' + this.client.address.batiment)
+                }
+                if (this.client.address.etage) {
+                    this.precision.push('etage ' + this.client.address.etage)
+                }
+                if (this.client.address.code) {
+                    this.precision.push('code ' + this.client.address.code)
+                }
+                if (this.precision.length) {
+                    this.precision = ('(' + this.precision.join(' - ') + ')');
+                } else {
+                    this.precision = ''
+                }
                 var sms = _.template("OS {{id}}\n" +
                     "Intervention chez {{client.civilite}} {{client.prenom}} {{client.nom}} au " +
-                    "{{client.address.n}} {{client.address.r}} {{client.address.cp}}, {{client.address.v}} " +
+                    "{{client.address.n}} {{client.address.r}} {{client.address.cp}}, {{client.address.v}} {{precision}}" +
                     "le " + moment(this.date.intervention).format("LLLL") + ".\n" +
                     "Pour la raison suivante: {{description}}.\n")(this)
                 sms += this.prixAnnonce ? this.prixAnnonce + "€ HT. " : "Pas de prix annoncé. ";
