@@ -12,7 +12,7 @@
      var _this = this;
      _this.doc = doc;
      _this.type = type;
-     this.doc.prixFinalTTC = _.round(this.doc.prixFinal * (1 + (this.doc.tva / 100)), 2);
+     this.doc.prixFinalTTC = _.round(this.doc.prixFinal * (1 + (this.doc.tva / 100)), 2).toFixed(2)
 
      _this.doc.os = _.padLeft(_this.doc.id, 6, '0')
      _this.doc.datePlain = moment(_this.doc.date.intervention).format('DD/MM/YYYY');
@@ -42,7 +42,6 @@
          this.mailBody = _.template(textTemplate.mail.intervention.relance2())(this.doc);
          this.letterBody = _.template(textTemplate.lettre.intervention.relance2())(this.doc);
          this.mailTitle = _.template("Deuxieme relance pour facture n°{{id}} impayée")(this.doc);
-
          async.waterfall([
              this.createPdf.bind(this),
              this.sendMail.bind(this),

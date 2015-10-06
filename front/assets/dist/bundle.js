@@ -2522,7 +2522,7 @@ module.exports = {
                 "</tr>" +
                 "</table>" +
 
-                "<p> Nous considérons aujourd'hui que vous faites opposition au règlement de la somme due. A défaut de réception de la totalité des $SOMME, sous huitaine, votre dossier sera transmis à notre service contentieux. <br> " +
+                "<p> Nous considérons aujourd'hui que vous faites opposition au règlement de la somme due. A défaut de réception de la totalité des {{prixFinalTTC}}, sous huitaine, votre dossier sera transmis à notre service contentieux. <br> " +
                 "Celui-ci entamera les démarches judiciaires pour en obtenir le règlement majoré des frais de recouvrement et de ceux relatifs à l'article 700 du NCPC. <br> </p>" +
 
                 "<p>A l'organisme qui gère notre comptabilité:</p>" +
@@ -2695,8 +2695,7 @@ module.exports = {
                     "</tr>" +
                     "</table>" +
 
-
-                    "<p> Nous considérons aujourd'hui que vous faites opposition au règlement de la somme due. A défaut de réception de la totalité des $SOMME, sous huitaine, votre dossier sera transmis à notre service contentieux. <br> " +
+                    "<p> Nous considérons aujourd'hui que vous faites opposition au règlement de la somme due. A défaut de réception de la totalité des {{prixFinalTTC}}, sous huitaine, votre dossier sera transmis à notre service contentieux. <br> " +
                     "Celui-ci entamera les démarches judiciaires pour en obtenir le règlement majoré des frais de recouvrement et de ceux relatifs à l'article 700 du NCPC. <br> </p>" +
 
                     "<p>A l'organisme qui gère notre comptabilité:</p>" +
