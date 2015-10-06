@@ -45,12 +45,12 @@
      }
  }
 
-/* Relance.prototype.validator = function(callback) {
-     var f = this.doc.facture;
-     if (!f.email ||  !f.nom || !f.address.r || !f.address.v ||  !f.address.cp || !f.address.n) {
-         cb('ERR')
-     }
- }*/
+ /* Relance.prototype.validator = function(callback) {
+      var f = this.doc.facture;
+      if (!f.email ||  !f.nom || !f.address.r || !f.address.v ||  !f.address.cp || !f.address.n) {
+          cb('ERR')
+      }
+  }*/
 
  Relance.prototype.createPdf = function(callback) {
      PDF([{
@@ -71,6 +71,7 @@
  }
 
  Relance.prototype.sendMail = function(buffer, callback) {
+    console.log('sendMail', buffer)
      mail.send({
          From: "comptabilite@edison-services.fr",
          ReplyTo: "comptabilite@edison-services.fr",

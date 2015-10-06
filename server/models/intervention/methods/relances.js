@@ -175,13 +175,13 @@ module.exports = function(schema) {
 
 
 
-    schema.statics.relances = function(req, res) {
+    schema.statics.relance = function(req, res) {
         return new Promise(function(resolve, reject)  {
             db.model('intervention').find({
-                'compta.reglement.recu': false,
+/*                'compta.reglement.recu': false,
                 'date.intervention': {
                     $lt: moment().subtract(21, 'days').toDate()
-                },
+                },*/
                 'date.envoiFacture': {
                     $exists: true
                 },
@@ -189,10 +189,8 @@ module.exports = function(schema) {
             }).then(function(resp, cb) {
                 console.log(resp.length)
                 var rnd = resp[_.random(0, resp.length - 1)];
-                //   console.log(rnd)
-                return resolve('ok')
                 var Relance = requireLocal('config/_Relance');
-                var rl = Relance(rnd, 'relance1')
+                var rl = Relance(rnd, req.query.model || 'relance1')
                 rl.send(function(err, resp) {
                         console.log(err, resp);
                         /*                        if (req.query.preview) {
