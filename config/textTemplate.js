@@ -31,6 +31,31 @@ module.exports = {
 
     lettre: {
         intervention: {
+            relance4: function() {
+                return "<p style='margin-top: 0px;'> Affaire de recouvrement suivie par: Mr DELVAUX<br>" +
+                    "Réf dossier: {{os}}<br>" +
+                    "Pièce - jointe: Injonction de payer au tribunal de commerce de Paris<br>" +
+                    "En copie: Monsieur le Greffier du tribunal de commerce de Paris </p>" +
+
+                    "<div class='spacer'></div>" +
+                    "<strong> LETTRE RECOMMANDEE AVEC AR </strong>" +
+                    "<div class='spacer'></div>" +
+                    "<strong> OBJET: Mise en demeure - Dossier d'injonction du tribunal de commerce de Paris </strong>" +
+                    "<div class='spacer'></div>" +
+
+                    "<p>A l'attention de <strong> {{facture.nom}} {{facture.prenom}} </strong>, </p>" +
+                    "<p>Nous constatons avec regret qu'en dépit des trois derniers courriers de relances, vous n'avez toujours pas procédé au solde de votre facture n° {{os}}. <p>" +
+                    "<p>!En conséquence, nous vous informons que nous engageons une action judiciaire à votre encontre.</p>" +
+                    "<p>Ainsi, nous vous mettons en demeure par le présente lettre recommandée de nous régler la somme de {{prixFinalTTC}} euros dans un délais de huit jours à compté de la réception de ce recommandé.</p>" +
+                    "<p> Nous vous rappelons que le présent courrier fait courir les intérêts légaux et conventionnels. </p>" +
+                    "<p> A défaut de réception dans les délais, votre dossier sera automatiquement transmis à notre service juridique.</p>" +
+                    "<p> Cordialement, </p>" +
+                    "<header>" +
+                    "<b> <u> Service recouvrement </u> </b>" +
+                    "<p> Damien Delvaux </p>" +
+                    "<p> Tél: 09.72.50.20.22 </p>" +
+                    "</header>"
+            },
             relance3: function() {
                 "<p> Affaire de recouvrement suivie par: Mr BARRIERE <br> Ligne direct: 09.72.50.20.22 <br> Réf dossier: {{os}} </p>" +
                 "<strong> LETTRE RECOMMANDEE AVEC AR </strong>" +

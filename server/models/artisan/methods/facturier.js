@@ -43,19 +43,19 @@ module.exports = function(schema) {
                     mailReply: (req.session.email ||  'contact@edison-services.fr')
                 }
 
-/*                var textTemplate = requireLocal('config/textTemplate.js');
-                var txt = _.template(textTemplate.lettre.artisan.rappelContrat())(artisan);
+                /*                var textTemplate = requireLocal('config/textTemplate.js');
+                                var txt = _.template(textTemplate.lettre.artisan.rappelContrat())(artisan);
 
-                mail.send({
-                    From: "intervention@edison-services.fr",
-                    ReplyTo: communication.mailReply,
-                    To: communication.mailDest,
-                    Bcc: communication.mailBcc,
-                    Subject: "",
-                    HtmlBody: txt.replaceAll('\n', '<br>'),
-                }).then(function() {
-                }, reject)*/
-                    artisan.save().then(resolve, reject)
+                                mail.send({
+                                    From: "intervention@edison-services.fr",
+                                    ReplyTo: communication.mailReply,
+                                    To: communication.mailDest,
+                                    Bcc: communication.mailBcc,
+                                    Subject: "",
+                                    HtmlBody: txt.replaceAll('\n', '<br>'),
+                                }).then(function() {
+                                }, reject)*/
+                artisan.save().then(resolve, reject)
             })
         }
     }
