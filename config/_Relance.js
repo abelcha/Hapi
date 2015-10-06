@@ -66,6 +66,7 @@
 
          async.waterfall([
              this.createInjonction.bind(this),
+             this.insertBlankPage.bind(this),
              this.printStack.bind(this)
          ], callback)
 
