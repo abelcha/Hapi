@@ -69,9 +69,7 @@
              this.printStack.bind(this)
          ], callback)
 
-     } else if (this.type === 'relance4') {
-         this.letterBody = _.template(textTemplate.lettre.intervention.relance4())(this.doc);
-
+     } else if (this.type === 'relance5') {
          async.waterfall([
              this.createAvisAvantPoursuites.bind(this),
              this.printStack.bind(this)
