@@ -39,8 +39,10 @@
              this.sendMail.bind(this),
          ], callback);
      } else if (this.type === 'relance2') {
-         this.mailBody = _.template(textTemplate.mail.intervention.relance1())(this.doc);
-         this.letterBody = _.template(textTemplate.lettre.intervention.relance1())(this.doc);
+         this.mailBody = _.template(textTemplate.mail.intervention.relance2())(this.doc);
+         this.letterBody = _.template(textTemplate.lettre.intervention.relance2())(this.doc);
+         this.mailTitle = _.template("Deuxieme relance pour facture n°{{id}} impayée")(this.doc);
+
          async.waterfall([
              this.createPdf.bind(this),
              this.sendMail.bind(this),
@@ -48,17 +50,17 @@
              this.insertBlankPage.bind(this),
              this.printStack.bind(this)
          ])
+     } else if (this.type === 'relance3') {
+         this.mailBody = _.template(textTemplate.mail.intervention.relance3())(this.doc);
+         this.letterBody = _.template(textTemplate.lettre.intervention.relance3())(this.doc);
+         this.mailTitle = _.template("Troisième relance pour facture n°{{id}} impayée")(this.doc);
+
+
      }
  }
 
- /* Relance.prototype.validator = function(callback) {
-      var f = this.doc.facture;
-      if (!f.email ||  !f.nom || !f.address.r || !f.address.v ||  !f.address.cp || !f.address.n) {
-          cb('ERR')
-      }
-  }*/
-
  Relance.prototype.createPdf = function(callback) {
+     console.log('createPdf');
      PDF([{
          model: 'letter',
          options: {
@@ -77,9 +79,11 @@
  }
 
  Relance.prototype.sendMail = function(buffer, callback) {
-    if (envDev) {
-        return callback(null, buffer);
-    }
+     console.log('sendMail');
+
+     if (envDev) {
+         return callback(null, buffer);
+     }
      mail.send({
          From: "comptabilite@edison-services.fr",
          ReplyTo: "comptabilite@edison-services.fr",
@@ -98,6 +102,8 @@
  }
 
  Relance.prototype.writeTmpFile = function(buffer, callback) {
+     console.log('writeTmpFile');
+
      var fs = require('fs')
      var uuid = require('uuid')
      var filename = '/tmp/' + uuid.v4() + '.pdf';
@@ -107,8 +113,10 @@
  }
 
  Relance.prototype.insertBlankPage = function(buffer, filename, callback) {
+     console.log('insertBlankPage');
+
      if (envDev) {
-         return cb(null, buffer)
+         return callback(null, buffer)
      }
      var fs = require('fs')
      var scissors = require('scissors');
@@ -126,6 +134,8 @@
      })
  }
  Relance.prototype.printStack = function(buffer, callback) {
+     console.log('printStack');
+
      document.stack(buffer, this.type.toUpperCase() + ' - ' + this.doc.id, "AUTO")
          .then(function(resp) {
              callback(null, callback)

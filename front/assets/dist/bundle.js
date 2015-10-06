@@ -2495,30 +2495,74 @@ module.exports = {
 
     lettre: {
         intervention: {
+            relance3: function() {
+                "<p> Affaire de recouvrement suivie par: Mr BARRIERE <br> Ligne direct: 09.72.50.20.22 <br> Réf dossier: XXXXXX </p>" +
+                "<strong> LETTRE RECOMMANDEE AVEC AR </strong>" +
+                "<div class='spacer'></div>" +
+                "<strong> OBJET: Troisième relance pour facture impayée avant mise en demeure </strong>" +
+                "<p> A l'attention de <b> NOM PRENOM </b>, <br>" +
+
+                "<p> Nous constatons que malgré nos précédentes lettres de rappel, vous n'avez toujours pas procédé au règlement de la facture <b> n° XXXXXX </b>. <br> Votre compte reste débiteur à ce jour des sommes suivantes: <p>" +
+
+                "<table cellspacing='0' cellpadding='8'>" +
+                "<tr class='bg-green'>" +
+                "<th style='width: 70px;'> DATE </th>" +
+                "<th class='align-left'> N° FACTURE </th>" +
+                "<th class='align-left'> LIEU </th>" +
+                "<th class='align-right'> MONTANT T.T.C. </th>" +
+                "</tr>" +
+                "<tr>" +
+                "<th> {{date}} </th>" +
+                "<th> {{id facture}} </th>" +
+                "<th> {{ville}}, {{cp}} </th>" +
+                "<th class='align-right'> {{prix}} € </th>" +
+                "</tr>" +
+                "<tr>" +
+                "<th colspan='3'> <b> TOTAL </b> </th>" +
+                "<th class='align-right'> {{TOTAL}} € T.T.C. </th>" +
+                "</tr>" +
+                "</table>" +
+
+                "<p> Nous considérons aujourd'hui que vous faites opposition au règlement de la somme due. A défaut de réception de la totalité des $SOMME, sous huitaine, votre dossier sera transmis à notre service contentieux. <br> " +
+                "Celui-ci entamera les démarches judiciaires pour en obtenir le règlement majoré des frais de recouvrement et de ceux relatifs à l'article 700 du NCPC. <br> </p>" +
+
+                "<p>A l'organisme qui gère notre comptabilité:</p>" +
+                "<p strong center> EDISON SERVICES FRANCE<br>" +
+                "Service comptabilité<br>" +
+                "75 rue des dames, 75017 Paris<br>" +
+                "Tél. 09.72.51.08.01 (Ouvert de 09h00 à 12h30 / 14h00 à 16h30)</p>" +
+
+                "<p> Nous vous prions d'agréer, Madame, Monsieur, nos salutations distinguées. </p>" +
+                "<header style='margin-top: 25px;'>" +
+                "<b> <u> Service comptabilité </u> </b>" +
+                "<p> Damien Delvaux </p>" +
+                "<p> Tél: 09.72.50.20.22 </p>" +
+                "</header>"
+            },
             relance2: function() {
                 return "<p> Réf: {{os}} <br> Pièce jointe: Facture n°{{os}} </p>" +
-                    "<div class='spacer'></div>" +
+                    "<br>" +
                     "<strong> OBJET: Deuxième relance pour facture impayée </strong>" +
                     "<p>Madame, Monsieur, <br>" +
 
                     "<p> Sauf erreur de notre part, nous constatons que votre compte client présente à ce jour un solde débiteur. <br> Ce montant correspond à nos factures suivantes restées impayées: <p>" +
 
                     "<table cellspacing='0' cellpadding='8'>" +
-                    "<tr class='bg-green'>" +
+                    "<tr style='background: #85C82B'>" +
                     "<th style='width: 70px;'> DATE </th>" +
-                    "<th class='align-left'> N° FACTURE </th>" +
-                    "<th class='align-left'> LIEU </th>" +
-                    "<th class='align-right'> MONTANT T.T.C. </th>" +
+                    "<th style='text-align:left'> N° FACTURE </th>" +
+                    "<th style='text-align:left'> LIEU </th>" +
+                    "<th style='text-align:right'> MONTANT T.T.C. </th>" +
                     "</tr>" +
                     "<tr>" +
                     "<th> {{datePlain}} </th>" +
                     "<th> {{os}} </th>" +
-                    "<th> {{client.address.v}}, {{client.address.cp}} </th>" +
-                    "<th class='align-right'> {{prixFinalTTC}} € </th>" +
+                    "<th> {{client.address.cp}}, {{client.address.v}} </th>" +
+                    "<th style='text-align:right'> {{prixFinalTTC}} € </th>" +
                     "</tr>" +
                     "<tr>" +
                     "<th colspan='3'> <b> TOTAL </b> </th>" +
-                    "<th class='align-right'> {{prixFinalTTC}} € T.T.C. </th>" +
+                    "<th style='text-align:right'> {{prixFinalTTC}} € T.T.C. </th>" +
                     "</tr>" +
                     "</table>" +
 
@@ -2546,7 +2590,7 @@ module.exports = {
             },
             relance1: function() {
                 return "<p> Réf: {{os}} <br> Pièce jointe: Facture n°{{os}} </p>" +
-                    "<div class='spacer'></div>" +
+                    "<br>" +
                     "<strong> OBJET: Première relance pour facture n°{{os}} impayée </strong>" +
                     "<p>Madame, Monsieur, <br>" +
                     "Suite a l'intervention que nous avons réalisée en date du {{datePlain}}, <p>" +
@@ -2617,8 +2661,8 @@ module.exports = {
                     "<p>Ces documents resterons à votre disposition durant la durée de notre partenariat, mais restent la propriété intellectuelle de la société EDISON Services et devront nous être renvoyé en cas de fin de partenariat.</p>" +
                     "<p>Vous en souhaitant bonne réception.</p>" +
                     "<p><i>Bienvenue dans l’équipe EDISON Services.</i></p>" +
-                    "<p class='align-right'><b>Yohann RHOUM</b></p>" +
-                    "<p class='align-right'>Service Partenariat</p>"
+                    "<p style='text-align:right'><b>Yohann RHOUM</b></p>" +
+                    "<p style='text-align:right'>Service Partenariat</p>"
             }
         }
     },
