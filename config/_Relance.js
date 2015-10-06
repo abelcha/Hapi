@@ -61,7 +61,19 @@
              this.insertBlankPage.bind(this),
              this.printStack.bind(this)
          ], callback)
+     } else if (this.type === 'relance4') {
+         this.letterBody = _.template(textTemplate.lettre.intervention.relance4())(this.doc);
 
+         async.waterfall([
+             this.createPdf.bind(this),
+             this.sendMail.bind(this),
+             this.writeTmpFile.bind(this),
+             this.insertBlankPage.bind(this),
+             this.printStack.bind(this)
+         ], callback)
+
+     } else {
+         callback(null);
      }
  }
 

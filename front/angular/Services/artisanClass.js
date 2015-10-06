@@ -66,6 +66,23 @@ angular.module('edison')
                                 })*/
         };
 
+
+        Artisan.prototype.save = function(cb) {
+            var _this = this;
+
+            edisonAPI.artisan.save(_this)
+                .then(function(resp) {
+                    LxNotificationService.success("Les données ont à été enregistré");
+                    if (typeof cb === 'function')
+                        cb(null, resp.data)
+                }).catch(function(error) {
+                    LxNotificationService.error(error.data);
+                    if (typeof cb === 'function')
+                        cb(error.data)
+                });
+        };
+
+
         Artisan.prototype.manager = function(cb) {
             var _this = this;
             _this.login.management = user.login;

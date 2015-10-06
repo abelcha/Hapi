@@ -29,6 +29,7 @@ var ArtisanCtrl = function($rootScope, $scope, edisonAPI, $location, $routeParam
     }
     _this.data = tab.data;
     _this.saveArtisan = function(options) {
+        console.log(artisan)
         artisan.save(function(err, resp) {
             console.log(resp)
             if (err) {
