@@ -32,14 +32,13 @@ module.exports = {
     lettre: {
         intervention: {
             relance3: function() {
-                "<p> Affaire de recouvrement suivie par: Mr BARRIERE <br> Ligne direct: 09.72.50.20.22 <br> Réf dossier: XXXXXX </p>" +
+                "<p> Affaire de recouvrement suivie par: Mr BARRIERE <br> Ligne direct: 09.72.50.20.22 <br> Réf dossier: {{os}} </p>" +
                 "<strong> LETTRE RECOMMANDEE AVEC AR </strong>" +
                 "<div class='spacer'></div>" +
                 "<strong> OBJET: Troisième relance pour facture impayée avant mise en demeure </strong>" +
-                "<p> A l'attention de <b> NOM PRENOM </b>, <br>" +
+                "<p> A l'attention de <b> {{facture.nom}} {{facture.prenom}} </b>, <br>" +
 
-                "<p> Nous constatons que malgré nos précédentes lettres de rappel, vous n'avez toujours pas procédé au règlement de la facture <b> n° XXXXXX </b>. <br> Votre compte reste débiteur à ce jour des sommes suivantes: <p>" +
-
+                "<p> Nous constatons que malgré nos précédentes lettres de rappel, vous n'avez toujours pas procédé au règlement de la facture <b> n° {{os}} </b>. <br> Votre compte reste débiteur à ce jour des sommes suivantes: <p>" +
                 "<table cellspacing='0' cellpadding='8'>" +
                 "<tr class='bg-green'>" +
                 "<th style='width: 70px;'> DATE </th>" +
@@ -48,14 +47,14 @@ module.exports = {
                 "<th class='align-right'> MONTANT T.T.C. </th>" +
                 "</tr>" +
                 "<tr>" +
-                "<th> {{date}} </th>" +
-                "<th> {{id facture}} </th>" +
-                "<th> {{ville}}, {{cp}} </th>" +
-                "<th class='align-right'> {{prix}} € </th>" +
+                "<th> {{datePlain}} </th>" +
+                "<th> {{os}} </th>" +
+                "<th> {{client.address.cp}}, {{client.address.v}} </th>" +
+                "<th class='align-right'> {{prixFinalTTC}} € </th>" +
                 "</tr>" +
                 "<tr>" +
                 "<th colspan='3'> <b> TOTAL </b> </th>" +
-                "<th class='align-right'> {{TOTAL}} € T.T.C. </th>" +
+                "<th class='align-right'> {{prixFinalTTC}} € T.T.C. </th>" +
                 "</tr>" +
                 "</table>" +
 
@@ -204,6 +203,51 @@ module.exports = {
     },
     mail: {
         intervention: {
+            relance3: function() {
+                return "<p> Affaire de recouvrement suivie par: Mr BARRIERE <br> Ligne direct: 09.72.50.20.22 <br> Réf dossier: {{os}} </p>" +
+                    "<strong> LETTRE RECOMMANDEE AVEC AR </strong>" +
+                    "<div class='spacer'></div>" +
+                    "<strong> OBJET: Troisième relance pour facture impayée avant mise en demeure </strong>" +
+                    "<p> A l'attention de <b> {{facture.nom}} {{facture.prenom}} </b>, <br>" +
+
+                    "<p> Nous constatons que malgré nos précédentes lettres de rappel, vous n'avez toujours pas procédé au règlement de la facture <b> n° {{os}} </b>. <br> Votre compte reste débiteur à ce jour des sommes suivantes: <p>" +
+
+                    "<table cellspacing='0' cellpadding='8'>" +
+                    "<tr style='background: #85C82B !important;'>" +
+                    "<th style='width: 70px;'> DATE </th>" +
+                    "<th style='text-align:left'> N° FACTURE </th>" +
+                    "<th style='text-align:left'> LIEU </th>" +
+                    "<th style='text-align:right'> MONTANT T.T.C. </th>" +
+                    "</tr>" +
+                    "<tr>" +
+                    "<th> {{datePlain}} </th>" +
+                    "<th> {{os}} </th>" +
+                    "<th> {{client.address.v}}, {{client.address.cp}} </th>" +
+                    "<th style='text-align:right'> {{prixFinalTTC}} € </th>" +
+                    "</tr>" +
+                    "<tr>" +
+                    "<th colspan='3'> <b> TOTAL </b> </th>" +
+                    "<th style='text-align:right'> {{prixFinalTTC}} € T.T.C. </th>" +
+                    "</tr>" +
+                    "</table>" +
+
+
+                    "<p> Nous considérons aujourd'hui que vous faites opposition au règlement de la somme due. A défaut de réception de la totalité des $SOMME, sous huitaine, votre dossier sera transmis à notre service contentieux. <br> " +
+                    "Celui-ci entamera les démarches judiciaires pour en obtenir le règlement majoré des frais de recouvrement et de ceux relatifs à l'article 700 du NCPC. <br> </p>" +
+
+                    "<p>A l'organisme qui gère notre comptabilité:</p>" +
+                    "<p strong center> EDISON SERVICES FRANCE<br>" +
+                    "Service comptabilité<br>" +
+                    "75 rue des dames, 75017 Paris<br>" +
+                    "Tél. 09.72.51.08.01 (Ouvert de 09h00 à 12h30 / 14h00 à 16h30)</p>" +
+
+                    "<p> Nous vous prions d'agréer, Madame, Monsieur, nos salutations distinguées. </p>" +
+                    "<header style='margin-top: 25px;'>" +
+                    "<b> <u> Service comptabilité </u> </b>" +
+                    "<p> Damien Delvaux </p>" +
+                    "<p> Tél: 09.72.50.20.22 </p>" +
+                    "</header>"
+            },
             relance2: function() {
                 return "<style> table { border-collapse: collapse;}\n table, td, th {border: 1px solid black;}</style>" +
                     "<p>Madame, Monsieur, <br>" +

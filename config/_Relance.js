@@ -55,6 +55,13 @@
          this.letterBody = _.template(textTemplate.lettre.intervention.relance3())(this.doc);
          this.mailTitle = _.template("Troisième relance pour facture n°{{id}} impayée")(this.doc);
 
+         async.waterfall([
+             this.createPdf.bind(this),
+             this.sendMail.bind(this),
+             this.writeTmpFile.bind(this),
+             this.insertBlankPage.bind(this),
+             this.printStack.bind(this)
+         ])
 
      }
  }
