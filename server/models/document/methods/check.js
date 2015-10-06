@@ -82,8 +82,7 @@
 
                        var i = 0;
                        var limit = req.query.limit || 100;
-                       console.log('query')
-                       edison.v1.get("SELECT * FROM scanner WHERE moved='0' ORDER BY id ASC LIMIT " + limit, function(err, resp)  {
+                       edison.v1.get("SELECT * FROM scanner WHERE moved='0' AND checked='0' ORDER BY id ASC LIMIT " + limit, function(err, resp)  {
                            limit = resp.length;
                            /*                       _.each(resp, function(e) {
                                                       console.log(moment(new Date(parseInt(e.start))).format('YYYY-MM-DD-HH-mm-ss'), e.id_inter)

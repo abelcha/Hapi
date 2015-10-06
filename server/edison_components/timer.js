@@ -8,6 +8,7 @@ var Timer = module.exports = function() {
     //    this.emitter.add("*/5 * * * *", "every 5 minutes");
     // this.emitter.add("*/2 * * * *", "every minute");
     this.emitter.add("0 3 * * *", "3pm");
+    this.emitter.add("0 4 * * *", "4pm");
     this.emitter.add("0 20 * * *", "20h");
     this.emitter.add("*/60 * * * *", "30 minutes")
     this.emitter.add("*/20 * * * *", "20 minutes")
@@ -46,6 +47,11 @@ var Timer = module.exports = function() {
     this.emitter.on("3pm", function() {
         redis.delWildcard("rs*")
     })
+    this.emitter.on("4pm", function() {
+        db.model('intervention').backup(function() {
+            console.log('backup [DONE]')
+        })
+    })
 
     /*    this.emitter.on("every 5 minutes", function() {
             edison.worker.createJob({
@@ -70,21 +76,21 @@ var Timer = module.exports = function() {
             })
         })*/
     var test = function() {
-        var parser = require('cron-parser');
-        try {
-            var interval = parser.parseExpression("*/20 * * * *");
-            console.log('Date: ', interval.next().toString()); // Sat Dec 29 2012 00:44:00 GMT+0200 (EET) 
-            console.log('Date: ', interval.next().toString()); // Sat Dec 29 2012 00:44:00 GMT+0200 (EET) 
-            console.log('Date: ', interval.next().toString()); // Sat Dec 29 2012 00:44:00 GMT+0200 (EET) 
-            console.log('Date: ', interval.next().toString()); // Sat Dec 29 2012 00:44:00 GMT+0200 (EET) 
-            console.log('Date: ', interval.next().toString()); // Sat Dec 29 2012 00:44:00 GMT+0200 (EET) 
-            console.log('Date: ', interval.next().toString()); // Sat Dec 29 2012 00:44:00 GMT+0200 (EET) 
-        } catch (err) {
-            console.log('Error: ' + err.message);
-        }
+            var parser = require('cron-parser');
+            try {
+                var interval = parser.parseExpression("*/20 * * * *");
+                console.log('Date: ', interval.next().toString()); // Sat Dec 29 2012 00:44:00 GMT+0200 (EET) 
+                console.log('Date: ', interval.next().toString()); // Sat Dec 29 2012 00:44:00 GMT+0200 (EET) 
+                console.log('Date: ', interval.next().toString()); // Sat Dec 29 2012 00:44:00 GMT+0200 (EET) 
+                console.log('Date: ', interval.next().toString()); // Sat Dec 29 2012 00:44:00 GMT+0200 (EET) 
+                console.log('Date: ', interval.next().toString()); // Sat Dec 29 2012 00:44:00 GMT+0200 (EET) 
+                console.log('Date: ', interval.next().toString()); // Sat Dec 29 2012 00:44:00 GMT+0200 (EET) 
+            } catch (err) {
+                console.log('Error: ' + err.message);
+            }
 
-    }
-   // test();
+        }
+        // test();
 
 
 }
