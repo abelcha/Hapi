@@ -69,11 +69,11 @@ var V1 = function(d) {
     })
 
     if (d.historique.pack && d.historique.pack.length && d.historique.pack[0].facturier) {
-        x.num_facturier = d.historique.pack[0].text ||  moment(d.historique.pack[0].date).format('L')
+        x.num_facturier = (d.historique.pack.length === 1 && d.historique.pack[0].text) ||  moment(d.historique.pack[0].date).format('L')
     }
 
     if (d.historique.pack && d.historique.pack.length && d.historique.pack[0].deviseur) {
-        x.num_deviseur = d.historique.pack[0].text ||  moment(d.historique.pack[0].date).format('L')
+        x.num_deviseur = (d.historique.pack.length === 1 && d.historique.pack[0].text) ||  moment(d.historique.pack[0].date).format('L')
     }
 
 
@@ -190,8 +190,8 @@ V1.prototype.___data = {
     "autres": "",
     "siret": "753985985",
     "rappel": "",
-    "num_facturier": "28/08",
-    "num_deviseur": "28/08",
+    "num_facturier": "",
+    "num_deviseur": "",
     "catalogue_electricite": "0",
     "catalogue_plomberie": "0",
     "catalogue_serrure": "0",
