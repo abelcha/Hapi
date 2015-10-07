@@ -22,7 +22,7 @@
                edison.v1.get("SELECT * FROM scanner WHERE archived=1 AND moved=1 and ordered='0' LIMIT " + limit, function(err, resp) {
                    async.eachLimit(resp, 5, function(e, cb) {
                        console.log('MV', '/SCAN_ARCHIVES/' + e.name, String(i++) + '/' + String(resp.length))
-                       document.copy('/SCAN_ARCHIVES/' + e.name, '/V2_PRODUCTION/' + e.id_inter + '/' + e.name)
+                       document.copy('/SCAN_ARCHIVES/' + e.name, '/V2_PRODUCTION/intervention/' + e.id_inter + '/' + e.name)
                            .then(function(resp) {
                                edison.v1.set("UPDATE scanner SET ordered='1' WHERE id='" + e.id + "'", function() {
                                    console.log('ARCHIVED', e.name)

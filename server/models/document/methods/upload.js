@@ -10,7 +10,7 @@ module.exports = function(schema) {
             // var name = moment().format(req.session.login + ' - ' + 'YYYY-MM-DD-HH-mm-ss[.pdf]')
             console.log('here');
             document.upload({
-                filename: '/V2_PRODUCTION/' + req.body.link + '/' + req.files.file.originalname,
+                filename: '/V2_PRODUCTION/intervention/' + req.body.link + '/' + req.files.file.originalname,
                 data: req.files.file.buffer,
             }).then(function(resp) {
                 resolve('ok');

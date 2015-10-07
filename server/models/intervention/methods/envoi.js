@@ -255,7 +255,7 @@ module.exports = function(schema) {
                                 getStaticFile.bind("Notice d'intervention.pdf")())
                         }
                         if (req.body.file) {
-                            filesPromises.push(getLocalFile('/V2_PRODUCTION/' + inter.id + '/' + req.body.file))
+                            filesPromises.push(getLocalFile('/V2_PRODUCTION/intervention/' + inter.id + '/' + req.body.file))
                         }
                     }
                     console.time('getFiles')
