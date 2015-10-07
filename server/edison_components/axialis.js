@@ -88,7 +88,7 @@ module.exports = {
                 if (!doc) {
                     return res.json(resps[2]);
                 }
-                if (req.params.id == '0') {
+                if (req.params.id == '0' || req.params.id == '29549') {
                     return res.json(resps[1])
                 }
                 promise = db.model('intervention').findOne({
