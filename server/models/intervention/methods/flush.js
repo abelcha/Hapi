@@ -90,7 +90,7 @@ module.exports = function(schema) {
                             To: "mzavot@gmail.com",
                             Bcc: "comptabilite@edison-services.fr",
                             Subject: "Paiement du " + moment().format('LL'),
-                            HtmlBody: "Bonjour,<br> Vous trouverez en piece jointe les reglement de la semaine<br>Cordialement",
+                            HtmlBody: textTemplate.intervention.paiement,
                             Attachments: [{
                                 Content: buffer.toString('base64'),
                                 Name: "Recap " + moment().format('LL') + ".pdf",
