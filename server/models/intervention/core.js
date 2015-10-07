@@ -79,6 +79,7 @@
         }
         console.log('-->=>', curr.artisan.id,  prev.artisan.id)
         if (curr.artisan.id !== prev.artisan.id) {
+            console.log( curr.sst.telephone.tel1)
             var moment = require('moment')
             var textTemplate = requireLocal('config/textTemplate');
             var config = requireLocal('config/dataList');
