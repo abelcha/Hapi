@@ -77,6 +77,7 @@
             curr.litige.closed = new Date();
             curr.litige.closedBy = session.login;
         }
+        console.log('-->=>', curr.artisan.id,  prev.artisan.id)
         if (curr.artisan.id !== prev.artisan.id) {
             var moment = require('moment')
             var textTemplate = requireLocal('config/textTemplate');
