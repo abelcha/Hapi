@@ -87,7 +87,7 @@ module.exports = {
                     console.log('two')
                     return res.json(resps[2])
                 } else if (parseInt(req.query.sst_id) === artisan.id) {
-                    console.log('three')
+                    console.log('OKOK', doc.client.telephone.tel1)
                     return res.json(ok(doc.client.telephone.tel1));
                 } else {
                     console.log('four')
