@@ -73,6 +73,7 @@ module.exports = {
             console.log('NOPE ID');
             return res.json(resps[1]);
         }
+        q.call_origin = q.call_origin.replace('33', '0')
         promise = db.model('intervention').findOne({
             id: parseInt(req.params.id)
         }).populate('sst');
