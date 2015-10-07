@@ -54,7 +54,7 @@
                        async.eachLimit(resp.slice(0, 1), 5, function(e, callback) {
                                var flush = _.find(e.compta.paiement.historique, 'dateFlush', new Date(req.body.date));
                                flush.numeroCheque = (_.find(req.body.ids, 'id', e.sst) || {}).numeroCheque
-                               getPage(filepath, i++, function(err, buffer) {
+                               getPage(filepath, ++i, function(err, buffer) {
                                    console.log('-->uauau')
                                    console.log(err, buffer)
                                    document.upload({
