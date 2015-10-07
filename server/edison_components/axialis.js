@@ -42,6 +42,7 @@ module.exports = {
     },
     contact: function(req, res) {
         console.log('contact')
+        console.log('QUERY =>', req.params, req.query);
         var _ = require('lodash');
         var q = req.query;
         var resps = [{
@@ -64,31 +65,40 @@ module.exports = {
 
 
         if (req.query.api_key !== 'F8v0x13ftadh89rm0e9x18b62ZqgEl47') {
+            console.log('401');
             return res.sendStatus(401)
         }
         if (!req.params.id.match(/^\d+$/)) {
+            console.log('NOPE ID');
             return res.json(resps[1]);
         }
         promise = db.model('intervention').findOne({
             id: parseInt(req.params.id)
         }).populate('artisan.id');
-
+        console.log('create promise')
         promise.then(function(doc) {
+            console.log('Get Intervention')
             if (!doc || !doc.artisan.id)
                 return res.json(resps[1])
             var artisan = doc.artisan.id
             if (q.call_origin !== artisan.telephone.tel1 && q.call_origin !== artisan.telephone.tel2) {
+                console.log('one')
                 if (!req.query.sst_id) {
+                    console.log('two')
                     return res.json(resps[2])
                 } else if (parseInt(req.query.sst_id) === artisan.id) {
+                    console.log('three')
                     return res.json(ok(doc.client.telephone.tel1));
                 } else {
+                    console.log('four')
                     return res.json(resps[4])
                 }
             } else {
+                console.log('five')
                 return res.json(ok(doc.client.telephone.tel1))
             }
         }, function() {
+            console.log('NOOOP')
             res.sendStatus(500)
         })
     }
