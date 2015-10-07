@@ -9,7 +9,7 @@
                             <h2>
                             <a style="color:black" href="/artisan/{{artisan.id}}/recap#interventions">{{artisan.id}} - {{artisan.nomSociete}}</a>
                             </h2></td>
-                        <td colspan="3" ng-if="!vm.search.d">
+                        <td colspan="3">
                             <input ng-if="artisan.list.getList()[0].mode === 'CHQ'" type="text" class="form-control" ng-model="artisan.numeroCheque" ng-change="vm.updateNumeroCheque($index, artisan.id)">
                         </td>
                         <td colspan="12"></td>
@@ -26,7 +26,7 @@
                         <td variable-length><i>Final</i></td>
                         <td variable-length><i>Payer</i></td>
                     </tr>
-                    <tr ng-repeat="item in artisan.list.getList()" ng-click="item.checked = !item.checked;vm.reloadList(artisan)" ng-right-click="vm.rowRightClick($event, item)" ng-class="{info : vm.contextMenu && vm.contextMenu.active && vm.contextMenu.data.id === item.id, success:item.numeroCheque}">
+                    <tr ng-repeat="item in artisan.list.getList()" ng-click="vm.selectToggle(artisan, item)" ng-right-click="vm.rowRightClick($event, item)" ng-class="{info : vm.contextMenu && vm.contextMenu.active && vm.contextMenu.data.id === item.id, success:item.numeroCheque}">
                         <td ng-click="item.checked = !item.checked;"><a style="color:black" href="/intervention/{{item.id}}">{{ item.id }}</a></td>
                         <td>{{ item.login}} ({{item.date|date:"dd/MM/yy à H'h'mm"}})</td>
                         <td>{{ item.mode }}</td>
@@ -41,7 +41,7 @@
                             </md-checkbox>
                         </td>
                     </tr>
-                    <tr ng-click="vm.checkArtisan(artisan);vm.reloadList(artisan)">
+                    <tr ng-click="!vm.search.d && vm.checkArtisan(artisan);vm.reloadList(artisan)">
                         <td colspan="3"><strong>Somme</strong></td>
                         <td></td>
                         <td><strong>{{artisan.total.base}} €</strong></td>
@@ -64,7 +64,8 @@
             <md-button ng-click="vm.print('documents')" class="md-raised">Documents</md-button>
             <md-button ng-click="vm.print('lettreCheques')" class="md-raised">Lettre Cheques</md-button>
             <md-button ng-click="vm.print('virement')" class="md-raised">Virements</md-button>
-            <md-button class="md-raised">Upload Scan</md-button>
+            <md-button ng-click="vm.clickTrigger('.input-file__input')" class="md-raised">Upload Scan</md-button>
+            <lx-file-input style="display:none" id="fileInput" label="Upload" value="fileUploadText" change="vm.onFileUpload(e)"></lx-file-input>
             <md-button ng-if="!vm.search.d" class="md-raised md-warn" ng-click="vm.flush()">FLUSH</md-button>
             <md-button class="md-raised md-primary" ng-click="vm.reloadLPA()">Reload</md-button>
         </div>

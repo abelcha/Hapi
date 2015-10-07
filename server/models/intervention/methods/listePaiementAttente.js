@@ -53,7 +53,6 @@ module.exports = function(schema) {
                             dateFlush: date
                         }
                     },
-                    id:30974
                 })
                 .populate('sst')
                 .select('id client description compta.paiement date.intervention sst artisan fourniture')

@@ -600,7 +600,6 @@ module.exports = FiltersFactory;
             rtn.login = e.compta.paiement.login
             rtn.checked = _includes(prevChecked, rtn.id)
             rtn.mode = e.compta.paiement.mode
-            console.log(e.compta.paiement)
             rtn.numeroCheque = e.compta.paiement.numeroCheque
             rtn.type = rtn.montant.legacy !== 0 ? (rtn.montant.balance > 0 ? 'COMPLEMENT' : 'AVOIR') : 'AUTO-FACT'
             list.push(rtn)
@@ -2750,7 +2749,7 @@ module.exports = {
                 "Celle-ci s'accompagne automatiquement d'un virement sur votre compte bancaire.<br>" +
                 "Si votre paiement n'apparaît pas sur votre compte dans les 4 jours ouvrés, merci de contacter notre service comptabilité.<br>" +
                 "En cas d'erreur sur l'auto-facture, répondez à ce mail en expliquant les raisons de votre désaccord, la modification sera immédiatement effectuée par nos services.<br>" +
-                "<i>Attention<br> depuis le 1er Janvier 2014, compte tenu de la Loi de Finances 2014, les sous-traitants n'auront ni à déclarer ni à payer la TVA due au titre de ces opérations.<br>" +
+                "<br><i>Attention<br> depuis le 1er Janvier 2014, compte tenu de la Loi de Finances 2014, les sous-traitants n'auront ni à déclarer ni à payer la TVA due au titre de ces opérations.<br>" +
                 "C'est le donneur d'ordre (SARL Edison Services) assujetti qui devra declarer la TVA sur ses déclarations de chiffre d'affaires.</i>" +
                 "<br><br>Service Comptabilité Fournisseur<br>" +
                 "09.72.45.27.09",

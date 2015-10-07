@@ -26,7 +26,6 @@ module.exports = function(schema) {
             }, 0)
             var data = _.groupBy(req.body, 'id');
             async.eachLimit(data, 3, function(sst, cb) {
-                console.log('-->', k)
                 var k = Object.keys(data)[i++]
                 global.currenWorkerJob.progress(i, req.body.length);
                 async.waterfall([

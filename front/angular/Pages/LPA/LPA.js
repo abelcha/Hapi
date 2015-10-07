@@ -38,6 +38,7 @@ var LpaController = function(openPost, socket, ContextMenu, $location, $window, 
     if (!$rootScope.lpa)
         _this.loadData()
     _this.checkArtisan = function(sst) {
+
         sst.checked = !sst.checked
         _.each(sst.list.getList(), function(e) {
             e.checked = sst.checked;
@@ -83,7 +84,15 @@ var LpaController = function(openPost, socket, ContextMenu, $location, $window, 
 
     })
 
+    _this.selectToggle = function(artisan, item) {
+        if (this.search.d) {
+            return false;
+        }
+        item.checked = !item.checked;
+        _this.reloadList(artisan)
+    }
     _this.reloadList = function(artisan) {
+
         artisan.total = artisan.list.getTotal()
         artisan.total = artisan.list.getTotal(true)
         artisan.total = artisan.list.getTotal()
@@ -98,6 +107,32 @@ var LpaController = function(openPost, socket, ContextMenu, $location, $window, 
             })
         })
         _this.loadData(rtn)
+    }
+
+    _this.clickTrigger = function(elem) {
+        window.setTimeout(function() {
+            angular.element(elem).trigger('click');
+        }, 0)
+    }
+
+    _this.onFileUpload = function(file) {
+        console.log('swad')
+        var ids = _($rootScope.lpa).map(_.partial(_.pick, _, 'numeroCheque', 'id')).value();
+        //LxProgressService.circular.show('#5fa2db', '#fileUploadProgress');
+        edisonAPI.file.uploadScans(file, {
+                ids: ids,
+                date: _this.search.d
+            }).then(function(resp) {
+                console.log('==>', resp);
+            })
+            //_.each($rootScope.lpa, function(sst) {
+            /*    _.each(sst.list.getList(), function(e) {
+                    if (e.checked) {
+                        rtn.push(e.id);
+                    }
+                })
+            })
+            _this.loadData(rtn)*/
     }
 
     _this.print = function(type) {

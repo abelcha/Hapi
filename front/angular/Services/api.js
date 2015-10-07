@@ -296,6 +296,13 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
             },
         },
         file: {
+            uploadScans: function(file, options) {
+                return Upload.upload({
+                    url: '/api/document/uploadScans',
+                    fields: options,
+                    file: file
+                })
+            },
             upload: function(file, options) {
                 return Upload.upload({
                     url: '/api/document/upload',

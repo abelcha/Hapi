@@ -122,7 +122,6 @@ module.exports = function(schema) {
         return new Promise(function(resolve, reject) {
             var resend = function() {
                 if (req.query.pdf || true) {
-                    console.log('yaypdf')
                     if (!op.length) {
                         return resolve('Pas de documents')
                     }
@@ -131,7 +130,6 @@ module.exports = function(schema) {
                         res.send(buffer);
                     })
                 } else {
-                    console.log('yay')
                     res.send(PDF(op).html());
                 }
             }

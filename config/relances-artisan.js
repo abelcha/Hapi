@@ -1,4 +1,4 @@
- var moment = require('moment')
+/* var moment = require('moment')
  var async = require('async')
  var PDF = require('edsx-mail')
  var _ = require('lodash')
@@ -179,3 +179,4 @@
  }
 
  module.exports = RelanceClient;
+*/
