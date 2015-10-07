@@ -50,7 +50,7 @@
                    }).then(function(resp) {
                        var i = 0;
 
-                       console.log(ids, reps.length)
+                       console.log(req.query.ids, reps.length)
                        async.eachLimit(resp, 5, function(e, callback) {
                                var flush = _.find(e.compta.paiement.historique, 'dateFlush', new Date(req.body.date));
                                flush.numeroCheque = (_.find(req.body.ids, 'id', e.sst) || {}).numeroCheque
@@ -58,7 +58,7 @@
                                    console.log('-->uauau')
                                    console.log(err, buffer)
                                    document.upload({
-                                       filename: '/V2_PRODUCTION/intervention/' + e.id + '/' + 'lettre-cheque-' + moment(req.body.date).format('LL') + '.pdf',
+                                       filename: '/V2_PRODUCTION/intervention/' + e.id + '/' + 'lettre-cheque-' + moment(req.body.date).format('L') + '.pdf',
                                        data: buffer
                                    }).then(function(resp) {
                                        console.log('ok upload')
