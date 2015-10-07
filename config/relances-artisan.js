@@ -5,7 +5,7 @@
  var textTemplate = requireLocal('config/textTemplate');
  require('nodeify').extend();
 
- var RelanceClient = function(doc, type) {
+ var RelanceClient = function() {
      if (!(this instanceof RelanceClient)) {
          return new RelanceClient(doc, type)
      }
