@@ -6,9 +6,11 @@
                 <body>
                     <tr ng-repeat-start="artisan in lpa" class="orange lighten-5">
                         <td colspan="2" variable-length>
-                            <h2><a style="color:black" href="/artisan/{{artisan.id}}/recap#interventions">{{artisan.id}} - {{artisan.nomSociete}}</a></h2></td>
-                        <td colspan="3">
-                            <input  ng-if="artisan.list.getList()[0].mode === 'CHQ'" type="text" class="form-control" ng-model="artisan.numeroCheque" ng-change="vm.updateNumeroCheque($index, artisan.id)">
+                            <h2>
+                            <a style="color:black" href="/artisan/{{artisan.id}}/recap#interventions">{{artisan.id}} - {{artisan.nomSociete}}</a>
+                            </h2></td>
+                        <td colspan="3" ng-if="!vm.search.d">
+                            <input ng-if="artisan.list.getList()[0].mode === 'CHQ'" type="text" class="form-control" ng-model="artisan.numeroCheque" ng-change="vm.updateNumeroCheque($index, artisan.id)">
                         </td>
                         <td colspan="12"></td>
                     </tr>
@@ -24,8 +26,7 @@
                         <td variable-length><i>Final</i></td>
                         <td variable-length><i>Payer</i></td>
                     </tr>
-                    <tr ng-repeat="item in artisan.list.getList()" ng-click="item.checked = !item.checked;vm.reloadList(artisan)" ng-right-click="vm.rowRightClick($event, item)"
-                    ng-class="{info : vm.contextMenu && vm.contextMenu.active && vm.contextMenu.data.id === item.id}">
+                    <tr ng-repeat="item in artisan.list.getList()" ng-click="item.checked = !item.checked;vm.reloadList(artisan)" ng-right-click="vm.rowRightClick($event, item)" ng-class="{info : vm.contextMenu && vm.contextMenu.active && vm.contextMenu.data.id === item.id, success:item.numeroCheque}">
                         <td ng-click="item.checked = !item.checked;"><a style="color:black" href="/intervention/{{item.id}}">{{ item.id }}</a></td>
                         <td>{{ item.login}} ({{item.date|date:"dd/MM/yy à H'h'mm"}})</td>
                         <td>{{ item.mode }}</td>

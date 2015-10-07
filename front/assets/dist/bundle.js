@@ -600,6 +600,8 @@ module.exports = FiltersFactory;
             rtn.login = e.compta.paiement.login
             rtn.checked = _includes(prevChecked, rtn.id)
             rtn.mode = e.compta.paiement.mode
+            console.log(e.compta.paiement)
+            rtn.numeroCheque = e.compta.paiement.numeroCheque
             rtn.type = rtn.montant.legacy !== 0 ? (rtn.montant.balance > 0 ? 'COMPLEMENT' : 'AVOIR') : 'AUTO-FACT'
             list.push(rtn)
         })

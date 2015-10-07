@@ -4448,7 +4448,7 @@ var InterventionCtrl = function(Description, Signalement, ContextMenu, $window, 
         }
     }
 
-    Mousetrap.bind(['command+k', 'ctrl+k'], function() {
+    Mousetrap.bind(['command+k', 'ctrl+k', 'command+f1', 'ctrl+f1'], function() {
         $window.open("appurl:", '_self');
         console.log("sweg")
         edisonAPI.intervention.scan(intervention.id).then(function() {
@@ -4641,8 +4641,6 @@ var InterventionCtrl = function(Description, Signalement, ContextMenu, $window, 
 
 angular.module('edison').controller('InterventionController', InterventionCtrl);
 
-angular.module('edison').controller('ListeArtisanController', _.noop);
-
 var LpaController = function(openPost, socket, ContextMenu, $location, $window, tabContainer, edisonAPI, $rootScope, LxProgressService, LxNotificationService, FlushList) {
     "use strict";
     var _this = this
@@ -4755,6 +4753,8 @@ var LpaController = function(openPost, socket, ContextMenu, $location, $window, 
 
 
 angular.module('edison').controller('LpaController', LpaController);
+
+angular.module('edison').controller('ListeArtisanController', _.noop);
 
 angular.module('edison').controller('ListeDevisController', _.noop);
 

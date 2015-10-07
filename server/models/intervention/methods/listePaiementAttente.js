@@ -8,7 +8,6 @@ module.exports = function(schema) {
                 .populate('sst')
                 .select('id client description compta.paiement date.intervention sst artisan fourniture')
                 .exec(function(err, docs) {
-                    docs = _.clone(docs)
                     var rtn = _(docs).groupBy('sst.id').values().map(function(e) {
                         return {
                             address: e[0].sst.address,
@@ -29,13 +28,17 @@ module.exports = function(schema) {
     var lol = function(inter, date) {
 
         var index = _.findIndex(inter.compta.paiement.historique, 'dateFlush', date)
+        inter = JSON.parse(JSON.stringify(inter));
         inter.compta.paiement.base = inter.compta.paiement.historique[index].base
         inter.compta.paiement.montant = inter.compta.paiement.historique[index].montant
         inter.compta.paiement.pourcentage = inter.compta.paiement.historique[index].pourcentage
         inter.compta.paiement.tva = inter.compta.paiement.historique[index].tva
+            //WTF
+        inter.compta.paiement.numeroCheque = inter.compta.paiement.historique[index].numeroCheque;
         inter.compta.paiement.fourniture = inter.compta.paiement.historique[index].fourniture
         inter.compta.paiement.historique = inter.compta.paiement.historique.slice(index + 1);
         inter.sst = undefined;
+        //   console.log(inter.compta.paiement.numeroCheque)
         return inter;
     }
 
@@ -43,28 +46,27 @@ module.exports = function(schema) {
         return new Promise(function(resolve, reject) {
 
             var date = new Date(parseInt(ts));
-            console.log(date)
             db.model('intervention')
                 .find({
                     'compta.paiement.historique': {
                         $elemMatch: {
                             dateFlush: date
                         }
-                    }
+                    },
                 })
                 .populate('sst')
                 .select('id client description compta.paiement date.intervention sst artisan fourniture')
                 .exec(function(err, docs) {
-                    docs = _.clone(docs)
-                    var rtn = _(docs).groupBy('sst.id').values().map(function(e) {
-                        return {
-                            address: e[0].sst.address,
-                            nomSociete: e[0].sst.nomSociete,
-                            id: e[0].sst.id,
-                            representant: e[0].sst.representant,
-                            list: _.map(e, _.partial(lol, _, date))
-                        }
-                    }).value()
+                    var rtn = _(docs).reject('sst', null).groupBy('sst.id').values().map(function(e) {
+                            return {
+                                address: e[0].sst.address,
+                                nomSociete: e[0].sst.nomSociete,
+                                id: e[0].sst.id,
+                                representant: e[0].sst.representant,
+                                list: _.map(e, _.partial(lol, _, date))
+                            }
+                        }).value()
+                        //  console.log(rtn);
                     resolve(rtn)
                 })
         })
