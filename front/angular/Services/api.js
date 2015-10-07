@@ -43,7 +43,7 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
         },
         compta: {
             lpa: function(data) {
-                return $http.get('/api/intervention/lpa?d=' + (data.d || ''));
+                return $http.get('/api/intervention/lpa?d=' + (data.d ||  ''));
             },
             flush: function(data) {
                 return $http.post('/api/intervention/flush', data);
@@ -178,6 +178,9 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
                     url: "/api/intervention/commissions",
                     params: options
                 });
+            },
+            scan: function(id) {
+                return $http.post("/api/intervention/" + id + "/scan");
             }
         },
         artisan: {

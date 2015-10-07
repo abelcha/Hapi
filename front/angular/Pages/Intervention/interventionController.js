@@ -57,11 +57,8 @@ var InterventionCtrl = function(Description, Signalement, ContextMenu, $window, 
 
     Mousetrap.bind(['command+k', 'ctrl+k'], function() {
         $window.open("appurl:", '_self');
-        edisonAPI.file.scan({
-            type: 'SCAN',
-            model: 'intervention',
-            link: intervention.id
-        }).then(function() {
+        console.log("sweg")
+        edisonAPI.intervention.scan(intervention.id).then(function() {
             $scope.loadFilesList();
             LxNotificationService.success("Le fichier est enregistré");
         })
