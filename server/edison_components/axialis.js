@@ -86,17 +86,21 @@ module.exports = {
                 }]
             }).then(function(doc) {
                 if (!doc) {
+                    console.log('==>', resps[2])
                     return res.json(resps[2]);
                 }
-                if (req.params.id == '0' || req.params.id == '29549') {
+                if (req.params.id == '0' ||  req.params.id == '29549') {
+                    console.log('==>', resps[1])
                     return res.json(resps[1])
                 }
                 promise = db.model('intervention').findOne({
                     id: parseInt(req.params.id)
                 }).then(function(intervention) {
                     if (!intervention ||  (intervention.sst !== doc.id)) {
+                        console.log('==>', resps[4])
                         return res.json(resps[4])
                     } else {
+                        console.log('==>', ok(intervention.client.telephone.tel1.replace('0', '33')))
                         return res.json(ok(intervention.client.telephone.tel1.replace('0', '33')))
                     }
                 })
