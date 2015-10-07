@@ -84,7 +84,7 @@ module.exports = function(schema) {
                         /* if (envDev) {
                              return callback(null, 'ok')
                          }*/
-                         var textTemplate = require('config/textTemplate.js');
+                         var textTemplate = requireLocal('config/textTemplate.js');
                         mail.send({
                             From: "comptabilite@edison-services.fr",
                             ReplyTo: "comptabilite@edison-services.fr",
