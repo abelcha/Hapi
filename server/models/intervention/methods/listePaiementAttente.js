@@ -57,7 +57,7 @@ module.exports = function(schema) {
                 .populate('sst')
                 .select('id client description compta.paiement date.intervention sst artisan fourniture')
                 .exec(function(err, docs) {
-                    var rtn = _(docs).reject('sst', null).groupBy('sst.id').values().map(function(e) {
+                    var rtn = _(docs).reject('[0]sst', null).groupBy('sst.id').values().map(function(e) {
                             return {
                                 address: e[0].sst.address,
                                 nomSociete: e[0].sst.nomSociete,
