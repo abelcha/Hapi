@@ -5,9 +5,9 @@
  var textTemplate = requireLocal('config/textTemplate');
  require('nodeify').extend();
 
- var Relance = function(doc, type) {
-     if (!(this instanceof Relance)) {
-         return new Relance(doc, type)
+ var RelanceClient = function(doc, type) {
+     if (!(this instanceof RelanceClient)) {
+         return new RelanceClient(doc, type)
      }
      var _this = this;
      _this.doc = doc;
@@ -28,9 +28,9 @@
 
  }
 
- Relance.prototype.send = function(callback) {
+ RelanceClient.prototype.send = function(callback) {
      var async = require('async');
-     if (this.type === "relance1") {
+     if (this.type === "relance-client-1") {
          this.mailBody = _.template(textTemplate.mail.intervention.relance1())(this.doc);
          this.letterBody = _.template(textTemplate.lettre.intervention.relance1())(this.doc);
          this.mailTitle = _.template("Première relance pour facture n°{{id}} impayée")(this.doc);
@@ -38,7 +38,7 @@
              this.createFacture.bind(this),
              this.sendMail.bind(this),
          ], callback);
-     } else if (this.type === 'relance2') {
+     } else if (this.type === 'relance-client-2') {
          this.mailBody = _.template(textTemplate.mail.intervention.relance2())(this.doc);
          this.letterBody = _.template(textTemplate.lettre.intervention.relance2())(this.doc);
          this.mailTitle = _.template("Deuxieme relance pour facture n°{{id}} impayée")(this.doc);
@@ -49,7 +49,7 @@
              this.insertBlankPage.bind(this),
              this.printStack.bind(this)
          ], callback)
-     } else if (this.type === 'relance3') {
+     } else if (this.type === 'relance-client-3') {
          this.mailBody = _.template(textTemplate.mail.intervention.relance3())(this.doc);
          this.letterBody = _.template(textTemplate.lettre.intervention.relance3())(this.doc);
          this.mailTitle = _.template("Troisième relance pour facture n°{{id}} impayée")(this.doc);
@@ -61,7 +61,7 @@
              this.insertBlankPage.bind(this),
              this.printStack.bind(this)
          ], callback)
-     } else if (this.type === 'relance4') {
+     } else if (this.type === 'relance-client-4') {
          this.letterBody = _.template(textTemplate.lettre.intervention.relance4())(this.doc);
 
          async.waterfall([
@@ -69,11 +69,15 @@
              this.printStack.bind(this)
          ], callback)
 
-     } else if (this.type === 'relance5') {
+     } else if (this.type === 'relance-client-5') {
          async.waterfall([
              this.createAvisAvantPoursuites.bind(this),
              this.printStack.bind(this)
          ], callback)
+
+     } else if (this.type === 'relance-sst-1') {
+
+
 
      } else {
          callback(null);
@@ -81,17 +85,17 @@
  }
 
 
- Relance.prototype.createAvisAvantPoursuites = function(callback) {
+ RelanceClient.prototype.createAvisAvantPoursuites = function(callback) {
      PDF('recouvrement', this.doc).buffer(callback)
  }
 
 
- Relance.prototype.createInjonction = function(callback) {
+ RelanceClient.prototype.createInjonction = function(callback) {
      PDF('injonction', this.doc).buffer(callback)
  }
 
 
- Relance.prototype.createFacture = function(callback) {
+ RelanceClient.prototype.createFacture = function(callback) {
      console.log('createFacture');
      PDF([{
          model: 'letter',
@@ -110,7 +114,7 @@
      }]).toBuffer(callback)
  }
 
- Relance.prototype.sendMail = function(buffer, callback) {
+ RelanceClient.prototype.sendMail = function(buffer, callback) {
      console.log('sendMail');
 
      if (envDev) {
@@ -133,7 +137,7 @@
      });
  }
 
- Relance.prototype.writeTmpFile = function(buffer, callback) {
+ RelanceClient.prototype.writeTmpFile = function(buffer, callback) {
      console.log('writeTmpFile');
 
      var fs = require('fs')
@@ -144,7 +148,7 @@
      })
  }
 
- Relance.prototype.insertBlankPage = function(buffer, filename, callback) {
+ RelanceClient.prototype.insertBlankPage = function(buffer, filename, callback) {
      console.log('insertBlankPage');
 
      if (envDev) {
@@ -165,7 +169,7 @@
 
      })
  }
- Relance.prototype.printStack = function(buffer, callback) {
+ RelanceClient.prototype.printStack = function(buffer, callback) {
      console.log('printStack');
 
      document.stack(buffer, this.type + ' - ' + this.doc.id, "AUTO")
@@ -174,4 +178,4 @@
          }, callback)
  }
 
- module.exports = Relance;
+ module.exports = RelanceClient;

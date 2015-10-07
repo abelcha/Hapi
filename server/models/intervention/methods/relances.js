@@ -9,10 +9,10 @@ module.exports = function(schema) {
     schema.statics.relance = function(req, res) {
         return new Promise(function(resolve, reject)  {
             db.model('intervention').find({
-/*                'compta.reglement.recu': false,
-                'date.intervention': {
-                    $lt: moment().subtract(21, 'days').toDate()
-                },*/
+                /*                'compta.reglement.recu': false,
+                                'date.intervention': {
+                                    $lt: moment().subtract(21, 'days').toDate()
+                                },*/
                 'date.envoiFacture': {
                     $exists: true
                 },
@@ -20,8 +20,10 @@ module.exports = function(schema) {
             }).then(function(resp, cb) {
                 console.log(resp.length)
                 var rnd = resp[_.random(0, resp.length - 1)];
-                var Relance = requireLocal('config/_Relance');
-                var rl = Relance(rnd, req.query.model || 'relance1')
+                // var RelanceClient = requireLocal('config/relances-client');
+                // var rl = RelanceClient(rnd, req.query.model || 'relance-client-1')
+                var RelanceArtisan = requireLocal('config/relances-artisan');
+                var rl = RelanceArtisan(rnd, req.query.model || 'relance-artisan-1')
                 rl.send(function(err, resp) {
                         console.log(err, resp);
                         /*                        if (req.query.preview) {

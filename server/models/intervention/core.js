@@ -77,7 +77,7 @@
             curr.litige.closed = new Date();
             curr.litige.closedBy = session.login;
         }
-        console.log('-->=>', curr.artisan.id,  prev.artisan.id)
+/*        console.log('-->=>', curr.artisan.id,  prev.artisan.id)
         if (curr.artisan.id !== prev.artisan.id) {
             console.log( curr.sst.telephone.tel1)
             var moment = require('moment')
@@ -90,7 +90,7 @@
                 text: text,
                 to: envProd ? curr.sst.telephone.tel1 : '0633138868',
             })
-        }
+        }*/
 
     }
 
