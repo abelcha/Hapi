@@ -9,10 +9,7 @@
            var fs = require('fs')
            var scissors = require('scissors');
            var finalBuffer = [];
-
-           var page = scissors(filepath).pages(1)
-           var blank = scissors(process.cwd() + '/front/assets/pdf/blank.pdf').pages(1);
-           var stream = scissors.join(page, blank).pdfStream()
+           var stream = scissors(filepath).pages(page).pdfStream()
            stream.on('data', function(data) {
                console.log('DATA')
                finalBuffer.push(data);
@@ -62,9 +59,9 @@
                                    console.log(err, buffer)
                                    document.upload({
                                        filename: '/V2_PRODUCTION/intervention/' + e.id + '/' + 'lettre-cheque-' + moment(req.body.date).format('LL') + '.pdf',
-                                       data:buffer
+                                       data: buffer
                                    }).then(function(resp) {
-                                    console.log('ok upload')
+                                       console.log('ok upload')
                                        callback(null)
                                    }, callback)
                                })
