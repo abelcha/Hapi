@@ -2701,6 +2701,34 @@ module.exports = {
             }
         },
         artisan: {
+            rappelDocuments: function() {
+                return "<strong> OBJET: En attente de vos documents administratifs </strong>" +
+                    "<p> Monsieur, </p>" +
+                    "<p> Depuis plusieurs mois <b><u>vous intervenez régulièrement</u></b> auprès de nos clients." +
+                    "<p> A chaque attestation de paiement reçu, nous vous avons transmis un <b><u>contrat de déclaration de sous-traitance</u></b> à remplir et à nous faire parvenir accompagné des documents administratifs obligatoires. </p>" +
+                    "<p> Cependant, à ce jour nous sommes toujours dans l'attente de ces documents obligatoires. </p>" +
+                    "<p> En effet, depuis la loi de fincance de 1er janvier 2014 concernant la sous-traitance dans le secteur du bâtiment, nous avons l'obligation de déclarer l'ensemble de nos sous-traitants intervenants chez nos clients. </p>" +
+                    "<p> <b><u>A partir du lundi 3 mars 2014, nos directions régionales ne pourront donc plus vous passer de commandes.</u></b>" +
+                    "<p> Merci de nous transmettre vos documents administratifs suivants: </p>" +
+                    "<p>" +
+                    (!this.document.kbis.file ? "&emsp;&emsp; ☐ &emsp;&emsp; KBIS ou immatriculation <br>" : '') +
+                    (!this.document.contrat.file ? "&emsp;&emsp; ☐ &emsp;&emsp; Contrat de partenariat reçu par mail <br>" : '') +
+                    (!this.document.cni.file ? "&emsp;&emsp; ☐ &emsp;&emsp; Photocopie Recto/Verso de la pièce d'identité du gérant <br>" : '') +
+                    (!this.document.assurance.file ? "&emsp;&emsp; ☐ &emsp;&emsp; Attestation d'assurance <br>" : '') +
+                    (!this.document.rib.file ? "&emsp;&emsp; ☐ &emsp;&emsp; RIB <br>" : '') +
+                    (!this.document.ursaff.file ? "&emsp;&emsp; ☐ &emsp;&emsp; Attestation URSAFF" : '') +
+                    "</p>" +
+                    "<p> Veuillez envoyer vos documents à cette adresse: </p>" +
+                    "<p strong center> EDISON SERVICES FRANCE<br>" +
+                    "Service partenariat - Yohann Rhoum <br>" +
+                    "75 rue des dames, 75017 Paris<br>" +
+                    "Tél. 09.72.51.08.01 (Ouvert de 09h00 à 12h30 / 14h00 à 16h30)</p>" +
+
+                    "<p> Restant à votre disposition, nous vous prions de croire, Monsieur, l'expression de nos salutations distinguées. </p>" +
+                    "<header style='margin-top: 85px;'>" +
+                    "<b> Monsieur QUEUDRAY </b>" +
+                    "</header>"
+            },
             envoiFacturier: function() {
                 return "<p>Cher Monsieur {{representant.nom}},</p>" +
                     "<p>Bienvenue au sein du réseau partenaire Edison Services.</p>" +

@@ -25,50 +25,58 @@ module.exports = function(schema) {
     };
 
 
-    var getDocs = function(data) {
+
+    var getDocs = function(req, res, data) {
+        var textTemplate = requireLocal('config/textTemplate');
         return new Promise(function(resolve, reject) {
             var op = [];
             var blank = {
                 model: 'blank',
                 options: {}
             }
-            console.log('==>', data.length)
+
             db.model('artisan').find({
                 id: {
                     $in: _.pluck(data, 'id')
                 }
             }).then(function(docs) {
-                _.each(docs, function(e) {
-                    if (!e.document.rib.file) {
-                        op.push({
-                            model: 'letter',
-                            options: {
-                                address: e.address,
-                                dest: e.representant,
-                                text: 'Bonjour, veuillez nous communiquer votre rib stp',
-                                title: "Demande de transmission de rib"
-                            }
-                        }, blank)
-                    }
-                    console.log('==>', e.document.contrat.file)
-                    if (!e.document.contrat.file) {
-                        op.push({
-                            model: 'letter',
-                            options: {
-                                address: e.address,
-                                dest: e.representant,
-                                text: 'Bonjour, veuillez nous communiquer votre contrat stp',
-                                title: "Demande de transmission de contrat"
-                            }
-                        }, blank, {
-                            model: 'contract',
-                            options: e
-                        }, blank)
-                    }
 
-                });
-                resolve(PDF(op).html())
-                    // resolve('ok')
+                async.eachLimit(docs, 1, function(e, big_callback) {
+                        var paiementsst = _.find(data, 'id', e.id);
+                        if (paiementsst.list.__list[0].mode === 'VIR') {
+                            return big_callback(null)
+                        }
+                        op.push({
+                            model: 'letter',
+                            options: {
+                                address: e.address,
+                                dest: e,
+                                text: textTemplate.lettre.artisan.rappelDocuments.bind(e)(),
+                                title: ""
+                            }
+                        })
+                        clean(paiementsst, "CHQ");
+
+                        async.eachLimit(paiementsst.interventions, 1, function(inter, small_callback) {
+                            db.model('intervention').findOne({
+                                id: inter.id
+                            }).populate('sst').then(function(doc) {
+                                doc = doc.toObject();
+                                doc.paiement = new Paiement(doc);
+                                op.push({
+                                    model: 'auto-facture',
+                                    options: doc
+                                });
+                                small_callback(null)
+                            }, small_callback)
+                        }, big_callback)
+                    },
+                    function() {
+                        PDF(op).toBuffer(function(err, buffer) {
+                            res.contentType('application/pdf')
+                            res.send(buffer);
+                        })
+                    });
             }, reject)
         })
     }
@@ -110,18 +118,7 @@ module.exports = function(schema) {
     }
 
 
-
-    schema.statics.print = function(req, res) {
-        var _this = this;
-        var data = JSON.parse(req.body.data);
-
-        if (req.body.type === 'documents') {
-            return getDocs(data).then(res.send.bind(res), res.json.bind(res));
-        } else if (req.body.type === 'virement') {
-            console.log('jdqsjdsqj')
-            return res.table(getVirements(data))
-        }
-
+    var getLettreCheques = function(res, req, data) {
         return new Promise(function(resolve, reject) {
             var resend = function() {
                 if (req.query.pdf || true) {
@@ -142,7 +139,6 @@ module.exports = function(schema) {
 
             var op = [];
             _.each(data, function(e, k) {
-
                 if (!e.total.final)
                     return 0;
                 var mode = _.find(e.list.__list, {
@@ -158,37 +154,22 @@ module.exports = function(schema) {
                     })
                 }
             })
-            if (req.body.type === 'recap') {
-                var it = 0;
-                async.each(data, function(e, callback) {
-                    async.each(e.interventions, function(x, cb2) {
-                        if (e.mode === 'CHQ') {
-                            return cb2();
-                        }
-                        db.model('intervention').findOne({
-                            id: x.id
-                        }).populate('sst').then(function(doc) {
-                            doc = doc.toObject();
-                            doc.paiement = new Paiement(doc);
-                            var __pos = _(op).findIndex('options.id', doc.artisan.id, 'model', 'recap')
-                            if (__pos >= 0) {
-                                op.splice(__pos + 1, 0, {
-                                    model: 'auto-facture',
-                                    options: doc
-                                });
-                            }
-                            cb2()
-                        }, callback)
-
-                    }, callback)
-
-                }, function(err, result) {
-                    resend(op, req.query.pdf)
-                })
-            } else {
-                resend(op, req.query.pdf)
-            }
+            resend(op, req.query.pdf)
         })
+
+    }
+
+    schema.statics.print = function(req, res) {
+        var _this = this;
+        var data = JSON.parse(req.body.data);
+
+        if (req.body.type === 'documents') {
+            return getDocs(req, res, data)
+        } else if (req.body.type === 'virement') {
+            return res.table(getVirements(data))
+        } else {
+            return getLettreCheques(res, req, data)
+        }
 
     }
 
