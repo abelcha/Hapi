@@ -97,8 +97,8 @@ module.exports = {
                     return res.json(resps[4])
                 }
             } else {
-                console.log('five')
-                return res.json(ok(doc.client.telephone.tel1))
+                console.log("OK ==>", ok(doc.client.telephone.tel1.replace('0', '33')))
+                return res.json(ok(doc.client.telephone.tel1.replace('0', '33')))
             }
         }, function() {
             console.log('NOOOP')
