@@ -24,12 +24,11 @@
                 <p ng-if="_model === 'devis'">
                     {{data.produits.length}} Produits ( {{::produits.total()}} €)
                 </p>
-           <!--      <p ng-if="_model === 'intervention' && data.status === 'ANN' && data.ca "strong>Annulation:</strong> {{data.ca.long_name}}</p> -->
+                <!--      <p ng-if="_model === 'intervention' && data.status === 'ANN' && data.ca "strong>Annulation:</strong> {{data.ca.long_name}}</p> -->
         </div>
         <div ng-if="_model === 'intervention'" class="col-sm-4 info-ext">
             <div style="min-height: 147px;padding-top:3px">
-            <p bold text-xxl underlined>Historique</p>
-
+                <p bold text-xxl underlined>Historique</p>
                 <p ng-if="data.devisOrigine.id">Devis <a ng-click="Devis(data).devisPreview()">{{data.devisOrigine.id}}</a> ajouté le {{data.devisOrigine.date.ajout | date:"dd/MM/yy à HH'h'mm"}} par {{data.devisOrigine.login.ajout}}
                 </p>
                 <p>Ajouté le {{data.date.ajout | date:"dd/MM/yy à HH'h'mm"}} par {{data.login.ajout}}</p>
@@ -41,7 +40,10 @@
                 <p ng-if="data.compta.paiement.effectue">Paiement éffectué le {{data.compta.paiement.date | date:"dd/MM/yy à HH'h'mm"}} par {{data.compta.paiement.login}}</p>
                 <p ng-if="data.status === 'ANN' && data.date.annulation">Annulé le {{data.date.annulation | date:"dd/MM/yy à HH'h'mm"}} par {{data.login.annulation}} <i ng-if="data.causeAnnulation">({{config.getCauseAnnulation(data.causeAnnulation).long_name}})</i></p>
                 <p ng-if="data.litige.opened">Litige Ouvert le {{data.litige.opened | date:"dd/MM/yy à HH'h'mm"}} par {{data.litige.openedBy}} <u text-xs>({{data.litige.description}})</u></p>
-                 <p ng-if="data.litige.closed">--> Fermé le {{data.litige.closed | date:"dd/MM/yy à HH'h'mm"}} par {{data.litige.closedBy}}</p>
+                <p ng-if="data.litige.closed">--> Fermé le {{data.litige.closed | date:"dd/MM/yy à HH'h'mm"}} par {{data.litige.closedBy}}</p>
+                <button ng-if="data.recouvrement.level === 1" class="btn--no-conflicts btn--m yellow btn--raised" lx-ripple>Facture Recu</button>
+                <button ng-if="data.recouvrement.level === 2" class="btn--no-conflicts btn--m red btn--raised" lx-ripple>Litige</button>
+                <button ng-if="data.recouvrement.level === 3"  class="btn--no-conflicts btn--m blue btn--raised" lx-ripple>Reglement Envoyé</button>
             </div>
         </div>
         <div ng-if="_model === 'devis'" class="col-sm-4 info-ext">

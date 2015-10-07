@@ -162,6 +162,7 @@ angular.module('edison').factory('tabContainer', ['$location', '$window', '$q', 
             '/list',
             '/search',
             '/recap',
+            'lpa',
             '/artisan/contact',
             '/tools/edit',
         ]

@@ -17,7 +17,6 @@ module.exports = function(schema) {
                     res.pdf(resp);
                 })
             }
-
         }
     }
 

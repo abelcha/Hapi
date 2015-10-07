@@ -3551,6 +3551,7 @@ angular.module('edison').factory('tabContainer', ['$location', '$window', '$q', 
             '/list',
             '/search',
             '/recap',
+            'lpa',
             '/artisan/contact',
             '/tools/edit',
         ]
@@ -4640,6 +4641,8 @@ var InterventionCtrl = function(Description, Signalement, ContextMenu, $window, 
 
 angular.module('edison').controller('InterventionController', InterventionCtrl);
 
+angular.module('edison').controller('ListeArtisanController', _.noop);
+
 var LpaController = function(openPost, socket, ContextMenu, $location, $window, tabContainer, edisonAPI, $rootScope, LxProgressService, LxNotificationService, FlushList) {
     "use strict";
     var _this = this
@@ -4752,8 +4755,6 @@ var LpaController = function(openPost, socket, ContextMenu, $location, $window, 
 
 
 angular.module('edison').controller('LpaController', LpaController);
-
-angular.module('edison').controller('ListeArtisanController', _.noop);
 
 angular.module('edison').controller('ListeDevisController', _.noop);
 

@@ -105,36 +105,5 @@ module.exports = {
                     }
                 })
             })
-            /*
-                    promise = db.model('intervention').findOne({
-                        id: parseInt(req.params.id)
-                    }).populate('sst');
-                    console.log('create promise')
-                    promise.then(function(doc) {
-                        console.log('Get Intervention')
-                        if (!doc || !doc.sst.id)
-                            return res.json(resps[1])
-                        var artisan = doc.sst.id
-                        console.log(q.call_origin, doc.sst.telephone.tel1, q.call_origin === doc.sst.telephone.tel1);
-                        if (q.call_origin !== doc.sst.telephone.tel1 && q.call_origin !== doc.sst.telephone.tel2) {
-                            console.log('one')
-                            if (!req.query.sst_id) {
-                                console.log('two')
-                                return res.json(resps[2])
-                            } else if (parseInt(req.query.sst_id) === doc.sst.id) {
-                                console.log('OKOK', doc.client.telephone.tel1)
-                                return res.json(ok(doc.client.telephone.tel1));
-                            } else {
-                                console.log('four')
-                                return res.json(resps[4])
-                            }
-                        } else {
-                            console.log("OK ==>", ok(doc.client.telephone.tel1.replace('0', '33')))
-                            return res.json(ok(doc.client.telephone.tel1.replace('0', '33')))
-                        }
-                    }, function() {
-                        console.log('NOOOP')
-                        res.sendStatus(500)
-                    })*/
     }
 }
