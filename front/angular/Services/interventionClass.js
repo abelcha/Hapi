@@ -170,15 +170,9 @@ angular.module('edison')
             $location.url(['/artisan', this.artisan.id, 'recap'].join('/') + '#interventions')
         }
         Intervention.prototype.smsArtisan = function(cb) {
+           
             var _this = this;
-            this.mmt = moment(this.date.intervention);
-            this.format = this.mmt.isSame(moment(), 'day') ? "[aujourd'hui à ]HH[h]mm" : "[le ]DD[/]MM[ à ]HH[h]mm"
-            this.datePlain = this.mmt.format(this.format)
-            this.user = user
-            this.user.pseudo = this.user.pseudo ||  "Arnaud";
-            this.ligneDirect = user.ligne ? (user.ligne.match(/.{2}|.{1,2}/g).join('.')) :  "09.72.44.16.63";
-            this.categorieClean = config.categories[this.categorie].suffix + " " + config.categories[this.categorie].long_name.toLowerCase()
-            var text = textTemplate.sms.intervention.demande();
+            var text = textTemplate.sms.intervention.demande.bind(this)(user, config);
             text = _.template(text)(this)
             dialog.getFileAndText(_this, text, [], function(err, text) {
                 if (err) {
@@ -267,7 +261,7 @@ angular.module('edison')
 
         Intervention.prototype.envoi = function(cb) {
             var _this = this;
-            var defaultText = textTemplate.sms.intervention.envoi.bind(_this)($rootScope.user);
+            var defaultText = textTemplate.sms.intervention.envoi.bind(_this)(user);
             dialog.getFileAndText(_this, defaultText, _this.files, function(err, text, file) {
                 if (err)
                     return cb(err)

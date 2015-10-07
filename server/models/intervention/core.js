@@ -35,6 +35,7 @@
                     oldID: data.tmpID,
                     newID: doc.id,
                 })*/
+
         if (data.devisOrigine) {
             db.model('devis').findOne({
                     id: data.devisOrigine
@@ -75,6 +76,18 @@
         if (curr.litige && curr.litige.open === false && prev.litige.open === true) {
             curr.litige.closed = new Date();
             curr.litige.closedBy = session.login;
+        }
+        if (curr.artisan.id !== prev.artisan.id) {
+            var moment = require('moment')
+            var textTemplate = requireLocal('config/textTemplate');
+            var config = requireLocal('config/dataList');
+            var text = textTemplate.sms.intervention.demande.bind(curr)(session, config ,moment);
+            sms.send({
+                link: curr.sst.id,
+                origin: curr.id,
+                text: text,
+                to: envProd ? curr.sst.telephone.tel1 : '0633138868',
+            })
         }
 
     }
