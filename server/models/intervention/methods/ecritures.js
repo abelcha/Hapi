@@ -4,32 +4,7 @@ module.exports = function(schema) {
     var async = require('async')
     var moment = require('moment')
     var csv = require('express-csv')
-    var getList = function(match) {
-        return new Promise(function(resolve, reject) {
-            db.model('intervention')
-                .aggregate()
-                .match(match ||  {})
-                .unwind("compta.paiement.historique")
-                .project({
-                    'compta': true,
-                    'artisan': true,
-                    'id': true,
-                    'categorie': true
-                })
-                .exec(function(err, docs) {
-                    var x = _.groupBy(docs, 'compta.paiement.historique.dateFlush')
-                    x = _(x).map(function(e, k) {
-                            return {
-                                date: k,
-                                timestamp: (new Date(k)).getTime(),
-                                list: _.groupBy(e, 'artisan.id')
-                            }
-                        }).value()
-                        // console.log(x)
-                    resolve(x)
-                })
-        })
-    }
+
 
     format = function(nbr) {
         return String(_.round(nbr, 2)).replaceAll('.', ',');
@@ -108,7 +83,7 @@ module.exports = function(schema) {
             if (!req.query.d)
                 return reject('pas de date')
             var date = new Date(parseInt(req.query.d));
-            getList({
+            this.getList({
                 'compta.paiement.historique': {
                     $elemMatch: {
                         dateFlush: date
@@ -140,6 +115,7 @@ module.exports = function(schema) {
 
         })
     }
+
 
     schema.statics.ecritureReglements = function(req, res) {
 
@@ -242,47 +218,4 @@ module.exports = function(schema) {
             });
         });
     };
-
-    schema.statics.archivePaiement = function(req, res) {
-        var _this = this;
-        return getList({
-            'compta.paiement.effectue': true,
-        });
-    }
-
-    schema.statics.archiveReglement = function(req, res) {
-
-        var _this = this;
-        console.log('hey')
-        return new Promise(function(resolve, reject) {
-            db.model('intervention')
-                .aggregate()
-                .match({
-                    'compta.reglement.recu': true
-                })
-                .group({
-                    _id: {
-                        yr: {
-                            $year: '$compta.reglement.date',
-
-                        },
-                        mth: {
-                            $month: '$compta.reglement.date',
-                        }
-                    },
-                    date: {
-                        $first: '$compta.reglement.date'
-                    }
-                })
-
-            .exec(function(err, docs) {
-
-                console.log(err, docs);
-                resolve(docs)
-            })
-        })
-    }
-
-
-
 }
