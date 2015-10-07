@@ -218,20 +218,20 @@ module.exports = function(schema) {
                                 TTC: format(R.avoir.montant * (1 + (e.tva / 100))),
                                 TVA: format(R.avoir.montant * (e.tva / 100))
                             };
+                            console.log(R.avoir._type);
                             var dateAvoir = moment(new Date(R.avoir.date)).format('L');
                             if (R.avoir._type === 'REM_COM') {
                                 var compteVTA2 = '70900000'
                             } else if (R.avoir._type === 'ERR_FACT') {
                                 var comptaVTA2 = compte.VT2;
                             }
-                            if (R.avoir._type === 'TROP_PERCU') {
-                                var VTA1 = ['VT', dateAvoir, compte.VT1, CLTOS, AOS, libelleAV, '', montantAvoir.TTC]
-                                var VTA2 = ['VT', dateAvoir, compte.VT2, '', AOS, libelleAV, montantAvoir.HT, '']
-                                var VTA3 = ['VT', dateAvoir, compte.VT3, '', AOS, libelleAV, montantAvoir.TVA, '']
-                                rtn.push(VTA1, VTA2, VTA3)
-                            }
+                            var VTA1 = ['VT', dateAvoir, compte.VT1, CLTOS, AOS, libelleAV, '', montantAvoir.TTC]
+                            var VTA2 = ['VT', dateAvoir, compte.VT2, '', AOS, libelleAV, montantAvoir.HT, '']
+                            var VTA3 = ['VT', dateAvoir, compte.VT3, '', AOS, libelleAV, montantAvoir.TVA, '']
+                            rtn.push(VTA1, VTA2, VTA3)
+
                             var BQA1 = ['BQ', dateAvoir, compte.VT1, CLTOS, 'numero cheque', libelleAV, montantAvoir.TTC, '']
-                            var BQA2 = ['BQ', dateAvoir, compte.BQA2, '', 'numero cheque', '', libelleAV, '', montantAvoir.TTC]
+                            var BQA2 = ['BQ', dateAvoir, compte.BQA2, '', 'numero cheque', libelleAV, '', montantAvoir.TTC]
                             rtn.push(BQA1, BQA2)
                         }
                         cb(null)
