@@ -2465,15 +2465,7 @@ module.exports = [{
 module.exports = {
     sms: {
         intervention: {
-            paiement: "Monsieur, \n" +
-                "Suite à votre intervention auprès de notre client, vous trouverez ci-joint l'autofacturation correspondant.\n" +
-                "Celle-ci s'accompagne automatiquement d'un virement sur votre compte bancaire.\n" +
-                "Si votre paiement n'apparaît pas sur votre compte dans les 4 jours ouvrés, merci de contacter notre service comptabilité.\n" +
-                "En cas d'erreur sur l'auto-facture, répondez à ce mail en expliquant les raisons de votre désaccord, la modification sera immédiatement effectuée par nos services.\n" +
-                "<i>Attention\n depuis le 1er Janvier 2014, compte tenu de la Loi de Finances 2014, les sous-traitants n'auront ni à déclarer ni à payer la TVA due au titre de ces opérations.\n" +
-                "C'est le donneur d'ordre (SARL Edison Services) assujetti qui devra declarer la TVA sur ses déclarations de chiffre d'affaires.</i>" +
-                "\n\nService Comptabilité Fournisseur\n" +
-                "09.72.45.27.09",
+
             demande: function(user, config, _moment) {
                 _moment = (_moment || moment);
                 this.mmt = _moment(this.date.intervention);
@@ -2723,6 +2715,15 @@ module.exports = {
     },
     mail: {
         intervention: {
+            paiement: "Monsieur, \n" +
+                "Suite à votre intervention auprès de notre client, vous trouverez ci-joint l'autofacturation correspondant.\n" +
+                "Celle-ci s'accompagne automatiquement d'un virement sur votre compte bancaire.\n" +
+                "Si votre paiement n'apparaît pas sur votre compte dans les 4 jours ouvrés, merci de contacter notre service comptabilité.\n" +
+                "En cas d'erreur sur l'auto-facture, répondez à ce mail en expliquant les raisons de votre désaccord, la modification sera immédiatement effectuée par nos services.\n" +
+                "<i>Attention\n depuis le 1er Janvier 2014, compte tenu de la Loi de Finances 2014, les sous-traitants n'auront ni à déclarer ni à payer la TVA due au titre de ces opérations.\n" +
+                "C'est le donneur d'ordre (SARL Edison Services) assujetti qui devra declarer la TVA sur ses déclarations de chiffre d'affaires.</i>" +
+                "\n\nService Comptabilité Fournisseur\n" +
+                "09.72.45.27.09",
             relance3: function() {
                 return "<p> Affaire de recouvrement suivie par: Mr BARRIERE <br> Ligne direct: 09.72.50.20.22 <br> Réf dossier: {{os}} </p>" +
                     "<strong> LETTRE RECOMMANDEE AVEC AR </strong>" +
