@@ -118,7 +118,7 @@ var LpaController = function(openPost, socket, ContextMenu, $location, $window, 
     _this.onFileUpload = function(file) {
         console.log('swad')
         var ids = _($rootScope.lpa).map(_.partial(_.pick, _, 'numeroCheque', 'id')).value();
-        LxProgressService.circular.show('#5fa2db', '#fileUploadProgress');
+        LxProgressService.circular.show('#5fa2db', '#globalProgress');
         edisonAPI.file.uploadScans(file, {
                 ids: ids,
                 date: _this.search.d
