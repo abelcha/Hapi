@@ -82,6 +82,7 @@ module.exports = {
             if (!doc || !doc.artisan.id)
                 return res.json(resps[1])
             var artisan = doc.artisan.id
+            console.log(q.call_origin, artisan.telephone.tel1, q.call_origin === artisan.telephone.tel1);
             if (q.call_origin !== artisan.telephone.tel1 && q.call_origin !== artisan.telephone.tel2) {
                 console.log('one')
                 if (!req.query.sst_id) {
