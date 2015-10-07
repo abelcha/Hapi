@@ -73,36 +73,64 @@ module.exports = {
             console.log('NOPE ID');
             return res.json(resps[1]);
         }
-        q.call_origin = q.call_origin.replace('33', '0')
-        promise = db.model('intervention').findOne({
-            id: parseInt(req.params.id)
-        }).populate('sst');
-        console.log('create promise')
-        promise.then(function(doc) {
-            console.log('Get Intervention')
-            if (!doc || !doc.sst.id)
-                return res.json(resps[1])
-            var artisan = doc.sst.id
-            console.log(q.call_origin, doc.sst.telephone.tel1, q.call_origin === doc.sst.telephone.tel1);
-            if (q.call_origin !== doc.sst.telephone.tel1 && q.call_origin !== doc.sst.telephone.tel2) {
-                console.log('one')
-                if (!req.query.sst_id) {
-                    console.log('two')
-                    return res.json(resps[2])
-                } else if (parseInt(req.query.sst_id) === doc.sst.id) {
-                    console.log('OKOK', doc.client.telephone.tel1)
-                    return res.json(ok(doc.client.telephone.tel1));
-                } else {
-                    console.log('four')
-                    return res.json(resps[4])
+        q.call_origin = q.call_origin && q.call_origin.replace('33', '0')
+
+
+        db.model('artisan').findOne({
+                $or: [{
+                    'telephone.tel1': q.call_origin
+                }, {
+                    'telephone.tel2': q.call_origin
+                }, {
+                    'id': parseInt(q.sst_id || 0)
+                }]
+            }).then(function(doc) {
+                if (!doc) {
+                    return res.json(resps[2]);
                 }
-            } else {
-                console.log("OK ==>", ok(doc.client.telephone.tel1.replace('0', '33')))
-                return res.json(ok(doc.client.telephone.tel1.replace('0', '33')))
-            }
-        }, function() {
-            console.log('NOOOP')
-            res.sendStatus(500)
-        })
+                if (req.params.id == '0') {
+                    return res.json(resps[1])
+                }
+                promise = db.model('intervention').findOne({
+                    id: parseInt(req.params.id)
+                }).then(function(intervention) {
+                    if (!intervention ||  (intervention.sst !== doc.id)) {
+                        return res.json(resps[4])
+                    } else {
+                        return res.json(ok(intervention.client.telephone.tel1.replace('0', '33')))
+                    }
+                })
+            })
+            /*
+                    promise = db.model('intervention').findOne({
+                        id: parseInt(req.params.id)
+                    }).populate('sst');
+                    console.log('create promise')
+                    promise.then(function(doc) {
+                        console.log('Get Intervention')
+                        if (!doc || !doc.sst.id)
+                            return res.json(resps[1])
+                        var artisan = doc.sst.id
+                        console.log(q.call_origin, doc.sst.telephone.tel1, q.call_origin === doc.sst.telephone.tel1);
+                        if (q.call_origin !== doc.sst.telephone.tel1 && q.call_origin !== doc.sst.telephone.tel2) {
+                            console.log('one')
+                            if (!req.query.sst_id) {
+                                console.log('two')
+                                return res.json(resps[2])
+                            } else if (parseInt(req.query.sst_id) === doc.sst.id) {
+                                console.log('OKOK', doc.client.telephone.tel1)
+                                return res.json(ok(doc.client.telephone.tel1));
+                            } else {
+                                console.log('four')
+                                return res.json(resps[4])
+                            }
+                        } else {
+                            console.log("OK ==>", ok(doc.client.telephone.tel1.replace('0', '33')))
+                            return res.json(ok(doc.client.telephone.tel1.replace('0', '33')))
+                        }
+                    }, function() {
+                        console.log('NOOOP')
+                        res.sendStatus(500)
+                    })*/
     }
 }
