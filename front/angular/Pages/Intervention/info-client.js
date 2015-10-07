@@ -7,6 +7,7 @@
          transclude: true,
          scope: {
              client: '=model',
+             data: '=',
              noDetails:'@'
          },
          link: function(scope, element, attrs) {
