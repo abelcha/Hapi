@@ -50,7 +50,7 @@
                    }).then(function(resp) {
                        var i = 0;
 
-                       console.log(req.query.ids, reps.length)
+                       console.log(req.query.ids, resp.length)
                        async.eachLimit(resp, 5, function(e, callback) {
                                var flush = _.find(e.compta.paiement.historique, 'dateFlush', new Date(req.body.date));
                                flush.numeroCheque = (_.find(req.body.ids, 'id', e.sst) || {}).numeroCheque
