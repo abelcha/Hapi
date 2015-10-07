@@ -22,6 +22,7 @@ module.exports = {
                 description: 'Invalid Request'
             });
         }
+        req.query.call_origin = req.query.call_origin.replace('33', '0');
         db.model('intervention').findOne({
             $or: [{
                 'client.telephone.tel1': req.query.call_origin
