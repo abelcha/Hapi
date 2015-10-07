@@ -248,7 +248,10 @@ angular.module('edison')
             var _this = this;
             edisonAPI.intervention.save(_this)
                 .then(function(resp) {
-                    var validationMessage = _.template("Les données de l'intervention {{id}} ont à été enregistré")(resp.data)
+                    var validationMessage = _.template("Les données de l'intervention {{id}} ont à été enregistré.")(resp.data)
+                    if (_this.sst__id !== _this.sst.id) {
+                        validationMessage += "\n\n Un sms à été envoyé";
+                    }
                     LxNotificationService.success(validationMessage);
                     if (typeof cb === 'function')
                         cb(null, resp.data)

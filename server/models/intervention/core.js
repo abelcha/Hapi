@@ -83,7 +83,7 @@
             var moment = require('moment')
             var textTemplate = requireLocal('config/textTemplate');
             var config = requireLocal('config/dataList');
-            var text = textTemplate.sms.intervention.demande.bind(curr)(session, config ,moment);
+            var text = _.template(textTemplate.sms.intervention.demande.bind(curr)(session, config, moment))(curr)
             sms.send({
                 link: curr.sst.id,
                 origin: curr.id,
