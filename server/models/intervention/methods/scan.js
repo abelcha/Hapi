@@ -11,13 +11,15 @@ module.exports = function(schema) {
                 edison.v1.set(query, function(err, resp) {
                     console.log(err, resp);
                     resolve("ok");
-                    db.model('document').check(req).then(function() {
-                        db.model('document').archiveScan(req).then(function() {
-                            db.model('document').order(req).then(function() {
-                                console.log('DocumentFullCheck [DONE]')
+                    setTimeout(function() {
+                        db.model('document').check(req).then(function() {
+                            db.model('document').archiveScan(req).then(function() {
+                                db.model('document').order(req).then(function() {
+                                    console.log('DocumentFullCheck [DONE]')
+                                })
                             })
                         })
-                    })
+                    }, 30000)
                 })
 
             })

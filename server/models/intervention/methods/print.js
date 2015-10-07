@@ -96,7 +96,9 @@ module.exports = function(schema) {
         _.each(data, function(sst) {
             var tmp = [];
             tmp.push(sst.nomSociete + ' ' + sst.id);
-            tmp.push("30002 00550 0000157845Z 02");
+            //tmp.push("30002 00550 0000157845Z 02");
+            var ids = _.pluck(sst.list.__list, 'id')
+            tmp.push(ids.join(', '))
             clean(sst);
             var total = _.reduce(sst.interventions, function(total, x) {
                 return total + x.montant;

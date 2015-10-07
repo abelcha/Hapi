@@ -43,12 +43,12 @@
                         Devis non conforme
                     </md-checkbox>
                 </div>
-                <div class="col-md-3" ng-if="data.compta.civilite !== 'Soc.'">
+                <div class="col-md-3" ng-if="data.tva !== 20">
                     <md-checkbox ng-model="data.compta.info.tvaNC" aria-label="_" class="md-warn">
                         Attestation de TVA Non-conforme
                     </md-checkbox>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-3" >
                     <md-checkbox ng-model="data.compta.info.fournitureNC" aria-label="_" class="md-warn">
                         Cout de fourniture Non Conforme
                     </md-checkbox>

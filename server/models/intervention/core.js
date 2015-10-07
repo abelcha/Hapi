@@ -77,20 +77,20 @@
             curr.litige.closed = new Date();
             curr.litige.closedBy = session.login;
         }
-/*        console.log('-->=>', curr.artisan.id,  prev.artisan.id)
-        if (curr.artisan.id !== prev.artisan.id) {
-            console.log( curr.sst.telephone.tel1)
-            var moment = require('moment')
-            var textTemplate = requireLocal('config/textTemplate');
-            var config = requireLocal('config/dataList');
-            var text = _.template(textTemplate.sms.intervention.demande.bind(curr)(session, config, moment))(curr)
-            sms.send({
-                link: curr.sst.id,
-                origin: curr.id,
-                text: text,
-                to: envProd ? curr.sst.telephone.tel1 : '0633138868',
-            })
-        }*/
+        /*        console.log('-->=>', curr.artisan.id,  prev.artisan.id)
+                if (curr.artisan.id !== prev.artisan.id) {
+                    console.log( curr.sst.telephone.tel1)
+                    var moment = require('moment')
+                    var textTemplate = requireLocal('config/textTemplate');
+                    var config = requireLocal('config/dataList');
+                    var text = _.template(textTemplate.sms.intervention.demande.bind(curr)(session, config, moment))(curr)
+                    sms.send({
+                        link: curr.sst.id,
+                        origin: curr.id,
+                        text: text,
+                        to: envProd ? curr.sst.telephone.tel1 : '0633138868',
+                    })
+                }*/
 
     }
 
@@ -275,7 +275,7 @@
             });
         }
         var rtn = {
-            tva: d.tva_facture  || 10,
+            tva: d.tva_facture  || (d.civilite === 'Soc.' ? 20 : 10),
             aDemarcher: d.A_DEMARCHE,
             id: d.id,
             _id: d.id,
