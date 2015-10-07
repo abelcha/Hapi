@@ -62,11 +62,11 @@
                                    console.log(err, buffer)
                                    document.upload({
                                        filename: '/V2_PRODUCTION/intervention/' + e.id + '/' + 'lettre-cheque-' + moment(req.body.date).format('LL') + '.pdf',
-                                       data:
+                                       data:buffer
                                    }).then(function(resp) {
                                     console.log('ok upload')
                                        callback(null)
-                                   }, callback);
+                                   }, callback)
                                })
 
                            }, function() {
