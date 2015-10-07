@@ -102,7 +102,7 @@
                                    })
                                } else {
                                    console.log('NOT FOUND', row.id_inter)
-                                   edison.v1.set(_.template("UPDATE scanner SET checked='1' WHERE id='{{id}}'")(row), cb)
+                                   edison.v1.set(_.template("UPDATE scanner SET checked='0' WHERE id='{{id}}'")(row), cb)
                                }
                            }, function(resp) {
                                resolve('ok');
