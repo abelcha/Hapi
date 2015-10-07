@@ -4317,12 +4317,6 @@ angular.module('edison').directive('infoCompta', ['config', 'Paiement',
                      scope.display = true;
                  }
 
-                 scope.$watch('data.facture.payeur', function(curr, prev) {
-                     if (curr !== prev && (curr === 'GRN' ||  curr === 'SOC')) {
-                         scope.data.tva = 20;
-                         LxNotificationService.info("La TVA à été mise a 20%");
-                     }
-                 })
 
                  scope.$watch('data.produits', function(curr, prev) {
                      if (!_.isEqual(curr, prev)) {
@@ -4622,11 +4616,13 @@ var InterventionCtrl = function(Description, Signalement, ContextMenu, $window, 
         _this.searchArtisans(intervention.categorie);
     })
 
+
     $scope.$watch(function() {
-        return intervention.client.civilite
-    }, function(newVal, oldVal) {
-        if (oldVal !== newVal) {
-            intervention.tva = (newVal == 'Soc.' ? 20 : 10);
+        return intervention.client.civilite;
+    }, function(curr, prev) {
+        if (curr !== prev &&curr === 'Soc.') {
+            intervention.tva = 20;
+            LxNotificationService.info("La TVA à été mise a 20%");
         }
     })
 

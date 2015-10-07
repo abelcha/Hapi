@@ -38,7 +38,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-3" ng-if="data.prixFinal > 125">
+                <div class="col-md-3" ng-if="data.compta.reglement.montantTTC >= 150">
                     <md-checkbox ng-model="data.compta.info.devisNC" aria-label="_" class="md-warn">
                         Devis non conforme
                     </md-checkbox>
