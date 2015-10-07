@@ -1,6 +1,6 @@
    module.exports = function(schema) {
        var _ = require('lodash')
-       var moment = require('moment-timezone')
+       var moment = require('moment')
        var request = require('request')
        var async = require('async')
        var fs = require('fs')
@@ -13,17 +13,13 @@
            var page = scissors(filepath).pages(1)
            var blank = scissors(process.cwd() + '/front/assets/pdf/blank.pdf').pages(1);
            var stream = scissors.join(page, blank).pdfStream()
-           console.log(page)
-           console.log('swag2000')
-               // console.log('==>', page.pdfStream())
-           page.pdfStream()
-               .on('data', function(data) {
-                   console.log('DATA')
-                   finalBuffer.push(data);
-               }).on('end', function() {
-                   console.log('END')
-                   return cb(null, Buffer.concat(finalBuffer))
-               })
+           stream.on('data', function(data) {
+               console.log('DATA')
+               finalBuffer.push(data);
+           }).on('end', function() {
+               console.log('END')
+               return cb(null, Buffer.concat(finalBuffer))
+           })
        }
 
        schema.statics.uploadScans = function(req, res) {
@@ -33,7 +29,6 @@
                }
                if (req.files.file.size > 5000000)
                    return reject("File is too big");
-
 
 
                var fs = require('fs')
@@ -65,7 +60,13 @@
                                getPage(filepath, i++, function(err, buffer) {
                                    console.log('-->uauau')
                                    console.log(err, buffer)
-                                   e.save(callback);
+                                   document.upload({
+                                       filename: '/V2_PRODUCTION/intervention/' + e.id + '/' + 'lettre-cheque-' + moment(req.body.date).format('LL') + '.pdf',
+                                       data:
+                                   }).then(function(resp) {
+                                    console.log('ok upload')
+                                       callback(null)
+                                   }, callback);
                                })
 
                            }, function() {
