@@ -83,7 +83,7 @@ module.exports = function(schema) {
             if (!req.query.d)
                 return reject('pas de date')
             var date = new Date(parseInt(req.query.d));
-            this.getList({
+            db.model('intervention').getList({
                 'compta.paiement.historique': {
                     $elemMatch: {
                         dateFlush: date
