@@ -59,6 +59,7 @@ module.exports = function(schema) {
                                 .then(function(resp) {
                                     if (!resp) return cb("nipe")
                                     resp = resp.toObject();
+                                    resp.compta.paiement.base = inter.montant;
                                     resp.paiement = new Paiement(resp);
                                     resp.sst = artisan;
                                     autofactures.push({
@@ -83,7 +84,7 @@ module.exports = function(schema) {
                         /* if (envDev) {
                              return callback(null, 'ok')
                          }*/
-                         var textTemplate = requireLocal('config/textTemplate.js');
+                        var textTemplate = requireLocal('config/textTemplate.js');
                         mail.send({
                             From: "comptabilite@edison-services.fr",
                             ReplyTo: "comptabilite@edison-services.fr",
@@ -152,6 +153,7 @@ module.exports = function(schema) {
                         doc.compta.paiement.ready = (hist.payed != hist.montant);
                         doc.compta.paiement.effectue = true
                         doc.compta.paiement.historique.push(hist)
+                        return small_cb(null);
                         doc.save(small_cb);
                     })
             }, function(err, resp) {

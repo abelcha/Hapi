@@ -34,10 +34,16 @@ module.exports = function(schema) {
                 model: 'blank',
                 options: {}
             }
-
+            var ids = _(data).filter(function(e) {
+                return _.find(e.list.__list, 'checked', true)
+            }).pluck('id').value()
+            console.log('--->', ids)
+            if (!ids.length) {
+                return res.send('Pas de documents')
+            }
             db.model('artisan').find({
                 id: {
-                    $in: _.pluck(data, 'id')
+                    $in: ids
                 }
             }).then(function(docs) {
 
@@ -50,7 +56,7 @@ module.exports = function(schema) {
                             model: 'letter',
                             options: {
                                 address: e.address,
-                                dest: e,
+                                dest: e.representant,
                                 text: textTemplate.lettre.artisan.rappelDocuments.bind(e)(),
                                 title: ""
                             }
@@ -62,6 +68,7 @@ module.exports = function(schema) {
                                 id: inter.id
                             }).populate('sst').then(function(doc) {
                                 doc = doc.toObject();
+                                doc.compta.paiement.base = inter.montant;
                                 doc.paiement = new Paiement(doc);
                                 op.push({
                                     model: 'auto-facture',
@@ -72,6 +79,9 @@ module.exports = function(schema) {
                         }, big_callback)
                     },
                     function() {
+                        if (!op.length) {
+                            return res.send('Pas de Documents')
+                        }
                         PDF(op).toBuffer(function(err, buffer) {
                             res.contentType('application/pdf')
                             res.send(buffer);
@@ -140,8 +150,10 @@ module.exports = function(schema) {
                 if (!e.total.final)
                     return 0;
                 var mode = _.find(e.list.__list, {
+                    checked: true,
                     mode: 'CHQ'
                 }) ? 'CHQ' : 'VIR';
+                console.log('-->', mode)
                 clean(e, mode);
 
                 if ((req.body.type === 'recap' && mode !== 'CHQ') ||
