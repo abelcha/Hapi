@@ -32,19 +32,15 @@
                     try {
                         console.log('NBS ==> ', resp.data.length, id_list)
                         if (resp.cacheList && resp.data) {
-                            console.log('get cachelist')
                             var cache = JSON.parse(resp.cacheList);
                             for (var i = 0; i < cache.length && id_list.length; i++) {
                                 var pos = id_list.indexOf(cache[i].id)
-                                console.log('==>', pos, cache[i].id)
                                 if (pos >= 0) {
-                                    console.log('OK fine pos', pos)
                                     cache[i] = resp.data[pos].cache;
                                     id_list.splice(pos, 1);
                                 }
                             };
                             if (id_list.length) {
-                                console.log('NOPE fine pos', pos)
                                 var z = _.filter(resp.data, function(e) {
                                     return _.includes(id_list, e._id);
                                 })
