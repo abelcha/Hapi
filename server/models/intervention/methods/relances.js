@@ -20,7 +20,7 @@ module.exports = function(schema) {
             }).then(function(resp, cb) {
                 console.log(resp.length)
                 var rnd = resp[_.random(0, resp.length - 1)];
-                 var RelanceClient = requireLocal('config/relances-client');
+                 var RelanceClient = requireLocal('config/_relances-client');
                  var rl = RelanceClient(rnd, req.query.model || 'relance-client-1')
                 /*var RelanceArtisan = requireLocal('config/relances-artisan');
                 var rl = RelanceArtisan(rnd, req.query.model || 'relance-artisan-1')*/

@@ -180,8 +180,5 @@ module.exports = function(schema) {
         } else {
             return getLettreCheques(res, req, data)
         }
-
     }
-
-
 }
