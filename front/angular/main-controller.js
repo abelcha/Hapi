@@ -73,6 +73,8 @@ angular.module('edison').controller('MainController', function($timeout, LxNotif
     }
     socket.on('event', _.debounce(bfm, _.random(0, 3000)));
 
+    bfm();
+    
     $scope.searchBox = {
         search: function(x) {
             var deferred = $q.defer();

@@ -43,7 +43,11 @@ module.exports = {
         var _ = require('lodash');
         db.model('event')
             .find({
-                date:moment({hour:0}).toDate()
+                date: {
+                    $gt: moment({
+                        hour: 0
+                    }).toDate()
+                }
             })
             .sort('field -date')
             .exists('message')
