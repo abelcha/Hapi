@@ -23,6 +23,7 @@ module.exports = {
             });
         }
         req.query.call_origin = req.query.call_origin.replace('33', '0');
+        console.log('==>', req.query.call_origin)
         db.model('intervention').findOne({
             $or: [{
                 'client.telephone.tel1': req.query.call_origin
@@ -32,6 +33,8 @@ module.exports = {
                 'client.telephone.tel3': req.query.call_origin
             }]
         }).populate('sst').then(function(resp) {
+        console.log('==>', 'ok', sst && sst.id)
+
             if (!resp) {
                 return res.json({
                     status_code: 402,
