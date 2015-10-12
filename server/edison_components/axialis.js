@@ -33,7 +33,7 @@ module.exports = {
                 'client.telephone.tel3': req.query.call_origin
             }]
         }).populate('sst').then(function(resp) {
-        console.log('==>', 'ok', sst && sst.id)
+        console.log('==>', 'ok', resp.sst && resp.sst.id)
 
             if (!resp) {
                 return res.json({
