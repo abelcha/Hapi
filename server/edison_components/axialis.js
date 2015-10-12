@@ -1,7 +1,8 @@
 var _ = require('lodash');
 
 var request = function(query) {
-    this.json(_.pick(query, 'status_code', 'description', 'redirect_to'));
+    var response = _.pick(query, 'status_code', 'description', 'redirect_to');
+    this.json(response);
     db.model('axialis')(query).save(function(err, resp) {
         console.log('saved')
     });
