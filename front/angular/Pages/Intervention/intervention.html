@@ -235,8 +235,8 @@
             <ul class="ng-scope">
                 <li ng-hide="item.hidden" ng-repeat="item in vm.contextMenu.list">
                     <a ng-mouseover="vm.contextMenu.closeSub()" ng-if="!item.subs" class="dropdown-link" ng-style="item.style" tabindex="0" ng-click="vm.contextMenu.close();vm.contextMenu.click(item)">{{item.title}}</a>
-                    <a ng-style="item.style" ng-mouseover="vm.contextMenu.openSub(300)" ng-if="item.subs" class="dropdown-link" tabindex="0"><i no-margin align-left class="fa fa-angle-right"></i>{{item.title}}</a>
-                    <a ng-style="sub.style" ng-repeat="sub in item.subs" ng-click="vm.contextMenu.close();vm.contextMenu.click(sub)" ng-hide="sub.hidden" ng-if="vm.contextMenu.mouseOverCM && item.subs" class="dropdown-link"><i no-margin align-left class=" fa fa-angle-double-right"></i>{{sub.title}}</a>
+                    <a ng-style="item.style" ng-mouseover="vm.contextMenu.openSub(200)" ng-if="item.subs" class="dropdown-link" tabindex="0"><i no-margin align-left class="fa fa-angle-right"></i>{{item.title}}</a>
+                    <a lx-tooltip="{{vm.contextMenu.tooltip(sub)}}" tooltip-position="right" ng-style="sub.style" ng-repeat="sub in item.subs" ng-click="vm.contextMenu.close();vm.contextMenu.click(sub)" ng-hide="sub.hidden" ng-if="vm.contextMenu.mouseOverCM && item.subs" class="dropdown-link"><i no-margin align-left class=" fa fa-angle-double-right"></i>{{sub.title}}</a>
                 </li>
             </ul>
         </div>
