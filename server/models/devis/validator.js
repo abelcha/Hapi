@@ -52,6 +52,7 @@ module.exports = function(schema) {
 
     }
 
+
     schema.pre('save', function(next) {
         validatorPreSave.bind(this)(next)
     });
