@@ -100,17 +100,11 @@ FiltersFactory.prototype.list = {
         url: 'dossierIncomplet',
         match: {
             $or: [{
-                'document.cni.file': {
-                    $exists: false
-                }
+                'document.cni.file': true
             }, {
-                'document.contrat.file': {
-                    $exists: true
-                }
+                'document.contrat.file': true
             }, {
-                'document.kbis.file': {
-                    $exists: true
-                }
+                'document.kbis.file': true
             }]
         },
     }, {

@@ -5,7 +5,8 @@ module.exports = function(schema) {
     var getSubStatus = function(sst) {
         var _ = require('lodash');
         var d = sst.document;
-        if (sst.status === "POT" && _.get(d.contrat.file) && _.get(d.cni.file) && _.get(d.kbis.file)) {
+
+        if (sst.status === "POT" && _.get(d.contrat, 'ok') && _.get(d.cni, 'ok') && _.get(d.kbis, 'ok')) {
             return 'HOT';
         }
         if (sst.nbrIntervention < 5 && sst.nbrIntervention > 0) {
@@ -37,7 +38,7 @@ module.exports = function(schema) {
     schema.post('save', function(doc) {
         if (!isWorker) {
             db.model('artisan').uniqueCacheReload(doc)
-        //    console.log(envProd, doc.date.dump, Date.now(), moment().subtract(5000).isAfter(doc.date.dump))
+                //    console.log(envProd, doc.date.dump, Date.now(), moment().subtract(5000).isAfter(doc.date.dump))
             if (envProd && (!doc.date.dump || moment().subtract(5000).isAfter(doc.date.dump))) {
                 var v1 = new V1(doc);
                 v1.send(function(resp) {

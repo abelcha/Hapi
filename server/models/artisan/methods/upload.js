@@ -10,19 +10,15 @@ module.exports = function(schema) {
                 }
                 if (req.files.file.size > 5000000)
                     return reject("File is too big");
-                var fileName = ["/V2/artisan", inter.id, [req.body.name, req.files.file.extension].join('.')].join('/')
+                var fileName = ["/V2_PRODUCTION/artisan", inter.id, [req.body.name, req.files.file.extension].join('.')].join('/')
+                console.log('-->', fileName);
                 document.upload({
                     filename: fileName,
-                    data: req.files.file.buffer
-                }).then(function(params) {
-                    inter.document[req.body.name] = {
-                        file: req.body.name,
-                        extension: '.' + req.files.file.extension,
-                        date: Date.now(),
-                        login: req.session.login
-                    };
-                    inter.save().then(resolve, reject)
+                    data: req.files.file.buffer,
+                }).then(function(resp) {
+                    resolve('ok');
                 }, reject);
+
             });
 
         }

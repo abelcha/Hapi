@@ -289,17 +289,11 @@ FiltersFactory.prototype.list = {
         url: 'dossierIncomplet',
         match: {
             $or: [{
-                'document.cni.file': {
-                    $exists: false
-                }
+                'document.cni.file': true
             }, {
-                'document.contrat.file': {
-                    $exists: true
-                }
+                'document.contrat.file': true
             }, {
-                'document.kbis.file': {
-                    $exists: true
-                }
+                'document.kbis.file': true
             }]
         },
     }, {
@@ -2710,12 +2704,12 @@ module.exports = {
                     "<p> <b><u>A partir du lundi 3 mars 2014, nos directions régionales ne pourront donc plus vous passer de commandes.</u></b>" +
                     "<p> Merci de nous transmettre vos documents administratifs suivants: </p>" +
                     "<p>" +
-                    (!this.document.kbis.file ? "&emsp;&emsp; ☐ &emsp;&emsp; KBIS ou immatriculation <br>" : '') +
-                    (!this.document.contrat.file ? "&emsp;&emsp; ☐ &emsp;&emsp; Contrat de partenariat reçu par mail <br>" : '') +
-                    (!this.document.cni.file ? "&emsp;&emsp; ☐ &emsp;&emsp; Photocopie Recto/Verso de la pièce d'identité du gérant <br>" : '') +
-                    (!this.document.assurance.file ? "&emsp;&emsp; ☐ &emsp;&emsp; Attestation d'assurance <br>" : '') +
-                    (!this.document.rib.file ? "&emsp;&emsp; ☐ &emsp;&emsp; RIB <br>" : '') +
-                    (!this.document.ursaff.file ? "&emsp;&emsp; ☐ &emsp;&emsp; Attestation URSAFF" : '') +
+                    (!this.document.kbis.ok ? "&emsp;&emsp; ☐ &emsp;&emsp; KBIS ou immatriculation <br>" : '') +
+                    (!this.document.contrat.ok ? "&emsp;&emsp; ☐ &emsp;&emsp; Contrat de partenariat reçu par mail <br>" : '') +
+                    (!this.document.cni.ok ? "&emsp;&emsp; ☐ &emsp;&emsp; Photocopie Recto/Verso de la pièce d'identité du gérant <br>" : '') +
+                    (!this.document.assurance.ok ? "&emsp;&emsp; ☐ &emsp;&emsp; Attestation d'assurance <br>" : '') +
+                    (!this.document.rib.ok ? "&emsp;&emsp; ☐ &emsp;&emsp; RIB <br>" : '') +
+                    (!this.document.ursaff.ok ? "&emsp;&emsp; ☐ &emsp;&emsp; Attestation URSAFF" : '') +
                     "</p>" +
                     "<p> Veuillez envoyer vos documents à cette adresse: </p>" +
                     "<p strong center> EDISON SERVICES FRANCE<br>" +

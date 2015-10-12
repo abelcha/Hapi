@@ -36,6 +36,21 @@
                     newID: doc.id,
                 })*/
 
+        console.log('-->=>', curr.artisan.id, prev.artisan.id)
+        if (curr.status === 'APR' && curr.artisan.id !== prev.artisan.id) {
+            console.log(curr.sst.telephone.tel1)
+            var moment = require('moment')
+            var textTemplate = requireLocal('config/textTemplate');
+            var config = requireLocal('config/dataList');
+            var text = _.template(textTemplate.sms.intervention.demande.bind(curr)(session, config, moment))(curr)
+            sms.send({
+                link: curr.sst.id,
+                origin: curr.id,
+                text: text,
+                to: envProd ? curr.sst.telephone.tel1 : '0633138868',
+            })
+        }
+
         if (data.devisOrigine) {
             db.model('devis').findOne({
                     id: data.devisOrigine
@@ -77,20 +92,7 @@
             curr.litige.closed = new Date();
             curr.litige.closedBy = session.login;
         }
-        /*        console.log('-->=>', curr.artisan.id,  prev.artisan.id)
-                if (curr.artisan.id !== prev.artisan.id) {
-                    console.log( curr.sst.telephone.tel1)
-                    var moment = require('moment')
-                    var textTemplate = requireLocal('config/textTemplate');
-                    var config = requireLocal('config/dataList');
-                    var text = _.template(textTemplate.sms.intervention.demande.bind(curr)(session, config, moment))(curr)
-                    sms.send({
-                        link: curr.sst.id,
-                        origin: curr.id,
-                        text: text,
-                        to: envProd ? curr.sst.telephone.tel1 : '0633138868',
-                    })
-                }*/
+
 
     }
 
@@ -139,7 +141,7 @@
             } else if (e.compta.paiement.ready) {
                 return 1;
             } else {
-                return 0
+                return undefined
             }
         }
 
@@ -148,6 +150,10 @@
                 e._status = 'AVR';
             } else {
                 e._status = e.status
+            }
+            if (!config.etats[e._status]) {
+                console.log('-->', e.id, e.status)
+
             }
             var rtn = {
                 t: e.login.ajout,

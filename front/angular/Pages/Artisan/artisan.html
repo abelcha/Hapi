@@ -164,7 +164,8 @@
                                     <thead>
                                         <tr>
                                             <th style="font-weight:bold">Nom</th>
-                                            <th style="font-weight:bold">Info</th>
+                                            <!--       <th style="font-weight:bold">Info</th> -->
+                                            <th style="font-weight:bold">OK</th>
                                             <th style="font-weight:bold">Voir</th>
                                             <th style="font-weight:bold">Ajouté</th>
                                         </tr>
@@ -174,20 +175,24 @@
                                             <td>
                                                 <span>{{file}}</span>
                                             </td>
-                                            <td>
+                                            <!--             <td>
                                                 <span class="display-block fs-body-1 tc-black-2" ng-if="vm.data.document[file]">
                                                  {{vm.data.document[file].date | date:"dd/MM/yy"}}
                                                  {{vm.data.document[file].login}}</span>
+                                            </td> -->
+                                            <td>
+                                                <md-checkbox aria-label=" lp" ng-model="vm.data.document[file].ok">
+                                                </md-checkbox>
                                             </td>
                                             <td>
-                                                <a ng-if="vm.data.document[file]" target="_blank" href="/api/artisan/{{::vm.data.id}}/openDocument?file={{::file}}">
+                                                <a ng-if="vm.fileExist(file)" target="_blank" href="/api/document/preview?name=artisan/{{vm.data.id}}/{{vm.fileExist(file)}}" >
                                                     <button class="btn--no-conflicts btn--m btn--green  btn--raised" lx-ripple>Voir</button>
                                                 </a>
                                             </td>
                                             <td>
                                                 <!--   <button  class="btn--no-conflicts btn--m btn--blue  btn--raised" lx-ripple>Upload</button> -->
-                                                <lx-file-input style="display:none" id="file_{{file}}" label="Upload" value="fileUploadText" change="vm.onFileUpload(e, file)"></lx-file-input>
-                                                <button ng-click="vm.clickTrigger(file)" class="btn--no-conflicts btn--m btn--blue  btn--raised" lx-ripple>Upload</button>
+                                                <lx-file-input style="display:none" id="file_{{file}}" label="Upload" value="fileUploadText" change="vm.onArtisanFileUpload(e, file)"></lx-file-input>
+                                                <button ng-click="vm.artisanClickTrigger(file)" class="btn--no-conflicts btn--m btn--blue  btn--raised" lx-ripple>Upload</button>
                                             </td>
                                         </tr>
                                     </tbody>

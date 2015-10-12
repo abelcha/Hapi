@@ -192,7 +192,8 @@
                         extension: path.extname(d[file]),
                         file: d[file],
                         date: rtn.date.ajout,
-                        login: 'yohann_r'
+                        login: 'yohann_r',
+                        ok: true
                     }
                 }
             })

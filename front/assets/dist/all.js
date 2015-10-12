@@ -1687,6 +1687,12 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
                     file: file
                 })
             },
+             getFiles: function(id) {
+                return $http({
+                    method: 'GET',
+                    url: "/api/artisan/" + id + "/getFiles"
+                });
+            },
             reaStats: function() {
                 return $http.get('/api/artisan/reaStats')
             },
@@ -3740,7 +3746,7 @@ angular.module('edison').controller('archivesPaiementController', archivesPaieme
 
  }]);
 
-var ArtisanCtrl = function($rootScope, $scope, edisonAPI, $location, $routeParams, ContextMenu, LxNotificationService, tabContainer, config, dialog, artisanPrm, Artisan) {
+var ArtisanCtrl = function($timeout, $rootScope, $scope, edisonAPI, $location, $routeParams, ContextMenu, LxProgressService, LxNotificationService, tabContainer, config, dialog, artisanPrm, Artisan) {
     "use strict";
     var _this = this;
     _this.config = config;
@@ -3782,12 +3788,20 @@ var ArtisanCtrl = function($rootScope, $scope, edisonAPI, $location, $routeParam
             }
         })
     }
-    _this.onFileUpload = function(file, name) {
-        artisan.upload(file, name);
+    _this.onArtisanFileUpload = function(file, name) {
+        LxProgressService.circular.show('#5fa2db', '#fileUploadProgress');
+        edisonAPI.artisan.upload(file, name, artisan.id).then(function() {
+            console.log('reload')
+            LxProgressService.circular.hide()
+            _this.loadFilesList();
+        })
     }
 
-    _this.clickTrigger = function(elem) {
-        angular.element("#file_" + elem + ">input").trigger('click');
+    _this.artisanClickTrigger = function(elem) {
+        setTimeout(function() {
+            angular.element("#file_" + elem + ">input").trigger('click');
+        }, 0)
+
     }
     _this.rightClick = function($event) {
         console.log('rightClick')
@@ -3795,6 +3809,22 @@ var ArtisanCtrl = function($rootScope, $scope, edisonAPI, $location, $routeParam
         _this.contextMenu.setData(artisan);
         _this.contextMenu.open();
     }
+
+    _this.fileExist = function(name) {
+        if (!artisan.file)
+            return false;
+        return _.find(artisan.file, function(e) {
+            return _.startsWith(e, name)
+        });
+    }
+
+    _this.loadFilesList = function() {
+        edisonAPI.artisan.getFiles(artisan.id).then(function(result) {
+            artisan.file = result.data;
+            console.log('==>', artisan.file)
+        }, console.log)
+    }
+    _this.loadFilesList();
 
     _this.addComment = function() {
         artisan.comments.push({
@@ -3860,6 +3890,20 @@ var AvoirsController = function(tabContainer, openPost, edisonAPI, $rootScope, L
 
 
 angular.module('edison').controller('avoirsController', AvoirsController);
+
+var DashboardController = function(edisonAPI, tabContainer, $routeParams, $location, LxProgressService) {
+    var tab = tabContainer.getCurrentTab();
+    tab.setTitle('Dashboard')
+    var _this = this;
+    //LxProgressService.circular.show('#5fa2db', '#globalProgress');
+
+    _this.openLink = function(link) {
+        $location.url(link)
+    }
+}
+
+angular.module('edison').controller('DashboardController', DashboardController);
+
 
 var ContactArtisanController = function($scope, $timeout, tabContainer, LxProgressService, FiltersFactory, ContextMenu, edisonAPI, DataProvider, $routeParams, $location, $q, $rootScope, $filter, config, ngTableParams) {
     "use strict";
@@ -3998,20 +4042,6 @@ var ContactArtisanController = function($scope, $timeout, tabContainer, LxProgre
 
 }
 angular.module('edison').controller('ContactArtisanController', ContactArtisanController);
-
-var DashboardController = function(edisonAPI, tabContainer, $routeParams, $location, LxProgressService) {
-    var tab = tabContainer.getCurrentTab();
-    tab.setTitle('Dashboard')
-    var _this = this;
-    //LxProgressService.circular.show('#5fa2db', '#globalProgress');
-
-    _this.openLink = function(link) {
-        $location.url(link)
-    }
-}
-
-angular.module('edison').controller('DashboardController', DashboardController);
-
 
 
  angular.module('edison').directive('edisonMap', ['$window', 'Map', 'mapAutocomplete', 'Address',

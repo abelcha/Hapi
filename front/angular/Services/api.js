@@ -218,6 +218,12 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
                     file: file
                 })
             },
+             getFiles: function(id) {
+                return $http({
+                    method: 'GET',
+                    url: "/api/artisan/" + id + "/getFiles"
+                });
+            },
             reaStats: function() {
                 return $http.get('/api/artisan/reaStats')
             },
