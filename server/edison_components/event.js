@@ -5,7 +5,7 @@ var Event = function(type) {
     this.doc = {
         login: 'auto',
         date: new Date,
-        type: type || 'UNKNOWN',
+        type: type ||  'UNKNOWN',
     }
 }
 

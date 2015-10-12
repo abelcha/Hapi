@@ -3,21 +3,22 @@ module.exports = function(schema) {
     schema.statics.verification = {
         unique: true,
         findBefore: true,
-        method:'POST',
+        method: 'POST',
         fn: function(inter, req, res) {
             return new Promise(function(resolve, reject) {
                 if (!inter.reglementSurPlace && !inter.date.envoiFacture)
                     return reject("Veuillez envoyer la facture avant de vérifier")
                 if (inter.date.verification)
                     return reject("L'intervention est deja vérifiée");
-                if (!inter.prixFinal) 
+                if (!inter.prixFinal)
                     return reject('Veuillez ajouté un prix final')
                 inter.date.verification = new Date;
                 inter.login.verification = req.session.login;
                 inter.status = "VRF";
+                edison.event('INTER_VERIFICATION').login(req.session.login).id(inter.id).save();
                 inter.save().then(resolve, reject)
             })
-            
+
         }
     }
 

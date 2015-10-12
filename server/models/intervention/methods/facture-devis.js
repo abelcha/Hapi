@@ -130,6 +130,7 @@ module.exports = function(schema) {
                     return reject('Veuillez renseigner au moins 1 produits')
                 }
                 if (!isWorker) {
+                    edison.event('INTER_SENDFACT_ACQ').login(req.session.login).id(inter.id).save();
                     return edison.worker.createJob({
                         name: 'db_id',
                         model: 'intervention',
@@ -223,6 +224,7 @@ module.exports = function(schema) {
                         data: inter,
                         req: _.pick(req, 'body', 'session')
                     }).then(function() {
+                        edison.event('INTER_SENDFACT').login(req.session.login).id(inter.id).save();
                         inter.save().then(resolve, reject)
                     }, reject)
                 }

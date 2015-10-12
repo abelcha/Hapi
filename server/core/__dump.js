@@ -68,7 +68,7 @@
                         var v2 = core.toV2(v1)
                         if (!convert)
                             v2.date.dump = Date.now();
-                        edison.event('DUMP_' + core.NAME).login(login).id(id).data({
+                        edison.event('DUMP_' + core.NAME).login(edison.users.search(login)).id(id).data({
                             v1: v1,
                             v2: v2
                         }).save()

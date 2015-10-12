@@ -230,6 +230,7 @@ module.exports = function(schema) {
                                 inter.date.demarchage = new Date();
                                 inter.login.demarchage = req.session.login;
                             }
+                            edison.event('INTER_ENVOI').login(req.session.login).id(inter.id).save();
                             inter.save().then(resolve, reject)
                         })
                     }

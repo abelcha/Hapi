@@ -53,6 +53,7 @@ module.exports = function(schema) {
                             date: new Date,
                         })
                         devis.status = 'ATT';
+                        edison.event('DEVIS_ENVOI').login(req.session.login).id(devis.id).save();
                         devis.save().then(resolve, reject)
                     }, reject)
                 }

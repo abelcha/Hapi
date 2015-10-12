@@ -6,7 +6,7 @@ module.exports = function(schema) {
         populateArtisan: true,
         method: 'POST',
         fn: function(inter, req, res) {
-            
+
             var _ = require('lodash')
             return new Promise(function(resolve, reject) {
                 inter.date.annulation = new Date;
@@ -20,6 +20,7 @@ module.exports = function(schema) {
                     inter.sst = undefined;
                     inter.status = 'APR';
                 }
+                edison.event('INTER_ANNULATION').login(req.session.login).id(inter.id).save();
                 inter.save().then(resolve, reject)
                 if (req.body.sms) {
                     sms.send({

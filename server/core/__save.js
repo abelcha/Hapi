@@ -25,6 +25,7 @@
                  if (_.isFunction(core.preSave))
                      core.preSave(data, req.session);
                  inter.save().then(function(doc) {
+                     edison.event('NEW_' + core.NAME).login(req.session.login).id(data.id).data(data).save();
                      if (_.isFunction(core.postSave))
                          core.postSave(doc, data, req.session);
                      resolve(doc);

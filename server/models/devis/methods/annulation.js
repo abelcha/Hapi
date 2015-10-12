@@ -10,6 +10,8 @@ module.exports = function(schema) {
                 devis.login.annulation = req.session.login;
                 devis.status = "ANN";
               //  devis.causeAnnulation = req.body.causeAnnulation;
+                edison.event('DEVIS_ANNULATION').login(req.session.login).id(devis.id).save();
+
                 devis.save().then(resolve, reject)
             })
         }

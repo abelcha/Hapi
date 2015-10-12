@@ -153,13 +153,15 @@ module.exports = function(schema) {
                         doc.compta.paiement.ready = (hist.payed != hist.montant);
                         doc.compta.paiement.effectue = true
                         doc.compta.paiement.historique.push(hist)
-                        //return small_cb(null);
+                            //return small_cb(null);
                         doc.save(small_cb);
                     })
             }, function(err, resp) {
                 if (err) {
                     reject(err);
                 }
+                edison.event('FLUSH').login(req.session.login).save();
+
                 resolve('ok');
             });
         }).catch(__catch)
