@@ -1,8 +1,10 @@
-var ok = function(telephone) {
-    return ({
-        status_code: 200,
-        description: 'OK',
-        redirect_to: telephone
+var _ = require('lodash');
+
+var request = function(query) {
+   // console.log('RESP==>', _.pick(query, 'status', 'description', 'redirect_to'))
+    this.json(_.pick(query, 'status', 'description', 'redirect_to'))
+    db.model('axialis')(query).save(function(err, resp) {
+        console.log('||||', err, resp)
     });
 }
 
@@ -33,48 +35,45 @@ module.exports = {
                 'client.telephone.tel3': req.query.call_origin
             }]
         }).populate('sst').then(function(resp) {
-            console.log('==>', 'ok', resp.sst && resp.sst.id)
 
             if (!resp) {
-                return res.json({
+                return request.bind(res)({
+                    _id: req.query.call_id,
+                    origin: req.query.call_origin,
+                    _type: 'CALLBACK',
                     status_code: 402,
                     description: 'partenaire inconnu'
-                })
+                });
             }
-            res.json(ok(resp.sst.telephone.tel1))
+            request.bind(res)({
+                _id: req.query.call_id,
+                origin: req.query.call_origin,
+                _type: 'CALLBACK',
+                status_code: 200,
+                description: 'OK',
+                id_sst: resp.sst.id,
+                id_intervention: resp.id,
+                redirect_to: resp.sst.telephone.tel1
+            });
         })
     },
     contact: function(req, res) {
-        console.log('contact')
         console.log('QUERY =>', req.params, req.query);
         var _ = require('lodash');
         var q = req.query;
-        var resps = [{
-            status_code: 200,
-            description: "OK",
-            telephone_redirect: "0633138868"
-        }, {
-            status_code: 401,
-            description: "Client inconnu"
-        }, {
-            status_code: 402,
-            description: "telephone d'origine inconnu + pas de sst_id"
-        }, {
-            status_code: 404,
-            description: "intervenant inconnu"
-        }, {
-            status_code: 403,
-            description: "le intervenant n'a pas les droits"
-        }]
 
 
         if (req.query.api_key !== 'F8v0x13ftadh89rm0e9x18b62ZqgEl47') {
-            console.log('401');
             return res.sendStatus(401)
         }
         if (!req.params.id.match(/^\d+$/)) {
-            console.log('NOPE ID');
-            return res.json(resps[1]);
+            return request.bind(res)({
+                _id: req.query.call_id,
+                origin: q.call_origin,
+                _type: 'CONTACT',
+                status_code: 401,
+                description: "Client inconnu"
+            });
         }
         q.call_origin = q.call_origin && q.call_origin.replace('33', '0')
 
@@ -89,23 +88,48 @@ module.exports = {
             }]
         }).then(function(doc) {
             if (!doc) {
-                console.log('==>', resps[2])
-                return res.json(resps[2]);
+                return request.bind(res)({
+                    _id: req.query.call_id,
+                    origin: q.call_origin,
+                    _type: 'CONTACT',
+                    status_code: 401,
+                    description: "telephone d'origine inconnu + pas de sst_id"
+                });
             }
             if (req.params.id == '0' ||  req.params.id == '29549') {
-                console.log('==>', resps[1])
-                return res.json(resps[1])
+                return request.bind(res)({
+                    _id: req.query.call_id,
+                    origin: q.call_origin,
+                    _type: 'CONTACT',
+                    id_sst: doc.id,
+                    status_code: 401,
+                    description: "client inconnu"
+                });
             }
             promise = db.model('intervention').findOne({
                 id: parseInt(req.params.id),
                 status: 'ENC',
             }).then(function(intervention) {
                 if (!intervention ||  (intervention.sst !== doc.id)) {
-                    console.log('==>', resps[4])
-                    return res.json(resps[4])
+                    return request.bind(res)({
+                        _id: req.query.call_id,
+                        origin: q.call_origin,
+                        id_sst: doc.id,
+                        _type: 'CONTACT',
+                        status_code: 403,
+                        description: "le intervenant n'a pas les droits"
+                    });
                 } else {
-                    console.log('==>', ok(intervention.client.telephone.tel1.replace('0', '33')))
-                    return res.json(ok(intervention.client.telephone.tel1.replace('0', '33')))
+                    return request.bind(res)({
+                        _id: req.query.call_id,
+                        origin: q.call_origin,
+                        id_sst: doc.id,
+                        _type: 'CONTACT',
+                        status_code: 200,
+                        description: "OK",
+                        id_intervention: intervention,
+                        redirect_to: intervention.client.telephone.tel1.replace('0', '33')
+                    });
                 }
             })
         })

@@ -29,6 +29,7 @@ OVH.prototype.send = function(params) {
                     receivers: [dest]
                 }, function(errsend, result) {
                     console.log(errsend, result);
+                    return resolve('ok')
                 });
             }
         });
