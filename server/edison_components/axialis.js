@@ -1,10 +1,7 @@
 var _ = require('lodash');
 
 var request = function(query) {
-   // console.log('RESP==>', _.pick(query, 'status', 'description', 'redirect_to'))
-    this.json(_.pick(query, 'status', 'description', 'redirect_to'))
-    console.log('RESP', _.pick(query, 'status_code', 'description', 'redirect_to'))
-    db.model('axialis')(query).save(function(err, resp) {
+    db.model('axialis')(_.pick(query, 'status_code', 'description', 'redirect_to')).save(function(err, resp) {
         console.log('saved')
     });
 }
@@ -90,6 +87,7 @@ module.exports = {
             }]
         }).then(function(doc) {
             if (!doc) {
+                console.log('pas artisan', q.call_origin, q.sst_id)
                 return request.bind(res)({
                     id_call: req.query.call_id,
                     origin: q.call_origin,
