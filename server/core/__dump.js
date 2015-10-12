@@ -5,6 +5,7 @@
 
         var Dump = function(req, res) {
             if (req.query.id) {
+                console.log('==>', req.query.login );
                 return singleDump(req.query.id, req.query.login || req.session.login, req.query.convert)
             } else if (!isWorker) {
                 console.log('dump worker')
@@ -55,6 +56,7 @@
 
         var singleDump = function(id, login, convert) {
             console.log('dumpOne', id)
+            console.log('==>', login);
             return new Promise(function(resolve, reject) {
                 var V1 = requireLocal('config/_convert_V1');
                 var request = require("request");
