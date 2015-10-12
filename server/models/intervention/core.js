@@ -28,7 +28,7 @@
     module.exports.postUpdate = function(prev, curr, session) {
         console.log('HERE')
         console.log('-->=>', curr.artisan.id, prev.artisan.id)
-        if (curr.status === 'APR' && curr.artisan.id !== prev.artisan.id && curr.artisan.id) {
+        if (curr.artisan.id !== prev.artisan.id && curr.artisan.id) {
             console.log(curr.sst.telephone.tel1)
             var moment = require('moment')
             var textTemplate = requireLocal('config/textTemplate');
@@ -45,8 +45,8 @@
     }
 
     module.exports.postSave = function(prev, curr, session) {
-        console.log('-->=>', curr.artisan.id, prev.artisan.id)
-        if (curr.status === 'APR' && curr.artisan.id !== prev.artisan.id && curr.artisan.id) {
+        console.log(curr.artisan.id)
+        if (curr.artisan.id) {
             console.log(curr.sst.telephone.tel1)
             var moment = require('moment')
             var textTemplate = requireLocal('config/textTemplate');
