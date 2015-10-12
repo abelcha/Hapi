@@ -32,7 +32,6 @@ module.exports = function(core) {
 
                 doc.save().then(function(resp) {
                     try {
-                        console.log('yay', core.postUpdate)
                         if (_.isFunction(core.postUpdate)) {
                             core.postUpdate(resp, data, req.session);
                         }

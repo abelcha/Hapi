@@ -136,16 +136,14 @@ var V1 = function(d, devis, legacy) {
                 envoyer: d.historique.length,
                 tva: x.tva
             });
+            console.log('-->', x.devis)
         } else {
             x.devis = "";
         }
-
         x.A_DEMARCHE = Number(d.aDemarcher);
     } catch (e) {
         __catch(e)
     }
-
-    //  console.log(x)
 }
 
 V1.prototype.compare = function() {

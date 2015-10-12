@@ -33,7 +33,7 @@ module.exports = {
                 'client.telephone.tel3': req.query.call_origin
             }]
         }).populate('sst').then(function(resp) {
-        console.log('==>', 'ok', resp.sst && resp.sst.id)
+            console.log('==>', 'ok', resp.sst && resp.sst.id)
 
             if (!resp) {
                 return res.json({
@@ -80,33 +80,34 @@ module.exports = {
 
 
         db.model('artisan').findOne({
-                $or: [{
-                    'telephone.tel1': q.call_origin
-                }, {
-                    'telephone.tel2': q.call_origin
-                }, {
-                    'id': parseInt(q.sst_id || 0)
-                }]
-            }).then(function(doc) {
-                if (!doc) {
-                    console.log('==>', resps[2])
-                    return res.json(resps[2]);
+            $or: [{
+                'telephone.tel1': q.call_origin
+            }, {
+                'telephone.tel2': q.call_origin
+            }, {
+                'id': parseInt(q.sst_id || 0)
+            }]
+        }).then(function(doc) {
+            if (!doc) {
+                console.log('==>', resps[2])
+                return res.json(resps[2]);
+            }
+            if (req.params.id == '0' ||  req.params.id == '29549') {
+                console.log('==>', resps[1])
+                return res.json(resps[1])
+            }
+            promise = db.model('intervention').findOne({
+                id: parseInt(req.params.id),
+                status: 'ENC',
+            }).then(function(intervention) {
+                if (!intervention ||  (intervention.sst !== doc.id)) {
+                    console.log('==>', resps[4])
+                    return res.json(resps[4])
+                } else {
+                    console.log('==>', ok(intervention.client.telephone.tel1.replace('0', '33')))
+                    return res.json(ok(intervention.client.telephone.tel1.replace('0', '33')))
                 }
-                if (req.params.id == '0' ||  req.params.id == '29549') {
-                    console.log('==>', resps[1])
-                    return res.json(resps[1])
-                }
-                promise = db.model('intervention').findOne({
-                    id: parseInt(req.params.id)
-                }).then(function(intervention) {
-                    if (!intervention ||  (intervention.sst !== doc.id)) {
-                        console.log('==>', resps[4])
-                        return res.json(resps[4])
-                    } else {
-                        console.log('==>', ok(intervention.client.telephone.tel1.replace('0', '33')))
-                        return res.json(ok(intervention.client.telephone.tel1.replace('0', '33')))
-                    }
-                })
             })
+        })
     }
 }
