@@ -24,6 +24,7 @@ module.exports = {
                 description: 'Invalid Request'
             });
         }
+        
         req.query.call_origin = req.query.call_origin.replace('33', '0');
         console.log('==>', req.query.call_origin)
         db.model('intervention').findOne({
