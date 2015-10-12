@@ -58,8 +58,8 @@
             <div style="padding: 11px 33px;" class="menu-content animated fadeIn">
                 <a href="/intervention" style="height: 31px;padding: 4px;" class="btn btn-primary btn-block btn-outline dark">Ajout d'une intervention</a>
             </div>
-             <div style="padding: 11px 33px;" class="menu-content animated fadeIn">
-                <a href="/devis" style="height: 31px;padding: 4px;"  class="btn btn-primary btn-block btn-outline dark">Ajout d'un devis</a>
+            <div style="padding: 11px 33px;" class="menu-content animated fadeIn">
+                <a href="/devis" style="height: 31px;padding: 4px;" class="btn btn-primary btn-block btn-outline dark">Ajout d'un devis</a>
             </div>
             <drop-down id="service-intervention" title="Service Intervention" icon="circle" open-default="displayUser.service === 'INTERVENTION'">
                 <link fltr="i_all" icon="th-list" title="Liste Interventions"></link>
@@ -109,8 +109,7 @@
                 </drop-down>
                 <drop-down icon="suitcase" title="Management">
                     <link fltr="i_chq" icon="th-list" login="{{displayUser.login}}" hash-model="dm" title="Relances cheques"></link>
-              
-                     <link fltr="a_man" icon="th-list" model="artisan" login="{{displayUser.login}}" hash-model="mn" title="Mes SST"></link>
+                    <link fltr="a_man" icon="th-list" model="artisan" login="{{displayUser.login}}" hash-model="mn" title="Mes SST"></link>
                 </drop-down>
                 <drop-down icon="calendar" title="Interventions">
                     <link fltr="i_tenv" icon="th-list" login="{{displayUser.login}}" hash-model="en" title="Envoyés"></link>
@@ -163,22 +162,28 @@
             <div class="double-bounce2"></div> -->
         </div>
     </div>
-    <script type="text/javascript">
-    //  window.PixelAdmin.start(init);
-    String.prototype.replaceAll = function(target, replacement) {
-        return this.split(target).join(replacement);
-    }
-    var searchInput = 'md-autocomplete.searchBar>md-autocomplete-wrap>input'
-    $(searchInput).ready(function() {
-        $(searchInput).focus(function() {
-            $('md-autocomplete.searchBar').css('width', '600px')
-        })
-        $(searchInput).blur(function() {
-            $('md-autocomplete.searchBar').css('width', '100px')
-        })
-
+    <footer class="footer sticky-footer">
+            <h2><marquee scrolldelay="60" scrollamount="14">
+                <span style="display:inline;margin-right:120px" ng-repeat='e in events'>{{e.date|date:"HH'h'mm"}} - {{e.message}}</span>
+            </marquee></h2>
+    </footer>
+</body>
+<script type="text/javascript">
+//  window.PixelAdmin.start(init);
+String.prototype.replaceAll = function(target, replacement) {
+    return this.split(target).join(replacement);
+}
+var searchInput = 'md-autocomplete.searchBar>md-autocomplete-wrap>input'
+$(searchInput).ready(function() {
+    $(searchInput).focus(function() {
+        $('md-autocomplete.searchBar').css('width', '600px')
     })
-    _.templateSettings.interpolate = /{{([\s\S]+?)}}/g;
-    </script>
+    $(searchInput).blur(function() {
+        $('md-autocomplete.searchBar').css('width', '100px')
+    })
+
+})
+_.templateSettings.interpolate = /{{([\s\S]+?)}}/g;
+</script>
 
 </html>

@@ -10,6 +10,8 @@ module.exports = function(db) {
         data: {
 
         },
+        message: String,
+        
         id: db.Schema.Types.Mixed,
         //type
         type: String,

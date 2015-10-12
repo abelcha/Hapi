@@ -192,7 +192,7 @@ process.on('uncaughtException', __catch);
 
 
 http.listen(port, function() {
-    edison.event('REBOOT').save()
+    return !envDev && edison.event('REBOOT').save()
     console.log('listening on *:' + port);
 });
 

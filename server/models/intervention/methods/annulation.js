@@ -20,7 +20,15 @@ module.exports = function(schema) {
                     inter.sst = undefined;
                     inter.status = 'APR';
                 }
-                edison.event('INTER_ANNULATION').login(req.session.login).id(inter.id).save();
+                edison.event('INTER_ANNULATION')
+                    .login(req.session.login)
+                    .id(inter.id)
+                    .broadcast(inter.login.ajout)
+                    .color('red')
+                    .message(_.template("L'intervention {{id}} chez {{client.civilite}} {{client.nom}} ({{client.address.cp}}) à été annulé par {{login.annulation}}")(inter))
+                    .send()
+                    .save()
+                    
                 inter.save().then(resolve, reject)
                 if (req.body.sms) {
                     sms.send({

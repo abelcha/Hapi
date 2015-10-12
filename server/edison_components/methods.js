@@ -37,5 +37,15 @@ module.exports = {
         u = _.map(u, prettyBytes);
         console.log(u)
         res.send(u)
+    },
+    bfm: function(req, res) {
+        var _ = require('lodash');
+        db.model('event')
+            .find()
+            .sort('field -date')
+            .exists('message')
+            .select('date message -_id')
+            .limit(10)
+            .then(res.json.bind(res))
     }
 }

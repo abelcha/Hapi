@@ -1,3 +1,5 @@
+var _ = require('lodash')
+
 var Event = function(type) {
     if (!(this instanceof Event)) {
         return new Event(type);
@@ -33,9 +35,39 @@ Event.prototype.date = function(date) {
     return this;
 }
 Event.prototype.save = function(cb) {
-    var _ = require('lodash')
-    console.log('EVENT', _.omit(this.doc, 'data'));
-    db.model('event')(this.doc).save(cb)
+    db.model('event')(this.doc).save(console.log)
+    return this
+}
+
+Event.prototype.broadcast = function(dest) {
+    this.brDest = dest
+    return this
+}
+
+Event.prototype.color = function(color) {
+    this.brColor = color
+    return this
+}
+Event.prototype.message = function(message) {
+    this.brMessage = message
+    this.doc.message = message
+    return this
+}
+
+Event.prototype.send = function() {
+    var _this = this;
+    if (typeof io !== 'undefined') {
+
+        io.sockets.emit('notification', {
+            message: _this.brMessage,
+            dest: _this.brDest,
+            color: _this.brColor || 'blue',
+            origin: _this.doc.login
+        })
+    } else {
+        console.log('SOCKET UNAVAILABLE')
+    }
+    return this;
 }
 
 

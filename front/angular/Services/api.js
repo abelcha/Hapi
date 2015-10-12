@@ -41,6 +41,11 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
                 return $http.get('/api/user/list');
             }
         },
+        bfm:{
+            get:function() {
+                 return $http.get('/api/bfm');
+            }
+        },
         compta: {
             lpa: function(data) {
                 return $http.get('/api/intervention/lpa?d=' + (data.d ||  ''));

@@ -1,4 +1,4 @@
-angular.module('edison').controller('MainController', function($timeout, $q, DataProvider, tabContainer, $scope, socket, config, $rootScope, $location, edisonAPI, taskList, $window) {
+angular.module('edison').controller('MainController', function($timeout, LxNotificationService, $q, DataProvider, tabContainer, $scope, socket, config, $rootScope, $location, edisonAPI, taskList, $window) {
     "use strict";
 
     $rootScope.app_users = app_users;
@@ -66,6 +66,13 @@ angular.module('edison').controller('MainController', function($timeout, $q, Dat
             }
         });
     })
+    var bfm = function() {
+        edisonAPI.bfm.get().then(function(resp) {
+            $rootScope.events = resp.data;
+        })
+    }
+    bfm();
+    $timeout(bfm, 30000)
     $scope.searchBox = {
         search: function(x) {
             var deferred = $q.defer();
@@ -104,6 +111,12 @@ angular.module('edison').controller('MainController', function($timeout, $q, Dat
         });
         $rootScope.interventionsStats = data;
     })
+    socket.on('notification', function(data) {
+        if (data.dest === $rootScope.user.login && data.dest !== data.origin) {
+            LxNotificationService.notify(data.message, 'android', false, data.color);
+        }
+    })
+
 
     $rootScope.openTab = function(tab) {
         //   console.log('-->', tab);

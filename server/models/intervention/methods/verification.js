@@ -1,5 +1,5 @@
 module.exports = function(schema) {
-
+    var _ = require('lodash')
     schema.statics.verification = {
         unique: true,
         findBefore: true,
@@ -15,7 +15,12 @@ module.exports = function(schema) {
                 inter.date.verification = new Date;
                 inter.login.verification = req.session.login;
                 inter.status = "VRF";
-                edison.event('INTER_VERIFICATION').login(req.session.login).id(inter.id).save();
+                edison.event('INTER_VERIFICATION').login(req.session.login).id(inter.id)
+                    .broadcast(inter.login.ajout)
+                    .color('green')
+                    .message(_.template("L'intervention {{id}} chez {{client.civilite}} {{client.nom}} ({{client.address.cp}}) à été verifié par {{login.verification}}")(inter))
+                    .send()
+                    .save()
                 inter.save().then(resolve, reject)
             })
 

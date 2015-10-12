@@ -18,6 +18,16 @@ md-switch.md-checked.md-primary .md-bar {
     transition: background 2s;
 }*/
 
+.sticky-footer {
+    position: fixed;
+    z-index: 9999999;
+    box-shadow: -1px 2px 5px 1px rgba(0, 0, 0, 0.7);
+    height: 40px;
+    bottom: 0;
+    background-color: white;
+    width: 100%;
+}
+
 .flash {
     background: rgba(125, 255, 125, 0.48)!important;
 }
