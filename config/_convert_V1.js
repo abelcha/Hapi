@@ -134,9 +134,8 @@ var V1 = function(d, devis, legacy) {
                 sous_total: _.round(sous_total, 2),
                 total: _.round(sous_total * 0.01 * x.tva, 2),
                 envoyer: d.historique.length,
-                tva: x.tva
+                tva: x.taux_tva
             });
-            console.log('-->', x.devis)
         } else {
             x.devis = "";
         }
