@@ -39,9 +39,12 @@ module.exports = {
         res.send(u)
     },
     bfm: function(req, res) {
+        var moment = require('moment');
         var _ = require('lodash');
         db.model('event')
-            .find()
+            .find({
+                date:moment({hour:0}).toDate()
+            })
             .sort('field -date')
             .exists('message')
             .select('date message -_id')

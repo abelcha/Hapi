@@ -35,7 +35,10 @@ Event.prototype.date = function(date) {
     return this;
 }
 Event.prototype.save = function(cb) {
-    db.model('event')(this.doc).save(console.log)
+    db.model('event')(this.doc).save(cb)
+    if (io) {
+        io.sockets.emit('event');
+    }
     return this
 }
 
