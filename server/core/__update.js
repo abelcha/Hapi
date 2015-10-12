@@ -19,7 +19,7 @@ module.exports = function(core) {
                 id: data.id
             }).then(function(doc) {
                 if (!doc)
-                   return reject("ERROR => unkown " + core.name + " '" + id + "'");
+                    return reject("ERROR => unkown " + core.name + " '" + id + "'");
 
                 if (_.isFunction(core.preUpdate))
                     core.preUpdate(doc, data, req.session);
@@ -35,9 +35,13 @@ module.exports = function(core) {
                         if (_.isFunction(core.postUpdate)) {
                             core.postUpdate(resp, data, req.session);
                         }
+                        edison.event('UPDATE_INTERVENTION').id(id).data({
+                            old: data,
+                            nw: doc
+                        }).save()
                         return resolve(resp);
                     } catch (e) {
-                       console.log(e.stack)
+                        console.log(e.stack)
                     }
                 }, mongoError(reject))
             }, mongoError(reject))

@@ -20,9 +20,22 @@ module.exports = function() {
         return Math.round(this * pow) / pow;
     }
     Number.prototype.safeAdd = function(number) {
-        console.log(this, number, (this + number).round())
-        return (this + number).round()
-    }
+            console.log(this, number, (this + number).round())
+            return (this + number).round()
+        }
+        /*
+            Object.prototype.normalize = function() {
+                
+            }*/
+
+    Object.defineProperty(Object.prototype, 'clone', {
+        value: function() {
+            return JSON.parse(JSON.stringify(this));
+        },
+        writable: true,
+        configurable: true,
+        enumerable: false
+    });
     Array.prototype.swap = function(x, y) {
         var b = this[x];
         this[x] = this[y];
