@@ -113,6 +113,9 @@ module.exports = {
                 id: parseInt(req.params.id),
                 status: 'ENC',
             }).then(function(intervention) {
+                console.log(!!intervention)
+                console.log(intervention.sst, doc.id, intervention.sst !== doc.id)
+
                 if (!intervention ||  (intervention.sst !== doc.id)) {
                     return request.bind(res)({
                         id_call: req.query.call_id,
