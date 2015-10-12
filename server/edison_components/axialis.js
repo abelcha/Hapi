@@ -114,7 +114,7 @@ module.exports = {
                 status: 'ENC',
             }).then(function(intervention) {
                 console.log(intervention.sst, doc.id);
-                if (!intervention || !intervention.sst  || intervention.sst !== doc.id) {
+                if (!intervention || !intervention.artisan  || intervention.artisan.id !== doc.id) {
                     return request.bind(res)({
                         id_call: req.query.call_id,
                         origin: q.call_origin,
@@ -131,7 +131,7 @@ module.exports = {
                         _type: 'CONTACT',
                         status_code: 200,
                         description: "OK",
-                        id_intervention: intervention,
+                        id_intervention: intervention.id,
                         redirect_to: intervention.client.telephone.tel1.replace('0', '33')
                     });
                 }
