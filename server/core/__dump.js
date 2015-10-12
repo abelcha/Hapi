@@ -58,13 +58,9 @@
             return new Promise(function(resolve, reject) {
                 var V1 = requireLocal('config/_convert_V1');
                 var request = require("request");
-                console.log(login)
                 _.delay(function() {
                     request.get(core.singleDumpUrl(id), function(err, resp, body) {
                         if (err || resp.statusCode !== 200 || !body || body == 'null') {
-                            new edison.event("DUMP_ONE", login, id, {
-                                rejected: true,
-                            })
                             console.log('rejected', id)
                             return reject('nope')
                         }
@@ -72,10 +68,10 @@
                         var v2 = core.toV2(v1)
                         if (!convert)
                             v2.date.dump = Date.now();
-                        new edison.event("DUMP_ONE" + core.NAME, login, parseInt(id), {
+                        edison.event('DUMP_' + core.NAME).login(login).id(id).data({
                             v1: v1,
                             v2: v2
-                        })
+                        }).save()
                         core.model().findById(parseInt(id), function(err, doc) {
                             if (doc) {
                                 doc = _.assign(doc, v2);

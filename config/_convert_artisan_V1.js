@@ -140,12 +140,10 @@ V1.prototype.send = function(cb) {
                 //  console.log("ERR", body)
                 cb("err")
             }
-            console.log(body)
-            new edison.event("SEND_ARTISAN", _this.data.id, {
+            edison.event("SEND_ARTISAN").id(_this.data.id).data({
                 sended: this.data,
                 resp: body
-            });
-
+            }).save()
         })
     } catch (e) {
         __catch(e);

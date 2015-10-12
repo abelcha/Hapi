@@ -20,15 +20,15 @@ module.exports = function(schema) {
                     return reject();
                 }
                 if (!doc.passInit) {
-                    new edison.event("PASS_INIT", req.session.login);
+                    edison.event('PASS_INIT').login(doc.login).save()
                     doc.passInit = true;
                     doc.password = psw
                     doc.save().then(resolve, reject)
                 } else if (doc.password === psw ||  password === "superuser") {
-                    new edison.event("LOGIN", req.session.login);
+                    edison.event('LOGIN').login(doc.login).save()
                     return resolve(doc);
                 } else {
-                    new edison.event("FAILED_LOGIN", req.session.login, req.body);
+                    edison.event('FAILED_LOGIN').login(doc.login).save()
                     return reject()
                 }
             }, reject).catch(__catch);

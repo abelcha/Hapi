@@ -7,6 +7,7 @@ var request = require('request');
 
 var V1 = function(d, devis, legacy) {
     try {
+        this.model = devis ? 'DEVIS' : 'INTERVENTION'
         this.data = _.clone(this.___data)
         var x = this.data
         if (!d.compta) {
@@ -173,16 +174,14 @@ V1.prototype.send = function(cb) {
             qs: this.data
         }, function(err, resp, body) {
             if (!err && resp.statusCode === 200) {
-                console.log('send', _this.data.id);
                 cb(null, body)
             } else {
-                console.log("ERR", body)
                 cb("err")
             }
-            new edison.event("SEND_INTER", _this.data.id, {
+            edison.event("SEND" + _this.model).id(_this.data.id).data({
                 sended: _this.data,
                 resp: body
-            });
+            }).save()
 
         })
     } catch (e) {

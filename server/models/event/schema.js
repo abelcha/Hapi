@@ -1,8 +1,7 @@
 module.exports = function(db) {
-
     return new db.Schema({
         //date
-        
+
         date: {
             type: Date,
             default: Date.now
@@ -11,6 +10,7 @@ module.exports = function(db) {
         data: {
 
         },
+        id: db.Schema.Types.Mixed,
         //type
         type: String,
     });

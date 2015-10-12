@@ -102,11 +102,10 @@ app.use(require('connect-redis-sessions')({
 
 app.get('/logout', function(req, res) {
     if (req.session && req.session.id)  {
-        new edison.event("LOGOUT", req.session.login);
+        edison.event('LOGOUT').login(req.session.login).save()
         req.session.destroy();
     }
     res.redirect('/')
-
 });
 
 
@@ -193,6 +192,7 @@ process.on('uncaughtException', __catch);
 
 
 http.listen(port, function() {
+    edison.event('REBOOT').save()
     console.log('listening on *:' + port);
 });
 
