@@ -3,8 +3,9 @@ var _ = require('lodash');
 var request = function(query) {
    // console.log('RESP==>', _.pick(query, 'status', 'description', 'redirect_to'))
     this.json(_.pick(query, 'status', 'description', 'redirect_to'))
+    console.log('RESP', _.pick(query, 'status', 'description', 'redirect_to'))
     db.model('axialis')(query).save(function(err, resp) {
-        console.log('||||', err, resp)
+        console.log('saved')
     });
 }
 
@@ -24,7 +25,7 @@ module.exports = {
                 description: 'Invalid Request'
             });
         }
-        
+
         req.query.call_origin = req.query.call_origin.replace('33', '0');
         console.log('==>', req.query.call_origin)
         db.model('intervention').findOne({
