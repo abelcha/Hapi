@@ -1,7 +1,7 @@
 module.exports = function(db) {
 
     return new db.Schema({
-        _id: String,
+        id_call: String,
         id_sst: Number,
         id_intervention: Number,
         status_code: Number,
