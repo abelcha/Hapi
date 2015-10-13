@@ -22,7 +22,7 @@ OVH.prototype.send = function(params) {
             if (err) {
                 return reject(err);
             } else {
-                var dest = envDev ? "0033633138868" : params.to.length == 10 ? params.to.replace('0', '0033') : params.to;
+                var dest = (params.to.length == 10 ? params.to.replace('0', '0033') : params.to);
                 _this.service.request('POST', '/sms/' + serviceName + '/jobs', {
                     message: params.text,
                     senderForResponse: true,
