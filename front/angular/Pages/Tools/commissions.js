@@ -1,7 +1,7 @@
-var CommissionsController = function(DateSelect, tabContainer, $routeParams, edisonAPI, $rootScope, $scope, $location, LxProgressService, socket) {
+var CommissionsController = function(DateSelect, TabContainer, $routeParams, edisonAPI, $rootScope, $scope, $location, LxProgressService, socket) {
     "use strict";
     var _this = this;
-    _this.tab = tabContainer.getCurrentTab();
+    _this.tab = TabContainer.getCurrentTab();
     _this.tab.setTitle('Coms.');
 
     _this.xcalc = function(e) {

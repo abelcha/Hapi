@@ -1,6 +1,6 @@
-var archiveReglementController = function(edisonAPI, tabContainer, $routeParams, $location, LxProgressService) {
+var archiveReglementController = function(edisonAPI, TabContainer, $routeParams, $location, LxProgressService) {
 
-    var tab = tabContainer.getCurrentTab();
+    var tab = TabContainer.getCurrentTab();
     var _this = this;
     _this.title = 'Archives Reglements'
     tab.setTitle('archives RGL')
@@ -17,9 +17,9 @@ var archiveReglementController = function(edisonAPI, tabContainer, $routeParams,
 
 angular.module('edison').controller('archivesReglementController', archiveReglementController);
 
-var archivesPaiementController = function(edisonAPI, tabContainer, $routeParams, $location, LxProgressService) {
+var archivesPaiementController = function(edisonAPI, TabContainer, $routeParams, $location, LxProgressService) {
     var _this = this;
-    var tab = tabContainer.getCurrentTab();
+    var tab = TabContainer.getCurrentTab();
     _this.type = 'paiement'
     _this.title = 'Archives Paiements'
     tab.setTitle('archives PAY')

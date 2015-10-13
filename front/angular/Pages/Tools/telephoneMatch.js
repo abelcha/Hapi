@@ -1,7 +1,7 @@
-var telephoneMatch = function(tabContainer, edisonAPI, $rootScope, $scope, $location, LxProgressService, socket) {
+var telephoneMatch = function(TabContainer, edisonAPI, $rootScope, $scope, $location, LxProgressService, socket) {
     "use strict";
     var _this = this;
-    _this.tab = tabContainer.getCurrentTab();
+    _this.tab = TabContainer.getCurrentTab();
     _this.tab.setTitle('TelMatch');
     $scope.__txt_tel = $rootScope.__txt_tel
     $rootScope.getTelMatch = function() {

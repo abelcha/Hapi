@@ -1,4 +1,4 @@
-angular.module('edison').controller('MainController', function($timeout, LxNotificationService, $q, DataProvider, tabContainer, $scope, socket, config, $rootScope, $location, edisonAPI, taskList, $window) {
+angular.module('edison').controller('MainController', function($timeout, LxNotificationService, $q, DataProvider, TabContainer, $scope, socket, config, $rootScope, $location, edisonAPI, taskList, $window) {
     "use strict";
 
     $rootScope.app_users = app_users;
@@ -10,6 +10,7 @@ angular.module('edison').controller('MainController', function($timeout, LxNotif
         $window.scrollTo(0, 0);
         $rootScope.loadingData = false;
     });
+    var _this = this;
     var checkResize = function() {
 
         $rootScope.smallWin = window.innerWidth < 1200
@@ -44,13 +45,13 @@ angular.module('edison').controller('MainController', function($timeout, LxNotif
     $scope.shadowClick = function(url) {
         $location.url(url)
     }
+
     $scope.dateFormat = moment().format('llll').slice(0, -5);
-    $scope.tabs = tabContainer;
-    $scope.$watch('tabs.selectedTab', function(prev, curr) {
-        if (prev === -1 && curr !== -1) {
-            $scope.tabs.selectedTab = curr;
-        }
-    });
+    /*    $scope.$watch('tabs.selectedTab', function(prev, curr) {
+            if (prev === -1 && curr !== -1) {
+                $scope.tabs.selectedTab = curr;
+            }
+        });*/
     $rootScope.options = {
         showMap: true
     };
@@ -74,7 +75,7 @@ angular.module('edison').controller('MainController', function($timeout, LxNotif
     socket.on('event', _.debounce(bfm, _.random(0, 3000)));
 
     bfm();
-    
+
     $scope.searchBox = {
         search: function(x) {
             var deferred = $q.defer();
@@ -125,6 +126,8 @@ angular.module('edison').controller('MainController', function($timeout, LxNotif
     }
 
     $rootScope.closeContextMenu = function() {
+        _this.selectedModel = null
+        console.log('close')
         $rootScope.$broadcast('closeContextMenu');
     }
 
@@ -134,36 +137,23 @@ angular.module('edison').controller('MainController', function($timeout, LxNotif
 
 
 
+    this.openSubTab = function(model) {
+        model.top = $('#' + model.title).offset().top;
+        model.left = $('#' + model.title).offset().left;
+        $timeout(function() {
+            _this.selectedModel = model;
+        }, 100)
+        console.log('open')
+    }
 
-
-    var initTabs = function(baseUrl, baseHash, urlFilter) {
-        $scope.tabsInitialized = true;
-        $scope.tabs.addTab(baseUrl, {
-            hash: baseHash,
-            urlFilter: urlFilter
-        });
-        return 0;
-    };
-
+    this.tabContainer = TabContainer;
     $scope.$on("$locationChangeStart", function(event) {
-        if ($rootScope.preventRouteChange) {
-            $rootScope.preventRouteChange = false;
-            return false;
+        if (_.includes(["/intervention", '/devis', '/artisan', '/'], $location.path())) {
+            return 0
         }
-        if ($location.path() === "/") {
-            return 0;
-        }
-        if (!$scope.tabsInitialized) {
-            return initTabs($location.path(), $location.hash(), $location.$$search);
-        }
-        if ($location.path() !== "/intervention" && $location.path() !== "/devis" && $location.path() !== "/artisan") {
-            $scope.tabs.addTab($location.path(), {
-                hash: $location.hash(),
-                urlFilter: $location.$$search
-            });
-        }
+        TabContainer.add($location).order();
+    })
 
-    });
 
     $scope.taskList = taskList;
 

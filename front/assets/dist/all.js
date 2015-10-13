@@ -37,7 +37,7 @@ angular.module('edison', ['browserify', 'ui.slimscroll', 'ngMaterial', 'lumx', '
         $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|callto|mailto|file|tel):/);
     });
 
-angular.module('edison').controller('MainController', function($timeout, LxNotificationService, $q, DataProvider, tabContainer, $scope, socket, config, $rootScope, $location, edisonAPI, taskList, $window) {
+angular.module('edison').controller('MainController', function($timeout, LxNotificationService, $q, DataProvider, TabContainer, $scope, socket, config, $rootScope, $location, edisonAPI, taskList, $window) {
     "use strict";
 
     $rootScope.app_users = app_users;
@@ -49,6 +49,7 @@ angular.module('edison').controller('MainController', function($timeout, LxNotif
         $window.scrollTo(0, 0);
         $rootScope.loadingData = false;
     });
+    var _this = this;
     var checkResize = function() {
 
         $rootScope.smallWin = window.innerWidth < 1200
@@ -83,13 +84,13 @@ angular.module('edison').controller('MainController', function($timeout, LxNotif
     $scope.shadowClick = function(url) {
         $location.url(url)
     }
+
     $scope.dateFormat = moment().format('llll').slice(0, -5);
-    $scope.tabs = tabContainer;
-    $scope.$watch('tabs.selectedTab', function(prev, curr) {
-        if (prev === -1 && curr !== -1) {
-            $scope.tabs.selectedTab = curr;
-        }
-    });
+    /*    $scope.$watch('tabs.selectedTab', function(prev, curr) {
+            if (prev === -1 && curr !== -1) {
+                $scope.tabs.selectedTab = curr;
+            }
+        });*/
     $rootScope.options = {
         showMap: true
     };
@@ -113,7 +114,7 @@ angular.module('edison').controller('MainController', function($timeout, LxNotif
     socket.on('event', _.debounce(bfm, _.random(0, 3000)));
 
     bfm();
-    
+
     $scope.searchBox = {
         search: function(x) {
             var deferred = $q.defer();
@@ -164,6 +165,8 @@ angular.module('edison').controller('MainController', function($timeout, LxNotif
     }
 
     $rootScope.closeContextMenu = function() {
+        _this.selectedModel = null
+        console.log('close')
         $rootScope.$broadcast('closeContextMenu');
     }
 
@@ -173,36 +176,23 @@ angular.module('edison').controller('MainController', function($timeout, LxNotif
 
 
 
+    this.openSubTab = function(model) {
+        model.top = $('#' + model.title).offset().top;
+        model.left = $('#' + model.title).offset().left;
+        $timeout(function() {
+            _this.selectedModel = model;
+        }, 100)
+        console.log('open')
+    }
 
-
-    var initTabs = function(baseUrl, baseHash, urlFilter) {
-        $scope.tabsInitialized = true;
-        $scope.tabs.addTab(baseUrl, {
-            hash: baseHash,
-            urlFilter: urlFilter
-        });
-        return 0;
-    };
-
+    this.tabContainer = TabContainer;
     $scope.$on("$locationChangeStart", function(event) {
-        if ($rootScope.preventRouteChange) {
-            $rootScope.preventRouteChange = false;
-            return false;
+        if (_.includes(["/intervention", '/devis', '/artisan', '/'], $location.path())) {
+            return 0
         }
-        if ($location.path() === "/") {
-            return 0;
-        }
-        if (!$scope.tabsInitialized) {
-            return initTabs($location.path(), $location.hash(), $location.$$search);
-        }
-        if ($location.path() !== "/intervention" && $location.path() !== "/devis" && $location.path() !== "/artisan") {
-            $scope.tabs.addTab($location.path(), {
-                hash: $location.hash(),
-                urlFilter: $location.$$search
-            });
-        }
+        TabContainer.add($location).order();
+    })
 
-    });
 
     $scope.taskList = taskList;
 
@@ -217,44 +207,6 @@ angular.module('edison').controller('MainController', function($timeout, LxNotif
         $scope.tabs.close(tab)
     };
 });
-
-var getDevisList = function(edisonAPI) {
-    "use strict";
-    return edisonAPI.devis.list({
-        cache: true
-    });
-};
-
-var getArtisanList = function(edisonAPI) {
-    "use strict";
-    return edisonAPI.artisan.list({
-        cache: true
-    });
-};
-
-var getInterList = function(edisonAPI) {
-    "use strict";
-    return edisonAPI.intervention.list({
-        cache: true
-    });
-};
-var getArtisanList = function(edisonAPI) {
-    "use strict";
-    return edisonAPI.artisan.list({
-        cache: true
-    });
-};
-
-
-var getArtisan = function($route, $q, edisonAPI) {
-    "use strict";
-    var id = $route.current.params.id;
-    if (id.length > 10) {
-        return edisonAPI.artisan.getTmp(id);
-    } else {
-        return edisonAPI.artisan.get(id);
-    }
-}
 
 var getIntervention = function($route, $q, edisonAPI) {
     "use strict";
@@ -285,6 +237,15 @@ var getDevis = function($route, $q, edisonAPI) {
         return edisonAPI.devis.get(id);
     }
 };
+var getArtisan = function($route, $q, edisonAPI) {
+    "use strict";
+    var id = $route.current.params.id;
+    if (id.length > 10) {
+        return edisonAPI.artisan.getTmp(id);
+    } else {
+        return edisonAPI.artisan.get(id);
+    }
+}
 
 angular.module('edison').config(function($routeProvider, $locationProvider) {
     "use strict";
@@ -386,7 +347,7 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
             controller: "ArtisanController",
             controllerAs: "vm",
             resolve: {
-                artisanPrm: getArtisan,
+                artisanPrm: getIntervention,
             }
         })
         .when('/dashboard', {
@@ -449,7 +410,7 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
             controller: "CommissionsController",
             controllerAs: "vm",
             reloadOnSearch: false
-            
+
         })
         .when('/stats/:type', {
             templateUrl: "Pages/Stats/stats.html",
@@ -687,7 +648,7 @@ angular.module('edison').directive('ngEnter', function () {
      }
  });
 
- var Controller = function($timeout, tabContainer, FiltersFactory, user, ContextMenu, LxProgressService, edisonAPI, DataProvider, $routeParams, $location, $rootScope, $filter, config, ngTableParams) {
+ var Controller = function($timeout, TabContainer, FiltersFactory, user, ContextMenu, LxProgressService, edisonAPI, DataProvider, $routeParams, $location, $rootScope, $filter, config, ngTableParams) {
      var _this = this;
      LxProgressService.circular.show('#5fa2db', '#globalProgress');
      var currentFilter;
@@ -728,7 +689,7 @@ angular.module('edison').directive('ngEnter', function () {
          _this.smallWin = window.innerWidth < 1400
      })
 
-     _this.tab = tabContainer.getCurrentTab();
+     _this.tab = TabContainer.getCurrentTab();
      _this.tab.hash = currentHash;
      _this.config = config;
      var title = currentFilter ? currentFilter.long_name : _this.model;
@@ -798,7 +759,7 @@ angular.module('edison').directive('ngEnter', function () {
 
      var lastChange = 0;
      $rootScope.$on(_this.model.toUpperCase() + '_CACHE_LIST_CHANGE', function(event, newData) {
-         if (tabContainer.getCurrentTab() && _this.tab.fullUrl === tabContainer.getCurrentTab().fullUrl) {
+         if (TabContainer.getCurrentTab() && _this.tab.fullUrl === TabContainer.getCurrentTab().fullUrl) {
              dataProvider.applyFilter(currentFilter, _this.tab.hash, _this.customFilter);
              _this.tableParams.reload();
              //_this.tableParams.orderBy(_this.tableParams.$params.sorting)
@@ -833,7 +794,7 @@ angular.module('edison').directive('ngEnter', function () {
          if (_this.contextMenu.active)
              return _this.contextMenu.close();
          if ($event.metaKey || $event.ctrlKey) {
-             tabContainer.addTab('/' + _this.model + '/' + inter.id, {
+             TabContainer.addTab('/' + _this.model + '/' + inter.id, {
                  title: ('#' + inter.id),
                  setFocus: false,
                  allowDuplicates: false
@@ -851,7 +812,7 @@ angular.module('edison').directive('ngEnter', function () {
 
 
 
- angular.module('edison').directive('lineupIntervention', function($timeout, tabContainer, FiltersFactory, user, ContextMenu, LxProgressService, edisonAPI, DataProvider, $routeParams, $location, $rootScope, $filter, config, ngTableParams) {
+ angular.module('edison').directive('lineupIntervention', function($timeout, TabContainer, FiltersFactory, user, ContextMenu, LxProgressService, edisonAPI, DataProvider, $routeParams, $location, $rootScope, $filter, config, ngTableParams) {
      "use strict";
      var arg = arguments;
      return {
@@ -871,7 +832,7 @@ angular.module('edison').directive('ngEnter', function () {
      }
  });
 
- angular.module('edison').directive('lineupDevis', function($timeout, tabContainer, FiltersFactory, user, ContextMenu, LxProgressService, edisonAPI, DataProvider, $routeParams, $location, $rootScope, $filter, config, ngTableParams) {
+ angular.module('edison').directive('lineupDevis', function($timeout, TabContainer, FiltersFactory, user, ContextMenu, LxProgressService, edisonAPI, DataProvider, $routeParams, $location, $rootScope, $filter, config, ngTableParams) {
      "use strict";
      var arg = arguments;
      return {
@@ -888,7 +849,7 @@ angular.module('edison').directive('ngEnter', function () {
      }
  });
 
- angular.module('edison').directive('lineupArtisan', function($timeout, tabContainer, FiltersFactory, user, ContextMenu, LxProgressService, edisonAPI, DataProvider, $routeParams, $location, $rootScope, $filter, config, ngTableParams) {
+ angular.module('edison').directive('lineupArtisan', function($timeout, TabContainer, FiltersFactory, user, ContextMenu, LxProgressService, edisonAPI, DataProvider, $routeParams, $location, $rootScope, $filter, config, ngTableParams) {
      "use strict";
      var arg = arguments;
      return {
@@ -1320,6 +1281,196 @@ angular.module("edison").filter('tableFilter', ['config', function(config) {
     }
 }]);
 
+angular.module('edison').factory('TabContainer', ['$location', '$window', '$q', 'edisonAPI', function($location, $window, $q, edisonAPI) {
+    "use strict";
+    var Tab = function(args, options, prevTab) {
+
+        if (typeof args === 'object') {
+            //copy constructor
+            _.each(args, function(e, k) {
+                this[k] = e;
+            })
+        } else {
+            this.prevTab = prevTab ||  {}
+            this.urlFilter = options.urlFilter
+            this.hash = options.hash
+            this.url = args;
+            this.fullUrl = this.url + ['', $.param(this.urlFilter)].join(_.isEmpty(this.urlFilter) ? '' : '?') + (this.hash ? '#' + this.hash : '')
+            this.title = '';
+            this.position = null;
+            this.deleted = false;
+            this._timestamp = Date.now();
+        }
+    }
+
+    Tab.prototype.setData = function(data) {
+        //slice create a copy
+        this.data = data;
+    }
+
+    Tab.prototype.setTitle = function(title, subTitle) {
+        this.title = title;
+    }
+
+    var TabContainer = function() {
+        this._tabs = [];
+        this.selectedTab = 0;
+    }
+
+    TabContainer.prototype.loadSessionTabs = function(currentUrl) {
+        var _this = this;
+
+        return $q(function(resolve, reject) {
+            var currentUrlInSessionTabs = false;
+            edisonAPI.request({
+                fn: "getSessionData",
+            }).then(function(result) {
+                _this.selectedTab = result.data.selectedTab;
+                for (var i = 0; i < result.data._tabs.length; i++) {
+                    _this._tabs.push(new Tab(result.data._tabs[i]))
+                    if (result.data._tabs[i].url === currentUrl) {
+                        _this.selectedTab = i;
+                        currentUrlInSessionTabs = true;
+                    }
+                }
+                if (!currentUrlInSessionTabs) {
+                    return reject();
+                }
+                return resolve();
+            }).catch(reject);
+
+        })
+
+    }
+
+    TabContainer.prototype.setFocus = function(tab) {
+        this.selectedTab = (typeof tab === 'number' ? tab : tab.position);
+    };
+
+    TabContainer.prototype.createTab = function(url, options) {
+        var tab = new Tab(url, options, this.getCurrentTab());
+        tab.position = this._tabs.length;
+        this._tabs.push(tab);
+        return (tab);
+    }
+
+    TabContainer.prototype.isOpen = function(url, options) {
+        var index = _.findIndex(this._tabs, function(e) {
+            return !e.deleted && e.url === url &&
+                (!options.hash && !e.hash || options.hash == e.hash) &&
+                _.isEqual(options.urlFilter, e.urlFilter)
+        });
+        return (index >= 0);
+    };
+
+    TabContainer.prototype.getTab = function(url, options) {
+
+        return _.find(this._tabs, function(e) {
+            return !e.deleted && e.url === url &&
+                (!options.hash && !e.hash || options.hash == e.hash) &&
+                _.isEqual(options.urlFilter, e.urlFilter)
+        });
+    };
+
+    TabContainer.prototype.getTabSimple = function(url, options) {
+
+        return _.find(this._tabs, function(e) {
+            return !e.deleted && e.url.split('/')[1] === url.split('/')[1]
+        });
+    };
+
+    TabContainer.prototype.len = function() {
+        var size = 0;
+
+        this._tabs.forEach(function(e) {
+            size += !e.deleted;
+        })
+        return (size);
+    }
+
+    TabContainer.prototype.getPrevTab = function(tab) {
+
+        for (var i = tab.position - 1; i >= 0; i--) {
+            if (this._tabs[i].deleted === false)
+                return (this._tabs[i]);
+        }
+    };
+
+    TabContainer.prototype.close = function(tab) {
+        if (this.len() > 1) {
+            console.log("multiple tabs")
+            if (this.remove(tab)) {
+                $location.url(tab.prevTab.fullUrl ||  '/intervention/list')
+            }
+        } else {
+            console.log("only tab")
+            $location.url(tab.prevTab.fullUrl ||  '/intervention/list');
+            this.noClose = true;
+            //this.remove(tab);
+        }
+    }
+
+    TabContainer.prototype.remove = function(tab) {
+        var newTabs = [];
+        var j = 0;
+
+        if (this._tabs.length <= 1) {
+            return false;
+        }
+        var reload = (this.selectedTab === tab.position);
+        for (var i = 0; i < this._tabs.length; i++) {
+            if (i !== tab.position) {
+                newTabs.push(this._tabs[i]);
+                newTabs[j].position = j;
+                ++j;
+            }
+        }
+        this._tabs = newTabs;
+
+        if (this.selectedTab === tab.position && this.selectedTab !== 0) {
+            this.selectedTab--;
+        }
+        if (this.selectedTab > tab.position) {
+            this.selectedTab--;
+        }
+        return (reload);
+    }
+
+    TabContainer.prototype.getCurrentTab = function() {
+        return this._tabs[this.selectedTab];
+    }
+    TabContainer.prototype.addTab = function(url, options) {
+        var tab;
+        var noOpen = [
+            '/list',
+            '/search',
+            '/recap',
+            'lpa',
+            '/artisan/contact',
+            '/tools/edit',
+        ]
+        if (this.noClose) {
+            tab = this._tabs[0]
+        } else if (_.find(noOpen, _.partial(_.includes, url)) && this.getTabSimple(url)) {
+            tab = this.getTabSimple(url);
+        } else if (this.noClose || this.isOpen(url, options)) {
+            tab = this.getTab(url, options)
+        } else {
+            tab = this.createTab(url, options);
+        }
+        this.noClose = false;
+        if (!(options && options.setFocus === false)) {
+            this.setFocus(tab)
+        }
+        if (options && options.title) {
+            tab.setTitle(options.title);
+        }
+    }
+
+    return (new TabContainer());
+
+}]);
+
 angular.module('edison').factory('Signalement', function() {
     "use strict";
 
@@ -1361,55 +1512,99 @@ angular.module('edison').factory('Signalement', function() {
     return Signalement;
 });
 
-angular.module('edison').factory('TabContainer', function($location, $window, $q, edisonAPI) {
+angular.module('edison').factory('Tab', function() {
+
+
+    var Tab = function(location) {
+        this.title = "...";
+        this.path = location.path();
+        this.url = location.path().split('/').slice(1)
+        this.model = this.url[0]
+        this.route = this.url[1]
+        this.hash = location.hash();
+        this.title = this.url[this.url.length - 1]
+        this.date = new Date;
+    }
+    Tab.prototype.setTitle = function(title) {
+        return this;
+    };
+    Tab.prototype.setData = function(data) {
+        this.data = data;
+        return this;
+    };
+    return Tab;
+
+})
+
+angular.module('edison').factory('TabContainer', function(Tab, $location) {
     "use strict";
 
-
-    var Tab = function(url, title, hash) {
-
-        this.url = url;
-        this.hash = hash;
-        this.title = title;
-    }
-
-    Tab.setTitle = function(title) {
-        this.title = title;
+    var TabContainer = {
+        __tabs: [],
+        __ordered: {}
     }
 
 
-    var TabContainer = function() {
-        if (!(this instanceof TabContainer)) {
-            return new TabContainer();
-        }
-    }
-
-    TabContainer.prototype.init = function() {
-        this.add($location.path(), "...", $location.path(), $location.hash())
-    }
-
-    TabContainer.prototype.selectedIndex = 0;
-    
-    TabContainer.prototype.add = function(url, title, hash) {
-        var tab = new Tab(url, title, hash);
-        this.tabs.push(tab);
-        console.log(tab)
-    }
-
-
-    TabContainer.prototype.tabs = [];
-
-    TabContainer.prototype.getTab = function(tab) {
-        _.each(this.tabs, function(e) {
-            console.log(e, tab)
+    TabContainer.find = function(location) {
+        var cmp = new Tab(location)
+        return _.find(this.__tabs, function(e) {
+            if (e.route === 'list' && cmp.route === 'list') {
+                return cmp.model === e.model
+            }
+            return e.path == location.path() && e.hash == location.hash()
         })
     }
-    TabContainer.prototype.getCurrentTab = function() {
-        return this.getTab(this.tab[this.selectedIndex])
+
+    TabContainer.ordered = function() {
+        return this.__ordered;
+    }
+    TabContainer.close = function(tab) {
+        var index = _.findIndex(this.__tabs, function(e) {
+            return e.path == tab.path && e.hash == location.hash
+        })
+        this.__tabs.splice(index, 1);
+        $location.url('/intervention/list');
     }
 
-    TabContainer.prototype.open = function(url, hash) {
-        var _this = this;
+
+
+    TabContainer.add = function(location) {
+        var tab = this.find(location);
+        if (!tab) {
+            this.selectedTab = new Tab(location);
+            this.__tabs.push(this.selectedTab)
+        } else {
+            this.selectedTab = tab
+        }
+        return this;
     }
+
+    TabContainer.getCurrentTab = function() {
+        return this.selectedTab;
+    }
+    TabContainer.order = function() {
+        var _this = this;
+        var models = ["intervention", "artisan", "devis", 'tools', 'compta'];
+        var tmp = {};
+        _.each(_this.__tabs, function(e) {
+            if (_.includes(models, e.model)) {
+                var dest = e.url[1] === 'list' ? (e.model + '_list') : e.url[1] === 'contact' ? e.model + '_repertoire' : e.model + '_id';
+            } else {
+                dest = 'other';
+            }
+            tmp[dest] = tmp[dest] || {
+                title: dest,
+                tabs: []
+            };
+            tmp[dest].tabs.push(e)
+        })
+        this.__ordered = tmp
+        return this;
+    }
+    TabContainer.getOrdered = function() {
+        return this.__ordered;
+    }
+
 
     return TabContainer
 
@@ -1419,7 +1614,6 @@ angular.module('edison').factory('Address', function() {
     "use strict";
 
     var Address = function(place, copyContructor) {
-        console.log('-->', copyContructor)
         if (place.lat && place.lng) {
             this.lt = place.lat;
             this.lg = place.lng;
@@ -3425,196 +3619,6 @@ angular.module('edison').factory('socket', function(socketFactory) {
     return socketFactory();
 });
 
-angular.module('edison').factory('tabContainer', ['$location', '$window', '$q', 'edisonAPI', function($location, $window, $q, edisonAPI) {
-    "use strict";
-    var Tab = function(args, options, prevTab) {
-
-        if (typeof args === 'object') {
-            //copy constructor
-            _.each(args, function(e, k) {
-                this[k] = e;
-            })
-        } else {
-            this.prevTab = prevTab ||  {}
-            this.urlFilter = options.urlFilter
-            this.hash = options.hash
-            this.url = args;
-            this.fullUrl = this.url + ['', $.param(this.urlFilter)].join(_.isEmpty(this.urlFilter) ? '' : '?') + (this.hash ? '#' + this.hash : '')
-            this.title = '';
-            this.position = null;
-            this.deleted = false;
-            this._timestamp = Date.now();
-        }
-    }
-
-    Tab.prototype.setData = function(data) {
-        //slice create a copy
-        this.data = data;
-    }
-
-    Tab.prototype.setTitle = function(title, subTitle) {
-        this.title = title;
-    }
-
-    var TabContainer = function() {
-        this._tabs = [];
-        this.selectedTab = 0;
-    }
-
-    TabContainer.prototype.loadSessionTabs = function(currentUrl) {
-        var _this = this;
-
-        return $q(function(resolve, reject) {
-            var currentUrlInSessionTabs = false;
-            edisonAPI.request({
-                fn: "getSessionData",
-            }).then(function(result) {
-                _this.selectedTab = result.data.selectedTab;
-                for (var i = 0; i < result.data._tabs.length; i++) {
-                    _this._tabs.push(new Tab(result.data._tabs[i]))
-                    if (result.data._tabs[i].url === currentUrl) {
-                        _this.selectedTab = i;
-                        currentUrlInSessionTabs = true;
-                    }
-                }
-                if (!currentUrlInSessionTabs) {
-                    return reject();
-                }
-                return resolve();
-            }).catch(reject);
-
-        })
-
-    }
-
-    TabContainer.prototype.setFocus = function(tab) {
-        this.selectedTab = (typeof tab === 'number' ? tab : tab.position);
-    };
-
-    TabContainer.prototype.createTab = function(url, options) {
-        var tab = new Tab(url, options, this.getCurrentTab());
-        tab.position = this._tabs.length;
-        this._tabs.push(tab);
-        return (tab);
-    }
-
-    TabContainer.prototype.isOpen = function(url, options) {
-        var index = _.findIndex(this._tabs, function(e) {
-            return !e.deleted && e.url === url &&
-                (!options.hash && !e.hash || options.hash == e.hash) &&
-                _.isEqual(options.urlFilter, e.urlFilter)
-        });
-        return (index >= 0);
-    };
-
-    TabContainer.prototype.getTab = function(url, options) {
-
-        return _.find(this._tabs, function(e) {
-            return !e.deleted && e.url === url &&
-                (!options.hash && !e.hash || options.hash == e.hash) &&
-                _.isEqual(options.urlFilter, e.urlFilter)
-        });
-    };
-
-    TabContainer.prototype.getTabSimple = function(url, options) {
-
-        return _.find(this._tabs, function(e) {
-            return !e.deleted && e.url.split('/')[1] === url.split('/')[1]
-        });
-    };
-
-    TabContainer.prototype.len = function() {
-        var size = 0;
-
-        this._tabs.forEach(function(e) {
-            size += !e.deleted;
-        })
-        return (size);
-    }
-
-    TabContainer.prototype.getPrevTab = function(tab) {
-
-        for (var i = tab.position - 1; i >= 0; i--) {
-            if (this._tabs[i].deleted === false)
-                return (this._tabs[i]);
-        }
-    };
-
-    TabContainer.prototype.close = function(tab) {
-        if (this.len() > 1) {
-            console.log("multiple tabs")
-            if (this.remove(tab)) {
-                $location.url(tab.prevTab.fullUrl ||  '/intervention/list')
-            }
-        } else {
-            console.log("only tab")
-            $location.url(tab.prevTab.fullUrl ||  '/intervention/list');
-            this.noClose = true;
-            //this.remove(tab);
-        }
-    }
-
-    TabContainer.prototype.remove = function(tab) {
-        var newTabs = [];
-        var j = 0;
-
-        if (this._tabs.length <= 1) {
-            return false;
-        }
-        var reload = (this.selectedTab === tab.position);
-        for (var i = 0; i < this._tabs.length; i++) {
-            if (i !== tab.position) {
-                newTabs.push(this._tabs[i]);
-                newTabs[j].position = j;
-                ++j;
-            }
-        }
-        this._tabs = newTabs;
-
-        if (this.selectedTab === tab.position && this.selectedTab !== 0) {
-            this.selectedTab--;
-        }
-        if (this.selectedTab > tab.position) {
-            this.selectedTab--;
-        }
-        return (reload);
-    }
-
-    TabContainer.prototype.getCurrentTab = function() {
-        return this._tabs[this.selectedTab];
-    }
-    TabContainer.prototype.addTab = function(url, options) {
-        var tab;
-        var noOpen = [
-            '/list',
-            '/search',
-            '/recap',
-            'lpa',
-            '/artisan/contact',
-            '/tools/edit',
-        ]
-        if (this.noClose) {
-            tab = this._tabs[0]
-        } else if (_.find(noOpen, _.partial(_.includes, url)) && this.getTabSimple(url)) {
-            tab = this.getTabSimple(url);
-        } else if (this.noClose || this.isOpen(url, options)) {
-            tab = this.getTab(url, options)
-        } else {
-            tab = this.createTab(url, options);
-        }
-        this.noClose = false;
-        if (!(options && options.setFocus === false)) {
-            this.setFocus(tab)
-        }
-        if (options && options.title) {
-            tab.setTitle(options.title);
-        }
-    }
-
-    return (new TabContainer());
-
-}]);
-
 angular.module('edison').factory('taskList', ['dialog', 'edisonAPI', function(dialog, edisonAPI) {
     "use strict";
     var Task = function(user) {
@@ -3663,7 +3667,6 @@ angular.module('edison').factory('user', function($window) {
                  });
              }
              edisonAPI.compte.list().then(function(resp) {
-                console.log(resp.data)
                  scope.grndComptes = resp.data
              })
 
@@ -3701,9 +3704,9 @@ angular.module('edison').directive('infoFourniture', ['config', 'fourniture',
     }
 ]);
 
-var archiveReglementController = function(edisonAPI, tabContainer, $routeParams, $location, LxProgressService) {
+var archiveReglementController = function(edisonAPI, TabContainer, $routeParams, $location, LxProgressService) {
 
-    var tab = tabContainer.getCurrentTab();
+    var tab = TabContainer.getCurrentTab();
     var _this = this;
     _this.title = 'Archives Reglements'
     tab.setTitle('archives RGL')
@@ -3720,9 +3723,9 @@ var archiveReglementController = function(edisonAPI, tabContainer, $routeParams,
 
 angular.module('edison').controller('archivesReglementController', archiveReglementController);
 
-var archivesPaiementController = function(edisonAPI, tabContainer, $routeParams, $location, LxProgressService) {
+var archivesPaiementController = function(edisonAPI, TabContainer, $routeParams, $location, LxProgressService) {
     var _this = this;
-    var tab = tabContainer.getCurrentTab();
+    var tab = TabContainer.getCurrentTab();
     _this.type = 'paiement'
     _this.title = 'Archives Paiements'
     tab.setTitle('archives PAY')
@@ -3771,7 +3774,7 @@ angular.module('edison').controller('archivesPaiementController', archivesPaieme
 
  }]);
 
-var ArtisanCtrl = function($timeout, $rootScope, $scope, edisonAPI, $location, $routeParams, ContextMenu, LxProgressService, LxNotificationService, tabContainer, config, dialog, artisanPrm, Artisan) {
+var ArtisanCtrl = function($timeout, $rootScope, $scope, edisonAPI, $location, $routeParams, ContextMenu, LxProgressService, LxNotificationService, TabContainer, config, dialog, artisanPrm, Artisan) {
     "use strict";
     var _this = this;
     _this.config = config;
@@ -3779,9 +3782,8 @@ var ArtisanCtrl = function($timeout, $rootScope, $scope, edisonAPI, $location, $
     _this.moment = moment;
     _this.contextMenu = new ContextMenu('artisan')
 
-    var tab = tabContainer.getCurrentTab();
+    var tab = TabContainer.getCurrentTab();
     if (!tab.data) {
-        console.log('-->', artisanPrm.data)
         var artisan = new Artisan(artisanPrm.data)
         tab.setData(artisan);
         if ($routeParams.id.length > 12) {
@@ -3793,7 +3795,7 @@ var ArtisanCtrl = function($timeout, $rootScope, $scope, edisonAPI, $location, $
             if (!artisan) {
                 LxNotificationService.error("Impossible de trouver les informations !");
                 $location.url("/dashboard");
-                tabContainer.remove(tab);
+                TabContainer.remove(tab);
                 return 0;
             }
         }
@@ -3807,9 +3809,9 @@ var ArtisanCtrl = function($timeout, $rootScope, $scope, edisonAPI, $location, $
                 return false
             } else if (options.contrat) {
                 artisan = new Artisan(resp);
-                artisan.envoiContrat.bind(resp)(tabContainer.close);
+                artisan.envoiContrat.bind(resp)(TabContainer.close);
             } else {
-                tabContainer.close(tab);
+                TabContainer.close(tab);
             }
         })
     }
@@ -3849,7 +3851,9 @@ var ArtisanCtrl = function($timeout, $rootScope, $scope, edisonAPI, $location, $
             console.log('==>', artisan.file)
         }, console.log)
     }
-    _this.loadFilesList();
+    if (artisan.id) {
+        _this.loadFilesList();
+    }
 
     _this.addComment = function() {
         artisan.comments.push({
@@ -3872,10 +3876,10 @@ var ArtisanCtrl = function($timeout, $rootScope, $scope, edisonAPI, $location, $
 }
 angular.module('edison').controller('ArtisanController', ArtisanCtrl);
 
-var AvoirsController = function(tabContainer, openPost, edisonAPI, $rootScope, LxProgressService, LxNotificationService, FlushList) {
+var AvoirsController = function(TabContainer, openPost, edisonAPI, $rootScope, LxProgressService, LxNotificationService, FlushList) {
     "use strict";
     var _this = this
-    var tab = tabContainer.getCurrentTab();
+    var tab = TabContainer.getCurrentTab();
     tab.setTitle('Avoirs')
     _this.loadData = function(prevChecked) {
         LxProgressService.circular.show('#5fa2db', '#globalProgress');
@@ -3916,7 +3920,7 @@ var AvoirsController = function(tabContainer, openPost, edisonAPI, $rootScope, L
 
 angular.module('edison').controller('avoirsController', AvoirsController);
 
-var ContactArtisanController = function($scope, $timeout, tabContainer, LxProgressService, FiltersFactory, ContextMenu, edisonAPI, DataProvider, $routeParams, $location, $q, $rootScope, $filter, config, ngTableParams) {
+var ContactArtisanController = function($scope, $timeout, TabContainer, LxProgressService, FiltersFactory, ContextMenu, edisonAPI, DataProvider, $routeParams, $location, $q, $rootScope, $filter, config, ngTableParams) {
     "use strict";
     var _this = this;
     _this.loadPanel = function(id) {
@@ -3930,7 +3934,7 @@ var ContactArtisanController = function($scope, $timeout, tabContainer, LxProgre
     _this.tbz = ['informations', 'interventions', 'historique', 'stats', 'paiements'];
     var ind = _this.tbz.indexOf($location.hash());
     $scope.selectedIndex = ind >= 0 ? ind : 0
-    _this.tab = tabContainer.getCurrentTab();
+    _this.tab = TabContainer.getCurrentTab();
 
     _this.recap = $location.url().includes('recap') ? $routeParams.sstid : undefined
 
@@ -3978,7 +3982,7 @@ var ContactArtisanController = function($scope, $timeout, tabContainer, LxProgre
         $rootScope.$watch('tableilter', _this.reloadData);
     */
     $rootScope.$on('ARTISAN_CACHE_LIST_CHANGE', function() {
-        if (_this.tab.fullUrl === tabContainer.getCurrentTab().fullUrl) {
+        if (_this.tab.fullUrl === TabContainer.getCurrentTab().fullUrl) {
             dataProvider.applyFilter(currentFilter, _this.tab.hash);
         }
     })
@@ -4006,7 +4010,7 @@ var ContactArtisanController = function($scope, $timeout, tabContainer, LxProgre
         if (_this.contextMenu.active)
             return _this.contextMenu.close();
         if ($event.metaKey || $event.ctrlKey) {
-            tabContainer.addTab('/artisan/' + inter.id, {
+            TabContainer.addTab('/artisan/' + inter.id, {
                 title: ('#' + inter.id),
                 setFocus: false,
                 allowDuplicates: false
@@ -4054,9 +4058,10 @@ var ContactArtisanController = function($scope, $timeout, tabContainer, LxProgre
 }
 angular.module('edison').controller('ContactArtisanController', ContactArtisanController);
 
-var DashboardController = function(edisonAPI, $scope, $filter, tabContainer, ngTableParams, $routeParams, $location, LxProgressService) {
-    var tab = tabContainer.getCurrentTab();
-    tab.setTitle('Dashboard')
+var DashboardController = function(edisonAPI, $scope, $filter, TabContainer, ngTableParams, $routeParams, $location, LxProgressService) {
+   console.log(TabContainer)
+   // var tab = TabContainer.getCurrentTab();
+ //   tab.setTitle('Dashboard')
     var _this = this;
     //LxProgressService.circular.show('#5fa2db', '#globalProgress');
 
@@ -4071,155 +4076,6 @@ var DashboardController = function(edisonAPI, $scope, $filter, tabContainer, ngT
 }
 
 angular.module('edison').controller('DashboardController', DashboardController);
-
-var LpaController = function(openPost, socket, ContextMenu, $location, $window, tabContainer, edisonAPI, $rootScope, LxProgressService, LxNotificationService, FlushList) {
-    "use strict";
-    var _this = this
-    var tab = tabContainer.getCurrentTab();
-    tab.setTitle('LPA')
-    _this.search = $location.search();
-    _this.contextMenu = new ContextMenu('intervention')
-
-    _this.loadData = function(prevChecked) {
-        LxProgressService.circular.show('#5fa2db', '#globalProgress');
-        edisonAPI.compta.lpa($location.search()).then(function(result) {
-            _.each(result.data, function(sst) {
-                sst.list = new FlushList(sst.list, prevChecked);
-                if (_this.search.d) {
-                    _this.checkArtisan(sst);
-                }
-                _this.reloadList(sst)
-            })
-            $rootScope.lpa = result.data
-            LxProgressService.circular.hide()
-        })
-    }
-
-
-    _this.rowRightClick = function($event, inter) {
-        edisonAPI.intervention.get(inter.id, {
-                populate: 'sst'
-            })
-            .then(function(resp) {
-                _this.contextMenu.setData(resp.data);
-                _this.contextMenu.setPosition($event.pageX, $event.pageY + 200)
-                _this.contextMenu.open();
-            })
-    }
-
-
-
-    if (!$rootScope.lpa)
-        _this.loadData()
-    _this.checkArtisan = function(sst) {
-
-        sst.checked = !sst.checked
-        _.each(sst.list.getList(), function(e) {
-            e.checked = sst.checked;
-        })
-    }
-    _this.updateNumeroCheque = function(index) {
-        var base = $rootScope.lpa[index].numeroCheque;
-        if (base) {
-            for (var i = index; i < $rootScope.lpa.length; i++) {
-                if ($rootScope.lpa[i].list.getList()[0].mode === 'CHQ') {
-                    $rootScope.lpa[i].numeroCheque = ++base
-                }
-            };
-        }
-    }
-    _this.flush = function() {
-        var rtn = [];
-
-        var lpa = [];
-        _.each(_.cloneDeep($rootScope.lpa), function(e) {
-            e.list.__list = _.filter(e.list.__list, 'checked', true);
-            if (e.list.__list.length) {
-                lpa.push(e);
-            }
-        })
-        console.log(lpa);
-        LxProgressService.circular.show('#5fa2db', '#globalProgress');
-        edisonAPI.compta.flush(lpa).then(function(resp) {
-            edisonAPI.compta.flushMail(lpa).then(function(resp) {
-                console.log('yayaya')
-            });
-        })
-    }
-
-    socket.on('intervention_db_flushMail', function(data) {
-        if (data === 100) {
-            $rootScope.globalProgressCounter = "";
-            LxProgressService.circular.hide();
-            _this.reloadLPA()
-        } else {
-            $rootScope.globalProgressCounter = data + '%';
-        }
-
-    })
-
-    _this.selectToggle = function(artisan, item) {
-        if (this.search.d) {
-            return false;
-        }
-        item.checked = !item.checked;
-        _this.reloadList(artisan)
-    }
-    _this.reloadList = function(artisan) {
-
-        artisan.total = artisan.list.getTotal()
-        artisan.total = artisan.list.getTotal(true)
-        artisan.total = artisan.list.getTotal()
-    }
-    _this.reloadLPA = function() {
-        var rtn = [];
-        _.each($rootScope.lpa, function(sst) {
-            _.each(sst.list.getList(), function(e) {
-                if (e.checked) {
-                    rtn.push(e.id);
-                }
-            })
-        })
-        _this.loadData(rtn)
-    }
-
-    _this.clickTrigger = function(elem) {
-        window.setTimeout(function() {
-            angular.element(elem).trigger('click');
-        }, 0)
-    }
-
-    _this.onFileUpload = function(file) {
-        console.log('swad')
-        var ids = _($rootScope.lpa).map(_.partial(_.pick, _, 'numeroCheque', 'id')).value();
-        LxProgressService.circular.show('#5fa2db', '#globalProgress');
-        edisonAPI.file.uploadScans(file, {
-                ids: ids,
-                date: _this.search.d
-            }).then(function(resp) {
-                LxProgressService.circular.hide()
-                console.log('==>', resp);
-            })
-            //_.each($rootScope.lpa, function(sst) {
-            /*    _.each(sst.list.getList(), function(e) {
-                    if (e.checked) {
-                        rtn.push(e.id);
-                    }
-                })
-            })
-            _this.loadData(rtn)*/
-    }
-
-    _this.print = function(type) {
-        openPost('/api/intervention/print', {
-            type: type,
-            data: $rootScope.lpa
-        });
-    }
-}
-
-
-angular.module('edison').controller('LpaController', LpaController);
 
 
  angular.module('edison').directive('edisonMap', ['$window', 'Map', 'mapAutocomplete', 'Address',
@@ -4309,13 +4165,13 @@ angular.module('edison').controller('LpaController', LpaController);
 
  }]);
 
-var DevisCtrl = function(edisonAPI, $scope, $rootScope, $location, $routeParams, LxProgressService, LxNotificationService, tabContainer, config, dialog, devisPrm, Devis) {
+var DevisCtrl = function(edisonAPI, $scope, $rootScope, $location, $routeParams, LxProgressService, LxNotificationService, TabContainer, config, dialog, devisPrm, Devis) {
     "use strict";
     var _this = this;
     _this.config = config;
     _this.dialog = dialog;
     _this.moment = moment;
-    var tab = tabContainer.getCurrentTab();
+    var tab = TabContainer.getCurrentTab();
     if (!tab.data) {
         var devis = new Devis(devisPrm.data)
         tab.setData(devis);
@@ -4328,7 +4184,7 @@ var DevisCtrl = function(edisonAPI, $scope, $rootScope, $location, $routeParams,
             if (!devis) {
                 LxNotificationService.error("Impossible de trouver les informations !");
                 $location.url("/dashboard");
-                tabContainer.remove(tab);
+                TabContainer.remove(tab);
                 return 0;
             }
         }
@@ -4340,7 +4196,7 @@ var DevisCtrl = function(edisonAPI, $scope, $rootScope, $location, $routeParams,
     var closeTab = function(err) {
         console.log('=========>', err)
         if (!err)
-            tabContainer.close(tab);
+            TabContainer.close(tab);
     }
 
     _this.saveDevis = function(options) {
@@ -4606,13 +4462,13 @@ angular.module('edison').directive('infoCompta', ['config', 'Paiement',
      }
  );
 
-var InterventionCtrl = function(Description, Signalement, ContextMenu, $window, $timeout, $rootScope, $scope, $location, $routeParams, dialog, fourniture, LxNotificationService, LxProgressService, tabContainer, edisonAPI, Address, $q, mapAutocomplete, productsList, config, interventionPrm, Intervention, Map) {
+var InterventionCtrl = function(Description, Signalement, ContextMenu, $window, $timeout, $rootScope, $scope, $location, $routeParams, dialog, fourniture, LxNotificationService, LxProgressService, TabContainer, edisonAPI, Address, $q, mapAutocomplete, productsList, config, interventionPrm, Intervention, Map) {
     "use strict";
     var _this = this;
     _this.config = config;
     _this.dialog = dialog;
     _this.autocomplete = mapAutocomplete;
-    var tab = tabContainer.getCurrentTab();
+    var tab = TabContainer.getCurrentTab();
 
     if (!tab.data) {
         var intervention = new Intervention(interventionPrm.data)
@@ -4634,7 +4490,7 @@ var InterventionCtrl = function(Description, Signalement, ContextMenu, $window, 
             if (!intervention) {
                 LxNotificationService.error("Impossible de trouver les informations !");
                 $location.url("/dashboard");
-                tabContainer.remove(tab);
+                TabContainer.remove(tab);
                 return 0;
             }
         }
@@ -4761,7 +4617,7 @@ var InterventionCtrl = function(Description, Signalement, ContextMenu, $window, 
                 intervention = new Intervention(resp);
                 postSave(options, resp, function(err) {
                     if (!err) {
-                        tabContainer.close(tab);
+                        TabContainer.close(tab);
                     }
                     $scope.saveInter = saveInter;
                 })
@@ -4856,14 +4712,163 @@ var InterventionCtrl = function(Description, Signalement, ContextMenu, $window, 
 
 angular.module('edison').controller('InterventionController', InterventionCtrl);
 
+var LpaController = function(openPost, socket, ContextMenu, $location, $window, TabContainer, edisonAPI, $rootScope, LxProgressService, LxNotificationService, FlushList) {
+    "use strict";
+    var _this = this
+    var tab = TabContainer.getCurrentTab();
+    tab.setTitle('LPA')
+    _this.search = $location.search();
+    _this.contextMenu = new ContextMenu('intervention')
+
+    _this.loadData = function(prevChecked) {
+        LxProgressService.circular.show('#5fa2db', '#globalProgress');
+        edisonAPI.compta.lpa($location.search()).then(function(result) {
+            _.each(result.data, function(sst) {
+                sst.list = new FlushList(sst.list, prevChecked);
+                if (_this.search.d) {
+                    _this.checkArtisan(sst);
+                }
+                _this.reloadList(sst)
+            })
+            $rootScope.lpa = result.data
+            LxProgressService.circular.hide()
+        })
+    }
+
+
+    _this.rowRightClick = function($event, inter) {
+        edisonAPI.intervention.get(inter.id, {
+                populate: 'sst'
+            })
+            .then(function(resp) {
+                _this.contextMenu.setData(resp.data);
+                _this.contextMenu.setPosition($event.pageX, $event.pageY + 200)
+                _this.contextMenu.open();
+            })
+    }
+
+
+
+    if (!$rootScope.lpa)
+        _this.loadData()
+    _this.checkArtisan = function(sst) {
+
+        sst.checked = !sst.checked
+        _.each(sst.list.getList(), function(e) {
+            e.checked = sst.checked;
+        })
+    }
+    _this.updateNumeroCheque = function(index) {
+        var base = $rootScope.lpa[index].numeroCheque;
+        if (base) {
+            for (var i = index; i < $rootScope.lpa.length; i++) {
+                if ($rootScope.lpa[i].list.getList()[0].mode === 'CHQ') {
+                    $rootScope.lpa[i].numeroCheque = ++base
+                }
+            };
+        }
+    }
+    _this.flush = function() {
+        var rtn = [];
+
+        var lpa = [];
+        _.each(_.cloneDeep($rootScope.lpa), function(e) {
+            e.list.__list = _.filter(e.list.__list, 'checked', true);
+            if (e.list.__list.length) {
+                lpa.push(e);
+            }
+        })
+        console.log(lpa);
+        LxProgressService.circular.show('#5fa2db', '#globalProgress');
+        edisonAPI.compta.flush(lpa).then(function(resp) {
+            edisonAPI.compta.flushMail(lpa).then(function(resp) {
+                console.log('yayaya')
+            });
+        })
+    }
+
+    socket.on('intervention_db_flushMail', function(data) {
+        if (data === 100) {
+            $rootScope.globalProgressCounter = "";
+            LxProgressService.circular.hide();
+            _this.reloadLPA()
+        } else {
+            $rootScope.globalProgressCounter = data + '%';
+        }
+
+    })
+
+    _this.selectToggle = function(artisan, item) {
+        if (this.search.d) {
+            return false;
+        }
+        item.checked = !item.checked;
+        _this.reloadList(artisan)
+    }
+    _this.reloadList = function(artisan) {
+
+        artisan.total = artisan.list.getTotal()
+        artisan.total = artisan.list.getTotal(true)
+        artisan.total = artisan.list.getTotal()
+    }
+    _this.reloadLPA = function() {
+        var rtn = [];
+        _.each($rootScope.lpa, function(sst) {
+            _.each(sst.list.getList(), function(e) {
+                if (e.checked) {
+                    rtn.push(e.id);
+                }
+            })
+        })
+        _this.loadData(rtn)
+    }
+
+    _this.clickTrigger = function(elem) {
+        window.setTimeout(function() {
+            angular.element(elem).trigger('click');
+        }, 0)
+    }
+
+    _this.onFileUpload = function(file) {
+        console.log('swad')
+        var ids = _($rootScope.lpa).map(_.partial(_.pick, _, 'numeroCheque', 'id')).value();
+        LxProgressService.circular.show('#5fa2db', '#globalProgress');
+        edisonAPI.file.uploadScans(file, {
+                ids: ids,
+                date: _this.search.d
+            }).then(function(resp) {
+                LxProgressService.circular.hide()
+                console.log('==>', resp);
+            })
+            //_.each($rootScope.lpa, function(sst) {
+            /*    _.each(sst.list.getList(), function(e) {
+                    if (e.checked) {
+                        rtn.push(e.id);
+                    }
+                })
+            })
+            _this.loadData(rtn)*/
+    }
+
+    _this.print = function(type) {
+        openPost('/api/intervention/print', {
+            type: type,
+            data: $rootScope.lpa
+        });
+    }
+}
+
+
+angular.module('edison').controller('LpaController', LpaController);
+
 angular.module('edison').controller('ListeArtisanController', _.noop);
 
 angular.module('edison').controller('ListeDevisController', _.noop);
 
 angular.module('edison').controller('ListeInterventionController', _.noop);
 
-var SearchController = function(edisonAPI, tabContainer, $routeParams, $location, LxProgressService) {
-    var tab = tabContainer.getCurrentTab();
+var SearchController = function(edisonAPI, TabContainer, $routeParams, $location, LxProgressService) {
+    var tab = TabContainer.getCurrentTab();
     tab.setTitle('Search')
     var _this = this;
     LxProgressService.circular.show('#5fa2db', '#globalProgress');
@@ -4878,10 +4883,10 @@ var SearchController = function(edisonAPI, tabContainer, $routeParams, $location
 
 angular.module('edison').controller('SearchController', SearchController);
 
-var StatsController = function(DateSelect, tabContainer, $routeParams, edisonAPI, $rootScope, $scope, $location, LxProgressService, socket) {
+var StatsController = function(DateSelect, TabContainer, $routeParams, edisonAPI, $rootScope, $scope, $location, LxProgressService, socket) {
     "use strict";
     var _this = this;
-    _this.tab = tabContainer.getCurrentTab();
+    _this.tab = TabContainer.getCurrentTab();
     _this.tab.setTitle('Stats');
 
 
@@ -4963,10 +4968,10 @@ var StatsController = function(DateSelect, tabContainer, $routeParams, edisonAPI
 }
 angular.module('edison').controller('StatsController', StatsController);
 
-var CommissionsController = function(DateSelect, tabContainer, $routeParams, edisonAPI, $rootScope, $scope, $location, LxProgressService, socket) {
+var CommissionsController = function(DateSelect, TabContainer, $routeParams, edisonAPI, $rootScope, $scope, $location, LxProgressService, socket) {
     "use strict";
     var _this = this;
-    _this.tab = tabContainer.getCurrentTab();
+    _this.tab = TabContainer.getCurrentTab();
     _this.tab.setTitle('Coms.');
 
     _this.xcalc = function(e) {
@@ -5031,10 +5036,10 @@ var CommissionsController = function(DateSelect, tabContainer, $routeParams, edi
 }
 angular.module('edison').controller('CommissionsController', CommissionsController);
 
-var editCombos = function(tabContainer, edisonAPI, $rootScope, $scope, $location, LxNotificationService, socket) {
+var editCombos = function(TabContainer, edisonAPI, $rootScope, $scope, $location, LxNotificationService, socket) {
     "use strict";
     var _this = this;
-    _this.tab = tabContainer.getCurrentTab();
+    _this.tab = TabContainer.getCurrentTab();
     _this.tab.setTitle('Combos');
 
 
@@ -5169,10 +5174,10 @@ var editCombos = function(tabContainer, edisonAPI, $rootScope, $scope, $location
 }
 angular.module('edison').controller('editCombos', editCombos);
 
-var editComptes = function(tabContainer, edisonAPI, $rootScope, $scope, $location, LxNotificationService, socket) {
+var editComptes = function(TabContainer, edisonAPI, $rootScope, $scope, $location, LxNotificationService, socket) {
     "use strict";
     var _this = this;
-    _this.tab = tabContainer.getCurrentTab();
+    _this.tab = TabContainer.getCurrentTab();
     _this.tab.setTitle('grand Comptes');
 
     edisonAPI.compte.list().then(function(resp) {
@@ -5195,10 +5200,10 @@ var editComptes = function(tabContainer, edisonAPI, $rootScope, $scope, $locatio
 
 angular.module('edison').controller('editComptes', editComptes);
 
-var editProducts = function(tabContainer, edisonAPI, $rootScope, $scope, $location, LxNotificationService, socket) {
+var editProducts = function(TabContainer, edisonAPI, $rootScope, $scope, $location, LxNotificationService, socket) {
     "use strict";
     var _this = this;
-    _this.tab = tabContainer.getCurrentTab();
+    _this.tab = TabContainer.getCurrentTab();
     _this.tab.setTitle('Produits');
 
 
@@ -5234,10 +5239,10 @@ var editProducts = function(tabContainer, edisonAPI, $rootScope, $scope, $locati
 }
 angular.module('edison').controller('editProducts', editProducts);
 
-var editUsers = function(tabContainer, edisonAPI, $rootScope, $scope, $location, LxNotificationService, socket) {
+var editUsers = function(TabContainer, edisonAPI, $rootScope, $scope, $location, LxNotificationService, socket) {
     "use strict";
     var _this = this;
-    _this.tab = tabContainer.getCurrentTab();
+    _this.tab = TabContainer.getCurrentTab();
     _this.tab.setTitle('Utilisateurs');
 
 
@@ -5261,10 +5266,10 @@ var editUsers = function(tabContainer, edisonAPI, $rootScope, $scope, $location,
 }
 angular.module('edison').controller('editUsers', editUsers);
 
-var telephoneMatch = function(tabContainer, edisonAPI, $rootScope, $scope, $location, LxProgressService, socket) {
+var telephoneMatch = function(TabContainer, edisonAPI, $rootScope, $scope, $location, LxProgressService, socket) {
     "use strict";
     var _this = this;
-    _this.tab = tabContainer.getCurrentTab();
+    _this.tab = TabContainer.getCurrentTab();
     _this.tab.setTitle('TelMatch');
     $scope.__txt_tel = $rootScope.__txt_tel
     $rootScope.getTelMatch = function() {

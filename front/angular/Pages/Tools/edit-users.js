@@ -1,7 +1,7 @@
-var editUsers = function(tabContainer, edisonAPI, $rootScope, $scope, $location, LxNotificationService, socket) {
+var editUsers = function(TabContainer, edisonAPI, $rootScope, $scope, $location, LxNotificationService, socket) {
     "use strict";
     var _this = this;
-    _this.tab = tabContainer.getCurrentTab();
+    _this.tab = TabContainer.getCurrentTab();
     _this.tab.setTitle('Utilisateurs');
 
 

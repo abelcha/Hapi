@@ -1,10 +1,10 @@
-var DevisCtrl = function(edisonAPI, $scope, $rootScope, $location, $routeParams, LxProgressService, LxNotificationService, tabContainer, config, dialog, devisPrm, Devis) {
+var DevisCtrl = function(edisonAPI, $scope, $rootScope, $location, $routeParams, LxProgressService, LxNotificationService, TabContainer, config, dialog, devisPrm, Devis) {
     "use strict";
     var _this = this;
     _this.config = config;
     _this.dialog = dialog;
     _this.moment = moment;
-    var tab = tabContainer.getCurrentTab();
+    var tab = TabContainer.getCurrentTab();
     if (!tab.data) {
         var devis = new Devis(devisPrm.data)
         tab.setData(devis);
@@ -17,7 +17,7 @@ var DevisCtrl = function(edisonAPI, $scope, $rootScope, $location, $routeParams,
             if (!devis) {
                 LxNotificationService.error("Impossible de trouver les informations !");
                 $location.url("/dashboard");
-                tabContainer.remove(tab);
+                TabContainer.remove(tab);
                 return 0;
             }
         }
@@ -29,7 +29,7 @@ var DevisCtrl = function(edisonAPI, $scope, $rootScope, $location, $routeParams,
     var closeTab = function(err) {
         console.log('=========>', err)
         if (!err)
-            tabContainer.close(tab);
+            TabContainer.close(tab);
     }
 
     _this.saveDevis = function(options) {

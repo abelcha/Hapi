@@ -2,7 +2,6 @@ angular.module('edison').factory('Address', function() {
     "use strict";
 
     var Address = function(place, copyContructor) {
-        console.log('-->', copyContructor)
         if (place.lat && place.lng) {
             this.lt = place.lat;
             this.lg = place.lng;

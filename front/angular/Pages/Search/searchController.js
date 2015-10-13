@@ -1,5 +1,5 @@
-var SearchController = function(edisonAPI, tabContainer, $routeParams, $location, LxProgressService) {
-    var tab = tabContainer.getCurrentTab();
+var SearchController = function(edisonAPI, TabContainer, $routeParams, $location, LxProgressService) {
+    var tab = TabContainer.getCurrentTab();
     tab.setTitle('Search')
     var _this = this;
     LxProgressService.circular.show('#5fa2db', '#globalProgress');

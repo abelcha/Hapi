@@ -1,4 +1,4 @@
- var Controller = function($timeout, tabContainer, FiltersFactory, user, ContextMenu, LxProgressService, edisonAPI, DataProvider, $routeParams, $location, $rootScope, $filter, config, ngTableParams) {
+ var Controller = function($timeout, TabContainer, FiltersFactory, user, ContextMenu, LxProgressService, edisonAPI, DataProvider, $routeParams, $location, $rootScope, $filter, config, ngTableParams) {
      var _this = this;
      LxProgressService.circular.show('#5fa2db', '#globalProgress');
      var currentFilter;
@@ -39,7 +39,7 @@
          _this.smallWin = window.innerWidth < 1400
      })
 
-     _this.tab = tabContainer.getCurrentTab();
+     _this.tab = TabContainer.getCurrentTab();
      _this.tab.hash = currentHash;
      _this.config = config;
      var title = currentFilter ? currentFilter.long_name : _this.model;
@@ -109,7 +109,7 @@
 
      var lastChange = 0;
      $rootScope.$on(_this.model.toUpperCase() + '_CACHE_LIST_CHANGE', function(event, newData) {
-         if (tabContainer.getCurrentTab() && _this.tab.fullUrl === tabContainer.getCurrentTab().fullUrl) {
+         if (TabContainer.getCurrentTab() && _this.tab.fullUrl === TabContainer.getCurrentTab().fullUrl) {
              dataProvider.applyFilter(currentFilter, _this.tab.hash, _this.customFilter);
              _this.tableParams.reload();
              //_this.tableParams.orderBy(_this.tableParams.$params.sorting)
@@ -144,7 +144,7 @@
          if (_this.contextMenu.active)
              return _this.contextMenu.close();
          if ($event.metaKey || $event.ctrlKey) {
-             tabContainer.addTab('/' + _this.model + '/' + inter.id, {
+             TabContainer.addTab('/' + _this.model + '/' + inter.id, {
                  title: ('#' + inter.id),
                  setFocus: false,
                  allowDuplicates: false
@@ -162,7 +162,7 @@
 
 
 
- angular.module('edison').directive('lineupIntervention', function($timeout, tabContainer, FiltersFactory, user, ContextMenu, LxProgressService, edisonAPI, DataProvider, $routeParams, $location, $rootScope, $filter, config, ngTableParams) {
+ angular.module('edison').directive('lineupIntervention', function($timeout, TabContainer, FiltersFactory, user, ContextMenu, LxProgressService, edisonAPI, DataProvider, $routeParams, $location, $rootScope, $filter, config, ngTableParams) {
      "use strict";
      var arg = arguments;
      return {
@@ -182,7 +182,7 @@
      }
  });
 
- angular.module('edison').directive('lineupDevis', function($timeout, tabContainer, FiltersFactory, user, ContextMenu, LxProgressService, edisonAPI, DataProvider, $routeParams, $location, $rootScope, $filter, config, ngTableParams) {
+ angular.module('edison').directive('lineupDevis', function($timeout, TabContainer, FiltersFactory, user, ContextMenu, LxProgressService, edisonAPI, DataProvider, $routeParams, $location, $rootScope, $filter, config, ngTableParams) {
      "use strict";
      var arg = arguments;
      return {
@@ -199,7 +199,7 @@
      }
  });
 
- angular.module('edison').directive('lineupArtisan', function($timeout, tabContainer, FiltersFactory, user, ContextMenu, LxProgressService, edisonAPI, DataProvider, $routeParams, $location, $rootScope, $filter, config, ngTableParams) {
+ angular.module('edison').directive('lineupArtisan', function($timeout, TabContainer, FiltersFactory, user, ContextMenu, LxProgressService, edisonAPI, DataProvider, $routeParams, $location, $rootScope, $filter, config, ngTableParams) {
      "use strict";
      var arg = arguments;
      return {

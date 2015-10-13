@@ -1,6 +1,7 @@
-var DashboardController = function(edisonAPI, $scope, $filter, tabContainer, ngTableParams, $routeParams, $location, LxProgressService) {
-    var tab = tabContainer.getCurrentTab();
-    tab.setTitle('Dashboard')
+var DashboardController = function(edisonAPI, $scope, $filter, TabContainer, ngTableParams, $routeParams, $location, LxProgressService) {
+   console.log(TabContainer)
+   // var tab = TabContainer.getCurrentTab();
+ //   tab.setTitle('Dashboard')
     var _this = this;
     //LxProgressService.circular.show('#5fa2db', '#globalProgress');
 

@@ -14,7 +14,11 @@
     <script src="/dist/all.js"></script>
 </head>
 
-<body ng-app="edison" ng-controller="MainController" style="  background: #f4f4f4 url(/img/mooning.png);" class="ng-cloak main-menu-fixed main-navbar-fixed theme-adminflare main-menu-animated" ng-class="{'mmc' : sideBarIsOpen}" ng-click="closeContextMenu();">
+<body ng-app="edison" ng-controller="MainController as vm" style="  background: #f4f4f4 url(/img/mooning.png);" class="ng-cloak main-menu-fixed main-navbar-fixed theme-adminflare main-menu-animated" ng-class="{'mmc' : sideBarIsOpen}" ng-click="closeContextMenu();">
+    <div ng-if="vm.selectedModel" style="background-color:white;top:{{vm.selectedModel.top + 35}}px;left:{{vm.selectedModel.left}}px;width:300px;z-index:999999;position:absolute">
+    <span ng-repeat="tab in vm.selectedModel.tabs" style="padding:4px"><a href="{{tab.path}}{{tab.hash ? ('#' + tab.hash) : ''}}">{{tab.path}}</a><br></span>
+    </div>
+    
     <div id="main-wrapper" ng-hide="loadingData">
         <div id="main-navbar" class="navbar navbar-inverse" role="navigation">
             <!-- Main menu toggle -->
@@ -95,7 +99,7 @@
             </drop-down>
             <drop-down title="Service Partenariat" icon="circle" open-default="displayUser.service === 'PARTENARIAT'">
                 <drop-down icon="truck" title="Artisans">
-                    <link fltr="a_all" url="/artisan/contact" icon="th-list" model="artisan" title="Repertoire"></link>
+                    <link fltr="a_all" url="/artisan/contact#informations" icon="th-list" model="artisan" title="Repertoire"></link>
                     <link fltr="a_all" icon="th-list" model="artisan" login='{{displayUser.login}}' title="Mes Artisans"></link>
                     <link fltr="a_all" icon="th-list" model="artisan" title="Tous les Artisans" no-counter="true"></link>
                     <li>
@@ -138,12 +142,16 @@
             </drop-down>
         </side-bar>
         <div class="page-header" style="background: #f4f4f4 url(/img/mooning.png);">
-            <div class="menu-tabs" style="width:{{sideBarIsOpen ? '95%' : '86%'}}">
-                <md-tabs md-selected="tabs.selectedTab" style=" margin-left: 6px;">
+            <div class="menu-tabs" style="width:100%;padding-left:40px;padding-top:9px">
+                <span id="{{model.title}}" ng-click="vm.openSubTab(model)" style="display:inline-block;margin-right:20px" ng-repeat="model in vm.tabContainer.ordered()">
+
+                <h2>{{model.title}} ({{model.tabs.length}})</h2>
+                </span>
+                <!-- <md-tabs md-selected="tabs.selectedTab" style=" margin-left: 6px;">
                     <md-tab ng-repeat="tab in tabs._tabs" ng-click="shadowClick(tab.fullUrl)" style="padding-right:8px">
                         <md-tab-label><a id="{{tab.position}}_tab" href="{{tab.fullUrl}}">{{tab.title || "•••"}} </a><span ng-if="tab.hash" style="color:black;font-size:8px">{{tab.hash}}</span> <i ng-click="tabIconClick($event, tab)" class="fa fa-remove" style="padding: 7px;"></i></md-tab-label>
                     </md-tab>
-                </md-tabs>
+                </md-tabs> -->
             </div>
             <div id="content-wrapper">
                 <div ng-view style="margin-top: 16px;">
@@ -163,7 +171,7 @@
         </div>
     </div>
     <footer class="footer sticky-footer">
-            <h2><marquee scrolldelay="60" scrollamount="14">
+        <h2><marquee scrolldelay="60" scrollamount="14">
                 <span style="display:inline;margin-right:120px" ng-repeat='e in events'>{{e.date|date:"HH'h'mm"}} - {{e.message}}</span>
             </marquee></h2>
     </footer>

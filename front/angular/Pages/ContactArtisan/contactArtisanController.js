@@ -1,4 +1,4 @@
-var ContactArtisanController = function($scope, $timeout, tabContainer, LxProgressService, FiltersFactory, ContextMenu, edisonAPI, DataProvider, $routeParams, $location, $q, $rootScope, $filter, config, ngTableParams) {
+var ContactArtisanController = function($scope, $timeout, TabContainer, LxProgressService, FiltersFactory, ContextMenu, edisonAPI, DataProvider, $routeParams, $location, $q, $rootScope, $filter, config, ngTableParams) {
     "use strict";
     var _this = this;
     _this.loadPanel = function(id) {
@@ -12,7 +12,7 @@ var ContactArtisanController = function($scope, $timeout, tabContainer, LxProgre
     _this.tbz = ['informations', 'interventions', 'historique', 'stats', 'paiements'];
     var ind = _this.tbz.indexOf($location.hash());
     $scope.selectedIndex = ind >= 0 ? ind : 0
-    _this.tab = tabContainer.getCurrentTab();
+    _this.tab = TabContainer.getCurrentTab();
 
     _this.recap = $location.url().includes('recap') ? $routeParams.sstid : undefined
 
@@ -60,7 +60,7 @@ var ContactArtisanController = function($scope, $timeout, tabContainer, LxProgre
         $rootScope.$watch('tableilter', _this.reloadData);
     */
     $rootScope.$on('ARTISAN_CACHE_LIST_CHANGE', function() {
-        if (_this.tab.fullUrl === tabContainer.getCurrentTab().fullUrl) {
+        if (_this.tab.fullUrl === TabContainer.getCurrentTab().fullUrl) {
             dataProvider.applyFilter(currentFilter, _this.tab.hash);
         }
     })
@@ -88,7 +88,7 @@ var ContactArtisanController = function($scope, $timeout, tabContainer, LxProgre
         if (_this.contextMenu.active)
             return _this.contextMenu.close();
         if ($event.metaKey || $event.ctrlKey) {
-            tabContainer.addTab('/artisan/' + inter.id, {
+            TabContainer.addTab('/artisan/' + inter.id, {
                 title: ('#' + inter.id),
                 setFocus: false,
                 allowDuplicates: false

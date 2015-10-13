@@ -1,10 +1,10 @@
-var InterventionCtrl = function(Description, Signalement, ContextMenu, $window, $timeout, $rootScope, $scope, $location, $routeParams, dialog, fourniture, LxNotificationService, LxProgressService, tabContainer, edisonAPI, Address, $q, mapAutocomplete, productsList, config, interventionPrm, Intervention, Map) {
+var InterventionCtrl = function(Description, Signalement, ContextMenu, $window, $timeout, $rootScope, $scope, $location, $routeParams, dialog, fourniture, LxNotificationService, LxProgressService, TabContainer, edisonAPI, Address, $q, mapAutocomplete, productsList, config, interventionPrm, Intervention, Map) {
     "use strict";
     var _this = this;
     _this.config = config;
     _this.dialog = dialog;
     _this.autocomplete = mapAutocomplete;
-    var tab = tabContainer.getCurrentTab();
+    var tab = TabContainer.getCurrentTab();
 
     if (!tab.data) {
         var intervention = new Intervention(interventionPrm.data)
@@ -26,7 +26,7 @@ var InterventionCtrl = function(Description, Signalement, ContextMenu, $window, 
             if (!intervention) {
                 LxNotificationService.error("Impossible de trouver les informations !");
                 $location.url("/dashboard");
-                tabContainer.remove(tab);
+                TabContainer.remove(tab);
                 return 0;
             }
         }
@@ -153,7 +153,7 @@ var InterventionCtrl = function(Description, Signalement, ContextMenu, $window, 
                 intervention = new Intervention(resp);
                 postSave(options, resp, function(err) {
                     if (!err) {
-                        tabContainer.close(tab);
+                        TabContainer.close(tab);
                     }
                     $scope.saveInter = saveInter;
                 })

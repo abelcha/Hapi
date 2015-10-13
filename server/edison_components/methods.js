@@ -1,13 +1,13 @@
 module.exports = {
     whoAmI: function(req, res) {
         var rtn = req.session.d;
-        rtn.tabContainer = undefined;
+        rtn.TabContainer = undefined;
         res.json(rtn);
     },
     setSessionData: function(req, res) {
         try {
-            JSON.parse(req.query.tabContainer);
-            req.session.tabContainer = req.query.tabContainer;
+            JSON.parse(req.query.TabContainer);
+            req.session.TabContainer = req.query.TabContainer;
             res.sendStatus(200);
         } catch (e) {
             res.send(400, "Invalid JSON tabcontainer");
@@ -15,10 +15,10 @@ module.exports = {
     },
     getSessionData: function(req, res) {
         return res.sendStatus(500);
-        if (req.session.tabContainer && req.session.tabContainer.length > 2) {
-            res.json(JSON.parse(req.session.tabContainer))
+        if (req.session.TabContainer && req.session.TabContainer.length > 2) {
+            res.json(JSON.parse(req.session.TabContainer))
         } else {
-            res.status(410).send("Session has no tabContainer");
+            res.status(410).send("Session has no TabContainer");
         }
     },
     ping: function(req, res) {

@@ -1,7 +1,7 @@
-var AvoirsController = function(tabContainer, openPost, edisonAPI, $rootScope, LxProgressService, LxNotificationService, FlushList) {
+var AvoirsController = function(TabContainer, openPost, edisonAPI, $rootScope, LxProgressService, LxNotificationService, FlushList) {
     "use strict";
     var _this = this
-    var tab = tabContainer.getCurrentTab();
+    var tab = TabContainer.getCurrentTab();
     tab.setTitle('Avoirs')
     _this.loadData = function(prevChecked) {
         LxProgressService.circular.show('#5fa2db', '#globalProgress');

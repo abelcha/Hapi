@@ -1,4 +1,4 @@
-var ArtisanCtrl = function($timeout, $rootScope, $scope, edisonAPI, $location, $routeParams, ContextMenu, LxProgressService, LxNotificationService, tabContainer, config, dialog, artisanPrm, Artisan) {
+var ArtisanCtrl = function($timeout, $rootScope, $scope, edisonAPI, $location, $routeParams, ContextMenu, LxProgressService, LxNotificationService, TabContainer, config, dialog, artisanPrm, Artisan) {
     "use strict";
     var _this = this;
     _this.config = config;
@@ -6,9 +6,8 @@ var ArtisanCtrl = function($timeout, $rootScope, $scope, edisonAPI, $location, $
     _this.moment = moment;
     _this.contextMenu = new ContextMenu('artisan')
 
-    var tab = tabContainer.getCurrentTab();
+    var tab = TabContainer.getCurrentTab();
     if (!tab.data) {
-        console.log('-->', artisanPrm.data)
         var artisan = new Artisan(artisanPrm.data)
         tab.setData(artisan);
         if ($routeParams.id.length > 12) {
@@ -20,7 +19,7 @@ var ArtisanCtrl = function($timeout, $rootScope, $scope, edisonAPI, $location, $
             if (!artisan) {
                 LxNotificationService.error("Impossible de trouver les informations !");
                 $location.url("/dashboard");
-                tabContainer.remove(tab);
+                TabContainer.remove(tab);
                 return 0;
             }
         }
@@ -34,9 +33,9 @@ var ArtisanCtrl = function($timeout, $rootScope, $scope, edisonAPI, $location, $
                 return false
             } else if (options.contrat) {
                 artisan = new Artisan(resp);
-                artisan.envoiContrat.bind(resp)(tabContainer.close);
+                artisan.envoiContrat.bind(resp)(TabContainer.close);
             } else {
-                tabContainer.close(tab);
+                TabContainer.close(tab);
             }
         })
     }
@@ -76,7 +75,9 @@ var ArtisanCtrl = function($timeout, $rootScope, $scope, edisonAPI, $location, $
             console.log('==>', artisan.file)
         }, console.log)
     }
-    _this.loadFilesList();
+    if (artisan.id) {
+        _this.loadFilesList();
+    }
 
     _this.addComment = function() {
         artisan.comments.push({

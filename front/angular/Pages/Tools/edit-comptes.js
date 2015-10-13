@@ -1,7 +1,7 @@
-var editComptes = function(tabContainer, edisonAPI, $rootScope, $scope, $location, LxNotificationService, socket) {
+var editComptes = function(TabContainer, edisonAPI, $rootScope, $scope, $location, LxNotificationService, socket) {
     "use strict";
     var _this = this;
-    _this.tab = tabContainer.getCurrentTab();
+    _this.tab = TabContainer.getCurrentTab();
     _this.tab.setTitle('grand Comptes');
 
     edisonAPI.compte.list().then(function(resp) {

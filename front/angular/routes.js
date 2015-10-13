@@ -1,41 +1,3 @@
-var getDevisList = function(edisonAPI) {
-    "use strict";
-    return edisonAPI.devis.list({
-        cache: true
-    });
-};
-
-var getArtisanList = function(edisonAPI) {
-    "use strict";
-    return edisonAPI.artisan.list({
-        cache: true
-    });
-};
-
-var getInterList = function(edisonAPI) {
-    "use strict";
-    return edisonAPI.intervention.list({
-        cache: true
-    });
-};
-var getArtisanList = function(edisonAPI) {
-    "use strict";
-    return edisonAPI.artisan.list({
-        cache: true
-    });
-};
-
-
-var getArtisan = function($route, $q, edisonAPI) {
-    "use strict";
-    var id = $route.current.params.id;
-    if (id.length > 10) {
-        return edisonAPI.artisan.getTmp(id);
-    } else {
-        return edisonAPI.artisan.get(id);
-    }
-}
-
 var getIntervention = function($route, $q, edisonAPI) {
     "use strict";
     var id = $route.current.params.id;
@@ -65,6 +27,15 @@ var getDevis = function($route, $q, edisonAPI) {
         return edisonAPI.devis.get(id);
     }
 };
+var getArtisan = function($route, $q, edisonAPI) {
+    "use strict";
+    var id = $route.current.params.id;
+    if (id.length > 10) {
+        return edisonAPI.artisan.getTmp(id);
+    } else {
+        return edisonAPI.artisan.get(id);
+    }
+}
 
 angular.module('edison').config(function($routeProvider, $locationProvider) {
     "use strict";
@@ -166,7 +137,7 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
             controller: "ArtisanController",
             controllerAs: "vm",
             resolve: {
-                artisanPrm: getArtisan,
+                artisanPrm: getIntervention,
             }
         })
         .when('/dashboard', {
@@ -229,7 +200,7 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
             controller: "CommissionsController",
             controllerAs: "vm",
             reloadOnSearch: false
-            
+
         })
         .when('/stats/:type', {
             templateUrl: "Pages/Stats/stats.html",

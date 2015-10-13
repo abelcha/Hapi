@@ -1,7 +1,7 @@
-var LpaController = function(openPost, socket, ContextMenu, $location, $window, tabContainer, edisonAPI, $rootScope, LxProgressService, LxNotificationService, FlushList) {
+var LpaController = function(openPost, socket, ContextMenu, $location, $window, TabContainer, edisonAPI, $rootScope, LxProgressService, LxNotificationService, FlushList) {
     "use strict";
     var _this = this
-    var tab = tabContainer.getCurrentTab();
+    var tab = TabContainer.getCurrentTab();
     tab.setTitle('LPA')
     _this.search = $location.search();
     _this.contextMenu = new ContextMenu('intervention')

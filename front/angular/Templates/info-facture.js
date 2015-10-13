@@ -17,7 +17,6 @@
                  });
              }
              edisonAPI.compte.list().then(function(resp) {
-                console.log(resp.data)
                  scope.grndComptes = resp.data
              })
 
