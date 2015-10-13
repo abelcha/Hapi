@@ -2723,7 +2723,7 @@ module.exports = {
                     "</header>"
             },
             envoiFacturier: function() {
-                return "<style>  header { margin-top: -90px; } header p { margin-bottom: 5px!important} p { line-height: 19px; margin-bottom: 20px;}</style>" +
+                return "<style> .logo { width: 7cm; margin-top: 50px; } header { margin-top: -90px; } header p { margin-bottom: 5px!important} p { line-height: 19px; margin-bottom: 20px;}</style>" +
 
                 "<p style='font-size: 10px; position: absolute; width: 6cm; text-align: center; top: 95px; left: 13.3cm;'>{{nomSociete}} - {{id}}</p>" +
                 "<p> Cher Monsieur {{representant.nom}} </p>" +
