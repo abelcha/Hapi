@@ -1415,7 +1415,7 @@ module.exports = {
         title: 'Reglement Client',
         action: "validerReglement",
         hide: function(inter) {
-            return !(app_session.root ||  app_session.service === 'COMPTABILITE') ||  inter.status === 'ANN';
+            return !(app_session.root ||  app_session.service === 'COMPTABILITE') ||  (inter.status !== 'ENC' && inter.status !== 'VRF');
         }
     }, {
         title: 'Paiement SST',
@@ -1451,7 +1451,7 @@ module.exports = {
         title: "Annuler",
         action: 'annulation',
         hide: function(inter) {
-            return inter.status === 'ANN' || inter.status === 'VRF'
+            return !inter.id || inter.status === 'ANN' || inter.status === 'VRF'
         }
     }, {
         title: "Recouvrement",

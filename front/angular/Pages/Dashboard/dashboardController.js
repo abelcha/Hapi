@@ -1,4 +1,4 @@
-var DashboardController = function(edisonAPI, tabContainer, $routeParams, $location, LxProgressService) {
+var DashboardController = function(edisonAPI, $scope, $filter, tabContainer, ngTableParams, $routeParams, $location, LxProgressService) {
     var tab = tabContainer.getCurrentTab();
     tab.setTitle('Dashboard')
     var _this = this;
@@ -7,7 +7,11 @@ var DashboardController = function(edisonAPI, tabContainer, $routeParams, $locat
     _this.openLink = function(link) {
         $location.url(link)
     }
+    edisonAPI.stats.day().then(function(resp) {
+
+        _this.statsTelepro = resp.data;
+
+    })
 }
 
 angular.module('edison').controller('DashboardController', DashboardController);
-

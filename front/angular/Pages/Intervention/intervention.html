@@ -231,8 +231,8 @@
         </div>
     </div>
     <div class="dropdown-menu--no-conflicts dropdown-menu--right dropdown__menu--is-dropped" style="margin-top: -215px;width: auto; height: auto; opacity: 1;" ng-style="vm.contextMenu.style">
-        <div class="dropdown-menu__content ng-scope">
-            <ul class="ng-scope">
+        <div class="dropdown-menu__content">
+            <ul >
                 <li ng-hide="item.hidden" ng-repeat="item in vm.contextMenu.list">
                     <a ng-mouseover="vm.contextMenu.closeSub()" ng-if="!item.subs" class="dropdown-link" ng-style="item.style" tabindex="0" ng-click="vm.contextMenu.close();vm.contextMenu.click(item)">{{item.title}}</a>
                     <a ng-style="item.style" ng-mouseover="vm.contextMenu.openSub(200)" ng-if="item.subs" class="dropdown-link" tabindex="0"><i no-margin align-left class="fa fa-angle-right"></i>{{item.title}}</a>

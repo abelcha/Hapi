@@ -70,7 +70,7 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
     "use strict";
     $routeProvider
         .when('/', {
-            redirectTo: '/intervention/list',
+            redirectTo: '/dashboard',
         })
         .when('/intervention/list', {
             templateUrl: "Pages/ListeInterventions/listeInterventions.html",
@@ -172,6 +172,7 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
         .when('/dashboard', {
             controller: 'DashboardController',
             templateUrl: "Pages/Dashboard/dashboard.html",
+            controllerAs: "vm",
         })
         .when('/search/:query', {
             templateUrl: "Pages/Search/search.html",

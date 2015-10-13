@@ -145,7 +145,8 @@
             remarque: 'PAS DE REMARQUES',
             modeReglement: 'CH',
             client: {
-                civilite: 'M.'
+                civilite: 'M.',
+                telephone:{}
             },
             facture: {
 
@@ -156,6 +157,9 @@
             compta: {
                 paiement: {
 
+                },
+                reglement:{
+                    
                 }
             },
             reglementSurPlace: true,

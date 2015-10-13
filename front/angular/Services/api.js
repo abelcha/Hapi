@@ -28,6 +28,9 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
         stats: {
             telepro: function() {
                 return $http.get('/api/stats/telepro');
+            },
+            day: function() {
+                return $http.get('/api/stats/day');
             }
         },
         users: {
@@ -41,9 +44,9 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
                 return $http.get('/api/user/list');
             }
         },
-        bfm:{
-            get:function() {
-                 return $http.get('/api/bfm');
+        bfm: {
+            get: function() {
+                return $http.get('/api/bfm');
             }
         },
         compta: {
@@ -223,7 +226,7 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
                     file: file
                 })
             },
-             getFiles: function(id) {
+            getFiles: function(id) {
                 return $http({
                     method: 'GET',
                     url: "/api/artisan/" + id + "/getFiles"

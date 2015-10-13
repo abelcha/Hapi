@@ -66,7 +66,6 @@ module.exports = function(req, res) {
             }
         }
 
-
         var rtn = {};
         db.model('user').find({
                 service: 'INTERVENTION',
@@ -80,10 +79,8 @@ module.exports = function(req, res) {
                         rtn[usr.login][fltr] = xfind(fltr, usr.login)
                     })
                 })
-                console.log(rtn)
+                res.json(rtn);
             })
-            // console.log('-->', err, resp)
-        res.send('ok')
     })
 
 
