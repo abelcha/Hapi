@@ -9,16 +9,14 @@ module.exports = function(schema) {
         fn: function(artisan, req, res) {
             var textTemplate = requireLocal('config/textTemplate.js');
             var params = {
-                address: artisan.address,
-                dest: artisan.representant,
+                sst: artisan,
                 text: _.template(textTemplate.lettre.artisan.envoiFacturier())(artisan),
                 title: ""
             }
-            console.log(params.text)
             if (req.query.html) {
-                res.send(PDF('letter', params).getHTML())
+                res.send(PDF('sst-letter', params).getHTML())
             } else {
-                PDF('letter', params).buffer(function(err, resp) {
+                PDF('sst-letter', params).buffer(function(err, resp) {
                     res.pdf(resp);
                 })
             }
