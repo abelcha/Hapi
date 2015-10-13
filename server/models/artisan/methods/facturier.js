@@ -14,6 +14,7 @@ module.exports = function(schema) {
                 text: _.template(textTemplate.lettre.artisan.envoiFacturier())(artisan),
                 title: ""
             }
+            console.log(params.text)
             if (req.query.html) {
                 res.send(PDF('letter', params).getHTML())
             } else {
@@ -42,19 +43,6 @@ module.exports = function(schema) {
                     mailBcc: envProd ? (req.session.email ||  'contact@edison-services.fr') : undefined,
                     mailReply: (req.session.email ||  'contact@edison-services.fr')
                 }
-
-                /*                var textTemplate = requireLocal('config/textTemplate.js');
-                                var txt = _.template(textTemplate.lettre.artisan.rappelContrat())(artisan);
-
-                                mail.send({
-                                    From: "intervention@edison-services.fr",
-                                    ReplyTo: communication.mailReply,
-                                    To: communication.mailDest,
-                                    Bcc: communication.mailBcc,
-                                    Subject: "",
-                                    HtmlBody: txt.replaceAll('\n', '<br>'),
-                                }).then(function() {
-                                }, reject)*/
                 artisan.save().then(resolve, reject)
             })
         }
