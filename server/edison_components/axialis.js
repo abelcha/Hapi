@@ -14,6 +14,12 @@ var request = function(query) {
 }
 
 module.exports = {
+    info: function(req, res) {
+        if (req.query.api_key !== 'F8v0x13ftadh89rm0e9x18b62ZqgEl47') {
+            return res.sendStatus(401)
+        }
+        console.log('dataaxialis', req.body, req.query, req.params);
+    },
     callback: function(req, res) {
         console.log('callback')
 

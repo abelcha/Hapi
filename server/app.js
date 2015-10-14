@@ -62,6 +62,7 @@ global.isWorker = false;
 
 new edison.timer();
 
+app.all('/api/call/:call_id', edison.axialis.info)
 app.get('/api/client/:id/svi/contact', edison.axialis.contact)
 app.get('/api/client/:id/svi/callback', edison.axialis.callback)
 

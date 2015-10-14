@@ -121,6 +121,9 @@ module.exports = function(schema) {
             return new Promise(function(resolve, reject) {
 
                 var inter = req.body.data
+                if (!inter.reglementSurPlace) {
+                    inter.facture = inter.client;
+                }
                 var f = inter.facture;
                 if (!f.email ||  !f.nom || !f.address.r || !f.address.v ||  !f.address.cp || !f.address.n) {
                     return reject('Les coordonées de facturations sont incompletes')
