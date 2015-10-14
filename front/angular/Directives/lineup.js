@@ -22,7 +22,7 @@
                      return true
                  }
                  if (_this.tableParams) {
-                     dataProvider.applyFilter(currentFilter, _this.tab.hash, _this.customFilter);
+                     dataProvider.applyFilter({}, _this.tab.hash, _this.customFilter);
                      _this.tableParams.reload();
                  }
              }
@@ -95,7 +95,9 @@
              getData: function($defer, params) {
                  actualiseUrl(params.filter(), params.page())
                  var data = dataProvider.filteredData;
-                 data = $filter('tableFilter')(data, params.filter());
+                 if (!_this.embedded) {
+                     data = $filter('tableFilter')(data, params.filter());
+                 }
                  _this.currentFilter = _.clone(params.filter());
                  params.total(data.length);
                  data = $filter('orderBy')(data, params.orderBy());
