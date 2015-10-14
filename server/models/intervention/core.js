@@ -113,7 +113,7 @@
             curr.litige.closedBy = session.login;
         }
 
-        if (curr.artisan.id && curr.artisan.id !== prev.artisan.id && curr.artisan.id) {
+        if (curr.artisan && curr.artisan.id && curr.artisan.id !== prev.artisan.id) {
             db.model('artisan').findOne({
                 id: curr.artisan.id
             }).then(function(sst) {
