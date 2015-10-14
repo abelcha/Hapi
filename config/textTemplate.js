@@ -46,7 +46,7 @@ module.exports = {
                     sms += "\nMerci de prendre rdv avec le client au " + this.client.telephone.tel1;
                     sms += this.client.telephone.tel2 ? " ou au " + this.client.telephone.tel2 : "";
                 } else {
-                     sms +=  "Merci d'appeler le 09.70.17.02.01 pour joindre le client"
+                     sms +=  "Merci d'appeler le 09.70.17.02.01 pour joindre le client."
                 }
                 sms += '\n' + (user.pseudo ||  "Arnaud") + ',\n';
                 sms += "Ligne directe: " + (user.ligne ? (user.ligne.match(/.{2}|.{1,2}/g).join('.')) :  "09.72.42.30.00") + "\n";
