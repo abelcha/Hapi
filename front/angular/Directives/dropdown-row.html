@@ -18,6 +18,9 @@
                 <div ng-if="_model === 'intervention' && !data.reglementSurPlace && !data.facture.nom && !data.facture.r ">
                     <p>FACTURE À FAIRE</p>
                 </div>
+                <div ng-if="_model === 'intervention' && data.aDemarcher">
+                    <br><p>[A DEMARCHER]</p>
+                </div>
                 <p ng-if="_model === 'devis'">
                     {{produits.flagship().title}} ({{produits.flagship().pu}} €)
                 </p>
@@ -32,6 +35,9 @@
                 <p ng-if="data.devisOrigine.id">Devis <a ng-click="Devis(data).devisPreview()">{{data.devisOrigine.id}}</a> ajouté le {{data.devisOrigine.date.ajout | date:"dd/MM/yy à HH'h'mm"}} par {{data.devisOrigine.login.ajout}}
                 </p>
                 <p>Ajouté le {{data.date.ajout | date:"dd/MM/yy à HH'h'mm"}} par {{data.login.ajout}}</p>
+                
+                <p ng-if="data.date.demarchage">Demarcher le {{data.date.demarchage | date:"dd/MM/yy à HH'h'mm"}} par {{data.login.demarchage}}</p>
+
                 <p ng-if="data.date.envoi">Envoyé le {{data.date.envoi | date:"dd/MM/yy à HH'h'mm"}} par {{data.login.envoi}}</p>
                 <p ng-if="data.date.intervention">Intervention le {{data.date.intervention | date:"dd/MM/yy à HH'h'mm"}} par <a href="/artisan/{{data.sst.id}}/recap">{{data.sst.nomSociete}}</a></p>
                 <p ng-if="data.date.envoiFacture"><a ng-click="Intervention(data).facturePreview()">Facture</a> envoyé le {{data.date.envoiFacture | date:"dd/MM/yy à HH'h'mm"}} par {{data.login.envoiFacture || 'inconnu'}}</p>
@@ -41,6 +47,7 @@
                 <p ng-if="data.status === 'ANN' && data.date.annulation">Annulé le {{data.date.annulation | date:"dd/MM/yy à HH'h'mm"}} par {{data.login.annulation}} <i ng-if="data.causeAnnulation">({{config.getCauseAnnulation(data.causeAnnulation).long_name}})</i></p>
                 <p ng-if="data.litige.opened">Litige Ouvert le {{data.litige.opened | date:"dd/MM/yy à HH'h'mm"}} par {{data.litige.openedBy}} <u text-xs>({{data.litige.description}})</u></p>
                 <p ng-if="data.litige.closed">--> Fermé le {{data.litige.closed | date:"dd/MM/yy à HH'h'mm"}} par {{data.litige.closedBy}}</p>
+
                 <button ng-if="data.recouvrement.level === 1" class="btn--no-conflicts btn--m yellow btn--raised" lx-ripple>Facture Recu</button>
                 <button ng-if="data.recouvrement.level === 2" class="btn--no-conflicts btn--m red btn--raised" lx-ripple>Litige</button>
                 <button ng-if="data.recouvrement.level === 3"  class="btn--no-conflicts btn--m blue btn--raised" lx-ripple>Reglement Envoyé</button>

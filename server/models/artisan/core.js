@@ -208,5 +208,5 @@
         } catch (e) {
             __catch(e)
         }
-        return rtn;
+        return _.omit(rtn, _.isUndefined);
     }

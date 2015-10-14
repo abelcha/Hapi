@@ -219,13 +219,14 @@
                 rc: e.compta.reglement.recu ? 1 : 0,
                 ps: getPaiementArtisan(e),
                 ad: e.client.address.cp + ', ' + e.client.address.v,
+                d: e.aDemarcher && !e.sst ? 1 : undefined,
                 dm: e.login.demarchage || undefined,
                 en: e.login.envoi || undefined,
             };
         } catch (e) {
             __catch(e)
         }
-        return rtn;
+        return _.omit(rtn, _.isUndefined);
     }
 
 

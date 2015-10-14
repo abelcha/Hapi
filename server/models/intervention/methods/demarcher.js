@@ -5,6 +5,7 @@ module.exports = function(schema) {
         findBefore: true,
         method: 'POST',
         fn: function(inter, req, res) {
+            var _ = require('lodash')
             return new Promise(function(resolve, reject) {
                 inter.aDemarcher = true;
                 inter.date.demarchage = new Date();

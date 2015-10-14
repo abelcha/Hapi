@@ -46,7 +46,8 @@
         var config = requireLocal('config/dataList')
         var d = requireLocal('config/dates.js')
         var ms = require('milliseconds')
-        return {
+        var _ = require('lodash')
+        var rtn = {
             da: d(e.date.ajout),
             t: e.login.ajout,
             c: e.categorie,
@@ -60,6 +61,8 @@
             ev: e.historique.length,
             pa: e.prixAnnonce,
         };
+        return _.omit(rtn, _.isUndefined);
+
     }
 
 
