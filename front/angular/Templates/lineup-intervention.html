@@ -1,6 +1,6 @@
 <div>
     <div class="shadow-box listeInterventions" ng-init="rl = (routeParamsFilter === 'relanceClient')">
-        <table style="background:white;cursor:pointer" ng-table="tableParams" class="table table-bordered table-hover table-hover table-xstriped" id="table-list" show-filter="embedded">
+        <table style="background:white;cursor:pointer" ng-table="tableParams" class="table table-bordered table-hover table-hover table-xstriped" id="table-list" show-filter="!embedded">
             <tbody id="tbody-list">
                 <tr data-id="{{inter.id}}" ng-repeat-start="inter in $data" ng-right-click="rowRightClick($event, inter)" ng-click="rowClick($event, inter, false)" ng-class="{
                 info : contextMenu.active && contextMenu.data.id === inter.id,
