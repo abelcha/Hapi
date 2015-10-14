@@ -8,6 +8,11 @@
             <br>
                 <textarea style="height:100%" class="form-control" ng-model="smsText" columns="1" ></textarea>
         </div>
+    <br>
+    <br>
+    <pre>
+        {{smsText.length}} Char. | {{Math.ceil(smsText.length / 160)}} credits
+    </pre>
     </md-dialog-content>
     <div class="md-actions" layout="row">
         <md-button ng-click="answer(true);" class="md-primary black-text">

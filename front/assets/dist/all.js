@@ -2037,7 +2037,7 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
                 })
             },
             send: function(params) {
-                return $http.post("/api/sms/__save", params)
+                return $http.post("/api/sms/send", params)
             },
 
         },
@@ -2866,7 +2866,7 @@ angular.module('edison').factory('dialog', function(openPost, $mdDialog, edisonA
         getFileAndText: function(data, text, files, cb) {
             $mdDialog.show({
                 controller: function DialogController($scope, $mdDialog) {
-
+                    $scope.Math = Math
                     $scope.xfiles = _.clone(files ||  []);
                     $scope.smsText = text;
                     $scope.answer = function(cancel) {

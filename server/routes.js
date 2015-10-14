@@ -20,6 +20,12 @@ module.exports = function(app) {
         }
     })
 
+
+    app.post('/api/sms/send', function(req, res) {
+        sms.send(req.body)
+        res.send('ok')
+    })
+
     app.get('/api/stats/telepro', edison.statsTelepro.get.bind(edison.statsTelepro));
     app.get('/api/stats/day', edison.statsDay);
 

@@ -253,7 +253,7 @@ angular.module('edison').factory('dialog', function(openPost, $mdDialog, edisonA
         getFileAndText: function(data, text, files, cb) {
             $mdDialog.show({
                 controller: function DialogController($scope, $mdDialog) {
-
+                    $scope.Math = Math
                     $scope.xfiles = _.clone(files ||  []);
                     $scope.smsText = text;
                     $scope.answer = function(cancel) {
