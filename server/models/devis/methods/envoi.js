@@ -77,13 +77,21 @@ module.exports = function(schema) {
                     } catch (e) {
                         console.log(e.stack);
                     }
+                    if (devis.historique.length == 0) {
+                        var txt = "DEVIS n°" + devis.id;
+                    } else if (devis.historique.length === 1) {
+                        var txt = "Suite au devis n°" + devis.id;
+                    } else if (devis.historique.length >= 2) {
+                        var txt = "Relance concernant le devis n°" + devis.id;
+                    }
+
                     console.log(communication);
                     mail.send({
                         From: "contact@edison-services.fr",
                         ReplyTo: communication.mailReply,
                         To: communication.mailDest,
                         Bcc: communication.mailBcc,
-                        Subject: "DEVIS n°" + devis.id,
+                        Subject: txt,
                         HtmlBody: req.body.text.replaceAll('\n', '<br>'),
                         Attachments: [{
                             Content: buffer.toString('base64'),
