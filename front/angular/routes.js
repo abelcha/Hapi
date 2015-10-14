@@ -2,9 +2,17 @@ var getIntervention = function($route, $q, edisonAPI) {
     "use strict";
     var id = $route.current.params.id;
     if ($route.current.params.d) {
-        return edisonAPI.devis.get($route.current.params.d, {
-            select: 'date login produits tva client prixAnnonce categorie -_id'
-        });
+        var deferred = $q.defer();
+        $q.all([
+            edisonAPI.devis.get($route.current.params.d, {
+                select: 'date login produits tva client prixAnnonce categorie -_id'
+            }),
+            edisonAPI.intervention.getTmp(0)
+        ]).then(function(result) {
+            deferred.resolve(_.merge(result[1], result[0]));
+        })
+        return deferred.promise;
+
     } else if (id.length > 10) {
         return edisonAPI.intervention.getTmp(id);
     } else {
