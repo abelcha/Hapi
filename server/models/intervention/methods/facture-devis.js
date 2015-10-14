@@ -121,7 +121,7 @@ module.exports = function(schema) {
             return new Promise(function(resolve, reject) {
 
                 var inter = req.body.data
-                if (!inter.reglementSurPlace) {
+                if (inter.reglementSurPlace) {
                     inter.facture = inter.client;
                 }
                 var f = inter.facture;
