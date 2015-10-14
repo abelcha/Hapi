@@ -265,7 +265,7 @@ angular.module('edison')
         Intervention.prototype.envoi = function(cb) {
             var _this = this;
             var defaultText = textTemplate.sms.intervention.envoi.bind(_this)(user);
-            dialog.getFileAndText(_this, defaultText, _this.files, function(err, text, file) {
+            dialog.envoiIntervention(_this, defaultText, function(err, text, file) {
                 if (err)
                     return cb(err)
                 LxProgressService.circular.show('#5fa2db', '#globalProgress');

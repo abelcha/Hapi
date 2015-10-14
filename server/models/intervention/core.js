@@ -146,7 +146,8 @@
             modeReglement: 'CH',
             client: {
                 civilite: 'M.',
-                telephone:{}
+                telephone:{},
+                address:{}
             },
             facture: {
 

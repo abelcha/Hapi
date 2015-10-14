@@ -166,7 +166,6 @@ angular.module('edison').controller('MainController', function($timeout, LxNotif
 
     $rootScope.closeContextMenu = function() {
         _this.selectedModel = null
-        console.log('close')
         $rootScope.$broadcast('closeContextMenu');
     }
 
@@ -181,8 +180,7 @@ angular.module('edison').controller('MainController', function($timeout, LxNotif
         model.left = $('#' + model.title).offset().left;
         $timeout(function() {
             _this.selectedModel = model;
-        }, 100)
-        console.log('open')
+        }, 20)
     }
 
     this.tabContainer = TabContainer;
@@ -1526,6 +1524,7 @@ angular.module('edison').factory('Tab', function() {
         this.date = new Date;
     }
     Tab.prototype.setTitle = function(title) {
+        this.title = title
         return this;
     };
     Tab.prototype.setData = function(data) {
@@ -2882,6 +2881,23 @@ angular.module('edison').factory('dialog', function(openPost, $mdDialog, edisonA
                 templateUrl: '/DialogTemplates/fileAndText.html',
             });
         },
+         envoiIntervention: function(data, text, cb) {
+            $mdDialog.show({
+                controller: function DialogController($scope, $mdDialog) {
+                    $scope.data = data;
+                    $scope.smsText = text;
+                    $scope.answer = function(cancel) {
+                        $mdDialog.hide();
+                        if (cancel === false) {
+                            return cb(null, $scope.smsText, $scope.addedFile);
+                        } else {
+                            return cb('nope');
+                        }
+                    }
+                },
+                templateUrl: '/DialogTemplates/envoi.html',
+            });
+        },
         editProduct: {
             open: function(produit, cb) {
                 $mdDialog.show({
@@ -3232,7 +3248,7 @@ angular.module('edison')
         Intervention.prototype.envoi = function(cb) {
             var _this = this;
             var defaultText = textTemplate.sms.intervention.envoi.bind(_this)(user);
-            dialog.getFileAndText(_this, defaultText, _this.files, function(err, text, file) {
+            dialog.envoiIntervention(_this, defaultText, function(err, text, file) {
                 if (err)
                     return cb(err)
                 LxProgressService.circular.show('#5fa2db', '#globalProgress');
@@ -4478,7 +4494,10 @@ var InterventionCtrl = function(Description, Signalement, ContextMenu, $window, 
         if ($routeParams.id.length > 12) {
             _this.isNew = true;
             intervention.tmpID = $routeParams.id;
-            tab.setTitle('#' + moment((new Date(parseInt(intervention.tmpID))).toISOString()).format("HH:mm").toString());
+            intervention.tmpDate = moment.unix(intervention.tmpID / 1000).format('HH[h]mm')
+            tab.setTitle(intervention.tmpDate);
+            // tab.setTitle('#' + moment((new Date(parseInt(intervention.tmpID))).toISOString()).format("HH:mm").toString());
+            //console.log('==>', '#' + moment((new Date(parseInt(intervention.tmpID))).toISOString()).format("HH:mm").toString())
         } else {
             if (intervention && intervention.client.nom) {
                 var __title = intervention.client.civilite + intervention.client.nom
@@ -4508,6 +4527,12 @@ var InterventionCtrl = function(Description, Signalement, ContextMenu, $window, 
         intervention.remarque = 'PAS DE REMARQUES';
     }
     _this.data = tab.data;
+
+
+    $scope.$watch('vm.data.client', _.throttle(function() {
+        tab.setTitle(_.template("{{typeof tmpDate == 'undefined' ? id : tmpDate}} - {{client.civilite}} {{client.nom}} ({{client.address.cp}})")(intervention));
+    }, 1000), true)
+
     _this.description = new Description(intervention);
     _this.signalement = new Signalement(intervention)
     _this.contextMenu = new ContextMenu('intervention')
@@ -4521,7 +4546,6 @@ var InterventionCtrl = function(Description, Signalement, ContextMenu, $window, 
 
     Mousetrap.bind(['command+k', 'ctrl+k', 'command+f1', 'ctrl+f1'], function() {
         $window.open("appurl:", '_self');
-        console.log("sweg")
         edisonAPI.intervention.scan(intervention.id).then(function() {
             $scope.loadFilesList();
             LxNotificationService.success("Le fichier est enregistré");
@@ -4572,13 +4596,15 @@ var InterventionCtrl = function(Description, Signalement, ContextMenu, $window, 
     }
 
 
+    $scope.$watch('fileupload', function(file) {
+        if (file && file.length === 1) {
+            intervention.fileUpload(file[0], function(err, resp) {
+                $scope.fileUploadText = "";
+                $scope.loadFilesList();
+            });
+        }
+    })
 
-    $scope.onFileUpload = function(file) {
-        intervention.fileUpload(file, function(err, resp) {
-            $scope.fileUploadText = "";
-            $scope.loadFilesList();
-        });
-    }
     $scope.loadFilesList = function() {
         edisonAPI.intervention.getFiles(intervention.id || intervention.tmpID).then(function(result) {
             intervention.files = result.data;
@@ -4586,10 +4612,6 @@ var InterventionCtrl = function(Description, Signalement, ContextMenu, $window, 
     }
 
     $scope.loadFilesList();
-
-    _this.searchArtisans = function(sst) {
-        console.log('----==>', sst)
-    }
 
     var postSave = function(options, resp, cb) {
         if (options && options.envoiFacture && options.verification) {
@@ -4614,7 +4636,9 @@ var InterventionCtrl = function(Description, Signalement, ContextMenu, $window, 
         }
         intervention.save(function(err, resp) {
             if (!err) {
+                var files = intervention.files
                 intervention = new Intervention(resp);
+                intervention.files = files
                 postSave(options, resp, function(err) {
                     if (!err) {
                         TabContainer.close(tab);
@@ -4692,7 +4716,7 @@ var InterventionCtrl = function(Description, Signalement, ContextMenu, $window, 
     $scope.$watch(function() {
         return intervention.client.civilite;
     }, function(curr, prev) {
-        if (curr !== prev &&curr === 'Soc.') {
+        if (curr !== prev && curr === 'Soc.') {
             intervention.tva = 20;
             LxNotificationService.info("La TVA à été mise a 20%");
         }

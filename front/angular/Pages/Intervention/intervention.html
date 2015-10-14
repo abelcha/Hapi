@@ -13,7 +13,7 @@
                         </div>
                     </div>
                 </div>
-                <info-client  data="vm.data"  model="vm.data.client"></info-client>
+                <info-client data="vm.data" model="vm.data.client"></info-client>
                 <info-categorie model="vm.data.categorie" change="vm.searchArtisans(newCategorie)"></info-categorie>
                 <div class="row" style="margin:0">
                     <div class="col-md-8" style="padding-left:0">
@@ -205,8 +205,9 @@
                                     </div>
                                 </div>
                                 <div class="card__actions">
-                                    <button ng-click="vm.clickTrigger('.input-file__input')" class="btn--no-conflicts btn--m btn--blue  btn--raised" lx-ripple>Ajouter un fichier</button>
-                                    <lx-file-input style="display:none" id="fileInput" label="Upload" value="fileUploadText" change="onFileUpload(e)"></lx-file-input>
+                                    <div class="button" ngf-select ng-model="fileupload" ngf-multiple="false">
+                                        <button ng-click="vm.clickTrigger('.input-file__input')" class="btn--no-conflicts btn--m btn--blue  btn--raised" lx-ripple>Ajouter un fichier</button>
+                                    </div>
                                 </div>
                             </div>
                             <info-comment style="width:48%;float:right" data="vm.data"></info-comment>
@@ -232,7 +233,7 @@
     </div>
     <div class="dropdown-menu--no-conflicts dropdown-menu--right dropdown__menu--is-dropped" style="margin-top: -215px;width: auto; height: auto; opacity: 1;" ng-style="vm.contextMenu.style">
         <div class="dropdown-menu__content">
-            <ul >
+            <ul>
                 <li ng-hide="item.hidden" ng-repeat="item in vm.contextMenu.list">
                     <a ng-mouseover="vm.contextMenu.closeSub()" ng-if="!item.subs" class="dropdown-link" ng-style="item.style" tabindex="0" ng-click="vm.contextMenu.close();vm.contextMenu.click(item)">{{item.title}}</a>
                     <a ng-style="item.style" ng-mouseover="vm.contextMenu.openSub(200)" ng-if="item.subs" class="dropdown-link" tabindex="0"><i no-margin align-left class="fa fa-angle-right"></i>{{item.title}}</a>

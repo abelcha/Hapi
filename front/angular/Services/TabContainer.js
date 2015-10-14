@@ -12,6 +12,7 @@ angular.module('edison').factory('Tab', function() {
         this.date = new Date;
     }
     Tab.prototype.setTitle = function(title) {
+        this.title = title
         return this;
     };
     Tab.prototype.setData = function(data) {

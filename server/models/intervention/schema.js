@@ -359,6 +359,7 @@ module.exports = function(db) {
                 default: 0
             }
         },
+        newOs:Boolean,
         relance: {
             r1: Date,
             r2: Date,

@@ -127,7 +127,6 @@ angular.module('edison').controller('MainController', function($timeout, LxNotif
 
     $rootScope.closeContextMenu = function() {
         _this.selectedModel = null
-        console.log('close')
         $rootScope.$broadcast('closeContextMenu');
     }
 
@@ -142,8 +141,7 @@ angular.module('edison').controller('MainController', function($timeout, LxNotif
         model.left = $('#' + model.title).offset().left;
         $timeout(function() {
             _this.selectedModel = model;
-        }, 100)
-        console.log('open')
+        }, 20)
     }
 
     this.tabContainer = TabContainer;

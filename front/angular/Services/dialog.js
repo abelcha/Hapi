@@ -268,6 +268,23 @@ angular.module('edison').factory('dialog', function(openPost, $mdDialog, edisonA
                 templateUrl: '/DialogTemplates/fileAndText.html',
             });
         },
+         envoiIntervention: function(data, text, cb) {
+            $mdDialog.show({
+                controller: function DialogController($scope, $mdDialog) {
+                    $scope.data = data;
+                    $scope.smsText = text;
+                    $scope.answer = function(cancel) {
+                        $mdDialog.hide();
+                        if (cancel === false) {
+                            return cb(null, $scope.smsText, $scope.addedFile);
+                        } else {
+                            return cb('nope');
+                        }
+                    }
+                },
+                templateUrl: '/DialogTemplates/envoi.html',
+            });
+        },
         editProduct: {
             open: function(produit, cb) {
                 $mdDialog.show({

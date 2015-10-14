@@ -16,7 +16,7 @@
 
 <body ng-app="edison" ng-controller="MainController as vm" style="  background: #f4f4f4 url(/img/mooning.png);" class="ng-cloak main-menu-fixed main-navbar-fixed theme-adminflare main-menu-animated" ng-class="{'mmc' : sideBarIsOpen}" ng-click="closeContextMenu();">
     <div ng-if="vm.selectedModel" style="background-color:white;top:{{vm.selectedModel.top + 35}}px;left:{{vm.selectedModel.left}}px;width:300px;z-index:999999;position:absolute">
-    <span ng-repeat="tab in vm.selectedModel.tabs" style="padding:4px"><a href="{{tab.path}}{{tab.hash ? ('#' + tab.hash) : ''}}">{{tab.path}}</a><br></span>
+    <span ng-repeat="tab in vm.selectedModel.tabs" style="padding:4px"><a href="{{tab.path}}{{tab.hash ? ('#' + tab.hash) : ''}}">{{tab.title}}</a><br></span>
     </div>
     
     <div id="main-wrapper" ng-hide="loadingData">
