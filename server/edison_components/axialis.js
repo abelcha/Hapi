@@ -18,6 +18,7 @@ module.exports = {
         if (req.query.api_key !== 'F8v0x13ftadh89rm0e9x18b62ZqgEl47') {
             return res.sendStatus(401)
         }
+        res.send('ok')
         console.log('dataaxialis', req.body, req.query, req.params);
     },
     callback: function(req, res) {
