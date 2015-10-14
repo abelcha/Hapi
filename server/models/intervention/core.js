@@ -30,42 +30,9 @@
     }
 
     module.exports.postSave = function(prev, curr, session) {
-        console.log(curr.artisan.id)
-        if (curr.artisan.id) {
-            console.log(curr.sst.telephone.tel1)
-            var moment = require('moment')
-            var textTemplate = requireLocal('config/textTemplate');
-            var config = requireLocal('config/dataList');
-            var text = _.template(textTemplate.sms.intervention.demande.bind(curr)(session, config, moment))(curr)
-            sms.send({
-                link: curr.sst.id,
-                origin: curr.id,
-                text: text,
-                to: envProd ? curr.sst.telephone.tel1 : '0633138868',
-            })
-        }
+        try {
 
-        if (curr.devisOrigine) {
-            db.model('devis').findOne({
-                    id: curr.devisOrigine
-                })
-                .then(function(devis) {
-                    if (!devis)
-                        return false;
-                    devis.status = "TRA";
-                    devis.transfertId = curr.id;
-                    devis.save()
-                })
-        }
-
-     /*   if (curr.artisan.id) {
-            db.model('artisan').findOne({
-                id: curr.artisan.id
-            }).then(function(sst) {
-                if (!sst) {
-                    return false;
-                }
-                curr.sst = JSON.parse(JSON.stringify(sst));
+            if (curr.artisan && curr.artisan.id) {
                 var moment = require('moment')
                 var textTemplate = requireLocal('config/textTemplate');
                 var config = requireLocal('config/dataList');
@@ -76,8 +43,46 @@
                     text: text,
                     to: envProd ? curr.sst.telephone.tel1 : '0633138868',
                 })
-            })
-        }*/
+            }
+
+            if (curr.devisOrigine) {
+                db.model('devis').findOne({
+                        id: curr.devisOrigine
+                    })
+                    .then(function(devis) {
+                        if (!devis)
+                            return false;
+                        devis.status = "TRA";
+                        devis.transfertId = curr.id;
+                        devis.save()
+                    })
+            }
+
+        } catch (e) {
+            __catch(e)
+        }
+
+
+        /*   if (curr.artisan.id) {
+               db.model('artisan').findOne({
+                   id: curr.artisan.id
+               }).then(function(sst) {
+                   if (!sst) {
+                       return false;
+                   }
+                   curr.sst = JSON.parse(JSON.stringify(sst));
+                   var moment = require('moment')
+                   var textTemplate = requireLocal('config/textTemplate');
+                   var config = requireLocal('config/dataList');
+                   var text = _.template(textTemplate.sms.intervention.demande.bind(curr)(session, config, moment))(curr)
+                   sms.send({
+                       link: curr.sst.id,
+                       origin: curr.id,
+                       text: text,
+                       to: envProd ? curr.sst.telephone.tel1 : '0633138868',
+                   })
+               })
+           }*/
     }
 
     module.exports.preUpdate = function(prev, curr, session) {
@@ -146,8 +151,8 @@
             modeReglement: 'CH',
             client: {
                 civilite: 'M.',
-                telephone:{},
-                address:{}
+                telephone: {},
+                address: {}
             },
             facture: {
 
@@ -159,8 +164,8 @@
                 paiement: {
 
                 },
-                reglement:{
-                    
+                reglement: {
+
                 }
             },
             reglementSurPlace: true,
