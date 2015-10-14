@@ -359,7 +359,15 @@ module.exports = function(db) {
                 default: 0
             }
         },
-        newOs:Boolean,
+        newOs: Boolean,
+        appels: [{
+            id_call: String,
+            date: {
+                type: Date,
+                default: Date.now
+            },
+            _type: String, //CONTACT/CALLBACK
+        }],
         relance: {
             r1: Date,
             r2: Date,

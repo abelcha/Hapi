@@ -3,10 +3,14 @@ var _ = require('lodash');
 var request = function(query) {
     var response = _.pick(query, 'status_code', 'description', 'redirect_to');
     this.json(response);
-    console.log('RESPONSE==>', query)
-    db.model('axialis')(query).save(function(err, resp) {
-        console.log('saved')
-    });
+    console.log(response)
+    db.model('axialis')(query).save();
+    if (response.status_code === 200) {
+        db.model('intervention').findById(query.id_intervention).then(function(resp) {
+            resp.appels.push(query);
+            resp.save();
+        })
+    }
 }
 
 module.exports = {

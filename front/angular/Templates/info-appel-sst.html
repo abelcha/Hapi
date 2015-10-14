@@ -1,0 +1,14 @@
+<div class="card margin">
+    <div class="p+">
+        <strong class="fs-headline display-block">Appels Clients</strong>
+        <div class="paragraph fs-body-1 mt+">
+        <table class="table table-bordered">
+            <tbody>
+                <tr ng-repeat="(k, v) in data.appels">
+                    <td>{{v.date|date:"dd/MM/yy à HH'h'mm"}}</td>
+                </tr>
+            </tbody>
+        </table>
+        </div>
+    </div>
+</div>
