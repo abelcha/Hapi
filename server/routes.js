@@ -116,7 +116,6 @@ module.exports = function(app) {
         if (typeof model.__update !== "function") {
             return next();
         }
-        console.log('update')
         model.__update(req.params.id, req, res).then(success.bind(res), die.bind(res))
     });
 

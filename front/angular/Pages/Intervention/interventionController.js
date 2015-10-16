@@ -16,8 +16,6 @@ var InterventionCtrl = function(Description, Signalement, ContextMenu, $window, 
             intervention.tmpID = $routeParams.id;
             intervention.tmpDate = moment.unix(intervention.tmpID / 1000).format('HH[h]mm')
             tab.setTitle(intervention.tmpDate);
-            // tab.setTitle('#' + moment((new Date(parseInt(intervention.tmpID))).toISOString()).format("HH:mm").toString());
-            //console.log('==>', '#' + moment((new Date(parseInt(intervention.tmpID))).toISOString()).format("HH:mm").toString())
         } else {
             if (intervention && intervention.client.nom) {
                 var __title = intervention.client.civilite + intervention.client.nom
@@ -48,11 +46,12 @@ var InterventionCtrl = function(Description, Signalement, ContextMenu, $window, 
     }
     _this.data = tab.data;
 
-
-    $scope.$watch('vm.data.client', _.throttle(function() {
+    var updateTitle = _.throttle(function() {
         tab.setTitle(_.template("{{typeof tmpDate == 'undefined' ? id : tmpDate}} - {{client.civilite}} {{client.nom}} ({{client.address.cp}})")(intervention));
-    }, 1000), true)
+    }, 1000)
 
+    $scope.$watch('vm.data.client', updateTitle, true)
+    updateTitle();
     _this.description = new Description(intervention);
     _this.signalement = new Signalement(intervention)
     _this.contextMenu = new ContextMenu('intervention')

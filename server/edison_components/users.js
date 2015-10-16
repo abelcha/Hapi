@@ -9,6 +9,12 @@ Users.prototype.list = function() {
     return this.data
 }
 
+
+Users.prototype.get = function(login) {
+    var _ = require('lodash')
+    return _.find(this.data, 'login', login)
+}
+
 Users.prototype.search = function(oldLogin) {
     var _ = require('lodash')
     if (!this.data) {
