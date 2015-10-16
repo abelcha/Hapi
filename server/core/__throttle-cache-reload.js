@@ -36,6 +36,8 @@
                             for (var i = 0; i < cache.length && id_list.length; i++) {
                                 var pos = id_list.indexOf(cache[i].id)
                                 if (pos >= 0) {
+                                    console.log('UPDATE')
+
                                     cache[i] = resp.data[pos].cache;
                                     id_list.splice(pos, 1);
                                 }
@@ -45,6 +47,7 @@
                                     return _.includes(id_list, e._id);
                                 })
                                 _.each(z, function(x) {
+                                    console.log('NEW')
                                     cache.unshift(x.cache)
                                 })
                             }
