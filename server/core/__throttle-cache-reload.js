@@ -50,7 +50,7 @@
                             }
                         }
                         redis.set(core.redisCacheListName.envify(), JSON.stringify(cache), function(err) {
-                            console.log('redis err ==>', err, )
+                            console.log('redis err ==>', err)
                             resolve(_.map(resp.data, 'cache'));
                         });
                     } catch (e) {
