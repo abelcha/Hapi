@@ -121,7 +121,6 @@
                     return false;
                 }
                 curr.sst = JSON.parse(JSON.stringify(sst));
-                console.log('==>', curr.sst.telephone)
                 var moment = require('moment')
                 var textTemplate = requireLocal('config/textTemplate');
                 var config = requireLocal('config/dataList');
@@ -198,11 +197,11 @@
                 e._status = 'AVR';
             } else {
                 e._status = e.status
-            }
+            }/*
             if (!config.etats[e._status]) {
                 console.log('-->', e.id, e.status)
 
-            }
+            }*/
             var rtn = {
                 t: e.login.ajout,
                 id: e.id,

@@ -41,6 +41,9 @@ module.exports = function(schema) {
             UP(this.facture.address)
             UP(this.facture)
             UP(this.client.address)
+            _this.coutFourniture = _.reduce(_this.fourniture, function(total, e) {
+                return total += (e.quantite * e.pu)
+            }, 0)
             _this.sst = _this.artisan.id
             _this.enDemarchage = _this.login.demarchage;
             _this.cache = db.model('intervention').Core.minify(_this);

@@ -30,6 +30,15 @@ Users.prototype.search = function(oldLogin) {
     }
 }
 
+Users.prototype.service = function(service) {
+    var _ = require('lodash')
+
+    return _(this.data).filter({
+        activated: true,
+        service: service
+    }).pluck('login').value()
+}
+
 Users.prototype.find = function(login) {
     var _ = require('lodash')
     if (!this.data) {
