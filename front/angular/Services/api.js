@@ -109,7 +109,9 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
             },
         },
         intervention: {
-
+            dashboardStats:function(options) {
+                return $http.get('/api/intervention/dashboardStats', options);
+            },
             getTelMatch: function(text) {
                 return $http.post('/api/intervention/telMatches', text);
             },

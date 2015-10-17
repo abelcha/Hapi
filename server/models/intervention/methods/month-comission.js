@@ -14,7 +14,7 @@ module.exports = function(schema) {
                     status: {
                         $in: ["ENC", "VRF"]
                     },
-                    'login.ajout': req.query.user
+                    'login.ajout': req.session.login ||  req.query.user
                 })
                 .project({
                     _id: 0,
@@ -136,19 +136,17 @@ module.exports = function(schema) {
     }
 
     var set = function(obj, prop, vr, vl) {
-        if (!obj[prop]) {
-            obj[prop] = {}
+        var v = _.find(obj, 'login', prop);
+        if (v) {
+            v[vr] = _.round(v[vr] + vl);
+            v.total = v.ajout + v.envoi + v.verif + v.sum - v.annul
         }
-        if (!obj[prop][vr]) {
-            obj[prop][vr] = 0
-        }
-        obj[prop][vr] = _.round(obj[prop][vr] + vl)
     }
     schema.statics.weekStats = function(req, res) {
         //ligue 1
         return new Promise(function(resolve, reject) {
-            var dateCeilling = moment().startOf('week').toDate();
-            var users = edison.users.service('INTERVENTION')
+            var dateCeilling = moment(req.query.date || new Date).startOf('week').toDate();
+
             db.model('intervention')
                 .aggregate()
                 .match({
@@ -180,8 +178,18 @@ module.exports = function(schema) {
                     TOTAL_ANN: sum('$ANN'),
                 })
                 .exec(function(err, resp) {
-                    var rtn = {};
-
+                    var rtn = edison.users.service('INTERVENTION')
+                    rtn = _.map(rtn, function(e) {
+                        return {
+                            login: e,
+                            ajout: 0,
+                            envoi: 0,
+                            verif: 0,
+                            annul: 0,
+                            total:0,
+                            sum: 0
+                        }
+                    })
                     _.each(resp, function(elem) {
                         if (elem.TOTAL_VRF > 0) {
                             set(rtn, elem._id.a, 'ajout', elem.TOTAL_VRF)
@@ -204,18 +212,12 @@ module.exports = function(schema) {
                             set(rtn, elem._id.a, 'annul', elem.TOTAL_ANN)
                         }
                     })
-                    rtn = _.mapValues(rtn, function(e) {
-                        e.ajout = e.ajout || 0
-                        e.annul = e.annul || 0
-                        e.envoi = e.envoi || 0
-                        e.verif = e.verif || 0
-                        e.sum = e.sum || 0
-                        e.total = e.ajout + e.envoi + e.verif + e.annul + e.sum
-                        return e;
-                    })
                     resolve(rtn);
                 })
         });
+    }
+
+    schema.statics.champLastMonth = function(req, res) {
     }
 
     schema.statics.dashboardStats = function(req, res) {
@@ -224,8 +226,8 @@ module.exports = function(schema) {
             this.weekStats(req, res),
         ]).then(function(resp) {
             var rtn = {
-                monthComission:resp[0],
-                weekStats:resp[1],
+                monthComission: resp[0],
+                weekStats: resp[1],
             }
             res.json(rtn)
         })

@@ -58,7 +58,7 @@ var InterventionCtrl = function(Description, Signalement, ContextMenu, $window, 
     _this.contextMenu.setData(intervention);
     _this.rowRightClick = function($event, inter) {
         if ($('.listeInterventions').has($event.target).length == 0) {
-            _this.contextMenu.setPosition($event.pageX, $event.pageY + 150)
+            _this.contextMenu.setPosition($event.pageX, $event.pageY + 200)
             _this.contextMenu.open();
         }
     }

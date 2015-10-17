@@ -44,6 +44,7 @@ angular.module('edison').controller('MainController', function($timeout, LxNotif
     $rootScope.displayUser = app_session
     $scope.sidebarHeight = $("#main-menu-bg").height();
     $scope.config = config;
+    $scope._ = _;
     $rootScope.loadingData = true;
     $rootScope.$on('$routeChangeSuccess', function() {
         $window.scrollTo(0, 0);
@@ -65,11 +66,6 @@ angular.module('edison').controller('MainController', function($timeout, LxNotif
     checkResize();
 
 
-    $scope.logout = function() {
-        edisonAPI.users.logout().then(function() {
-            $window.location.reload()
-        })
-    }
 
     $scope.toggleSidebar = function(open) {
         if (open && !$rootScope.smallWin)
@@ -77,9 +73,6 @@ angular.module('edison').controller('MainController', function($timeout, LxNotif
         $scope.sideBarIsOpen = open;
     }
 
-    $scope.changeUser = function(usr) {
-        $rootScope.displayUser = usr
-    }
 
     $scope.shadowClick = function(url) {
         $location.url(url)
@@ -94,18 +87,7 @@ angular.module('edison').controller('MainController', function($timeout, LxNotif
     $rootScope.options = {
         showMap: true
     };
-    $('input[type="search"]').ready(function() {
 
-        $('input[type="search"]').on('keyup', function(e, w) {
-            if (e.which == 13) {
-                if ($('ul.md-autocomplete-suggestions>li').length) {
-                    $location.url('/search/' + $(this).val())
-                    $(this).val("")
-                    $(this).blur()
-                }
-            }
-        });
-    })
     var bfm = function() {
         edisonAPI.bfm.get().then(function(resp) {
             $rootScope.events = resp.data;
@@ -114,25 +96,6 @@ angular.module('edison').controller('MainController', function($timeout, LxNotif
     socket.on('event', _.debounce(bfm, _.random(0, 3000)));
 
     bfm();
-
-    $scope.searchBox = {
-        search: function(x) {
-            var deferred = $q.defer();
-            edisonAPI.searchText(x, {
-                limit: 10,
-                flat: true
-            }).success(function(resp) {
-                deferred.resolve(resp)
-            })
-            return deferred.promise;
-        },
-        change: function(x) {
-            if (x) {
-                $location.url(x.link)
-            }
-            $scope.searchText = "";
-        }
-    }
 
     var reloadStats = function() {
         edisonAPI.stats.telepro()
@@ -164,8 +127,7 @@ angular.module('edison').controller('MainController', function($timeout, LxNotif
         //   console.log('-->', tab);
     }
 
-    $rootScope.closeContextMenu = function() {
-        _this.selectedModel = null
+    $rootScope.closeContextMenu = function(ev) {
         $rootScope.$broadcast('closeContextMenu');
     }
 
@@ -175,13 +137,6 @@ angular.module('edison').controller('MainController', function($timeout, LxNotif
 
 
 
-    this.openSubTab = function(model) {
-        model.top = $('#' + model.title).offset().top;
-        model.left = $('#' + model.title).offset().left;
-        $timeout(function() {
-            _this.selectedModel = model;
-        }, 20)
-    }
 
     this.tabContainer = TabContainer;
     $scope.$on("$locationChangeStart", function(event) {
@@ -430,194 +385,6 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
     // use the HTML5 History API
     $locationProvider.html5Mode(true);
 });
-
-angular.module("edison").filter('contactFilter', ['config', function(config) {
-    "use strict";
-
-    var clean = function(str) {
-        return _.deburr(str).toLowerCase();
-    }
-
-    var compare = function(a, b, strictMode) {
-        if (typeof a === "string") {
-            return clean(a).includes(b);
-        } else if (!strictMode) {
-            return clean(String(a)).startsWith(b);
-        } else {
-            return a === parseInt(b);
-        }
-    }
-    return function(dataContainer, input) {
-        var rtn = [];
-        input = clean(input);
-        _.each(dataContainer, function(data) {
-            if (!data.stringify)
-                data.stringify = clean(JSON.stringify(data))
-            if (!input || data.stringify.indexOf(input) >= 0) {
-                rtn.push(data);
-            } else {
-            }
-        })
-        return rtn;
-    }
-}]);
-
-angular.module('edison').filter('crlf', function() {
-	"use strict";
-    return function(text) {
-        return text.split(/\n/g).join('<br>');
-    };
-});
-
-angular.module('edison').filter('loginify', function() {
-    "use strict";
-    return function(obj) {
-        if (!obj)
-            return "";
-        return obj.slice(0, 1).toUpperCase() + obj.slice(1, -2)
-    };
-});
-
-angular.module('edison').filter('relativeDate', function() {
-    "use strict";
-    return function(date, smallWin) {
-        var d = moment((date + 1370000000) * 1000);
-        var l = moment().subtract(4, 'days');
-        if (d < l) {
-            return smallWin ? d.format('DD/MM') : d.format('DD/MM/YY')
-        } else {
-            var x = d.fromNow().toString()
-            if (smallWin) {
-                x = x
-                    .replace('quelques secondes', '')
-                    .replace(' minutes', 'mn')
-                    .replace(' minute', 'mn')
-                    .replace(' une', '1')
-                    .replace(' heures', 'H')
-                    .replace(' heure', 'H')
-                    .replace(' jours', 'J')
-                    .replace(' jour', 'J')
-                    .replace('il y a', '-')
-                    .replace(' un', '1')
-                    .replace('dans ', '+')
-            }
-            return x;
-        }
-        // return moment((date + 1370000000) * 1000).fromNow(no).toString()
-    };
-});
-
-angular.module('edison').filter('reverse', function() {
-    "use strict";
-    return function(items) {
-        if (!items)
-            return [];
-        return items.slice().reverse();
-    };
-});
-
-angular.module("edison").filter('tableFilter', ['config', function(config) {
-    "use strict";
-
-    var clean = function(str) {
-        return _.deburr(str).toLowerCase();
-    }
-
-    var compare = function(a, b, strictMode) {
-        if (typeof a === "string") {
-            return clean(a).includes(b);
-        } else if (!strictMode) {
-            return clean(String(a)).startsWith(b);
-        } else {
-            return a === parseInt(b);
-        }
-    }
-    var compareCustom = function(key, data, input) {
-        if (key === '_categorie') {
-            var cell = config.categoriesHash()[data.c].long_name;
-            return compare(cell, input);
-        }
-        if (key === '_etat') {
-            var cell = config.etatsHash()[data.s].long_name
-            return compare(cell, input);
-        }
-        return true;
-
-    }
-    var compareDate = function(key, data, input) {
-        var md = (data[key] + 1370000000) * 1000;
-        //console.log( input.start, input.end);
-        if (md > input.start.getTime() && md < input.end.getTime()) {
-            return true
-        }
-        return false;
-    }
-
-    var parseDate = function(e) {
-        if (!(/^[0-9\/]+$/).test(e) ||  _.endsWith(e, '/')) {
-            return undefined;
-        }
-        var x = e.split('/');
-        if (x.length === 1) {
-            var month = parseInt(x[0]);
-            return {
-                start: new Date(2015, month - 1),
-                end: new Date(2015, month)
-            }
-        } else if (x.length === 2)  {
-            var day = parseInt(x[0]);
-            var month = parseInt(x[1]);
-            return {
-                start: new Date(2015, month - 1, day),
-                end: new Date(2015, month - 1, day + 1)
-            }
-        }
-        return undefined;
-    }
-
-
-    return function(dataContainer, inputs, strictMode) {
-        var rtn = [];
-        //console.time('fltr')
-        inputs = _.mapValues(inputs, clean);
-        _.each(inputs, function(e, k) {
-            if (k.charAt(0) === '∆') {
-                inputs[k] = parseDate(e);
-            }
-        })
-        _.each(dataContainer, function(data) {
-                if (data.id) {
-                    var psh = true;
-                    _.each(inputs, function(input, k) {
-                        if (input && _.size(input) > 0) {
-                            if (k.charAt(0) === '_') {
-                                if (!compareCustom(k, data, input)) {
-                                    psh = false;
-                                    return false
-                                }
-                            } else if (k.charAt(0) === '∆') {
-                                if (!compareDate(k.slice(1), data, input)) {
-                                    psh = false;
-                                    return false
-                                }
-                            } else {
-                                if (!compare(data[k], input, strictMode)) {
-                                    psh = false;
-                                    return false
-                                }
-                            }
-                        }
-                    });
-                    if (psh === true) {
-                        rtn.push(data);
-                    }
-                }
-            })
-            //console.timeEnd('fltr')
-
-        return rtn;
-    }
-}]);
 
 angular.module('edison').directive('allowPattern', [allowPatternDirective]);
 
@@ -1289,6 +1056,194 @@ angular.module('edison').directive('ngRightClick', function($parse) {
      }
  });
 
+angular.module("edison").filter('contactFilter', ['config', function(config) {
+    "use strict";
+
+    var clean = function(str) {
+        return _.deburr(str).toLowerCase();
+    }
+
+    var compare = function(a, b, strictMode) {
+        if (typeof a === "string") {
+            return clean(a).includes(b);
+        } else if (!strictMode) {
+            return clean(String(a)).startsWith(b);
+        } else {
+            return a === parseInt(b);
+        }
+    }
+    return function(dataContainer, input) {
+        var rtn = [];
+        input = clean(input);
+        _.each(dataContainer, function(data) {
+            if (!data.stringify)
+                data.stringify = clean(JSON.stringify(data))
+            if (!input || data.stringify.indexOf(input) >= 0) {
+                rtn.push(data);
+            } else {
+            }
+        })
+        return rtn;
+    }
+}]);
+
+angular.module('edison').filter('crlf', function() {
+	"use strict";
+    return function(text) {
+        return text.split(/\n/g).join('<br>');
+    };
+});
+
+angular.module('edison').filter('loginify', function() {
+    "use strict";
+    return function(obj) {
+        if (!obj)
+            return "";
+        return obj.slice(0, 1).toUpperCase() + obj.slice(1, -2)
+    };
+});
+
+angular.module('edison').filter('relativeDate', function() {
+    "use strict";
+    return function(date, smallWin) {
+        var d = moment((date + 1370000000) * 1000);
+        var l = moment().subtract(4, 'days');
+        if (d < l) {
+            return smallWin ? d.format('DD/MM') : d.format('DD/MM/YY')
+        } else {
+            var x = d.fromNow().toString()
+            if (smallWin) {
+                x = x
+                    .replace('quelques secondes', '')
+                    .replace(' minutes', 'mn')
+                    .replace(' minute', 'mn')
+                    .replace(' une', '1')
+                    .replace(' heures', 'H')
+                    .replace(' heure', 'H')
+                    .replace(' jours', 'J')
+                    .replace(' jour', 'J')
+                    .replace('il y a', '-')
+                    .replace(' un', '1')
+                    .replace('dans ', '+')
+            }
+            return x;
+        }
+        // return moment((date + 1370000000) * 1000).fromNow(no).toString()
+    };
+});
+
+angular.module('edison').filter('reverse', function() {
+    "use strict";
+    return function(items) {
+        if (!items)
+            return [];
+        return items.slice().reverse();
+    };
+});
+
+angular.module("edison").filter('tableFilter', ['config', function(config) {
+    "use strict";
+
+    var clean = function(str) {
+        return _.deburr(str).toLowerCase();
+    }
+
+    var compare = function(a, b, strictMode) {
+        if (typeof a === "string") {
+            return clean(a).includes(b);
+        } else if (!strictMode) {
+            return clean(String(a)).startsWith(b);
+        } else {
+            return a === parseInt(b);
+        }
+    }
+    var compareCustom = function(key, data, input) {
+        if (key === '_categorie') {
+            var cell = config.categoriesHash()[data.c].long_name;
+            return compare(cell, input);
+        }
+        if (key === '_etat') {
+            var cell = config.etatsHash()[data.s].long_name
+            return compare(cell, input);
+        }
+        return true;
+
+    }
+    var compareDate = function(key, data, input) {
+        var md = (data[key] + 1370000000) * 1000;
+        //console.log( input.start, input.end);
+        if (md > input.start.getTime() && md < input.end.getTime()) {
+            return true
+        }
+        return false;
+    }
+
+    var parseDate = function(e) {
+        if (!(/^[0-9\/]+$/).test(e) ||  _.endsWith(e, '/')) {
+            return undefined;
+        }
+        var x = e.split('/');
+        if (x.length === 1) {
+            var month = parseInt(x[0]);
+            return {
+                start: new Date(2015, month - 1),
+                end: new Date(2015, month)
+            }
+        } else if (x.length === 2)  {
+            var day = parseInt(x[0]);
+            var month = parseInt(x[1]);
+            return {
+                start: new Date(2015, month - 1, day),
+                end: new Date(2015, month - 1, day + 1)
+            }
+        }
+        return undefined;
+    }
+
+
+    return function(dataContainer, inputs, strictMode) {
+        var rtn = [];
+        //console.time('fltr')
+        inputs = _.mapValues(inputs, clean);
+        _.each(inputs, function(e, k) {
+            if (k.charAt(0) === '∆') {
+                inputs[k] = parseDate(e);
+            }
+        })
+        _.each(dataContainer, function(data) {
+                if (data.id) {
+                    var psh = true;
+                    _.each(inputs, function(input, k) {
+                        if (input && _.size(input) > 0) {
+                            if (k.charAt(0) === '_') {
+                                if (!compareCustom(k, data, input)) {
+                                    psh = false;
+                                    return false
+                                }
+                            } else if (k.charAt(0) === '∆') {
+                                if (!compareDate(k.slice(1), data, input)) {
+                                    psh = false;
+                                    return false
+                                }
+                            } else {
+                                if (!compare(data[k], input, strictMode)) {
+                                    psh = false;
+                                    return false
+                                }
+                            }
+                        }
+                    });
+                    if (psh === true) {
+                        rtn.push(data);
+                    }
+                }
+            })
+            //console.timeEnd('fltr')
+
+        return rtn;
+    }
+}]);
+
 angular.module('edison').factory('TabContainer', ['$location', '$window', '$q', 'edisonAPI', function($location, $window, $q, edisonAPI) {
     "use strict";
     var Tab = function(args, options, prevTab) {
@@ -1596,10 +1551,10 @@ angular.module('edison').factory('TabContainer', function(Tab, $location) {
         var models = ["intervention", "artisan", "devis", 'tools', 'compta'];
         var tmp = {};
         _.each(_this.__tabs, function(e) {
-            if (_.includes(models, e.model)) {
-                var dest = e.url[1] === 'list' ? (e.model + '_list') : e.url[1] === 'contact' ? e.model + '_repertoire' : e.model + '_id';
+            if (_.includes(models, e.model) && e.url[1] !== 'list' && e.url[1] !== 'contact') {
+                var dest =  e.model + 's';
             } else {
-                dest = 'other';
+                dest = 'Recents';
             }
             tmp[dest] = tmp[dest] || {
                 title: dest,
@@ -1798,7 +1753,9 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
             },
         },
         intervention: {
-
+            dashboardStats:function(options) {
+                return $http.get('/api/intervention/dashboardStats', options);
+            },
             getTelMatch: function(text) {
                 return $http.post('/api/intervention/telMatches', text);
             },
@@ -3745,6 +3702,111 @@ angular.module('edison').directive('infoFourniture', ['config', 'fourniture',
     }
 ]);
 
+angular.module('edison').directive('mainNavbar', function($q, edisonAPI, TabContainer, $timeout, $rootScope, $location, $window) {
+    "use strict";
+    return {
+        restrict: 'E',
+        templateUrl: '/Templates/main-navbar.html',
+        scope: {
+            data: "=",
+            display: "=",
+            small: "="
+        },
+        link: function(scope, element, attrs) {
+            scope.root = $rootScope;
+            scope._ = _;
+            scope.tabContainer = TabContainer;
+
+            scope.select = function(model) {
+                if (scope.selectedTab == model) {
+                    scope.selectedTab = null
+                } else {
+                    scope.selectedTab = model
+                }
+            }
+            $('input[type="search"]').ready(function() {
+                $timeout(function() {
+                    $('input[type="search"]').on('keyup', function(e, w) {
+                        if (e.which == 13) {
+                            if ($('ul.md-autocomplete-suggestions>li').length) {
+                                $location.url('/search/' + $(this).val())
+                                $(this).val("")
+                                $(this).blur()
+                            }
+                        }
+                    });
+                }, 10);
+            })
+
+            $rootScope.$on('closeContextMenu', function() {
+                console.log('uau')
+                scope.selectedTab = null;
+            })
+
+
+
+
+            scope.logout = function() {
+                edisonAPI.users.logout().then(function() {
+                    $window.location.reload()
+                })
+            }
+
+
+            $rootScope.$on('closeSearchBar', function() {
+                scope.searchBarSize = 100
+            })
+
+            var searchInput = 'md-autocomplete.searchBar>md-autocomplete-wrap>input'
+            $(searchInput).ready(function() {
+                $timeout(function() {
+                    $(searchInput).on('focus', function() {
+                        scope.searchFocus = true
+                        var selectors = [, '.navbar-header', '.navbar-nav', '.dropdown-toggle.user-menu']
+                        scope.searchBarSize = _.reduce(selectors, function(total, el) {
+                            return total -= $(el).width();
+                        }, $(window).width())
+                    })
+                    $(searchInput).on('blur', function() {
+                        scope.searchFocus = false
+                        scope.searchBarSize = 100
+                    })
+                }, 10);
+            })
+
+            scope.changeUser = function(usr) {
+                $rootScope.displayUser = usr
+            }
+
+            scope.searchBox = {
+                search: function(x) {
+                    var deferred = $q.defer();
+                    edisonAPI.searchText(x, {
+                        limit: 10,
+                        flat: true
+                    }).success(function(resp) {
+                        deferred.resolve(resp)
+                    })
+                    return deferred.promise;
+                },
+                change: function(x) {
+                    if (x) {
+                        $location.url(x.link)
+                    }
+                    $timeout(function() {
+                        $(searchInput).blur();
+                    });
+                    scope.searchText = "";
+                }
+            }
+
+
+
+        },
+    }
+
+});
+
 var archiveReglementController = function(edisonAPI, TabContainer, $routeParams, $location, LxProgressService) {
 
     var tab = TabContainer.getCurrentTab();
@@ -4099,20 +4161,33 @@ var ContactArtisanController = function($scope, $timeout, TabContainer, LxProgre
 }
 angular.module('edison').controller('ContactArtisanController', ContactArtisanController);
 
-var DashboardController = function(edisonAPI, $scope, $filter, TabContainer, ngTableParams, $routeParams, $location, LxProgressService) {
-   console.log(TabContainer)
-   // var tab = TabContainer.getCurrentTab();
- //   tab.setTitle('Dashboard')
+var DashboardController = function(user, edisonAPI, $scope, $filter, TabContainer, NgTableParams, $routeParams, $location, LxProgressService) {
+    // var tab = TabContainer.getCurrentTab();
+    //   tab.setTitle('Dashboard')
     var _this = this;
     //LxProgressService.circular.show('#5fa2db', '#globalProgress');
-
+    $scope._ = _;
     _this.openLink = function(link) {
-        $location.url(link)
-    }
-    edisonAPI.stats.day().then(function(resp) {
+            $location.url(link)
+        }
+        /*    edisonAPI.stats.day().then(function(resp) {
 
-        _this.statsTelepro = resp.data;
+                _this.statsTelepro = resp.data;
 
+            })*/
+    edisonAPI.intervention.dashboardStats({
+        user: user.login
+    }).then(function(resp) {
+        _this.tableParams = new NgTableParams({
+            count: resp.data.weekStats.length,
+            sorting: {
+                total: 'desc'
+            }
+        }, {
+            counts: [],
+            data: resp.data.weekStats
+        });
+        _this.result = resp.data
     })
 }
 
@@ -4563,7 +4638,7 @@ var InterventionCtrl = function(Description, Signalement, ContextMenu, $window, 
     _this.contextMenu.setData(intervention);
     _this.rowRightClick = function($event, inter) {
         if ($('.listeInterventions').has($event.target).length == 0) {
-            _this.contextMenu.setPosition($event.pageX, $event.pageY + 150)
+            _this.contextMenu.setPosition($event.pageX, $event.pageY + 200)
             _this.contextMenu.open();
         }
     }

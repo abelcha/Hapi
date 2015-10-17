@@ -5,6 +5,7 @@ angular.module('edison').controller('MainController', function($timeout, LxNotif
     $rootScope.displayUser = app_session
     $scope.sidebarHeight = $("#main-menu-bg").height();
     $scope.config = config;
+    $scope._ = _;
     $rootScope.loadingData = true;
     $rootScope.$on('$routeChangeSuccess', function() {
         $window.scrollTo(0, 0);
@@ -26,11 +27,6 @@ angular.module('edison').controller('MainController', function($timeout, LxNotif
     checkResize();
 
 
-    $scope.logout = function() {
-        edisonAPI.users.logout().then(function() {
-            $window.location.reload()
-        })
-    }
 
     $scope.toggleSidebar = function(open) {
         if (open && !$rootScope.smallWin)
@@ -38,9 +34,6 @@ angular.module('edison').controller('MainController', function($timeout, LxNotif
         $scope.sideBarIsOpen = open;
     }
 
-    $scope.changeUser = function(usr) {
-        $rootScope.displayUser = usr
-    }
 
     $scope.shadowClick = function(url) {
         $location.url(url)
@@ -55,18 +48,7 @@ angular.module('edison').controller('MainController', function($timeout, LxNotif
     $rootScope.options = {
         showMap: true
     };
-    $('input[type="search"]').ready(function() {
 
-        $('input[type="search"]').on('keyup', function(e, w) {
-            if (e.which == 13) {
-                if ($('ul.md-autocomplete-suggestions>li').length) {
-                    $location.url('/search/' + $(this).val())
-                    $(this).val("")
-                    $(this).blur()
-                }
-            }
-        });
-    })
     var bfm = function() {
         edisonAPI.bfm.get().then(function(resp) {
             $rootScope.events = resp.data;
@@ -75,25 +57,6 @@ angular.module('edison').controller('MainController', function($timeout, LxNotif
     socket.on('event', _.debounce(bfm, _.random(0, 3000)));
 
     bfm();
-
-    $scope.searchBox = {
-        search: function(x) {
-            var deferred = $q.defer();
-            edisonAPI.searchText(x, {
-                limit: 10,
-                flat: true
-            }).success(function(resp) {
-                deferred.resolve(resp)
-            })
-            return deferred.promise;
-        },
-        change: function(x) {
-            if (x) {
-                $location.url(x.link)
-            }
-            $scope.searchText = "";
-        }
-    }
 
     var reloadStats = function() {
         edisonAPI.stats.telepro()
@@ -125,8 +88,7 @@ angular.module('edison').controller('MainController', function($timeout, LxNotif
         //   console.log('-->', tab);
     }
 
-    $rootScope.closeContextMenu = function() {
-        _this.selectedModel = null
+    $rootScope.closeContextMenu = function(ev) {
         $rootScope.$broadcast('closeContextMenu');
     }
 
@@ -136,13 +98,6 @@ angular.module('edison').controller('MainController', function($timeout, LxNotif
 
 
 
-    this.openSubTab = function(model) {
-        model.top = $('#' + model.title).offset().top;
-        model.left = $('#' + model.title).offset().left;
-        $timeout(function() {
-            _this.selectedModel = model;
-        }, 20)
-    }
 
     this.tabContainer = TabContainer;
     $scope.$on("$locationChangeStart", function(event) {

@@ -1,3 +1,0 @@
-document/check {'staging': False, 'cache': False, 'live': False} {}
-<Response [200]> <Time [3.571]>
-

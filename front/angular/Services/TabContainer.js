@@ -74,10 +74,10 @@ angular.module('edison').factory('TabContainer', function(Tab, $location) {
         var models = ["intervention", "artisan", "devis", 'tools', 'compta'];
         var tmp = {};
         _.each(_this.__tabs, function(e) {
-            if (_.includes(models, e.model)) {
-                var dest = e.url[1] === 'list' ? (e.model + '_list') : e.url[1] === 'contact' ? e.model + '_repertoire' : e.model + '_id';
+            if (_.includes(models, e.model) && e.url[1] !== 'list' && e.url[1] !== 'contact') {
+                var dest =  e.model + 's';
             } else {
-                dest = 'other';
+                dest = 'Recents';
             }
             tmp[dest] = tmp[dest] || {
                 title: dest,

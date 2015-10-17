@@ -14,50 +14,14 @@
     <script src="/dist/all.js"></script>
 </head>
 
-<body ng-app="edison" ng-controller="MainController as vm" style="  background: #f4f4f4 url(/img/mooning.png);" class="ng-cloak main-menu-fixed main-navbar-fixed theme-adminflare main-menu-animated" ng-class="{'mmc' : sideBarIsOpen}" ng-click="closeContextMenu();">
-    <div ng-if="vm.selectedModel" style="background-color:white;top:{{vm.selectedModel.top + 35}}px;left:{{vm.selectedModel.left}}px;width:300px;z-index:999999;position:absolute">
-    <span ng-repeat="tab in vm.selectedModel.tabs" style="padding:4px"><a href="{{tab.path}}{{tab.hash ? ('#' + tab.hash) : ''}}">{{tab.title}}</a><br></span>
+<body ng-app="edison" ng-controller="MainController as vm" style="  background: #f4f4f4 url(/img/mooning.png);" class="ng-cloak main-menu-fixed main-navbar-fixed theme-adminflare main-menu-animated" ng-class="{'mmc' : sideBarIsOpen}">
+    <div ng-if="vm.selectedModel" style="background-color:white;top:{{vm.selectedModel.top + 35}}px;left:{{vm.selectedModel.left}}px;width:300px;z-index:999999;position:absolute;box-shadow: rgba(0, 0, 0, 0.4) 3px 5px 12px;">
+        <ul ng-repeat="tab in vm.selectedModel.tabs" style="padding:4px">
+            <a class="dropdown-link" style="text-decoration: none!important;" href="{{tab.path}}{{tab.hash ? ('#' + tab.hash) : ''}}">{{tab.title}}</a>
+        </ul>
     </div>
-    
     <div id="main-wrapper" ng-hide="loadingData">
-        <div id="main-navbar" class="navbar navbar-inverse" role="navigation">
-            <!-- Main menu toggle -->
-            <button type="button" id="main-menu-toggle" ng-click="sideBarIsOpen = !sideBarIsOpen">
-                <img style="height: 40px;margin: 0 auto;" src="/img/logo_cutted.png">
-            </button>
-            <img style="height: 39px;margin-top: 3px;position: fixed;margin-left: 72px;" src="/img/logo_text_cutted.png">
-            <div class="navbar-inner">
-                <!-- Main navbar header -->
-                <!-- / .navbar-header -->
-                <span right ng-click="userDropdown = !userDropdown" style="margin-right:80px"><li class="dropdown">
-                                <a href="#" class="dropdown-toggle user-menu" data-toggle="dropdown">
-                                    <img src="/img/profile/default.jpg" alt="">
-                                    <span bold>{{displayUser.login | uppercase}}</span>
-                </a>
-                <ul ng-class="{'display-block' : userDropdown}" class="dropdown-menu open">
-                    <!--   <li><a href="#"><span class="label label-warning pull-right">New</span>Profile</a></li> -->
-                    <li ng-repeat="u in app_users" ng-click="changeUser(u)">
-                        <a href="#">
-                            <span class="badge badge-primary pull-right"></span> {{u.login}}
-                        </a>
-                    </li>
-                    <!-- 
-                    <li><a href="#"><i class="dropdown-icon fa fa-cog"></i>&nbsp;&nbsp;Settings</a></li> -->
-                    <li class="divider"></li>
-                    <li><a ng-click="logout()"><i class="dropdown-icon fa fa-power-off"></i>&nbsp;&nbsp;Log Out</a></li>
-                </ul>
-                </li>
-                </span>
-                <div id="main-navbar-collapse" class="collapse navbar-collapse main-navbar-collapse">
-                    <!--  -->
-                    <md-autocomplete class="searchBar" style="width: 100px;float: right;margin-top: 3px;margin-right: 40px;" md-search-text-change="null" md-min-length="3" md-selected-item-change="searchBox.change(selectedItem)" md-menu-class="autocomplete-custom-template" md-selected-item="selectedItem" md-search-text="searchText" md-autofocus="false" md-items="item in searchBox.search(searchText)" placeholder="Recherche..." md-item-text="item.description">
-                        <span text-xl md-highlight-text="searchText"> {{item.description}}</span>
-                    </md-autocomplete>
-                </div>
-                <!-- / #main-navbar-collapse -->
-            </div>
-            <!-- / .navbar-inner -->
-        </div>
+    <main-navbar></main-navbar>
         <side-bar ng-if="displayUser.login && interventionsStats" ng-mouseenter="toggleSidebar(false)" ng-mouseleave="toggleSidebar(true)">
             <div style="padding: 11px 33px;" class="menu-content animated fadeIn">
                 <a href="/intervention" style="height: 31px;padding: 4px;" class="btn btn-primary btn-block btn-outline dark">Ajout d'une intervention</a>
@@ -141,19 +105,8 @@
                 <simple-link icon="wrench" title="VCF Artisan" extern url="/api/artisan/vcf"></simple-link>
             </drop-down>
         </side-bar>
-        <div class="page-header" style="background: #f4f4f4 url(/img/mooning.png);">
-            <div class="menu-tabs" style="width:100%;padding-left:40px;padding-top:9px">
-                <span id="{{model.title}}" ng-click="vm.openSubTab(model)" style="display:inline-block;margin-right:20px" ng-repeat="model in vm.tabContainer.ordered()">
-
-                <h2>{{model.title}} ({{model.tabs.length}})</h2>
-                </span>
-                <!-- <md-tabs md-selected="tabs.selectedTab" style=" margin-left: 6px;">
-                    <md-tab ng-repeat="tab in tabs._tabs" ng-click="shadowClick(tab.fullUrl)" style="padding-right:8px">
-                        <md-tab-label><a id="{{tab.position}}_tab" href="{{tab.fullUrl}}">{{tab.title || "•••"}} </a><span ng-if="tab.hash" style="color:black;font-size:8px">{{tab.hash}}</span> <i ng-click="tabIconClick($event, tab)" class="fa fa-remove" style="padding: 7px;"></i></md-tab-label>
-                    </md-tab>
-                </md-tabs> -->
-            </div>
-            <div id="content-wrapper">
+        <div class="page-header" style="background: #f4f4f4 url(/img/mooning.png);" >
+            <div id="content-wrapper"  ng-click="closeContextMenu($event);">
                 <div ng-view style="margin-top: 16px;">
                 </div>
                 <div id="globalProgress" style="position:fixed;top: 50%;left: 57%;z-index: 12222;">
@@ -161,7 +114,7 @@
                 </div>
             </div>
         </div>
-        <div id="main-menu-bg"></div>
+        <div id="main-menu-bg" ></div>
     </div>
     <!-- / #main-wrapper -->
     <div ng-show="loadingData || true" class="animate-loading">
@@ -181,16 +134,6 @@
 String.prototype.replaceAll = function(target, replacement) {
     return this.split(target).join(replacement);
 }
-var searchInput = 'md-autocomplete.searchBar>md-autocomplete-wrap>input'
-$(searchInput).ready(function() {
-    $(searchInput).focus(function() {
-        $('md-autocomplete.searchBar').css('width', '600px')
-    })
-    $(searchInput).blur(function() {
-        $('md-autocomplete.searchBar').css('width', '100px')
-    })
-
-})
 _.templateSettings.interpolate = /{{([\s\S]+?)}}/g;
 </script>
 

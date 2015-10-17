@@ -2345,6 +2345,7 @@ md-switch.md-checked.md-primary .md-bar {
     padding: 3px;
 }
 
+
 /*#tbody-list>tr {
     transition: background 2s;
 }*/
@@ -2369,7 +2370,7 @@ md-switch.md-checked.md-primary .md-bar {
 
 .sticky-footer {
     position: fixed;
-    padding-top:2px;
+    padding-top: 2px;
     z-index: 1000;
     box-shadow: -1px 2px 5px 1px rgba(0, 0, 0, 0.7);
     height: 40px;
@@ -2607,12 +2608,17 @@ md-autocomplete > ul {
     pointer-events: all;
 }
 
+#content-wrapper {
+    padding: 0px 18px 18px!important;
+}
+
 md-autocomplete.searchBar {
-    width: 100px;
-    -webkit-transition: width .25s ease-in;
-    -moz-transition: width .25s ease-in;
-    -o-transition: width .25s ease-in;
-    transition: width .25s ease-in;
+    margin-top: 3px;
+    margin-right: 40px;
+    -webkit-transition: width .18s ease-in;
+    -moz-transition: width .18s ease-in;
+    -o-transition: width .18s ease-in;
+    transition: width .18s ease-in;
 }
 
 #static-map:hover {
