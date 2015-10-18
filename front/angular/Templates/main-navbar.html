@@ -18,9 +18,6 @@
         <div id="main-navbar-collapse" class="collapse navbar-collapse main-navbar-collapse">
             <div>
                 <ul class="nav navbar-nav" ng-if="!searchFocus">
-                    <li>
-                        <a href="#">Home</a>
-                    </li>
                     <li class="dropdown" ng-class="{open:selectedTab == model.title}" ng-click="select(model.title)" ng-repeat="model in tabContainer.ordered()" id="{{model.title}}" ng-click="openSubTab(model)">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{_.capitalize(model.title)}} ({{model.tabs.length}})</a>
                         <ul ng-if="selectedTab == model.title" class="dropdown-menu">

@@ -16,16 +16,18 @@ var strip = function(s) {
 }
 
 Description.prototype.search = function(str) {
-    var _ = require('lodash');
+    var _map = require('lodash/collection/map');
+    var _map = require('lodash/collection/sortby');
     var resemblance = require('resemblance');
     str = str.toUpperCase()
-    var list = _(this.data).map(function(e) {
+    var list = _map(this.data, function(e) {
         var res = 1 - resemblance.compareStrings(strip(e), str)
         return {
             match: res,
             name: e
         }
-    }).sortBy('match').slice(0, 5).value()
+    })
+    list = _sortBy(list, 'match').slice(0, 5)
 
     return list;
 }

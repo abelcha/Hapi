@@ -1,6 +1,5 @@
 var ms = require('milliseconds');
 var _each = require('lodash/collection/each');
-var moment = require('moment');
 FiltersFactory = function(model) {
     if (!(this instanceof FiltersFactory)) {
         return new FiltersFactory(model);
@@ -10,7 +9,9 @@ FiltersFactory = function(model) {
 }
 
 var today = function() {
-    return moment().startOf('day').toDate();
+    var today = new Date()
+    today.setHours(0)
+    return today;
 }
 
 var dateInter = function(inter) {

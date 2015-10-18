@@ -109,7 +109,7 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
             },
         },
         intervention: {
-            dashboardStats:function(options) {
+            dashboardStats: function(options) {
                 return $http.get('/api/intervention/dashboardStats', options);
             },
             getTelMatch: function(text) {
@@ -289,27 +289,15 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
             },
         },
         task: {
-            get: function(params) {
-                return $http({
-                    method: 'GET',
-                    url: '/api/taks/get',
-                    params: params
-                })
-            },
             add: function(params) {
-                return $http({
-                    method: 'GET',
-                    url: '/api/task/add',
-                    params: params
-                })
+                return $http.post('/api/task/add', params)
             },
-            check: function(params) {
-                return $http({
-                    method: 'GET',
-                    url: '/api/task/add',
-                    params: params
-                })
+            check: function(id) {
+                return $http.post('/api/task/' + id + '/check')
             },
+            listRelevant:function() {
+                return $http.get('/api/task/relevant');
+            }
         },
         file: {
             uploadScans: function(file, options) {

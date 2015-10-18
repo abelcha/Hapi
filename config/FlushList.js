@@ -1,7 +1,7 @@
-    var _each = require('lodash/collection/each');
+/*    var _each = require('lodash/collection/each');
     var _includes = require('lodash/collection/includes');
     var _round = require('lodash/math/round')
-
+*/
     var FlushList = function(interArray, prevChecked) {
         var _this = this;
         var list = [];

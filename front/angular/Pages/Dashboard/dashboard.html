@@ -3,7 +3,7 @@
         <div class="col-sm-6">
             <div class="shadow-box" style="min-height:200px">
                 <div style="padding:20px">
-                <strong class="fs-headline display-block">Classement de la semaine</strong>
+                    <strong class="fs-headline display-block">Classement de la semaine</strong>
                     <table ng-table="vm.tableParams" class="table table-striped" show-filter="false">
                         <tr ng-repeat="user in $data" ng-class="{success:$index === 0}">
                             <td title="'Login'" sortable="'login'">
@@ -53,6 +53,43 @@
     <div class="row">
         <div class="col-sm-6">
             <div class="shadow-box" style="min-height:200px">
+                <div class="shadow-box" style="min-height:200px">
+                    <div style="padding:20px">
+                        <table class="table table-bordered tbls-usrs">
+                            <thead>
+                                <tr>
+                                    <th>Login</th>
+                                    <th>Login V1</th>
+                                    <th>Email</th>
+                                    <th>Pseudo</th>
+                                    <th>Service</th>
+                                    <th>Ligne</th>
+                                    <th>Root</th>
+                                    <th>init pw</th>
+                                    <th>Actif</th>
+                                    <th>Sup.</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="p in vm.taskList">
+                                    <td>
+                                        {{p.date}}
+                                    </td>
+                                    <td>{{p.from}}
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control" ng-model="p.oldLogin">
+                                    </td>
+                                    <td style="width:1%">
+                                        <button class="btn--no-conflicts btn--l btn--red btn--icon" ng-click="vm.remove(p)">
+                                            <i class="fa fa-remove"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="col-sm-6">

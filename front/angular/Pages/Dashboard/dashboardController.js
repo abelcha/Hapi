@@ -12,6 +12,9 @@ var DashboardController = function(user, edisonAPI, $scope, $filter, TabContaine
                 _this.statsTelepro = resp.data;
 
             })*/
+
+
+
     edisonAPI.intervention.dashboardStats({
         user: user.login
     }).then(function(resp) {
