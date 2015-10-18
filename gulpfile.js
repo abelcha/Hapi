@@ -60,8 +60,8 @@ var jssrc;
 gulp.task('minify-js', function() {
     jssrc = ['front/angular/*.js', 'front/angular/*/*.js', 'front/angular/*/*/*.js'];
     return gulp.src(jssrc)
-        .pipe(ngAnnotate())
-        .pipe(uglify())
+        //.pipe(ngAnnotate())
+        //.pipe(uglify())
         .pipe(concat('all.min.js'))
         .pipe(gulp.dest('front/assets/dist'));
 
@@ -70,8 +70,8 @@ gulp.task('minify-js', function() {
 gulp.task('minify-bundle', function() {
     jssrc = ['front/assets/dist/bundle.js'];
     return gulp.src(jssrc)
-        .pipe(ngAnnotate())
-        .pipe(uglify())
+        //.pipe(ngAnnotate())
+        //.pipe(uglify())
         .pipe(concat('bundle.min.js'))
         .pipe(gulp.dest('front/assets/dist'));
 
@@ -91,7 +91,7 @@ gulp.task('scripts', function() {
 
 gulp.task('jsLibs', function() {
     return gulp.src(jslibs)
-        .pipe(uglify())
+       // .pipe(uglify())
 //        .pipe(sourcemaps.init())
         .pipe(concat('libs.js'))
   //      .pipe(sourcemaps.write('.'))
@@ -171,12 +171,12 @@ gulp.task('styles', function() {
 // Watch Files For Changes
 gulp.task('watch', function() {
     gulp.watch(jssrc, ['scripts']);
-    gulp.watch(jssrc, ['minify-js']);
-    gulp.watch(jssrc, ['minify-bundle']);
+   // gulp.watch(jssrc, ['minify-js']);
+   // gulp.watch(jssrc, ['minify-bundle']);
     /*    gulp.watch(jslibs, ['jsLibs']);
         gulp.watch(jslibs, ['jsLibs']);*/
     gulp.watch(['front/assets/css/*.css', 'front/bower_components/*/*.css', 'front/bower_components/*/*/*.css'], ['styles'])
 });
 
 // Default Task
-gulp.task('default', ['scripts', 'styles', 'bundle', 'minify-js', 'minify-bundle', 'watch']);
+gulp.task('default', ['scripts', 'styles', 'bundle', 'watch']);

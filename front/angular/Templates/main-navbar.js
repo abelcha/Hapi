@@ -35,7 +35,6 @@ angular.module('edison').directive('mainNavbar', function($q, edisonAPI, TabCont
             })
 
             $rootScope.$on('closeContextMenu', function() {
-                console.log('uau')
                 scope.selectedTab = null;
             })
 
@@ -58,10 +57,10 @@ angular.module('edison').directive('mainNavbar', function($q, edisonAPI, TabCont
                 $timeout(function() {
                     $(searchInput).on('focus', function() {
                         scope.searchFocus = true
-                        var selectors = [, '.navbar-header', '.navbar-nav', '.dropdown-toggle.user-menu']
+                        var selectors = ['.navbar-header', '.navbar-nav', '.dropdown-toggle.user-menu']
                         scope.searchBarSize = _.reduce(selectors, function(total, el) {
                             return total -= $(el).width();
-                        }, $(window).width())
+                        }, $(window).width() - 70)
                     })
                     $(searchInput).on('blur', function() {
                         scope.searchFocus = false

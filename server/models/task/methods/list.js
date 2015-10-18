@@ -11,7 +11,7 @@ module.exports = function(schema) {
     	var moment = require('moment')
         return new Promise(function(resolve, reject) {
             db.model('task').find({
-                to: req.query.user || req.session.user,
+                to: req.query.user || req.session.login,
                 $or: [{
                     checked: false,
                 }, {

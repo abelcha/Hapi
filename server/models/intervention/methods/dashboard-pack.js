@@ -163,7 +163,7 @@ module.exports = function(schema) {
                     VRF: cond('$status', 'VRF', 1),
                     APR: cond('$status', 'APR', 1),
                     ANN: cond('$status', 'ANN', 1),
-                    SUM: cond('$status', 'VRF', div(sub("$prixFinal", "$coutFourniture"), 300))
+                    SUM: cond('$status', 'VRF', div(sub("$prixFinal", "$coutFourniture"), 200))
                 })
                 .group({
                     _id: {
