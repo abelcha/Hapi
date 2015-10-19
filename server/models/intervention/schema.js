@@ -366,6 +366,8 @@ module.exports = function(db) {
                 type: Date,
                 default: Date.now
             },
+            status: String,
+            duration: Number,
             _type: String, //CONTACT/CALLBACK
         }],
         relance: {

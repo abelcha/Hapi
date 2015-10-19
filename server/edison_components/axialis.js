@@ -16,7 +16,7 @@ var request = function(query) {
             }
         }
         
-        console.log('==>', JSON.stringify(q), query)
+      //  console.log('==>', JSON.stringify(q), query)
 
         db.model('intervention').findOne(q).then(function(resp) {
             console.log('FIND INTERVENTION', !!resp)
@@ -24,7 +24,7 @@ var request = function(query) {
                 resp.appels  = resp.appels || [];
                 resp.appels.push(query);
                 resp.save(function(err, resp) {
-                    console.log("RESP INTERVENTION", err, resp)
+                    console.log("RESP INTERVENTION", !!err, !!resp)
                 });
             }
         })
