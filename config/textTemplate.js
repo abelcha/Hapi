@@ -496,16 +496,16 @@ module.exports = {
         },
         devis: {
             envoi: function(user, _config, __, _moment) {
-                var _ = __ || _
-                var moment = moment || _moment
+                var lodash = __ || _
+                var mmt = _moment || moment
                 var config = _config || require('./dataList.js')
                 var categorieClean = config.categories[this.categorie].suffix + " " + config.categories[this.categorie].long_name.toLowerCase()
                 var pseudo = user.pseudo
                 var intro;
                 if (this.client.civilite === "Soc.") {
-                    intro = _.template("À l'intention du responsable de la société {{_.startCase(client.nom.toLowerCase())}},\n\n")(this);
+                    intro = lodash.template("À l'intention du responsable de la société {{client.nom}},\n\n")(this);
                 } else {
-                    intro = _.template("{{client.civilite}} {{client.nom}},\n\n")(this);
+                    intro = lodash.template("{{client.civilite}} {{client.nom}},\n\n")(this);
                 }
                 var start = "Suite à notre conversation téléphonique de tout à l'heure, ";
                 var end = "Avez-vous reçu le devis ?\n\n" +
@@ -536,7 +536,7 @@ module.exports = {
                     var text = start + cont + end;
 
                 } else if (this.historique && this.historique.length > 1) {
-                    var text = "je vous ai transmis un devis " + categorieClean + " en date du " + moment(this.historique[0].date).format('L') + ".\n\n" + end;
+                    var text = "je vous ai transmis un devis " + categorieClean + " en date du " + mmt(this.historique[0].date).format('L') + ".\n\n" + end;
                 } else if (this.categorie == 'VT') {
                     var text = "Suite à notre échange téléphonique concernant le remplacement de votre vitrage," +
                         "vous trouverez ci-joint le devis n°" + this.id + " correspondant à ce que nous avons vu ensemble.\n\n" +
@@ -544,8 +544,8 @@ module.exports = {
                         "Merci de nous renvoyer le devis signé accompagné de la mention « BON POUR ACCORD » par mail.\n\n" +
                         "Nous interviendrons dans les plus brefs délais.\n\n" +
                         "Je reste à votre entière disposition pour toutes les demandes de renseignement et les remarques que vous pourriez avoir.\n\n";
-                } else if (_.find(this.produits, function(e) {
-                        return _.startsWith(e.ref, "BAL");
+                } else if (lodash.find(this.produits, function(e) {
+                        return lodash.startsWith(e.ref, "BAL");
                     })) {
                     var text = "Suite à notre échange téléphonique concernant le remplacement de votre ballon d'eau chaude sanitaire," +
                         "vous trouverez ci-joint le devis n°" + this.id + ".\n\n" +
