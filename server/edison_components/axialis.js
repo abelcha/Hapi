@@ -15,16 +15,25 @@ var request = function(query) {
                 }
             }
         }
-        
-      //  console.log('==>', JSON.stringify(q), query)
 
-        db.model('intervention').findOne(q).then(function(resp) {
+        //  console.log('==>', JSON.stringify(q), query)
+
+        db.model('intervention').findOne(q).populate('sst').then(function(resp) {
             console.log('FIND INTERVENTION', !!resp)
             if (resp) {
-                resp.appels  = resp.appels || [];
+
+                resp.appels = resp.appels || [];
                 resp.appels.push(query);
                 resp.save(function(err, resp) {
                     console.log("RESP INTERVENTION", !!err, !!resp)
+                    edison.event('INTER_CALL')
+                        .login(resp.login.ajout)
+                        .id(resp.id)
+                        .broadcast(inter.login.ajout)
+                        .color('purple')
+                        .message(_.template("{{sst.nomSociete}} appel le client {{id}} ({{client.civilite}} {{client.nom}})")(resp))
+                        .send()
+                        .save()
                 });
             }
         })
@@ -46,6 +55,7 @@ module.exports = {
         }, function(err, resp) {
             console.log("===>INFO RESP", err, resp)
         })
+
         res.send('ok')
     },
     callback: function(req, res) {
