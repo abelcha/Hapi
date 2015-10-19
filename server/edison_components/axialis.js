@@ -3,7 +3,6 @@ var _ = require('lodash');
 var request = function(query) {
     var response = _.pick(query, 'status_code', 'description', 'redirect_to');
     this.json(response);
-    console.log(response)
     db.model('axialis')(query).save();
     if (response.status_code === 200 && query.id_intervention) {
         var q = {
@@ -20,10 +19,13 @@ var request = function(query) {
         console.log('==>', JSON.stringify(q), query)
 
         db.model('intervention').findOne(q).then(function(resp) {
+            console.log('FIND INTERVENTION', !!resp)
             if (resp) {
                 resp.appels  = resp.appels || [];
                 resp.appels.push(query);
-                resp.save();
+                resp.save(function(err, resp) {
+                    console.log("RESP INTERVENTION", err, resp)
+                });
             }
         })
     }
@@ -45,11 +47,8 @@ module.exports = {
             console.log("===>INFO RESP", err, resp)
         })
         res.send('ok')
-        console.log('dataaxialis', req.body, req.query, req.params);
     },
     callback: function(req, res) {
-        console.log('callback')
-
         var _ = require('lodash');
         var q = req.query;
         if (req.query.api_key !== 'F8v0x13ftadh89rm0e9x18b62ZqgEl47') {
@@ -64,7 +63,6 @@ module.exports = {
         }
 
         req.query.call_origin = req.query.call_origin.replace('0033', '0');
-        console.log('==>', req.query.call_origin)
         db.model('intervention').findOne({
             $or: [{
                 'client.telephone.tel1': req.query.call_origin
@@ -75,7 +73,6 @@ module.exports = {
             }],
             status: 'ENC'
         }).populate('sst').then(function(resp) {
-            console.log('==>', resp.id)
             if (!resp) {
                 return request.bind(res)({
                     call_id: req.query.call_id,
@@ -98,7 +95,6 @@ module.exports = {
         })
     },
     contact: function(req, res) {
-        console.log('QUERY =>', req.params, req.query);
         var _ = require('lodash');
         var q = req.query;
 
@@ -151,7 +147,6 @@ module.exports = {
                 id: parseInt(req.params.id),
                 status: 'ENC',
             }).then(function(intervention) {
-                console.log(intervention.sst, doc.id);
                 if (!intervention || !intervention.artisan  || intervention.artisan.id !== doc.id) {
                     return request.bind(res)({
                         call_id: req.query.call_id,
