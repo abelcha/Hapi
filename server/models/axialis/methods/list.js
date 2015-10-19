@@ -47,8 +47,9 @@ module.exports = function(schema) {
                                     var uuid = require('uuid');
                                     var id = uuid.v4();
                                     fs.writeFileSync("/tmp/" + id + '.wav', buffer2)
-
+                                    console.log('before transcript')
                                     gspeech.recognize("/tmp/" + id + '.wav', function(err, data) {
+                                    console.log('after transcript')
                                         if (err)
                                             console.error(err);
                                         console.log("Final transcript is:\n" + data.transcript);
