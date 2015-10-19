@@ -159,6 +159,7 @@ module.exports = function(db) {
         descriptionTags: [
             String
         ],
+        remarqueSms: Boolean,
         remarque: {
             type: String,
             default: 'PAS DE REMARQUES'

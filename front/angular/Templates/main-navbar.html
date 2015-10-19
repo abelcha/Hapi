@@ -22,8 +22,9 @@
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{_.capitalize(model.title)}} ({{model.tabs.length}})</a>
                         <ul ng-if="selectedTab == model.title" class="dropdown-menu">
                             <li ng-repeat="t in model.tabs">
+
                             <a href="{{t.path}}">
-                                    {{t.title}}
+                                  <!--   <i class="fa fa-close red-text" ng-click="t.close()"></i>&nbsp;&nbsp; - &nbsp;&nbsp; -->{{t.title}}
                                 </a>
                             </li>
                         </ul>

@@ -1479,7 +1479,8 @@ angular.module('edison').factory('Signalement', function() {
 angular.module('edison').factory('Tab', function() {
 
 
-    var Tab = function(location) {
+    var Tab = function(container, location) {
+        this.container = container;
         this.title = "...";
         this.path = location.path();
         this.url = location.path().split('/').slice(1)
@@ -1493,6 +1494,11 @@ angular.module('edison').factory('Tab', function() {
         this.title = title
         return this;
     };
+
+    Tab.prototype.close = function() {
+        this.container.close(this);
+    }
+
     Tab.prototype.setData = function(data) {
         this.data = data;
         return this;
@@ -1511,7 +1517,7 @@ angular.module('edison').factory('TabContainer', function(Tab, $location) {
 
 
     TabContainer.find = function(location) {
-        var cmp = new Tab(location)
+        var cmp = new Tab(this, location)
         return _.find(this.__tabs, function(e) {
             if (e.route === 'list' && cmp.route === 'list') {
                 return cmp.model === e.model
@@ -1536,7 +1542,7 @@ angular.module('edison').factory('TabContainer', function(Tab, $location) {
     TabContainer.add = function(location) {
         var tab = this.find(location);
         if (!tab) {
-            this.selectedTab = new Tab(location);
+            this.selectedTab = new Tab(this, location);
             this.__tabs.push(this.selectedTab)
         } else {
             this.selectedTab = tab
