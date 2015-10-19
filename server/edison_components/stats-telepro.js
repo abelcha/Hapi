@@ -1,4 +1,3 @@
-var users = requireLocal('config/_users');
 var ms = require('milliseconds');
 var async = require('async')
 var _ = require("lodash")
@@ -69,7 +68,7 @@ var mergeFilters = function(allFilters, model) {
 
 
 module.exports = {
-    reload: _.throttle(function() {
+    reload: function() {
         return new Promise(function(resolve, reject) {
 
             try {
@@ -87,7 +86,7 @@ module.exports = {
                     })
                     var rtn = [];
                     var sum = {}
-                    users.forEach(function(user) {
+                _.each(edison.users.data, function(user) {
                         var telepro = {
                             login: user.login,
                         }
@@ -111,7 +110,7 @@ module.exports = {
                 __catch(e)
             }
         });
-    }, 5000),
+    },
     get: function(req, res) {
         var _this = this;
 
