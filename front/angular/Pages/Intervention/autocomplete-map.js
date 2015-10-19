@@ -27,7 +27,7 @@
                      scope.mapDisplay = true
                  }
 
-                 if (_.get(scope, 'client.address')) {
+                 if (_.get(scope, 'client.address.lt')) {
                      scope.client.address = Address(scope.client.address, true); //true -> copyContructor
                      scope.map.setCenter(scope.client.address);
                  } else {
@@ -35,6 +35,7 @@
                          lat: 46.3333,
                          lng: 2.6
                      }));
+                     scope.map.setZoom(5)
                  }
 
                  scope.changeAddress = function(place) {

@@ -83,7 +83,6 @@ module.exports = function(schema) {
             db.model('intervention').uniqueCacheReload(doc)
             if (envProd && (!doc.date.dump || moment().subtract(5000).isAfter(doc.date.dump))) {
                 var v1 = new V1(doc);
-                console.log('send')
                 v1.send(function(resp) {
                     console.log(resp)
                 });

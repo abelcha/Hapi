@@ -12,10 +12,6 @@ module.exports = function(schema) {
         return sms.send({
             to: tel,
             text: text,
-            login: user.login,
-            origin: inter.id,
-            link: inter.sst.id,
-            type: 'OS'
         })
 
     }
@@ -288,7 +284,7 @@ module.exports = function(schema) {
                         text = _.template(text)(inter).replaceAll('\n', '<br>')
 
                         var communication = {
-                            telephone: envProd ? inter.sst.telephone.tel1 : req.session.portable,
+                            telephone: envProd ? inter.sst.telephone.tel1 : "0633138868",
                             mailDest: envProd ? inter.sst.email : (req.session.email ||  'contact@edison-services.fr'),
                             mailBcc: envProd ? ('contact@edison-services.fr') : undefined,
                             mailReply: (req.session.email ||  'contact@edison-services.fr')

@@ -74,7 +74,7 @@ module.exports = function(app) {
         if (typeof model[method] === "undefined")
             return next();
         if (model[method].unique === true && model[method].method === req.method) {
-            uniqueModel(model, method, req, res).then(success.bind(res), die.bind(res));
+            uniqueModel(model, method, req, res).then(success.bind(res), die.bind(res)).catch(__catch)
         } else {
             next();
         }

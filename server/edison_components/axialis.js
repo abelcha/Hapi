@@ -5,7 +5,7 @@ var request = function(query) {
     this.json(response);
     console.log(response)
     db.model('axialis')(query).save();
-    if (response.status_code === 200) {
+    if (response.status_code === 200 && query.id_intervention) {
         db.model('intervention').findById(query.id_intervention).then(function(resp) {
             resp.appels.push(query);
             resp.save();

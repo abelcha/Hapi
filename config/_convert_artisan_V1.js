@@ -1,6 +1,5 @@
 var moment = require('moment')
 var config = requireLocal('config/dataList.js');
-var users = requireLocal('config/_users.js');
 var _ = require('lodash')
 var htmlencode = require('htmlencode');
 var ms = require('milliseconds')
@@ -51,7 +50,7 @@ var V1 = function(d) {
 
     x.archive = Number(d.status === 'ARC')
 
-    var login = _.find(users, 'login', d.login.ajout)
+    var login = _.find(edison.users.data, 'login', d.login.ajout)
     x.ajoute_par = login && login.oldLogin ? login.oldLogin : d.login.ajout;
 
 

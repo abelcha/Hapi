@@ -260,7 +260,6 @@
 
     module.exports.toV2 = function(d) {
         var ms = require('milliseconds')
-        var users = requireLocal('config/_users');
         var config = requireLocal('config/dataList');
         var sanitizeHtml = require('sanitize-html');
         var Entities = require('html-entities').XmlEntities;

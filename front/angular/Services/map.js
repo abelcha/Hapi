@@ -13,6 +13,7 @@ angular.module('edison').factory('Map', function() {
     }
 
     Map.prototype.setZoom = function(value) {
+       // throw new Error('lol')
          if (window.map)
             window.map.setZoom(value)
         this.zoom = value

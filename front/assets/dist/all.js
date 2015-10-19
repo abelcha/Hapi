@@ -3394,6 +3394,7 @@ angular.module('edison').factory('Map', function() {
     }
 
     Map.prototype.setZoom = function(value) {
+       // throw new Error('lol')
          if (window.map)
             window.map.setZoom(value)
         this.zoom = value
@@ -3794,178 +3795,6 @@ angular.module('edison').directive('mainNavbar', function($q, edisonAPI, TabCont
 
 });
 
-var archiveReglementController = function(edisonAPI, TabContainer, $routeParams, $location, LxProgressService) {
-
-    var tab = TabContainer.getCurrentTab();
-    var _this = this;
-    _this.title = 'Archives Reglements'
-    tab.setTitle('archives RGL')
-    LxProgressService.circular.show('#5fa2db', '#globalProgress');
-    edisonAPI.compta.archivesReglement().success(function(resp) {
-        LxProgressService.circular.hide()
-        _this.data = resp
-    })
-    _this.moment = moment;
-    _this.openLink = function(link) {
-        $location.url(link)
-    }
-}
-
-angular.module('edison').controller('archivesReglementController', archiveReglementController);
-
-var archivesPaiementController = function(edisonAPI, TabContainer, $routeParams, $location, LxProgressService) {
-    var _this = this;
-    var tab = TabContainer.getCurrentTab();
-    _this.type = 'paiement'
-    _this.title = 'Archives Paiements'
-    tab.setTitle('archives PAY')
-    LxProgressService.circular.show('#5fa2db', '#globalProgress');
-    edisonAPI.compta.archivesPaiement().success(function(resp) {
-        LxProgressService.circular.hide()
-        _this.data = resp
-    })
-    _this.moment = moment;
-    _this.openLink = function(link) {
-        $location.url(link)
-    }
-}
-
-angular.module('edison').controller('archivesPaiementController', archivesPaiementController);
-
- angular.module('edison').directive('artisanCategorie', ['config', function(config) {
-     "use strict";
-     return {
-         replace: true,
-         restrict: 'E',
-         templateUrl: '/Templates/artisan-categorie.html',
-         transclude: true,
-         scope: {
-             model: "=",
-         },
-         link: function(scope, element, attrs) {
-             scope.config = config
-             scope.findColor = function(categorie) {
-                 var f = _.find(scope.model.categories, function(e)  {
-                     return e === categorie.short_name
-                 })
-                 return f ? categorie.color : "white";
-
-             }
-             scope.toggleCategorie = function(categorie) {
-                var f = scope.model.categories.indexOf(categorie);
-                if (f >= 0) {
-                    scope.model.categories.splice(f, 1);
-                } else {
-                    scope.model.categories.push(categorie)
-                }
-             }
-         },
-     }
-
- }]);
-
-var ArtisanCtrl = function($timeout, $rootScope, $scope, edisonAPI, $location, $routeParams, ContextMenu, LxProgressService, LxNotificationService, TabContainer, config, dialog, artisanPrm, Artisan) {
-    "use strict";
-    var _this = this;
-    _this.config = config;
-    _this.dialog = dialog;
-    _this.moment = moment;
-    _this.contextMenu = new ContextMenu('artisan')
-
-    var tab = TabContainer.getCurrentTab();
-    if (!tab.data) {
-        var artisan = new Artisan(artisanPrm.data)
-        tab.setData(artisan);
-        if ($routeParams.id.length > 12) {
-            _this.isNew = true;
-            artisan.tmpID = $routeParams.id;
-            tab.setTitle('SST  ' + moment((new Date(parseInt(artisan.tmpID))).toISOString()).format("HH:mm").toString());
-        } else {
-            tab.setTitle('SST  ' + $routeParams.id);
-            if (!artisan) {
-                LxNotificationService.error("Impossible de trouver les informations !");
-                $location.url("/dashboard");
-                TabContainer.remove(tab);
-                return 0;
-            }
-        }
-    } else {
-        var artisan = tab.data;
-    }
-    _this.data = tab.data;
-    _this.saveArtisan = function(options) {
-        artisan.save(function(err, resp) {
-            if (err) {
-                return false
-            } else if (options.contrat) {
-                artisan = new Artisan(resp);
-                artisan.envoiContrat.bind(resp)(TabContainer.close);
-            } else {
-                TabContainer.close(tab);
-            }
-        })
-    }
-    _this.onArtisanFileUpload = function(file, name) {
-        LxProgressService.circular.show('#5fa2db', '#fileUploadProgress');
-        edisonAPI.artisan.upload(file, name, artisan.id).then(function() {
-            console.log('reload')
-            LxProgressService.circular.hide()
-            _this.loadFilesList();
-        })
-    }
-
-    _this.artisanClickTrigger = function(elem) {
-        setTimeout(function() {
-            angular.element("#file_" + elem + ">input").trigger('click');
-        }, 0)
-
-    }
-    _this.rightClick = function($event) {
-        console.log('rightClick')
-        _this.contextMenu.setPosition($event.pageX, $event.pageY)
-        _this.contextMenu.setData(artisan);
-        _this.contextMenu.open();
-    }
-
-    _this.fileExist = function(name) {
-        if (!artisan.file)
-            return false;
-        return _.find(artisan.file, function(e) {
-            return _.startsWith(e, name)
-        });
-    }
-
-    _this.loadFilesList = function() {
-        edisonAPI.artisan.getFiles(artisan.id).then(function(result) {
-            artisan.file = result.data;
-            console.log('==>', artisan.file)
-        }, console.log)
-    }
-    if (artisan.id) {
-        _this.loadFilesList();
-    }
-
-    _this.addComment = function() {
-        artisan.comments.push({
-            login: $rootScope.user.login,
-            text: _this.commentText,
-            date: new Date()
-        })
-        _this.commentText = "";
-    }
-    var updateTmpArtisan = _.after(5, _.throttle(function() {
-        edisonAPI.artisan.saveTmp(artisan);
-
-    }, 2000))
-
-    if (!artisan.id) {
-        $scope.$watch(function() {
-            return artisan;
-        }, updateTmpArtisan, true)
-    }
-}
-angular.module('edison').controller('ArtisanController', ArtisanCtrl);
-
 var AvoirsController = function(TabContainer, openPost, edisonAPI, $rootScope, LxProgressService, LxNotificationService, FlushList) {
     "use strict";
     var _this = this
@@ -4009,6 +3838,44 @@ var AvoirsController = function(TabContainer, openPost, edisonAPI, $rootScope, L
 
 
 angular.module('edison').controller('avoirsController', AvoirsController);
+
+var archiveReglementController = function(edisonAPI, TabContainer, $routeParams, $location, LxProgressService) {
+
+    var tab = TabContainer.getCurrentTab();
+    var _this = this;
+    _this.title = 'Archives Reglements'
+    tab.setTitle('archives RGL')
+    LxProgressService.circular.show('#5fa2db', '#globalProgress');
+    edisonAPI.compta.archivesReglement().success(function(resp) {
+        LxProgressService.circular.hide()
+        _this.data = resp
+    })
+    _this.moment = moment;
+    _this.openLink = function(link) {
+        $location.url(link)
+    }
+}
+
+angular.module('edison').controller('archivesReglementController', archiveReglementController);
+
+var archivesPaiementController = function(edisonAPI, TabContainer, $routeParams, $location, LxProgressService) {
+    var _this = this;
+    var tab = TabContainer.getCurrentTab();
+    _this.type = 'paiement'
+    _this.title = 'Archives Paiements'
+    tab.setTitle('archives PAY')
+    LxProgressService.circular.show('#5fa2db', '#globalProgress');
+    edisonAPI.compta.archivesPaiement().success(function(resp) {
+        LxProgressService.circular.hide()
+        _this.data = resp
+    })
+    _this.moment = moment;
+    _this.openLink = function(link) {
+        $location.url(link)
+    }
+}
+
+angular.module('edison').controller('archivesPaiementController', archivesPaiementController);
 
 var ContactArtisanController = function($scope, $timeout, TabContainer, LxProgressService, FiltersFactory, ContextMenu, edisonAPI, DataProvider, $routeParams, $location, $q, $rootScope, $filter, config, ngTableParams) {
     "use strict";
@@ -4148,6 +4015,140 @@ var ContactArtisanController = function($scope, $timeout, TabContainer, LxProgre
 }
 angular.module('edison').controller('ContactArtisanController', ContactArtisanController);
 
+ angular.module('edison').directive('artisanCategorie', ['config', function(config) {
+     "use strict";
+     return {
+         replace: true,
+         restrict: 'E',
+         templateUrl: '/Templates/artisan-categorie.html',
+         transclude: true,
+         scope: {
+             model: "=",
+         },
+         link: function(scope, element, attrs) {
+             scope.config = config
+             scope.findColor = function(categorie) {
+                 var f = _.find(scope.model.categories, function(e)  {
+                     return e === categorie.short_name
+                 })
+                 return f ? categorie.color : "white";
+
+             }
+             scope.toggleCategorie = function(categorie) {
+                var f = scope.model.categories.indexOf(categorie);
+                if (f >= 0) {
+                    scope.model.categories.splice(f, 1);
+                } else {
+                    scope.model.categories.push(categorie)
+                }
+             }
+         },
+     }
+
+ }]);
+
+var ArtisanCtrl = function($timeout, $rootScope, $scope, edisonAPI, $location, $routeParams, ContextMenu, LxProgressService, LxNotificationService, TabContainer, config, dialog, artisanPrm, Artisan) {
+    "use strict";
+    var _this = this;
+    _this.config = config;
+    _this.dialog = dialog;
+    _this.moment = moment;
+    _this.contextMenu = new ContextMenu('artisan')
+
+    var tab = TabContainer.getCurrentTab();
+    if (!tab.data) {
+        var artisan = new Artisan(artisanPrm.data)
+        tab.setData(artisan);
+        if ($routeParams.id.length > 12) {
+            _this.isNew = true;
+            artisan.tmpID = $routeParams.id;
+            tab.setTitle('SST  ' + moment((new Date(parseInt(artisan.tmpID))).toISOString()).format("HH:mm").toString());
+        } else {
+            tab.setTitle('SST  ' + $routeParams.id);
+            if (!artisan) {
+                LxNotificationService.error("Impossible de trouver les informations !");
+                $location.url("/dashboard");
+                TabContainer.remove(tab);
+                return 0;
+            }
+        }
+    } else {
+        var artisan = tab.data;
+    }
+    _this.data = tab.data;
+    _this.saveArtisan = function(options) {
+        artisan.save(function(err, resp) {
+            if (err) {
+                return false
+            } else if (options.contrat) {
+                artisan = new Artisan(resp);
+                artisan.envoiContrat.bind(resp)(TabContainer.close);
+            } else {
+                TabContainer.close(tab);
+            }
+        })
+    }
+    _this.onArtisanFileUpload = function(file, name) {
+        LxProgressService.circular.show('#5fa2db', '#fileUploadProgress');
+        edisonAPI.artisan.upload(file, name, artisan.id).then(function() {
+            console.log('reload')
+            LxProgressService.circular.hide()
+            _this.loadFilesList();
+        })
+    }
+
+    _this.artisanClickTrigger = function(elem) {
+        setTimeout(function() {
+            angular.element("#file_" + elem + ">input").trigger('click');
+        }, 0)
+
+    }
+    _this.rightClick = function($event) {
+        console.log('rightClick')
+        _this.contextMenu.setPosition($event.pageX, $event.pageY)
+        _this.contextMenu.setData(artisan);
+        _this.contextMenu.open();
+    }
+
+    _this.fileExist = function(name) {
+        if (!artisan.file)
+            return false;
+        return _.find(artisan.file, function(e) {
+            return _.startsWith(e, name)
+        });
+    }
+
+    _this.loadFilesList = function() {
+        edisonAPI.artisan.getFiles(artisan.id).then(function(result) {
+            artisan.file = result.data;
+            console.log('==>', artisan.file)
+        }, console.log)
+    }
+    if (artisan.id) {
+        _this.loadFilesList();
+    }
+
+    _this.addComment = function() {
+        artisan.comments.push({
+            login: $rootScope.user.login,
+            text: _this.commentText,
+            date: new Date()
+        })
+        _this.commentText = "";
+    }
+    var updateTmpArtisan = _.after(5, _.throttle(function() {
+        edisonAPI.artisan.saveTmp(artisan);
+
+    }, 2000))
+
+    if (!artisan.id) {
+        $scope.$watch(function() {
+            return artisan;
+        }, updateTmpArtisan, true)
+    }
+}
+angular.module('edison').controller('ArtisanController', ArtisanCtrl);
+
 var DashboardController = function($rootScope, dialog, user, edisonAPI, $scope, $filter, TabContainer, NgTableParams, $routeParams, $location, LxProgressService) {
     // var tab = TabContainer.getCurrentTab();
     //   tab.setTitle('Dashboard')
@@ -4238,7 +4239,7 @@ angular.module('edison').controller('DashboardController', DashboardController);
                      scope.mapDisplay = true
                  }
 
-                 if (_.get(scope, 'client.address')) {
+                 if (_.get(scope, 'client.address.lt')) {
                      scope.client.address = Address(scope.client.address, true); //true -> copyContructor
                      scope.map.setCenter(scope.client.address);
                  } else {
@@ -4246,6 +4247,7 @@ angular.module('edison').controller('DashboardController', DashboardController);
                          lat: 46.3333,
                          lng: 2.6
                      }));
+                     scope.map.setZoom(5)
                  }
 
                  scope.changeAddress = function(place) {

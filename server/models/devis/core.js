@@ -95,7 +95,6 @@
         var Entities = require('html-entities').XmlEntities;
         var entities = new Entities();
 
-        var users = requireLocal('config/_users');
         var ms = require('milliseconds')
 
         var addProp = function(obj, prop, name) {
