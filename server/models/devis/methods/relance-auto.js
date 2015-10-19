@@ -43,8 +43,8 @@ module.exports = function(schema) {
                 $size: 2
             },
             'historique.1.date': {
-                $lt: oneDaysAgo
-                $gt: twoDaysAgo,
+                $lt: oneDaysAgo,
+                $gte: twoDaysAgo
             }
         }).then(function(resp) {
             async.eachLimit(resp, 1, send);
