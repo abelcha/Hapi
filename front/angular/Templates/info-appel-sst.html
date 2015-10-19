@@ -7,9 +7,9 @@
                     <tr ng-repeat="(k, v) in data.appels">
                         <td>{{v.date|date:"dd/MM/yy à HH'h'mm"}}</td>
                         <td>{{v._type}}</td>
-                        <td><a target="_blank" href="/api/axialis/{{v.id_call}}/get">Conversation</a></td>
+                        <td><a target="_blank" href="/api/axialis/{{v.call_id}}/get">Conversation</a></td>
                         <td>
-                            <audio controls ng-init="v.audioFile = '/api/axialis/' + v.id_call + '/get'">
+                            <audio controls ng-init="v.audioFile = '/api/axialis/' + v.call_id + '/get'">
                                 <source ng-src="{{v.audioFile}}" type="audio/mpeg">
                             </audio>
                         </td>
