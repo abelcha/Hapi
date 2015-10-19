@@ -37,7 +37,7 @@ module.exports = {
             });
         }
 
-        req.query.call_origin = req.query.call_origin.replace('33', '0');
+        req.query.call_origin = req.query.call_origin.replace('0033', '0');
         console.log('==>', req.query.call_origin)
         db.model('intervention').findOne({
             $or: [{
