@@ -19,7 +19,7 @@ var request = function(query) {
         
         console.log('==>', JSON.stringify(q), query)
 
-        db.model('intervention').find(q).then(function(resp) {
+        db.model('intervention').findOne(q).then(function(resp) {
             if (resp) {
                 resp.appels  = resp.appels || [];
                 resp.appels.push(query);
