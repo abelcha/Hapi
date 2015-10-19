@@ -6,7 +6,16 @@ var request = function(query) {
     console.log(response)
     db.model('axialis')(query).save();
     if (response.status_code === 200 && query.id_intervention) {
-        db.model('intervention').findById(query.id_intervention).then(function(resp) {
+        db.model('intervention').find({
+            id: query.id_intervention,
+            appels: {
+                $not: {
+                    $elemMatch: {
+                        call_id: query.call_id
+                    }
+                }
+            }
+        }).then(function(resp) {
             resp.appels.push(query);
             resp.save();
         })
@@ -18,6 +27,14 @@ module.exports = {
         if (req.query.api_key !== 'F8v0x13ftadh89rm0e9x18b62ZqgEl47') {
             return res.sendStatus(401)
         }
+        db.model('intervention').update({
+            "appels.call_id": req.query.call_id
+        }, {
+            $set: {
+                "appels.$.duration": req.query.duree_about,
+                "appels.$.status": req.query.status,
+            }
+        })
         res.send('ok')
         console.log('dataaxialis', req.body, req.query, req.params);
     },
@@ -48,7 +65,7 @@ module.exports = {
                 'client.telephone.tel3': req.query.call_origin
             }]
         }).populate('sst').then(function(resp) {
-
+            console.log('==>', resp.id)
             if (!resp) {
                 return request.bind(res)({
                     id_call: req.query.call_id,

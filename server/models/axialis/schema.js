@@ -5,6 +5,8 @@ module.exports = function(db) {
         id_sst: Number,
         id_intervention: Number,
         status_code: Number,
+        status:String,
+        duration:Number,
         redirect_to: String,
         date: {
             type: Date,
