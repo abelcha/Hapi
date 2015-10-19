@@ -6,7 +6,7 @@ var request = function(query) {
     console.log(response)
     db.model('axialis')(query).save();
     if (response.status_code === 200 && query.id_intervention) {
-        db.model('intervention').find({
+        var q = {
             id: query.id_intervention,
             appels: {
                 $not: {
@@ -15,9 +15,14 @@ var request = function(query) {
                     }
                 }
             }
-        }).then(function(resp) {
-            resp.appels.push(query);
-            resp.save();
+        }
+        console.log('==>', q)
+        db.model('intervention').find(q).then(function(resp) {
+            if (resp) {
+
+                resp.appels.push(query);
+                resp.save();
+            }
         })
     }
 }
