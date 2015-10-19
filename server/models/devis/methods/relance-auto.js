@@ -24,6 +24,7 @@ module.exports = function(schema) {
         var todayAt7 = moment().hours(7).toDate()
         var yesterdayAt12h30 = moment().add(-1, 'days').hours(12).minutes(30).toDate()
         var twoDaysAgo = moment().add(-2, 'days').toDate();
+        var oneDaysAgo = moment().add(-1, 'days').toDate();
         db.model('devis').find({
             status: 'ATT',
             historique: {
@@ -42,7 +43,8 @@ module.exports = function(schema) {
                 $size: 2
             },
             'historique.1.date': {
-                $gt: twoDaysAgo
+                $lt: oneDaysAgo
+                $gt: twoDaysAgo,
             }
         }).then(function(resp) {
             async.eachLimit(resp, 1, send);
