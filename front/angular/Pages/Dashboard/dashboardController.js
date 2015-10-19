@@ -14,24 +14,35 @@ var DashboardController = function($rootScope, dialog, user, edisonAPI, $scope, 
 
             })*/
 
-    _this.newTask = {
-        to: user.login,
-        from: user.login
-    }
+
 
     _this.addTask = function() {
-        edisonAPI.task.add(_this.newTask);
+        edisonAPI.task.add(_this.newTask).then(reloadTask);
     }
-    edisonAPI.task.listRelevant({
-        user: $rootScope.displayUser
-    }).then(function(resp) {
-        console.log('==>', resp.data)
-        _this.taskList = resp.data;
-    })
+
+    _this.check = function(task) {
+        edisonAPI.task.check(task._id).then(reloadTask)
+    }
+
+
+    var reloadTask = function() {
+        _this.newTask = {
+            to: user.login,
+            from: user.login
+        }
+        edisonAPI.task.listRelevant({
+            user: $rootScope.displayUser
+        }).then(function(resp) {
+            _this.taskList = resp.data;
+        })
+    }
+
+    reloadTask();
 
     edisonAPI.intervention.dashboardStats({
         user: user.login
     }).then(function(resp) {
+        console.log(resp);
         _this.tableParams = new NgTableParams({
             count: resp.data.weekStats.length,
             sorting: {

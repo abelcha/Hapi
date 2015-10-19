@@ -145,7 +145,7 @@ module.exports = function(schema) {
     schema.statics.weekStats = function(req, res) {
         //ligue 1
         return new Promise(function(resolve, reject) {
-            var dateCeilling = moment(req.query.date || new Date).startOf('week').toDate();
+            var dateCeilling = moment(req.query.date ||  new Date).startOf('week').toDate();
 
             db.model('intervention')
                 .aggregate()
@@ -163,7 +163,7 @@ module.exports = function(schema) {
                     VRF: cond('$status', 'VRF', 1),
                     APR: cond('$status', 'APR', 1),
                     ANN: cond('$status', 'ANN', 1),
-                    SUM: cond('$status', 'VRF', div(sub("$prixFinal", "$coutFourniture"), 200))
+                    SUM: cond('$status', 'VRF', div(sub("$prixFinal", "$coutFourniture"), 300))
                 })
                 .group({
                     _id: {
@@ -186,7 +186,7 @@ module.exports = function(schema) {
                             envoi: 0,
                             verif: 0,
                             annul: 0,
-                            total:0,
+                            total: 0,
                             sum: 0
                         }
                     })
@@ -217,8 +217,7 @@ module.exports = function(schema) {
         });
     }
 
-    schema.statics.champLastMonth = function(req, res) {
-    }
+    schema.statics.champLastMonth = function(req, res) {}
 
     schema.statics.dashboardStats = function(req, res) {
         Promise.all([

@@ -2345,6 +2345,10 @@ md-switch.md-checked.md-primary .md-bar {
     padding: 3px;
 }
 
+.barred {
+    text-decoration: line-through;
+}
+
 
 /*#tbody-list>tr {
     transition: background 2s;

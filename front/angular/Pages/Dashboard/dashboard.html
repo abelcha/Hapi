@@ -69,7 +69,7 @@
                         <br>
                         <br>
                         </div>
-                        <table class="table table-bordered tbls-usrs">
+                        <table class="table  table-hover">
                             <thead>
                                 <tr>
                                     <th>Date</th>
@@ -78,7 +78,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr ng-repeat="p in vm.taskList">
+                                <tr ng-repeat="p in vm.taskList" ng-class="{barred:p.checked}" ng-click="vm.check(p)">
                                     <td>{{p.date|date:"dd/MM/yy à HH'h'mm"}}</td>
                                     <td>{{p.from}}</td>
                                     <td>{{p.text}}</td>

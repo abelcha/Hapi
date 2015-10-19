@@ -3966,6 +3966,50 @@ var ArtisanCtrl = function($timeout, $rootScope, $scope, edisonAPI, $location, $
 }
 angular.module('edison').controller('ArtisanController', ArtisanCtrl);
 
+var AvoirsController = function(TabContainer, openPost, edisonAPI, $rootScope, LxProgressService, LxNotificationService, FlushList) {
+    "use strict";
+    var _this = this
+    var tab = TabContainer.getCurrentTab();
+    tab.setTitle('Avoirs')
+    _this.loadData = function(prevChecked) {
+        LxProgressService.circular.show('#5fa2db', '#globalProgress');
+        edisonAPI.compta.avoirs().then(function(result) {
+            console.log(result)
+            $rootScope.avoirs = result.data
+            LxProgressService.circular.hide()
+        })
+    }
+    if (!$rootScope.avoirs)
+        _this.loadData()
+
+    _this.reloadAvoir = function() {
+        _this.loadData()
+    }
+
+    _this.print = function(type) {
+        console.log($rootScope.avoirs);
+        openPost('/api/intervention/printAvoir', {
+            data: $rootScope.avoirs
+        });
+    }
+
+    _this.flush = function() {
+        var list = _.filter($rootScope.avoirs, {
+            checked: true
+        })
+        edisonAPI.compta.flushAvoirs(list).then(function(resp) {
+            LxNotificationService.success(resp.data);
+            _this.reloadAvoir()
+        }).catch(function(err) {
+            LxNotificationService.error(err.data);
+        })
+    }
+
+}
+
+
+angular.module('edison').controller('avoirsController', AvoirsController);
+
 var ContactArtisanController = function($scope, $timeout, TabContainer, LxProgressService, FiltersFactory, ContextMenu, edisonAPI, DataProvider, $routeParams, $location, $q, $rootScope, $filter, config, ngTableParams) {
     "use strict";
     var _this = this;
@@ -4120,24 +4164,35 @@ var DashboardController = function($rootScope, dialog, user, edisonAPI, $scope, 
 
             })*/
 
-    _this.newTask = {
-        to: user.login,
-        from: user.login
-    }
+
 
     _this.addTask = function() {
-        edisonAPI.task.add(_this.newTask);
+        edisonAPI.task.add(_this.newTask).then(reloadTask);
     }
-    edisonAPI.task.listRelevant({
-        user: $rootScope.displayUser
-    }).then(function(resp) {
-        console.log('==>', resp.data)
-        _this.taskList = resp.data;
-    })
+
+    _this.check = function(task) {
+        edisonAPI.task.check(task._id).then(reloadTask)
+    }
+
+
+    var reloadTask = function() {
+        _this.newTask = {
+            to: user.login,
+            from: user.login
+        }
+        edisonAPI.task.listRelevant({
+            user: $rootScope.displayUser
+        }).then(function(resp) {
+            _this.taskList = resp.data;
+        })
+    }
+
+    reloadTask();
 
     edisonAPI.intervention.dashboardStats({
         user: user.login
     }).then(function(resp) {
+        console.log(resp);
         _this.tableParams = new NgTableParams({
             count: resp.data.weekStats.length,
             sorting: {
@@ -4946,9 +5001,9 @@ angular.module('edison').controller('LpaController', LpaController);
 
 angular.module('edison').controller('ListeArtisanController', _.noop);
 
-angular.module('edison').controller('ListeInterventionController', _.noop);
-
 angular.module('edison').controller('ListeDevisController', _.noop);
+
+angular.module('edison').controller('ListeInterventionController', _.noop);
 
 var SearchController = function(edisonAPI, TabContainer, $routeParams, $location, LxProgressService) {
     var tab = TabContainer.getCurrentTab();
@@ -5379,49 +5434,5 @@ var telephoneMatch = function(TabContainer, edisonAPI, $rootScope, $scope, $loca
 
 }
 angular.module('edison').controller('telephoneMatch', telephoneMatch);
-
-var AvoirsController = function(TabContainer, openPost, edisonAPI, $rootScope, LxProgressService, LxNotificationService, FlushList) {
-    "use strict";
-    var _this = this
-    var tab = TabContainer.getCurrentTab();
-    tab.setTitle('Avoirs')
-    _this.loadData = function(prevChecked) {
-        LxProgressService.circular.show('#5fa2db', '#globalProgress');
-        edisonAPI.compta.avoirs().then(function(result) {
-            console.log(result)
-            $rootScope.avoirs = result.data
-            LxProgressService.circular.hide()
-        })
-    }
-    if (!$rootScope.avoirs)
-        _this.loadData()
-
-    _this.reloadAvoir = function() {
-        _this.loadData()
-    }
-
-    _this.print = function(type) {
-        console.log($rootScope.avoirs);
-        openPost('/api/intervention/printAvoir', {
-            data: $rootScope.avoirs
-        });
-    }
-
-    _this.flush = function() {
-        var list = _.filter($rootScope.avoirs, {
-            checked: true
-        })
-        edisonAPI.compta.flushAvoirs(list).then(function(resp) {
-            LxNotificationService.success(resp.data);
-            _this.reloadAvoir()
-        }).catch(function(err) {
-            LxNotificationService.error(err.data);
-        })
-    }
-
-}
-
-
-angular.module('edison').controller('avoirsController', AvoirsController);
 
 //# sourceMappingURL=all.js.map

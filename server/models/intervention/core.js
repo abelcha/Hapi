@@ -395,7 +395,7 @@
         if (rtn.status === "INT") {
             rtn.login.verification = rtn.login.ajout
             if (!rtn.reglementSurPlace) {
-                rtn.login.envoiFacture = edison.users.search(d.facture_editee_par ||  'boukris_b')
+                rtn.login.envoiFacture = edison.users.search(d.facture_editee_par || rtn.login.ajout)
                 rtn.login.verification = rtn.login.envoiFacture
             }
             rtn.date.verification = rtn.date.intervention || rtn.date.ajout;
