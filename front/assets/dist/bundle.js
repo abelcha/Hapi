@@ -2957,8 +2957,9 @@ module.exports = {
             }
         },
         devis: {
-            envoi: function(user) {
-                var config = require('./dataList.js')
+            envoi: function(user, _config, __) {
+                var _ = __ || _
+                var config = _config || require('./dataList.js')
                 var categorieClean = config.categories[this.categorie].suffix + " " + config.categories[this.categorie].long_name.toLowerCase()
                 var pseudo = user.pseudo
                 var intro;
@@ -2986,7 +2987,6 @@ module.exports = {
                         "Je reste à votre entière disposition pour tous les renseignements ou les remarques que vous pourriez avoir concernant ce devis (technique, délais, prix).\n"
 
                 } else if (this.historique && this.historique.length === 1) {
-                    console.log('yay histor')
                     var cont;
                     if (this.categorie == 'VT')
                         cont = "je vous ai envoyé le devis que vous m'avez demandé pour le remplacement de votre vitrage, vous deviez le transmettre directement à votre compagnie d'assurance.\n\n";

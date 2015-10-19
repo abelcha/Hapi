@@ -7,6 +7,7 @@ var Timer = module.exports = function() {
     //    this.emitter.add("*/120 * * * *", "every hour");
     //    this.emitter.add("*/5 * * * *", "every 5 minutes");
     // this.emitter.add("*/2 * * * *", "every minute");
+    this.emitter.add("0 7 * * *", "everyday at 7")
     this.emitter.add("0 3 * * *", "3pm");
     this.emitter.add("0 4 * * *", "4pm");
     this.emitter.add("0 20 * * *", "20h");
@@ -20,6 +21,14 @@ var Timer = module.exports = function() {
                 method: 'cacheReload'
             })
         });*/
+
+
+    this.emitter.on("everyday at 7", function() {
+        db.model('devis').relanceAuto7h().then(function() {
+            console.log('OK')
+        })
+    });
+
     this.emitter.on("30 minutes", function() {
         db.model('intervention').fullReload().then(function() {
             console.log('inter ok')
@@ -78,7 +87,7 @@ var Timer = module.exports = function() {
     var test = function() {
             var parser = require('cron-parser');
             try {
-                var interval = parser.parseExpression("*/20 * * * *");
+                var interval = parser.parseExpression("0 7 * * *");
                 console.log('Date: ', interval.next().toString()); // Sat Dec 29 2012 00:44:00 GMT+0200 (EET) 
                 console.log('Date: ', interval.next().toString()); // Sat Dec 29 2012 00:44:00 GMT+0200 (EET) 
                 console.log('Date: ', interval.next().toString()); // Sat Dec 29 2012 00:44:00 GMT+0200 (EET) 
@@ -90,7 +99,7 @@ var Timer = module.exports = function() {
             }
 
         }
-        // test();
+     //   test();
 
 
 }

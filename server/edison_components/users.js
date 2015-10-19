@@ -1,6 +1,6 @@
 var Users = function() {
     var _this = this;
-    db.model('user').find().then(function(resp) {
+    db.model('user').find().select('-password').then(function(resp) {
         _this.data = resp;
     })
 }

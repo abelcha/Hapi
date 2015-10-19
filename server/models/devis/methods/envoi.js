@@ -10,8 +10,8 @@ module.exports = function(schema) {
         method: 'POST',
         fn: function(devis, req, res) {
 
-
             var getDevisPdfObj = function(doc) {
+                console.log("devisSend")
                 doc.facture = doc.client;
                 doc.facture.tel = doc.client.telephone.tel1;
                 doc.datePlain = moment.tz('Europe/Paris').format('LL');
@@ -28,8 +28,8 @@ module.exports = function(schema) {
             }
 
 
-
             return new Promise(function(resolve, reject) {
+                console.log('==>' ,devis)
                 if (!devis && !devis.produits || !devis.produits.length)
                     return reject('Le devis est vide')
                         /*                if (envDev) {
