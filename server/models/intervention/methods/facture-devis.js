@@ -147,22 +147,19 @@ module.exports = function(schema) {
                 if (!params.text ||  !params.date) {
                     Promise.reject("Invalid Request")
                 }
-                try {
-                    if (inter.reglementSurPlace) {
-                        inter.facture = inter.client;
-                    }
-                    var pdf = getFacturePdfObj(inter, inter.date.intervention, true, req.body.date);
-
-                } catch (e) {
-                    reject(e)
+                if (inter.reglementSurPlace) {
+                    inter.facture = inter.client;
                 }
+                inter.acompte = inter.prixFinal;
+
+                var pdf = getFacturePdfObj(inter, inter.date.intervention, true, req.body.date);
+
                 pdf.toBuffer(function(err, buffer) {
                     var communication = {
                         mailDest: envProd ? inter.facture.email : (req.session.email ||  'contact@edison-services.fr'),
                         mailBcc: envProd ? (req.session.email ||  'contact@edison-services.fr') : undefined,
                         mailReply: (req.session.email ||  'comptabilite@edison-services.fr')
                     }
-                    console.log(communication);
                     mail.send({
                         From: "comptabilite@edison-services.fr",
                         ReplyTo: communication.mailReply,
