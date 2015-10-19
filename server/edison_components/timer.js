@@ -8,6 +8,7 @@ var Timer = module.exports = function() {
     //    this.emitter.add("*/5 * * * *", "every 5 minutes");
     // this.emitter.add("*/2 * * * *", "every minute");
     this.emitter.add("0 7 * * *", "everyday at 7")
+    this.emitter.add("0 14 * * *", "everyday at 14")
     this.emitter.add("0 3 * * *", "3pm");
     this.emitter.add("0 4 * * *", "4pm");
     this.emitter.add("0 20 * * *", "20h");
@@ -24,10 +25,14 @@ var Timer = module.exports = function() {
 
 
     this.emitter.on("everyday at 7", function() {
-        db.model('devis').relanceAuto7h().then(function() {
-            console.log('OK')
-        })
+        db.model('devis').relanceAuto7h()
     });
+
+
+    this.emitter.on("everyday at 14", function() {
+        db.model('devis').relanceAuto14h()
+    });
+
 
     this.emitter.on("30 minutes", function() {
         db.model('intervention').fullReload().then(function() {
