@@ -18,7 +18,7 @@
                 <div class="row" style="margin:0">
                     <div class="col-md-8" style="padding-left:0">
                         <div class="card margin">
-                            <div class="p+" style="height: 538px;">
+                            <div class="p+" style="height: 538px;overflow:hidden">
                                 <span class="fs-headline display-block">
          <button ng-click="vm.data.categorie = undefined" style="float:left" class="btn--no-conflicts btn--m {{config.categories[vm.data.categorie].color}} btn--flat" lx-ripple> {{config.categories[vm.data.categorie].long_name}}</button></span>
                                 <div class="fs-body-1 mt+" style="padding-top:10px">
@@ -41,20 +41,11 @@
                                         </p>
                                         <p style="width:49%;float:right">
                                             Date d'ajout: {{vm.data.sst.date.ajout| date:"dd/MM/yyyy"}}
-                                            <br>
+                                            <br><strong>Commentaires:</strong>
                                             <span ng-if="vm.data.sst.calls.length > 0" ng-click="vm.dialog.callsList(vm.data.sst)">
                                                Dernier Appel le {{vm.data.sst.calls[0].date | date:"dd/MM à HH:mm" }}  ({{vm.data.sst.calls[0].login}})
                                         </span>
-                                            <span ng-if="vm.data.sst.calls.length == 0">
-                                            Aucuns Appels
-                                            </span>
-                                            <br>
-                                            <span ng-if="vm.data.sst.sms.length > 0" ng-click="vm.dialog.smsList(vm.data.sst)">
-                                               Dernier SMS le {{vm.data.sst.sms[0].date | date:"dd/MM à HH:mm" }}  ({{vm.data.sst.sms[0].login}})
-                                        </span>
-                                            <span ng-if="vm.data.sst.sms.length == 0">
-                                            Aucuns SMS
-                                            </span>
+                                        <span ng-repeat="cm in vm.data.sst.comments.slice(0, 2)"><br>{{cm.text}}</span>
                                         </p>
                                     </div>
                                 </div>
@@ -65,7 +56,8 @@
                                     <button class="btn--no-conflicts btn--m btn--orange btn--flat" lx-ripple>Recap'</button>
                                 </a>
                                 <button class="btn--no-conflicts btn--m btn--black btn--flat {{interList ? 'grey lighten-3' : ''}}" ng-click="interList = !interList" lx-ripple>Interventions</button>
-                                <button style="float:right" class="btn--no-conflicts btn--m btn--black btn--flat {{showSignalement ? 'grey lighten-3' : ''}}" ng-click="showSignalement = !showSignalement" lx-ripple>Signalement</button>
+
+                                <button class="btn--no-conflicts btn--m btn--black btn--flat {{showSignalement ? 'grey lighten-3' : ''}}" ng-click="showSignalement = !showSignalement" lx-ripple>Signalement</button>
                             </div>
                         </div>
                     </div>
@@ -175,8 +167,8 @@
                                             </div>
                                         </div>
                                         <div class="col-sm-2">
-                                             <md-switch class="md-primary" md-no-ink aria-label="Switch No Ink" ng-model="vm.data.newOs" style="padding: 0px;margin-top: 5px;">
-                                             Nouvel OS
+                                            <md-switch class="md-primary" md-no-ink aria-label="Switch No Ink" ng-model="vm.data.newOs" style="padding: 0px;margin-top: 5px;">
+                                                Nouvel OS
                                             </md-switch>
                                         </div>
                                     </div>
