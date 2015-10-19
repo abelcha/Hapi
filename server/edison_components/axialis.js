@@ -30,7 +30,7 @@ var request = function(query) {
                         .login(resp.login.ajout)
                         .id(resp.id)
                         .broadcast(resp.login.ajout)
-                        .color('purple')
+                        .color('red')
                         .message(_.template("{{sst.nomSociete}} appel le client {{id}} ({{client.civilite}} {{client.nom}})")(resp))
                         .send()
                         .save()
