@@ -29,6 +29,7 @@ module.exports = function(schema) {
                     user: "edison", // defaults to "anonymous" 
                     pass: "/@8.r2DmXcZwvdKs" // defaults to "@anonymous" 
                 });
+                try {
 
                 ftp.get(call_id + ".mp3", function(err, socket) {
                     var str = "";
@@ -50,6 +51,10 @@ module.exports = function(schema) {
                     })
                     socket.resume();
                 });
+                } catch (e) {
+                    reject('pas de fichier')
+                }
+
                 /* ftp.ls(".", function(err, res) {
                      console.log(err, res)
                      res.forEach(function(file) {
