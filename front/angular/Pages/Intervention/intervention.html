@@ -42,10 +42,7 @@
                                         <p style="width:49%;float:right">
                                             Date d'ajout: {{vm.data.sst.date.ajout| date:"dd/MM/yyyy"}}
                                             <br><strong>Commentaires:</strong>
-                                            <span ng-if="vm.data.sst.calls.length > 0" ng-click="vm.dialog.callsList(vm.data.sst)">
-                                               Dernier Appel le {{vm.data.sst.calls[0].date | date:"dd/MM à HH:mm" }}  ({{vm.data.sst.calls[0].login}})
-                                        </span>
-                                        <span ng-repeat="cm in vm.data.sst.comments.slice(0, 2)"><br>{{cm.text}}</span>
+                                            <span ng-repeat="cm in vm.data.sst.comments.slice(0, 2)"><br>• {{cm.date|date:"dd/MM/yy à HH'h'mm"}} - {{cm.login}} - {{cm.text}}</span>
                                         </p>
                                     </div>
                                 </div>
@@ -56,7 +53,6 @@
                                     <button class="btn--no-conflicts btn--m btn--orange btn--flat" lx-ripple>Recap'</button>
                                 </a>
                                 <button class="btn--no-conflicts btn--m btn--black btn--flat {{interList ? 'grey lighten-3' : ''}}" ng-click="interList = !interList" lx-ripple>Interventions</button>
-
                                 <button class="btn--no-conflicts btn--m btn--black btn--flat {{showSignalement ? 'grey lighten-3' : ''}}" ng-click="showSignalement = !showSignalement" lx-ripple>Signalement</button>
                             </div>
                         </div>
