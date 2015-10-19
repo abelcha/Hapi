@@ -184,7 +184,7 @@
                                 <br>
                             </div>
                         </div>
-                        <info-appel-sst ng-if="vm.data.newOs" data="vm.data"></info-appel-sst>
+                        <info-appel-sst ng-if="vm.data.newOs && vm.data.appels.length" data="vm.data"></info-appel-sst>
                         <div id="facture"></div>
                         <info-facture ng-if="!vm.data.reglementSurPlace" data="vm.data"></info-facture>
                         <produits ng-if="vm.data.id || vm.data.devisOrigine" data="vm.data"></produits>
