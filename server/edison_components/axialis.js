@@ -29,7 +29,7 @@ var request = function(query) {
                     edison.event('INTER_CALL')
                         .login(resp.login.ajout)
                         .id(resp.id)
-                        .broadcast(inter.login.ajout)
+                        .broadcast(resp.login.ajout)
                         .color('purple')
                         .message(_.template("{{sst.nomSociete}} appel le client {{id}} ({{client.civilite}} {{client.nom}})")(resp))
                         .send()
