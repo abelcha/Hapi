@@ -29,7 +29,6 @@ module.exports = function(schema) {
 
 
             return new Promise(function(resolve, reject) {
-                console.log('==>' ,devis)
                 if (!devis && !devis.produits || !devis.produits.length)
                     return reject('Le devis est vide')
                         /*                if (envDev) {
