@@ -35,7 +35,7 @@ module.exports = function(schema) {
                     if (err) {
                         return ftp.get(call_id + ".wav", function(err, socket2) {
                             if (err) {
-                                return reject(err)
+                                return resolve('')
                             }
                             streamToBuffer(socket2, function(err, buffer2) {
                                 res.contentType("audio/wav");
