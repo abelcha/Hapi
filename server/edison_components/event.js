@@ -57,13 +57,18 @@ Event.prototype.message = function(message) {
     return this
 }
 
+Event.prototype.self = function() {
+    this.self = true;
+    return this
+}
+
 Event.prototype.send = function() {
     var _this = this;
     if (typeof io !== 'undefined') {
-
         io.sockets.emit('notification', {
             message: _this.brMessage,
             dest: _this.brDest,
+            self: _this.self,
             color: _this.brColor || 'blue',
             origin: _this.doc.login
         })

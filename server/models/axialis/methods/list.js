@@ -32,21 +32,22 @@ module.exports = function(schema) {
 
                 ftp.get(call_id + ".mp3", function(err, socket) {
                     var str = "";
-                    if (err)
-                        return resolve(err);
+                    if (err) {
+                        return ftp.get(call_id + ".wav", function(err, socket2) {
+                            if (err) {
+                                return reject(err)
+                            }
+                            streamToBuffer(socket2, function(err, buffer2) {
+                                res.contentType("audio/wav");
+                                res.send(buffer2);
+                            })
+                            socket.resume();
+                        })
+                    }
                     streamToBuffer(socket, function(err, buffer) {
-                    	res.contentType("audio/mpeg");
-                    	res.send(buffer);
+                        res.contentType("audio/mpeg");
+                        res.send(buffer);
                     })
-
-                    /*
-                                        socket.on("data", function(d) {
-                                            str += d.toString();
-                                        })
-                                        socket.on("close", function(hadErr) {
-                                            if (hadErr)
-                                                console.error('There was an error retrieving the file.');
-                                        });*/
                     socket.resume();
                 });
                 /* ftp.ls(".", function(err, res) {

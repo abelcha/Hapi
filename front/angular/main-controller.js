@@ -79,7 +79,7 @@ angular.module('edison').controller('MainController', function($timeout, LxNotif
     })
     socket.on('notification', function(data) {
         console.log('notification==>',data)
-        if (data.dest === $rootScope.user.login && data.dest !== data.origin) {
+        if (data.dest === $rootScope.user.login && data.dest !== data.origin || data.self) {
             LxNotificationService.notify(data.message, 'android', false, data.color);
         }
     })

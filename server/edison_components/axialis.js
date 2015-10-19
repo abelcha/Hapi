@@ -30,6 +30,7 @@ var request = function(query) {
                         .login("")
                         .id(resp.id)
                         .broadcast(resp.login.ajout)
+                        .self()
                         .color('red')
                         .message(_.template("{{artisan.nomSociete}} appel le client {{id}} ({{client.civilite}} {{client.nom}})")(resp))
                         .send()
