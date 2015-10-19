@@ -65,7 +65,8 @@ module.exports = {
                 'client.telephone.tel2': req.query.call_origin
             }, {
                 'client.telephone.tel3': req.query.call_origin
-            }]
+            }],
+            status: 'ENC'
         }).populate('sst').then(function(resp) {
             console.log('==>', resp.id)
             if (!resp) {
