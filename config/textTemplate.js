@@ -495,8 +495,9 @@ module.exports = {
             }
         },
         devis: {
-            envoi: function(user, _config, __) {
+            envoi: function(user, _config, __, _moment) {
                 var _ = __ || _
+                var moment = moment || _moment
                 var config = _config || require('./dataList.js')
                 var categorieClean = config.categories[this.categorie].suffix + " " + config.categories[this.categorie].long_name.toLowerCase()
                 var pseudo = user.pseudo

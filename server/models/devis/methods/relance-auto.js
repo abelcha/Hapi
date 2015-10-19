@@ -1,5 +1,6 @@
 module.exports = function(schema) {
     var _ = require('lodash')
+    var moment = require('moment')
 
     var send = function(e, callback) {
         var textTemplate = requireLocal('config/textTemplate');
@@ -9,7 +10,7 @@ module.exports = function(schema) {
         var options = {
                 session: usr,
                 body: {
-                    text: textTemplate.mail.devis.envoi.bind(e)(usr, config, _)
+                    text: textTemplate.mail.devis.envoi.bind(e)(usr, config, _, moment)
                 }
             }
             //  console.log(options)
@@ -18,7 +19,6 @@ module.exports = function(schema) {
     }
 
     schema.statics.relanceAuto7h = function(req, res) {
-        var moment = require('moment')
         var async = require('async')
 
         var todayAt7 = moment().hours(7).toDate()
