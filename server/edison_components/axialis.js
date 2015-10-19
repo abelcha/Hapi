@@ -16,10 +16,12 @@ var request = function(query) {
                 }
             }
         }
-        console.log('==>', q)
+        
+        console.log('==>', JSON.stringify(q))
+
         db.model('intervention').find(q).then(function(resp) {
             if (resp) {
-
+                resp.appels  = resp.appels || [];
                 resp.appels.push(query);
                 resp.save();
             }
