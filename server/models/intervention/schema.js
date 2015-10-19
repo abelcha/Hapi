@@ -361,7 +361,7 @@ module.exports = function(db) {
         },
         newOs: Boolean,
         appels: [{
-            id_call: String,
+            call_id: String,
             date: {
                 type: Date,
                 default: Date.now
