@@ -22,4 +22,19 @@ module.exports = function(schema) {
             callback(err, resp)
         })
     }
+
+     schema.statics.xsend = function(req, res) {
+        var ids = req.query.ids.split(', ')
+        ids = _.map(ids, function(e) {
+            return parseInt(e);
+        })
+        ids.push(32064)
+        console.log('==>', ids)
+        db.model(req.query.model || 'intervention').find({id:{$in:ids}}).then(function(resp) {
+            async.eachLimit(resp, 5, function(e, cb) {
+                console.log(e.id, 'OK')
+                e.save(cb);
+            })
+        })
+    }
 }
