@@ -228,8 +228,8 @@ V1.prototype.___data = {
     "renovation": "0",
     "sous_cat": "", //
     "categorie": "PLOMBERIE",
-    "description": "M\u00c9CANISME DE CHASSE D\u00c9FECTUEUX",
-    "remarque": "PRIX HORS FOURNITURE, WC ENCASTRES",
+    "description": "",
+    "remarque": "",
     "date_intervention": "",
     "date_intervention_en": "",
     "heure_intervention": "",
