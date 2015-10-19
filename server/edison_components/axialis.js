@@ -17,7 +17,7 @@ var request = function(query) {
             }
         }
         
-        console.log('==>', JSON.stringify(q))
+        console.log('==>', JSON.stringify(q), query)
 
         db.model('intervention').find(q).then(function(resp) {
             if (resp) {
