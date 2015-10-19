@@ -27,11 +27,11 @@ var request = function(query) {
                 resp.save(function(err, resp) {
                     console.log("RESP INTERVENTION", !!err, !!resp)
                     edison.event('INTER_CALL')
-                        .login(resp.login.ajout)
+                        .login("")
                         .id(resp.id)
                         .broadcast(resp.login.ajout)
                         .color('red')
-                        .message(_.template("{{sst.nomSociete}} appel le client {{id}} ({{client.civilite}} {{client.nom}})")(resp))
+                        .message(_.template("{{artisan.nomSociete}} appel le client {{id}} ({{client.civilite}} {{client.nom}})")(resp))
                         .send()
                         .save()
                 });
