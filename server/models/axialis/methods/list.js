@@ -31,26 +31,41 @@ module.exports = function(schema) {
                 });
                 try {
 
-                ftp.get(call_id + ".mp3", function(err, socket) {
-                    var str = "";
-                    if (err) {
-                        return ftp.get(call_id + ".wav", function(err, socket2) {
-                            if (err) {
-                                return resolve('')
-                            }
-                            streamToBuffer(socket2, function(err, buffer2) {
-                                res.contentType("audio/wav");
-                                res.send(buffer2);
+                    ftp.get(call_id + ".mp3", function(err, socket) {
+                        var str = "";
+                        if (err) {
+                            return ftp.get(call_id + ".wav", function(err, socket2) {
+
+
+                                if (err) {
+                                    return resolve('')
+                                }
+                                streamToBuffer(socket2, function(err, buffer2) {
+
+                                    var gspeech = require('gspeech-api');
+                                    var fs = require('fs');
+                                    var uuid = require('uuid');
+                                    var id = uuid.v4();
+                                    fs.writeFileSync("/tmp/" + id + '.wav', buffer2)
+
+                                    gspeech.recognize("/tmp/" + id + '.wav', function(err, data) {
+                                        if (err)
+                                            console.error(err);
+                                        console.log("Final transcript is:\n" + data.transcript);
+                                    });
+
+                                    res.contentType("audio/wav");
+                                    res.send(buffer2);
+                                })
+                                socket.resume();
                             })
-                            socket.resume();
+                        }
+                        streamToBuffer(socket, function(err, buffer) {
+                            res.contentType("audio/mpeg");
+                            res.send(buffer);
                         })
-                    }
-                    streamToBuffer(socket, function(err, buffer) {
-                        res.contentType("audio/mpeg");
-                        res.send(buffer);
-                    })
-                    socket.resume();
-                });
+                        socket.resume();
+                    });
                 } catch (e) {
                     reject('pas de fichier')
                 }
