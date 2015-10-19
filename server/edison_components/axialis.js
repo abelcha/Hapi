@@ -34,6 +34,8 @@ module.exports = {
                 "appels.$.duration": req.query.duree_about,
                 "appels.$.status": req.query.status,
             }
+        }, function(err, resp) {
+            console.log("===>INFO RESP", err, resp)
         })
         res.send('ok')
         console.log('dataaxialis', req.body, req.query, req.params);
