@@ -1,11 +1,10 @@
 module.exports = function(schema) {
     var _ = require('lodash')
-    var moment = require('moment')
+    var moment = require('moment-timezone')
 
     var send = function(e, callback) {
         var textTemplate = requireLocal('config/textTemplate');
         var config = requireLocal('config/dataList');
-        e.client.email = "mzavot@gmail.com"
         var usr = _.find(edison.users.data, 'login', "benjamin_b");
         var options = {
                 session: usr,
@@ -14,17 +13,17 @@ module.exports = function(schema) {
                 }
             }
             //  console.log(options)
-        db.model('devis').envoi.fn(e, options)
+        db.model('devis').envoiTest.fn(e, options)
             .then(callback, _.partial(callback, null))
     }
 
     schema.statics.relanceAuto7h = function(req, res) {
         var async = require('async')
 
-        var todayAt7 = moment().hours(7).toDate()
-        var yesterdayAt12h30 = moment().add(-1, 'days').hours(12).minutes(30).toDate()
-        var twoDaysAgo = moment().add(-2, 'days').toDate();
-        var oneDaysAgo = moment().add(-1, 'days').toDate();
+        var todayAt7 = moment.tz('Europe/Paris').hours(7).toDate()
+        var yesterdayAt12h30 = moment.tz('Europe/Paris').add(-1, 'days').hours(12).minutes(30).toDate()
+        var twoDaysAgo = moment.tz('Europe/Paris').add(-2, 'days').toDate();
+        var oneDaysAgo = moment.tz('Europe/Paris').add(-1, 'days').toDate();
         db.model('devis').find({
             status: 'ATT',
             historique: {
@@ -56,7 +55,7 @@ module.exports = function(schema) {
         var moment = require('moment')
         var async = require('async')
 
-        var todayAt7 = moment().hours(7).toDate()
+        var todayAt7 = moment.tz('Europe/Paris').hours(7).toDate()
         db.model('devis').find({
             status: 'ATT',
             historique: {

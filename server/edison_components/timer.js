@@ -1,17 +1,21 @@
 var Timer = module.exports = function() {
     var CronEmitter = require("cron-emitter").CronEmitter;
 
+    var hour = function(h) {
+        var moment = require('moment-timezone')
+        return moment.tz('Europe/Paris').format('[0] H [* * *]')
+    }
+
     this.emitter = new CronEmitter();
 
     //    this.emitter.add("*/10 * * * *", "every 10 minutes");
     //    this.emitter.add("*/120 * * * *", "every hour");
     //    this.emitter.add("*/5 * * * *", "every 5 minutes");
     // this.emitter.add("*/2 * * * *", "every minute");
-    this.emitter.add("0 7 * * *", "everyday at 7")
-    this.emitter.add("0 14 * * *", "everyday at 14")
-    this.emitter.add("0 3 * * *", "3pm");
-    this.emitter.add("0 4 * * *", "4pm");
-    this.emitter.add("0 20 * * *", "20h");
+    this.emitter.add(hour(7), "everyday at 7")
+    this.emitter.add(hour(14), "everyday at 14")
+    this.emitter.add(hour(3), "3pm");
+    this.emitter.add(hour(4), "4pm");
     this.emitter.add("*/60 * * * *", "30 minutes")
     this.emitter.add("*/20 * * * *", "20 minutes")
 
@@ -92,7 +96,7 @@ var Timer = module.exports = function() {
     var test = function() {
             var parser = require('cron-parser');
             try {
-                var interval = parser.parseExpression("0 7 * * *");
+                var interval = parser.parseExpression(hour(7));
                 console.log('Date: ', interval.next().toString()); // Sat Dec 29 2012 00:44:00 GMT+0200 (EET) 
                 console.log('Date: ', interval.next().toString()); // Sat Dec 29 2012 00:44:00 GMT+0200 (EET) 
                 console.log('Date: ', interval.next().toString()); // Sat Dec 29 2012 00:44:00 GMT+0200 (EET) 
@@ -104,7 +108,7 @@ var Timer = module.exports = function() {
             }
 
         }
-     //   test();
+           test();
 
 
 }
