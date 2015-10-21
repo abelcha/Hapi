@@ -86,8 +86,8 @@ var ArtisanCtrl = function($timeout, $rootScope, $scope, edisonAPI, $location, $
             text: _this.commentText,
             date: new Date()
         })
-        if (_this.sst.id) {
-            edisonAPI.artisan.comment(_this.sst.id, _this.commentText)
+        if (artisan.id) {
+            edisonAPI.artisan.comment(artisan.id, _this.commentText)
         }
         _this.commentText = "";
     }
