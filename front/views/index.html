@@ -75,17 +75,13 @@
                     <link fltr="i_pan" icon="th-list" login="{{displayUser.login}}" hash-model="dm" title="Mon Panier"></link>
                     <link fltr="i_davr" icon="th-list" title="Verifs" color="warning"></link>
 
-                    <link fltr="i_hist" icon="th-list" title="Mon Historique" login="{{displayUser.login}}" hash-model="dm"></link>
+                    <link fltr="i_hist" icon="th-list" title="Historique" login="{{displayUser.login}}"></link>
                 </drop-down>
                 <drop-down icon="suitcase" title="Management">
                     <link fltr="i_chq" icon="th-list" login="{{displayUser.login}}" hash-model="dm" title="Relances cheques"></link>
                     <link fltr="a_man" icon="th-list" model="artisan" login="{{displayUser.login}}" hash-model="mn" title="Mes SST"></link>
                 </drop-down>
-                <drop-down icon="calendar" title="Interventions">
-                    <link fltr="i_tenv" icon="th-list" login="{{displayUser.login}}" hash-model="en" title="Envoyés"></link>
-                    <link fltr="i_avr" icon="th-list" color="warning" hash-model="en" login="{{displayUser.login}}"></link>
-                    <link fltr="i_avr" icon="th-list" color="warning" hash-model="en" login="{{displayUser.login}}"></link>
-                </drop-down>
+                
             </drop-down>
             <drop-down title="Service Comptabilité" icon="circle" open-default="displayUser.service === 'COMPTABILITE'">
                 <simple-link icon="credit-card" fltr="i_carl" title="Tableau des relances" url="/intervention/list/relanceClient"></simple-link>
