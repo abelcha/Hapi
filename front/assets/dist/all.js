@@ -302,7 +302,7 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
             controller: "ArtisanController",
             controllerAs: "vm",
             resolve: {
-                artisanPrm: getIntervention,
+                artisanPrm: getArtisan,
             }
         })
         .when('/dashboard', {
@@ -3877,7 +3877,7 @@ var ArtisanCtrl = function($timeout, $rootScope, $scope, edisonAPI, $location, $
     _this.dialog = dialog;
     _this.moment = moment;
     _this.contextMenu = new ContextMenu('artisan')
-
+    console.log('==>', artisanPrm)
     var tab = TabContainer.getCurrentTab();
     if (!tab.data) {
         var artisan = new Artisan(artisanPrm.data)

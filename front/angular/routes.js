@@ -145,7 +145,7 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
             controller: "ArtisanController",
             controllerAs: "vm",
             resolve: {
-                artisanPrm: getIntervention,
+                artisanPrm: getArtisan,
             }
         })
         .when('/dashboard', {
