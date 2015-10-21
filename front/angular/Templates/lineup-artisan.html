@@ -21,16 +21,19 @@
                     <strong>{{::artisan.r}}</strong> {{::artisan.p}}
                 </td>
                 <td variable-length data-title="'Ville'" sortable="'v'" filter="{ 'v': 'text' }">
-                     {{::artisan.cp}} - {{::artisan.v}}
+                    {{::artisan.cp}} - {{::artisan.v}}
                 </td>
                 <td data-title="'Status'" sortable="'s'" filter="{ 's': 'text' }">
                     <span style="width:80px;" class="label {{::config.etatsArtisan[artisan.s].color}}">{{::config.etatsArtisan[artisan.s].long_name}}</span>
                 </td>
+                <td data-title="'SubStatus'" sortable="'ss'" filter="{ 'ss': 'text' }">
+                    <span style="width:80px;" class="label {{::config.etatsArtisan[artisan.ss].color}}">{{::config.etatsArtisan[artisan.ss].long_name}}</span>
+                </td>
+                <span style="width:90px;margin-top:4px" class="label fs-body-1  {{config.artisanSubStatus[vm.sst.subStatus].color}} accent-2">{{config.artisanSubStatus[vm.sst.subStatus].long_name}}</span>
                 <td>{{expendedRow}} {{expendedRow && expendedRow === artisan.id}}</td>
             </tr>
             <tr ng-repeat-end ng-if="expendedRow && expendedRow === artisan.id">
                 <td class="drpdwn" colspan="42" style="background-color:white!important">
-                
                     <dropdown-row model="artisan" row="artisan" expendedRow="expendedRow"></dropdown-row>
                 </td>
             </tr>
