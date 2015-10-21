@@ -2,6 +2,7 @@
     <div class="shadow-box listeInterventions">
         <div class="row" style="">
             <br>
+            {{vm.sst.civillite}} {{vm.sst.prenom}} {{vm.sst.nom}}<a ng-href="callto:{{vm.sst.telephone.tel1}}">{{vm.sst.telephone.tel1}}</a> - <a ng-href="callto:{{vm.sst.telephone.tel2}}">{{vm.sst.telephone.tel2}}</a>
             <div class="col-md-4">
                 <input type="text" ng-model="vm.tableFilter" ng-change="vm.reloadData()" class="form-control">
                 <br>

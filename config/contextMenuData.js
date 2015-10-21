@@ -1,6 +1,6 @@
 module.exports = {
     artisan: [{
-        title: 'Ouvrir Fiche',
+        title: 'Modifier la Fiche',
         action: "ouvrirFiche"
     }, {
         title: 'Ouvrir Recap',

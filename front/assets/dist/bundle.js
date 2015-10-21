@@ -1228,7 +1228,7 @@ module.exports = [{
 },{}],7:[function(require,module,exports){
 module.exports = {
     artisan: [{
-        title: 'Ouvrir Fiche',
+        title: 'Modifier la Fiche',
         action: "ouvrirFiche"
     }, {
         title: 'Ouvrir Recap',

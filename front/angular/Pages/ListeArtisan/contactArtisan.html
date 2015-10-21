@@ -1,7 +1,8 @@
 <div>
-    <div class="shadow-box listeInterventions">
+    <div class="shadow-box listeInterventions" center>
+         <h2>{{vm.sst.representant.civillite}} {{vm.sst.representant.prenom}} {{vm.sst.representant.nom}} &nbsp;&nbsp;&nbsp;&nbsp;<a ng-href="callto:{{vm.sst.telephone.tel1}}">{{vm.sst.telephone.tel1}}</a> - <a ng-href="callto:{{vm.sst.telephone.tel2}}">{{vm.sst.telephone.tel2}}</a></h2>
         <div class="row" style="">
-            <br>
+
             <div class="col-sm-4 contactSize" ng-if="selectedIndex !== 1 && !vm.recap">
                 <input type="text" ng-model="vm.tableFilter" ng-change="vm.reloadData()" class="form-control">
                 <br>

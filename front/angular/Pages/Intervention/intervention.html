@@ -48,9 +48,8 @@
                                 </div>
                             </div>
                             <div class="card__actions" style="border-bottom: 2px solid rgba(0, 0, 0, .12);">
-                                <button class="btn--no-conflicts btn--m btn--blue btn--flat" lx-ripple ng-click="smsArtisan(vm.data.sst)">SMS</button>
-                                <a href="/artisan/{{vm.data.sst.id}}/recap#interventions">
-                                    <button class="btn--no-conflicts btn--m btn--orange btn--flat" lx-ripple>Recap'</button>
+                                <a href="/artisan/{{vm.data.sst.id}}">
+                                    <button class="btn--no-conflicts btn--m btn--orange btn--flat" lx-ripple>Fiche</button>
                                 </a>
                                 <button class="btn--no-conflicts btn--m btn--black btn--flat {{interList ? 'grey lighten-3' : ''}}" ng-click="interList = !interList" lx-ripple>Interventions</button>
                                 <button class="btn--no-conflicts btn--m btn--black btn--flat {{showSignalement ? 'grey lighten-3' : ''}}" ng-click="showSignalement = !showSignalement" lx-ripple>Signalement</button>
