@@ -59,7 +59,7 @@ module.exports = function(schema) {
                                 .then(function(resp) {
                                     if (!resp) return cb("nipe")
                                     resp = resp.toObject();
-                                    resp.compta.paiement.base = inter.montant;
+                                    //resp.compta.paiement.base = inter.montant;
                                     resp.paiement = new Paiement(resp);
                                     resp.sst = artisan;
                                     autofactures.push({
