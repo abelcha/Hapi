@@ -113,8 +113,9 @@ module.exports = function(schema) {
         var rtn = [];
         _.each(data, function(sst) {
             var tmp = [];
+            if (_.find(sst.list.__list, 'mode', 'CHQ'))
+                return 0;
             tmp.push(sst.nomSociete + ' ' + sst.id);
-            //tmp.push("30002 00550 0000157845Z 02");
             var ids = _.pluck(sst.list.__list, 'id')
             tmp.push(ids.join(', '))
             clean(sst);
@@ -144,7 +145,6 @@ module.exports = function(schema) {
                 }
             }
 
-
             var op = [];
             _.each(data, function(e, k) {
                 if (!e.total.final)
@@ -153,7 +153,6 @@ module.exports = function(schema) {
                     checked: true,
                     mode: 'CHQ'
                 }) ? 'CHQ' : 'VIR';
-                console.log('-->', mode)
                 clean(e, mode);
 
                 if ((req.body.type === 'recap' && mode !== 'CHQ') ||
