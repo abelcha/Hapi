@@ -1,11 +1,11 @@
-<div id="main-navbar" class="navbar navbar-inverse" role="navigation">
+<div id="main-navbar" class="navbar navbar-inverse" role="navigation" ng-class="{'red':root.displayUser.login != root.user.login}">
     <!-- Main menu toggle -->
     <button type="button" ng-click="root.toggleSidebarMode()" id="main-menu-toggle">
     <i ng-class="{'fa-toggle-on':root.sideBarIsClosed, 'fa-toggle-off':!root.sideBarIsClosed}" class="fa fa-2x"></i>
     <span class="hide-menu-text">HIDE MENU</span></button>
     <div class="navbar-inner">
         <!-- Main navbar header -->
-        <div class="navbar-header">
+        <div class="navbar-header" style='background: transparent;'>
             <!-- Logo -->
             <a href="/" class="navbar-brand">
                 <div>
