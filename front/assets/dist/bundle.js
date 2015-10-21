@@ -360,6 +360,17 @@ FiltersFactory.prototype.list = {
         },
     }],
     intervention: [{
+        short_name: 'i_davr',
+        long_name: 'Demarchages a verifié',
+        url: 'davr',
+        match: {
+            status: 'ENC',
+            'date.intervention': {
+                $lt: new Date(Date.now() + ms.hours(1))
+            },
+            aDemarcher: true
+        },
+    }, {
         short_name: 'i_all',
         long_name: 'Toutes les inters',
         url: '',
