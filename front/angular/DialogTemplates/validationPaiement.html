@@ -11,6 +11,30 @@
         <div class="row">
             <info-fourniture ng-if="displayFourniture === true" data="data" small="false" display="true"></info-fourniture>
         </div>
+        <div class="row">
+            <div class="card">
+                <div class="col-md-3" ng-if="data.compta.reglement.montantTTC >= 150">
+                    <md-checkbox ng-model="data.compta.info.devisNC" aria-label="_" class="md-warn">
+                        Devis non conforme
+                    </md-checkbox>
+                </div>
+                <div class="col-md-3" ng-if="data.tva !== 20">
+                    <md-checkbox ng-model="data.compta.info.tvaNC" aria-label="_" class="md-warn">
+                        Attestation de TVA Non-conforme
+                    </md-checkbox>
+                </div>
+                <div class="col-md-3">
+                    <md-checkbox ng-model="data.compta.info.fournitureNC" aria-label="_" class="md-warn">
+                        Cout de fourniture Non Conforme
+                    </md-checkbox>
+                </div>
+                <div class="col-md-3" ng-if="data.reglementSurPlace">
+                    <md-checkbox ng-model="data.info.factureNC" aria-label="_" class="md-warn">
+                        Facture non conforme
+                    </md-checkbox>
+                </div>
+            </div>
+        </div>
     </md-dialog-content>
     <div class="md-actions card" layout="row">
         <md-button ng-click="displayFourniture = !displayFourniture" class="md-primary black-text">

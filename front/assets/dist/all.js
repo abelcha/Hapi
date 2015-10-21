@@ -2371,9 +2371,7 @@ angular.module('edison').factory('DataProvider',function($timeout, edisonAPI, so
             for (var i = 0; i < _this.getData().length && id_list.length; i++) {
                 var pos = id_list.indexOf(_this.getData()[i].id)
                 if (pos >= 0) {
-                    console.log('UPDATE DATA')
-                    _.merge(_this.getData()[i], newRows[pos]);
-                  //  _this.flash(newRows[pos])
+                    _this.getData()[i] = newRows[pos];
                     id_list.splice(pos, 1);
                 }
             };
@@ -4851,8 +4849,6 @@ var InterventionCtrl = function(Description, Signalement, ContextMenu, $window, 
 
 angular.module('edison').controller('InterventionController', InterventionCtrl);
 
-angular.module('edison').controller('ListeArtisanController', _.noop);
-
 var LpaController = function(openPost, socket, ContextMenu, $location, $window, TabContainer, edisonAPI, $rootScope, LxProgressService, LxNotificationService, FlushList) {
     "use strict";
     var _this = this
@@ -5001,6 +4997,8 @@ var LpaController = function(openPost, socket, ContextMenu, $location, $window, 
 
 
 angular.module('edison').controller('LpaController', LpaController);
+
+angular.module('edison').controller('ListeArtisanController', _.noop);
 
 angular.module('edison').controller('ListeDevisController', _.noop);
 

@@ -1424,7 +1424,7 @@ module.exports = {
         title: 'Paiement SST',
         action: "validerPaiement",
         hide: function(inter) {
-            return !((app_session.root ||  app_session.service === 'COMPTABILITE') && inter.status === 'VRF');
+            return !((app_session.root ||  app_session.service === 'COMPTABILITE') && (inter.status === 'VRF' || inter.status === "ENC"));
         }
     }, {
         title: "SMS sous-traitant",
