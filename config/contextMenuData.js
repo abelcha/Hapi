@@ -12,7 +12,7 @@ module.exports = {
         title: "Archiver",
         action: 'archiver',
         hide: function(artisan) {
-            return artisan.status !== 'ARC';
+            return artisan.status === 'ARC';
         }
     }, {
         title: "Envoyer Contrat",
