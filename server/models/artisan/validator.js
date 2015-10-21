@@ -9,7 +9,7 @@ module.exports = function(schema) {
         if (sst.status === "POT" && _.get(d.contrat, 'ok') && _.get(d.cni, 'ok') && _.get(d.kbis, 'ok')) {
             return 'HOT';
         }
-        if (sst.nbrIntervention < 5 && sst.nbrIntervention > 0) {
+        if ((sst.nbrIntervention < 5 && sst.nbrIntervention > 0) && moment().add(-30, "days").isBefore(sst.date.ajout)) {
             return "NEW";
         }
         if (sst.nbrIntervention > 15) {
