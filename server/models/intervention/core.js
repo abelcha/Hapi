@@ -197,11 +197,13 @@
                 e._status = 'AVR';
             } else {
                 e._status = e.status
-            }/*
-            if (!config.etats[e._status]) {
-                console.log('-->', e.id, e.status)
+            }
+            /*
+                        if (!config.etats[e._status]) {
+                            console.log('-->', e.id, e.status)
 
-            }*/
+                        }*/
+
             var rtn = {
                 t: e.login.ajout,
                 id: e.id,
@@ -218,10 +220,12 @@
                 rc: e.compta.reglement.recu ? 1 : 0,
                 ps: getPaiementArtisan(e),
                 ad: e.client.address.cp + ', ' + e.client.address.v,
-                d: e.aDemarcher && !e.sst ? 1 : undefined,
                 dm: e.login.demarchage || undefined,
                 en: e.login.envoi || undefined,
             };
+            if (e.aDemarcher && !e.sst) {
+                rtn.d = e.enDemarchage ? 2 : 1;
+            }
         } catch (e) {
             __catch(e)
         }
