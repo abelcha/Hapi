@@ -381,9 +381,7 @@ FiltersFactory.prototype.list = {
         group: '$login.demarchage',
         match: {
             aDemarcher: true,
-            'login.demarchage': {
-                $exists: true
-            }
+           
         },
     }]
 }
