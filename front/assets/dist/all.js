@@ -51,32 +51,25 @@ angular.module('edison').controller('MainController', function($timeout, LxNotif
         $rootScope.loadingData = false;
     });
     var _this = this;
-    var checkResize = function() {
 
-        $rootScope.smallWin = window.innerWidth < 1200
-        $timeout(function() {
-            if ($rootScope.smallWin) {
-                $rootScope.sideBarIsOpen = true;
-            }
-        })
+    $rootScope.toggleSidebar = function(open) {
+        if ($rootScope.sideBarMode === true) {
+            $rootScope.sideBarIsClosed = open;
+        }
     }
 
-    $(window).resize(checkResize);
+    $rootScope.toggleSidebarMode = function(newVal) {
+        $rootScope.sideBarMode = _.isUndefined(newVal) ? !$rootScope.sideBarMode : newVal;
+        $rootScope.sideBarIsClosed = $rootScope.sideBarMode
+    }
 
+    var checkResize = function() {
+        $rootScope.smallWin = window.innerWidth < 1350
+        return $rootScope.toggleSidebarMode($rootScope.smallWin);
+    }
+    $(window).resize(checkResize);
     checkResize();
 
-
-
-    $scope.toggleSidebar = function(open) {
-        if (open && !$rootScope.smallWin)
-            return 0;
-        $scope.sideBarIsOpen = open;
-    }
-
-
-    $scope.shadowClick = function(url) {
-        $location.url(url)
-    }
 
     $scope.dateFormat = moment().format('llll').slice(0, -5);
     /*    $scope.$watch('tabs.selectedTab', function(prev, curr) {
@@ -117,7 +110,7 @@ angular.module('edison').controller('MainController', function($timeout, LxNotif
         $rootScope.interventionsStats = data;
     })
     socket.on('notification', function(data) {
-        console.log('notification==>',data)
+        console.log('notification==>', data)
         if (data.dest === $rootScope.user.login && data.dest !== data.origin || data.self) {
             LxNotificationService.notify(data.message, 'android', false, data.color);
         }
@@ -4200,7 +4193,6 @@ var DashboardController = function($rootScope, dialog, user, edisonAPI, $scope, 
     edisonAPI.intervention.dashboardStats({
         user: user.login
     }).then(function(resp) {
-        console.log(resp);
         _this.tableParams = new NgTableParams({
             count: resp.data.weekStats.length,
             sorting: {
@@ -4859,6 +4851,8 @@ var InterventionCtrl = function(Description, Signalement, ContextMenu, $window, 
 
 angular.module('edison').controller('InterventionController', InterventionCtrl);
 
+angular.module('edison').controller('ListeArtisanController', _.noop);
+
 var LpaController = function(openPost, socket, ContextMenu, $location, $window, TabContainer, edisonAPI, $rootScope, LxProgressService, LxNotificationService, FlushList) {
     "use strict";
     var _this = this
@@ -5007,8 +5001,6 @@ var LpaController = function(openPost, socket, ContextMenu, $location, $window, 
 
 
 angular.module('edison').controller('LpaController', LpaController);
-
-angular.module('edison').controller('ListeArtisanController', _.noop);
 
 angular.module('edison').controller('ListeDevisController', _.noop);
 

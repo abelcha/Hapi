@@ -42,7 +42,6 @@ var DashboardController = function($rootScope, dialog, user, edisonAPI, $scope, 
     edisonAPI.intervention.dashboardStats({
         user: user.login
     }).then(function(resp) {
-        console.log(resp);
         _this.tableParams = new NgTableParams({
             count: resp.data.weekStats.length,
             sorting: {

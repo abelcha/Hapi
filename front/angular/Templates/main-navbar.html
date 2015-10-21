@@ -1,6 +1,8 @@
 <div id="main-navbar" class="navbar navbar-inverse" role="navigation">
     <!-- Main menu toggle -->
-    <button type="button" id="main-menu-toggle"><i class="navbar-icon fa fa-bars icon"></i><span class="hide-menu-text">HIDE MENU</span></button>
+    <button type="button" ng-click="root.toggleSidebarMode()" id="main-menu-toggle">
+    <i ng-class="{'fa-toggle-on':root.sideBarIsClosed, 'fa-toggle-off':!root.sideBarIsClosed}" class="fa fa-2x"></i>
+    <span class="hide-menu-text">HIDE MENU</span></button>
     <div class="navbar-inner">
         <!-- Main navbar header -->
         <div class="navbar-header">
@@ -66,34 +68,4 @@
     </div>
     <!-- / .navbar-inner -->
 </div>
-<!-- <div id="main-navbar" class="navbar navbar-inverse" role="navigation">
-    <button type="button" id="main-menu-toggle" ng-click="sideBarIsOpen = !sideBarIsOpen">
-        <img style="height: 40px;margin: 0 auto;" src="/img/logo_cutted.png">
-    </button>
-    <img style="height: 39px;margin-top: 3px;position: fixed;margin-left: 72px;" src="/img/logo_text_cutted.png">
-    <div class="navbar-inner">
-        <span right ng-click="userDropdown = !userDropdown" style="margin-right:80px"><li class="dropdown">
-                                <a href="#" class="dropdown-toggle user-menu" data-toggle="dropdown">
-                                    <img src="/img/profile/default.jpg" alt="">
-                                    <span bold>{{displayUser.login | uppercase}}</span>
-        </a>
-        <ul ng-class="{'display-block' : userDropdown}" class="dropdown-menu open">
-            <li ng-repeat="u in app_users" ng-click="changeUser(u)">
-                <a href="#">
-                    <span class="badge badge-primary pull-right"></span> {{u.login}}
-                </a>
-            </li>
-            <li class="divider"></li>
-            <li><a ng-click="logout()"><i class="dropdown-icon fa fa-power-off"></i>&nbsp;&nbsp;Log Out</a></li>
-        </ul>
-        </li>
-        </span>
-        <div id="main-navbar-collapse" class="collapse navbar-collapse main-navbar-collapse">
-   
-            <md-autocomplete class="searchBar" style="width: 100px;float: right;margin-top: 3px;margin-right: 40px;" md-search-text-change="null" md-min-length="3" md-selected-item-change="searchBox.change(selectedItem)" md-menu-class="autocomplete-custom-template" md-selected-item="selectedItem" md-search-text="searchText" md-autofocus="false" md-items="item in searchBox.search(searchText)" placeholder="Recherche..." md-item-text="item.description">
-                <span text-xl md-highlight-text="searchText"> {{item.description}}</span>
-            </md-autocomplete>
-        </div>
-    </div>
-</div>
- -->
+

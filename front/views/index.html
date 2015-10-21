@@ -14,7 +14,7 @@
     <script src="/dist/all.js"></script>
 </head>
 
-<body ng-app="edison" ng-controller="MainController as vm" style="  background: #f4f4f4 url(/img/mooning.png);" class="ng-cloak main-menu-fixed main-navbar-fixed theme-adminflare main-menu-animated" ng-class="{'mmc' : sideBarIsOpen}">
+<body ng-app="edison" ng-controller="MainController as vm" style="  background: #f4f4f4 url(/img/mooning.png);" class="ng-cloak main-menu-fixed main-navbar-fixed theme-adminflare" ng-class="{'mmc' : sideBarIsClosed}">
     <div ng-if="vm.selectedModel" style="background-color:white;top:{{vm.selectedModel.top + 35}}px;left:{{vm.selectedModel.left}}px;width:300px;z-index:999999;position:absolute;box-shadow: rgba(0, 0, 0, 0.4) 3px 5px 12px;">
         <ul ng-repeat="tab in vm.selectedModel.tabs" style="padding:4px">
             <a class="dropdown-link" style="text-decoration: none!important;" href="{{tab.path}}{{tab.hash ? ('#' + tab.hash) : ''}}">{{tab.title}}</a>
