@@ -80,11 +80,15 @@ var ArtisanCtrl = function($timeout, $rootScope, $scope, edisonAPI, $location, $
     }
 
     _this.addComment = function() {
+
         artisan.comments.push({
             login: $rootScope.user.login,
             text: _this.commentText,
             date: new Date()
         })
+        if (_this.sst.id) {
+            edisonAPI.artisan.comment(_this.sst.id, _this.commentText)
+        }
         _this.commentText = "";
     }
     var updateTmpArtisan = _.after(5, _.throttle(function() {
