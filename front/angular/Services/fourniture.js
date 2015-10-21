@@ -30,7 +30,6 @@ angular.module('edison').factory('fourniture', [function() {
             this.fourniture.push({
                 bl: '0',
                 title: 'Fourniture',
-                fournisseur: 'ARTISAN',
                 quantite: 1,
                 pu: 0
             });

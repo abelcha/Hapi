@@ -170,7 +170,7 @@ angular.module('edison')
             $location.url(['/artisan', this.artisan.id, 'recap'].join('/') + '#interventions')
         }
         Intervention.prototype.smsArtisan = function(cb) {
-           
+
             var _this = this;
             var text = textTemplate.sms.intervention.demande.bind(this)(user, config);
             text = _.template(text)(this)
@@ -246,6 +246,14 @@ angular.module('edison')
         };
         Intervention.prototype.save = function(cb) {
             var _this = this;
+
+            var fournitureSansFournisseur = _.find(this.fourniture, function(e) {
+                return !e.fournisseur;
+            })
+            if (fournitureSansFournisseur) {
+                LxNotificationService.error("Veuillez renseigner un fournisseur");
+                return cb(fournitureSansFournisseur)
+            }
             edisonAPI.intervention.save(_this)
                 .then(function(resp) {
                     var validationMessage = _.template("Les données de l'intervention {{id}} ont à été enregistré.")(resp.data)

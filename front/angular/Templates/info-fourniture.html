@@ -116,60 +116,6 @@
                         </tr>
                     </tbody>
                 </table>
-                <!-- <table class="data-table data-table--has-primary data-table--has-secondary">
-                    <thead>
-                        <tr>
-                            <th style="font-weight:bold">BL</th>
-                            <th style="font-weight:bold">Désignation</th>
-                            <th style="font-weight:bold">Q</th>
-                            <th style="font-weight:bold">PU</th>
-                            <th style="font-weight:bold">Montant</th>
-                            <th style="font-weight:bold">Fournisseur</th>
-                            <th style="font-weight:bold">Modif</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr class="products data-table__clickable-row" ng-repeat="f in data.fourniture">
-                            <td>
-                                <span e-type="text" editable-text="f.bl">{{f.bl}}</span>
-                            </td>
-                            <td>
-                                <span e-type="text" editable-text="f.title">{{f.title}}</span>
-                            </td>
-                            <td>
-                                <span> 
-                                                     <a e-type="number" e-step="1" editable-text="f.quantite">{{f.quantite}}</a>
-                                                    </span>
-                            </td>
-                            <td>
-                                <span>
-                                                 <a e-type="number" editable-text="f.pu" e-step="0.01">{{f.pu}} €</a>
-                                                    </span>
-                            </td>
-                            <td>
-                                <span>{{f.pu * f.quantite}} €</span>
-                            </td>
-                            <td style="padding-right: 10%;  width: 30%;">
-                                <select style="width: 170px;" class="form-control" ng-model="f.fournisseur" ng-options="frn.short_name as frn.short_name group by frn.type for frn in config.fournisseur ">
-                                </select>
-                            </td>
-                            <td>
-                                <lx-dropdown position="right" from-top>
-                                    <button class="btn--no-conflicts btn--l btn--black btn--icon" lx-ripple lx-dropdown-toggle>
-                                          <i class="fa fa-navicon"></i>
-                                    </button>
-                                    <lx-dropdown-menu>
-                                        <ul>
-                                            <li><a ng-click="fourniture.moveDown($index)" class="dropdown-link">Descendre</a></li>
-                                            <li><a ng-click="fourniture.moveTop($index)" class="dropdown-link">Monter</a></li>
-                                            <li><a ng-click="fourniture.remove($index)" class="dropdown-link">Supprimer</a></li>
-                                        </ul>
-                                    </lx-dropdown-menu>
-                                </lx-dropdown>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table> -->
             </div>
         </div>
     </div>
