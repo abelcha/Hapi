@@ -35,7 +35,7 @@
                     <tr ng-repeat="remise in vm.data|orderBy:'-date'">
                         <td>{{vm.moment(remise.date).format('MMMM YYYY');}}</td>
                         <td><a target="_blank" href="/api/intervention/ecritureReglements?m={{remise._id.mth}}&y={{remise._id.yr}}" >Voir Ecriture </a></td>
-                          <td><a target="_blank" href="/api/intervention/comptesClient?m={{remise._id.mth}}&y={{remise._id.yr}}">Comptes Tiers Client</a></td>
+                          <td><a target="_blank" href="/api/intervention/comptesClient?m={{remise._id.mth}}&y={{remise._id.yr}}&download=true" download>Comptes Tiers Client</a></td>
                         <td><a target="_blank" href="/api/intervention/ecritureReglements?m={{remise._id.mth}}&y={{remise._id.yr}}&download=true" download >Telecharger Ecriture</a></td>
                     </tr>
                 </tbody>

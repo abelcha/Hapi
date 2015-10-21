@@ -24,7 +24,7 @@ module.exports = function(schema) {
                         e.address.cp
                     ]
                 });
-                return res.table(rtn);
+                return req.query.download ? res.sage(rtn) : res.table(rtn);
             });
         });
     };
@@ -47,7 +47,7 @@ module.exports = function(schema) {
                         e.client.address.cp,
                     ];
                 })
-                return res.table(rtn);
+                return req.query.download ? res.sage(rtn) : res.table(rtn);
             })
         })
     }
