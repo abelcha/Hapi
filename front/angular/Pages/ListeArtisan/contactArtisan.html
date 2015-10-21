@@ -1,11 +1,9 @@
 <div>
     <div class="shadow-box listeInterventions" center>
-         <h2>{{vm.sst.representant.civillite}} {{vm.sst.representant.prenom}} {{vm.sst.representant.nom}} &nbsp;&nbsp;&nbsp;&nbsp;<a ng-href="callto:{{vm.sst.telephone.tel1}}">{{vm.sst.telephone.tel1}}</a> - <a ng-href="callto:{{vm.sst.telephone.tel2}}">{{vm.sst.telephone.tel2}}</a></h2>
+        <h2>{{vm.sst.representant.civillite}} {{vm.sst.representant.prenom}} {{vm.sst.representant.nom}} &nbsp;&nbsp;&nbsp;&nbsp;<a ng-href="callto:{{vm.sst.telephone.tel1}}">{{vm.sst.telephone.tel1}}</a> - <a ng-href="callto:{{vm.sst.telephone.tel2}}">{{vm.sst.telephone.tel2}}</a></h2>
         <div class="row" style="">
-
-            <div class="col-sm-4 contactSize" ng-if="selectedIndex !== 1 && !vm.recap">
+            <div class="col-sm-4 contactSize" ng-if="selectedIndex !== 1 && !vm.recap" style="padding-top: 29px;">
                 <input type="text" ng-model="vm.tableFilter" ng-change="vm.reloadData()" class="form-control">
-                <br>
                 <div when-scroll-ends="vm.loadMore()">
                     <ul class="list mt++">
                         <li class="list-row list-row--has-separator" ng-repeat="artisan in vm.tableData | orderBy:'-da' | limitTo:vm.tableLimit " ng-right-click="vm.rowRightClick($event, artisan)" ng-click="vm.rowClick($event, artisan, false)" ng-class="{success : vm.vm.contextMenu.active && vm.vm.contextMenu.data.id === artisan.id, greyed : expendedRow === artisan.id}">
