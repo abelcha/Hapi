@@ -41,6 +41,7 @@ module.exports = function(schema) {
                         artisan.total = sst[0].total.final;
                         artisan.interventions = _.map(sst[0].list.__list, function(e) {
                             return {
+                                mode:e.mode,
                                 montant: e.montant.final,
                                 description: e.description,
                                 id: e.id,
@@ -51,7 +52,7 @@ module.exports = function(schema) {
                     },
                     function(artisan, callback) {
                         var autofactures = [];
-                        async.each(artisan.interventions, function(inter, small_cb) {
+                        async.each(_.filter(artisan.interventions, 'mode', 'VIR'), function(inter, small_cb) {
                             db.model('intervention')
                                 .findOne({
                                     id: inter.id
@@ -153,7 +154,7 @@ module.exports = function(schema) {
                         doc.compta.paiement.ready = (hist.payed != hist.montant);
                         doc.compta.paiement.effectue = true
                         doc.compta.paiement.historique.push(hist)
-                            //return small_cb(null);
+                            return small_cb(null);
                         doc.save(small_cb);
                     })
             }, function(err, resp) {
