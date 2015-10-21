@@ -246,6 +246,7 @@ FiltersFactory.prototype.list = {
                 "compta.reglement.recu": true,
                 "compta.paiement.effectue": false,
                 "compta.paiement.ready": false,
+                "compta.paiement.dette": false,
                 "status": {
                     $ne: 'ANN'
                 }

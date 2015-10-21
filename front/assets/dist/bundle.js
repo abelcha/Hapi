@@ -437,6 +437,7 @@ FiltersFactory.prototype.list = {
                 "compta.reglement.recu": true,
                 "compta.paiement.effectue": false,
                 "compta.paiement.ready": false,
+                "compta.paiement.dette": false,
                 "status": {
                     $ne: 'ANN'
                 }
@@ -2712,7 +2713,6 @@ module.exports = {
                     "<p> A chaque attestation de paiement reçu, nous vous avons transmis un <b><u>contrat de déclaration de sous-traitance</u></b> à remplir et à nous faire parvenir accompagné des documents administratifs obligatoires. </p>" +
                     "<p> Cependant, à ce jour nous sommes toujours dans l'attente de ces documents obligatoires. </p>" +
                     "<p> En effet, depuis la loi de fincance de 1er janvier 2014 concernant la sous-traitance dans le secteur du bâtiment, nous avons l'obligation de déclarer l'ensemble de nos sous-traitants intervenants chez nos clients. </p>" +
-                    "<p> <b><u>A partir du lundi 3 mars 2014, nos directions régionales ne pourront donc plus vous passer de commandes.</u></b>" +
                     "<p> Merci de nous transmettre vos documents administratifs suivants: </p>" +
                     "<p>" +
                     (!this.document.kbis.ok ? "&emsp;&emsp; ☐ &emsp;&emsp; KBIS ou immatriculation <br>" : '') +
@@ -2728,9 +2728,10 @@ module.exports = {
                     "75 rue des dames, 75017 Paris<br>" +
                     "Tél. 09.72.51.08.01 (Ouvert de 09h00 à 12h30 / 14h00 à 16h30)</p>" +
 
-                    "<p> Restant à votre disposition, nous vous prions de croire, Monsieur, l'expression de nos salutations distinguées. </p>" +
+                    "<p> Nous vous prions d'agréer, monsieur, nos salutations distinguées. </p>" +
                     "<header style='margin-top: 85px;'>" +
                     "<b> Monsieur QUEUDRAY </b>" +
+                    "<b> Responsable Comptable</b>" +
                     "</header>"
             },
             envoiFacturier: function() {
