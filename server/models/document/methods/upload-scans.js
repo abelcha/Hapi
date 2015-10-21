@@ -58,7 +58,7 @@
                                    console.log('-->uauau')
                                    console.log(err, buffer)
                                    document.upload({
-                                       filename: '/V2_PRODUCTION/intervention/' + e.id + '/' + 'lettre-cheque.pdf',
+                                       filename: '/V2_PRODUCTION/intervention/' + e.id + '/' + 'Lettre-cheque-' + flush.numeroCheque + '.pdf',
                                        data: buffer
                                    }).then(function(resp) {
                                        console.log('ok upload')
