@@ -27,7 +27,7 @@
                     <span style="width:80px;" class="label {{::config.etatsArtisan[artisan.s].color}}">{{::config.etatsArtisan[artisan.s].long_name}}</span>
                 </td>
                 <td data-title="'SubStatus'" sortable="'ss'" filter="{ 'ss': 'text' }">
-                    <span style="width:80px;" class="label {{::config.artisanSubStatus[artisan.ss].color}}">{{::config.artisanSubStatus[artisan.ss].long_name}}</span>
+                    <span style="width:80px;" class="label {{::config.artisanSubStatus[artisan.ss].color}} accent-2">{{::config.artisanSubStatus[artisan.ss].long_name}}</span>
                 </td>
             </tr>
             <tr ng-repeat-end ng-if="expendedRow && expendedRow === artisan.id">
