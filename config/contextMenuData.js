@@ -239,7 +239,7 @@ module.exports = {
         title: "Je prend !",
         action: 'demarcher',
         hide: function(inter) {
-            return (!inter.aDemarcher || inter.login.demarchage);
+            return !inter.aDemarcher;
         }
     }]
 }
