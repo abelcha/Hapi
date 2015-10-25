@@ -21,17 +21,19 @@ module.exports = function(schema) {
     schema.pre('save', function(next) {
         var _this = this;
         _this.loc = [_this.address.lt, _this.address.lg]
-        _this.cache = db.model('artisan').Core.minify(_this);
         if (_this.status !== 'ARC') {
-            db.model("intervention").find({
+            db.model("intervention").where({
                 'artisan.id': _this.id
-            }).then(function(docs) {
-                _this.nbrIntervention = docs.length;
-                _this.status = docs.length ? "ACT" : "POT";
+            }).count(function(err, count) {
+                _this.nbrIntervention = count;
+                _this.status = count ? "ACT" : "POT";
                 _this.subStatus = getSubStatus(_this);
+                _this.cache = db.model('artisan').Core.minify(_this);
                 next();
-            }, next)
+            })
         } else {
+            _this.subStatus = null;
+            _this.cache = db.model('artisan').Core.minify(_this);
             next();
         }
     });

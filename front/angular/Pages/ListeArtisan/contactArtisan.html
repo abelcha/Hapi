@@ -21,24 +21,21 @@
                             <md-tab label="Informations">
                                 <md-content class="md-padding" ng-right-click="vm.rowRightClick($event, vm.sst)">
                                     <div class="col-sm-6" style="height:580px">
-                                        <span class="fs-display-1 display-block">{{vm.sst.nomSociete}}</span><span class="fs-headline display-block"><i>{{vm.sst.representant.civilite}} {{vm.sst.representant.nom}} {{vm.sst.representant.prenom}}</i></span>
-                                        <br>
-                                        <a ng-href="callto:{{vm.sst.telephone.tel1}}"><span class="fs-headline">{{vm.sst.telephone.tel1}}</span></a>
-                                        <a ng-if="vm.sst.telephone.tel2" ng-href="callto:{{vm.sst.telephone.tel1}}"><span class="fs-headline "> - {{vm.sst.telephone.tel2}}</span></a>
-                                        <br>
-                                        <br>
-                                        <a style="color:black" ng-href="mailto:{{vm.sst.email}}"><span class="fs-title ">{{vm.sst.email}}</span></a>
-                                        <br>
-                                        <br>
-                                        <div class="row">
-                                            <div class="col-sm-3">
-                                                <span class="display-block fs-body-1">Categories</span>
-                                                <span ng-repeat="c in vm.sst.categories" style="width:100px;margin-top:4px" class="label {{::config.categories[c].color}} display-block fs-body-1">{{::config.categories[c].long_name}}</span>
+                                        <div class="row" style="margin-top:30px">
+                                            <div class="col-sm-6 card" style="padding:20px">
+                                                <div class="md-display-1">Interventions</div>
+                                                <br>
+                                                <div class="ct-chart" style="height:300px"></div>
+                                                <br>
+                                                <span class="fa fa-square" style="margin-left:5px;color:#B0CCB0"></span> Annuler
+                                                <span class="fa fa-square" style="margin-left:25px;color:#8BBD26"></span> Payé
+                                                <span class="fa fa-square" style="margin-left:25px;color:#CBE8F0"></span> En Cours
                                             </div>
-                                            <div class="col-sm-3">
-                                                <span class="display-block fs-body-1">Documents</span>
-                                                <a ng-repeat="(k, f) in vm.sst.document" ng-href="/api/artisan/59/openDocument?file={{k}}" target="_blank">
-                                                    <span style="width:90px;margin-top:4px" class="label display-block fs-body-1 grey darken-3">{{k}}</span></a>
+                                            <div class="col-sm-6">
+                                                Gains depuis le {{vm.sst.date.ajout|date:"dd/MM/yyyy"}} (représente la totalité des paiement effectué) :
+                                                <div class="md-display-2"> {{(vm.stats.paye.paye)|frnbr}} €</div>
+                                                <br> Chiffre d’affaire (représente la totalité des montants:
+                                                <div class="md-display-2"> {{(vm.stats.paye.final)|frnbr}} €</div>
                                             </div>
                                         </div>
                                     </div>
@@ -79,6 +76,10 @@
                             <md-tab label="Stats" data-position="2">
                                 <md-content class="md-padding">
                                     <h1 class="md-display-2">Stats</h1>
+                                    <div class="row" style="height:500px">
+                                        <canvas id="bar" class="chart chart-bar" chart-options="vm.sstChart.options" chart-data="vm.sstChart.data" chart-labels="vm.sstChart.labels" height="200"width="700" chart-colours="vm.sstChart.colours">
+                                        </canvas>
+                                    </div>
                                     <!--  <artisan-recap id="vm.sst.id"></artisan-recap> -->
                                 </md-content>
                             </md-tab>

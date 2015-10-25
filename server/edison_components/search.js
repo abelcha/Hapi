@@ -85,7 +85,16 @@ module.exports = function(req, res) {
             template: "{{id}} - {{mmt}} - ({{client.address.v}}) - {{client.civilite}} {{client.nom}} - {{client.address.cp}} {{prixAnnonce}} €"
 
         }),
-
+        artisanId: createFilter({
+            model: 'artisan',
+            pre: '@',
+            link: '/recap',
+            query: {
+                id: parseInt(query)
+            },
+            template: "{{id}} ({{nomSociete}}) - {{representant.nom}} - {{address.cp}}",
+            regexp: new RegExp('^[0-9]+$')
+        }),
         artisanNom: createFilter({
             pre: '@',
             model: 'artisan',

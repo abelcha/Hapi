@@ -221,7 +221,6 @@
                 ps: getPaiementArtisan(e),
                 ad: e.client.address.cp + ', ' + e.client.address.v,
                 dm: e.login.demarchage || undefined,
-                en: e.login.envoi || undefined,
             };
             if (e.aDemarcher && !e.sst) {
                 rtn.d = e.enDemarchage ? 2 : 1;

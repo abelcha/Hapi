@@ -20,7 +20,8 @@ angular.module('edison').factory('DateSelect', function() {
                 _this._list.push({
                     m: mth + 1,
                     y: _this.start.y + yr,
-                    t: frenchMonths[mth] + ' ' + (_this.start.y + yr)
+                    t: frenchMonths[mth] + ' ' + (_this.start.y + yr),
+                    o: (_this.start.y + yr) + (mth + 1) * 0.01
                 })
             })
         })

@@ -12,7 +12,8 @@
                  xmarkers: "=",
                  markerClick: '&',
                  isNew: "=",
-                 firstAddress: "="
+                 firstAddress: "=",
+                 showAddress: "="
              },
              link: function(scope, element, attrs) {
                  scope._height = scope.height || 315;

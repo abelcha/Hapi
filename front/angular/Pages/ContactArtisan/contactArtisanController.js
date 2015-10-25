@@ -1,6 +1,7 @@
 var ContactArtisanController = function($scope, $timeout, TabContainer, LxProgressService, FiltersFactory, ContextMenu, edisonAPI, DataProvider, $routeParams, $location, $q, $rootScope, $filter, config, ngTableParams) {
     "use strict";
     var _this = this;
+
     _this.loadPanel = function(id) {
         edisonAPI.artisan.get(id)
             .then(function(resp) {
@@ -8,7 +9,68 @@ var ContactArtisanController = function($scope, $timeout, TabContainer, LxProgre
                 _this.tab.setTitle('@' + _this.sst.nomSociete.slice(0, 10));
 
             })
+        edisonAPI.artisan.getStats(id).then(function(resp) {
+            new Chartist.Pie('.ct-chart', {
+                series: [{
+                    value: resp.data.envoye.total,
+                    name: 'En cours',
+                    className: 'ct-orange',
+                    meta: 'Meta One'
+                }, {
+                    value: resp.data.annule.total,
+                    name: 'annulé',
+                    className: 'ct-red',
+                    meta: 'Meta One'
+                }, {
+                    value: resp.data.paye.total,
+                    name: 'payé',
+                    className: 'ct-green',
+                    meta: 'Meta One'
+                }]
+            }, {
+                total: resp.data.annule.total + resp.data.paye.total + resp.data.envoye.total,
+                donut: true,
+                startAngle: 270,
+                donutWidth: 62,
+                /* donut: true,
+                 total: 100 +resp.data.annule.total + resp.data.paye.total + resp.data.envoye.total,
+                 showLabel: false*/
+            });
+            _this.stats = resp.data
+        })
+
     }
+
+    _this.reloadStats = function() {
+        edisonAPI.artisan.statsMonths($routeParams.sstid).then(function(resp) {
+            var series = ['Annulé', 'Payé'];
+            var labels = []
+            var data = [
+                [],
+                []
+            ];
+            _.each(resp.data, function(e) {
+                labels.push(_.capitalize(moment([e.year, e.month - 1]).format('MMMM YYYY')))
+                data[0].push(e.annule);
+                data[1].push(e.paye);
+            })
+            _this.sstChart = {
+                series: series,
+                data: data,
+                labels: labels,
+                options: {
+                    scaleBeginAtZero: true,
+                },
+                colours: [
+                    '#F7464A', // red
+                    '#46BFBD', // green
+                   
+                ]
+            }
+        });
+    }
+
+
     _this.tbz = ['informations', 'interventions', 'historique', 'stats', 'paiements'];
     var ind = _this.tbz.indexOf($location.hash());
     $scope.selectedIndex = ind >= 0 ? ind : 0
@@ -19,17 +81,14 @@ var ContactArtisanController = function($scope, $timeout, TabContainer, LxProgre
     if (_this.recap) {
         _this.loadPanel(_this.recap)
     } else {
-        console.log('-->', 'yay')
         LxProgressService.circular.show('#5fa2db', '#globalProgress');
         var dataProvider = new DataProvider('artisan');
         dataProvider.init(function(err, resp) {
-            console.log('init')
             _this.config = config;
             _this.moment = moment;
             if (!dataProvider.isInit()) {
                 dataProvider.setData(resp);
             }
-
             _this.tableFilter = "";
             _this.tableLimit = 20;
             $rootScope.expendedRow = $routeParams.sstid || 45
@@ -106,32 +165,14 @@ var ContactArtisanController = function($scope, $timeout, TabContainer, LxProgre
 
 
     $scope.$watchCollection('[selectedIndex, expendedRow]', function(current, prev) {
-            if (current && current[0] !== void(0)) {
-                $location.hash(_this.tbz[current[0]]);
-            }
-            if (prev[1] && $scope.selectedIndex == 4) {
-                $scope.compteTiers = undefined
-                edisonAPI.artisan.getCompteTiers($rootScope.expendedRow).success(function(resp) {
-                    $scope.compteTiers = resp;
-                })
-            }
-        })
-        /*
-            $scope.$on('$locationChangeSuccess', function(event) {
-                if ($route.current.$$route.controller === 'CurrencyConvertCtrl') {
-                    // Will not load only if my view use the same controller
-                    $route.current = lastRoute;
-                }
-            });
-        */
-    $scope.$watch('selectedIndex', function(current, prev) {
-        if (current !== void(0) && prev !== current)  {
-            $('md-tabs-content-wrapper').hide()
-            $timeout(function() {
-                $('md-tabs-content-wrapper').show()
-            }, 500)
+        if (current && current[0] !== void(0)) {
+            $location.hash(_this.tbz[current[0]]);
+        }
+        if (_this.tbz[current[0]] === 'stats') {
+            _this.reloadStats();
         }
     })
+
 
 }
 angular.module('edison').controller('ContactArtisanController', ContactArtisanController);

@@ -41,29 +41,20 @@ angular.module('edison')
                 edisonAPI.artisan.sendFacturier(_this.id, facturier, deviseur);
             })
         }
+
+        Artisan.prototype.deArchiver = function() {
+            this.status = "ACT";
+            Artisan(this).save();
+        }
+        Artisan.prototype.archiver = function() {
+            this.status = "ARC";
+            Artisan(this).save();
+        }
+
         Artisan.prototype.call = function(cb) {
             var _this = this;
             var now = Date.now();
             $window.open('callto:' + _this.telephone.tel1, '_self', false)
-                /*                dialog.choiceText({
-                                    title: 'Nouvel Appel',
-                                    subTitle: _this.telephone.tel1
-                                }, function(response, text) {
-                                    edisonAPI.call.save({
-                                        date: now,
-                                        to: _this.telephone.tel1,
-                                        link: _this.id,
-                                        origin: _this.id || _this.tmpID || 0,
-                                        description: text,
-                                        response: response
-                                    }).success(function(resp) {
-                                        if (typeof cb === 'function')
-                                            cb(null, resp);
-                                    }).catch(function(err) {
-                                        if (typeof cb === 'function')
-                                            cb(err);
-                                    })
-                                })*/
         };
 
 

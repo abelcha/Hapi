@@ -61,6 +61,9 @@ gulp.task('jsLibs', function() {
         'bower_components/d3/d3.min.js',
         'bower_components/dimple/dist/dimple.latest.min.js',
         'bower_components/mousetrap/mousetrap.min.js',
+        'bower_components/chartist/dist/chartist.min.js',
+        'bower_components/Chart.js/Chart.min.js',
+        'bower_components/angular-chart.js/dist/angular-chart.min.js'
 //        'bower_components/angular-material-icons/angular-material-icons.js',
 
     ]
@@ -118,7 +121,7 @@ gulp.task('styles', function() {
         'front/assets/css/style.css',
         'front/assets/css/pages.min.css',
 
-
+        'bower_components/chartist/dist/chartist.min.css',
         'bower_components/font-awesome/css/font-awesome.min.css',
         'bower_components/font-awesome-animation/dist/font-awesome-animation.min.css',
         'bower_components/bootstrap/dist/css/bootstrap.css',
@@ -130,7 +133,7 @@ gulp.task('styles', function() {
         'bower_components/pickadate/lib/compressed/themes/classic.time.css',
         'bower_components/lumx/dist/lumx.css',
         'bower_components/mdi/css/materialdesignicons.css',
-
+        'bower_components/angular-chart.js/dist/angular-chart.min.css'
     ]
     return gulp.src(libs)
         //.pipe(minify({mangle:false}))

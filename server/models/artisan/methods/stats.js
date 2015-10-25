@@ -20,6 +20,12 @@ module.exports = function(schema) {
                             mnt: {
                                 $sum: "$prixAnnonce"
                             },
+                            fnl: {
+                                $sum: "$prixAnnonce"
+                            },
+                            px: {
+                                $sum: "$compta.paiement.montant"
+                            },
                             total: {
                                 $sum: 1
                             }
@@ -28,19 +34,9 @@ module.exports = function(schema) {
                         $project: {
                             _id: 0,
                             total: 1,
-                            montant: {
-                                $divide: [{
-                                        $subtract: [{
-                                            $multiply: ['$mnt', 100]
-                                        }, {
-                                            $mod: [{
-                                                $multiply: ['$mnt', 100]
-                                            }, 1]
-                                        }]
-                                    },
-                                    100
-                                ]
-                            }
+                            paye: db.utils.round("$px"),
+                            'final': db.utils.round("$fnl"),
+                            montant: db.utils.round("$mnt")
                         }
                     }])
                     return q.exec.bind(q);
@@ -98,15 +94,19 @@ module.exports = function(schema) {
                     function(err, results) {
                         if (err)
                             return reject(err);
+                        console.log(results)
                         var rtn = (_.mapValues(results, function(e, k) {
                             if (k.indexOf('_') == 0) {
                                 return e
                             }
                             return e.length ? e[0] : {
                                 total: 0,
-                                montant: 0
+                                montant: 0,
+                                paye: 0,
+                                final: 0
                             };
                         }));
+                        //        console.log(rtn)
                         resolve(rtn)
                     });
 

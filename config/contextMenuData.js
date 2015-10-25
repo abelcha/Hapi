@@ -15,6 +15,12 @@ module.exports = {
             return artisan.status === 'ARC';
         }
     }, {
+        title: "dé-Archiver",
+        action: 'deArchiver',
+        hide: function(artisan) {
+            return artisan.status !== 'ARC';
+        }
+    }, {
         title: "Envoyer Contrat",
         action: 'envoiContrat',
         hide: function(artisan) {

@@ -25,7 +25,7 @@ module.exports = function(core) {
                     core.preUpdate(doc, data, req.session);
 
                 for (k in data) {
-                    if (!(_.contains(['id', '_id', '__v', 'status'], k))) {
+                    if (!(_.contains(['id', '_id', '__v'], k))) {
                         doc[k] = data[k];
                     }
                 }

@@ -240,6 +240,9 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
             extendedStats: function(id) {
                 return $http.get('/api/artisan/' + id + "/extendedStats")
             },
+            statsMonths: function(id) {
+                return $http.get('/api/artisan/' + id + "/statsMonths")
+            },
             save: function(params) {
                 if (!params.id) {
                     return $http.post("/api/artisan", params)
@@ -295,7 +298,7 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
             check: function(id) {
                 return $http.post('/api/task/' + id + '/check')
             },
-            listRelevant:function() {
+            listRelevant: function() {
                 return $http.get('/api/task/relevant');
             }
         },

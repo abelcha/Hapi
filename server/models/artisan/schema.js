@@ -185,6 +185,7 @@ module.exports = function(db) {
             }],
         },
         signalements: [{
+            date: Date,
             login: String,
             type: String,
         }],
@@ -194,7 +195,6 @@ module.exports = function(db) {
         },
         BIC: String,
         IBAN: String,
-
         nbrIntervention: Number,
         siret: String,
         cache: {}

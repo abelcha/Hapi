@@ -13,6 +13,7 @@ module.exports = function(db) {
             required: true
         },
         oldLogin: String,
+        id: Number,
         _id: String,
         service: String,
         ligne: String,

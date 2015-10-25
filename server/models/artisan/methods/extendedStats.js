@@ -40,7 +40,7 @@ module.exports = function(schema) {
                     .exec(function(err, resp) {
                         var monthStart = last12Months.getMonth();
                         var yearStart = last12Months.getFullYear();
-
+                        console.log(resp)
                         var rtn = [];
                         _.times(12, function(n) {
                             var month = (monthStart + n) % 12;
@@ -72,6 +72,7 @@ module.exports = function(schema) {
                                 })
                             }
                         })
+                        console.log(rtn)
                         resolve(rtn)
                     });
             })
