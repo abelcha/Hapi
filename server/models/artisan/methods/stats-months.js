@@ -2,7 +2,6 @@ module.exports = function(schema) {
     var async = require('async');
     var _ = require('lodash');
     var moment = require('moment')
-    require('moment-range');
 
     schema.statics.statsMonths = {
         unique: true,
