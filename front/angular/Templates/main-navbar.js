@@ -85,6 +85,8 @@ angular.module('edison').directive('mainNavbar', function($q, edisonAPI, TabCont
                     return deferred.promise;
                 },
                 change: function(x) {
+                    if (!x.link)
+                        return 0;
                     if (x) {
                         $location.url(x.link)
                     }

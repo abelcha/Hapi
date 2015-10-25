@@ -145,7 +145,7 @@ module.exports = function(req, res) {
                 var t = artisan.telephone;
                 artisan.telMatch = t.tel1.startsWith(query) ? t.tel1 : t.tel2.startsWith(query) ? t.tel2 : t.tel3;
                 return {
-                    link: '/artisanvention/' + artisan.id,
+                    link: '/artisan/' + artisan.id + '/recap',
                     description: _.template("@{{id}} ({{address.telMatch}}) - {{nomSociete}} - {{address.cp}} {{address.v}} ")(artisan)
                 }
             }

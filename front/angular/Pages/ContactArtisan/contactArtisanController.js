@@ -6,6 +6,7 @@ var ContactArtisanController = function($scope, $timeout, TabContainer, LxProgre
         edisonAPI.artisan.get(id)
             .then(function(resp) {
                 _this.sst = resp.data;
+                console.log(TabContainer)
                 _this.tab.setTitle('@' + _this.sst.nomSociete.slice(0, 10));
 
             })
@@ -92,7 +93,6 @@ var ContactArtisanController = function($scope, $timeout, TabContainer, LxProgre
             _this.tableFilter = "";
             _this.tableLimit = 20;
             $rootScope.expendedRow = $routeParams.sstid || 45
-            console.log(_this.recap, $location.url())
                 // if (_this.recap) {
                 //     $scope.selectedIndex = 1;
                 // }

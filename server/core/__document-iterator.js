@@ -35,6 +35,9 @@ module.exports = function(core) {
                         };
 
                     core.model().update(conditions, update, options, cb);
+                    e = null;
+                    conditions = null;
+                    updates = null
                 }, function(err) {
                     if (err) {
                         return reject(err);
