@@ -3,7 +3,7 @@ var Timer = module.exports = function() {
 
     var hour = function(h) {
         var moment = require('moment-timezone')
-        return moment.tz('Europe/Paris').format('[0] H [* * *]')
+        return moment.tz('Europe/Paris').hour(h).format('[0] H [* * *]')
     }
 
     this.emitter = new CronEmitter();
