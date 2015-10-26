@@ -314,6 +314,9 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
             add: function(params) {
                 return $http.post('/api/signalement/add', params)
             },
+            list: function(params) {
+                return $http.get('/api/signalement/list', params)
+            },
         },
         file: {
             uploadScans: function(file, options) {

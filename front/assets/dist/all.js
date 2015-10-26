@@ -350,6 +350,13 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
             controller: "editSignalements",
             controllerAs: "vm",
         })
+        .when('/listeSignalements', {
+            templateUrl: "Pages/Tools/liste-signalements.html",
+            controller: "listeSignalements",
+            controllerAs: "vm",
+            reloadOnSearch: false
+
+        })
         .when('/tools/editComptes', {
             templateUrl: "Pages/Tools/edit-comptes.html",
             controller: "editComptes",
@@ -1060,7 +1067,7 @@ angular.module('edison').directive('ngRightClick', function($parse) {
                     id_inter: scope.data.id || scope.data.tmpID,
                     id_sst: scope.data.sst && scope.data.sst.id
                 })).then(function() {
-                    LxNotificationService.success("Le service " + signal.service.toLowerCase() + "en a été notifié");
+                    LxNotificationService.success("Le service " + signal.service.toLowerCase() + " en a été notifié");
                 })
                 scope.exit()
             }
@@ -1956,6 +1963,9 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
         signalement: {
             add: function(params) {
                 return $http.post('/api/signalement/add', params)
+            },
+            list: function(params) {
+                return $http.get('/api/signalement/list', params)
             },
         },
         file: {
@@ -5056,6 +5066,21 @@ angular.module('edison').controller('ListeArtisanController', _.noop);
 angular.module('edison').controller('ListeDevisController', _.noop);
 
 angular.module('edison').controller('ListeInterventionController', _.noop);
+
+var listeSignalements = function(TabContainer, edisonAPI, $rootScope, $scope, $location, LxNotificationService, socket) {
+    "use strict";
+    var _this = this;
+    _this.tab = TabContainer.getCurrentTab();
+    _this.tab.setTitle('Liste Signalements');
+
+    edisonAPI.signal.list({
+        service: 'INTERVENTION'
+    }).then(function(resp) {
+        $scope.pl = resp.data;
+    })
+
+}
+angular.module('edison').controller('listeSignalements', listeSignalements);
 
 var SearchController = function(edisonAPI, TabContainer, $routeParams, $location, LxProgressService) {
     var tab = TabContainer.getCurrentTab();

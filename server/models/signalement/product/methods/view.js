@@ -12,7 +12,7 @@ module.exports = function(schema) {
 
     schema.statics.list = function(req, res) {
         return new Promise(function(resolve, reject) {
-            db.model('product').find().then(resolve, reject)
+            db.model('product').find(req.query || {}).then(resolve, reject)
         })
     }
 };

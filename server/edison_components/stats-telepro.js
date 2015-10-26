@@ -1,3 +1,4 @@
+var users = requireLocal('config/_users');
 var ms = require('milliseconds');
 var async = require('async')
 var _ = require("lodash")
@@ -6,7 +7,7 @@ var FiltersFactory = requireLocal('config/FiltersFactory');
 var statusDistinctFactory = function(model, customMatch, customGroup) {
     var match = customMatch || {};
     return function(cb) {
-        db.model(model ||  'intervention')
+        db.model(model ||  'intervention')
             .aggregate()
             .match(match)
             .group({
@@ -68,7 +69,7 @@ var mergeFilters = function(allFilters, model) {
 
 
 module.exports = {
-    reload: function() {
+    reload: _.throttle(function() {
         return new Promise(function(resolve, reject) {
 
             try {
@@ -86,7 +87,7 @@ module.exports = {
                     })
                     var rtn = [];
                     var sum = {}
-                _.each(edison.users.data, function(user) {
+                    users.forEach(function(user) {
                         var telepro = {
                             login: user.login,
                         }
@@ -110,10 +111,10 @@ module.exports = {
                 __catch(e)
             }
         });
-    },
+    }, 5000),
     get: function(req, res) {
         var _this = this;
-
+        console.log("==>", edison.users)
         redis.get('statsTelepro'.envify(), function(err, reply) {
             if (!err && reply && !req.query.cache) {
                 return res.jsonStr(reply)

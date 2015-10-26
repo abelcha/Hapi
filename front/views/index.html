@@ -21,7 +21,7 @@
         </ul>
     </div>
     <div id="main-wrapper" ng-hide="loadingData">
-    <main-navbar></main-navbar>
+        <main-navbar></main-navbar>
         <side-bar ng-if="displayUser.login && interventionsStats" ng-mouseenter="toggleSidebar(false)" ng-mouseleave="toggleSidebar(true)">
             <div style="padding: 11px 33px;" class="menu-content animated fadeIn">
                 <a href="/intervention" style="height: 31px;padding: 4px;" class="btn btn-primary btn-block btn-outline dark">Ajout d'une intervention</a>
@@ -63,6 +63,7 @@
             </drop-down>
             <drop-down title="Service Partenariat" icon="circle" open-default="displayUser.service === 'PARTENARIAT'">
                 <drop-down icon="truck" title="Artisans">
+                    <link title="Signalements" href="/listeSignalements?level=1">
                     <link fltr="a_all" url="/artisan/contact#informations" icon="th-list" model="artisan" title="Repertoire"></link>
                     <link fltr="a_all" icon="th-list" model="artisan" login='{{displayUser.login}}' title="Mes Artisans"></link>
                     <link fltr="a_all" icon="th-list" model="artisan" title="Tous les Artisans" no-counter="true"></link>
@@ -74,14 +75,12 @@
                     <link fltr="i_mar" icon="th-list" title="Market"></link>
                     <link fltr="i_pan" icon="th-list" login="{{displayUser.login}}" hash-model="dm" title="Mon Panier"></link>
                     <link fltr="i_davr" icon="th-list" title="Verifs" color="warning"></link>
-
-                    <link fltr="i_hist" icon="th-list" title="Historique"  no-counter="true"></link>
+                    <link fltr="i_hist" icon="th-list" title="Historique" no-counter="true"></link>
                 </drop-down>
                 <drop-down icon="suitcase" title="Management">
                     <link fltr="i_chq" icon="th-list" login="{{displayUser.login}}" hash-model="dm" title="Relances cheques"></link>
                     <link fltr="a_man" icon="th-list" model="artisan" login="{{displayUser.login}}" hash-model="mn" title="Mes SST"></link>
                 </drop-down>
-                
             </drop-down>
             <drop-down title="Service Comptabilité" icon="circle" open-default="displayUser.service === 'COMPTABILITE'">
                 <simple-link icon="credit-card" fltr="i_carl" title="Tableau des relances" url="/intervention/list/relanceClient"></simple-link>
@@ -104,8 +103,8 @@
                 <simple-link icon="wrench" title="VCF Artisan" extern url="/api/artisan/vcf"></simple-link>
             </drop-down>
         </side-bar>
-        <div class="page-header" style="background: #f4f4f4 url(/img/mooning.png);" >
-            <div id="content-wrapper"  ng-click="closeContextMenu($event);">
+        <div class="page-header" style="background: #f4f4f4 url(/img/mooning.png);">
+            <div id="content-wrapper" ng-click="closeContextMenu($event);">
                 <div ng-view style="margin-top: 16px;">
                 </div>
                 <div id="globalProgress" style="position:fixed;top: 50%;left: 57%;z-index: 12222;">
@@ -113,7 +112,7 @@
                 </div>
             </div>
         </div>
-        <div id="main-menu-bg" ></div>
+        <div id="main-menu-bg"></div>
     </div>
     <!-- / #main-wrapper -->
     <div ng-show="loadingData || true" class="animate-loading">

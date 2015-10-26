@@ -193,6 +193,13 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
             controller: "editSignalements",
             controllerAs: "vm",
         })
+        .when('/listeSignalements', {
+            templateUrl: "Pages/Tools/liste-signalements.html",
+            controller: "listeSignalements",
+            controllerAs: "vm",
+            reloadOnSearch: false
+
+        })
         .when('/tools/editComptes', {
             templateUrl: "Pages/Tools/edit-comptes.html",
             controller: "editComptes",

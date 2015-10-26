@@ -22,7 +22,7 @@
                     id_inter: scope.data.id || scope.data.tmpID,
                     id_sst: scope.data.sst && scope.data.sst.id
                 })).then(function() {
-                    LxNotificationService.success("Le service " + signal.service.toLowerCase() + "en a été notifié");
+                    LxNotificationService.success("Le service " + signal.service.toLowerCase() + " en a été notifié");
                 })
                 scope.exit()
             }
