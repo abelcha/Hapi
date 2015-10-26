@@ -114,7 +114,6 @@ module.exports = {
     }, 5000),
     get: function(req, res) {
         var _this = this;
-        console.log("==>", edison.users)
         redis.get('statsTelepro'.envify(), function(err, reply) {
             if (!err && reply && !req.query.cache) {
                 return res.jsonStr(reply)
