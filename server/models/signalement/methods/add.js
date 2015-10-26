@@ -7,7 +7,7 @@ module.exports = function(schema) {
             params.save().then(resolve, reject)
         })
     }
-
+    
     schema.statics.view = function(req, res) {
         return new Promise(function(resolve, reject) {
             db.model('signalement').find().then(resolve, reject);
