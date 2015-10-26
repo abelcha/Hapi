@@ -5,6 +5,7 @@ module.exports = function() {
     var _ = require('lodash');
 
     mongoose.connect(process.env.MONGOLAB_URI || 'mongodb://localhost/EDISON');
+
     function getDirectories(srcpath) {
         return fs.readdirSync(srcpath).filter(function(file) {
             return fs.statSync(path.join(srcpath, file)).isDirectory();
@@ -45,6 +46,22 @@ module.exports = function() {
                     },
                     100
                 ]
+            }
+        },
+        cond: function(field, value, rA, rB) {
+            return {
+                $cond: [{
+                    $eq: [field, value]
+                }, (rA || 1), (rB || 0)]
+            }
+        },
+        sumCond: function(field, value, rA, rB) {
+            return {
+                $sum: {
+                    $cond: [{
+                        $eq: [field, value]
+                    }, (rA || 1), (rB || 0)]
+                }
             }
         }
     }
