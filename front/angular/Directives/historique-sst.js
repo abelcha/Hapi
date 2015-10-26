@@ -9,12 +9,14 @@ angular.module('edison').directive('historiqueSst', function(edisonAPI) {
             data: "=",
         },
         link: function(scope, element, attrs) {
-            scope.$watch('data.id', function() {
+
+            var reload = function() {
                 edisonAPI.artisan.fullHistory(scope.data.id).then(function(resp) {
-                    console.log('====>', resp.data);
                     scope.hist = resp.data;
                 })
-            })
+            }
+
+            scope.$watch('data.id', reload)
             scope.check = function(sign) {
                 /*  if (sign.ok)
                       return 0;*/
@@ -22,6 +24,10 @@ angular.module('edison').directive('historiqueSst', function(edisonAPI) {
                     sign = _.merge(sign, resp.data);
                 })
                 console.log('=>', sign)
+            }
+            scope.comment = function() {
+                edisonAPI.artisan.comment(scope.data.id, scope.comm).then(reload)
+                scope.comm = ""
             }
         }
     };

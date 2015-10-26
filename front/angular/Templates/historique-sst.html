@@ -1,13 +1,13 @@
 <div class="panel panel-success widget-support-tickets" id="dashboard-support-tickets">
     <div class="panel-heading">
-        <span class="panel-title"><i class="panel-title-icon fa fa-bullhorn"></i>Support Tickets</span>
+        <span class="panel-title"><i class="panel-title-icon fa fa-bullhorn"></i>Historique</span>
         <div class="panel-heading-controls">
-            <div class="panel-heading-text"><a href="#">15 new tickets</a></div>
+            <div class="panel-heading-text"><a href="#">{{hist.length}} Elements</a></div>
         </div>
     </div>
     <div class="panel-body tab-content-padding">
         <div class="panel-padding no-padding-vr">
-            <div class="ticket" style="text-align: left;border-left: solid 5px {{h.ok ? '#4CAF50' : '#ff9800'}};" ng-repeat="h in hist" ng-if="h.type === 'signalement'">
+            <div class="ticket" style="text-align: left;border-left: solid 5px {{h.ok ? '#4CAF50' : '#ff9800'}};" ng-repeat-start="h in hist" ng-if="h.type === 'signalement'">
                 <div class="row">
                     <div class="col-sm-6">
                         <a href="/intervention/{{h.inter_id}}" title="" class="ticket-title">
@@ -29,7 +29,7 @@
                     </div>
                 </div>
             </div>
-            <div class="ticket" style="text-align: left;border-left: solid 4px grey" ng-repeat="h in hist" ng-if="h.type === 'comment'">
+            <div class="ticket" style="text-align: left;border-left: solid 4px grey" ng-if="h.type === 'comment'">
                 <div class="row">
                     <div class="col-sm-6">
                         <span ng-class="ticket-info"><a href="#">{{h.login}}</a> 
@@ -38,6 +38,26 @@
                     <div class="col-sm-6">
                         <span class="md-subhead sst-comment">{{h.text}}</span>
                     </div>
+                </div>
+            </div>
+            <div class="ticket" style="text-align: left;border-left: solid 4px blue" ng-if="h.type === 'pack'" ng-repeat-end>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <span ng-class="ticket-info"><a href="#">{{h.login}}</a> 
+                le {{h.date|date:"dd/MM/yy à HH'h'mm"}} </span>
+                    </div>
+                    <div class="col-sm-6">
+                        <span class="md-subhead">Envoi 
+                        <span ng-if="h.facturier">facturier</span>
+                        <span ng-if="h.facturier && h.deviseur"> + </span>
+                        <span ng-if="h.deviseur">deviseur</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="ticket">
+                <div class="col-sm-6 col-sm-offset-6">
+                    <input type="text" class="form-control" placeholder="Commentaire..." ng-model="comm" style="height:56px;" ng-enter="comment()">
                 </div>
             </div>
         </div>
