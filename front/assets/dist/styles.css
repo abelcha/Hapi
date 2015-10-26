@@ -1,13 +1,13 @@
 .ct-red > path.ct-slice-donut {
-    stroke: #B0CCB0 !important
+    stroke: #F44336 !important
 }
 
 .ct-green > path.ct-slice-donut {
-    stroke: #8BBD26 !important
+    stroke: #4CAF50 !important
 }
 
 .ct-orange > path.ct-slice-donut {
-    stroke: #CBE8F0 !important
+    stroke: #ff9800 !important
 }
 
 .materialize-red.lighten-5 {
