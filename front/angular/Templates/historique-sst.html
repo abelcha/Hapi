@@ -7,7 +7,7 @@
     </div>
     <div class="panel-body tab-content-padding">
         <div class="panel-padding no-padding-vr">
-            <div class="ticket" style="text-align: left;" ng-repeat="h in hist" ng-if="h.type === 'signalement'">
+            <div class="ticket" style="text-align: left;border-left: solid 5px {{h.ok ? '#4CAF50' : '#ff9800'}};" ng-repeat="h in hist" ng-if="h.type === 'signalement'">
                 <div class="row">
                     <div class="col-sm-6">
                         <a href="/intervention/{{h.inter_id}}" title="" class="ticket-title">
@@ -15,14 +15,28 @@
                         </a>
                         <span ng-class="ticket-info">Signalé par <a href="#">{{h.login.ajout}}</a> 
                 {{h._date|date:"dd/MM/yy à HH'h'mm"}}</span>
+                        <br>
+                        <span ng-if="h.ok && h.login.done" ng-class="ticket-info">Réglé par <a href="#">{{h.login.done}}</a> 
+                {{h.date.done|date:"dd/MM/yy à HH'h'mm"}}</span>
                     </div>
                     <div class="col-sm-4">
-                        <textarea ng-disabled="h.ok" elastic class="form-control" ng-model="h.text" placeholder="SMS..."></textarea>
+                        <textarea ng-disabled="h.ok" elastic class="form-control" ng-model="h.text" placeholder="Commentaire..."></textarea>
                     </div>
                     <div class="col-sm-2">
-                        <span ng-if="h.ok" class="label label-success ticket-label" ng-click="h.ok = !h.ok">OK</span>
-                        <span ng-if="!h.ok && h.level === '1'" class="label label-warning ticket-label" ng-click="h.ok = !h.ok">PENDING</span>
-                        <span ng-if="!h.ok && h.level === '2'" class="label label-danger ticket-label" ng-click="h.ok = !h.ok">PENDING</span>
+                        <span ng-if="h.ok" class="label label-success ticket-label" ng-click="check(h)">OK</span>
+                        <span ng-if="!h.ok && h.level === '1'" class="label label-warning ticket-label" ng-click="check(h)">PENDING</span>
+                        <span ng-if="!h.ok && h.level === '2'" class="label label-danger ticket-label" ng-click="check(h)" ng-click="check(h)">PENDING</span>
+                    </div>
+                </div>
+            </div>
+            <div class="ticket" style="text-align: left;border-left: solid 4px grey" ng-repeat="h in hist" ng-if="h.type === 'comment'">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <span ng-class="ticket-info"><a href="#">{{h.login}}</a> 
+                le {{h.date|date:"dd/MM/yy à HH'h'mm"}} </span>
+                    </div>
+                    <div class="col-sm-6">
+                        <span class="md-subhead sst-comment">{{h.text}}</span>
                     </div>
                 </div>
             </div>

@@ -3246,6 +3246,12 @@ md-switch.md-checked.md-primary .md-bar {
     padding: 3px;
 }
 
+.sst-comment {
+    border: solid 2px rgba(0, 0, 0, 0.18);
+    padding: 8px;
+   // background: rgba(100, 190, 216, 0.06);
+}
+
 .barred {
     text-decoration: line-through;
 }

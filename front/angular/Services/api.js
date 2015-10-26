@@ -313,6 +313,11 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
             }
         },
         signalement: {
+            check: function(id, text) {
+                return $http.post('/api/signalement/' + id + '/check', {
+                    text: text
+                })
+            },
             add: function(params) {
                 return $http.post('/api/signalement/add', params)
             },

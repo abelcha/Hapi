@@ -3,11 +3,11 @@ module.exports = function(db) {
     return new db.Schema({
         login: {
             ajout: String,
-            fixage: String
+            done: String
         },
         date: {
             ajout: Date,
-            fixage: Date
+            done: Date
         },
         inter_id: {
             type: Number,
