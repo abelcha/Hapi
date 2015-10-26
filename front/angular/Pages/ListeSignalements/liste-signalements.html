@@ -1,4 +1,15 @@
 <div class="card margin">
-    <div class="p+" style="width:95%">
+    <div class="p+" style="width:95%;min-height:800px">
+    <table class="table table-hover">
+    	<tbody>
+    		<tr ng-repeat="p in pl">
+    			<td>{{p.date.ajout|date:"dd/MM/yy à HH'h'mm"}}</td>
+    			<td>{{p.login.ajout}}</td>
+    			<td><a href="/intervention/{{p.inter_id}}">{{p.inter_id}}</a></td>
+    			<td><a href="/artisan/{{p.sst_id}}/recap#historique">{{p.sst_nom}}</a></td>
+    			<td>{{p.nom}}</td>
+    		</tr>
+    	</tbody>
+    </table>
     </div>
 </div>

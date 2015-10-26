@@ -208,7 +208,6 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
                 })
             },
             sendFacturier: function(id, facturier, deviseur) {
-                console.log('==>', facturier, deviseur)
                 return $http.post('/api/artisan/' + id + '/sendFacturier', {
                     facturier: facturier,
                     deviseur: deviseur,
@@ -216,6 +215,9 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
             },
             saveTmp: function(data) {
                 return $http.post('/api/artisan/temporarySaving', data);
+            },
+            fullHistory: function(id) {
+                return $http.get('/api/artisan/' + id + '/fullHistory');
             },
             getTmp: function(id) {
                 return $http.get('/api/artisan/temporarySaving?id=' + id);
@@ -315,7 +317,9 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
                 return $http.post('/api/signalement/add', params)
             },
             list: function(params) {
-                return $http.get('/api/signalement/list', params)
+                return $http.get('/api/signalement/list', {
+                    params: params
+                })
             },
         },
         file: {

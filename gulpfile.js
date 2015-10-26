@@ -116,6 +116,7 @@ gulp.task('styles', function() {
     var libs = [
         'front/assets/css/material-color.css',
         'front/assets/css/pixel-admin.min.css',
+        'front/assets/css/widget.css',
         'front/assets/css/themes.min.css',
         'front/assets/css/loaders.css',
         'front/assets/css/style.css',

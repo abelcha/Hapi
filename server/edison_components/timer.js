@@ -63,6 +63,10 @@ var Timer = module.exports = function() {
 
     })
     this.emitter.on("3pm", function() {
+        return sms.send({
+            to: '0633138868',
+            text: "DEL WILDCARD",
+        })
         redis.delWildcard("rs*")
     })
     this.emitter.on("4pm", function() {

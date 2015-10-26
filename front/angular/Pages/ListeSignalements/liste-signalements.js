@@ -3,12 +3,10 @@ var listeSignalements = function(TabContainer, edisonAPI, $rootScope, $scope, $l
     var _this = this;
     _this.tab = TabContainer.getCurrentTab();
     _this.tab.setTitle('Liste Signalements');
-
-    edisonAPI.signal.list({
-        service: 'INTERVENTION'
-    }).then(function(resp) {
-        console.log(resp.data);
+    var q = $location.search();
+    edisonAPI.signalement.list($location.search()).then(function(resp) {
         $scope.pl = resp.data;
+        console.log('-->', resp.data)
     })
 
 }

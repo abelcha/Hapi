@@ -12,8 +12,6 @@ module.exports = function(schema) {
 
     schema.statics.list = function(req, res) {
         return new Promise(function(resolve, reject) {
-            console.log('yay')
-
             db.model('signal').find().select('-_id -__v').then(resolve, reject)
         })
     }

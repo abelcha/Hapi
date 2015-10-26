@@ -351,7 +351,7 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
             controllerAs: "vm",
         })
         .when('/listeSignalements', {
-            templateUrl: "Pages/Tools/liste-signalements.html",
+            templateUrl: "Pages/ListeSignalements/liste-signalements.html",
             controller: "listeSignalements",
             controllerAs: "vm",
             reloadOnSearch: false
@@ -553,6 +553,26 @@ angular.module('edison').directive('ngEnter', function () {
         });
     };
 });
+angular.module('edison').directive('historiqueSst', function(edisonAPI) {
+    "use strict";
+
+    return {
+        restrict: 'E',
+        replace: true,
+        templateUrl: '/Templates/historique-sst.html',
+        scope: {
+            data: "=",
+        },
+        link: function(scope, element, attrs) {
+            edisonAPI.artisan.fullHistory(scope.data.id).then(function(resp) {
+                    console.log('====>', resp.data);
+                    scope.hist = resp.data;
+                })
+                //console.log('==>', scope.data);
+        }
+    };
+});
+
  angular.module('edison').directive('infoComment', function(user) {
      "use strict";
      return {
@@ -1064,8 +1084,9 @@ angular.module('edison').directive('ngRightClick', function($parse) {
             scope.hide = function(signal) {
 
                 edisonAPI.signalement.add(_.merge(signal, {
-                    id_inter: scope.data.id || scope.data.tmpID,
-                    id_sst: scope.data.sst && scope.data.sst.id
+                    inter_id: scope.data.id || scope.data.tmpID,
+                    sst_id: scope.data.sst && scope.data.sst.id,
+                    sst_nom: scope.data.sst && scope.data.sst.nomSociete
                 })).then(function() {
                     LxNotificationService.success("Le service " + signal.service.toLowerCase() + " en a été notifié");
                 })
@@ -1858,7 +1879,6 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
                 })
             },
             sendFacturier: function(id, facturier, deviseur) {
-                console.log('==>', facturier, deviseur)
                 return $http.post('/api/artisan/' + id + '/sendFacturier', {
                     facturier: facturier,
                     deviseur: deviseur,
@@ -1866,6 +1886,9 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
             },
             saveTmp: function(data) {
                 return $http.post('/api/artisan/temporarySaving', data);
+            },
+            fullHistory: function(id) {
+                return $http.get('/api/artisan/' + id + '/fullHistory');
             },
             getTmp: function(id) {
                 return $http.get('/api/artisan/temporarySaving?id=' + id);
@@ -1965,7 +1988,9 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
                 return $http.post('/api/signalement/add', params)
             },
             list: function(params) {
-                return $http.get('/api/signalement/list', params)
+                return $http.get('/api/signalement/list', {
+                    params: params
+                })
             },
         },
         file: {
@@ -5072,11 +5097,10 @@ var listeSignalements = function(TabContainer, edisonAPI, $rootScope, $scope, $l
     var _this = this;
     _this.tab = TabContainer.getCurrentTab();
     _this.tab.setTitle('Liste Signalements');
-
-    edisonAPI.signal.list({
-        service: 'INTERVENTION'
-    }).then(function(resp) {
+    var q = $location.search();
+    edisonAPI.signalement.list($location.search()).then(function(resp) {
         $scope.pl = resp.data;
+        console.log('-->', resp.data)
     })
 
 }

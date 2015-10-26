@@ -19,8 +19,9 @@
             scope.hide = function(signal) {
 
                 edisonAPI.signalement.add(_.merge(signal, {
-                    id_inter: scope.data.id || scope.data.tmpID,
-                    id_sst: scope.data.sst && scope.data.sst.id
+                    inter_id: scope.data.id || scope.data.tmpID,
+                    sst_id: scope.data.sst && scope.data.sst.id,
+                    sst_nom: scope.data.sst && scope.data.sst.nomSociete
                 })).then(function() {
                     LxNotificationService.success("Le service " + signal.service.toLowerCase() + " en a été notifié");
                 })

@@ -62,9 +62,11 @@
                 </drop-down>
             </drop-down>
             <drop-down title="Service Partenariat" icon="circle" open-default="displayUser.service === 'PARTENARIAT'">
+                <link title="Signalements Level 1" url="/listeSignalements?level=1&service={{displayUser.service}}&ok=false">
+                    <link title="Signalements Level 2" url="/listeSignalements?level=2&service={{displayUser.service}}&ok=false">
+                   
                 <drop-down icon="truck" title="Artisans">
-                    <link title="Signalements" href="/listeSignalements?level=1">
-                    <link fltr="a_all" url="/artisan/contact#informations" icon="th-list" model="artisan" title="Repertoire"></link>
+                     <link fltr="a_all" url="/artisan/contact#informations" icon="th-list" model="artisan" title="Repertoire"></link>
                     <link fltr="a_all" icon="th-list" model="artisan" login='{{displayUser.login}}' title="Mes Artisans"></link>
                     <link fltr="a_all" icon="th-list" model="artisan" title="Tous les Artisans" no-counter="true"></link>
                     <li>

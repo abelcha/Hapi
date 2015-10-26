@@ -22,7 +22,6 @@ module.exports = function(app) {
 
 
     app.post('/api/sms/send', function(req, res) {
-        sms.send(req.body)
         res.send('ok')
     })
 

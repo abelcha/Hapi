@@ -194,7 +194,7 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
             controllerAs: "vm",
         })
         .when('/listeSignalements', {
-            templateUrl: "Pages/Tools/liste-signalements.html",
+            templateUrl: "Pages/ListeSignalements/liste-signalements.html",
             controller: "listeSignalements",
             controllerAs: "vm",
             reloadOnSearch: false

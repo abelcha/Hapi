@@ -59,18 +59,7 @@
                             </md-tab>
                             <md-tab label="Historique" data-position="1">
                                 <md-content class="md-padding">
-                                    <h1 class="md-display-2">Historique</h1>
-                                    <div class="paragraph fs-body-1 mt+" style="height:100%">
-                                        <ul style="padding-bottom:20px;margin-left: 0px;">
-                                            <li class="list-row" ng-repeat="com in vm.sst.comments | reverse">
-                                                <div class="list-row__content">
-                                                    <span class="display-block">{{com.text}}</span>
-                                                    <span class="display-block fs-body-1 tc-black-2">{{com.date  |  date:"dd/MM/yy"}} - {{com.login}}</span>
-                                                </div>
-                                            </li>
-                                        </ul>
-                                        <input placeholder="Commentaire..." ng-model="commentText" ng-enter="addComment()" class="form-control" />
-                                    </div>
+                                    <historique-sst data="vm.sst"></historique-sst>
                                 </md-content>
                             </md-tab>
                             <md-tab label="Stats" data-position="2">

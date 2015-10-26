@@ -17,10 +17,15 @@ module.exports = function(db) {
             type: Number,
             ref: 'artisan'
         },
+        sst_nom: String,
         _type: String,
         subType: String,
         level: String,
         service: String,
         nom: String,
+        ok: {
+            type: Boolean,
+            default: false
+        }
     });
 }
