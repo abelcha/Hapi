@@ -359,7 +359,7 @@
             rtn.produits = devis.devisTab;
             rtn.tva = parseInt(devis.tva) || 10;
             rtn.produits.map(function(p) {
-                p.quantite = (p.quantite || "0").replace(/[^\d.-]/g, '')
+                p.quantite = typeof p.quantite === 'string' ? p.quantite.replace(/[^\d.-]/g, '') : 0
                 p.desc = sanitizeHtml(entities.decode(p.desc))
                 p.ref = sanitizeHtml(entities.decode(p.ref || 'EDI042'))
                 p.pu = typeof p.pu === 'number' ? p.pu : (parseFloat(p.pu.replace(/[^\d.-]/g, '')) || 0)
