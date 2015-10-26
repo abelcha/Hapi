@@ -5,6 +5,14 @@ module.exports = function(schema) {
         return d.status !== 'ARC' && (!this.categorie || d.categories.indexOf(this.categorie) !== -1);
     }
 
+    var isAbsent = function(abs) {
+        var moment = require('moment')
+        if (!abs || !abs.length) {
+            return false;
+        }
+        return moment().isAfter(abs[abs.length - 1].start) && moment().isBefore(abs[abs.length - 1].end)
+    }
+
     var __map = function(doc, i) {
         var d = doc.obj;
         return {
@@ -12,10 +20,12 @@ module.exports = function(schema) {
             nomSociete: d.nomSociete,
             distance: doc.dis.round(1),
             categories: d.categories,
-            ajout:d.date.ajout,
+            ajout: d.date.ajout,
             status: d.status,
-            subStatus:d.subStatus,
-            zoneChalandise:d.zoneChalandise,
+            subStatus: d.subStatus,
+            quarantained: d.quarantained,
+            zoneChalandise: d.zoneChalandise,
+            absent: isAbsent(d.absence),
             address: {
                 lt: d.address.lt,
                 lg: d.address.lg,
@@ -35,7 +45,12 @@ module.exports = function(schema) {
                 distanceMultiplier: 0.001,
                 maxDistance: (parseFloat(options.maxDistance) || 100) / 0.001
             }).then(function(docs) {
-                resolve(_.chain(docs).filter(__filter.bind(options)).map(__map).take(options.limit || 50).value())
+                try {
+                    resolve(_.chain(docs).filter(__filter.bind(options)).map(__map).take(options.limit || 50).value())
+
+                } catch (e) {
+                    __catch(e);
+                }
             }, reject)
         })
     }

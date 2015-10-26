@@ -5,7 +5,9 @@ module.exports = function(schema) {
     var getSubStatus = function(sst) {
         var _ = require('lodash');
         var d = sst.document;
-
+        if (sst.quarantained) {
+            return 'QUA';
+        }
         if (sst.status === "POT" && _.get(d.contrat, 'ok') && _.get(d.cni, 'ok') && _.get(d.kbis, 'ok')) {
             return 'HOT';
         }
@@ -19,18 +21,34 @@ module.exports = function(schema) {
 
 
     schema.pre('save', function(next) {
+        console.log('SAVE')
         var _this = this;
         _this.loc = [_this.address.lt, _this.address.lg]
         if (_this.status !== 'ARC') {
-            db.model("intervention").where({
-                'artisan.id': _this.id
-            }).count(function(err, count) {
-                _this.nbrIntervention = count;
-                _this.status = count ? "ACT" : "POT";
+
+            var async = require('async');
+            async.parallel({
+                nbrIntervention: function(cb) {
+                    db.model("intervention").count({
+                        'artisan.id': _this.id
+                    }).count(cb)
+                },
+                quarantained: function(cb) {
+                    db.model('signalement').count({
+                        sst_id: _this.id,
+                        level: '2',
+                        ok: false
+                    }).count(cb)
+                }
+            }, function(err, result) {
+                _this.quarantained = result.quarantained;
+                _this.nbrIntervention = result.nbrIntervention;
+                _this.status = result.nbrIntervention ? "ACT" : "POT";
                 _this.subStatus = getSubStatus(_this);
                 _this.cache = db.model('artisan').Core.minify(_this);
                 next();
             })
+
         } else {
             _this.subStatus = null;
             _this.cache = db.model('artisan').Core.minify(_this);

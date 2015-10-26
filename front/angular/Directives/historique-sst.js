@@ -7,6 +7,7 @@ angular.module('edison').directive('historiqueSst', function(edisonAPI) {
         templateUrl: '/Templates/historique-sst.html',
         scope: {
             data: "=",
+            exit: '&'
         },
         link: function(scope, element, attrs) {
 
@@ -23,6 +24,7 @@ angular.module('edison').directive('historiqueSst', function(edisonAPI) {
                 edisonAPI.signalement.check(sign._id, sign.text).then(function(resp) {
                     sign = _.merge(sign, resp.data);
                 })
+                scope.exit && scope.exit();
                 console.log('=>', sign)
             }
             scope.comment = function() {

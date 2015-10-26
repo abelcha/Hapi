@@ -46,6 +46,25 @@ var InterventionCtrl = function(Description, Signalement, ContextMenu, $window, 
     }
     _this.data = tab.data;
 
+    $scope.bv = {
+        show: function(view) {
+            if (this[view]) {
+                return (this[view] = false);
+            }
+            this.historique = false;
+            this.absence = false;
+            this.signalement = false;
+            this[view] = true;
+        },
+        init: function() {
+            this.historique = this.absence = this.signalement = false;
+            _this.searchArtisans(intervention.categorie)
+            $timeout(function() {
+                _this.searchArtisans(intervention.categorie)
+            }, 666)
+        }
+    }
+
     var updateTitle = _.throttle(function() {
         tab.setTitle(_.template("{{typeof tmpDate == 'undefined' ? id : tmpDate}} - {{client.civilite}} {{client.nom}} ({{client.address.cp}})")(intervention));
     }, 1000)
@@ -72,9 +91,6 @@ var InterventionCtrl = function(Description, Signalement, ContextMenu, $window, 
         return false;
     });
 
-    $scope.hideSignalements = function() {
-        $scope.showSignalement = false;
-    }
 
     $scope.calculPrixFinal = function() {
         intervention.prixFinal = 0;

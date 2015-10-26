@@ -5,15 +5,18 @@ module.exports = function(schema) {
         return new Promise(function(resolve, reject) {
             db.model('signalement')
                 .aggregate()
-                .match({})
+                .match({
+                    ok: {
+                        $ne: true
+                    }
+                })
                 .group({
                     _id: '$service',
-                    'ok': db.utils.sumCond('$ok', true),
-                    'nok': db.utils.sumCond('$ok', true, 0, 1),
+                    'level1': db.utils.sumCond('$level', '1'),
+                    'level2': db.utils.sumCond('$level', '2'),
                 }).exec(function(err, resp) {
-                    var rtn = _(resp).groupBy('_id').value()
-                    console.log(rtn)
-                    resolve('ok')
+                    var rtn = _(resp).groupBy('_id').mapValues('[0]').mapValues(_.partial(_.omit, _, '_id')).value()
+                    resolve(rtn)
                 })
         })
     }

@@ -25,7 +25,8 @@
                 })).then(function() {
                     LxNotificationService.success("Le service " + signal.service.toLowerCase() + " en a été notifié");
                 })
-                scope.exit()
+                console.log('EXIT')
+                return scope.exit && scope.exit()
             }
         }
     }

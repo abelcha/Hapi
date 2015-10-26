@@ -27,6 +27,9 @@
          },
          link: function(scope, element, attrs) {
              var findTotal = function() {
+                if (scope.count) {
+                    return scope.count
+                }
                  if (scope.noCounter)
                      return undefined;
                  var total = 0;

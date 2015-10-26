@@ -30,14 +30,11 @@
                         reject(err);
                     }
                     try {
-                        console.log('NBS ==> ', resp.data.length, id_list)
                         if (resp.cacheList && resp.data) {
                             var cache = JSON.parse(resp.cacheList);
                             for (var i = 0; i < cache.length && id_list.length; i++) {
                                 var pos = id_list.indexOf(cache[i].id)
                                 if (pos >= 0) {
-                                    console.log('UPDATE')
-
                                     cache[i] = resp.data[pos].cache;
                                     id_list.splice(pos, 1);
                                 }
@@ -47,13 +44,11 @@
                                     return _.includes(id_list, e._id);
                                 })
                                 _.each(z, function(x) {
-                                    console.log('NEW')
                                     cache.unshift(x.cache)
                                 })
                             }
                         }
                         redis.set(core.redisCacheListName.envify(), JSON.stringify(cache), function(err) {
-                            console.log('redis err ==>', err)
                             resolve(_.map(resp.data, 'cache'));
                         });
                     } catch (e) {

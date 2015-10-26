@@ -85,15 +85,13 @@ module.exports = function(db) {
             type: [Number],
             index: '2dsphere'
         },
-        absences: {
+        quarantained: Boolean,
+        absence: [{
             start: Date,
             end: Date,
             login: String,
-            date: {
-                type: Date,
-                default: Date.now
-            }
-        },
+            date: Date
+        }],
         categories: [],
         email: {
             type: String,

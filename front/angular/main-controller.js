@@ -42,14 +42,24 @@ angular.module('edison').controller('MainController', function($timeout, LxNotif
         showMap: true
     };
 
+
+    var getSignalementStats = function() {
+        edisonAPI.signalement.stats().then(function(resp) {
+            $scope.signalementStats = resp.data;
+        })
+    }
+    getSignalementStats()
+
+
+/*
     var bfm = function() {
         edisonAPI.bfm.get().then(function(resp) {
             $rootScope.events = resp.data;
         })
     }
-    socket.on('event', _.debounce(bfm, _.random(0, 3000)));
+    socket.on('event', _.debounce(bfm, _.random(0, 000)));
 
-    bfm();
+    bfm();*/
 
     var reloadStats = function() {
         edisonAPI.stats.telepro()

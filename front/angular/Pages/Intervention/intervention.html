@@ -18,17 +18,19 @@
                 <div class="row" style="margin:0">
                     <div class="col-md-8" style="padding-left:0">
                         <div class="card margin">
-                            <div class="p+" style="height: 538px;overflow:hidden">
+                            <div class="p+" style="height: 538px;overflow:hidden;">
                                 <span class="fs-headline display-block">
          <button ng-click="vm.data.categorie = undefined" style="float:left" class="btn--no-conflicts btn--m {{config.categories[vm.data.categorie].color}} btn--flat" lx-ripple> {{config.categories[vm.data.categorie].long_name}}</button></span>
-                                <div class="fs-body-1 mt+" style="padding-top:10px">
-                                    <signalement exit="hideSignalements()" data="vm.data" ng-if="vm.data.sst && showSignalement"></signalement>
-                                    <edison-map ng-show="!showSignalement" first-address="firstAddress" is-new="vm.isNew" data="vm.data" client="vm.data.client" xmarkers="vm.nearestArtisans" marker-click="vm.selectArtisan(sst);vm.showInterList()" height="small"></edison-map>
+                                <div class="fs-body-1 mt+" style="padding-top:{{bv.historique ? '30' : '10'}}px">
+                                    <edison-map ng-show="!bv.signalement && !bv.historique && !bv.absence" first-address="firstAddress" is-new="vm.isNew" data="vm.data" client="vm.data.client" xmarkers="vm.nearestArtisans" marker-click="vm.selectArtisan(sst);vm.showInterList()" height="small"></edison-map>
+                                    <historique-sst exit="bv.init()" data="vm.data.sst" ng-if="vm.data.sst.id && bv.historique" slimscroll="{height:474}"></historique-sst>
+                                    <absence-sst exit="bv.init()" data="vm.data.sst" ng-if="vm.data.sst.id && bv.absence"></absence-sst>
+                                    <signalement exit="bv.init()" data="vm.data" ng-if="vm.data.sst && bv.signalement"></signalement>
                                 </div>
                                 <div class="p+" ng-if="!vm.data.sst.id">
                                     <h1 center style="font-size: 40px;margin-top:55px">A PROGRAMMER</h1>
                                 </div>
-                                <div class="p+" ng-if="vm.data.sst.id" ng-show="!showSignalement">
+                                <div class="p+" ng-if="vm.data.sst.id" ng-show="!bv.signalement && !bv.historique && !bv.absence">
                                     <span class="fs-subhead tc-black-2 display-block">
                                     {{vm.data.sst.nomSociete}} - M. {{vm.data.sst.representant.nom}} {{vm.data.sst.representant.prenom}}</span>
                                     <div class="paragraph fs-body-1" style="height:90px;">
@@ -42,17 +44,16 @@
                                         <p style="width:49%;float:right">
                                             Date d'ajout: {{vm.data.sst.date.ajout| date:"dd/MM/yyyy"}}
                                             <br><strong>Commentaires:</strong>
-                                            <span ng-repeat="cm in vm.data.sst.comments.slice(0, 2)"><br>• {{cm.date|date:"dd/MM/yy à HH'h'mm"}} - {{cm.login}} - {{cm.text}}</span>
+                                            <span ng-repeat="cm in vm.data.sst.comments.slice(0, 2).reverse()"><br>• {{cm.date|date:"dd/MM/yy à HH'h'mm"}} - {{cm.login}} - {{cm.text}}</span>
                                         </p>
                                     </div>
                                 </div>
                             </div>
                             <div class="card__actions" style="border-bottom: 2px solid rgba(0, 0, 0, .12);">
-                                <a href="/artisan/{{vm.data.sst.id}}">
-                                    <button class="btn--no-conflicts btn--m btn--orange btn--flat" lx-ripple>Fiche</button>
-                                </a>
+                                <button class="btn--no-conflicts btn--m btn--orange btn--flat {{bv.historique ? 'grey lighten-3' : ''}}" ng-click="bv.show('historique');" lx-ripple>Historique</button>
                                 <button class="btn--no-conflicts btn--m btn--black btn--flat {{interList ? 'grey lighten-3' : ''}}" ng-click="interList = !interList" lx-ripple>Interventions</button>
-                                <button class="btn--no-conflicts btn--m btn--black btn--flat {{showSignalement ? 'grey lighten-3' : ''}}" ng-click="showSignalement = !showSignalement" lx-ripple>Signalement</button>
+                                <button class="btn--no-conflicts btn--m btn--black btn--flat {{bv.signalement ? 'grey lighten-3' : ''}}" ng-click="bv.show('signalement')" lx-ripple>Signalement</button>
+                                <button class="btn--no-conflicts btn--m btn--black btn--red {{bv.absence ? 'grey lighten-3' : ''}}" ng-click="bv.show('absence')" lx-ripple>Absences</button>
                             </div>
                         </div>
                     </div>
@@ -66,12 +67,16 @@
                                         <tbody>
                                          <tr><td colspan="12" style="text-align:center;border-top: 0px;"><h4 style="margin: 0;">Actifs</h4></td></tr>
                                             <tr ng-repeat="sst in vm.nearestArtisans" ng-if="sst.status == 'ACT'" ng-class="sst.id == vm.data.sst.id ? 'success' : ''" ng-click="vm.selectArtisan(sst);vm.showInterList()">
-                                                <td variable-length style="text-align:left">{{sst.nomSociete}} <small class="{{config.artisanSubStatus[sst.subStatus].color}}-text">{{config.artisanSubStatus[sst.subStatus].long_name}}</small></td>
+                                                <td variable-length style="text-align:left">{{sst.nomSociete}} 
+                                                <small ng-if="sst.absent" class="red-text">INDISPO</small>
+                                                <small ng-if="!sst.absent" class="{{config.artisanSubStatus[sst.subStatus].color}}-text">{{config.artisanSubStatus[sst.subStatus].long_name}}</small></td>
                                                 <td ng-class="{'red-text': sst.zoneChalandise < sst.distance}">{{sst.distance}} km</td>
                                             </tr>
                                          <tr><td colspan="12" style="text-align:center;border-top: 0px;"><h4 style="margin: 0;">Potentiels</h4></td></tr>
                                          <tr ng-repeat="sst in vm.nearestArtisans" ng-if="sst.status == 'POT'" ng-class="sst.id == vm.data.sst.id ? 'success' : ''" ng-click="vm.selectArtisan(sst);vm.showInterList()">
-                                                <td variable-length style="text-align:left">{{sst.nomSociete}} <small class="{{config.artisanSubStatus[sst.subStatus].color}}-text">{{config.artisanSubStatus[sst.subStatus].long_name}}</small></td>
+                                                <td  variable-length style="text-align:left">{{sst.nomSociete}}
+                                                <small ng-if="sst.absent" class="red-text">INDISPO</small>
+                                                 <small ng-if="!sst.absent" class="{{config.artisanSubStatus[sst.subStatus].color}}-text">{{config.artisanSubStatus[sst.subStatus].long_name}}</small></td>
                                                 <td ng-class="{'red-text': sst.zoneChalandise < sst.distance}">{{sst.distance}} km</td>
                                             </tr>
 
@@ -166,10 +171,9 @@
                                                 SMS Axialis
                                             </md-switch>
                                         </div>
-                                         <div class="col-sm-2 col-sm-offset-4">
-                                            <md-switch class="md-primary" md-no-ink aria-label="Switch No Ink" 
-                                            ng-model="vm.data.remarqueSms" style="padding: 0px;margin-top: 5px;">
-                                                Remarque SMS 
+                                        <div class="col-sm-2 col-sm-offset-4">
+                                            <md-switch class="md-primary" md-no-ink aria-label="Switch No Ink" ng-model="vm.data.remarqueSms" style="padding: 0px;margin-top: 5px;">
+                                                Remarque SMS
                                             </md-switch>
                                         </div>
                                     </div>

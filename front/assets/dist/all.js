@@ -81,14 +81,24 @@ angular.module('edison').controller('MainController', function($timeout, LxNotif
         showMap: true
     };
 
+
+    var getSignalementStats = function() {
+        edisonAPI.signalement.stats().then(function(resp) {
+            $scope.signalementStats = resp.data;
+        })
+    }
+    getSignalementStats()
+
+
+/*
     var bfm = function() {
         edisonAPI.bfm.get().then(function(resp) {
             $rootScope.events = resp.data;
         })
     }
-    socket.on('event', _.debounce(bfm, _.random(0, 3000)));
+    socket.on('event', _.debounce(bfm, _.random(0, 000)));
 
-    bfm();
+    bfm();*/
 
     var reloadStats = function() {
         edisonAPI.stats.telepro()
@@ -391,6 +401,33 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
     $locationProvider.html5Mode(true);
 });
 
+ angular.module('edison').directive('absenceSst', function(edisonAPI, LxNotificationService, user) {
+    "use strict";
+    return {
+        replace: false,
+        restrict: 'E',
+        templateUrl: '/Templates/absence-sst.html',
+        scope: {
+            data: '=',
+            exit: '&',
+        },
+        link: function(scope, elem) {
+            scope.absence = {
+                start: moment().add(-1, 'hours').toDate(),
+                end: moment().hour(23).minute(43).toDate()
+            }
+            scope.save = function() {
+                edisonAPI.artisan.absence(scope.data.id, scope.absence).then(function() {
+                    console.log('yaya')
+                })
+                LxNotificationService.success("L'absence à été enregistrer");
+                console.log('==>', scope.exit);
+                (scope.exit || _.noop)();
+            }
+        }
+    }
+ });
+
 angular.module('edison').directive('allowPattern', [allowPatternDirective]);
 
 function allowPatternDirective() {
@@ -561,6 +598,7 @@ angular.module('edison').directive('historiqueSst', function(edisonAPI) {
         templateUrl: '/Templates/historique-sst.html',
         scope: {
             data: "=",
+            exit: '&'
         },
         link: function(scope, element, attrs) {
 
@@ -577,6 +615,7 @@ angular.module('edison').directive('historiqueSst', function(edisonAPI) {
                 edisonAPI.signalement.check(sign._id, sign.text).then(function(resp) {
                     sign = _.merge(sign, resp.data);
                 })
+                scope.exit && scope.exit();
                 console.log('=>', sign)
             }
             scope.comment = function() {
@@ -915,6 +954,9 @@ angular.module('edison').directive('ngRightClick', function($parse) {
          },
          link: function(scope, element, attrs) {
              var findTotal = function() {
+                if (scope.count) {
+                    return scope.count
+                }
                  if (scope.noCounter)
                      return undefined;
                  var total = 0;
@@ -1104,7 +1146,8 @@ angular.module('edison').directive('ngRightClick', function($parse) {
                 })).then(function() {
                     LxNotificationService.success("Le service " + signal.service.toLowerCase() + " en a été notifié");
                 })
-                scope.exit()
+                console.log('EXIT')
+                return scope.exit && scope.exit()
             }
         }
     }
@@ -1892,6 +1935,9 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
                     text: text
                 })
             },
+            absence: function(id, absence) {
+                return $http.post('/api/artisan/' + id + '/absence', absence)
+            },
             sendFacturier: function(id, facturier, deviseur) {
                 return $http.post('/api/artisan/' + id + '/sendFacturier', {
                     facturier: facturier,
@@ -2011,6 +2057,9 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
                     params: params
                 })
             },
+            stats: function() {
+                return $http.get('/api/signalement/stats')
+            }
         },
         file: {
             uploadScans: function(file, options) {
@@ -4756,6 +4805,25 @@ var InterventionCtrl = function(Description, Signalement, ContextMenu, $window, 
     }
     _this.data = tab.data;
 
+    $scope.bv = {
+        show: function(view) {
+            if (this[view]) {
+                return (this[view] = false);
+            }
+            this.historique = false;
+            this.absence = false;
+            this.signalement = false;
+            this[view] = true;
+        },
+        init: function() {
+            this.historique = this.absence = this.signalement = false;
+            _this.searchArtisans(intervention.categorie)
+            $timeout(function() {
+                _this.searchArtisans(intervention.categorie)
+            }, 666)
+        }
+    }
+
     var updateTitle = _.throttle(function() {
         tab.setTitle(_.template("{{typeof tmpDate == 'undefined' ? id : tmpDate}} - {{client.civilite}} {{client.nom}} ({{client.address.cp}})")(intervention));
     }, 1000)
@@ -4782,9 +4850,6 @@ var InterventionCtrl = function(Description, Signalement, ContextMenu, $window, 
         return false;
     });
 
-    $scope.hideSignalements = function() {
-        $scope.showSignalement = false;
-    }
 
     $scope.calculPrixFinal = function() {
         intervention.prixFinal = 0;

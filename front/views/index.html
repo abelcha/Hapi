@@ -62,8 +62,9 @@
                 </drop-down>
             </drop-down>
             <drop-down title="Service Partenariat" icon="circle" open-default="displayUser.service === 'PARTENARIAT'">
-                <link title="Signalements Level 1" url="/listeSignalements?level=1&service={{displayUser.service}}&ok=false">
-                    <link title="Signalements Level 2" url="/listeSignalements?level=2&service={{displayUser.service}}&ok=false">
+
+                <link ng-if="signalementStats" title="Signalements Management" count="{{signalementStats[displayUser.service].level1}}"url="/listeSignalements?level=1&service={{displayUser.service}}&ok=false">
+                <link ng-if="signalementStats" title="Signalements Avert." count="{{signalementStats[displayUser.service].level2}}"url="/listeSignalements?level=2&service={{displayUser.service}}&ok=false">
                    
                 <drop-down icon="truck" title="Artisans">
                      <link fltr="a_all" url="/artisan/contact#informations" icon="th-list" model="artisan" title="Repertoire"></link>
@@ -123,11 +124,11 @@
             <div class="double-bounce2"></div> -->
         </div>
     </div>
-    <footer class="footer sticky-footer">
+    <!-- <footer class="footer sticky-footer">
         <h2><marquee scrolldelay="60" scrollamount="14">
                 <span style="display:inline;margin-right:120px" ng-repeat='e in events'>{{e.date|date:"HH'h'mm"}} - {{e.message}}</span>
             </marquee></h2>
-    </footer>
+    </footer> -->
 </body>
 <script type="text/javascript">
 //  window.PixelAdmin.start(init);

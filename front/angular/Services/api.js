@@ -207,6 +207,9 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
                     text: text
                 })
             },
+            absence: function(id, absence) {
+                return $http.post('/api/artisan/' + id + '/absence', absence)
+            },
             sendFacturier: function(id, facturier, deviseur) {
                 return $http.post('/api/artisan/' + id + '/sendFacturier', {
                     facturier: facturier,
@@ -326,6 +329,9 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
                     params: params
                 })
             },
+            stats: function() {
+                return $http.get('/api/signalement/stats')
+            }
         },
         file: {
             uploadScans: function(file, options) {
