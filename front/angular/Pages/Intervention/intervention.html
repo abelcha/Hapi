@@ -22,7 +22,7 @@
                                 <span class="fs-headline display-block">
          <button ng-click="vm.data.categorie = undefined" style="float:left" class="btn--no-conflicts btn--m {{config.categories[vm.data.categorie].color}} btn--flat" lx-ripple> {{config.categories[vm.data.categorie].long_name}}</button></span>
                                 <div class="fs-body-1 mt+" style="padding-top:10px">
-                                    <signalement exit="hideSignalements()" sst="vm.data.sst" ng-if="vm.data.sst && showSignalement"></signalement>
+                                    <signalement exit="hideSignalements()" data="vm.data" ng-if="vm.data.sst && showSignalement"></signalement>
                                     <edison-map ng-show="!showSignalement" first-address="firstAddress" is-new="vm.isNew" data="vm.data" client="vm.data.client" xmarkers="vm.nearestArtisans" marker-click="vm.selectArtisan(sst);vm.showInterList()" height="small"></edison-map>
                                 </div>
                                 <div class="p+" ng-if="!vm.data.sst.id">

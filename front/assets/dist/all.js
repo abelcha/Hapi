@@ -345,6 +345,11 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
             controller: "editProducts",
             controllerAs: "vm",
         })
+        .when('/tools/editSignalements', {
+            templateUrl: "Pages/Tools/edit-signalements.html",
+            controller: "editSignalements",
+            controllerAs: "vm",
+        })
         .when('/tools/editComptes', {
             templateUrl: "Pages/Tools/edit-comptes.html",
             controller: "editComptes",
@@ -1031,23 +1036,36 @@ angular.module('edison').directive('ngRightClick', function($parse) {
      };
  }]);
 
- angular.module('edison').directive('signalement', function() {
-     "use strict";
-     return {
-         replace: false,
-         restrict: 'E',
-         templateUrl: '/Templates/signalement.html',
-         scope: {
-             sst: '=',
-             exit: '&',
-         },
-         link: function(scope, elem) {
-             console.log('==>', scope.exit);
-             scope.hide = function() {
+ angular.module('edison').directive('signalement', function(edisonAPI, LxNotificationService) {
+    "use strict";
+    return {
+        replace: false,
+        restrict: 'E',
+        templateUrl: '/Templates/signalement.html',
+        scope: {
+            data: '=',
+            exit: '&',
+        },
+        link: function(scope, elem) {
+            scope.setSelectedSubType = function(subType) {
+                scope.selectedSubType = subType
+            }
+            edisonAPI.signal.list().then(function(resp) {
+                scope.signalementsGrp = _.groupBy(resp.data, 'subType');
+                scope.signalements = resp.data;
+            })
+            scope.hide = function(signal) {
+
+                edisonAPI.signalement.add(_.merge(signal, {
+                    id_inter: scope.data.id || scope.data.tmpID,
+                    id_sst: scope.data.sst && scope.data.sst.id
+                })).then(function() {
+                    LxNotificationService.success("Le service " + signal.service.toLowerCase() + "en a été notifié");
+                })
                 scope.exit()
-             }
-         }
-     }
+            }
+        }
+    }
  });
 
 angular.module("edison").filter('contactFilter', ['config', function(config) {
@@ -1439,44 +1457,14 @@ angular.module('edison').factory('TabContainer', ['$location', '$window', '$q', 
 
 }]);
 
-angular.module('edison').factory('Signalement', function() {
+angular.module('edison').factory('Signalement', function(edisonAPI) {
     "use strict";
 
     var Signalement = function(inter) {
         this.intervention = inter;
     }
 
-    Signalement.prototype.list = {
-        intervention: [{
-            name: 'Indisponibilité',
-            id: 'INDISPO',
-            fn: function() {
-                console.log('yay')
-            }
-        }],
-        partenariat: [{
-            name: 'Facturier / Deviseur',
-            id: 'FACT_DEV',
-            fn: function() {
-                console.log('FACTDEV')
-            }
-        }, {
-            name: 'Erreur SST',
-            id: 'ERREUR',
-            fn: function() {
-                console.log('ERR')
-            }
-            // N'A PAS COMPTÉ LA TVA
-            // 
-        }, {
-            name: 'Plainte SST',
-            id: 'PLAINTE',
-            fn: function() {
-                console.log('PLAINTE')
-            }
-        }],
-        compta: []
-    }
+    Signalement.prototype.list = []
     return Signalement;
 });
 
@@ -1662,6 +1650,14 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
             },
             save: function(data) {
                 return $http.post('/api/product/__save', data);
+            }
+        },
+        signal: {
+            list: function() {
+                return $http.get('/api/signal/list');
+            },
+            save: function(data) {
+                return $http.post('/api/signal/__save', data);
             }
         },
         compte: {
@@ -1956,6 +1952,11 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
             listRelevant: function() {
                 return $http.get('/api/task/relevant');
             }
+        },
+        signalement: {
+            add: function(params) {
+                return $http.post('/api/signalement/add', params)
+            },
         },
         file: {
             uploadScans: function(file, options) {
@@ -3808,6 +3809,44 @@ angular.module('edison').directive('mainNavbar', function($q, edisonAPI, TabCont
 
 });
 
+var archiveReglementController = function(edisonAPI, TabContainer, $routeParams, $location, LxProgressService) {
+
+    var tab = TabContainer.getCurrentTab();
+    var _this = this;
+    _this.title = 'Archives Reglements'
+    tab.setTitle('archives RGL')
+    LxProgressService.circular.show('#5fa2db', '#globalProgress');
+    edisonAPI.compta.archivesReglement().success(function(resp) {
+        LxProgressService.circular.hide()
+        _this.data = resp
+    })
+    _this.moment = moment;
+    _this.openLink = function(link) {
+        $location.url(link)
+    }
+}
+
+angular.module('edison').controller('archivesReglementController', archiveReglementController);
+
+var archivesPaiementController = function(edisonAPI, TabContainer, $routeParams, $location, LxProgressService) {
+    var _this = this;
+    var tab = TabContainer.getCurrentTab();
+    _this.type = 'paiement'
+    _this.title = 'Archives Paiements'
+    tab.setTitle('archives PAY')
+    LxProgressService.circular.show('#5fa2db', '#globalProgress');
+    edisonAPI.compta.archivesPaiement().success(function(resp) {
+        LxProgressService.circular.hide()
+        _this.data = resp
+    })
+    _this.moment = moment;
+    _this.openLink = function(link) {
+        $location.url(link)
+    }
+}
+
+angular.module('edison').controller('archivesPaiementController', archivesPaiementController);
+
  angular.module('edison').directive('artisanCategorie', ['config', function(config) {
      "use strict";
      return {
@@ -4168,44 +4207,6 @@ var ContactArtisanController = function($scope, $timeout, TabContainer, LxProgre
 
 }
 angular.module('edison').controller('ContactArtisanController', ContactArtisanController);
-
-var archiveReglementController = function(edisonAPI, TabContainer, $routeParams, $location, LxProgressService) {
-
-    var tab = TabContainer.getCurrentTab();
-    var _this = this;
-    _this.title = 'Archives Reglements'
-    tab.setTitle('archives RGL')
-    LxProgressService.circular.show('#5fa2db', '#globalProgress');
-    edisonAPI.compta.archivesReglement().success(function(resp) {
-        LxProgressService.circular.hide()
-        _this.data = resp
-    })
-    _this.moment = moment;
-    _this.openLink = function(link) {
-        $location.url(link)
-    }
-}
-
-angular.module('edison').controller('archivesReglementController', archiveReglementController);
-
-var archivesPaiementController = function(edisonAPI, TabContainer, $routeParams, $location, LxProgressService) {
-    var _this = this;
-    var tab = TabContainer.getCurrentTab();
-    _this.type = 'paiement'
-    _this.title = 'Archives Paiements'
-    tab.setTitle('archives PAY')
-    LxProgressService.circular.show('#5fa2db', '#globalProgress');
-    edisonAPI.compta.archivesPaiement().success(function(resp) {
-        LxProgressService.circular.hide()
-        _this.data = resp
-    })
-    _this.moment = moment;
-    _this.openLink = function(link) {
-        $location.url(link)
-    }
-}
-
-angular.module('edison').controller('archivesPaiementController', archivesPaiementController);
 
 var DashboardController = function($rootScope, dialog, user, edisonAPI, $scope, $filter, TabContainer, NgTableParams, $routeParams, $location, LxProgressService) {
     // var tab = TabContainer.getCurrentTab();
@@ -5426,6 +5427,33 @@ var editProducts = function(TabContainer, edisonAPI, $rootScope, $scope, $locati
 
 }
 angular.module('edison').controller('editProducts', editProducts);
+
+var editSignalements = function(TabContainer, edisonAPI, $rootScope, $scope, $location, LxNotificationService, socket) {
+    "use strict";
+    var _this = this;
+    _this.tab = TabContainer.getCurrentTab();
+    _this.tab.setTitle('Signalements');
+
+
+    edisonAPI.signal.list().then(function(resp) {
+        $scope.pl = resp.data;
+    })
+
+    _this.remove = function(obj) {
+        $scope.pl.splice(_.findIndex($scope.pl, '_id', obj._id), 1);
+    }
+    _this.save = function() {
+        edisonAPI.signal.save($scope.pl).then(function(resp) {
+            $scope.pl = resp.data;
+            LxNotificationService.success("Les produits on été mis a jour");
+        }, function(err) {
+            LxNotificationService.error("Une erreur est survenu (" + JSON.stringify(err.data) + ')');
+        })
+    }
+
+
+}
+angular.module('edison').controller('editSignalements', editSignalements);
 
 var editUsers = function(TabContainer, edisonAPI, $rootScope, $scope, $location, LxNotificationService, socket) {
     "use strict";

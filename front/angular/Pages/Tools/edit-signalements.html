@@ -1,0 +1,57 @@
+<div class="card margin">
+    <div class="p+" style="width:95%">
+        <div class="row">
+            <div class="col-sm-4">
+                <input placeholder="Rechercher..." type="text" ng-model="search" class="form-control">
+            </div>
+        </div>
+        <br>
+        <table class="table table-bordered produits">
+            <thead>
+                <tr>
+                    <th>Nom</th>
+                    <th>SubType</th>
+                    <th>Service</th>
+                    <th>level</th>
+                    <th>Supp</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="p in pl | filter:search track by $index">
+                    <td style="width:40%">
+                        <input capitalize type="text" style="width: 93%;display: inline;" placeholder="Nom" class="form-control" ng-model="p.nom">
+                    </td>
+                    <td style="width:20%">
+                        <input capitalize type="text" style="width: 93%;display: inline;" placeholder="SubType..." class="form-control" ng-model="p.subType">
+                    </td>
+                    <td style="width:20%">
+                        <select class="form-control" ng-model="p.service">
+                            <option value="INTERVENTION">INTERVENTION</option>
+                            <option value="PARTENARIAT">PARTENARIAT</option>
+                            <option value="INFORMATIQUE">INFORMATIQUE</option>
+                            <option value="COMPTABILITE">COMPTABILITE</option>
+                        </select>
+                    </td>
+                    <td style="width:10%">
+                        <select class="form-control" ng-model="p.level">
+                            <option value="0">Level 0</option>
+                            <option value="1">Level 1</option>
+                            <option value="2">Level 2</option>
+                        </select>
+                    </td>
+                    <td style="width:1%">
+                        <button class="btn--no-conflicts btn--l btn--red btn--icon" ng-click="vm.remove(p)">
+                            <i class="fa fa-remove"></i>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="fab" style="position: fixed;right: 40px;z-index: 999;top: 87%;">
+        <button ng-click="vm.save()" class="btn--no-conflicts btn--l btn--black btn--fab green"><i class="fa fa-check"></i></button>
+    </div>
+    <div class="fab" style="position: fixed;right: 100px;z-index: 999;top: 87%;">
+        <button ng-click="pl.push({single:false, open:false})" class="btn--no-conflicts btn--l btn--black btn--fab blue"><i class="fa fa-plus"></i></button>
+    </div>
+</div>

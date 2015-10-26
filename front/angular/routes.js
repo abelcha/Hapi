@@ -188,6 +188,11 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
             controller: "editProducts",
             controllerAs: "vm",
         })
+        .when('/tools/editSignalements', {
+            templateUrl: "Pages/Tools/edit-signalements.html",
+            controller: "editSignalements",
+            controllerAs: "vm",
+        })
         .when('/tools/editComptes', {
             templateUrl: "Pages/Tools/edit-comptes.html",
             controller: "editComptes",

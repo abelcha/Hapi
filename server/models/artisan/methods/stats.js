@@ -94,7 +94,6 @@ module.exports = function(schema) {
                     function(err, results) {
                         if (err)
                             return reject(err);
-                        console.log(results)
                         var rtn = (_.mapValues(results, function(e, k) {
                             if (k.indexOf('_') == 0) {
                                 return e

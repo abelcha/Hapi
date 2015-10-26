@@ -9,6 +9,14 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
                 return $http.post('/api/product/__save', data);
             }
         },
+        signal: {
+            list: function() {
+                return $http.get('/api/signal/list');
+            },
+            save: function(data) {
+                return $http.post('/api/signal/__save', data);
+            }
+        },
         compte: {
             list: function() {
                 return $http.get('/api/compte/list');
@@ -301,6 +309,11 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
             listRelevant: function() {
                 return $http.get('/api/task/relevant');
             }
+        },
+        signalement: {
+            add: function(params) {
+                return $http.post('/api/signalement/add', params)
+            },
         },
         file: {
             uploadScans: function(file, options) {
