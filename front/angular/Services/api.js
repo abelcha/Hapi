@@ -310,8 +310,10 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
             check: function(id) {
                 return $http.post('/api/task/' + id + '/check')
             },
-            listRelevant: function() {
-                return $http.get('/api/task/relevant');
+            listRelevant: function(options) {
+                return $http.get('/api/task/relevant', {
+                    params: options
+                });
             }
         },
         signalement: {

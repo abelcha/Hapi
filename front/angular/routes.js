@@ -22,6 +22,10 @@ var getIntervention = function($route, $q, edisonAPI) {
     }
 };
 
+var statsTelepro = function($route, $q, edisonAPI) {
+    return edisonAPI.stats.telepro()
+}
+
 var getDevis = function($route, $q, edisonAPI) {
     "use strict";
     var id = $route.current.params.id;
@@ -152,6 +156,9 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
             controller: 'DashboardController',
             templateUrl: "Pages/Dashboard/dashboard.html",
             controllerAs: "vm",
+            resolve: {
+                statsTelepro: statsTelepro
+            }
         })
         .when('/search/:query', {
             templateUrl: "Pages/Search/search.html",
@@ -197,7 +204,7 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
             templateUrl: "Pages/ListeSignalements/liste-signalements.html",
             controller: "listeSignalements",
             controllerAs: "vm",
-           // reloadOnSearch: false
+            // reloadOnSearch: false
         })
         .when('/tools/editComptes', {
             templateUrl: "Pages/Tools/edit-comptes.html",

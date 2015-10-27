@@ -189,6 +189,10 @@ var getIntervention = function($route, $q, edisonAPI) {
     }
 };
 
+var statsTelepro = function($route, $q, edisonAPI) {
+    return edisonAPI.stats.telepro()
+}
+
 var getDevis = function($route, $q, edisonAPI) {
     "use strict";
     var id = $route.current.params.id;
@@ -319,6 +323,9 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
             controller: 'DashboardController',
             templateUrl: "Pages/Dashboard/dashboard.html",
             controllerAs: "vm",
+            resolve: {
+                statsTelepro: statsTelepro
+            }
         })
         .when('/search/:query', {
             templateUrl: "Pages/Search/search.html",
@@ -364,7 +371,7 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
             templateUrl: "Pages/ListeSignalements/liste-signalements.html",
             controller: "listeSignalements",
             controllerAs: "vm",
-           // reloadOnSearch: false
+            // reloadOnSearch: false
         })
         .when('/tools/editComptes', {
             templateUrl: "Pages/Tools/edit-comptes.html",
@@ -1194,7 +1201,7 @@ angular.module('edison').filter('crlf', function() {
  angular.module('edison').filter('frnbr', function() {
  	"use strict";
  	return function(num) {
- 		var n = (num || 0).toString(),
+ 		var n = _.round((num || 0), 2).toString(),
  			p = n.indexOf('.');
  		return n.replace(/\d(?=(?:\d{3})+(?:\.|$))/g, function($0, i) {
  			return (p < 0 || i < p ? ($0 + ' ') : $0).replace('.', ',');
@@ -2038,8 +2045,10 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
             check: function(id) {
                 return $http.post('/api/task/' + id + '/check')
             },
-            listRelevant: function() {
-                return $http.get('/api/task/relevant');
+            listRelevant: function(options) {
+                return $http.get('/api/task/relevant', {
+                    params: options
+                });
             }
         },
         signalement: {
@@ -4310,7 +4319,7 @@ var ContactArtisanController = function($scope, $timeout, TabContainer, LxProgre
 }
 angular.module('edison').controller('ContactArtisanController', ContactArtisanController);
 
-var DashboardController = function($rootScope, dialog, user, edisonAPI, $scope, $filter, TabContainer, NgTableParams, $routeParams, $location, LxProgressService) {
+var DashboardController = function($rootScope, statsTelepro, dialog, user, edisonAPI, $scope, $filter, TabContainer, NgTableParams, $routeParams, $location, LxProgressService) {
     var _this = this;
     $scope._ = _;
     $scope.root = $rootScope;
@@ -4321,34 +4330,33 @@ var DashboardController = function($rootScope, dialog, user, edisonAPI, $scope, 
 
 
     _this.addTask = function() {
-        edisonAPI.task.add(_this.newTask).then(reloadTask);
+        edisonAPI.task.add(_this.newTask).then(_.partial(_this.reloadTask, _this.newTask.to));
     }
 
     _this.check = function(task) {
-        edisonAPI.task.check(task._id).then(reloadTask)
+        edisonAPI.task.check(task._id).then(_.partial(_this.reloadTask, _this.newTask.to))
     }
 
 
-    var reloadTask = function() {
+    console.log('==>', _.find(statsTelepro.data, 'login', user.login))
+
+    _this.reloadTask = function(usr) {
         _this.newTask = {
-            to: user.login,
+            to: usr,
             from: user.login
         }
         edisonAPI.task.listRelevant({
-            user: $rootScope.displayUser
+            login: usr
         }).then(function(resp) {
             _this.taskList = resp.data;
         })
     }
 
-    reloadTask();
+    _this.reloadTask(user.login);
 
     _this.reloadDashboardStats = function(date) {
 
-        edisonAPI.intervention.dashboardStats({
-            user: user.login,
-            date: date
-        }).then(function(resp) {
+        edisonAPI.intervention.dashboardStats(date).then(function(resp) {
             _this.tableParams = new NgTableParams({
                 count: resp.data.weekStats.length,
                 sorting: {
@@ -4358,10 +4366,9 @@ var DashboardController = function($rootScope, dialog, user, edisonAPI, $scope, 
                 counts: [],
                 data: resp.data.weekStats
             });
-            _this.result = resp.data
+            _this.stats = resp.data
         })
     }
-    this.reloadDashboardStats(moment().add('-3', 'months').toDate());
 
     _this.dateSelect = [{
         nom: 'Du jour',
@@ -4376,8 +4383,12 @@ var DashboardController = function($rootScope, dialog, user, edisonAPI, $scope, 
         nom: "De l'année",
         date: moment().startOf('year').toDate()
     }]
+    _this.dateChoice = _this.dateSelect[1];
+    this.reloadDashboardStats(_this.dateChoice);
 
 }
+
+
 
 angular.module('edison').controller('DashboardController', DashboardController);
 

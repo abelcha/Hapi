@@ -17,7 +17,6 @@ OVH.prototype.send = function(params) {
         if (!params.text || !params.to) {
             return reject("Invalid Parameters");
         }
-        console.log('==>', params)
         _this.service.request('GET', '/sms', function(err, serviceName) {
 
             if (err) {
@@ -59,9 +58,9 @@ OVH.prototype.jobs = function() {
     });
 
 };
-var x = new OVH;
+/*var x = new OVH;
 x.jobs().then(function() {
 
-})
+})*/
 
 module.exports = OVH;

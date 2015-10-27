@@ -6,10 +6,11 @@
                     <strong class="fs-headline display-inline">
                     <span>Classement</span>
                     <span> 
-<select style="width:200px;margin-left:20px;display: inline;" class="form-control" ng-model="vm.dateChoice" ng-options="f.date as f.nom for f in vm.dateSelect"></select></span>
+<select style="width:200px;margin-left:20px;display: inline;" class="form-control" ng-model="vm.dateChoice" ng-options="f as f.nom for f in vm.dateSelect" ng-change="vm.reloadDashboardStats(vm.dateChoice)"></select></span>
 
                     </strong>
-                    <br><br>
+                    <br>
+                    <br>
                     <table ng-table="vm.tableParams" class="table table-striped" show-filter="false">
                         <tr ng-repeat="user in $data" ng-class="{success:$index === 0}">
                             <td title="'Login'" sortable="'login'">
@@ -39,21 +40,123 @@
             </div>
         </div>
         <div class="col-sm-6">
-            <div class="shadow-box" style="min-height:200px">
+            <div class="shadow-box" style="padding:20px;overflow: hidden;min-height:200px">
+                <strong class="fs-headline display-inline">Commissions</strong>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <td>Mois</td>
+                            <td>C.A Potentiel</td>
+                            <td>Com Potentiel</td>
+                            <td>C.A Réel</td>
+                            <td>Com Réel</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="(k, v) in vm.stats.monthComission|orderBy:'_id'">
+                            <td>{{v._id}}</td>
+                            <td>{{v.sum_pot + v.sum_VT_pot|frnbr}} €</td>
+                            <td><b>{{(v.sum_pot + v.sum_VT_pot) * 0.01|frnbr}} €</b></td>
+                            <td>{{v.sum_reel + v.sum_VT_reel|frnbr}} €</td>
+                            <td><b>{{(v.sum_reel + v.sum_VT_reel) * 0.01|frnbr }} €</b></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <br>
+            <div class="shadow-box" style="padding:20px;overflow: hidden;min-height:200px">
+                <div class="row">
+                    <div class="col-lg-3 col-md-6">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">
+                                <div class="row">
+                                    <div class="col-xs-3">
+                                        <i class="fa fa-comments fa-2x"></i>
+                                    </div>
+                                    <div class="col-xs-9 text-right">
+                                        <div class="huge">26</div>
+                                        <div>New Comments!</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <a href="#">
+                                <div class="panel-footer">
+                                    <span class="pull-left">View Details</span>
+                                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <div class="panel panel-green">
+                            <div class="panel-heading">
+                                <div class="row">
+                                    <div class="col-xs-3">
+                                        <i class="fa fa-tasks fa-2x"></i>
+                                    </div>
+                                    <div class="col-xs-9 text-right">
+                                        <div class="huge">12</div>
+                                        <div>Interventions Ajoutés</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <a href="#">
+                                <div class="panel-footer">
+                                    <span class="pull-left">View Details</span>
+                                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <div class="panel success yellow">
+                            <div class="panel-heading">
+                                <div class="row">
+                                    <div class="col-xs-3">
+                                        <i class="fa fa-shopping-cart fa-2x"></i>
+                                    </div>
+                                    <div class="col-xs-9 text-right">
+                                        <div class="huge">124</div>
+                                        <div>New Orders!</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <a href="#">
+                                <div class="panel-footer">
+                                    <span class="pull-left">View Details</span>
+                                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <div class="panel red">
+                            <div class="panel-heading">
+                                <div class="row">
+                                    <div class="col-xs-3">
+                                        <i class="fa fa-support fa-2x"></i>
+                                    </div>
+                                    <div class="col-xs-9 text-right">
+                                        <div class="huge">13</div>
+                                        <div>Support Tickets!</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <a href="#">
+                                <div class="panel-footer">
+                                    <span class="pull-left">View Details</span>
+                                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-        <!--  <div class="shadow-box" style="min-height:1000px">
-        <h1>Dashboard</h1>
-        <table class="table">
-            <tbody>
-                <tr ng-repeat="(k, t) in vm.statsTelepro">
-                    <td>{{k}}</td>
-                    <td>{{t.enc.montant}}</td>
-                    <td>{{t.enc.total}}</td>
-                </tr>
-            </tbody>
-        </table>
-    </div> -->
     </div>
     <br>
     <div class="row">
@@ -63,11 +166,11 @@
                     <div style="padding:20px">
                         <div class="row">
                             <div class="col-sm-3">
-                                <select class="form-control" ng-model="vm.newTask.to" ng-options="users.login as users.prenom for users in root.app_users">
+                                <select class="form-control" ng-model="vm.newTask.to" ng-options="users.login as users.login for users in root.app_users" ng-change="vm.reloadTask(vm.newTask.to)">
                                 </select>
                             </div>
                             <div class="col-sm-7">
-                                <input type="text" class="form-control" ng-model="vm.newTask.text" />
+                                <input type="text" class="form-control" ng-model="vm.newTask.text" ng-enter="vm.addTask()" />
                             </div>
                             <div class="col-sm-2">
                                 <button class="form-control btn btn-success" ng-click="vm.addTask()">Ajouter</button>

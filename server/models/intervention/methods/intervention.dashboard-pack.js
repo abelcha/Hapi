@@ -42,11 +42,7 @@ module.exports = function(schema) {
                     },
                     montant_vt_pot: {
                         $cond: [{
-                                $and: [{
-                                    $eq: ['$categorie', 'VT']
-                                }, {
-                                    $ne: ['$compta.reglement.recu', true]
-                                }]
+                                $eq: ['$categorie', 'VT']
                             },
                             150,
                             0
@@ -66,11 +62,7 @@ module.exports = function(schema) {
                     },
                     montant_pot: {
                         $cond: [{
-                                $and: [{
-                                    $ne: ['$categorie', 'VT']
-                                }, {
-                                    $ne: ['$compta.reglement.recu', true]
-                                }]
+                                $ne: ['$categorie', 'VT']
                             },
                             "$prixFinal",
                             0
@@ -145,13 +137,13 @@ module.exports = function(schema) {
     schema.statics.weekStats = function(req, res) {
         //ligue 1
         return new Promise(function(resolve, reject) {
-            var dateCeilling = moment(req.query.date ||  new Date).startOf('week').toDate();
+            var dateCeilling = moment().startOf('week').toDate();
 
             db.model('intervention')
                 .aggregate()
                 .match({
                     'date.ajout': {
-                        $gt: dateCeilling
+                        $gt: new Date(req.query.date)
                     },
                 })
                 .project({
@@ -220,7 +212,6 @@ module.exports = function(schema) {
     schema.statics.champLastMonth = function(req, res) {}
 
     schema.statics.dashboardStats = function(req, res) {
-        console.log('==>', req.query)
         Promise.all([
             this.monthComission(req, res),
             this.weekStats(req, res),
