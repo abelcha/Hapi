@@ -8,9 +8,10 @@ module.exports = function(schema) {
     var fs = require('fs')
     var PDFMerge = require('pdf-merge');
     var async = require('async');
-    var sendSMS = function(text, inter, user, tel) {
+    var sendSMS = function(text, to) {
+        console.log(to, text);
         return sms.send({
-            to: tel,
+            to: to,
             text: text,
         })
 
@@ -302,7 +303,7 @@ module.exports = function(schema) {
                         console.log(communication);
                         var validationPromises = [
                             mail.send(mailOptions),
-                            sendSMS(req.body.sms, inter, req.session, communication.telephone),
+                            sendSMS(req.body.sms, communication.telephone),
                         ]
                         console.time('validation')
 

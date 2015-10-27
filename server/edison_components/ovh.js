@@ -49,7 +49,7 @@ OVH.prototype.jobs = function() {
             if (err) {
                 return reject(err);
             } else {
-                _this.service.request('GET', '/sms/' + serviceName + '/jobs/' + '42875514', {}, function(errsend, result) {
+                _this.service.request('GET', '/sms/' + serviceName + '/jobs/' + '42911188', {}, function(errsend, result) {
                     console.log(errsend, result);
                     return resolve('ok')
                 });
@@ -59,9 +59,9 @@ OVH.prototype.jobs = function() {
     });
 
 };
-/*var x = new OVH;
+var x = new OVH;
 x.jobs().then(function() {
 
-})*/
+})
 
 module.exports = OVH;
