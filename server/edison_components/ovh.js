@@ -17,6 +17,7 @@ OVH.prototype.send = function(params) {
         if (!params.text || !params.to) {
             return reject("Invalid Parameters");
         }
+        console.log('==>', params)
         _this.service.request('GET', '/sms', function(err, serviceName) {
 
             if (err) {
@@ -36,5 +37,31 @@ OVH.prototype.send = function(params) {
 
     });
 };
+
+
+OVH.prototype.jobs = function() {
+    console.log('NTM')
+    var _this = this;
+    return new Promise(function(resolve, reject) {
+
+        _this.service.request('GET', '/sms', function(err, serviceName) {
+            console.log(err, serviceName)
+            if (err) {
+                return reject(err);
+            } else {
+                _this.service.request('GET', '/sms/' + serviceName + '/jobs/' + '42875514', {}, function(errsend, result) {
+                    console.log(errsend, result);
+                    return resolve('ok')
+                });
+            }
+        });
+
+    });
+
+};
+/*var x = new OVH;
+x.jobs().then(function() {
+
+})*/
 
 module.exports = OVH;

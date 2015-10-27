@@ -118,7 +118,9 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
         },
         intervention: {
             dashboardStats: function(options) {
-                return $http.get('/api/intervention/dashboardStats', options);
+                return $http.get('/api/intervention/dashboardStats', {
+                    params: options
+                });
             },
             getTelMatch: function(text) {
                 return $http.post('/api/intervention/telMatches', text);
@@ -246,9 +248,6 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
                     method: 'GET',
                     url: "/api/artisan/" + id + "/getFiles"
                 });
-            },
-            reaStats: function() {
-                return $http.get('/api/artisan/reaStats')
             },
             extendedStats: function(id) {
                 return $http.get('/api/artisan/' + id + "/extendedStats")

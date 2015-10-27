@@ -13,20 +13,20 @@ module.exports = function() {
     }
     var basePath = process.cwd() + '/server/models/'
     getDirectories(basePath).forEach(function(model) {
-        var folder = basePath + '/' + model;
-        var schema = require(folder + '/schema')(mongoose);
+        var folder = basePath +  model;
+        var schema = require(folder + '/' + model + '.schema')(mongoose);
 
-        require(folder + '/validator')(schema);
+        require(folder + '/' + model + '.validator')(schema);
 
         fs.readdirSync(folder + '/methods').forEach(function(method) {
             if (_.endsWith(method, '.js') && !_.startsWith(method, '-')) {
-                require(folder + '/methods/' + method)(schema)
+                require(folder + '/methods/'  + method)(schema)
             } else {
                 //console.log(method)
             }
         });
         if (model === 'intervention' || model === 'devis' || model === 'artisan') {
-            requireLocal('server/core')(model, schema)
+            requireLocal('server/core/core.index.js')(model, schema)
         }
         var model = mongoose.model(model, schema);
 

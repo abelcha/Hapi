@@ -1846,7 +1846,9 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
         },
         intervention: {
             dashboardStats: function(options) {
-                return $http.get('/api/intervention/dashboardStats', options);
+                return $http.get('/api/intervention/dashboardStats', {
+                    params: options
+                });
             },
             getTelMatch: function(text) {
                 return $http.post('/api/intervention/telMatches', text);
@@ -1974,9 +1976,6 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
                     method: 'GET',
                     url: "/api/artisan/" + id + "/getFiles"
                 });
-            },
-            reaStats: function() {
-                return $http.get('/api/artisan/reaStats')
             },
             extendedStats: function(id) {
                 return $http.get('/api/artisan/' + id + "/extendedStats")
@@ -4312,21 +4311,13 @@ var ContactArtisanController = function($scope, $timeout, TabContainer, LxProgre
 angular.module('edison').controller('ContactArtisanController', ContactArtisanController);
 
 var DashboardController = function($rootScope, dialog, user, edisonAPI, $scope, $filter, TabContainer, NgTableParams, $routeParams, $location, LxProgressService) {
-    // var tab = TabContainer.getCurrentTab();
-    //   tab.setTitle('Dashboard')
     var _this = this;
-    //LxProgressService.circular.show('#5fa2db', '#globalProgress');
     $scope._ = _;
     $scope.root = $rootScope;
+
     _this.openLink = function(link) {
-            $location.url(link)
-        }
-        /*    edisonAPI.stats.day().then(function(resp) {
-
-                _this.statsTelepro = resp.data;
-
-            })*/
-
+        $location.url(link)
+    }
 
 
     _this.addTask = function() {
@@ -4352,20 +4343,40 @@ var DashboardController = function($rootScope, dialog, user, edisonAPI, $scope, 
 
     reloadTask();
 
-    edisonAPI.intervention.dashboardStats({
-        user: user.login
-    }).then(function(resp) {
-        _this.tableParams = new NgTableParams({
-            count: resp.data.weekStats.length,
-            sorting: {
-                total: 'desc'
-            }
-        }, {
-            counts: [],
-            data: resp.data.weekStats
-        });
-        _this.result = resp.data
-    })
+    _this.reloadDashboardStats = function(date) {
+
+        edisonAPI.intervention.dashboardStats({
+            user: user.login,
+            date: date
+        }).then(function(resp) {
+            _this.tableParams = new NgTableParams({
+                count: resp.data.weekStats.length,
+                sorting: {
+                    total: 'desc'
+                }
+            }, {
+                counts: [],
+                data: resp.data.weekStats
+            });
+            _this.result = resp.data
+        })
+    }
+    this.reloadDashboardStats(moment().add('-3', 'months').toDate());
+
+    _this.dateSelect = [{
+        nom: 'Du jour',
+        date: moment().startOf('day').toDate()
+    }, {
+        nom: 'De la semaine',
+        date: moment().startOf('week').toDate()
+    }, {
+        nom: 'Du mois',
+        date: moment().startOf('month').toDate()
+    }, {
+        nom: "De l'année",
+        date: moment().startOf('year').toDate()
+    }]
+
 }
 
 angular.module('edison').controller('DashboardController', DashboardController);

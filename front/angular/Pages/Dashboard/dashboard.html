@@ -3,7 +3,13 @@
         <div class="col-sm-6">
             <div class="shadow-box" style="min-height:200px">
                 <div style="padding:20px;overflow: hidden;">
-                    <strong class="fs-headline display-block">Classement de la semaine</strong>
+                    <strong class="fs-headline display-inline">
+                    <span>Classement</span>
+                    <span> 
+<select style="width:200px;margin-left:20px;display: inline;" class="form-control" ng-model="vm.dateChoice" ng-options="f.date as f.nom for f in vm.dateSelect"></select></span>
+
+                    </strong>
+                    <br><br>
                     <table ng-table="vm.tableParams" class="table table-striped" show-filter="false">
                         <tr ng-repeat="user in $data" ng-class="{success:$index === 0}">
                             <td title="'Login'" sortable="'login'">
@@ -61,13 +67,13 @@
                                 </select>
                             </div>
                             <div class="col-sm-7">
-                                <input type="text" class="form-control" ng-model="vm.newTask.text"/>
+                                <input type="text" class="form-control" ng-model="vm.newTask.text" />
                             </div>
                             <div class="col-sm-2">
                                 <button class="form-control btn btn-success" ng-click="vm.addTask()">Ajouter</button>
                             </div>
-                        <br>
-                        <br>
+                            <br>
+                            <br>
                         </div>
                         <table class="table  table-hover">
                             <thead>

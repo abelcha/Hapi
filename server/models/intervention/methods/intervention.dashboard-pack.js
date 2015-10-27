@@ -220,6 +220,7 @@ module.exports = function(schema) {
     schema.statics.champLastMonth = function(req, res) {}
 
     schema.statics.dashboardStats = function(req, res) {
+        console.log('==>', req.query)
         Promise.all([
             this.monthComission(req, res),
             this.weekStats(req, res),
