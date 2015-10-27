@@ -46,13 +46,14 @@ module.exports = function(schema) {
                 }
             })
             q = _.filter(q, function(e) {
-                return e.client && e.client.length == 10;
+                return e && e.client && e.client.length == 10;
             })
             q = _.groupBy(q, 'origin');
             //console.log(q)
             var artn = [];
             var i = 0;
             async.each(q, function(e, cb) {
+                console.log('opklpk')
                 var query = {
                     $or: []
                 };
@@ -87,6 +88,7 @@ module.exports = function(schema) {
                             }
                         })
                         ++i
+                    console.log('progress')
                     if (global.currenWorkerJob) {
                         global.currenWorkerJob.progress(i, _.size(q));
                     }
