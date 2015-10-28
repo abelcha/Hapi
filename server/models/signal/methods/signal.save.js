@@ -9,10 +9,7 @@ module.exports = function(schema) {
                 e.subType = _(e.subType).chain().snakeCase().deburr().value().toUpperCase();
             })
             db.model('signal').remove({}, function() {
-                db.model('signal').create(signalementList).then(function(resp) {
-                    edison.users.data = resp;
-                    resolve(resp)
-                }, reject)
+                db.model('signal').create(signalementList).then(resolve, reject)
             })
         })
     }
