@@ -22,7 +22,7 @@ Event.prototype.type = function(type) {
 }
 
 Event.prototype.id = function(id) {
-    this.doc.id = id;
+    this.doc.id = parseInt(id);
     return this;
 }
 

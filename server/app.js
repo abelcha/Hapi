@@ -42,22 +42,8 @@ var fs = require('fs')
 global.io = require('socket.io')(http);
 require('./shared.js')(express);
 global.jobs = edison.worker.initJobQueue();
-// var memwatch = require('memwatch');
-
-// memwatch.on('leak', function(info) {
-//     console.log('LEAK', info)
-// });
 
 global.isWorker = false;
-
-/*if (envProd) {
-    var net = require('net');
-
-    var socket = net.createConnection(2003, "6ede54ad.carbon.hostedgraphite.com", function() {
-        socket.write("26b9bf18-ab21-493e-bea7-31aff56c95cd.test.testing 1.2\n");
-        socket.end();
-    });
-}*/
 
 
 new edison.timer();

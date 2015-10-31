@@ -32,7 +32,7 @@
     module.exports.postSave = function(prev, curr, session) {
         try {
 
-            if (curr.artisan && curr.artisan.id) {
+            if (envProd && curr.artisan && curr.artisan.id) {
                 var moment = require('moment')
                 var textTemplate = requireLocal('config/textTemplate');
                 var config = requireLocal('config/dataList');
@@ -114,24 +114,27 @@
         }
 
         if (curr.artisan && curr.artisan.id && curr.artisan.id !== prev.artisan.id) {
-            db.model('artisan').findOne({
-                id: curr.artisan.id
-            }).then(function(sst) {
-                if (!sst) {
-                    return false;
-                }
-                curr.sst = JSON.parse(JSON.stringify(sst));
-                var moment = require('moment')
-                var textTemplate = requireLocal('config/textTemplate');
-                var config = requireLocal('config/dataList');
-                var text = _.template(textTemplate.sms.intervention.demande.bind(curr)(session, config, moment))(curr)
-                sms.send({
-                    link: curr.sst.id,
-                    origin: curr.id,
-                    text: text,
-                    to: envProd ? curr.sst.telephone.tel1 : '0633138868',
+            curr.status = 'APR';
+            if (envProd) {
+                db.model('artisan').findOne({
+                    id: curr.artisan.id
+                }).then(function(sst) {
+                    if (!sst) {
+                        return false;
+                    }
+                    curr.sst = JSON.parse(JSON.stringify(sst));
+                    var moment = require('moment')
+                    var textTemplate = requireLocal('config/textTemplate');
+                    var config = requireLocal('config/dataList');
+                    var text = _.template(textTemplate.sms.intervention.demande.bind(curr)(session, config, moment))(curr)
+                    sms.send({
+                        link: curr.sst.id,
+                        origin: curr.id,
+                        text: text,
+                        to: envProd ? curr.sst.telephone.tel1 : '0633138868',
+                    })
                 })
-            })
+            }
         }
 
 
@@ -270,7 +273,6 @@
 
 
 
-
         var addProp = function(obj, prop, name) {
             if (prop) {
                 obj[name] = prop;
@@ -330,6 +332,13 @@
                 text: d.remarque_interne
             });
         }
+
+        if (d.etat_reglement == "CHEQUE RECUPERE") {
+            console.log('yayay')
+            d.etat_intervention = "VRF"
+        }
+
+
         var rtn = {
             tva: d.tva_facture  || (d.civilite === 'Soc.' ? 20 : 10),
             aDemarcher: d.A_DEMARCHE,
