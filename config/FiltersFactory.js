@@ -199,7 +199,7 @@ FiltersFactory.prototype.list = {
     }, {
         short_name: 'i_tenv',
         long_name: 'Envoyé',
-        group: '$login.envoi',
+        group: '$login.ajout',
         url: 'envoyeAjd',
         match: function() {
             return {

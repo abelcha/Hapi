@@ -360,7 +360,10 @@ module.exports = function(db) {
                 default: 0
             }
         },
-        newOs: Boolean,
+        newOs: {
+            type: Boolean,
+            default: false,
+        },
         appels: [{
             call_id: String,
             date: {
