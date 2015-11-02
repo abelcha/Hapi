@@ -212,11 +212,6 @@
             } else {
                 e._status = e.status
             }
-            /*
-                        if (!config.etats[e._status]) {
-                            console.log('-->', e.id, e.status)
-
-                        }*/
 
             var rtn = {
                 t: e.login.ajout,

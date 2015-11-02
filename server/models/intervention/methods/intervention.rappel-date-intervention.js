@@ -18,8 +18,12 @@ module.exports = function(schema) {
 				'date.ajout': {
 					$lt: twoDaysAgo
 				},
+				'status': 'ENC'
 			}).lean().populate('sst').then(function(resp) {
-
+				sms.send({
+					to: '0633138868',
+					text: 'rappel sms ' + resp.length
+				})
 				_.each(resp, function(e) {
 					if (!e.sst)
 						return 0
