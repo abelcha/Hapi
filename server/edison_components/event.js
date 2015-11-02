@@ -30,6 +30,12 @@ Event.prototype.data = function(data) {
     this.doc.data = data;
     return this;
 }
+
+Event.prototype.icon = function(icon) {
+    this.doc.icon = icon;
+    return this;
+}
+
 Event.prototype.date = function(date) {
     this.doc.date = date;
     return this;

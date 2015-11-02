@@ -33,6 +33,7 @@ var request = function(query) {
                         .id(resp.id)
                         .broadcast(resp.login.ajout)
                         .self()
+                        .icon('phone')
                         .color('green')
                         .message(_.template("{{artisan.nomSociete}} appel le client {{id}} ({{client.civilite}} {{client.nom}})")(resp))
                         .send()
