@@ -4,6 +4,7 @@ var request = function(query) {
     var response = _.pick(query, 'status_code', 'description', 'redirect_to');
     this.json(response);
     db.model('axialis')(query).save();
+    console.log(response.status_code === 200, query.id_intervention)
     if (response.status_code === 200 && query.id_intervention) {
         var q = {
             id: query.id_intervention,
