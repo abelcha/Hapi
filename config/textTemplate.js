@@ -14,12 +14,16 @@ var getPrecision = function(address) {
 module.exports = {
     sms: {
         intervention: {
+            rappelNoCalls: function(id) {
+                return "OS " + id + "\nAttention ! Le client attend votre appel pour confirmer le rendez-vous. Merci prendre contact avec lui immédiatement."
+
+            },
             rappelArtisan: function() {
                 return "OS {{e.id}}\n" +
-                "Bonjour M. {{e.sst.representant.nom}},\n" +
-                "nous vous rapellons que vous avez une intervention à effectuer chez {{e.client.civilite}} {{e.client.nom}} ({{e.client.address.cp}})" +
-                "aujourd'hui à {{datePlain}}\n" +
-                "Edison Services\n"
+                    "Bonjour M. {{e.sst.representant.nom}},\n" +
+                    "nous vous rapellons que vous avez une intervention à effectuer chez {{e.client.civilite}} {{e.client.nom}} ({{e.client.address.cp}})" +
+                    "aujourd'hui à {{datePlain}}\n" +
+                    "Edison Services\n"
 
             },
             demande: function(user, config, _moment) {

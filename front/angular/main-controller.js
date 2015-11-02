@@ -51,15 +51,15 @@ angular.module('edison').controller('MainController', function($timeout, LxNotif
     getSignalementStats()
 
 
-/*
-    var bfm = function() {
-        edisonAPI.bfm.get().then(function(resp) {
-            $rootScope.events = resp.data;
-        })
-    }
-    socket.on('event', _.debounce(bfm, _.random(0, 000)));
+    /*
+        var bfm = function() {
+            edisonAPI.bfm.get().then(function(resp) {
+                $rootScope.events = resp.data;
+            })
+        }
+        socket.on('event', _.debounce(bfm, _.random(0, 000)));
 
-    bfm();*/
+        bfm();*/
 
     var reloadStats = function() {
         edisonAPI.stats.telepro()
@@ -83,7 +83,10 @@ angular.module('edison').controller('MainController', function($timeout, LxNotif
     socket.on('notification', function(data) {
         console.log('notification==>', data)
         if (data.dest === $rootScope.user.login && (data.dest !== data.origin || data.self)) {
-            LxNotificationService.notify(data.message, 'android', false, data.color);
+            LxNotificationService.notify(data.message, data.icon || 'android', false, data.color);
+        }
+        if (data.service && data.service === $rootScope.user.service) {
+            LxNotificationService.notify(data.message, data.icon || 'android', false, data.color);
         }
     })
 

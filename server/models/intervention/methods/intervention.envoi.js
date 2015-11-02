@@ -233,6 +233,36 @@ module.exports = function(schema) {
                                 .message(_.template("L'intervention {{id}} chez {{client.civilite}} {{client.nom}} ({{client.address.cp}}) à été envoyé par {{login.envoi}}")(inter))
                                 .send()
                                 .save()
+                                console.log('okok')
+                            if (inter.newOs) {
+                                setTimeout(function() {
+                                    db.model('intervention').findById(inter.id)
+                                        .populate('sst')
+                                        .then(function(resp) {
+                                            if (!resp.appels.length) {
+                                                console.log('nocall')
+                                                sms.send({
+                                                    to: resp.sst.telephone.tel1,
+                                                    text: template.sms.intervention.rappelNoCalls(inter.id)
+                                                })
+                                                 sms.send({
+                                                    to: '0633138868',
+                                                    text: template.sms.intervention.rappelNoCalls(inter.id)
+                                                })
+                                                edison.event('INTER_NO_CALLS').login(req.session.login).id(inter.id)
+                                                    .service('INTERVENTION')
+                                                    .color('red')
+                                                    .message(_.template("OS {{id}}: ({{client.civilite}} {{client.nom}}) attend l'appel de {{sst.nomSociete}}")(resp))
+                                                    .send()
+                                                    .save()
+                                            } else {
+                                                console.log('call passed')
+                                            }
+                                        })
+                                }, 60000)
+                            }
+
+
                             inter.save().then(resolve, reject)
                         })
                     }
@@ -305,17 +335,8 @@ module.exports = function(schema) {
                             mail.send(mailOptions),
                             sendSMS(req.body.sms, communication.telephone),
                         ]
-                        console.time('validation')
-
-                        Promise.all(validationPromises).then(function(e) {
-                            console.timeEnd('validation')
-                            console.timeEnd('envoi')
-                            resolve('ok')
-                        }, function(err) {
-                            console.log(err);
-                            reject("erreur, l'envoi a échoué")
-                        }).catch(__catch)
-
+                        Promise.all(validationPromises).catch(__catch)
+                        resolve('ok')
                     }, reject).catch(__catch)
                 } catch (e) {
                     console.log('--->', e)

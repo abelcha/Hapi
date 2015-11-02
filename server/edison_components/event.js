@@ -16,6 +16,11 @@ Event.prototype.login = function(login) {
     return this;
 }
 
+Event.prototype.service = function(service) {
+    this.doc.service = service;
+    return this;
+}
+
 Event.prototype.type = function(type) {
     this.doc.type = type;
     return this;
@@ -75,9 +80,10 @@ Event.prototype.send = function() {
             message: _this.brMessage,
             dest: _this.brDest,
             self: _this.self,
+            service: _this.doc.service ||  null,
             color: _this.brColor || 'blue',
             origin: _this.doc.login,
-            icon: _this.icon ||  'android'
+            icon: _this.doc.icon ||  'android'
         })
     } else {
         console.log('SOCKET UNAVAILABLE')

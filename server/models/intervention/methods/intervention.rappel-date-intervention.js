@@ -4,8 +4,8 @@ module.exports = function(schema) {
 			var moment = require('moment')
 			var _ = require('lodash')
 			var now = moment().toDate();
-			var inOneHour = moment().add('1', 'hours').toDate()
-			var inTwoHour = moment().add('2', 'hours').toDate()
+			var inOneHour = moment().add('3', 'hours').toDate()
+			var inTwoHour = moment().add('4', 'hours').toDate()
 			var twoDaysAgo = moment().add('-1', 'days').toDate()
 			var textTemplate = requireLocal('config/textTemplate');
 
