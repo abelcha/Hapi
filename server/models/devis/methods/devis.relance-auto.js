@@ -10,7 +10,7 @@ module.exports = function(schema) {
         var options = {
                 session: realUsr || usr,
                 body: {
-                    text: textTemplate.mail.devis.envoi.bind(e)(usr, config, _, moment)
+                    text: textTemplate.mail.devis.envoi.bind(e)(realUsr || usr, config, _, moment)
                 }
             }
             //  console.log(options)
