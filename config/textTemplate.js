@@ -2,7 +2,7 @@ var getPrecision = function(address) {
     var precision = [];
 
     address.batiment && precision.push('bat. ' + address.batiment)
-    address.etage && precision.push('etage ' + address.etage)
+    address.etage && precision.push('étage ' + address.etage)
     address.code && precision.push('code ' + address.code)
 
     if (precision.length) {
@@ -66,7 +66,7 @@ module.exports = {
                 } else {
                     var sms = "OS {{inter.id}}\n" +
                         "Intervention chez {{inter.client.civilite}} {{inter.client.prenom}} {{inter.client.nom}} au " +
-                        "{{inter.client.address.n}} {{inter.client.address.r}} {{inter.client.address.cp}}, {{inter.client.address.v}} {{options.precision}}" +
+                        "{{inter.client.address.n}} {{inter.client.address.r}} {{inter.client.address.cp}}, {{inter.client.address.v}} {{options.precision}}\n" +
                         "{{options.datePlain}}.\n" +
                         "Pour la raison suivante: {{inter.description}}{{options.remarques}}.\n" +
                         "{{options.prix}}\n" +
