@@ -105,8 +105,19 @@
             curr.compta.paiement.date = Date.now()
         }
         if (curr.litige && curr.litige.open === true && prev.litige.open === void(0)) {
+
             curr.litige.opened = new Date();
             curr.litige.openedBy = session.login;
+
+            edison.event('INTER_LITIGE')
+                .login(session.login)
+                .id(curr.id)
+                .broadcast(curr.login.ajout)
+                .color('red')
+                .message(_.template("Un litige à été ouvert par {{litige.openedBy}} sur votre intervention {{id}} chez {{client.civilite}} {{client.nom}} ({{client.address.cp}}) ")(curr))
+                .send()
+                .save()
+
         }
         if (curr.litige && curr.litige.open === false && prev.litige.open === true) {
             curr.litige.closed = new Date();
@@ -333,7 +344,7 @@
             });
         }
 
-        if (d.etat_reglement == "CHEQUE RECUPERE" || d.date_edition_facture) {
+        if (d.etat_reglement == "CHEQUE RECUPERE" ||  d.date_edition_facture) {
             d.etat_intervention = "VRF"
         }
 
