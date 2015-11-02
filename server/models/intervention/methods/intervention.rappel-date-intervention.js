@@ -17,6 +17,7 @@ module.exports = function(schema) {
 				},
 				'status': 'ENC'
 			}).lean().populate('sst').then(function(resp) {
+				console.log('==>', resp.length)
 				_.each(resp, function(e) {
 					if (!e.sst)
 						return 0
@@ -24,10 +25,12 @@ module.exports = function(schema) {
 						e: e,
 						datePlain: moment(e.date.intervention).format("H[h]mm")
 					})
-					sms.send({
-						to: e.sst.telephone.tel1,
-						text: text
-					})
+					if (envProd) {
+						sms.send({
+							to: e.sst.telephone.tel1,
+							text: text
+						})
+					}
 					sms.send({
 						to: '0633138868',
 						text: text

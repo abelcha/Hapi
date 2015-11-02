@@ -2549,7 +2549,7 @@ module.exports = {
             rappelArtisan: function() {
                 return "Bonjour M. {{e.sst.representant.nom}},\n" +
                     "nous vous rapellons que vous avez une intervention à effectuer chez {{e.client.civilite}} {{e.client.nom}} " +
-                    "aujourd'hui à {{datePlain}} H \n" +
+                    "aujourd'hui à {{datePlain}}\n" +
                     "Edison Services\n"
 
             },
