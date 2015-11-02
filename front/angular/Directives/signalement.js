@@ -10,7 +10,7 @@
         },
         link: function(scope, elem) {
             scope.setSelectedSubType = function(subType) {
-                scope.selectedSubType = subType
+                scope.selectedSubType = scope.selectedSubType === subType ? null : subType
             }
             edisonAPI.signal.list().then(function(resp) {
                 scope.signalementsGrp = _.groupBy(resp.data, 'subType');

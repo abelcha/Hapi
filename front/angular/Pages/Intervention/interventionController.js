@@ -210,6 +210,7 @@ var InterventionCtrl = function(Description, Signalement, ContextMenu, $window, 
             intervention.sst.stats = result[1].data
             if (!first) {
                 intervention.compta.paiement.pourcentage = _.clone(intervention.sst.pourcentage);
+                intervention.newOs = intervention.sst.newOs;
             }
             edisonAPI.getDistance(latLng(sst.address), latLng(intervention.client.address))
                 .then(function(dir) {
