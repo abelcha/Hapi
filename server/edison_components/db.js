@@ -68,6 +68,12 @@ module.exports = function() {
             return {
                 $exists: true
             }
+        },
+        between: function(a, b) {
+            return {
+                $gt: a,
+                $lt: b
+            }
         }
     }
     return mongoose;

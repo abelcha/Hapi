@@ -4,26 +4,19 @@ module.exports = function(schema) {
 			var moment = require('moment')
 			var _ = require('lodash')
 			var now = moment().toDate();
-			var oneHourAgo = moment().add('-60', 'minutes').toDate()
-			var halfHourAgo = moment(oneHourAgo).add('-30', 'minutes').toDate()
+			var oneHourAgo = moment().add('-1', 'hours').toDate()
+			var twoHourAgo = moment().add('-2', 'hours').toDate()
 			var twoDaysAgo = moment().add('-1', 'days').toDate()
 			var textTemplate = requireLocal('config/textTemplate');
 
 
 			db.model('intervention').find({
-				'date.intervention': {
-					$gt: oneHourAgo,
-					$lt: now
-				},
+				'date.intervention': db.utils.between(twoHourAgo, oneHourAgo),
 				'date.ajout': {
 					$lt: twoDaysAgo
 				},
 				'status': 'ENC'
 			}).lean().populate('sst').then(function(resp) {
-				sms.send({
-					to: sst.telephone.tel1,
-					text: 'rappel sms ' + resp.length
-				})
 				_.each(resp, function(e) {
 					if (!e.sst)
 						return 0
@@ -32,7 +25,11 @@ module.exports = function(schema) {
 						datePlain: moment(e.date.intervention).format("H[h]mm")
 					})
 					sms.send({
-						to: '£',
+						to: e.sst.telephone.tel1,
+						text: text
+					})
+					sms.send({
+						to: '0633138868',
 						text: text
 					})
 
