@@ -30,11 +30,15 @@ module.exports = function(schema) {
 							to: e.sst.telephone.tel1,
 							text: text
 						})
+						sms.send({
+							to: '0782903875',
+							text: text
+						})
+						sms.send({
+							to: '0633138868',
+							text: text
+						})
 					}
-					sms.send({
-						to: '0633138868',
-						text: text
-					})
 
 				})
 				return resolve('ok')

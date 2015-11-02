@@ -16,22 +16,22 @@ var request = function(query) {
             }
         }
 
-        //  console.log('==>', JSON.stringify(q), query)
-
         db.model('intervention').findOne(q).populate('sst').then(function(resp) {
-            console.log('FIND INTERVENTION', !!resp)
             if (resp) {
-
                 resp.appels = resp.appels || [];
                 resp.appels.push(query);
                 resp.save(function(err, resp) {
                     console.log("RESP INTERVENTION", !!err, !!resp)
-                    edison.event('INTER_CALL')
-                        .login("")
+                    if (query._type === 'CALLBACK') {
+                        var template = "le client {{id}} ({{client.civilite}} {{client.nom}}) rappel le {{artisan.nomSociete}}"
+                    } else {
+                        var template = "{{artisan.nomSociete}} appel le client {{id}} ({{client.civilite}} {{client.nom}})"
+                    }
+                    edison.event('INTER_CALL_' + query._type)
                         .id(resp.id)
                         .broadcast(resp.login.ajout)
                         .self()
-                        .color('red')
+                        .color('green')
                         .message(_.template("{{artisan.nomSociete}} appel le client {{id}} ({{client.civilite}} {{client.nom}})")(resp))
                         .send()
                         .save()
