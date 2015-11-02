@@ -189,7 +189,7 @@
                         <info-fourniture ng-if="vm.data.id" data="vm.data"></info-fourniture>
                         <info-compta ng-if="vm.data.status === 'VRF'" data="vm.data"></info-compta>
                         <info-litige ng-if="vm.data.id && vm.data.date.envoi" data="vm.data"></info-litige>
-                        <info-sav ng-if="vm.data.status === 'VRF'" data="vm.data" artisans="vm.nearestArtisans"></info-sav>
+                        <info-sav ng-if="vm.data.status === 'VRF' || vm.data.status === 'ENC'" data="vm.data" artisans="vm.nearestArtisans"></info-sav>
                         <div class="row" style="margin:0">
                             <div style="width:48%;float:left;" class="card" id="fileUpload">
                                 <div class="p+">
