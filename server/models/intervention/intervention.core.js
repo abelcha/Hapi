@@ -104,6 +104,20 @@
             curr.compta.paiement.login = session.login
             curr.compta.paiement.date = Date.now()
         }
+
+        if (curr.sav && curr.sav.status === 'ENC' && prev.sav.status !== 'ENC') {
+
+            edison.event('INTER_SAV')
+                .login(session.login)
+                .id(curr.id)
+                .broadcast(curr.login.ajout)
+                .color('blue')
+                .message(_.template("Un S.A.V à été ouvert sur votre intervention {{id}} chez {{client.civilite}} {{client.nom}} ({{client.address.cp}}) ")(curr))
+                .send()
+                .save()
+
+        }
+
         if (curr.litige && curr.litige.open === true && prev.litige.open === void(0)) {
 
             curr.litige.opened = new Date();
