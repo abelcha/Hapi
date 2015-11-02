@@ -85,7 +85,7 @@ module.exports = {
                 'client.telephone.tel3': req.query.call_origin
             }],
             status: 'ENC'
-        }).populate('sst').then(function(resp) {
+        }).populate('sst').sort('-id').then(function(resp) {
             if (!resp) {
                 return request.bind(res)({
                     call_id: req.query.call_id,
@@ -135,7 +135,7 @@ module.exports = {
             }, {
                 'id': parseInt(q.sst_id || 0)
             }]
-        }).then(function(doc) {
+        }).sort('-id').then(function(doc) {
             if (!doc) {
                 console.log('pas artisan', q.call_origin, q.sst_id)
                 return request.bind(res)({
