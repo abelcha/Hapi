@@ -289,6 +289,23 @@ FiltersFactory.prototype.list = {
                 modeReglement: 'CHQ',
                 reglementSurPlace: true,
                 'compta.reglement.recu': false,
+                'compta.paiement.effectue': false,
+                'date.intervention': {
+                    $lt: new Date(Date.now() - ms.weeks(2)),
+                }
+            }
+        },
+        stats: true,
+    }, {
+        short_name: 'i_wtf1',
+        long_name: 'Payé mais pas reglés',
+        url: 'payePasRegle',
+        match: function() {
+            return {
+                status: 'VRF',
+                modeReglement: 'CHQ',
+                reglementSurPlace: true,
+                'compta.reglement.recu': false,
                 'date.intervention': {
                     $lt: new Date(Date.now() - ms.weeks(2)),
                 }
@@ -381,7 +398,7 @@ FiltersFactory.prototype.list = {
         group: '$login.demarchage',
         match: {
             aDemarcher: true,
-           
+
         },
     }]
 }
