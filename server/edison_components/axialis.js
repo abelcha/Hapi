@@ -15,8 +15,9 @@ var request = function(query) {
                 }
             }
         }
-
+        console.log('ok broadcast event')
         db.model('intervention').findOne(q).populate('sst').then(function(resp) {
+            console.log('==>', !!resp)
             if (resp) {
                 resp.appels = resp.appels || [];
                 resp.appels.push(query);

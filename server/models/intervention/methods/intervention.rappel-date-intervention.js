@@ -4,14 +4,14 @@ module.exports = function(schema) {
 			var moment = require('moment')
 			var _ = require('lodash')
 			var now = moment().toDate();
-			var oneHourAgo = moment().add('-1', 'hours').toDate()
-			var twoHourAgo = moment().add('-2', 'hours').toDate()
+			var inOneHour = moment().add('1', 'hours').toDate()
+			var inTwoHour = moment().add('2', 'hours').toDate()
 			var twoDaysAgo = moment().add('-1', 'days').toDate()
 			var textTemplate = requireLocal('config/textTemplate');
 
 
 			db.model('intervention').find({
-				'date.intervention': db.utils.between(twoHourAgo, oneHourAgo),
+				'date.intervention': db.utils.between(inOneHour, inTwoHour),
 				'date.ajout': {
 					$lt: twoDaysAgo
 				},
@@ -27,18 +27,18 @@ module.exports = function(schema) {
 					})
 					if (envProd) {
 						sms.send({
-							to: e.sst.telephone.tel1,
-							text: text
-						})
-						sms.send({
-							to: '0782903875',
-							text: text
-						})
-						sms.send({
-							to: '0633138868',
-							text: text
-						})
+								to: e.sst.telephone.tel1,
+								text: text
+							})
+							sms.send({
+								to: '0782903875',
+								text: text
+							})
 					}
+					sms.send({
+						to: '0633138868',
+						text: text
+					})
 
 				})
 				return resolve('ok')
