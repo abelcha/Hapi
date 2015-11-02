@@ -1,3 +1,16 @@
+var getPrecision = function(address) {
+    var precision = [];
+
+    address.batiment && precision.push('bat. ' + address.batiment)
+    address.etage && precision.push('etage ' + address.etage)
+    address.code && precision.push('code ' + address.code)
+
+    if (precision.length) {
+        return '(' + precision.join(' - ') + ')';
+    }
+    return '';
+}
+
 module.exports = {
     sms: {
         intervention: {
@@ -27,40 +40,46 @@ module.exports = {
                     "Edison Services\n"
             },
             envoi: function(user) {
-                this.precision = [];
-                if (this.client.address.batiment) {
-                    this.precision.push('bat. ' + this.client.address.batiment)
+                var options = {
+                    precision: getPrecision(this.client.address),
+                    datePlain: moment(this.date.intervention).format("[le] DD[/]MM[ à ]HH[h]mm"),
+                    login: user.pseudo || "Arnaud",
+                    ligne: (user.ligne || "0972423000").match(/.{2}/g).join('.'),
+                    remarques: this.remarqueSms ? (' (' + this.remarque + ')') : '',
+                    prix: this.prixAnnonce ? this.prixAnnonce + "€ HT. " : "Pas de prix annoncé. ",
+                    telClient: this.client.telephone.tel1.match(/.{2}/g).join('.')
                 }
-                if (this.client.address.etage) {
-                    this.precision.push('etage ' + this.client.address.etage)
-                }
-                if (this.client.address.code) {
-                    this.precision.push('code ' + this.client.address.code)
-                }
-                if (this.precision.length) {
-                    this.precision = ('(' + this.precision.join(' - ') + ')');
+                if (this.newOs) {
+                    sms = "OS {{inter.id}}\n" +
+                        "Cher partenaire({{inter.sst.id}}),\n" +
+                        "{{options.datePlain}}\n" +
+                        "{{inter.client.civilite}} {{inter.client.prenom}} {{inter.client.nom}}\n" +
+                        "{{inter.client.address.n}} {{inter.client.address.r}} {{inter.client.address.cp}}, {{inter.client.address.v}} {{options.precision}}" +
+                        "Pour la raison suivante:\n" +
+                        "{{inter.description}}{{options.remarques}}\n" +
+                        "Prix: à partir de {{inter.prixAnnonce}}€ H.T\n" +
+                        "Vous pouvez joindre le client au:\n" +
+                        "09.701.702.01 (OS {{inter.id}})\n" +
+                        "\n" +
+                        "{{options.login}}\n" +
+                        "{{options.ligne}} \n"
                 } else {
-                    this.precision = ''
+                    var sms = "OS {{inter.id}}\n" +
+                        "Intervention chez {{inter.client.civilite}} {{inter.client.prenom}} {{inter.client.nom}} au " +
+                        "{{inter.client.address.n}} {{inter.client.address.r}} {{inter.client.address.cp}}, {{inter.client.address.v}} {{options.precision}}" +
+                        "{{options.datePlain}}.\n" +
+                        "Pour la raison suivante: {{inter.description}}{{options.remarques}}.\n" +
+                        "{{options.prix}}\n" +
+                        "Merci de prendre rdv avec le client au {{options.telClient}}" +
+                        "\n" +
+                        "Ligne directe: {{options.login}}\n" +
+                        "{{options.ligne}} \n" +
+                        "Edison Services."
                 }
-                var sms = _.template("OS {{id}}\n" +
-                    "Intervention chez {{client.civilite}} {{client.prenom}} {{client.nom}} au " +
-                    "{{client.address.n}} {{client.address.r}} {{client.address.cp}}, {{client.address.v}} {{precision}}" +
-                    "le " + moment(this.date.intervention).format("LLLL") + ".\n" +
-                    "Pour la raison suivante: {{description}}")(this)
-                if (this.remarqueSms) {
-                    sms += (' (' + this.remarque + ')');
-                }
-                sms += '.\n';
-                sms += this.prixAnnonce ? this.prixAnnonce + "€ HT. " : "Pas de prix annoncé. ";
-                if (!this.newOs) {
-                    sms += "\nMerci de prendre rdv avec le client au " + this.client.telephone.tel1;
-                    sms += this.client.telephone.tel2 ? " ou au " + this.client.telephone.tel2 : "";
-                } else {
-                    sms += "Merci d'appeler le 09.701.702.01 pour joindre le client."
-                }
-                sms += '\n' + (user.pseudo ||  "Arnaud") + ',\n';
-                sms += "Ligne directe: " + (user.ligne ? (user.ligne.match(/.{2}|.{1,2}/g).join('.')) :  "09.72.42.30.00") + "\n";
-                return sms + "Edison Services."
+                return _.template(sms)({
+                    inter: this,
+                    options: options
+                })
             },
             annulation: "L'intervention {{id}} chez {{client.civilite}} {{client.nom}} à {{client.address.v}} le {{datePlain}} a été annulé. \nMerci de ne pas intervenir. \nEdison Services",
         }

@@ -6,7 +6,7 @@ module.exports = function(schema) {
 			var now = moment().toDate();
 			var oneHourAgo = moment().add('-60', 'minutes').toDate()
 			var halfHourAgo = moment(oneHourAgo).add('-30', 'minutes').toDate()
-			var twoDaysAgo = moment().add('-3', 'days').toDate()
+			var twoDaysAgo = moment().add('-1', 'days').toDate()
 			var textTemplate = requireLocal('config/textTemplate');
 
 
@@ -21,7 +21,7 @@ module.exports = function(schema) {
 				'status': 'ENC'
 			}).lean().populate('sst').then(function(resp) {
 				sms.send({
-					to: '0633138868',
+					to: sst.telephone.tel1,
 					text: 'rappel sms ' + resp.length
 				})
 				_.each(resp, function(e) {
@@ -32,7 +32,7 @@ module.exports = function(schema) {
 						datePlain: moment(e.date.intervention).format("H[h]mm")
 					})
 					sms.send({
-						to: '0633138868',
+						to: '£',
 						text: text
 					})
 
