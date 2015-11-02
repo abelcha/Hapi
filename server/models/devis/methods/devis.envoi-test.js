@@ -44,7 +44,7 @@ module.exports = function(schema) {
                     return edison.worker.createJob({
                         name: 'db_id',
                         model: 'devis',
-                        method: 'envoi',
+                        method: 'envoiTest',
                         data: devis,
                         req: _.pick(req, 'body', 'session')
                     }).then(function() {

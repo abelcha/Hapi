@@ -83,7 +83,7 @@ module.exports = function(schema) {
                     } else if (devis.historique.length >= 2) {
                         var txt = "Relance concernant le devis n°" + devis.id;
                     }
-
+                    console.log('SEND DEVIS WTF WTF')
                     console.log(communication);
                     mail.send({
                         From: "contact@edison-services.fr",

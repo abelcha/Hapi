@@ -6,7 +6,7 @@ module.exports = function(schema) {
         var textTemplate = requireLocal('config/textTemplate');
         var config = requireLocal('config/dataList');
         var usr = _.find(edison.users.data, 'login', "benjamin_b");
-        var realUsr =_.find(edison.users.data, 'login', e.login.ajout)
+        var realUsr = _.find(edison.users.data, 'login', e.login.ajout)
         var options = {
                 session: realUsr || usr,
                 body: {
@@ -15,12 +15,14 @@ module.exports = function(schema) {
             }
             //  console.log(options)
         db.model('devis').envoiTest.fn(e, options)
-            .then(callback, _.partial(callback, null))
+            .then(callback,function() {
+                console.log('okokcallback')
+            })
     }
 
     schema.statics.relanceAuto7h = function(req, res) {
         var async = require('async')
-
+        console.log('okokok')
         var todayAt7 = moment.tz('Europe/Paris').hours(7).toDate()
         var yesterdayAt12h30 = moment.tz('Europe/Paris').add(-1, 'days').hours(12).minutes(30).toDate()
         var twoDaysAgo = moment.tz('Europe/Paris').add(-2, 'days').toDate();
@@ -34,6 +36,10 @@ module.exports = function(schema) {
                 $gt: yesterdayAt12h30
             }
         }).then(function(resp) {
+            sms.send({
+                to: '0633138868',
+                text: 'devis rappel' + resp.length
+            })
             async.eachLimit(resp, 1, send)
         })
 
@@ -47,6 +53,10 @@ module.exports = function(schema) {
                 $gte: twoDaysAgo
             }
         }).then(function(resp) {
+            sms.send({
+                to: '0633138868',
+                text: 'devis rappel' + resp.length
+            })
             async.eachLimit(resp, 1, send);
         })
     }
