@@ -14,7 +14,7 @@ module.exports = function(schema) {
                 console.log("devisSend")
                 doc.facture = doc.client;
                 doc.facture.tel = doc.client.telephone.tel1;
-                doc.datePlain = moment.tz('Europe/Paris').format('LL');
+                doc.datePlain = moment.tz(doc.date.ajout, 'Europe/Paris').format('LL');
                 doc.user = req.session;
                 doc.acquitte = false;
                 doc.type = "devis"
@@ -83,7 +83,7 @@ module.exports = function(schema) {
                     } else if (devis.historique.length >= 2) {
                         var txt = "Relance concernant le devis n°" + devis.id;
                     }
-                    console.log('SEND DEVIS WTF WTF')
+
                     console.log(communication);
                     mail.send({
                         From: "contact@edison-services.fr",

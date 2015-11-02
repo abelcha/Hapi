@@ -14,7 +14,7 @@ module.exports = function(schema) {
                 }
             }
             //  console.log(options)
-        db.model('devis').envoiTest.fn(e, options)
+        db.model('devis').envoi.fn(e, options)
             .then(callback,function() {
                 console.log('okokcallback')
             })
