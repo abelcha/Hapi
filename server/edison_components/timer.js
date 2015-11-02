@@ -16,7 +16,7 @@ var Timer = module.exports = function() {
     this.emitter.add(hour(14), "everyday at 14")
     this.emitter.add(hour(3), "3pm");
     this.emitter.add(hour(4), "4pm");
-    this.emitter.add("*/60 * * * *", "30 minutes")
+    this.emitter.add("*/60 * * * *", "hour")
     this.emitter.add("*/20 * * * *", "20 minutes")
 
     /*    this.emitter.on("every 10 minutes", function() {
@@ -38,7 +38,13 @@ var Timer = module.exports = function() {
     });
 
 
-    this.emitter.on("30 minutes", function() {
+    this.emitter.on("hour", function() {
+
+        db.model('intervention').rappelDateIntervention()
+
+    });
+
+    this.emitter.on("hour", function() {
         db.model('intervention').fullReload().then(function() {
             console.log('inter ok')
         })
@@ -63,10 +69,6 @@ var Timer = module.exports = function() {
 
     })
     this.emitter.on("3pm", function() {
-        return sms.send({
-            to: '0633138868',
-            text: "DEL WILDCARD",
-        })
         redis.delWildcard("rs*")
     })
     this.emitter.on("4pm", function() {

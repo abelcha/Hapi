@@ -6,8 +6,9 @@ module.exports = function(schema) {
         var textTemplate = requireLocal('config/textTemplate');
         var config = requireLocal('config/dataList');
         var usr = _.find(edison.users.data, 'login', "benjamin_b");
+        var realUsr =_.find(edison.users.data, 'login', e.login.ajout)
         var options = {
-                session: usr,
+                session: realUsr || usr,
                 body: {
                     text: textTemplate.mail.devis.envoi.bind(e)(usr, config, _, moment)
                 }

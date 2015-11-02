@@ -13,14 +13,14 @@ module.exports = function() {
     }
     var basePath = process.cwd() + '/server/models/'
     getDirectories(basePath).forEach(function(model) {
-        var folder = basePath +  model;
+        var folder = basePath + model;
         var schema = require(folder + '/' + model + '.schema')(mongoose);
 
         require(folder + '/' + model + '.validator')(schema);
 
         fs.readdirSync(folder + '/methods').forEach(function(method) {
             if (_.endsWith(method, '.js') && !_.startsWith(method, '-')) {
-                require(folder + '/methods/'  + method)(schema)
+                require(folder + '/methods/' + method)(schema)
             } else {
                 //console.log(method)
             }
@@ -62,6 +62,11 @@ module.exports = function() {
                         $eq: [field, value]
                     }, (rA || 1), (rB || 0)]
                 }
+            }
+        },
+        isDefined: function() {
+            return {
+                $exists: true
             }
         }
     }

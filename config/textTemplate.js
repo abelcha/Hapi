@@ -1,7 +1,13 @@
 module.exports = {
     sms: {
         intervention: {
+            rappelArtisan: function() {
+                return "Bonjour M. {{e.sst.representant.nom}},\n" +
+                    "nous vous rapellons que vous avez une intervention à effectuer chez {{e.client.civilite}} {{e.client.nom}} " +
+                    "aujourd'hui à {{datePlain}} H \n" +
+                    "Edison Services\n"
 
+            },
             demande: function(user, config, _moment) {
                 _moment = (_moment || moment);
                 this.mmt = _moment(this.date.intervention);
@@ -50,7 +56,7 @@ module.exports = {
                     sms += "\nMerci de prendre rdv avec le client au " + this.client.telephone.tel1;
                     sms += this.client.telephone.tel2 ? " ou au " + this.client.telephone.tel2 : "";
                 } else {
-                    sms += "Merci d'appeler le 09.70.17.02.01 pour joindre le client."
+                    sms += "Merci d'appeler le 09.701.702.01 pour joindre le client."
                 }
                 sms += '\n' + (user.pseudo ||  "Arnaud") + ',\n';
                 sms += "Ligne directe: " + (user.ligne ? (user.ligne.match(/.{2}|.{1,2}/g).join('.')) :  "09.72.42.30.00") + "\n";
@@ -459,7 +465,7 @@ module.exports = {
                     "<strong>" +
                     "OS n°{{id}}\n" +
                     "{{client.nom}} {{client.prenom}}\n" +
-                    "Tél. {{client.telephone.tel1}}\n" +
+                    "Tél. {{newOs ? '09.701.702.01' : client.telephone.tel1}}\n" +
                     "{{client.address.n}} {{client.address.r}}\n" +
                     "{{client.address.cp}} {{client.address.v}}\n" +
                     "</strong>" +
@@ -498,7 +504,7 @@ module.exports = {
             envoi: function(user, _config, __, _moment) {
                 var lodash = __ || _
                 var mmt = _moment || moment
-                var config = _config || require('./dataList.js')
+                var config = _config ||  require('./dataList.js')
                 var categorieClean = config.categories[this.categorie].suffix + " " + config.categories[this.categorie].long_name.toLowerCase()
                 var pseudo = user.pseudo
                 var intro;
