@@ -45,7 +45,7 @@ var request = function(query) {
                         .message(_.template("La conversation téléphonique du client {{id}} ({{client.civilite}} {{client.nom}}) a été upload")(resp))
                         .send()
                         .save()
-                }, 25 * 60 * 1000);
+                },/* 25 **/ 60 * 1000);
             }
         })
     }

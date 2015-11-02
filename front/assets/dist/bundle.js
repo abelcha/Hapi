@@ -2588,14 +2588,14 @@ module.exports = {
                 }
                 if (this.newOs) {
                     sms = "OS {{inter.id}}\n" +
-                        "Cher partenaire,\n" +
+                        "Cher partenaire, merci d'interveni\n" +
                         "{{options.datePlain}}\n" +
                         "{{inter.client.civilite}} {{inter.client.prenom}} {{inter.client.nom}}\n" +
                         "{{inter.client.address.n}} {{inter.client.address.r}} {{inter.client.address.cp}}, {{inter.client.address.v}} {{options.precision}}\n" +
                         "Pour la raison suivante:\n" +
                         "{{inter.description}}{{options.remarques}}\n" +
                         "Prix: à partir de {{inter.prixAnnonce}}€ H.T\n" +
-                        "Vous pouvez joindre le client au:\n" +
+                        "Veuillez joindre le client au:\n" +
                         "09.701.702.01 (OS {{inter.id}})\n" +
                         "\n" +
                         "{{options.login}}\n" +
