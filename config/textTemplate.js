@@ -15,10 +15,11 @@ module.exports = {
     sms: {
         intervention: {
             rappelArtisan: function() {
-                return "Bonjour M. {{e.sst.representant.nom}},\n" +
-                    "nous vous rapellons que vous avez une intervention à effectuer chez {{e.client.civilite}} {{e.client.nom}} " +
-                    "aujourd'hui à {{datePlain}}\n" +
-                    "Edison Services\n"
+                return "OS {{e.id}}\n" +
+                "Bonjour M. {{e.sst.representant.nom}},\n" +
+                "nous vous rapellons que vous avez une intervention à effectuer chez {{e.client.civilite}} {{e.client.nom}} (e.client.address.cp)" +
+                "aujourd'hui à {{datePlain}}\n" +
+                "Edison Services\n"
 
             },
             demande: function(user, config, _moment) {
@@ -44,7 +45,7 @@ module.exports = {
                     precision: getPrecision(this.client.address),
                     datePlain: moment(this.date.intervention).format("[le] DD[/]MM[ à ]HH[h]mm"),
                     login: user.pseudo || "Arnaud",
-                    ligne: (user.ligne || "0972423000").match(/.{2}/g).join('.'),
+                    ligne: (user.ligne ||  "0972423000").match(/.{2}/g).join('.'),
                     remarques: this.remarqueSms ? (' (' + this.remarque + ')') : '',
                     prix: this.prixAnnonce ? this.prixAnnonce + "€ HT. " : "Pas de prix annoncé. ",
                     telClient: this.client.telephone.tel1.match(/.{2}/g).join('.')

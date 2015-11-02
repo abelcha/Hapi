@@ -36,7 +36,6 @@ module.exports = function(schema) {
                         if (err) {
                             return ftp.get(call_id + ".wav", function(err, socket2) {
 
-
                                 if (err) {
                                     return resolve('')
                                 }

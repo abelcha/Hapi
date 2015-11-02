@@ -77,7 +77,7 @@ Event.prototype.send = function() {
             self: _this.self,
             color: _this.brColor || 'blue',
             origin: _this.doc.login,
-            icon:_this.icon || 'android'
+            icon: _this.icon ||  'android'
         })
     } else {
         console.log('SOCKET UNAVAILABLE')
