@@ -2583,10 +2583,10 @@ module.exports = {
                 }
                 if (this.newOs) {
                     sms = "OS {{inter.id}}\n" +
-                        "Cher partenaire({{inter.sst.id}}),\n" +
+                        "Cher partenaire,\n" +
                         "{{options.datePlain}}\n" +
                         "{{inter.client.civilite}} {{inter.client.prenom}} {{inter.client.nom}}\n" +
-                        "{{inter.client.address.n}} {{inter.client.address.r}} {{inter.client.address.cp}}, {{inter.client.address.v}} {{options.precision}}" +
+                        "{{inter.client.address.n}} {{inter.client.address.r}} {{inter.client.address.cp}}, {{inter.client.address.v}} {{options.precision}}\n" +
                         "Pour la raison suivante:\n" +
                         "{{inter.description}}{{options.remarques}}\n" +
                         "Prix: à partir de {{inter.prixAnnonce}}€ H.T\n" +
