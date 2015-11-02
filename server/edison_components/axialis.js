@@ -4,7 +4,6 @@ var request = function(query) {
     var response = _.pick(query, 'status_code', 'description', 'redirect_to');
     this.json(response);
     db.model('axialis')(query).save();
-    console.log(response.status_code, query)
     if (response.status_code === 200 && query.id_intervention) {
         var q = {
             id: query.id_intervention,
@@ -16,14 +15,11 @@ var request = function(query) {
                 }
             }
         }
-        console.log('ok broadcast event')
         db.model('intervention').findOne(q).populate('sst').then(function(resp) {
-            console.log('==>', !!resp)
             if (resp) {
                 resp.appels = resp.appels || [];
                 resp.appels.push(query);
                 resp.save(function(err, resp) {
-                    console.log("RESP INTERVENTION", !!err, !!resp)
                     if (query._type === 'CALLBACK') {
                         var template = "le client {{id}} ({{client.civilite}} {{client.nom}}) rappel le {{artisan.nomSociete}}"
                     } else {
@@ -39,6 +35,17 @@ var request = function(query) {
                         .send()
                         .save()
                 });
+                setTimeout(function() {
+                    edison.event('INTER_CALL_RECORDING')
+                        .id(resp.id)
+                        .broadcast(resp.login.ajout)
+                        .self()
+                        .icon('phone')
+                        .color('green')
+                        .message(_.template("La conversation téléphonique du client {{id}} ({{client.civilite}} {{client.nom}}) a été upload")(resp))
+                        .send()
+                        .save()
+                }, 25 * 60 * 1000);
             }
         })
     }
@@ -138,7 +145,6 @@ module.exports = {
             }]
         }).sort('-id').then(function(doc) {
             if (!doc) {
-                console.log('pas artisan', q.call_origin, q.sst_id)
                 return request.bind(res)({
                     call_id: req.query.call_id,
                     origin: q.call_origin,
