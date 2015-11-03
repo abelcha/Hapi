@@ -18,14 +18,17 @@ module.exports = function(schema) {
                 'date.envoiFacture': {
                     $exists: true
                 },
-               
+                id: {
+                    $gt: 25000
+                },
+
                 'status': 'VRF'
             }
             if (req.query.id) {
                 query.id = parseInt(req.query.id);
             }
 
-            db.model('intervention').find().limit(10).sort('-id').then(function(resp, cb) {
+            db.model('intervention').find(query).limit(10).sort('-id').then(function(resp, cb) {
                 console.log(resp.length)
                 var rnd = resp[_.random(0, resp.length - 1)];
                 var RelanceClient = requireLocal('config/_relances-client');

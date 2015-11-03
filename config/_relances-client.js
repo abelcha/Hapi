@@ -91,7 +91,15 @@
 
 
  RelanceClient.prototype.createFacture = function(callback) {
-    console.log('createFacture');
+/*    console.log('createFacture', {
+            address: this.doc.facture.address,
+            dest: this.doc.facture,
+            text: this.letterBody,
+            title: "",
+            factureQrCode: true,
+            id: this.doc.os,
+            date: this.doc.date,
+        });*/
     PDF([{
         model: 'letter',
         options: {
