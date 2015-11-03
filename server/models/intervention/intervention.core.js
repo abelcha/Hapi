@@ -571,7 +571,7 @@
                 }]
             }
         }
-        if (!rtn.reglementSurPlace && !rtn.produits ||  !rtn.produits.length) {
+        if (!rtn.reglementSurPlace && (!rtn.produits || !rtn.produits.length)) {
             rtn.produits = [{
                 ref: 'EDX121',
                 title: rtn.description,

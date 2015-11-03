@@ -6,6 +6,36 @@ module.exports = function(schema) {
     var textTemplate = requireLocal('config/textTemplate');
     require('nodeify').extend();
 
+    schema.statics.relanceAuto = function(req, res) {
+
+        return new Promise(function(resolve, reject) {
+            var relances = [{
+                //Rappel automatique : 10 jours après - pdf en pj
+                target: 'relance-client-1',
+                days: 10
+            }, {
+                // Rappel automatique : 20 jours après + Impression automatique au courrier
+                target: 'relance-client-2',
+                days: 20
+            }, {
+                //35 jours après + impression courrier automatique
+                target: 'relance-client-3',
+                days: 35
+            }, {
+                //50 jours apres: fausse lettre huissier (injonction a payer)
+                target: 'relance-client-4',
+                days: 45
+            }, {
+                //60 jours apres + AvisAvantPoursuites
+                target: 'relance-client-5',
+                days: 60
+            }]
+
+        })
+
+    }
+
+
     schema.statics.relance = function(req, res) {
         console.log('==>', req.query.id)
         return new Promise(function(resolve, reject)  {

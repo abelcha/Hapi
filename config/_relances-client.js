@@ -69,10 +69,6 @@
             this.printStack.bind(this)
         ], callback)
 
-    } else if (this.type === 'relance-sst-1') {
-
-
-
     } else {
         callback(null);
     }
