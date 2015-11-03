@@ -2754,8 +2754,7 @@ module.exports = {
                     "75 rue des dames, 75017 Paris<br>" +
                     "Tél. 09.72.51.08.01 (Ouvert de 09h00 à 12h30 / 14h00 à 16h30)</p>" +
                     "<p>" +
-                    "Pour un reglement par virement :<br>" +
-                    "<br>" +
+                    "<p>Pour un reglement par virement :</p>" +
                     "RIB: 30004 01557 00010041423 30<br>" +
                     "IBAN: FR76 3000 4015 5700 0100 4142 330<br>" +
                     "BIC: BNPAFRPPPRG" +
@@ -2876,23 +2875,24 @@ module.exports = {
 
                     "<p> Nous constatons que malgré nos précédentes lettres de rappel, vous n'avez toujours pas procédé au règlement de la facture <b> n° {{os}} </b>. <br> Votre compte reste débiteur à ce jour des sommes suivantes: <p>" +
 
-                    "<table cellspacing='0' cellpadding='8'>" +
-                    "<tr style='background: #85C82B !important;'>" +
-                    "<th style='width: 70px;'> DATE </th>" +
-                    "<th style='text-align:left'> N° FACTURE </th>" +
-                    "<th style='text-align:left'> LIEU </th>" +
-                    "<th style='text-align:right'> MONTANT T.T.C. </th>" +
-                    "</tr>" +
-                    "<tr>" +
-                    "<th> {{datePlain}} </th>" +
-                    "<th> {{os}} </th>" +
-                    "<th> {{client.address.v}}, {{client.address.cp}} </th>" +
-                    "<th style='text-align:right'> {{prixFinalTTC}} € </th>" +
-                    "</tr>" +
-                    "<tr>" +
-                    "<th colspan='3'> <b> TOTAL </b> </th>" +
-                    "<th style='text-align:right'> {{prixFinalTTC}} € T.T.C. </th>" +
-                    "</tr>" +
+                   "<table cellspacing='0' cellpadding='8'> " + 
+                    "    <tr style='background: rgb(106, 168, 79); !important;'> " + 
+                    "        <th style='width: 70px;'> DATE </th> " + 
+                    "        <th style='text-align:left'> N° FACTURE </th> " + 
+                    "        <th style='text-align:right'> MONTANT T.T.C. </th> " + 
+                    "        <th style='text-align:left'> LIEU </th> " + 
+                    "    </tr> " + 
+                    "    <tr> " + 
+                    "        <th> {{datePlain}} </th> " + 
+                    "        <th> {{os}} </th> " + 
+                    "        <th> {{client.address.v}}, {{client.address.cp}} </th> " + 
+                    "        <th style='text-align:right'> {{prixFinalTTC}} € </th> " + 
+                    "    </tr> " + 
+                    "    <tr> " + 
+                    "        <th colspan='2'> <b> TOTAL </b> </th> " + 
+                    "        <th style='text-align:right'> {{prixFinalTTC}} € T.T.C. </th> " + 
+                    "         <th></th> " + 
+                    "     </tr>"+
                     "</table>" +
 
                     "<p> Nous considérons aujourd'hui que vous faites opposition au règlement de la somme due. A défaut de réception de la totalité des {{prixFinalTTC}}, sous huitaine, votre dossier sera transmis à notre service contentieux. <br> " +
@@ -2914,28 +2914,27 @@ module.exports = {
             relance2: function() {
                 return "<style> table { border-collapse: collapse;}\n table, td, th {border: 1px solid black;}</style>" +
                     "<p>Madame, Monsieur, <br>" +
-                    "<p> Sauf erreur de notre part, nous constatons que votre compte client présente à ce jour un solde débiteur. <br> Ce montant correspond à nos factures suivantes restées impayées: <p>" +
-                    "<table cellspacing='0' cellpadding='8'>" +
-                    "<tr style='background: #85C82B !important;'>" +
-                    "<th style='width: 70px;'> DATE </th>" +
-                    "<th style='text-align:left'> N° FACTURE </th>" +
-                    "<th style='text-align:left'> LIEU </th>" +
-                    "<th style='text-align:right'> MONTANT T.T.C. </th>" +
-                    "</tr>" +
-                    "<tr>" +
-                    "<th> {{datePlain}} </th>" +
-                    "<th> {{os}} </th>" +
-                    "<th> {{client.address.v}}, {{client.address.cp}} </th>" +
-                    "<th style='text-align:right'> {{prixFinalTTC}} € </th>" +
-                    "</tr>" +
-                    "<tr>" +
-                    "<th colspan='3'> <b> TOTAL </b> </th>" +
-                    "<th style='text-align:right'> {{prixFinalTTC}} € T.T.C. </th>" +
-                    "</tr>" +
+                    "<p> Sauf erreur de notre part, nous constatons que votre compte client présente à ce jour un solde débiteur. <br> Ce montant correspond à nos factures suivantes restées impayées: <p>" + 
+                    "<table cellspacing='0' cellpadding='8'> " + 
+                    "    <tr style='background: rgb(106, 168, 79); !important;'> " + 
+                    "        <th style='width: 70px;'> DATE </th> " + 
+                    "        <th style='text-align:left'> N° FACTURE </th> " + 
+                    "        <th style='text-align:right'> MONTANT T.T.C. </th> " + 
+                    "        <th style='text-align:left'> LIEU </th> " + 
+                    "    </tr> " + 
+                    "    <tr> " + 
+                    "        <th> {{datePlain}} </th> " + 
+                    "        <th> {{os}} </th> " + 
+                    "        <th> {{client.address.v}}, {{client.address.cp}} </th> " + 
+                    "        <th style='text-align:right'> {{prixFinalTTC}} € </th> " + 
+                    "    </tr> " + 
+                    "    <tr> " + 
+                    "        <th colspan='2'> <b> TOTAL </b> </th> " + 
+                    "        <th style='text-align:right'> {{prixFinalTTC}} € T.T.C. </th> " + 
+                    "         <th></th> " + 
+                    "     </tr>"+
                     "</table>" +
-
                     "<p> L'échéance étant dépassée, nous vous demandons de bien vouloir régulariser cette situation par retour de courrier. </p>" +
-
                     "<strong><p>A l'organisme qui gère notre comptabilité:</p>" +
                     "<p strong center> EDISON SERVICES FRANCE<br>" +
                     "Service comptabilité<br>" +
