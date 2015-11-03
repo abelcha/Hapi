@@ -3110,7 +3110,7 @@ module.exports = {
                     "               <td style='border: 1px solid black;font-size:13px;'> {{e.id}}</td>" +
                     "               <td style='border: 1px solid black;font-size:13px;'> {{e.client.civilite}} {{e.client.nom}}</td>" +
                     "               <td style='border: 1px solid black;font-size:13px;'> {{e.client.address.n}} {{e.client.address.r}}, {{e.client.address.cp}} - {{e.client.address.v}}</td>" +
-                    "               <td style='border: 1px solid black;font-size:13px;'> {{e.prixFinal}} </td>" +
+                    "               <td style='border: 1px solid black;font-size:13px;'> {{e.prixFinal}} €</td>" +
                     "           </tr>" +
                     "<% }); %>" +
                     "</table>" +
