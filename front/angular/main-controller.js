@@ -62,6 +62,7 @@ angular.module('edison').controller('MainController', function($timeout, LxNotif
         bfm();*/
 
     var reloadStats = function() {
+        console.log('reloadstats')
         edisonAPI.stats.telepro()
             .success(function(result) {
                 $scope.userStats = _.find(result, function(e) {
@@ -74,8 +75,8 @@ angular.module('edison').controller('MainController', function($timeout, LxNotif
                 date: moment().startOf('day').toDate()
             })
             .then(function(resp) {
+                console.log('reload')
                 _this.statsTeleproBfm = _.sortBy(resp.data.weekStats, 'total').reverse().slice(0, 6)
-                console.log(_this.statsTeleproBfm[0])
                     /*_this.statsTeleproBfm = _.reduce(classement, function(result, n, key) {
                         return result + " " + _.capitalize(n.login).slice(0, -2)
                     }, "")
@@ -86,13 +87,7 @@ angular.module('edison').controller('MainController', function($timeout, LxNotif
 
     $rootScope.user = window.app_session
     reloadStats();
-
-    socket.on('filterStatsReload', function(data) {
-        $scope.userStats = _.find(data, function(e) {
-            return e.login === $scope.user.login;
-        });
-        $rootScope.interventionsStats = data;
-    })
+    socket.on('filterStatsReload', reloadStats)
 
     var notify = function(data) {
         if (!("Notification" in window)) {

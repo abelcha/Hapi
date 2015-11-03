@@ -3045,6 +3045,49 @@ module.exports = {
                     (user.ligne ? (user.ligne.match(/.{2}|.{1,2}/g).join('.')) :  "09.72.42.30.00") + "</strong>\n" +
                     "\n" +
                     "L’équipe <strong>Edison Services</strong>\n"
+            },
+            attenteReglement: function() {
+                return "A l'attention de l'entreprise {{inter.sst.nomSociete}},<br>" +
+                    "<br>" +
+                    "Monsieur {{inter.sst.representant.nom}},<br>" +
+                    "En date du {{options.datePlain}}, vous avez réalisé une intervention (<strong>Réf : {{inter.id}}</strong>) auprès de notre client :<br>" +
+                    "<br>" +
+                    "<strong>" +
+                    "{{inter.client.nom}} {{inter.client.prenom}}<br>" +
+                    "{{inter.client.address.n}} {{inter.client.address.r}}<br>" +
+                    "{{inter.client.address.cp}} {{inter.client.address.v}}<br>" +
+                    "</strong>" +
+                    "<br>" +
+                    "Pour les raisons suivantes :<br>" +
+                    "<strong>{{inter.description}}</strong><br>" +
+                    "<br>" +
+                    "Nous vous prions de bien vouloir nous transmettre au plus vite les éléments suivant :<br>" +
+                    "- La facture d'intervention n°{{inter.id}} ou l'ordre de service correspondant<br>" +
+                    "- Le règlement de notre client<br>" +
+                    "<br>" +
+                    "Veuillez transmettre l'ensemble de ces documents par voie postale à :<br>" +
+                    "<br>" +
+                    "<strong><center>" +
+                    "EDISON SERVICES<br>" +
+                    "Comptabilité Fournisseur<br>" +
+                    "75 rue des Dames, 75017 PARIS<br>" +
+                    "</center></strong>" +
+                    "<br>" +
+                    "Dans le cas où l'intervention n'aurait pas été réalisée par vos soins, merci de prendre contact au plus vite avec le service comptabilité<br>" +
+                    "<br>" +
+                    "<strong>Tél. 09.72.45.27.09</strong> (ouvert de 09h00 à 12h30 / 14h00 à 16h30)<br>" +
+                    "<br>" +
+                    "Remarques :<br>" +
+                    "- Si vous êtes détenteur du matériel installé, veuillez nous transmettre le montant H.T du coût de votre matériel (avec remise) pour nous permettre d'effectuer votre remboursement.<br>" +
+                    "- Si vous avez pris du matériel auprès de l'un de nos fournisseurs, veuillez nous transmettre le bon de retrait correspondant.<br>" +
+                    "<br>" +
+                    "Dès réception de ces documents par nos services, votre règlement vous sera transmis sous <strong>7 jours.</strong><br>" +
+                    "<br>" +
+                    "Cordialement,<br>" +
+                    "<br>" +
+                    "<p style='text-align:right'><strong><u>Service comptabilité fournisseur</u></strong><br>" +
+                    "Vincent QUEUDRAY<br>" +
+                    "Tél.09.72.45.27.09</p>"
             }
         },
         devis: {

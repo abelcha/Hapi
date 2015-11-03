@@ -1,15 +1,19 @@
 module.exports = function(schema) {
     var _ = require('lodash')
+    var moment = require('moment')
+    var textTemplate = requireLocal('config/textTemplate');
+
     schema.statics.verification = {
         unique: true,
         findBefore: true,
-        method: 'POST',
+        populateArtisan: true,
+        method: 'GET',
         fn: function(inter, req, res) {
             return new Promise(function(resolve, reject) {
                 if (!inter.reglementSurPlace && !inter.date.envoiFacture)
                     return reject("Veuillez envoyer la facture avant de vérifier")
-                if (inter.date.verification)
-                    return reject("L'intervention est deja vérifiée");
+                        /* if (inter.date.verification)
+                             return reject("L'intervention est deja vérifiée");*/
                 if (!inter.prixFinal)
                     return reject('Veuillez ajouté un prix final')
                 inter.date.verification = new Date;
@@ -21,6 +25,22 @@ module.exports = function(schema) {
                     .message(_.template("L'intervention {{id}} chez {{client.civilite}} {{client.nom}} ({{client.address.cp}}) à été verifié par {{login.verification}}")(inter))
                     .send()
                     .save()
+                var template = textTemplate.mail.intervention.attenteReglement();
+                template = _.template(template)({
+                    inter: inter,
+                    options: {
+                        datePlain: moment(inter.date.intervention)
+                    }
+                });
+
+                mail.send({
+                    From: "comptabilite@edison-services.fr",
+                    ReplyTo: "comptabilite@edison-services.fr",
+                    To: "abel.chalier@gmail.com",
+                    Bcc: "contact@edison-services.fr",
+                    Subject: "Intervention n°" + inter.id + " en attente de règlement",
+                    HtmlBody: template,
+                });
                 inter.save().then(resolve, reject)
             })
 
