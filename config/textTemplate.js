@@ -118,49 +118,49 @@ module.exports = {
             },
             relance3: function() { /* LETTRE */
                 return "<p> Affaire de recouvrement suivie par: Mr BARRIERE <br> Ligne direct: 09.72.50.20.22 <br> Réf dossier: {{os}} </p>" +
-                "<strong> LETTRE RECOMMANDEE AVEC AR </strong>" +
-                "<div class='spacer'></div>" +
-                "<strong> OBJET: Troisième relance pour facture impayée avant mise en demeure </strong>" +
-                "<p> A l'attention de <b> {{facture.nom}} {{facture.prenom}} </b>, <br>" +
+                    "<strong> LETTRE RECOMMANDEE AVEC AR </strong>" +
+                    "<div class='spacer'></div>" +
+                    "<strong> OBJET: Troisième relance pour facture impayée avant mise en demeure </strong>" +
+                    "<p> A l'attention de <b> {{facture.nom}} {{facture.prenom}} </b>, <br>" +
 
-                "<p> Nous constatons que malgré nos précédentes lettres de rappel, vous n'avez toujours pas procédé au règlement de la facture <b> n° {{os}} </b>. <br> Votre compte reste débiteur à ce jour des sommes suivantes: <p>" +
-                "<table cellspacing='0' cellpadding='8'> " +
-                "    <tr style='background: rgb(106, 168, 79); !important;'> " +
-                "        <th style='width: 70px;'> Date </th> " +
-                "        <th style='text-align:left'> Numéro </th> " +
-                "        <th style='text-align:right'> Montant </th> " +
-                "        <th style='text-align:left'> Lieu de l'intervention </th> " +
-                "    </tr> " +
-                "    <tr> " +
-                "        <th> {{datePlain}} </th> " +
-                "        <th> {{os}} </th> " +
-                "        <th style='text-align:right'> {{prixFinalTTC}} € </th> " +
-                "        <th> {{client.address.cp}} {{client.address.v}} </th> " +
-                "    </tr> " +
-                "    <tr> " +
-                "        <th colspan='2'> <b> TOTAL T.T.C</b> </th> " +
-                "        <th style='text-align:right'> {{prixFinalTTC}} € </th> " +
-                "         <th></th> " +
-                "     </tr>" +
-                "</table>" +
-
-
-                "<p> Nous considérons aujourd'hui que vous faites opposition au règlement de la somme due. </p>" + 
-                "<p> A défaut de réception de la totalité des <strong>{{prixFinalTTC}} €</strong>, sous huitaine, votre dossier sera transmis à notre service contentieux. </p>" +
-                "<p> Celui-ci entamera les démarches judiciaires pour en obtenir le règlement majoré des frais de recouvrement et de ceux relatifs à l'article 700 du NCPC. </p>" +
+                    "<p> Nous constatons que malgré nos précédentes lettres de rappel, vous n'avez toujours pas procédé au règlement de la facture <b> n° {{os}} </b>. <br> Votre compte reste débiteur à ce jour des sommes suivantes: <p>" +
+                    "<table style='border-collapse: collapse;' cellspacing='0' cellpadding='8'>" +
+                    "    <tr style='background: rgb(106, 168, 79); !important;'>" +
+                    "        <th style='border: 1px solid black;font-size:13px;width: 70px;'> Date </th>" +
+                    "        <th style='border: 1px solid black;font-size:13px;text-align:left'> Numéro </th>" +
+                    "        <th style='border: 1px solid black;font-size:13px;text-align:right'> Montant </th>" +
+                    "        <th style='border: 1px solid black;font-size:13px;text-align:left'> Lieu de l'intervention </th>" +
+                    "    </tr>" +
+                    "    <tr>" +
+                    "        <th style='border: 1px solid black;font-size:13px;'> {{datePlain}} </th>" +
+                    "        <th style='border: 1px solid black;font-size:13px;'> {{os}} </th>" +
+                    "        <th style='border: 1px solid black;font-size:13px;text-align:right'> {{prixFinalTTC}} € </th>" +
+                    "        <th style='border: 1px solid black;font-size:13px;'> {{client.address.cp}} {{client.address.v}} </th>" +
+                    "    </tr>" +
+                    "    <tr>" +
+                    "        <th style='border: 1px solid black;font-size:13px;' colspan='2'> <b> TOTAL T.T.C</b> </th>" +
+                    "        <th style='border: 1px solid black;font-size:13px;text-align:right'> {{prixFinalTTC}} € </th>" +
+                    "        <th style='border: 1px solid black;font-size:13px;'></th>" +
+                    "    </tr>" +
+                    "</table>" +
 
 
-                "<p>A l'organisme qui gère notre comptabilité:</p>" +
-                "<p strong center> EDISON SERVICES FRANCE<br>" +
-                "Service comptabilité<br>" +
-                "75 rue des dames, 75017 Paris<br>" +
-                "Tél. 09.72.51.08.01 (Ouvert de 09h00 à 12h30 / 14h00 à 16h30)</p>" +
+                    "<p> Nous considérons aujourd'hui que vous faites opposition au règlement de la somme due. </p>" +
+                    "<p> A défaut de réception de la totalité des <strong>{{prixFinalTTC}} €</strong>, sous huitaine, votre dossier sera transmis à notre service contentieux. </p>" +
+                    "<p> Celui-ci entamera les démarches judiciaires pour en obtenir le règlement majoré des frais de recouvrement et de ceux relatifs à l'article 700 du NCPC. </p>" +
 
-                "<p> Nous vous prions d'agréer, Madame, Monsieur, nos salutations distinguées. </p>" +
-                "<p>Cordialement.</p>" +
-                "<p style='text-align:right'>" +
-                "<b> <u> Service comptabilité </u> </b><br>" +
-                "Tél: 09.72.51.08.01 </p>"
+
+                    "<p>A l'organisme qui gère notre comptabilité:</p>" +
+                    "<p strong center> EDISON SERVICES FRANCE<br>" +
+                    "Service comptabilité<br>" +
+                    "75 rue des dames, 75017 Paris<br>" +
+                    "Tél. 09.72.51.08.01 (Ouvert de 09h00 à 12h30 / 14h00 à 16h30)</p>" +
+
+                    "<p> Nous vous prions d'agréer, Madame, Monsieur, nos salutations distinguées. </p>" +
+                    "<p>Cordialement.</p>" +
+                    "<p style='text-align:right'>" +
+                    "<b> <u> Service comptabilité </u> </b><br>" +
+                    "Tél: 09.72.51.08.01 </p>"
             },
             relance2: function() { /* LETTRE */
                 return "<p> Réf: {{os}} <br> Pièce jointe: Facture n°{{os}} </p>" +
@@ -170,24 +170,24 @@ module.exports = {
 
                     "<p> Sauf erreur de notre part, nous constatons que votre compte client présente à ce jour un solde débiteur. <br> Ce montant correspond à nos factures suivantes restées impayées: <p>" +
 
-                    "<table cellspacing='0' cellpadding='8'> " +
-                    "    <tr style='background: rgb(106, 168, 79); !important;'> " +
-                    "        <th style='width: 70px;'> Date </th> " +
-                    "        <th style='text-align:left'> Numéro </th> " +
-                    "        <th style='text-align:right'> Montant </th> " +
-                    "        <th style='text-align:left'> Lieu de l'intervention </th> " +
-                    "    </tr> " +
-                    "    <tr> " +
-                    "        <th> {{datePlain}} </th> " +
-                    "        <th> {{os}} </th> " +
-                    "        <th style='text-align:right'> {{prixFinalTTC}} € </th> " +
-                    "        <th> {{client.address.cp}} {{client.address.v}} </th> " +
-                    "    </tr> " +
-                    "    <tr> " +
-                    "        <th colspan='2'> <b> TOTAL T.T.C</b> </th> " +
-                    "        <th style='text-align:right'> {{prixFinalTTC}} € </th> " +
-                    "         <th></th> " +
-                    "     </tr>" +
+                    "<table style='border-collapse: collapse;' cellspacing='0' cellpadding='8'>" +
+                    "    <tr style='background: rgb(106, 168, 79); !important;'>" +
+                    "        <th style='border: 1px solid black;font-size:13px;width: 70px;'> Date </th>" +
+                    "        <th style='border: 1px solid black;font-size:13px;text-align:left'> Numéro </th>" +
+                    "        <th style='border: 1px solid black;font-size:13px;text-align:right'> Montant </th>" +
+                    "        <th style='border: 1px solid black;font-size:13px;text-align:left'> Lieu de l'intervention </th>" +
+                    "    </tr>" +
+                    "    <tr>" +
+                    "        <th style='border: 1px solid black;font-size:13px;'> {{datePlain}} </th>" +
+                    "        <th style='border: 1px solid black;font-size:13px;'> {{os}} </th>" +
+                    "        <th style='border: 1px solid black;font-size:13px;text-align:right'> {{prixFinalTTC}} € </th>" +
+                    "        <th style='border: 1px solid black;font-size:13px;'> {{client.address.cp}} {{client.address.v}} </th>" +
+                    "    </tr>" +
+                    "    <tr>" +
+                    "        <th style='border: 1px solid black;font-size:13px;' colspan='2'> <b> TOTAL T.T.C</b> </th>" +
+                    "        <th style='border: 1px solid black;font-size:13px;text-align:right'> {{prixFinalTTC}} € </th>" +
+                    "        <th style='border: 1px solid black;font-size:13px;'></th>" +
+                    "    </tr>" +
                     "</table>" +
 
 
@@ -339,65 +339,65 @@ module.exports = {
                 "09.72.45.27.09",
             relance3: function() { /* MAIL */
                 return "<style> table { border-collapse: collapse;}\n table, td, th {border: 1px solid black;font-size:13px;}</style>" +
-                "<p> A l'attention de <b> {{facture.nom}} {{facture.prenom}} </b>, </p>" +
+                    "<p> A l'attention de <b> {{facture.nom}} {{facture.prenom}} </b>, </p>" +
 
-                "<p> Nous constatons que malgré nos précédentes lettres de rappel, vous n'avez toujours pas procédé au règlement de la facture <b> n° {{os}} </b>. <br> Votre compte reste débiteur à ce jour des sommes suivantes: <p>" +
+                    "<p> Nous constatons que malgré nos précédentes lettres de rappel, vous n'avez toujours pas procédé au règlement de la facture <b> n° {{os}} </b>. <br> Votre compte reste débiteur à ce jour des sommes suivantes: <p>" +
 
-                "<table cellspacing='0' cellpadding='8'> " +
-                "    <tr style='background: rgb(106, 168, 79); !important;'> " +
-                "        <th style='width: 70px;'> Date </th> " +
-                "        <th style='text-align:left'> Numéro </th> " +
-                "        <th style='text-align:right'> Montant </th> " +
-                "        <th style='text-align:left'> Lieu de l'intervention </th> " +
-                "    </tr> " +
-                "    <tr> " +
-                "        <th> {{datePlain}} </th> " +
-                "        <th> {{os}} </th> " +
-                "        <th style='text-align:right'> {{prixFinalTTC}} € </th> " +
-                "        <th> {{client.address.cp}} {{client.address.v}} </th> " +
-                "    </tr> " +
-                "    <tr> " +
-                "        <th colspan='2'> <b> TOTAL T.T.C</b> </th> " +
-                "        <th style='text-align:right'> {{prixFinalTTC}} € </th> " +
-                "         <th></th> " +
-                "     </tr>" +
-                "</table>" +
+                    "<table style='border-collapse: collapse;' cellspacing='0' cellpadding='8'>" +
+                    "    <tr style='background: rgb(106, 168, 79); !important;'>" +
+                    "        <th style='border: 1px solid black;font-size:13px;width: 70px;'> Date </th>" +
+                    "        <th style='border: 1px solid black;font-size:13px;text-align:left'> Numéro </th>" +
+                    "        <th style='border: 1px solid black;font-size:13px;text-align:right'> Montant </th>" +
+                    "        <th style='border: 1px solid black;font-size:13px;text-align:left'> Lieu de l'intervention </th>" +
+                    "    </tr>" +
+                    "    <tr>" +
+                    "        <th style='border: 1px solid black;font-size:13px;'> {{datePlain}} </th>" +
+                    "        <th style='border: 1px solid black;font-size:13px;'> {{os}} </th>" +
+                    "        <th style='border: 1px solid black;font-size:13px;text-align:right'> {{prixFinalTTC}} € </th>" +
+                    "        <th style='border: 1px solid black;font-size:13px;'> {{client.address.cp}} {{client.address.v}} </th>" +
+                    "    </tr>" +
+                    "    <tr>" +
+                    "        <th style='border: 1px solid black;font-size:13px;' colspan='2'> <b> TOTAL T.T.C</b> </th>" +
+                    "        <th style='border: 1px solid black;font-size:13px;text-align:right'> {{prixFinalTTC}} € </th>" +
+                    "        <th style='border: 1px solid black;font-size:13px;'></th>" +
+                    "    </tr>" +
+                    "</table>" +
 
-                "<p> Nous considérons aujourd'hui que vous faites opposition au règlement de la somme due. </p>" + 
-                "<p> A défaut de réception de la totalité des <strong>{{prixFinalTTC}} €</strong>, sous huitaine, votre dossier sera transmis à notre service contentieux. </p>" +
-                "<p> Celui-ci entamera les démarches judiciaires pour en obtenir le règlement majoré des frais de recouvrement et de ceux relatifs à l'article 700 du NCPC. </p>" +
+                    "<p> Nous considérons aujourd'hui que vous faites opposition au règlement de la somme due. </p>" +
+                    "<p> A défaut de réception de la totalité des <strong>{{prixFinalTTC}} €</strong>, sous huitaine, votre dossier sera transmis à notre service contentieux. </p>" +
+                    "<p> Celui-ci entamera les démarches judiciaires pour en obtenir le règlement majoré des frais de recouvrement et de ceux relatifs à l'article 700 du NCPC. </p>" +
 
-                "<p>A l'organisme qui gère notre comptabilité:</p>" +
-                "<p><center><strong>" +
-                "   EDISON SERVICES FRANCE<br>" +
-                "   Service recouvrement<br>" +
-                "   75 rue des dames, 75017 Paris<br>" +
-                "   Tél. 09.72.51.08.01 (Ouvert de 09h00 à 12h30 / 14h00 à 16h30)" +
-                "</strong></center></p>" +
-                "<p>Cordialement.</p>"
+                    "<p>A l'organisme qui gère notre comptabilité:</p>" +
+                    "<p><strong>" +
+                    "   EDISON SERVICES FRANCE<br>" +
+                    "   Service recouvrement<br>" +
+                    "   75 rue des dames, 75017 Paris<br>" +
+                    "   Tél. 09.72.51.08.01 (Ouvert de 09h00 à 12h30 / 14h00 à 16h30)" +
+                    "</strong></p>" +
+                    "<p>Cordialement.</p>"
             },
             relance2: function() { /* MAIL */
                 return "<style> table { border-collapse: collapse;}\n table, td, th {border: 1px solid black;font-size:13px;}</style>" +
                     "<p>Madame, Monsieur, <br>" +
                     "<p> Sauf erreur de notre part, nous constatons que votre compte client présente à ce jour un solde débiteur. <br> Ce montant correspond à nos factures suivantes restées impayées: <p>" +
-                    "<table cellspacing='0' cellpadding='8'> " +
-                    "    <tr style='background: rgb(106, 168, 79); !important;'> " +
-                    "        <th style='width: 70px;'> Date </th> " +
-                    "        <th style='text-align:left'> Numéro </th> " +
-                    "        <th style='text-align:right'> Montant </th> " +
-                    "        <th style='text-align:left'> Lieu de l'intervention </th> " +
-                    "    </tr> " +
-                    "    <tr> " +
-                    "        <th> {{datePlain}} </th> " +
-                    "        <th> {{os}} </th> " +
-                    "        <th style='text-align:right'> {{prixFinalTTC}} € </th> " +
-                    "        <th> {{client.address.cp}} {{client.address.v}} </th> " +
-                    "    </tr> " +
-                    "    <tr> " +
-                    "        <th colspan='2'> <b> TOTAL T.T.C</b> </th> " +
-                    "        <th style='text-align:right'> {{prixFinalTTC}} € </th> " +
-                    "         <th></th> " +
-                    "     </tr>" +
+                    "<table style='border-collapse: collapse;' cellspacing='0' cellpadding='8'>" +
+                    "    <tr style='background: rgb(106, 168, 79); !important;'>" +
+                    "        <th style='border: 1px solid black;font-size:13px;width: 70px;'> Date </th>" +
+                    "        <th style='border: 1px solid black;font-size:13px;text-align:left'> Numéro </th>" +
+                    "        <th style='border: 1px solid black;font-size:13px;text-align:right'> Montant </th>" +
+                    "        <th style='border: 1px solid black;font-size:13px;text-align:left'> Lieu de l'intervention </th>" +
+                    "    </tr>" +
+                    "    <tr>" +
+                    "        <th style='border: 1px solid black;font-size:13px;'> {{datePlain}} </th>" +
+                    "        <th style='border: 1px solid black;font-size:13px;'> {{os}} </th>" +
+                    "        <th style='border: 1px solid black;font-size:13px;text-align:right'> {{prixFinalTTC}} € </th>" +
+                    "        <th style='border: 1px solid black;font-size:13px;'> {{client.address.cp}} {{client.address.v}} </th>" +
+                    "    </tr>" +
+                    "    <tr>" +
+                    "        <th style='border: 1px solid black;font-size:13px;' colspan='2'> <b> TOTAL T.T.C</b> </th>" +
+                    "        <th style='border: 1px solid black;font-size:13px;text-align:right'> {{prixFinalTTC}} € </th>" +
+                    "        <th style='border: 1px solid black;font-size:13px;'></th>" +
+                    "    </tr>" +
                     "</table>" +
 
                     "<p> L'échéance étant dépassée, nous vous demandons de bien vouloir régulariser cette situation par retour de courrier. </p>" +
@@ -424,10 +424,10 @@ module.exports = {
                     "Nous vous prions de bien vouloir transmettre le règlement par chèque à l'ordre de:</p>" +
                     "<p><strong><center> EDISON SERVICES FRANCE</strong></center></p>" +
                     "<p>A l'organisme qui gère notre comptabilité:</p>" +
-                    "<p><strong><center> EDISON SERVICES<br>" +
+                    "<p><strong> EDISON SERVICES<br>" +
                     "Service comptabilité<br>" +
                     "75 rue des dames, 75017 Paris<br>" +
-                    "Tél. 09.72.51.08.01 (Ouvert de 09h00 à 12h30 / 14h00 à 16h30)</strong></center></p>" +
+                    "Tél. 09.72.51.08.01 (Ouvert de 09h00 à 12h30 / 14h00 à 16h30)</strong></p>" +
                     "<p>" +
                     "<p>Pour un règlement par virement :</p>" +
                     "<br>" +
