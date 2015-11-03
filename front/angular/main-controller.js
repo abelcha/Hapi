@@ -74,7 +74,7 @@ angular.module('edison').controller('MainController', function($timeout, LxNotif
                 date: moment().startOf('day').toDate()
             })
             .then(function(resp) {
-                _this.statsTeleproBfm = _.sortBy(resp.data.weekStats, 'total').reverse().slice(0, 5)
+                _this.statsTeleproBfm = _.sortBy(resp.data.weekStats, 'total').reverse().slice(0, 6)
                 console.log(_this.statsTeleproBfm[0])
                 /*_this.statsTeleproBfm = _.reduce(classement, function(result, n, key) {
                     return result + " " + _.capitalize(n.login).slice(0, -2)

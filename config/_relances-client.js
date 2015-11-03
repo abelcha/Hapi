@@ -124,7 +124,7 @@
      mail.send({
          From: "comptabilite@edison-services.fr",
          ReplyTo: "comptabilite@edison-services.fr",
-         To: _this.emailDest,
+         To: this.emailDest,
          // Bcc: "comptabilite@edison-services.fr",
          Subject: this.mailTitle,
          HtmlBody: this.mailBody,
