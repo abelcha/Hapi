@@ -11,7 +11,6 @@ module.exports = function(schema) {
 
         doc.datePlain = moment(date).format('LL');
         doc.acquitte = acquitte;
-        doc.factureQrCode = true;
         /*        doc.produits.unshift({
                     pu: 0,
                     quantite: 1,
@@ -24,17 +23,11 @@ module.exports = function(schema) {
             address: doc.facture.address,
             dest: doc.facture,
             text: _.template(text)(doc),
+            factureQrCode: true,
+            date: doc.date,
             title: "OBJET : Facture n°" + doc.id + " en attente de reglement"
         }
-        if (doc.produits[0].ref !== 'ME001') {
-            doc.produits.unshift({
-                desc: _.template("Suite à notre intervention chez {{client.civilite}} {{client.nom}} " +
-                    "{{client.prenom}},\n {{client.address.n}} {{client.address.r}}, {{client.address.cp}} " +
-                    "{{client.address.v}}\n le ")(doc) + moment(doc.date.intervention).format('DD[/]MM/YYYY[ à ]HH[h]mm'),
-                pu: 0,
-                quantite: 1
-            })
-        }
+       /**/
         doc.type = 'facture'
         if (!acquitte) {
             var l = [{
