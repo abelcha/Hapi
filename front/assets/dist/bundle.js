@@ -2624,7 +2624,7 @@ module.exports = {
 
     lettre: {
         intervention: {
-            relance4: function() {
+            relance4: function() { /* LETTRE */
                 return "<p style='margin-top: 0px;'> Affaire de recouvrement suivie par: Mr DELVAUX<br>" +
                     "Réf dossier: {{os}}<br>" +
                     "Pièce - jointe: Injonction de payer au tribunal de commerce de Paris<br>" +
@@ -2643,12 +2643,12 @@ module.exports = {
                     "<p> Nous vous rappelons que le présent courrier fait courir les intérêts légaux et conventionnels. </p>" +
                     "<p> A défaut de réception dans les délais, votre dossier sera automatiquement transmis à notre service juridique.</p>" +
                     "<p> Cordialement, </p>" +
-                    "<header style='text-align:right'>" +
-                    "<b> <u> Service comptabilité </u> </b>" +
-                    "<p> Tél: 09.72.51.08.01 </p>" +
-                    "</header>"
+                    "<p style='text-align:right'>" +
+                    "<b> <u> Service comptabilité </u> </b><br>" +
+                    "Tél: 09.72.51.08.01" +
+                    "</p>"
             },
-            relance3: function() {
+            relance3: function() { /* LETTRE */
                 "<p> Affaire de recouvrement suivie par: Mr BARRIERE <br> Ligne direct: 09.72.50.20.22 <br> Réf dossier: {{os}} </p>" +
                 "<strong> LETTRE RECOMMANDEE AVEC AR </strong>" +
                 "<div class='spacer'></div>" +
@@ -2688,16 +2688,16 @@ module.exports = {
 
                 "<p> Nous vous prions d'agréer, Madame, Monsieur, nos salutations distinguées. </p>" +
                 "<p>Cordialement.</p>" +
-                "<header style='text-align:right'>" +
+                "<p style='text-align:right'>" +
                 "<b> <u> Service comptabilité </u> </b>" +
                 "<p> Tél: 09.72.51.08.01 </p>" +
-                "</header>"
+                "</>"
             },
-            relance2: function() {
+            relance2: function() { /* LETTRE */
                 return "<p> Réf: {{os}} <br> Pièce jointe: Facture n°{{os}} </p>" +
                     "<div class='spacer'></div>" +
                     "<strong> OBJET: Deuxième relance pour facture impayée </strong>" +
-                    "<p>Madame, Monsieur, <br>" +
+                    "<p>Madame, Monsieur, </p>" +
 
                     "<p> Sauf erreur de notre part, nous constatons que votre compte client présente à ce jour un solde débiteur. <br> Ce montant correspond à nos factures suivantes restées impayées: <p>" +
 
@@ -2730,8 +2730,7 @@ module.exports = {
                     "75 rue des dames, 75017 Paris<br>" +
                     "Tél. 09.72.51.08.01 (Ouvert de 09h00 à 12h30 / 14h00 à 16h30)</p>" +
                     "<p>" +
-                    "Pour un reglement par virement :<br>" +
-                    "<br>" +
+                    "Pour un règlement par virement :<br>" +
                     "RIB: 30004 01557 00010041423 30<br>" +
                     "IBAN: FR76 3000 4015 5700 0100 4142 330<br>" +
                     "BIC: BNPAFRPPPRG" +
@@ -2739,12 +2738,12 @@ module.exports = {
                     "<p> Merci d'indiquer la référence de la facture ({{os}}) dans le règlement. </p>" +
                     "<p> Nous vous prions d'agréer, Madame, Monsieur, nos salutations distinguées. </p>" +
                     "<p>Cordialement.</p>" +
-                    "<header style='text-align:right'>" +
-                    "<b> <u> Service comptabilité </u> </b>" +
-                    "<p> Tél: 09.72.51.08.01 </p>" +
-                    "</header>"
+                    "<p style='text-align:right'>" +
+                    "<b> <u> Service comptabilité </u> </b><br>" +
+                    "Tél: 09.72.51.08.01" +
+                    "</p>"
             },
-            relance1: function() { //Qlolo
+            relance1: function() { /* LETTRE */ 
                 return "<strong> OBJET: Première relance pour facture n°{{os}} impayée </strong>" +
                     "<p>Madame, Monsieur, <br>" +
                     "Suite a l'intervention que nous avons réalisée en date du {{datePlain}}, <p>" +
@@ -2757,7 +2756,7 @@ module.exports = {
                     "75 rue des dames, 75017 Paris<br>" +
                     "Tél. 09.72.51.08.01 (Ouvert de 09h00 à 12h30 / 14h00 à 16h30)</p>" +
                     "<p>" +
-                    "<p>Pour un reglement par virement :</p>" +
+                    "<p>Pour un règlement par virement :</p>" +
                     "RIB: 30004 01557 00010041423 30<br>" +
                     "IBAN: FR76 3000 4015 5700 0100 4142 330<br>" +
                     "BIC: BNPAFRPPPRG" +
@@ -2766,12 +2765,12 @@ module.exports = {
                     "<ul>" +
                     "<li>Ci-joint la facture</li>" +
                     "</ul>" +
-                    "<header style='text-align:right'>" +
-                    "<b> <u> Service comptabilité </u> </b>" +
-                    "<p> Tél: 09.72.51.08.01 </p>" +
-                    "</header>"
+                    "<p style='text-align:right'>" +
+                    "<b> <u> Service comptabilité </u> </b><br>" +
+                    "Tél: 09.72.51.08.01" +
+                    "</p>"
             },
-            envoiFacture: function() {
+            envoiFacture: function() { /* LETTRE */
                 return "<p>Madame, Monsieur,</p>" +
                     "<p>Suite à notre intervention le {{datePlain}} dans vos locaux:\n" +
                     "<p strong center>{{client.civilite}} {{client.nom}} {{client.prenom}}\n" +
@@ -2789,7 +2788,7 @@ module.exports = {
                     "75 rue des dames, 75017 Paris\n" +
                     "Tél. 09.72.51.08.01 (Ouvert de 09h00 à 12h30 / 14h00 à 16h30)</p>" +
                     "<p>" +
-                    "Pour un reglement par virement :</p>" +
+                    "Pour un règlement par virement :</p>" +
                     "<p>RIB: 30004 01557 00010041423 30\n" +
                     "IBAN: FR76 3000 4015 5700 0100 4142 330\n" +
                     "BIC: BNPAFRPPPRG" +
@@ -2869,7 +2868,7 @@ module.exports = {
                 "C'est le donneur d'ordre (SARL Edison Services) assujetti qui devra declarer la TVA sur ses déclarations de chiffre d'affaires.</i>" +
                 "<br><br>Service Comptabilité Fournisseur<br>" +
                 "09.72.45.27.09",
-            relance3: function() {
+            relance3: function() { /* MAIL */
                 return "<p> Affaire de recouvrement suivie par: Mr BARRIERE <br> Ligne direct: 09.72.50.20.22 <br> Réf dossier: {{os}} </p>" +
                     "<strong> LETTRE RECOMMANDEE AVEC AR </strong>" +
                     "<div class='spacer'></div>" +
@@ -2910,7 +2909,7 @@ module.exports = {
                     "</strong></center></p>" +
                     "<p>Cordialement.</p>"
             },
-            relance2: function() {
+            relance2: function() { /* MAIL */
                 return "<style> table { border-collapse: collapse;}\n table, td, th {border: 1px solid black;font-size:13px;}</style>" +
                     "<p>Madame, Monsieur, <br>" +
                     "<p> Sauf erreur de notre part, nous constatons que votre compte client présente à ce jour un solde débiteur. <br> Ce montant correspond à nos factures suivantes restées impayées: <p>" +
@@ -2943,8 +2942,7 @@ module.exports = {
                     "   Tél. 09.72.51.08.01 (Ouvert de 09h00 à 12h30 / 14h00 à 16h30)" +
                     "</strong></center></p>" +
                     "<p>" +
-                    "Pour un reglement par virement :<br>" +
-                    "<br>" +
+                    "<p>Pour un règlement par virement :</p>" +
                     "RIB: 30004 01557 00010041423 30<br>" +
                     "IBAN: FR76 3000 4015 5700 0100 4142 330<br>" +
                     "BIC: BNPAFRPPPRG" +
@@ -2952,7 +2950,7 @@ module.exports = {
                     "<p> Merci d'indiquer la référence de la facture ({{os}}) dans le règlement. </p>" +
                     "<p>Cordialement.</p>"
             },
-            relance1: function() {
+            relance1: function() { /* MAIL */
                 return "<p>Madame, Monsieur,<br>" +
                     "Suite à l'intervention que nous avons réalisé en date du {{datePlain}}</p>" +
                     "<p>A ce jour, <u><b>nous sommes toujours dans l'attente du règlement de cette facture</b></u><br>" +
@@ -2964,7 +2962,7 @@ module.exports = {
                     "75 rue des dames, 75017 Paris<br>" +
                     "Tél. 09.72.51.08.01 (Ouvert de 09h00 à 12h30 / 14h00 à 16h30)</strong></center></p>" +
                     "<p>" +
-                    "<p>Pour un reglement par virement :</p>" +
+                    "<p>Pour un règlement par virement :</p>" +
                     "<br>" +
                     "RIB: 30004 01557 00010041423 30<br>" +
                     "IBAN: FR76 3000 4015 5700 0100 4142 330<br>" +
