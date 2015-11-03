@@ -25,7 +25,7 @@ module.exports = function(schema) {
             console.log(resp && resp.length)
             async.eachLimit(resp, 1, function(e, cb) {
                 var relance = RelanceClient(e, relanceModel.target, 'noreply.edison@gmail.com')
-                relance.send(callback)
+                relance.send(cb)
             }, callback)
         })
 
