@@ -24,7 +24,6 @@ Mail.prototype.send = function(options, callback) {
         }*/
     var _this = this;
     return new bPromise(function(resolve, reject) {
-        console.log('here here==>', _.omit(options, 'Attachments'))
         _this.client.sendEmail(options, function(err, success) {
             console.log(err, success);
             if (err)

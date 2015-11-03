@@ -15,7 +15,7 @@ module.exports = {
     sms: {
         intervention: {
             rappelNoCalls: function(id) {
-                return "OS " + id + "\nAttention ! Le client attend votre appel pour confirmer le rendez-vous. Merci prendre contact avec lui immédiatement."
+                return "OS " + id + "\nAttention ! Le client attend votre appel pour confirmer le rendez-vous. Merci prendre contact avec lui immédiatement.\n Edison Services"
 
             },
             rappelArtisan: function() {

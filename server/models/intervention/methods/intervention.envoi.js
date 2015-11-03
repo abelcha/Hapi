@@ -259,7 +259,7 @@ module.exports = function(schema) {
                                                 console.log('call passed')
                                             }
                                         })
-                                }, /*60 * */60 * 1000)
+                                }, 60 * 60 * 1000)
                             }
 
 

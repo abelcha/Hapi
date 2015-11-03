@@ -30,14 +30,35 @@ module.exports = function(schema) {
                 params.signe = true;
             }
             return new Promise(function(resolve, reject) {
+                console.log('oksend')
+
+                if (!isWorker) {
+                    return edison.worker.createJob({
+                        name: 'db_id',
+                        model: 'artisan',
+                        method: 'sendContrat',
+                        data: artisan,
+                        req: _.pick(req, 'query', 'session', 'body')
+                    }).then(function() {
+                    console.log('sended')
+
+                        artisan.historique.contrat.push({
+                            login: req.session.login,
+                            signe: params.signe,
+                            date: Date.now()
+                        })
+                        artisan.save().then(resolve, reject);
+                    })
+                }
+
+                var communication = {
+                    mailDest: envProd ? artisan.email : (req.session.email ||  'intervention@edison-services.fr'),
+                    mailBcc: envProd ? (req.session.email ||  'intervention@edison-services.fr') : undefined,
+                    mailReply: (req.session.email ||  'intervention@edison-services.fr')
+                }
 
                 PDF('contract', params).buffer(function(err, buffer) {
-                    var communication = {
-                        mailDest: envProd ? artisan.email : (req.session.email ||  'intervention@edison-services.fr'),
-                        mailBcc: envProd ? (req.session.email ||  'intervention@edison-services.fr') : undefined,
-                        mailReply: (req.session.email ||  'intervention@edison-services.fr')
-                    }
-                    console.log(communication);
+                    console.log('gotbuffer')
                     mail.send({
                         From: "intervention@edison-services.fr",
                         ReplyTo: communication.mailReply,
@@ -50,13 +71,7 @@ module.exports = function(schema) {
                             Name: 'Declaration de sous-traitance.pdf',
                             ContentType: 'application/pdf'
                         }]
-                    }).then(function() {
-                        artisan.historique.contrat.push({
-                            login: req.session.login,
-                            signe: params.signe,
-                            date: Date.now()
-                        })
-                    }, reject)
+                    }).then(resolve, reject)
                 })
             })
 
