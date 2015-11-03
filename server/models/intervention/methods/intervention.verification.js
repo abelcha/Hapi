@@ -7,7 +7,7 @@ module.exports = function(schema) {
         unique: true,
         findBefore: true,
         populateArtisan: true,
-        method: 'GET',
+        method: 'POST',
         fn: function(inter, req, res) {
             return new Promise(function(resolve, reject) {
                 if (!inter.reglementSurPlace && !inter.date.envoiFacture)
@@ -37,7 +37,6 @@ module.exports = function(schema) {
                     From: "comptabilite@edison-services.fr",
                     ReplyTo: "comptabilite@edison-services.fr",
                     To: "abel.chalier@gmail.com",
-                    Bcc: "contact@edison-services.fr",
                     Subject: "Intervention n°" + inter.id + " en attente de règlement",
                     HtmlBody: template,
                 });

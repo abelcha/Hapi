@@ -152,14 +152,12 @@ module.exports = function(schema) {
                 pdf.toBuffer(function(err, buffer) {
                     var communication = {
                         mailDest: envProd ? inter.facture.email : (req.session.email ||  'contact@edison-services.fr'),
-                        mailBcc: envProd ? (req.session.email ||  'contact@edison-services.fr') : undefined,
                         mailReply: (req.session.email ||  'comptabilite@edison-services.fr')
                     }
                     mail.send({
                         From: "comptabilite@edison-services.fr",
                         ReplyTo: communication.mailReply,
                         To: communication.mailDest,
-                        Bcc: communication.mailBcc,
                         Subject: "Facture n°" + inter.id + " acquitté",
                         HtmlBody: req.body.text.replaceAll('\n', '<br>'),
                         Attachments: [{
@@ -238,7 +236,6 @@ module.exports = function(schema) {
                 pdf.toBuffer(function(err, buffer) {
                     var communication = {
                         mailDest: envProd ? inter.facture.email : (req.session.email ||  'contact@edison-services.fr'),
-                        mailBcc: envProd ? (req.session.email ||  'contact@edison-services.fr') : undefined,
                         mailReply: (req.session.email ||  'comptabilite@edison-services.fr')
                     }
                     console.log(communication);
@@ -247,7 +244,6 @@ module.exports = function(schema) {
                         From: "comptabilite@edison-services.fr",
                         ReplyTo: communication.mailReply,
                         To: communication.mailDest,
-                        Bcc: communication.mailBcc,
                         Subject: "Facture n°" + inter.id + " en attente de reglement",
                         HtmlBody: req.body.text.replaceAll("\n", '<br>'),
                         Attachments: [{

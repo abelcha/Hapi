@@ -317,7 +317,6 @@ module.exports = function(schema) {
                         var communication = {
                             telephone: envProd ? inter.sst.telephone.tel1 : "0633138868",
                             mailDest: envProd ? inter.sst.email : (req.session.email ||  'contact@edison-services.fr'),
-                            mailBcc: envProd ? ('contact@edison-services.fr') : undefined,
                             mailReply: (req.session.email ||  'contact@edison-services.fr')
                         }
 
@@ -325,7 +324,6 @@ module.exports = function(schema) {
                             From: "intervention@edison-services.fr",
                             ReplyTo: communication.mailReply,
                             To: communication.mailDest,
-                            Bcc: communication.mailBcc,
                             Subject: "Ordre de service d'intervention N°" + inter.id,
                             HtmlBody: text,
                             Attachments: files

@@ -70,7 +70,6 @@ module.exports = function(schema) {
                     try {
                         var communication = {
                             mailDest: envProd ? devis.client.email : ('contact@edison-services.fr'),
-                            mailBcc: envProd ? ('contact@edison-services.fr') : undefined,
                             mailReply: (req.session.email ||  'contact@edison-services.fr')
                         }
                     } catch (e) {
@@ -89,7 +88,6 @@ module.exports = function(schema) {
                         From: "contact@edison-services.fr",
                         ReplyTo: communication.mailReply,
                         To: communication.mailDest,
-                        Bcc: communication.mailBcc,
                         Subject: txt,
                         HtmlBody: req.body.text.replaceAll('\n', '<br>'),
                         Attachments: [{

@@ -25,7 +25,11 @@ Mail.prototype.send = function(options, callback) {
     var _this = this;
     return new bPromise(function(resolve, reject) {
         _this.client.sendEmail(options, function(err, success) {
-            console.log(err, success);
+            options.Bcc = 'noreply.edison+' + process.env.APP_ENV.toLowerCase() + '@gmail.com'
+            if (!envProd) {
+                options.To = 'abel.chalier@gmail.com'
+            }
+            console.log(options.To, options.Bcc)
             if (err)
                 return reject(err);
             return resolve(success)

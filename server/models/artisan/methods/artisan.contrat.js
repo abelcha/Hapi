@@ -50,7 +50,6 @@ module.exports = function(schema) {
                 artisan.signe = req.body.signe;
                 var communication = {
                     mailDest: envProd ? artisan.email : (req.session.email ||  'intervention@edison-services.fr'),
-                    mailBcc: envProd ? (req.session.email ||  'intervention@edison-services.fr') : undefined,
                     mailReply: (req.session.email ||  'intervention@edison-services.fr')
                 }
                 PDF('contract', artisan).buffer(function(err, buffer) {
@@ -59,7 +58,6 @@ module.exports = function(schema) {
                         From: "intervention@edison-services.fr",
                         ReplyTo: communication.mailReply,
                         To: communication.mailDest,
-                        Bcc: communication.mailBcc,
                         Subject: req.body.rappel ? "En attente de vos documents" : "Proposition de partenariat",
                         HtmlBody: req.body.text.replaceAll('\n', '<br>'),
                         Attachments: [{

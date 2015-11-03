@@ -12,6 +12,7 @@ var Timer = module.exports = function() {
     //    this.emitter.add("*/120 * * * *", "every hour");
     //    this.emitter.add("*/5 * * * *", "every 5 minutes");
     // this.emitter.add("*/2 * * * *", "every minute");
+    this.emitter.add(hour(20), "everyday at 20")
     this.emitter.add(hour(7), "everyday at 7")
     this.emitter.add(hour(14), "everyday at 14")
     this.emitter.add(hour(3), "3pm");
@@ -27,6 +28,9 @@ var Timer = module.exports = function() {
             })
         });*/
 
+    this.emitter.on("everyday at 20", function() {
+        db.model('intervention').relanceAuto();
+    });
 
     this.emitter.on("everyday at 7", function() {
         db.model('devis').relanceAuto7h()

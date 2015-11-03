@@ -35,12 +35,6 @@ module.exports = function(schema) {
                 opt.login = req.session.login;
                 opt.date = Date.now();
                 artisan.historique.pack.push(opt)
-
-                var communication = {
-                    mailDest: envProd ? artisan.email : (req.session.email ||  'contact@edison-services.fr'),
-                    mailBcc: envProd ? (req.session.email ||  'contact@edison-services.fr') : undefined,
-                    mailReply: (req.session.email ||  'contact@edison-services.fr')
-                }
                 artisan.save().then(resolve, reject)
             })
         }
