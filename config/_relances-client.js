@@ -17,7 +17,6 @@
     this.doc.prixFinalTTC = _.round(this.doc.prixFinal * (1 + (this.doc.tva / 100)), 2).toFixed(2)
 
     _this.doc.os = _.padLeft(_this.doc.id, 6, '0')
-    _this.doc.datePlain = moment(_this.doc.date.intervention ||  _this.doc.date.intervention).format('DD/MM/YYYY');
     _this.doc.type = 'facture'
 
 
@@ -100,7 +99,7 @@
             title: "",
             factureQrCode: true,
             id: this.doc.os,
-            date: this.doc.date.envoiFacture || this.doc.date.verification,
+            date: this.doc.date.intervention,
         }
     }, {
         model: 'facture',
