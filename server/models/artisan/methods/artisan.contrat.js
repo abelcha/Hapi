@@ -25,10 +25,7 @@ module.exports = function(schema) {
         findBefore: true,
         method: 'POST',
         fn: function(artisan, req, res) {
-            params = JSON.parse(JSON.stringify(artisan));
-            if (req.body.signe === 'true') {
-                params.signe = true;
-            }
+
             return new Promise(function(resolve, reject) {
                 console.log('oksend')
 
@@ -40,24 +37,23 @@ module.exports = function(schema) {
                         data: artisan,
                         req: _.pick(req, 'query', 'session', 'body')
                     }).then(function() {
-                    console.log('sended')
+                        console.log('sended')
 
                         artisan.historique.contrat.push({
                             login: req.session.login,
-                            signe: params.signe,
+                            signe: req.body.signe,
                             date: Date.now()
                         })
                         artisan.save().then(resolve, reject);
                     })
                 }
-
+                artisan.signe = req.body.signe;
                 var communication = {
                     mailDest: envProd ? artisan.email : (req.session.email ||  'intervention@edison-services.fr'),
                     mailBcc: envProd ? (req.session.email ||  'intervention@edison-services.fr') : undefined,
                     mailReply: (req.session.email ||  'intervention@edison-services.fr')
                 }
-
-                PDF('contract', params).buffer(function(err, buffer) {
+                PDF('contract', artisan).buffer(function(err, buffer) {
                     console.log('gotbuffer')
                     mail.send({
                         From: "intervention@edison-services.fr",
