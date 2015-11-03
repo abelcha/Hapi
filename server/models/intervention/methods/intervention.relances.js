@@ -17,7 +17,7 @@ module.exports = function(schema) {
                     $exists: true
                 },
                 'status': 'VRF'
-            }).limit(10).then(function(resp, cb) {
+            }).limit(10).sort('-id').then(function(resp, cb) {
                 console.log(resp.length)
                 var rnd = resp[_.random(0, resp.length - 1)];
                  var RelanceClient = requireLocal('config/_relances-client');
