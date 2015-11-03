@@ -22,7 +22,7 @@
     "crypto-js": "^3.1.5",
     "deep-diff": "^0.3.3",
     "dropbox": "^0.10.3",
-    "edsx-mail": "^2.1.45",
+    "edsx-mail": "^2.1.46",
     "ejs": "^2.3.4",
     "express": "^4.13.3",
     "express-csv": "^0.6.0",
