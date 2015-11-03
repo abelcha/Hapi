@@ -99,6 +99,7 @@
             title: "",
             factureQrCode: true,
             id: this.doc.os,
+            date:this.doc.date
         }
     }, {
         model: 'facture',
