@@ -20,7 +20,9 @@ module.exports = function(schema) {
                 'compta.reglement.recu': false,
                 'date.intervention': db.utils.between(from, to)
             }).populate('sst').exec(function(err, resp) {
-                console.log(err, resp && resp.length)
+                var rtn = _.groupBy(resp, 'sst.id')
+                console.log(rtn);
+               // console.log(err, resp && resp.length)
             })
         }).catch(__catch)
 
