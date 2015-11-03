@@ -431,15 +431,7 @@
             }
             rtn.date.verification = rtn.date.intervention || rtn.date.ajout;
             rtn.status = 'VRF'
-            if (!rtn.reglementSurPlace && !rtn.produits ||  !rtn.produits.length) {
-                rtn.produits = [{
-                    ref: 'EDX121',
-                    title: rtn.description,
-                    desc: rtn.description,
-                    pu: rtn.prixFinal ||  rtn.prixAnnonce || 0,
-                    quantite: 1
-                }]
-            }
+
         }
 
         rtn.prixAnnonce = d.prix_ht_annonce;
@@ -578,6 +570,15 @@
                     montant: rtn.prixFinal,
                 }]
             }
+        }
+        if (!rtn.reglementSurPlace && !rtn.produits ||  !rtn.produits.length) {
+            rtn.produits = [{
+                ref: 'EDX121',
+                title: rtn.description,
+                desc: rtn.description,
+                pu: rtn.prixFinal ||  rtn.prixAnnonce || 0,
+                quantite: 1
+            }]
         }
 
         return rtn;
