@@ -209,17 +209,15 @@ module.exports = {
                     "<p> Tél: 09.72.51.08.01 </p>" +
                     "</header>"
             },
-            relance1: function() {
-                return "<p> Réf: {{os}} <br> Pièce jointe: Facture n°{{os}} </p>" +
-                    "<div class='spacer'></div>" +
-                    "<strong> OBJET: Première relance pour facture n°{{os}} impayée </strong>" +
+            relance1: function() { //Qlolo
+                return "<strong> OBJET: Première relance pour facture n°{{os}} impayée </strong>" +
                     "<p>Madame, Monsieur, <br>" +
                     "Suite a l'intervention que nous avons réalisée en date du {{datePlain}}, <p>" +
                     "<p>A ce jour, nous <b> <u> sommes toujours dans l'attente d'un règlement de cette facture </u> </b>. <br>" +
                     "Nous vous prions de bien vouloir transmettre le règlement par chèque à l'ordre de:</p>" +
-                    "<p strong center> S.A.R.L EDISON SERVICES</p>" +
+                    "<p strong center> EDISON SERVICES FRANCE</p>" +
                     "<p>A l'organisme qui gère notre comptabilité:</p>" +
-                    "<p strong center> EDISON SERVICES FRANCE<br>" +
+                    "<p strong center> EDISON SERVICES<br>" +
                     "Service comptabilité<br>" +
                     "75 rue des dames, 75017 Paris<br>" +
                     "Tél. 09.72.51.08.01 (Ouvert de 09h00 à 12h30 / 14h00 à 16h30)</p>" +
@@ -230,12 +228,12 @@ module.exports = {
                     "IBAN: FR76 3000 4015 5700 0100 4142 330<br>" +
                     "BIC: BNPAFRPPPRG" +
                     "</p>" +
-                    "<p> Merci d'indiquer la référence de la facture ({{os}}) dans le règlement. </p>" +
-                    "<p> Nous vous prions d'agréer, Madame, Monsieur, nos salutations distinguées. </p>" +
-                    "<div class='spacer'></div>" +
+                    "<p>Merci d'indiquer la réference de la facture (<strong>{{id}}</strong>) dans le réglement. </p>" +
+                    "<ul>" +
+                    "<li>Ci-joint la facture</li>" +
+                    "</ul>" +
                     "<header>" +
                     "<b> <u> Service comptabilité </u> </b>" +
-                    "<p> Lionel Durand </p>" +
                     "<p> Tél: 09.72.51.08.01 </p>" +
                     "</header>"
             },
