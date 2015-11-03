@@ -2644,8 +2644,8 @@ module.exports = {
                     "<p> A défaut de réception dans les délais, votre dossier sera automatiquement transmis à notre service juridique.</p>" +
                     "<p> Cordialement, </p>" +
                     "<p style='text-align:right'>" +
-                    "<b> <u> Service comptabilité </u> </b><br>" +
-                    "Tél: 09.72.51.08.01" +
+                    "<b> <u> Service recouvrement </u> </b><br>" +
+                    "Tél: 09.72.50.20.22" +
                     "</p>"
             },
             relance3: function() { /* LETTRE */
@@ -2682,17 +2682,17 @@ module.exports = {
                     "<p> Celui-ci entamera les démarches judiciaires pour en obtenir le règlement majoré des frais de recouvrement et de ceux relatifs à l'article 700 du NCPC. </p>" +
 
 
-                    "<p>A l'organisme qui gère notre comptabilité:</p>" +
+                    "<p>A l'organisme qui gère notre recouvrement:</p>" +
                     "<p strong center> EDISON SERVICES FRANCE<br>" +
-                    "Service comptabilité<br>" +
+                    "Service recouvrement<br>" +
                     "75 rue des dames, 75017 Paris<br>" +
-                    "Tél. 09.72.51.08.01 (Ouvert de 09h00 à 12h30 / 14h00 à 16h30)</p>" +
+                    "Tél. 09.72.50.20.22 (Ouvert de 09h00 à 12h30 / 14h00 à 16h30)</p>" +
 
                     "<p> Nous vous prions d'agréer, Madame, Monsieur, nos salutations distinguées. </p>" +
                     "<p>Cordialement.</p>" +
                     "<p style='text-align:right'>" +
-                    "<b> <u> Service comptabilité </u> </b><br>" +
-                    "Tél: 09.72.51.08.01 </p>"
+                    "<b> <u> Service recouvrement </u> </b><br>" +
+                    "Tél: 09.72.50.20.22 </p>"
             },
             relance2: function() { /* LETTRE */
                 return "<p> Réf: {{os}} <br> Pièce jointe: Facture n°{{os}} </p>" +
@@ -2899,12 +2899,12 @@ module.exports = {
                     "<p> A défaut de réception de la totalité des <strong>{{prixFinalTTC}} €</strong>, sous huitaine, votre dossier sera transmis à notre service contentieux. </p>" +
                     "<p> Celui-ci entamera les démarches judiciaires pour en obtenir le règlement majoré des frais de recouvrement et de ceux relatifs à l'article 700 du NCPC. </p>" +
 
-                    "<p>A l'organisme qui gère notre comptabilité:</p>" +
+                    "<p>A l'organisme qui gère notre recouvrement:</p>" +
                     "<p><strong>" +
                     "   EDISON SERVICES FRANCE<br>" +
                     "   Service recouvrement<br>" +
                     "   75 rue des dames, 75017 Paris<br>" +
-                    "   Tél. 09.72.51.08.01 (Ouvert de 09h00 à 12h30 / 14h00 à 16h30)" +
+                    "   Tél. 09.72.50.20.22 (Ouvert de 09h00 à 12h30 / 14h00 à 16h30)" +
                     "</strong></p>" +
                     "<p>Cordialement.</p>"
             },
