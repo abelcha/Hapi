@@ -135,8 +135,8 @@ module.exports = {
                 "    <tr> " +
                 "        <th> {{datePlain}} </th> " +
                 "        <th> {{os}} </th> " +
-                "        <th> {{client.address.v}}, {{client.address.cp}} </th> " +
                 "        <th style='text-align:right'> {{prixFinalTTC}} € </th> " +
+                "        <th> {{client.address.v}}, {{client.address.cp}} </th> " +
                 "    </tr> " +
                 "    <tr> " +
                 "        <th colspan='2'> <b> TOTAL </b> </th> " +
@@ -176,8 +176,8 @@ module.exports = {
                     "    <tr> " +
                     "        <th> {{datePlain}} </th> " +
                     "        <th> {{os}} </th> " +
-                    "        <th> {{client.address.v}}, {{client.address.cp}} </th> " +
                     "        <th style='text-align:right'> {{prixFinalTTC}} € </th> " +
+                    "        <th> {{client.address.v}}, {{client.address.cp}} </th> " +
                     "    </tr> " +
                     "    <tr> " +
                     "        <th colspan='2'> <b> TOTAL </b> </th> " +
@@ -349,8 +349,8 @@ module.exports = {
                     "    <tr> " +
                     "        <th> {{datePlain}} </th> " +
                     "        <th> {{os}} </th> " +
-                    "        <th> {{client.address.v}}, {{client.address.cp}} </th> " +
                     "        <th style='text-align:right'> {{prixFinalTTC}} € </th> " +
+                    "        <th> {{client.address.v}}, {{client.address.cp}} </th> " +
                     "    </tr> " +
                     "    <tr> " +
                     "        <th colspan='2'> <b> TOTAL </b> </th> " +
@@ -390,8 +390,8 @@ module.exports = {
                     "    <tr> " +
                     "        <th> {{datePlain}} </th> " +
                     "        <th> {{os}} </th> " +
-                    "        <th> {{client.address.v}}, {{client.address.cp}} </th> " +
                     "        <th style='text-align:right'> {{prixFinalTTC}} € </th> " +
+                    "        <th> {{client.address.v}}, {{client.address.cp}} </th> " +
                     "    </tr> " +
                     "    <tr> " +
                     "        <th colspan='2'> <b> TOTAL </b> </th> " +
