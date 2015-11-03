@@ -11,6 +11,7 @@
      }
      var _this = this;
      _this.doc = doc;
+     _this.doc.factureQrCode = true
      _this.type = type;
      _this.emailDest = email;
 

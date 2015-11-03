@@ -11,6 +11,7 @@ module.exports = function(schema) {
 
         doc.datePlain = moment(date).format('LL');
         doc.acquitte = acquitte;
+        doc.factureQrCode = true;
         /*        doc.produits.unshift({
                     pu: 0,
                     quantite: 1,
