@@ -7,12 +7,13 @@
 
  var RelanceClient = function(doc, type, email) {
      if (!(this instanceof RelanceClient)) {
-         return new RelanceClient(doc, type)
+         return new RelanceClient(doc, type, email)
      }
      var _this = this;
      _this.doc = doc;
      _this.type = type;
      _this.emailDest = email;
+
      this.doc.prixFinalTTC = _.round(this.doc.prixFinal * (1 + (this.doc.tva / 100)), 2).toFixed(2)
 
      _this.doc.os = _.padLeft(_this.doc.id, 6, '0')
@@ -117,6 +118,7 @@
 
  RelanceClient.prototype.sendMail = function(buffer, callback) {
      console.log('sendMail');
+     console.log('==>', this.emailDest)
 
      if (envDev) {
          return callback(null, buffer);
