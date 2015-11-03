@@ -57,6 +57,10 @@ app.get('/favicon.ico', function(req, res) {
 })
 
 
+app.get('/api/loltest', function(req, res) {
+    res.send('ok')
+})
+
 app.use(require("multer")({
     inMemory: true,
     onFileUploadStart: function(file, req, res) {

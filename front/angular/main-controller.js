@@ -76,10 +76,10 @@ angular.module('edison').controller('MainController', function($timeout, LxNotif
             .then(function(resp) {
                 _this.statsTeleproBfm = _.sortBy(resp.data.weekStats, 'total').reverse().slice(0, 6)
                 console.log(_this.statsTeleproBfm[0])
-                /*_this.statsTeleproBfm = _.reduce(classement, function(result, n, key) {
-                    return result + " " + _.capitalize(n.login).slice(0, -2)
-                }, "")
-                console.log('==>',  _this.statsTeleproBfm)*/
+                    /*_this.statsTeleproBfm = _.reduce(classement, function(result, n, key) {
+                        return result + " " + _.capitalize(n.login).slice(0, -2)
+                    }, "")
+                    console.log('==>',  _this.statsTeleproBfm)*/
             });
 
     };
@@ -93,11 +93,42 @@ angular.module('edison').controller('MainController', function($timeout, LxNotif
         });
         $rootScope.interventionsStats = data;
     })
+
+    var notify = function(data) {
+        if (!("Notification" in window)) {
+            alert("This browser does not support desktop notification");
+        }
+
+        // Let's check whether notification permissions have already been granted
+        else if (Notification.permission === "granted") {
+            // If it's okay let's create a notification
+
+            var notification = new Notification(data.message, {
+                icon: '/img/notification.png'
+            });
+            console.log(notification)
+
+        }
+
+        // Otherwise, we need to ask the user for permission
+        else if (Notification.permission !== 'denied') {
+            Notification.requestPermission(function(permission) {
+                // If the user accepts, let's create a notification
+                if (permission === "granted") {
+                    var notification = new Notification("Hi there!");
+                }
+            });
+        }
+
+    }
+
     socket.on('notification', function(data) {
         if (data.dest === $rootScope.user.login && (data.dest !== data.origin || data.self)) {
+            notify(data);
             LxNotificationService.notify(data.message, data.icon || 'android', false, data.color);
         }
         if (data.service && data.service === $rootScope.user.service) {
+            notify(data);
             LxNotificationService.notify(data.message, data.icon || 'android', false, data.color);
         }
     })
