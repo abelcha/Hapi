@@ -7,6 +7,7 @@ module.exports = function(schema) {
     require('nodeify').extend();
 
     schema.statics.relance = function(req, res) {
+        console.log('==>', req.query.id)
         return new Promise(function(resolve, reject)  {
             db.model('intervention').find({
                 /*                'compta.reglement.recu': false,
