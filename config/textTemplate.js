@@ -168,7 +168,7 @@ module.exports = {
                     "<strong> OBJET: Deuxième relance pour facture impayée </strong>" +
                     "<p>Madame, Monsieur, </p>" +
 
-                    "<p> Sauf erreur de notre part, nous constatons que votre compte client présente à ce jour un solde débiteur. <br> Ce montant correspond à nos factures suivantes restées impayées: <p>" +
+                    "<p> Sauf erreur ou omission de notre part, nous constatons que votre compte client présente à ce jour un solde débiteur. <br> Ce montant correspond à nos factures suivantes restées impayées: <p>" +
 
                     "<table style='border-collapse: collapse;' cellspacing='0' cellpadding='8'>" +
                     "    <tr style='background: rgb(106, 168, 79); !important;'>" +
@@ -379,7 +379,7 @@ module.exports = {
             relance2: function() { /* MAIL */
                 return "<style> table { border-collapse: collapse;}\n table, td, th {border: 1px solid black;font-size:13px;}</style>" +
                     "<p>Madame, Monsieur, <br>" +
-                    "<p> Sauf erreur de notre part, nous constatons que votre compte client présente à ce jour un solde débiteur. <br> Ce montant correspond à nos factures suivantes restées impayées: <p>" +
+                    "<p> Sauf erreur ou omission de notre part, nous constatons que votre compte client présente à ce jour un solde débiteur. <br> Ce montant correspond à nos factures suivantes restées impayées: <p>" +
                     "<table style='border-collapse: collapse;' cellspacing='0' cellpadding='8'>" +
                     "    <tr style='background: rgb(106, 168, 79); !important;'>" +
                     "        <th style='border: 1px solid black;font-size:13px;width: 70px;'> Date </th>" +
