@@ -125,25 +125,25 @@ module.exports = {
                 "<p> A l'attention de <b> {{facture.nom}} {{facture.prenom}} </b>, <br>" +
 
                 "<p> Nous constatons que malgré nos précédentes lettres de rappel, vous n'avez toujours pas procédé au règlement de la facture <b> n° {{os}} </b>. <br> Votre compte reste débiteur à ce jour des sommes suivantes: <p>" +
-                   "<table cellspacing='0' cellpadding='8'> " + 
-                    "    <tr style='background: rgb(106, 168, 79); !important;'> " + 
-                    "        <th style='width: 70px;'> Date </th> " + 
-                    "        <th style='text-align:left'> Numéro </th> " + 
-                    "        <th style='text-align:right'> Montant </th> " + 
-                    "        <th style='text-align:left'> Lieu de l'intervention </th> " + 
-                    "    </tr> " + 
-                    "    <tr> " + 
-                    "        <th> {{datePlain}} </th> " + 
-                    "        <th> {{os}} </th> " + 
-                    "        <th> {{client.address.v}}, {{client.address.cp}} </th> " + 
-                    "        <th style='text-align:right'> {{prixFinalTTC}} € </th> " + 
-                    "    </tr> " + 
-                    "    <tr> " + 
-                    "        <th colspan='2'> <b> TOTAL </b> </th> " + 
-                    "        <th style='text-align:right'> {{prixFinalTTC}} € T.T.C. </th> " + 
-                    "         <th></th> " + 
-                    "     </tr>"+
-                    "</table>" +
+                "<table cellspacing='0' cellpadding='8'> " +
+                "    <tr style='background: rgb(106, 168, 79); !important;'> " +
+                "        <th style='width: 70px;'> Date </th> " +
+                "        <th style='text-align:left'> Numéro </th> " +
+                "        <th style='text-align:right'> Montant </th> " +
+                "        <th style='text-align:left'> Lieu de l'intervention </th> " +
+                "    </tr> " +
+                "    <tr> " +
+                "        <th> {{datePlain}} </th> " +
+                "        <th> {{os}} </th> " +
+                "        <th> {{client.address.v}}, {{client.address.cp}} </th> " +
+                "        <th style='text-align:right'> {{prixFinalTTC}} € </th> " +
+                "    </tr> " +
+                "    <tr> " +
+                "        <th colspan='2'> <b> TOTAL </b> </th> " +
+                "        <th style='text-align:right'> {{prixFinalTTC}} € T.T.C. </th> " +
+                "         <th></th> " +
+                "     </tr>" +
+                "</table>" +
 
 
                 "<p> Nous considérons aujourd'hui que vous faites opposition au règlement de la somme due. A défaut de réception de la totalité des {{prixFinalTTC}}, sous huitaine, votre dossier sera transmis à notre service contentieux. <br> " +
@@ -156,11 +156,7 @@ module.exports = {
                 "Tél. 09.72.51.08.01 (Ouvert de 09h00 à 12h30 / 14h00 à 16h30)</p>" +
 
                 "<p> Nous vous prions d'agréer, Madame, Monsieur, nos salutations distinguées. </p>" +
-                "<header style='margin-top: 25px;'>" +
-                "<b> <u> Service comptabilité </u> </b>" +
-                "<p> Damien Delvaux </p>" +
-                "<p> Tél: 09.72.50.20.22 </p>" +
-                "</header>"
+                "<p>Cordialement.</p>"
             },
             relance2: function() {
                 return "<p> Réf: {{os}} <br> Pièce jointe: Facture n°{{os}} </p>" +
@@ -170,24 +166,24 @@ module.exports = {
 
                     "<p> Sauf erreur de notre part, nous constatons que votre compte client présente à ce jour un solde débiteur. <br> Ce montant correspond à nos factures suivantes restées impayées: <p>" +
 
-                   "<table cellspacing='0' cellpadding='8'> " + 
-                    "    <tr style='background: rgb(106, 168, 79); !important;'> " + 
-                    "        <th style='width: 70px;'> Date </th> " + 
-                    "        <th style='text-align:left'> Numéro </th> " + 
-                    "        <th style='text-align:right'> Montant </th> " + 
-                    "        <th style='text-align:left'> Lieu de l'intervention </th> " + 
-                    "    </tr> " + 
-                    "    <tr> " + 
-                    "        <th> {{datePlain}} </th> " + 
-                    "        <th> {{os}} </th> " + 
-                    "        <th> {{client.address.v}}, {{client.address.cp}} </th> " + 
-                    "        <th style='text-align:right'> {{prixFinalTTC}} € </th> " + 
-                    "    </tr> " + 
-                    "    <tr> " + 
-                    "        <th colspan='2'> <b> TOTAL </b> </th> " + 
-                    "        <th style='text-align:right'> {{prixFinalTTC}} € T.T.C. </th> " + 
-                    "         <th></th> " + 
-                    "     </tr>"+
+                    "<table cellspacing='0' cellpadding='8'> " +
+                    "    <tr style='background: rgb(106, 168, 79); !important;'> " +
+                    "        <th style='width: 70px;'> Date </th> " +
+                    "        <th style='text-align:left'> Numéro </th> " +
+                    "        <th style='text-align:right'> Montant </th> " +
+                    "        <th style='text-align:left'> Lieu de l'intervention </th> " +
+                    "    </tr> " +
+                    "    <tr> " +
+                    "        <th> {{datePlain}} </th> " +
+                    "        <th> {{os}} </th> " +
+                    "        <th> {{client.address.v}}, {{client.address.cp}} </th> " +
+                    "        <th style='text-align:right'> {{prixFinalTTC}} € </th> " +
+                    "    </tr> " +
+                    "    <tr> " +
+                    "        <th colspan='2'> <b> TOTAL </b> </th> " +
+                    "        <th style='text-align:right'> {{prixFinalTTC}} € T.T.C. </th> " +
+                    "         <th></th> " +
+                    "     </tr>" +
                     "</table>" +
 
 
@@ -207,11 +203,7 @@ module.exports = {
                     "</p>" +
                     "<p> Merci d'indiquer la référence de la facture ({{os}}) dans le règlement. </p>" +
                     "<p> Nous vous prions d'agréer, Madame, Monsieur, nos salutations distinguées. </p>" +
-                    "<header style='margin-top: 25px;'>" +
-                    "<b> <u> Service comptabilité </u> </b>" +
-                    "<p> Lionel Durand </p>" +
-                    "<p> Tél: 09.72.51.08.01 </p>" +
-                    "</header>"
+                    "<p>Cordialement.</p>"
             },
             relance1: function() { //Qlolo
                 return "<strong> OBJET: Première relance pour facture n°{{os}} impayée </strong>" +
@@ -347,24 +339,24 @@ module.exports = {
 
                     "<p> Nous constatons que malgré nos précédentes lettres de rappel, vous n'avez toujours pas procédé au règlement de la facture <b> n° {{os}} </b>. <br> Votre compte reste débiteur à ce jour des sommes suivantes: <p>" +
 
-                   "<table cellspacing='0' cellpadding='8'> " + 
-                    "    <tr style='background: rgb(106, 168, 79); !important;'> " + 
-                    "        <th style='width: 70px;'> Date </th> " + 
-                    "        <th style='text-align:left'> Numéro </th> " + 
-                    "        <th style='text-align:right'> Montant </th> " + 
-                    "        <th style='text-align:left'> Lieu de l'intervention </th> " + 
-                    "    </tr> " + 
-                    "    <tr> " + 
-                    "        <th> {{datePlain}} </th> " + 
-                    "        <th> {{os}} </th> " + 
-                    "        <th> {{client.address.v}}, {{client.address.cp}} </th> " + 
-                    "        <th style='text-align:right'> {{prixFinalTTC}} € </th> " + 
-                    "    </tr> " + 
-                    "    <tr> " + 
-                    "        <th colspan='2'> <b> TOTAL </b> </th> " + 
-                    "        <th style='text-align:right'> {{prixFinalTTC}} € T.T.C. </th> " + 
-                    "         <th></th> " + 
-                    "     </tr>"+
+                    "<table cellspacing='0' cellpadding='8'> " +
+                    "    <tr style='background: rgb(106, 168, 79); !important;'> " +
+                    "        <th style='width: 70px;'> Date </th> " +
+                    "        <th style='text-align:left'> Numéro </th> " +
+                    "        <th style='text-align:right'> Montant </th> " +
+                    "        <th style='text-align:left'> Lieu de l'intervention </th> " +
+                    "    </tr> " +
+                    "    <tr> " +
+                    "        <th> {{datePlain}} </th> " +
+                    "        <th> {{os}} </th> " +
+                    "        <th> {{client.address.v}}, {{client.address.cp}} </th> " +
+                    "        <th style='text-align:right'> {{prixFinalTTC}} € </th> " +
+                    "    </tr> " +
+                    "    <tr> " +
+                    "        <th colspan='2'> <b> TOTAL </b> </th> " +
+                    "        <th style='text-align:right'> {{prixFinalTTC}} € T.T.C. </th> " +
+                    "         <th></th> " +
+                    "     </tr>" +
                     "</table>" +
 
                     "<p> Nous considérons aujourd'hui que vous faites opposition au règlement de la somme due. A défaut de réception de la totalité des {{prixFinalTTC}}, sous huitaine, votre dossier sera transmis à notre service contentieux. <br> " +
@@ -378,7 +370,6 @@ module.exports = {
                     "   Tél. 09.72.51.08.01 (Ouvert de 09h00 à 12h30 / 14h00 à 16h30)" +
                     "</strong></center></p>" +
 
-                    "<p> Nous vous prions d'agréer, Madame, Monsieur, nos salutations distinguées. </p>" +
                     "<header style='margin-top: 25px;'>" +
                     "<b> <u> Service comptabilité </u> </b>" +
                     "<p> Damien Delvaux </p>" +
@@ -388,25 +379,25 @@ module.exports = {
             relance2: function() {
                 return "<style> table { border-collapse: collapse;}\n table, td, th {border: 1px solid black;font-size:13px;}</style>" +
                     "<p>Madame, Monsieur, <br>" +
-                    "<p> Sauf erreur de notre part, nous constatons que votre compte client présente à ce jour un solde débiteur. <br> Ce montant correspond à nos factures suivantes restées impayées: <p>" + 
-                   "<table cellspacing='0' cellpadding='8'> " + 
-                    "    <tr style='background: rgb(106, 168, 79); !important;'> " + 
-                    "        <th style='width: 70px;'> Date </th> " + 
-                    "        <th style='text-align:left'> Numéro </th> " + 
-                    "        <th style='text-align:right'> Montant </th> " + 
-                    "        <th style='text-align:left'> Lieu de l'intervention </th> " + 
-                    "    </tr> " + 
-                    "    <tr> " + 
-                    "        <th> {{datePlain}} </th> " + 
-                    "        <th> {{os}} </th> " + 
-                    "        <th> {{client.address.v}}, {{client.address.cp}} </th> " + 
-                    "        <th style='text-align:right'> {{prixFinalTTC}} € </th> " + 
-                    "    </tr> " + 
-                    "    <tr> " + 
-                    "        <th colspan='2'> <b> TOTAL </b> </th> " + 
-                    "        <th style='text-align:right'> {{prixFinalTTC}} € T.T.C. </th> " + 
-                    "         <th></th> " + 
-                    "     </tr>"+
+                    "<p> Sauf erreur de notre part, nous constatons que votre compte client présente à ce jour un solde débiteur. <br> Ce montant correspond à nos factures suivantes restées impayées: <p>" +
+                    "<table cellspacing='0' cellpadding='8'> " +
+                    "    <tr style='background: rgb(106, 168, 79); !important;'> " +
+                    "        <th style='width: 70px;'> Date </th> " +
+                    "        <th style='text-align:left'> Numéro </th> " +
+                    "        <th style='text-align:right'> Montant </th> " +
+                    "        <th style='text-align:left'> Lieu de l'intervention </th> " +
+                    "    </tr> " +
+                    "    <tr> " +
+                    "        <th> {{datePlain}} </th> " +
+                    "        <th> {{os}} </th> " +
+                    "        <th> {{client.address.v}}, {{client.address.cp}} </th> " +
+                    "        <th style='text-align:right'> {{prixFinalTTC}} € </th> " +
+                    "    </tr> " +
+                    "    <tr> " +
+                    "        <th colspan='2'> <b> TOTAL </b> </th> " +
+                    "        <th style='text-align:right'> {{prixFinalTTC}} € T.T.C. </th> " +
+                    "         <th></th> " +
+                    "     </tr>" +
                     "</table>" +
 
                     "<p> L'échéance étant dépassée, nous vous demandons de bien vouloir régulariser cette situation par retour de courrier. </p>" +
@@ -425,7 +416,6 @@ module.exports = {
                     "BIC: BNPAFRPPPRG" +
                     "</p>" +
                     "<p> Merci d'indiquer la référence de la facture ({{os}}) dans le règlement. </p>" +
-                    "<p> Nous vous prions d'agréer, Madame, Monsieur, nos salutations distinguées. </p>" +
                     "<header style='margin-top: 25px;'>" +
                     "<b> <u> Service comptabilité </u> </b>" +
                     "<p> Lionel Durand </p>" +
