@@ -2678,7 +2678,7 @@ module.exports = {
 
 
                 "<p> Nous considérons aujourd'hui que vous faites opposition au règlement de la somme due. </p>" + 
-                "<p> A défaut de réception de la totalité des {{prixFinalTTC}} €, sous huitaine, votre dossier sera transmis à notre service contentieux. </p>" +
+                "<p> A défaut de réception de la totalité des <strong>{{prixFinalTTC}} €</strong>, sous huitaine, votre dossier sera transmis à notre service contentieux. </p>" +
                 "<p> Celui-ci entamera les démarches judiciaires pour en obtenir le règlement majoré des frais de recouvrement et de ceux relatifs à l'article 700 du NCPC. </p>" +
 
 
@@ -2692,7 +2692,7 @@ module.exports = {
                 "<p>Cordialement.</p>" +
                 "<p style='text-align:right'>" +
                 "<b> <u> Service comptabilité </u> </b><br>" +
-                "style='text-align:right'> Tél: 09.72.51.08.01 </p>"
+                "Tél: 09.72.51.08.01 </p>"
             },
             relance2: function() { /* LETTRE */
                 return "<p> Réf: {{os}} <br> Pièce jointe: Facture n°{{os}} </p>" +
@@ -2896,7 +2896,7 @@ module.exports = {
                 "</table>" +
 
                 "<p> Nous considérons aujourd'hui que vous faites opposition au règlement de la somme due. </p>" + 
-                "<p> A défaut de réception de la totalité des {{prixFinalTTC}} €, sous huitaine, votre dossier sera transmis à notre service contentieux. </p>" +
+                "<p> A défaut de réception de la totalité des <strong>{{prixFinalTTC}} €</strong>, sous huitaine, votre dossier sera transmis à notre service contentieux. </p>" +
                 "<p> Celui-ci entamera les démarches judiciaires pour en obtenir le règlement majoré des frais de recouvrement et de ceux relatifs à l'article 700 du NCPC. </p>" +
 
                 "<p>A l'organisme qui gère notre comptabilité:</p>" +
