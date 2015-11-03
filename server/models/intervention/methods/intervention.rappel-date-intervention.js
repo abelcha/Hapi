@@ -25,20 +25,6 @@ module.exports = function(schema) {
 						e: e,
 						datePlain: moment(e.date.intervention).format("H[h]mm")
 					})
-					if (envProd) {
-						sms.send({
-								to: e.sst.telephone.tel1,
-								text: text
-							})
-							sms.send({
-								to: '0782903875',
-								text: text
-							})
-					}
-					sms.send({
-						to: '0633138868',
-						text: text
-					})
 
 				})
 				return resolve('ok')

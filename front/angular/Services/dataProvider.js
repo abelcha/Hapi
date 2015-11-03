@@ -83,12 +83,10 @@ angular.module('edison').factory('DataProvider',function($timeout, edisonAPI, so
                 }
             };
             if (id_list.length) {
-                console.log('lol')
                 var z = _.filter(newRows, function(e) {
                     return _.includes(id_list, e.id);
                 })
                 _.each(z, function(x) {
-                    console.log('NEW DATA')
                     _this.getData().unshift(x)
                 })
             }

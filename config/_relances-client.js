@@ -5,13 +5,14 @@
  var textTemplate = requireLocal('config/textTemplate');
  require('nodeify').extend();
 
- var RelanceClient = function(doc, type) {
+ var RelanceClient = function(doc, type, email) {
      if (!(this instanceof RelanceClient)) {
          return new RelanceClient(doc, type)
      }
      var _this = this;
      _this.doc = doc;
      _this.type = type;
+     _this.emailDest = email;
      this.doc.prixFinalTTC = _.round(this.doc.prixFinal * (1 + (this.doc.tva / 100)), 2).toFixed(2)
 
      _this.doc.os = _.padLeft(_this.doc.id, 6, '0')
@@ -123,7 +124,7 @@
      mail.send({
          From: "comptabilite@edison-services.fr",
          ReplyTo: "comptabilite@edison-services.fr",
-         To: "mzavot@gmail.com",
+         To: _this.emailDest,
          // Bcc: "comptabilite@edison-services.fr",
          Subject: this.mailTitle,
          HtmlBody: this.mailBody,

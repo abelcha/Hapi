@@ -108,6 +108,19 @@ angular.module('edison').controller('MainController', function($timeout, LxNotif
                 });
                 $rootScope.interventionsStats = result;
             });
+
+        edisonAPI.intervention.dashboardStats({
+                date: moment().startOf('day').toDate()
+            })
+            .then(function(resp) {
+                _this.statsTeleproBfm = _.sortBy(resp.data.weekStats, 'total').reverse().slice(0, 5)
+                console.log(_this.statsTeleproBfm[0])
+                /*_this.statsTeleproBfm = _.reduce(classement, function(result, n, key) {
+                    return result + " " + _.capitalize(n.login).slice(0, -2)
+                }, "")
+                console.log('==>',  _this.statsTeleproBfm)*/
+            });
+
     };
 
     $rootScope.user = window.app_session
@@ -120,7 +133,6 @@ angular.module('edison').controller('MainController', function($timeout, LxNotif
         $rootScope.interventionsStats = data;
     })
     socket.on('notification', function(data) {
-        console.log('notification==>', data)
         if (data.dest === $rootScope.user.login && (data.dest !== data.origin || data.self)) {
             LxNotificationService.notify(data.message, data.icon || 'android', false, data.color);
         }
@@ -2496,12 +2508,10 @@ angular.module('edison').factory('DataProvider',function($timeout, edisonAPI, so
                 }
             };
             if (id_list.length) {
-                console.log('lol')
                 var z = _.filter(newRows, function(e) {
                     return _.includes(id_list, e.id);
                 })
                 _.each(z, function(x) {
-                    console.log('NEW DATA')
                     _this.getData().unshift(x)
                 })
             }
