@@ -3088,227 +3088,280 @@ module.exports = {
                     "<p style='text-align:right'><strong><u>Service comptabilité fournisseur</u></strong><br>" +
                     "Vincent QUEUDRAY<br>" +
                     "Tél.09.72.45.27.09</p>"
-            }
-        },
-        devis: {
-            envoi: function(user, _config, __, _moment) {
-                var lodash = __ || _
-                var mmt = _moment || moment
-                var config = _config ||  require('./dataList.js')
-                var categorieClean = config.categories[this.categorie].suffix + " " + config.categories[this.categorie].long_name.toLowerCase()
-                var pseudo = user.pseudo
-                var intro;
-                if (this.client.civilite === "Soc.") {
-                    intro = lodash.template("À l'intention du responsable de la société {{client.nom}},\n\n")(this);
-                } else {
-                    intro = lodash.template("{{client.civilite}} {{client.nom}},\n\n")(this);
-                }
-                var start = "Suite à notre conversation téléphonique de tout à l'heure, ";
-                var end = "Avez-vous reçu le devis ?\n\n" +
-                    "Je n'ai pas eu de retour de votre part, devons nous planifier une intervention ?\n\n" +
-                    "Merci de revenir vers moi pour me tenir au courant de la suite que vous donnerez à ce devis.\n\n" +
-                    "Je reste à votre disposition pour toutes les demandes de renseignement\n\n";
-                if (this.combo && this.comboText) {
-                    var text = "Suite à notre dernier échange téléphonique concernant la réalisation d'un " + this.comboText + ".\n" +
-                        "\n" +
-                        "Vous trouverez ci-joint <strong>le devis n°" + this.id + " </strong>qui correspond à ce que nous avons vu ensemble.\n" +
-                        "\n" +
-                        "Je vous rappel que les délais d'interventions dépendent également de votre rapidement de réponse.\n" +
-                        "Sachez également que votre installation sera éligible à notre assurance RC PRO et notre assurance décennale.\n" +
-                        "Lors de l'acceptation, je vous prie de me renvoyer signé, accompagné de la mention : \n" +
-                        "\n" +
-                        "<strong> « BON POUR ACCORD » </strong>\n" +
-                        "\n" +
-                        "Je reste à votre entière disposition pour tous les renseignements ou les remarques que vous pourriez avoir concernant ce devis (technique, délais, prix).\n"
-
-                } else if (this.historique && this.historique.length === 1) {
-                    var cont;
-                    if (this.categorie == 'VT')
-                        cont = "je vous ai envoyé le devis que vous m'avez demandé pour le remplacement de votre vitrage, vous deviez le transmettre directement à votre compagnie d'assurance.\n\n";
-                    else if (this.categorie == 'AS')
-                        cont = "je vous ai transmis comme convenue le devis de remplacement de votre ballon d'eau chaude sanitaire.\n\n";
-                    else
-                        cont = "je vous ai transmis comme convenue le devis " + categorieClean + " que vous avez souhaité.\n\n";
-                    var text = start + cont + end;
-
-                } else if (this.historique && this.historique.length > 1) {
-                    var text = "je vous ai transmis un devis " + categorieClean + " en date du " + mmt(this.historique[0].date).format('L') + ".\n\n" + end;
-                } else if (this.categorie == 'VT') {
-                    var text = "Suite à notre échange téléphonique concernant le remplacement de votre vitrage," +
-                        "vous trouverez ci-joint le devis n°" + this.id + " correspondant à ce que nous avons vu ensemble.\n\n" +
-                        "Merci de bien vouloir transmettre ce devis de remplacement de vitrage directement à votre compagnie d’assurance, afin d'obtenir leurs accords (si nécessaire).\n" +
-                        "Merci de nous renvoyer le devis signé accompagné de la mention « BON POUR ACCORD » par mail.\n\n" +
-                        "Nous interviendrons dans les plus brefs délais.\n\n" +
-                        "Je reste à votre entière disposition pour toutes les demandes de renseignement et les remarques que vous pourriez avoir.\n\n";
-                } else if (lodash.find(this.produits, function(e) {
-                        return lodash.startsWith(e.ref, "BAL");
-                    })) {
-                    var text = "Suite à notre échange téléphonique concernant le remplacement de votre ballon d'eau chaude sanitaire," +
-                        "vous trouverez ci-joint le devis n°" + this.id + ".\n\n" +
-                        "Je reste à votre entière disposition pour tous renseignements complémentaires ou remarques que vous pourriez avoir (technique/prix).\n\n" +
-                        "Sachez également, que votre installation sera éligible à notre assurance RC PRO et notre assurance décennale.\n" +
-                        "Dès votre accord, nous interviendrons rapidement.\n\n" +
-                        "Meilleures salutations,\n\n";
-                } else {
-                    var text = "Suite à notre dernier échange concernant la réalisation d'un devis " + categorieClean + ", \n" +
-                        "vous trouverez ci-joint le devis n°" + this.id + " correspondant à ce que nous avons vu ensemble. \n\n" +
-                        "Sachez également, que votre installation sera éligible à notre assurance RC PRO et notre assurance décennale.\n\n" +
-                        "Lors de l'acceptation, je vous prie de me renvoyer le devis signé, accompagné de la mention:\n\n" +
-                        "<strong> « BON POUR ACCORD » </strong>\n\n" +
-                        "Je reste à votre entière disposition pour tous les renseignements ou les remarques que vous pourriez avoir concernant ce devis (technique, délais, prix). \n\n" +
-                        "Merci de me tenir au courant de la suite que vous donnerez à ce devis. \n\n";
-
-                }
-                var outro = "Cordialement, \n\n" +
-                    (user.pseudo ||  "Arnaud,") + '\n' +
-                    "<strong>Ligne Directe : " + (user.ligne ? (user.ligne.match(/.{2}|.{1,2}/g).join('.')) :  "09.72.42.30.00") + "</strong>\n" +
-                    "<strong>Ligne Atelier : " + "09.72.42.30.00" + "</strong>\n";
-
-                return intro + text + outro;
-            }
-        },
-        artisan: {
-            envoiContrat: function(user) {
-                return "Monsieur {{representant.nom}},\n" +
-                    "\n" +
-                    "Comme expliqué lors de notre conversation téléphonique, nous sommes une entreprise générale du bâtiment situé dans la région d'île de France.\n" +
-                    "\n" +
-                    "Notre entreprise intervient de manière régulière dans plusieurs villes en France pour des interventions de dépannage spécialisé dans le second œuvre (plomberie sanitaire, génie climatique, serrurerie, vitrerie et l'électricité générale).\n" +
-                    "\n" +
-                    "Nos clients sont des particuliers, des réseaux d'entreprises, des commerces, des administrateurs de bien et des agences immobilières.\n" +
-                    "\n" +
-                    "Je suis actuellement à la <u><b>recherche d'un partenaire</b></u> pouvant intervenir auprès de nos clients dans votre région pour des prestations de dépannage.\n" +
-                    "Vous trouverez ci-joint une brochure expliquant notre fonctionnement pour une éventuelle collaboration.\n" +
-                    "Je vous transmets également un contrat de partenariat permettant d'établir les conditions de travail entre nos deux entreprises.\n" +
-                    "\n" +
-                    "Pour chaque intervention, vous recevez au préalable un ordre de service par mail et par téléphone,<u><b> l'ordre de service n'est validé que sous votre accord.</b></u>\n" +
-                    "\n" +
-                    "Une fois chez notre client, vous restez totalement autonome sur le montant à facturer et si nécessaire vous pouvez ajuster le montant de la prestation tout en ayant préalablement prévenu notre client.\n" +
-                    "\n" +
-                    "Lors des interventions, vous représentez notre entreprise c'est pourquoi vous disposez des documents fournis à tous nos partenaires en France.\n" +
-                    "\n" +
-                    "<u><b>Vous avez à votre disposition :</u></b>\n" +
-                    "\n" +
-                    "• Un bloc facturier au nom de Edison Services\n" +
-                    "• Un bloc devis au nom de Edison Services\n" +
-                    "• Un catalogue de prix de vente du matériel\n" +
-                    "• Un accès à tous nos fournisseurs\n" +
-                    "\n" +
-                    "Si vous souhaitez rejoindre notre réseau, vous trouverez les documents à nous transmettre :\n" +
-                    "\n" +
-                    "• Le contrat de partenariat signé\n" +
-                    "• Immatriculation ou KBIS\n" +
-                    "• Pièce d'identité du responsable de l'entreprise\n" +
-                    "• Attestation d'assurance (si disponible)\n" +
-                    "\n" +
-                    "Je tiens à vous rappelez que cette future collaboration ne vous oblige jamais à intervenir pour nous. Il s'agit simplement de rajouter à votre quotidien des interventions en plus.\n" +
-                    "\n" +
-                    "Cependant, j'attire votre attention sur le fait que nous recherchons des personnes de confiances, maîtrisant parfaitement l'aspect technique du travail à effectuer tout en sachant être à l'aise avec la clientèle.\n" +
-                    "\n" +
-                    "Je reste à votre entière disposition pour toutes les questions ou les remarques que vous pourriez avoir.\n" +
-                    "\n" +
-                    "En vous remerciant d'avance pour l'attention que vous porterez à ma demande et aux documents transmis.\n" +
-                    "\n" +
-                    "Dans l'attente d'un retour de votre part.\n" +
-                    "\n" +
-                    "PS : Si vous souhaitez faire un test avant de travailler régulièrement avec notre entreprise et dans le but de comprendre le fonctionnement global de notre structure, n'hésitez pas à nous le faire savoir.\n" +
-                    "\n" +
-                    "Cordialement\n" +
-                    "\n" +
-                    "<b>Yohann RHOUM</b>\n" +
-                    "Service partenariat\n" +
-                    "Port : 06.37.37.59.45 Fax : 09.72.39.33.46\n" +
-                    "yohann.rhoum@edison-services.fr\n" +
-                    "\n" +
-                    "<b>Edison Services</b>\n" +
-                    "Dépannage - Entretien - Installation - Rénovation\n" +
-                    "Siège social : 75, rue des dames - 75017 Paris\n" +
-                    "contact@edison-services.fr - www.edison-services.fr"
             },
-            rappelContrat: function(user) {
-                return "Bonjour Monsieur {{representant.nom}}\n" +
-                    "\n" +
-                    "Suite à notre conversation téléphonique du {{datePlain}} concernant la signature d'un contrat de partenariat entre nos deux entreprises.\n" +
-                    "\n" +
-                    "Vous trouverez donc ci-joint la déclaration de sous-traitance à remplir.\n" +
-                    "\n" +
-                    "Merci de joindre également à cette déclaration les éléments suivants :\n" +
-                    "\n" +
-                    "• Extrait KBIS ou INSEE\n" +
-                    "• Photocopie R/V de la pièce d'identité du gérant\n" +
-                    "\n" +
-                    "Vous pouvez nous transmettre ces pièces administratives par mail à :\n" +
-                    "\n" +
-                    "yohann.rhoum@edison-services.fr\n" +
-                    "\n" +
-                    "\n" +
-                    "Ou par voie postal :\n" +
-                    "\n" +
-                    "<u><b>" +
-                    "Edison Services\n" +
-                    "Service Partenariat\n" +
-                    "75 rue des dames - 75017 PARIS\n" +
-                    "</b></u>" +
-                    "\n" +
-                    "\n" +
-                    "Dès réception de ces documents et validation par nos services, vous recevrez par voie postal:\n" +
-                    "\n" +
-                    "• Un bloc facture Edison Services\n" +
-                    "• Un bloc devis Edison Services\n" +
-                    "• Un catalogue de prix de vente du matériel\n" +
-                    "• Un accès à tous nos fournisseurs\n" +
-                    "Je reste à votre entière disposition pour toutes les questions ou les remarques que vous pourriez avoir.\n" +
-                    "\n" +
-                    "Dans l'attente d'une réponse favorable de votre part,\n" +
-                    "\n" +
-                    "Cordialement\n" +
-                    "\n" +
-                    "<b>Yohann RHOUM</b>\n" +
-                    "Service Partenariat\n" +
-                    "Port : 06.37.37.59.45 Fax : 09.72.39.33.46\n" +
-                    "yohann.rhoum@edison-services.fr\n" +
-                    "\n" +
-                    "<b>Edison Services</b>\n" +
-                    "Dépannage - Entretien - Installation - Rénovation\n" +
-                    "Siège social : 75 rue des Dames, 75017, Paris\n" +
-                    "contact@edison-services.fr - www.edison-services.fr\n"
-            },
-            dossierComplet: function() {
-                return "Monsieur <b>{{representant.nom}}</b>,\n" +
-                    "\n" +
-                    "Nous avons le plaisir de vous annoncer que vous êtes dès à présent <b>membre du réseau partenaire Edison Services.</b>\n" +
-                    "\n" +
-                    "Le service partenariat a validé votre dossier.\n" +
-                    "\n" +
-                    "Vous allez recevoir très prochainement les pièces administratives vous permettant d'intervenir directement auprès de nos clients.\n" +
-                    "\n" +
-                    "Ces documents seront transmis par voie postale à cette adresse :\n" +
-                    "<p strong center>" +
-                    "Monsieur {{representant.nom}},\n" +
-                    "{{address.n}} {{address.r}}\n" +
-                    "{{address.cp}} {{address.v}}</b>\n" +
-                    "</p>" +
-                    "Nous pouvons désormais vous proposez d'intervenir auprès de nos clients dans les domaines suivants :\n" +
-                    "<p strong center>électricité - plomberie - chauffage - climatisation - serrurerie</p>" +
-                    "Vous trouverez ci-joint, votre fiche d'identification récapitulative.\n" +
-                    "\n" +
-                    "Le service intervention de notre société devrait faire appel à vous dans les plus brefs délais.\n" +
-                    "Cordialement,\n" +
-                    "\n" +
-                    "Yohann RHOUM\n" +
-                    "Service partenariat\n" +
-                    "Port : 06.45.57.87.66 Fax : 09.72.39.33.46\n" +
-                    "yohann.rhoum@edison-services.fr\n" +
-                    "\n" +
-                    "Edison Services\n" +
-                    "Dépannage - Entretien - Installation - Rénovation\n" +
-                    "Siège social : 75, rue des dames - 75010 Paris\n" +
-                    "contact@edison-services.fr - www.edison-services.fr\n"
+            relanceArtisan: function() {
+                return "A l'attention de l'entreprise <strong>{{sst.nomSociete}}</strong>,<br>" +
+                    "<br>" +
+                    "Monsieur <strong>{{sst.representant.nom}}</strong>,<br>" +
+                    "Au cours de cette semaine vous avez réalisez plusieurs interventions auprès de nos clients.<br>" +
+                    "Vous trouvez ci-dessous la liste des interventions actuellement en attente à notre service comptabilité :<br>" +
+
+                    "<table style='border-collapse: collapse;' cellspacing='0' cellpadding='8'>" +
+                    "    <tr style='background: rgb(106, 168, 79); !important;'>" +
+                    "        <th style='border: 1px solid black;font-size:13px;width: 70px;'> Date </th>" +
+                    "        <th style='border: 1px solid black;font-size:13px;'> Numéro OS </th>" +
+                    "        <th style='border: 1px solid black;font-size:13px;'> Client </th>" +
+                    "        <th style='border: 1px solid black;font-size:13px;'> Lieu de l'intervention </th>" +
+                    "        <th style='border: 1px solid black;font-size:13px;'> Montant H.T </th>" +
+                    "    </tr>" +
+                    "<% _.forEach(inters, function(e) { %>" +
+                    "           <tr>" +
+                    "               <td style='border: 1px solid black;font-size:13px;'> {{moment(e.date.intervention).format('L')}} </td>" +
+                    "               <td style='border: 1px solid black;font-size:13px;'> {{e.id}}</td>" +
+                    "               <td style='border: 1px solid black;font-size:13px;'> {{e.client.civilite}} {{e.client.nom}}</td>" +
+                    "               <td style='border: 1px solid black;font-size:13px;'> {{e.client.address.n}} {{e.client.address.r}}, {{e.client.address.cp}} - {{e.client.address.v}}</td>" +
+                    "               <td style='border: 1px solid black;font-size:13px;'> {{e.prixFinal}} </td>" +
+                    "           </tr>" +
+                    "<% }); %>" +
+                    "</table>" +
+
+                    "Nous vous prions de bien vouloir nous transmettre au plus vite les éléments suivant :<br>" +
+                    "- La facture d'intervention ou l'ordre de service correspondant<br>" +
+                    "- Le règlement de notre client<br>" +
+                    "<br>" +
+                    "Veuillez transmettre l'ensemble de ces documents par voie postale à :<br>" +
+                    "<br>" +
+                    "<center><strong>" +
+                    "EDISON SERVICES<br>" +
+                    "Comptabilité Fournisseur<br>" +
+                    "75 rue des Dames, 75017 PARIS<br>" +
+                    "</center></strong>" +
+                    "<br>" +
+                    "Dans le cas où l'intervention n'aurait pas été réalisée par vos soins, merci de prendre contact au plus vite avec le service comptabilité<br>" +
+                    "<br>" +
+                    "<strong>Tél. 09.72.45.27.09 </strong>(ouvert de 09h00 à 12h30 / 14h00 à 16h30)<br>" +
+                    "<br>" +
+                    "Remarques :<br>" +
+                    "- Si vous êtes détenteur du matériel installé, veuillez nous transmettre le montant H.T du coût de votre matériel (avec remise) pour nous permettre d'effectuer votre remboursement.<br>" +
+                    "- Si vous avez pris du matériel auprès de l'un de nos fournisseurs, veuillez nous transmettre le bon de retrait correspondant.<br>" +
+                    "<br>" +
+                    "Dès réception de ces documents par nos services, votre règlement vous sera transmis sous <strong>7 jours.</strong><br>" +
+                    "<br>" +
+                    "Cordialement,<br>" +
+                    "<p style='text-align:right'>" +
+                    "<u><strong>Service comptabilité fournisseur</strong></u><br>" +
+                    "Vincent QUEUDRAY<br>" +
+                    "Tél.09.72.45.27.09<br></p>"
             }
         }
     },
+    devis: {
+        envoi: function(user, _config, __, _moment) {
+            var lodash = __ || _
+            var mmt = _moment || moment
+            var config = _config ||  require('./dataList.js')
+            var categorieClean = config.categories[this.categorie].suffix + " " + config.categories[this.categorie].long_name.toLowerCase()
+            var pseudo = user.pseudo
+            var intro;
+            if (this.client.civilite === "Soc.") {
+                intro = lodash.template("À l'intention du responsable de la société {{client.nom}},\n\n")(this);
+            } else {
+                intro = lodash.template("{{client.civilite}} {{client.nom}},\n\n")(this);
+            }
+            var start = "Suite à notre conversation téléphonique de tout à l'heure, ";
+            var end = "Avez-vous reçu le devis ?\n\n" +
+                "Je n'ai pas eu de retour de votre part, devons nous planifier une intervention ?\n\n" +
+                "Merci de revenir vers moi pour me tenir au courant de la suite que vous donnerez à ce devis.\n\n" +
+                "Je reste à votre disposition pour toutes les demandes de renseignement\n\n";
+            if (this.combo && this.comboText) {
+                var text = "Suite à notre dernier échange téléphonique concernant la réalisation d'un " + this.comboText + ".\n" +
+                    "\n" +
+                    "Vous trouverez ci-joint <strong>le devis n°" + this.id + " </strong>qui correspond à ce que nous avons vu ensemble.\n" +
+                    "\n" +
+                    "Je vous rappel que les délais d'interventions dépendent également de votre rapidement de réponse.\n" +
+                    "Sachez également que votre installation sera éligible à notre assurance RC PRO et notre assurance décennale.\n" +
+                    "Lors de l'acceptation, je vous prie de me renvoyer signé, accompagné de la mention : \n" +
+                    "\n" +
+                    "<strong> « BON POUR ACCORD » </strong>\n" +
+                    "\n" +
+                    "Je reste à votre entière disposition pour tous les renseignements ou les remarques que vous pourriez avoir concernant ce devis (technique, délais, prix).\n"
 
-};
+            } else if (this.historique && this.historique.length === 1) {
+                var cont;
+                if (this.categorie == 'VT')
+                    cont = "je vous ai envoyé le devis que vous m'avez demandé pour le remplacement de votre vitrage, vous deviez le transmettre directement à votre compagnie d'assurance.\n\n";
+                else if (this.categorie == 'AS')
+                    cont = "je vous ai transmis comme convenue le devis de remplacement de votre ballon d'eau chaude sanitaire.\n\n";
+                else
+                    cont = "je vous ai transmis comme convenue le devis " + categorieClean + " que vous avez souhaité.\n\n";
+                var text = start + cont + end;
+
+            } else if (this.historique && this.historique.length > 1) {
+                var text = "je vous ai transmis un devis " + categorieClean + " en date du " + mmt(this.historique[0].date).format('L') + ".\n\n" + end;
+            } else if (this.categorie == 'VT') {
+                var text = "Suite à notre échange téléphonique concernant le remplacement de votre vitrage," +
+                    "vous trouverez ci-joint le devis n°" + this.id + " correspondant à ce que nous avons vu ensemble.\n\n" +
+                    "Merci de bien vouloir transmettre ce devis de remplacement de vitrage directement à votre compagnie d’assurance, afin d'obtenir leurs accords (si nécessaire).\n" +
+                    "Merci de nous renvoyer le devis signé accompagné de la mention « BON POUR ACCORD » par mail.\n\n" +
+                    "Nous interviendrons dans les plus brefs délais.\n\n" +
+                    "Je reste à votre entière disposition pour toutes les demandes de renseignement et les remarques que vous pourriez avoir.\n\n";
+            } else if (lodash.find(this.produits, function(e) {
+                    return lodash.startsWith(e.ref, "BAL");
+                })) {
+                var text = "Suite à notre échange téléphonique concernant le remplacement de votre ballon d'eau chaude sanitaire," +
+                    "vous trouverez ci-joint le devis n°" + this.id + ".\n\n" +
+                    "Je reste à votre entière disposition pour tous renseignements complémentaires ou remarques que vous pourriez avoir (technique/prix).\n\n" +
+                    "Sachez également, que votre installation sera éligible à notre assurance RC PRO et notre assurance décennale.\n" +
+                    "Dès votre accord, nous interviendrons rapidement.\n\n" +
+                    "Meilleures salutations,\n\n";
+            } else {
+                var text = "Suite à notre dernier échange concernant la réalisation d'un devis " + categorieClean + ", \n" +
+                    "vous trouverez ci-joint le devis n°" + this.id + " correspondant à ce que nous avons vu ensemble. \n\n" +
+                    "Sachez également, que votre installation sera éligible à notre assurance RC PRO et notre assurance décennale.\n\n" +
+                    "Lors de l'acceptation, je vous prie de me renvoyer le devis signé, accompagné de la mention:\n\n" +
+                    "<strong> « BON POUR ACCORD » </strong>\n\n" +
+                    "Je reste à votre entière disposition pour tous les renseignements ou les remarques que vous pourriez avoir concernant ce devis (technique, délais, prix). \n\n" +
+                    "Merci de me tenir au courant de la suite que vous donnerez à ce devis. \n\n";
+
+            }
+            var outro = "Cordialement, \n\n" +
+                (user.pseudo ||  "Arnaud,") + '\n' +
+                "<strong>Ligne Directe : " + (user.ligne ? (user.ligne.match(/.{2}|.{1,2}/g).join('.')) :  "09.72.42.30.00") + "</strong>\n" +
+                "<strong>Ligne Atelier : " + "09.72.42.30.00" + "</strong>\n";
+
+            return intro + text + outro;
+        }
+    },
+    artisan: {
+        envoiContrat: function(user) {
+            return "Monsieur {{representant.nom}},\n" +
+                "\n" +
+                "Comme expliqué lors de notre conversation téléphonique, nous sommes une entreprise générale du bâtiment situé dans la région d'île de France.\n" +
+                "\n" +
+                "Notre entreprise intervient de manière régulière dans plusieurs villes en France pour des interventions de dépannage spécialisé dans le second œuvre (plomberie sanitaire, génie climatique, serrurerie, vitrerie et l'électricité générale).\n" +
+                "\n" +
+                "Nos clients sont des particuliers, des réseaux d'entreprises, des commerces, des administrateurs de bien et des agences immobilières.\n" +
+                "\n" +
+                "Je suis actuellement à la <u><b>recherche d'un partenaire</b></u> pouvant intervenir auprès de nos clients dans votre région pour des prestations de dépannage.\n" +
+                "Vous trouverez ci-joint une brochure expliquant notre fonctionnement pour une éventuelle collaboration.\n" +
+                "Je vous transmets également un contrat de partenariat permettant d'établir les conditions de travail entre nos deux entreprises.\n" +
+                "\n" +
+                "Pour chaque intervention, vous recevez au préalable un ordre de service par mail et par téléphone,<u><b> l'ordre de service n'est validé que sous votre accord.</b></u>\n" +
+                "\n" +
+                "Une fois chez notre client, vous restez totalement autonome sur le montant à facturer et si nécessaire vous pouvez ajuster le montant de la prestation tout en ayant préalablement prévenu notre client.\n" +
+                "\n" +
+                "Lors des interventions, vous représentez notre entreprise c'est pourquoi vous disposez des documents fournis à tous nos partenaires en France.\n" +
+                "\n" +
+                "<u><b>Vous avez à votre disposition :</u></b>\n" +
+                "\n" +
+                "• Un bloc facturier au nom de Edison Services\n" +
+                "• Un bloc devis au nom de Edison Services\n" +
+                "• Un catalogue de prix de vente du matériel\n" +
+                "• Un accès à tous nos fournisseurs\n" +
+                "\n" +
+                "Si vous souhaitez rejoindre notre réseau, vous trouverez les documents à nous transmettre :\n" +
+                "\n" +
+                "• Le contrat de partenariat signé\n" +
+                "• Immatriculation ou KBIS\n" +
+                "• Pièce d'identité du responsable de l'entreprise\n" +
+                "• Attestation d'assurance (si disponible)\n" +
+                "\n" +
+                "Je tiens à vous rappelez que cette future collaboration ne vous oblige jamais à intervenir pour nous. Il s'agit simplement de rajouter à votre quotidien des interventions en plus.\n" +
+                "\n" +
+                "Cependant, j'attire votre attention sur le fait que nous recherchons des personnes de confiances, maîtrisant parfaitement l'aspect technique du travail à effectuer tout en sachant être à l'aise avec la clientèle.\n" +
+                "\n" +
+                "Je reste à votre entière disposition pour toutes les questions ou les remarques que vous pourriez avoir.\n" +
+                "\n" +
+                "En vous remerciant d'avance pour l'attention que vous porterez à ma demande et aux documents transmis.\n" +
+                "\n" +
+                "Dans l'attente d'un retour de votre part.\n" +
+                "\n" +
+                "PS : Si vous souhaitez faire un test avant de travailler régulièrement avec notre entreprise et dans le but de comprendre le fonctionnement global de notre structure, n'hésitez pas à nous le faire savoir.\n" +
+                "\n" +
+                "Cordialement\n" +
+                "\n" +
+                "<b>Yohann RHOUM</b>\n" +
+                "Service partenariat\n" +
+                "Port : 06.37.37.59.45 Fax : 09.72.39.33.46\n" +
+                "yohann.rhoum@edison-services.fr\n" +
+                "\n" +
+                "<b>Edison Services</b>\n" +
+                "Dépannage - Entretien - Installation - Rénovation\n" +
+                "Siège social : 75, rue des dames - 75017 Paris\n" +
+                "contact@edison-services.fr - www.edison-services.fr"
+        },
+        rappelContrat: function(user) {
+            return "Bonjour Monsieur {{representant.nom}}\n" +
+                "\n" +
+                "Suite à notre conversation téléphonique du {{datePlain}} concernant la signature d'un contrat de partenariat entre nos deux entreprises.\n" +
+                "\n" +
+                "Vous trouverez donc ci-joint la déclaration de sous-traitance à remplir.\n" +
+                "\n" +
+                "Merci de joindre également à cette déclaration les éléments suivants :\n" +
+                "\n" +
+                "• Extrait KBIS ou INSEE\n" +
+                "• Photocopie R/V de la pièce d'identité du gérant\n" +
+                "\n" +
+                "Vous pouvez nous transmettre ces pièces administratives par mail à :\n" +
+                "\n" +
+                "yohann.rhoum@edison-services.fr\n" +
+                "\n" +
+                "\n" +
+                "Ou par voie postal :\n" +
+                "\n" +
+                "<u><b>" +
+                "Edison Services\n" +
+                "Service Partenariat\n" +
+                "75 rue des dames - 75017 PARIS\n" +
+                "</b></u>" +
+                "\n" +
+                "\n" +
+                "Dès réception de ces documents et validation par nos services, vous recevrez par voie postal:\n" +
+                "\n" +
+                "• Un bloc facture Edison Services\n" +
+                "• Un bloc devis Edison Services\n" +
+                "• Un catalogue de prix de vente du matériel\n" +
+                "• Un accès à tous nos fournisseurs\n" +
+                "Je reste à votre entière disposition pour toutes les questions ou les remarques que vous pourriez avoir.\n" +
+                "\n" +
+                "Dans l'attente d'une réponse favorable de votre part,\n" +
+                "\n" +
+                "Cordialement\n" +
+                "\n" +
+                "<b>Yohann RHOUM</b>\n" +
+                "Service Partenariat\n" +
+                "Port : 06.37.37.59.45 Fax : 09.72.39.33.46\n" +
+                "yohann.rhoum@edison-services.fr\n" +
+                "\n" +
+                "<b>Edison Services</b>\n" +
+                "Dépannage - Entretien - Installation - Rénovation\n" +
+                "Siège social : 75 rue des Dames, 75017, Paris\n" +
+                "contact@edison-services.fr - www.edison-services.fr\n"
+        },
+        dossierComplet: function() {
+            return "Monsieur <b>{{representant.nom}}</b>,\n" +
+                "\n" +
+                "Nous avons le plaisir de vous annoncer que vous êtes dès à présent <b>membre du réseau partenaire Edison Services.</b>\n" +
+                "\n" +
+                "Le service partenariat a validé votre dossier.\n" +
+                "\n" +
+                "Vous allez recevoir très prochainement les pièces administratives vous permettant d'intervenir directement auprès de nos clients.\n" +
+                "\n" +
+                "Ces documents seront transmis par voie postale à cette adresse :\n" +
+                "<p strong center>" +
+                "Monsieur {{representant.nom}},\n" +
+                "{{address.n}} {{address.r}}\n" +
+                "{{address.cp}} {{address.v}}</b>\n" +
+                "</p>" +
+                "Nous pouvons désormais vous proposez d'intervenir auprès de nos clients dans les domaines suivants :\n" +
+                "<p strong center>électricité - plomberie - chauffage - climatisation - serrurerie</p>" +
+                "Vous trouverez ci-joint, votre fiche d'identification récapitulative.\n" +
+                "\n" +
+                "Le service intervention de notre société devrait faire appel à vous dans les plus brefs délais.\n" +
+                "Cordialement,\n" +
+                "\n" +
+                "Yohann RHOUM\n" +
+                "Service partenariat\n" +
+                "Port : 06.45.57.87.66 Fax : 09.72.39.33.46\n" +
+                "yohann.rhoum@edison-services.fr\n" +
+                "\n" +
+                "Edison Services\n" +
+                "Dépannage - Entretien - Installation - Rénovation\n" +
+                "Siège social : 75, rue des dames - 75010 Paris\n" +
+                "contact@edison-services.fr - www.edison-services.fr\n"
+        }
+    }
+}
 
 },{"./dataList.js":8}],14:[function(require,module,exports){
 /**

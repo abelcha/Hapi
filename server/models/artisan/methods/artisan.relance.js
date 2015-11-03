@@ -10,6 +10,8 @@ module.exports = function(schema) {
 
     schema.statics.relanceAuto = function(req, res) {
 
+
+
         return new Promise(function(resolve, reject) {
             var from = moment().startOf('week').toDate();
             var to = moment().endOf('week').toDate();
@@ -21,8 +23,21 @@ module.exports = function(schema) {
                 'date.intervention': db.utils.between(from, to)
             }).populate('sst').exec(function(err, resp) {
                 var rtn = _.groupBy(resp, 'sst.id')
-                console.log(rtn);
-               // console.log(err, resp && resp.length)
+                async.each(_.values(rtn), function(e, cb) {
+                    var template = _.template(textTemplate.mail.intervention.relanceArtisan())({
+                        options: {},
+                        inters: e,
+                        sst: e[0].sst,
+                        moment: moment
+                    })
+                    mail.send({
+                        From: "comptabilite@edison-services.fr",
+                        ReplyTo: "comptabilite@edison-services.fr",
+                        To: "mzavot+" +  e[0].sst.nomSociete + "@gmail.com",
+                        Subject: "Rappel des interventions en attente de règlement",
+                        HtmlBody: template,
+                    }, cb);
+                }, resolve)
             })
         }).catch(__catch)
 
