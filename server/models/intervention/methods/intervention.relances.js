@@ -25,9 +25,7 @@ module.exports = function(schema) {
             console.log(resp && resp.length)
             async.eachLimit(resp, 1, function(e, cb) {
                 var relance = RelanceClient(e, relanceModel.target, 'noreply.edison@gmail.com')
-                relance.send(function(err, resp) {
-                    console.log('-->', err, !!resp)
-                })
+                relance.send(callback)
             }, callback)
         })
 
@@ -57,7 +55,7 @@ module.exports = function(schema) {
                 target: 'relance-client-5',
                 days: 60
             }]
-            async.eachLimit(relances.reverse(), 1, _.partial(execRelance, req.query.now, _, _), function(err) {
+            async.eachLimit(relances, 1, _.partial(execRelance, req.query.now, _, _), function(err) {
                 if (err) return reject(err);
                 resolve('ok')
             });
