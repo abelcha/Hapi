@@ -2677,8 +2677,10 @@ module.exports = {
                 "</table>" +
 
 
-                "<p> Nous considérons aujourd'hui que vous faites opposition au règlement de la somme due. A défaut de réception de la totalité des {{prixFinalTTC}}, sous huitaine, votre dossier sera transmis à notre service contentieux. <br> " +
-                "Celui-ci entamera les démarches judiciaires pour en obtenir le règlement majoré des frais de recouvrement et de ceux relatifs à l'article 700 du NCPC. <br> </p>" +
+                "<p> Nous considérons aujourd'hui que vous faites opposition au règlement de la somme due. </p>" + 
+                "<p> A défaut de réception de la totalité des {{prixFinalTTC}} €, sous huitaine, votre dossier sera transmis à notre service contentieux. </p>" +
+                "<p> Celui-ci entamera les démarches judiciaires pour en obtenir le règlement majoré des frais de recouvrement et de ceux relatifs à l'article 700 du NCPC. </p>" +
+
 
                 "<p>A l'organisme qui gère notre comptabilité:</p>" +
                 "<p strong center> EDISON SERVICES FRANCE<br>" +
@@ -2689,8 +2691,8 @@ module.exports = {
                 "<p> Nous vous prions d'agréer, Madame, Monsieur, nos salutations distinguées. </p>" +
                 "<p>Cordialement.</p>" +
                 "<p style='text-align:right'>" +
-                "<b> <u> Service comptabilité </u> </b>" +
-                "<p> Tél: 09.72.51.08.01 </p>"
+                "<b> <u> Service comptabilité </u> </b><br>" +
+                "style='text-align:right'> Tél: 09.72.51.08.01 </p>"
             },
             relance2: function() { /* LETTRE */
                 return "<p> Réf: {{os}} <br> Pièce jointe: Facture n°{{os}} </p>" +
@@ -2894,7 +2896,7 @@ module.exports = {
                 "</table>" +
 
                 "<p> Nous considérons aujourd'hui que vous faites opposition au règlement de la somme due. </p>" + 
-                "<p> A défaut de réception de la totalité des {{prixFinalTTC}}, sous huitaine, votre dossier sera transmis à notre service contentieux. </p>" +
+                "<p> A défaut de réception de la totalité des {{prixFinalTTC}} €, sous huitaine, votre dossier sera transmis à notre service contentieux. </p>" +
                 "<p> Celui-ci entamera les démarches judiciaires pour en obtenir le règlement majoré des frais de recouvrement et de ceux relatifs à l'article 700 du NCPC. </p>" +
 
                 "<p>A l'organisme qui gère notre comptabilité:</p>" +
