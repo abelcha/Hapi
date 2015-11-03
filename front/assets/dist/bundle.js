@@ -2643,10 +2643,9 @@ module.exports = {
                     "<p> Nous vous rappelons que le présent courrier fait courir les intérêts légaux et conventionnels. </p>" +
                     "<p> A défaut de réception dans les délais, votre dossier sera automatiquement transmis à notre service juridique.</p>" +
                     "<p> Cordialement, </p>" +
-                    "<header>" +
-                    "<b> <u> Service recouvrement </u> </b>" +
-                    "<p> Damien Delvaux </p>" +
-                    "<p> Tél: 09.72.50.20.22 </p>" +
+                    "<header style='text-align:right'>" +
+                    "<b> <u> Service comptabilité </u> </b>" +
+                    "<p> Tél: 09.72.51.08.01 </p>" +
                     "</header>"
             },
             relance3: function() {
@@ -2668,7 +2667,7 @@ module.exports = {
                 "        <th> {{datePlain}} </th> " +
                 "        <th> {{os}} </th> " +
                 "        <th style='text-align:right'> {{prixFinalTTC}} € </th> " +
-                "        <th> {{client.address.v}}, {{client.address.cp}} </th> " +
+                "        <th> {{client.address.cp}} {{client.address.v}} </th> " +
                 "    </tr> " +
                 "    <tr> " +
                 "        <th colspan='2'> <b> TOTAL </b> </th> " +
@@ -2688,7 +2687,11 @@ module.exports = {
                 "Tél. 09.72.51.08.01 (Ouvert de 09h00 à 12h30 / 14h00 à 16h30)</p>" +
 
                 "<p> Nous vous prions d'agréer, Madame, Monsieur, nos salutations distinguées. </p>" +
-                "<p>Cordialement.</p>"
+                "<p>Cordialement.</p>" +
+                "<header style='text-align:right'>" +
+                "<b> <u> Service comptabilité </u> </b>" +
+                "<p> Tél: 09.72.51.08.01 </p>" +
+                "</header>"
             },
             relance2: function() {
                 return "<p> Réf: {{os}} <br> Pièce jointe: Facture n°{{os}} </p>" +
@@ -2709,7 +2712,7 @@ module.exports = {
                     "        <th> {{datePlain}} </th> " +
                     "        <th> {{os}} </th> " +
                     "        <th style='text-align:right'> {{prixFinalTTC}} € </th> " +
-                    "        <th> {{client.address.v}}, {{client.address.cp}} </th> " +
+                    "        <th> {{client.address.cp}} {{client.address.v}} </th> " +
                     "    </tr> " +
                     "    <tr> " +
                     "        <th colspan='2'> <b> TOTAL </b> </th> " +
@@ -2735,7 +2738,11 @@ module.exports = {
                     "</p>" +
                     "<p> Merci d'indiquer la référence de la facture ({{os}}) dans le règlement. </p>" +
                     "<p> Nous vous prions d'agréer, Madame, Monsieur, nos salutations distinguées. </p>" +
-                    "<p>Cordialement.</p>"
+                    "<p>Cordialement.</p>" +
+                    "<header style='text-align:right'>" +
+                    "<b> <u> Service comptabilité </u> </b>" +
+                    "<p> Tél: 09.72.51.08.01 </p>" +
+                    "</header>"
             },
             relance1: function() { //Qlolo
                 return "<strong> OBJET: Première relance pour facture n°{{os}} impayée </strong>" +
@@ -2759,7 +2766,7 @@ module.exports = {
                     "<ul>" +
                     "<li>Ci-joint la facture</li>" +
                     "</ul>" +
-                    "<header>" +
+                    "<header style='text-align:right'>" +
                     "<b> <u> Service comptabilité </u> </b>" +
                     "<p> Tél: 09.72.51.08.01 </p>" +
                     "</header>"
@@ -2882,7 +2889,7 @@ module.exports = {
                     "        <th> {{datePlain}} </th> " +
                     "        <th> {{os}} </th> " +
                     "        <th style='text-align:right'> {{prixFinalTTC}} € </th> " +
-                    "        <th> {{client.address.v}}, {{client.address.cp}} </th> " +
+                    "        <th> {{client.address.cp}} {{client.address.v}} </th> " +
                     "    </tr> " +
                     "    <tr> " +
                     "        <th colspan='2'> <b> TOTAL </b> </th> " +
@@ -2901,12 +2908,7 @@ module.exports = {
                     "   75 rue des dames, 75017 Paris<br>" +
                     "   Tél. 09.72.51.08.01 (Ouvert de 09h00 à 12h30 / 14h00 à 16h30)" +
                     "</strong></center></p>" +
-
-                    "<header style='margin-top: 25px;'>" +
-                    "<b> <u> Service comptabilité </u> </b>" +
-                    "<p> Damien Delvaux </p>" +
-                    "<p> Tél: 09.72.50.20.22 </p>" +
-                    "</header>"
+                    "<p>Cordialement.</p>"
             },
             relance2: function() {
                 return "<style> table { border-collapse: collapse;}\n table, td, th {border: 1px solid black;font-size:13px;}</style>" +
@@ -2923,7 +2925,7 @@ module.exports = {
                     "        <th> {{datePlain}} </th> " +
                     "        <th> {{os}} </th> " +
                     "        <th style='text-align:right'> {{prixFinalTTC}} € </th> " +
-                    "        <th> {{client.address.v}}, {{client.address.cp}} </th> " +
+                    "        <th> {{client.address.cp}} {{client.address.v}} </th> " +
                     "    </tr> " +
                     "    <tr> " +
                     "        <th colspan='2'> <b> TOTAL </b> </th> " +
@@ -2948,11 +2950,7 @@ module.exports = {
                     "BIC: BNPAFRPPPRG" +
                     "</p>" +
                     "<p> Merci d'indiquer la référence de la facture ({{os}}) dans le règlement. </p>" +
-                    "<header style='margin-top: 25px;'>" +
-                    "<b> <u> Service comptabilité </u> </b>" +
-                    "<p> Lionel Durand </p>" +
-                    "<p> Tél: 09.72.51.08.01 </p>" +
-                    "</header>"
+                    "<p>Cordialement.</p>"
             },
             relance1: function() {
                 return "<p>Madame, Monsieur,<br>" +
