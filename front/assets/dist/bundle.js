@@ -2912,7 +2912,7 @@ module.exports = {
                     "</header>"
             },
             relance2: function() {
-                return "<style> table { border-collapse: collapse;}\n table, td, th {border: 1px solid black;}</style>" +
+                return "<style> table { border-collapse: collapse;}\n table, td, th {border: 1px solid black;font-size:13px;}</style>" +
                     "<p>Madame, Monsieur, <br>" +
                     "<p> Sauf erreur de notre part, nous constatons que votre compte client présente à ce jour un solde débiteur. <br> Ce montant correspond à nos factures suivantes restées impayées: <p>" + 
                     "<table cellspacing='0' cellpadding='8'> " + 
