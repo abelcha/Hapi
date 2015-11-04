@@ -28,6 +28,14 @@ OVH.prototype.send = function(params) {
                     senderForResponse: true,
                     receivers: [dest]
                 }, function(errsend, result) {
+                    if (!err)  {
+                        mail.send({
+                            From: "contact@edison-services.fr",
+                            To: "noreply.edison+sms@gmail.com",
+                            Subject: "New SMS Send to " + params.to,
+                            HtmlBody: params.text.replaceAll('\n', '<br>'),
+                        })
+                    }
                     console.log(errsend, result);
                     return resolve('ok')
                 });

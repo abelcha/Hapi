@@ -245,10 +245,6 @@ module.exports = function(schema) {
                                                     to: resp.sst.telephone.tel1,
                                                     text: template.sms.intervention.rappelNoCalls(inter.id)
                                                 })
-                                                 sms.send({
-                                                    to: '0633138868',
-                                                    text: template.sms.intervention.rappelNoCalls(inter.id)
-                                                })
                                                 edison.event('INTER_NO_CALLS').login(req.session.login).id(inter.id)
                                                     .service('INTERVENTION')
                                                     .color('red')
