@@ -84,37 +84,4 @@ module.exports = function(schema) {
         })
 
     }
-
-    /*
-        schema.statics.relance = function(req, res) {
-            console.log('==>', req.query.id)
-            return new Promise(function(resolve, reject)  {
-
-                va
-                    'date.envoiFacture': {
-                        $exists: true
-                    },
-                    id: {
-                        $gt: 25000
-                    },
-
-                    'status': 'VRF'
-                }
-                if (req.query.id) {
-                    query.id = parseInt(req.query.id);
-                }
-
-                db.model('intervention').find(query).limit(10).sort('-id').then(function(resp, cb) {
-                    console.log(resp.length)
-                    var rnd = resp[_.random(0, resp.length - 1)];
-                    var RelanceClient = requireLocal('config/_relances-client');
-                    var rl = RelanceClient(rnd, req.query.model || 'relance-client-1', req.query.email || 'mzavot@gmail.com')
-                    rl.send(function(err, resp) {
-                            console.log(err, resp);
-                            resolve('ok')
-                        })
-                }, resolve)
-            }).catch(__catch)
-        }
-    */
 }

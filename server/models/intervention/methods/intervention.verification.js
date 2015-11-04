@@ -36,7 +36,7 @@ module.exports = function(schema) {
                 mail.send({
                     From: "comptabilite@edison-services.fr",
                     ReplyTo: "comptabilite@edison-services.fr",
-                    To: "abel.chalier@gmail.com",
+                    To: inter.sst.email,
                     Subject: "Intervention n°" + inter.id + " en attente de règlement",
                     HtmlBody: template,
                 });

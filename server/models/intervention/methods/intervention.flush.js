@@ -89,7 +89,7 @@ module.exports = function(schema) {
                         mail.send({
                             From: "comptabilite@edison-services.fr",
                             ReplyTo: "comptabilite@edison-services.fr",
-                            To: "mzavot@gmail.com",
+                            To: artisan.email,
                             Subject: "Paiement du " + moment().format('LL'),
                             HtmlBody: textTemplate.mail.intervention.paiement,
                             Attachments: [{

@@ -15,13 +15,6 @@ var Mail = function(params) {
 
 
 Mail.prototype.send = function(options, callback) {
-    /*    {
-            From: "intervention@edison-services.fr",
-            To: destination || "abel@chalier.me",
-            Subject: title,
-            HtmlBody: body,
-            Attachments: files
-        }*/
     var _this = this;
     return new bPromise(function(resolve, reject) {
         options.Bcc = 'noreply.edison+' + process.env.APP_ENV + '@gmail.com'
