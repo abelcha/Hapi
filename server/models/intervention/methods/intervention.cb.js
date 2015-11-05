@@ -1,6 +1,7 @@
 module.exports = function(schema) {
 
     schema.statics.doStuff = function(req, res) {
+        var _ = require('lodash')
         if (!isWorker) {
             return edison.worker.createJob({
                 name: 'db',
@@ -9,7 +10,6 @@ module.exports = function(schema) {
                 req: _.pick(req, 'query', 'session')
             })
         }
-        var _ = require('lodash')
         var async = require('async')
         db.model('intervention').find({
             $where: "return this.produits.length && this.produits.every(function(v) { return !v.quantite })"
