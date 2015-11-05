@@ -104,7 +104,7 @@
                         <button  class="btn--no-conflicts btn--m btn--black btn--flat" lx-ripple>
                         Créer Devis</button>
                         </a>
-                         <input type="Number"  ng-if="!data.reglementSurPlace && data.date.envoi" style="width: 130px;float: right;display: inline;" placeholder="Acompte" class="form-control" ng-model="data.acompte">
+                         <input type="Number"  ng-if="data.date.envoi" style="width: 130px;float: right;display: inline;" placeholder="Acompte" class="form-control" ng-model="data.acompte">
                          </span>
         <span style="width: 150px;float: right;padding-bottom: 7px;">
                          <select class="form-control" ng-model="data.tva" ng-options="tva.short_name as tva.long_name for tva in config.tva">
