@@ -87,7 +87,7 @@ angular.module('edison').controller('MainController', function($timeout, LxNotif
 
     $rootScope.user = window.app_session
     reloadStats();
-    socket.on('filterStatsReload', reloadStats)
+    socket.on('filterStatsReload', _.debounce(reloadStats, 1000));
 
     var notify = function(data) {
         if (!("Notification" in window)) {

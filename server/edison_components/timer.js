@@ -76,9 +76,11 @@ var Timer = module.exports = function() {
         redis.delWildcard("rs*")
     })
     this.emitter.on("4pm", function() {
-        db.model('intervention').backup(function() {
-            console.log('backup [DONE]')
-        })
+        if (envProd) {
+            db.model('intervention').backup(function() {
+                console.log('backup [DONE]')
+            })
+        }
     })
 
     /*    this.emitter.on("every 5 minutes", function() {

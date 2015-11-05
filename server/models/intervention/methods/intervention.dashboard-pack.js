@@ -209,7 +209,6 @@ module.exports = function(schema) {
         });
     }
 
-    schema.statics.champLastMonth = function(req, res) {}
 
     schema.statics.dashboardStats = function(req, res) {
         Promise.all([

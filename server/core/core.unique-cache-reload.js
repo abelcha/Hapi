@@ -42,10 +42,8 @@
                         data: resp,
                         ts: _.now()
                     });
-                    edison.statsTelepro.reload().then(function(_resp) {
-                        io.sockets.emit('filterStatsReload', _resp);
-                    });
-                }, Promise.reject.bind(Promise))
+                    edison.statsTelepro.reload();
+                })
             }
 
         }, 5000, {
