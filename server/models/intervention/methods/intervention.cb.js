@@ -1,6 +1,14 @@
 module.exports = function(schema) {
 
     schema.statics.doStuff = function(req, res) {
+        if (!isWorker) {
+            return edison.worker.createJob({
+                name: 'db',
+                model: 'intervention',
+                method: 'doStuff',
+                req: _.pick(req, 'query', 'session')
+            })
+        }
         var _ = require('lodash')
         var async = require('async')
         db.model('intervention').find({
@@ -8,7 +16,7 @@ module.exports = function(schema) {
         }, {
             id: 1
         }).then(function(resp) {
-            async.eachLimit(_.pluck(resp, "id"), 2, function(id, callback) {
+            async.eachLimit(_.pluck(resp, "id"), 10, function(id, callback) {
                 db.model('intervention').dump({
                     query: {
                         id: id,
