@@ -435,7 +435,7 @@
         }
 
         rtn.prixAnnonce = d.prix_ht_annonce;
-        rtn.prixFinal = d.comptaPrixFinal || d.prix_ht_final ||  undefined;
+        rtn.prixFinal = d.comptaPrixFinal || d.prix_ht_final || d.montant_ht_facture || undefined;
         if (!rtn.prixFinal && rtn.status === 'VRF') {
             rtn.prixFinal = rtn.prixAnnonce || 0;
         }

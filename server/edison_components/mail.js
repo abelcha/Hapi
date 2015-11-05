@@ -17,9 +17,10 @@ var Mail = function(params) {
 Mail.prototype.send = function(options, callback) {
     var _this = this;
     return new bPromise(function(resolve, reject) {
-        options.Bcc = 'noreply.edison+' + process.env.APP_ENV + '@gmail.com'
         if (!envProd) {
             options.To = 'abel.chalier@gmail.com'
+        } else {
+            options.Bcc = 'noreply.edison+' + process.env.APP_ENV + '@gmail.com'
         }
         _this.client.sendEmail(options, function(err, success) {
             console.log(options.To, options.Bcc)

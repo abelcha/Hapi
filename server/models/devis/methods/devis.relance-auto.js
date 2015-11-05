@@ -15,30 +15,27 @@ module.exports = function(schema) {
             }
             //  console.log(options)
         db.model('devis').envoi.fn(e, options)
-            .then(callback,function() {
-                console.log('okokcallback')
-            })
+            .then(_.partial(callback, null), callback)
     }
 
     schema.statics.relanceAuto7h = function(req, res) {
         var async = require('async')
-        console.log('okokok')
         var todayAt7 = moment.tz('Europe/Paris').hours(7).toDate()
         var yesterdayAt12h30 = moment.tz('Europe/Paris').add(-1, 'days').hours(12).minutes(30).toDate()
         var twoDaysAgo = moment.tz('Europe/Paris').add(-2, 'days').toDate();
         var oneDaysAgo = moment.tz('Europe/Paris').add(-1, 'days').toDate();
         db.model('devis').find({
             status: 'ATT',
-            historique: {
+            /*historique: {
                 $size: 1
             },
             'historique.0.date': {
                 $gt: yesterdayAt12h30
-            }
+            }*/
         }).then(function(resp) {
             sms.send({
                 to: '0633138868',
-                text: 'devis rappel' + resp.length
+                text: 'devis rappel ' + JSON.stringify(_.pluck(resp, 'id')) 
             })
             async.eachLimit(resp, 1, send)
         })
@@ -55,7 +52,7 @@ module.exports = function(schema) {
         }).then(function(resp) {
             sms.send({
                 to: '0633138868',
-                text: 'devis rappel' + resp.length
+                text: 'devis rappel ' + JSON.stringify(_.pluck(resp, 'id')) 
             })
             async.eachLimit(resp, 1, send);
         })
@@ -76,6 +73,10 @@ module.exports = function(schema) {
                 $gt: todayAt7
             }
         }).then(function(resp) {
+            sms.send({
+                to: '0633138868',
+                text: 'devis rappel ' + JSON.stringify(_.pluck(resp, 'id')) 
+            })
             async.eachLimit(resp, 1, send)
         })
     }

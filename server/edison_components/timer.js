@@ -29,23 +29,29 @@ var Timer = module.exports = function() {
         });*/
 
     this.emitter.on("everyday at 20", function() {
-        db.model('intervention').relanceAuto();
+        if (envProd) {
+            db.model('intervention').relanceAuto();
+        }
     });
 
     this.emitter.on("everyday at 7", function() {
-        db.model('devis').relanceAuto7h()
+        if (envProd) {
+            db.model('devis').relanceAuto7h()
+        }
     });
 
 
     this.emitter.on("everyday at 14", function() {
-        db.model('devis').relanceAuto14h()
+        if (envProd) {
+            db.model('devis').relanceAuto14h()
+        }
     });
 
 
     this.emitter.on("hour", function() {
-
-        db.model('intervention').rappelDateIntervention()
-
+        if (envProd) {
+            db.model('intervention').rappelDateIntervention()
+        }
     });
 
     this.emitter.on("hour", function() {
