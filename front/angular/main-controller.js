@@ -119,11 +119,11 @@ angular.module('edison').controller('MainController', function($timeout, LxNotif
 
     socket.on('notification', function(data) {
         if (data.dest === $rootScope.user.login && (data.dest !== data.origin || data.self)) {
-            notify(data);
+       //     notify(data);
             LxNotificationService.notify(data.message, data.icon || 'android', false, data.color);
         }
         if (data.service && data.service === $rootScope.user.service) {
-            notify(data);
+         //   notify(data);
             LxNotificationService.notify(data.message, data.icon || 'android', false, data.color);
         }
     })
