@@ -47,7 +47,7 @@ Event.prototype.date = function(date) {
 }
 Event.prototype.save = function(cb) {
     db.model('event')(this.doc).save(cb)
-    if (io) {
+    if (typeof io !== 'undefined') {
         io.sockets.emit('event');
     }
     return this

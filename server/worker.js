@@ -31,6 +31,7 @@ try {
         jobs.process('db', function(job, done) {
             var terminated = false
             global.currenWorkerJob = job;
+            console.log(job.data.model, job.data.method)
             db.model(job.data.model)[job.data.method](job.data.req).then(function(result)  {
                 terminated = true;
                 done(null, result);
