@@ -30,7 +30,10 @@ module.exports = function(schema) {
             async.parallel({
                 nbrIntervention: function(cb) {
                     db.model("intervention").count({
-                        'artisan.id': _this.id
+                        'artisan.id': _this.id,
+                        'status': {
+                            $in: ['ENC', 'VRF']
+                        }
                     }).count(cb)
                 },
                 quarantained: function(cb) {
