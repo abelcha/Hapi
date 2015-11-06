@@ -34,6 +34,7 @@ module.exports = function(db) {
                 default: Date.now,
             },
             login: String,
+            auto: Boolean,
             mail: {}
         }],
         client: { //

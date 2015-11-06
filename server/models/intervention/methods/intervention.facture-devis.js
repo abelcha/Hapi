@@ -6,6 +6,7 @@ module.exports = function(schema) {
     moment.locale('fr');
     var textTemplate = requireLocal('config/textTemplate');
     var _ = require('lodash')
+    var Facture = requireLocal('config/validate-facture');
 
     var getFacturePdfObj = function(doc, date, acquitte, reverse) {
 

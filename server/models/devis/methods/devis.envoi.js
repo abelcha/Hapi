@@ -55,6 +55,7 @@ module.exports = function(schema) {
                         devis.historique.push({
                             login: req.session.login,
                             date: new Date,
+                            auto: req.body.auto
                         })
                         devis.status = 'ATT';
                         edison.event('DEVIS_ENVOI').login(req.session.login).id(devis.id).save();

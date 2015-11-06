@@ -20,6 +20,7 @@ var request = function(query) {
                 resp.appels = resp.appels || [];
                 resp.appels.push(query);
                 resp.save(function(err, resp) {
+                    console.log("==>", query._type, query._type === 'CALLBACK')
                     if (query._type === 'CALLBACK') {
                         var template = "le client {{id}} ({{client.civilite}} {{client.nom}}) rappel le {{artisan.nomSociete}}"
                     } else {

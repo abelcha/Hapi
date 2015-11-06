@@ -10,7 +10,8 @@ module.exports = function(schema) {
         var options = {
                 session: realUsr || usr,
                 body: {
-                    text: textTemplate.mail.devis.envoi.bind(e)(realUsr || usr, config, _, moment)
+                    text: textTemplate.mail.devis.envoi.bind(e)(realUsr || usr, config, _, moment),
+                    auto: true,
                 }
             }
             //  console.log(options)
@@ -35,7 +36,7 @@ module.exports = function(schema) {
         }).then(function(resp) {
             sms.send({
                 to: '0633138868',
-                text: 'devis rappel ' + JSON.stringify(_.pluck(resp, 'id')) 
+                text: 'devis rappel ' + JSON.stringify(_.pluck(resp, 'id'))
             })
             async.eachLimit(resp, 1, send)
         })
@@ -52,7 +53,7 @@ module.exports = function(schema) {
         }).then(function(resp) {
             sms.send({
                 to: '0633138868',
-                text: 'devis rappel ' + JSON.stringify(_.pluck(resp, 'id')) 
+                text: 'devis rappel ' + JSON.stringify(_.pluck(resp, 'id'))
             })
             async.eachLimit(resp, 1, send);
         })
@@ -75,7 +76,7 @@ module.exports = function(schema) {
         }).then(function(resp) {
             sms.send({
                 to: '0633138868',
-                text: 'devis rappel ' + JSON.stringify(_.pluck(resp, 'id')) 
+                text: 'devis rappel ' + JSON.stringify(_.pluck(resp, 'id'))
             })
             async.eachLimit(resp, 1, send)
         })
