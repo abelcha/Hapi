@@ -21,7 +21,7 @@ module.exports = function(schema) {
             'reglementSurPlace': false,
             'compta.reglement.recu': false,
             'date.intervention': db.utils.between(from, to)
-        }).populate('sst').exec(function(err, resp) {
+        }).populate('sst').lean().exec(function(err, resp) {
             console.log(resp && resp.length)
             async.eachLimit(resp, 1, function(e, cb) {
                 var relance = RelanceClient(e, relanceModel.target, 'noreply.edison@gmail.com')
@@ -34,7 +34,7 @@ module.exports = function(schema) {
     schema.statics.relanceOne = function(req, res) {
         db.model('intervention').findOne({
             id: req.query.id
-        }).populate('sst').exec(function(err, resp) {
+        }).lean().populate('sst').exec(function(err, resp) {
             if (!resp) {
                 return res.send('nope')
             }

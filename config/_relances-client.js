@@ -145,6 +145,8 @@
 
  RelanceClient.prototype.createPrintableFacture = function(buffer, callback, c) {
     console.log('yoyswag')
+    this.doc.printable = true
+    console.log("=>=>=>",this.doc.printable)
     PDF([{
         model: 'letter',
         options: {
@@ -161,9 +163,7 @@
         options: {}
     }, {
         model: 'facture',
-        options: _.merge(this.doc, {
-            printable: true
-        })
+        options: this.doc
     }]).toBuffer(callback)
  }
 
@@ -190,7 +190,9 @@
  }
  RelanceClient.prototype.printStack = function(buffer, callback) {
     console.log('printStack');
-
+    if (envDev) {
+        return require('fs').writeFile('/tmp/result.pdf', buffer, callback)
+    }
     document.stack(buffer, this.type + ' - ' + this.doc.id, "AUTO")
         .then(function(resp) {
             console.log('ok uploaded')
