@@ -32,14 +32,15 @@ module.exports = function(schema) {
                         datePlain: moment(inter.date.intervention)
                     }
                 });
-
-                mail.send({
-                    From: "comptabilite@edison-services.fr",
-                    ReplyTo: "comptabilite@edison-services.fr",
-                    To: inter.sst.email,
-                    Subject: "Intervention n°" + inter.id + " en attente de règlement",
-                    HtmlBody: template,
-                });
+                if (inter.reglementSurPlace) {
+                    mail.send({
+                        From: "comptabilite@edison-services.fr",
+                        ReplyTo: "comptabilite@edison-services.fr",
+                        To: inter.sst.email,
+                        Subject: "Intervention n°" + inter.id + " en attente de règlement",
+                        HtmlBody: template,
+                    });
+                }
                 inter.save().then(resolve, reject)
             })
 
