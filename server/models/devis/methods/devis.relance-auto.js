@@ -2,6 +2,8 @@ module.exports = function(schema) {
     var _ = require('lodash')
     var moment = require('moment-timezone')
 
+    var relanceRapport;
+
     var send = function(e, callback) {
         var textTemplate = requireLocal('config/textTemplate');
         var config = requireLocal('config/dataList');
@@ -25,46 +27,54 @@ module.exports = function(schema) {
         var yesterdayAt12h30 = moment.tz('Europe/Paris').add(-1, 'days').hours(12).minutes(30).toDate()
         var twoDaysAgo = moment.tz('Europe/Paris').add(-2, 'days').toDate();
         var oneDaysAgo = moment.tz('Europe/Paris').add(-1, 'days').toDate();
-        db.model('devis').find({
-            status: 'ATT',
-            historique: {
-                $size: 1
+        var relanceRapport = []
+        async.parallel([
+            function(cb) {
+                db.model('devis').find({
+                    status: 'ATT',
+                    historique: {
+                        $size: 1
+                    },
+                    'historique.0.date': {
+                        $gt: yesterdayAt12h30
+                    }
+                }).then(function(resp) {
+                    relanceRapport.push(["TodayBefore12am", _.pluck(resp, 'id').join(' - ')].join(' -> '))
+                    async.eachLimit(resp, 1, send, cb)
+                })
             },
-            'historique.0.date': {
-                $gt: yesterdayAt12h30
+            function(cb) {
+                db.model('devis').find({
+                    status: 'ATT',
+                    historique: {
+                        $size: 2
+                    },
+                    'historique.1.date': {
+                        $lt: oneDaysAgo,
+                        $gte: twoDaysAgo
+                    }
+                }).then(function(resp) {
+                    relanceRapport.push(["YesterdayAfter14H", _.pluck(resp, 'id').join(' - ')].join(' -> '))
+                    async.eachLimit(resp, 1, send, cb);
+                })
             }
-        }).then(function(resp) {
-            sms.send({
-                silent: true,
-                to: '0633138868',
-                text: 'devis rappel ' + JSON.stringify(_.pluck(resp, 'id'))
+        ], function() {
+            mail.send({
+                From: "comptabilite@edison-services.fr",
+                To: "abel.chalier@gmail.com",
+                Subject: "Rapport d'envoi des relances devis 7H",
+                HtmlBody: relanceRapport.join("<br>")
             })
-            async.eachLimit(resp, 1, send)
+            console.log(relanceRapport);
         })
 
-        db.model('devis').find({
-            status: 'ATT',
-            historique: {
-                $size: 2
-            },
-            'historique.1.date': {
-                $lt: oneDaysAgo,
-                $gte: twoDaysAgo
-            }
-        }).then(function(resp) {
-            sms.send({
-                silent: true,
-                to: '0633138868',
-                text: 'devis rappel ' + JSON.stringify(_.pluck(resp, 'id'))
-            })
-            async.eachLimit(resp, 1, send);
-        })
     }
 
 
     schema.statics.relanceAuto14h = function(req, res) {
         var moment = require('moment')
         var async = require('async')
+        var relanceRapport = [];
 
         var todayAt7 = moment.tz('Europe/Paris').hours(7).toDate()
         db.model('devis').find({
@@ -76,12 +86,16 @@ module.exports = function(schema) {
                 $gt: todayAt7
             }
         }).then(function(resp) {
-            sms.send({
-                silent: true,
-                to: '0633138868',
-                text: 'devis rappel ' + JSON.stringify(_.pluck(resp, 'id'))
+            relanceRapport.push(['TodayBefore14H', _.pluck(resp, 'id').join(' - ')].join(' -> '))
+            async.eachLimit(resp, 1, function() {
+                mail.send({
+                    From: "comptabilite@edison-services.fr",
+                    To: "abel.chalier@gmail.com",
+                    Subject: "Rapport d'envoi des relances devis",
+                    HtmlBody: relanceRapport.join("<br>")
+                })
+                console.log(relanceRapport);
             })
-            async.eachLimit(resp, 1, send)
         })
     }
 
