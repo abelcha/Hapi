@@ -435,14 +435,16 @@
         }
 
         rtn.prixAnnonce = d.prix_ht_annonce;
-   //     console.log('==>', d.comptaPrixFinal, d.prix_ht_final, d.montant_ht_facture)
+        //     console.log('==>', d.comptaPrixFinal, d.prix_ht_final, d.montant_ht_facture)
         rtn.prixFinal = d.comptaPrixFinal || d.prix_ht_final || d.montant_ht_facture || undefined;
         if (!rtn.prixFinal && rtn.status === 'VRF') {
             rtn.prixFinal = rtn.prixAnnonce || 0;
         }
 
 
-        rtn.recouvrement.level = d.recouvrement;
+        rtn.recouvrement = {
+            level: d.recouvrement
+        }
 
         rtn.reglementSurPlace = !d.fact;
         if (d.id_annulation) {
@@ -575,7 +577,7 @@
                 }]
             }
         }
-        if (!rtn.reglementSurPlace && (!rtn.produits || !rtn.produits.length)) {
+        if (!rtn.reglementSurPlace && (!rtn.produits ||  !rtn.produits.length)) {
             rtn.produits = [{
                 ref: 'EDX121',
                 title: rtn.description,
