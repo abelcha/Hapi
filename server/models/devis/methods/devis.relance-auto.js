@@ -26,12 +26,12 @@ module.exports = function(schema) {
         var oneDaysAgo = moment.tz('Europe/Paris').add(-1, 'days').toDate();
         db.model('devis').find({
             status: 'ATT',
-            /*historique: {
+            historique: {
                 $size: 1
             },
             'historique.0.date': {
                 $gt: yesterdayAt12h30
-            }*/
+            }
         }).then(function(resp) {
             sms.send({
                 to: '0633138868',
