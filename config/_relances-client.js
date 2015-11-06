@@ -164,11 +164,7 @@
         options: _.merge(this.doc, {
             printable: true
         })
-    }]).toBuffer(function(err, resp) {
-        console.log('==>', typeof buffer,  typeof callback,  typeof c)
-        console.log('--->', err, !!resp)
-        callback(null, resp, "lpol")
-    })
+    }]).toBuffer(callback)
  }
 
  RelanceClient.prototype.insertBlankPage = function(buffer, filename, callback) {
@@ -197,6 +193,7 @@
 
     document.stack(buffer, this.type + ' - ' + this.doc.id, "AUTO")
         .then(function(resp) {
+            console.log('ok uploaded')
             callback(null, callback)
         }, callback)
  }
