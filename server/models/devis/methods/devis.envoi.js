@@ -30,7 +30,7 @@ module.exports = function(schema) {
 
             return new Promise(function(resolve, reject) {
 
-                if (!envProd) {
+                if (envDev) {
                     return resolve('ok')
                 }
 
