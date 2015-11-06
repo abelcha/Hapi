@@ -28,31 +28,48 @@ var Timer = module.exports = function() {
             })
         });*/
 
-    this.emitter.on("everyday at 20", function() {
-        if (envProd) {
+    if (envProd) {
+
+        this.emitter.on("everyday at 20", function() {
             db.model('intervention').relanceAuto();
-        }
-    });
+        });
 
-    this.emitter.on("everyday at 7", function() {
-        if (envProd) {
+        this.emitter.on("everyday at 7", function() {
             db.model('devis').relanceAuto7h()
-        }
-    });
+        });
 
 
-    this.emitter.on("everyday at 14", function() {
-        if (envProd) {
+        this.emitter.on("everyday at 14", function() {
             db.model('devis').relanceAuto14h()
-        }
-    });
+        });
 
 
-    this.emitter.on("hour", function() {
-        if (envProd) {
+        this.emitter.on("hour", function() {
             db.model('intervention').rappelDateIntervention()
-        }
-    });
+        });
+
+        this.emitter.on("20 minutes", function() {
+
+            var req = {
+                query: {}
+            }
+            db.model('document').check(req).then(function() {
+                db.model('document').archiveScan(req).then(function() {
+                    db.model('document').order(req).then(function() {
+                        console.log('DocumentFullCheck [DONE]')
+                    })
+                })
+            })
+
+        })
+    }
+
+    this.emitter.on("4pm", function() {
+        db.model('intervention').backup(function() {
+            console.log('backup [DONE]')
+        })
+    })
+
 
     this.emitter.on("hour", function() {
         db.model('intervention').fullReload().then(function() {
@@ -62,55 +79,10 @@ var Timer = module.exports = function() {
             console.log('devis ok')
         })
     })
-    this.emitter.on("20 minutes", function() {
-
-        var req = {
-            query: {}
-        }
-        if (envProd) {
-            db.model('document').check(req).then(function() {
-                db.model('document').archiveScan(req).then(function() {
-                    db.model('document').order(req).then(function() {
-                        console.log('DocumentFullCheck [DONE]')
-                    })
-                })
-            })
-        }
-
-    })
     this.emitter.on("3pm", function() {
         redis.delWildcard("rs*")
     })
-    this.emitter.on("4pm", function() {
-        if (envProd) {
-            db.model('intervention').backup(function() {
-                console.log('backup [DONE]')
-            })
-        }
-    })
 
-    /*    this.emitter.on("every 5 minutes", function() {
-            edison.worker.createJob({
-                name: 'db',
-                model: 'sms',
-                method: 'refreshStatus'
-            })
-        })
-        this.emitter.on("every hour", function() {
-            edison.worker.createJob({
-                name: 'db',
-                model: 'intervention',
-                method: 'workerDump',
-                arg: 25000
-            }).then(function() {
-                edison.worker.createJob({
-                    name: 'db',
-                    model: 'devis',
-                    method: 'workerDump',
-                    arg: 25000
-                })
-            })
-        })*/
     var test = function() {
             var parser = require('cron-parser');
             try {
