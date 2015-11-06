@@ -31,6 +31,21 @@ module.exports = function(schema) {
 
     }
 
+    schema.statics.relanceOne = function(req, res) {
+        db.model('intervention').findOne({
+            id: req.query.id
+        }).populate('sst').exec(function(err, resp) {
+            if (!resp) {
+                return res.send('nope')
+            }
+            console.log(resp && resp.length)
+            var relance = RelanceClient(resp, req.query.model, 'noreply.edison@gmail.com')
+            relance.send(function() {
+                res.send('ok')
+            })
+        })
+    }
+
     schema.statics.relanceAuto = function(req, res) {
 
         return new Promise(function(resolve, reject) {

@@ -23,6 +23,8 @@
  }
 
  RelanceClient.prototype.send = function(callback) {
+        console.log('lol', this.type)
+
     var async = require('async');
     if (this.type === "relance-client-1") {
         this.mailBody = _.template(textTemplate.mail.intervention.relance1())(this.doc);
@@ -33,14 +35,16 @@
             this.sendMail.bind(this),
         ], callback);
     } else if (this.type === 'relance-client-2') {
+        console.log('yayaya')
         this.mailBody = _.template(textTemplate.mail.intervention.relance2())(this.doc);
         this.letterBody = _.template(textTemplate.lettre.intervention.relance2())(this.doc);
         this.mailTitle = _.template("Deuxieme relance pour facture n°{{id}} impayée")(this.doc);
         async.waterfall([
             this.createFacture.bind(this),
             this.sendMail.bind(this),
-            this.writeTmpFile.bind(this),
-            this.insertBlankPage.bind(this),
+            this.createPrintableFacture.bind(this),
+            // this.writeTmpFile.bind(this),
+            // this.insertBlankPage.bind(this),
             this.printStack.bind(this)
         ], callback)
     } else if (this.type === 'relance-client-3') {
@@ -95,7 +99,7 @@
             title: "",
             factureQrCode: true,
             id: this.doc.os,
-            date:this.doc.date
+            date: this.doc.date
         }
     }, {
         model: 'facture',
@@ -136,6 +140,34 @@
     var filename = '/tmp/' + uuid.v4() + '.pdf';
     fs.writeFile(filename, buffer, function(err) {
         callback(err, buffer, filename);
+    })
+ }
+
+ RelanceClient.prototype.createPrintableFacture = function(buffer, callback, c) {
+    console.log('yoyswag')
+    PDF([{
+        model: 'letter',
+        options: {
+            address: this.doc.facture.address,
+            dest: this.doc.facture,
+            text: this.letterBody,
+            title: "",
+            factureQrCode: true,
+            id: this.doc.os,
+            date: this.doc.date
+        }
+    }, {
+        model: 'blank',
+        options: {}
+    }, {
+        model: 'facture',
+        options: _.merge(this.doc, {
+            printable: true
+        })
+    }]).toBuffer(function(err, resp) {
+        console.log('==>', typeof buffer,  typeof callback,  typeof c)
+        console.log('--->', err, !!resp)
+        callback(null, resp, "lpol")
     })
  }
 
