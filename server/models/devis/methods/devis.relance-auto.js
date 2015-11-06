@@ -17,8 +17,12 @@ module.exports = function(schema) {
                 }
             }
             //  console.log(options)
+        if (envDev) {
+            console.log('send devis ' + e.id);
+            return callback(null)
+        }
         db.model('devis').envoi.fn(e, options)
-            .then(_.partial(callback, null), callback)
+            .then(_.partial(callback, null))
     }
 
     schema.statics.relanceAuto7h = function(req, res) {
@@ -87,7 +91,7 @@ module.exports = function(schema) {
             }
         }).then(function(resp) {
             relanceRapport.push(['TodayBefore14H', _.pluck(resp, 'id').join(' - ')].join(' -> '))
-            async.eachLimit(resp, 1, function() {
+            async.eachLimit(resp, 1, send, function() {
                 mail.send({
                     From: "comptabilite@edison-services.fr",
                     To: "abel.chalier@gmail.com",
