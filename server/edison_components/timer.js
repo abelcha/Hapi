@@ -13,20 +13,13 @@ var Timer = module.exports = function() {
     //    this.emitter.add("*/5 * * * *", "every 5 minutes");
     // this.emitter.add("*/2 * * * *", "every minute");
     this.emitter.add(hour(20), "everyday at 20")
-    this.emitter.add(hour(7), "everyday at 7")
-    this.emitter.add(hour(14), "everyday at 14")
+    this.emitter.add(hour(7 - 1), "everyday at 7")
+    this.emitter.add(hour(14 - 1), "everyday at 14")
     this.emitter.add(hour(3), "3pm");
     this.emitter.add(hour(4), "4pm");
     this.emitter.add("*/60 * * * *", "hour")
     this.emitter.add("*/20 * * * *", "20 minutes")
 
-    /*    this.emitter.on("every 10 minutes", function() {
-            edison.worker.createJob({
-                name: 'db',
-                model: 'intervention',
-                method: 'cacheReload'
-            })
-        });*/
 
     if (envProd) {
 
@@ -82,6 +75,8 @@ var Timer = module.exports = function() {
     this.emitter.on("3pm", function() {
         redis.delWildcard("rs*")
     })
+
+
 
     var test = function() {
             var parser = require('cron-parser');
