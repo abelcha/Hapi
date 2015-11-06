@@ -6,7 +6,7 @@ module.exports = function(schema) {
     var textTemplate = requireLocal('config/textTemplate');
     var RelanceClient = requireLocal('config/_relances-client');
     require('nodeify').extend();
-
+    var relanceRapport;
 
     var execRelance = function(now, relanceModel, callback) {
         now = now ||  moment().toDate()
@@ -22,15 +22,19 @@ module.exports = function(schema) {
             'compta.reglement.recu': false,
             'date.intervention': db.utils.between(from, to)
         }).populate('sst').lean().exec(function(err, resp) {
-            sms.send({
+            /*sms.send({
                 silent: true,
                 to: '0633138868',
                 text: 'Facture relances ' + relanceModel.target + _.pluck(resp, 'id')
-            })
+            })*/
             async.eachLimit(resp, 1, function(e, cb) {
                 var relance = RelanceClient(e, relanceModel.target, 'noreply.edison@gmail.com')
                 relance.send(cb)
-            }, callback)
+
+            }, function() {
+                relanceRapport.push([relanceModel.target, _.pluck(resp, 'id').join(' - ')].join(' -> '))
+                callback(null)
+            })
         })
 
     }
@@ -42,7 +46,6 @@ module.exports = function(schema) {
             if (!resp) {
                 return res.send('nope')
             }
-            console.log(resp && resp.length)
             var relance = RelanceClient(resp, req.query.model, 'noreply.edison@gmail.com')
             relance.send(function() {
                 res.send('ok')
@@ -74,8 +77,15 @@ module.exports = function(schema) {
                 target: 'relance-client-5',
                 days: 60
             }]
+            relanceRapport = [];
             async.eachLimit(relances, 1, _.partial(execRelance, req.query.now, _, _), function(err) {
-                if (err) return reject(err);
+                mail.send({
+                    From: "comptabilite@edison-services.fr",
+                    To: "abel.chalier@gmail.com",
+                    Subject: "Rapport d'envoi des relances client",
+                    HtmlBody: relanceRapport.join("<br>")
+                })
+                console.log(relanceRapport);
                 resolve('ok')
             });
         }).catch(__catch)

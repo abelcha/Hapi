@@ -23,8 +23,6 @@
  }
 
  RelanceClient.prototype.send = function(callback) {
-        console.log('lol', this.type)
-
     var async = require('async');
     if (this.type === "relance-client-1") {
         this.mailBody = _.template(textTemplate.mail.intervention.relance1())(this.doc);
@@ -35,7 +33,6 @@
             this.sendMail.bind(this),
         ], callback);
     } else if (this.type === 'relance-client-2') {
-        console.log('yayaya')
         this.mailBody = _.template(textTemplate.mail.intervention.relance2())(this.doc);
         this.letterBody = _.template(textTemplate.lettre.intervention.relance2())(this.doc);
         this.mailTitle = _.template("Deuxieme relance pour facture n°{{id}} impayée")(this.doc);
@@ -55,8 +52,9 @@
         async.waterfall([
             this.createFacture.bind(this),
             this.sendMail.bind(this),
-            this.writeTmpFile.bind(this),
-            this.insertBlankPage.bind(this),
+            this.createPrintableFacture.bind(this),
+            // this.writeTmpFile.bind(this),
+            // this.insertBlankPage.bind(this),
             this.printStack.bind(this)
         ], callback)
     } else if (this.type === 'relance-client-4') {
@@ -80,16 +78,25 @@
 
 
  RelanceClient.prototype.createAvisAvantPoursuites = function(callback) {
+    if (envDev) {
+        callback(null, null);
+    }
     PDF('recouvrement', this.doc).buffer(callback)
  }
 
 
  RelanceClient.prototype.createInjonction = function(callback) {
+    if (envDev) {
+        callback(null, null);
+    }
     PDF('injonction', this.doc).buffer(callback)
  }
 
 
  RelanceClient.prototype.createFacture = function(callback) {
+    if (envDev) {
+        callback(null, null);
+    }
     PDF([{
         model: 'letter',
         options: {
@@ -144,9 +151,10 @@
  }
 
  RelanceClient.prototype.createPrintableFacture = function(buffer, callback, c) {
-    console.log('yoyswag')
+    if (envDev) {
+        return callback(null, null);
+    }
     this.doc.printable = true
-    console.log("=>=>=>",this.doc.printable)
     PDF([{
         model: 'letter',
         options: {
@@ -163,7 +171,9 @@
         options: {}
     }, {
         model: 'facture',
-        options: this.doc
+        options: _.merge(this.doc, {
+            printable: true
+        })
     }]).toBuffer(callback)
  }
 
