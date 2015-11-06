@@ -44,6 +44,7 @@ var V1 = function(d, devis, legacy) {
         x.sms_status = d.sms_status;
         x.civilite = d.client.civilite;
         x.nom = d.client.nom;
+        x.recouvrement = d.recouvrement.level;
         x.prenom = d.client.prenom;
         x.tel1 = d.client.telephone.tel1
         x.tel2 = d.client.telephone.tel2 || ""

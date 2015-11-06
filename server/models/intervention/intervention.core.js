@@ -441,6 +441,9 @@
             rtn.prixFinal = rtn.prixAnnonce || 0;
         }
 
+
+        rtn.recouvrement.level = d.recouvrement;
+
         rtn.reglementSurPlace = !d.fact;
         if (d.id_annulation) {
             var tmp = _.find(config.causeAnnulation, function(e) {
