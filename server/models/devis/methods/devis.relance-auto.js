@@ -35,6 +35,7 @@ module.exports = function(schema) {
             }
         }).then(function(resp) {
             sms.send({
+                silent: true,
                 to: '0633138868',
                 text: 'devis rappel ' + JSON.stringify(_.pluck(resp, 'id'))
             })
@@ -52,6 +53,7 @@ module.exports = function(schema) {
             }
         }).then(function(resp) {
             sms.send({
+                silent: true,
                 to: '0633138868',
                 text: 'devis rappel ' + JSON.stringify(_.pluck(resp, 'id'))
             })
@@ -75,6 +77,7 @@ module.exports = function(schema) {
             }
         }).then(function(resp) {
             sms.send({
+                silent: true,
                 to: '0633138868',
                 text: 'devis rappel ' + JSON.stringify(_.pluck(resp, 'id'))
             })

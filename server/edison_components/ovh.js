@@ -28,7 +28,7 @@ OVH.prototype.send = function(params) {
                     senderForResponse: true,
                     receivers: [dest]
                 }, function(errsend, result) {
-                    if (!err)  {
+                    if (!err && !params.silent)  {
                         mail.send({
                             From: "contact@edison-services.fr",
                             To: "noreply.edison+sms@gmail.com",

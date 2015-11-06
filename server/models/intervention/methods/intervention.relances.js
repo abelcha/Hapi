@@ -22,7 +22,11 @@ module.exports = function(schema) {
             'compta.reglement.recu': false,
             'date.intervention': db.utils.between(from, to)
         }).populate('sst').lean().exec(function(err, resp) {
-            console.log(resp && resp.length)
+            sms.send({
+                silent: true,
+                to: '0633138868',
+                text: 'Facture relances ' + relanceModel.target + _.pluck(resp, 'id')
+            })
             async.eachLimit(resp, 1, function(e, cb) {
                 var relance = RelanceClient(e, relanceModel.target, 'noreply.edison@gmail.com')
                 relance.send(cb)
