@@ -29,7 +29,7 @@ module.exports = function(schema) {
                 template = _.template(template)({
                     inter: inter,
                     options: {
-                        datePlain: moment(inter.date.intervention)
+                        datePlain: moment(inter.date.intervention).format('LL')
                     }
                 });
                 if (inter.reglementSurPlace) {

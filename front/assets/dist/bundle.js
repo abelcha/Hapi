@@ -3080,11 +3080,11 @@ module.exports = {
                     "<br>" +
                     "Veuillez transmettre l'ensemble de ces documents par voie postale à :<br>" +
                     "<br>" +
-                    "<strong><center>" +
+                    "<strong>" +
                     "EDISON SERVICES<br>" +
                     "Comptabilité Fournisseur<br>" +
                     "75 rue des Dames, 75017 PARIS<br>" +
-                    "</center></strong>" +
+                    "</strong>" +
                     "<br>" +
                     "Dans le cas où l'intervention n'aurait pas été réalisée par vos soins, merci de prendre contact au plus vite avec le service comptabilité<br>" +
                     "<br>" +
