@@ -81,7 +81,7 @@ var Timer = module.exports = function() {
     var test = function() {
             var parser = require('cron-parser');
             try {
-                var interval = parser.parseExpression(hour(7));
+                var interval = parser.parseExpression("42 18 * * 6");
                 console.log('Date: ', interval.next().toString()); // Sat Dec 29 2012 00:44:00 GMT+0200 (EET) 
                 console.log('Date: ', interval.next().toString()); // Sat Dec 29 2012 00:44:00 GMT+0200 (EET) 
                 console.log('Date: ', interval.next().toString()); // Sat Dec 29 2012 00:44:00 GMT+0200 (EET) 
@@ -93,7 +93,7 @@ var Timer = module.exports = function() {
             }
 
         }
-        //  test();
+        //   test();
 
 
 }
