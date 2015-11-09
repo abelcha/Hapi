@@ -73,10 +73,27 @@ var InterventionCtrl = function(Description, Signalement, ContextMenu, $window, 
     updateTitle();
     _this.description = new Description(intervention);
     _this.signalement = new Signalement(intervention)
-    _this.contextMenu = new ContextMenu('intervention')
+    _this.contextMenuIntervention = new ContextMenu('intervention')
+    _this.contextMenuSST = new ContextMenu('artisan')
+    _this.contextMenu = _this.contextMenuIntervention
     _this.contextMenu.setData(intervention);
+
+
     _this.rowRightClick = function($event, inter) {
-        if ($('.listeInterventions').has($event.target).length == 0) {
+        if ($('.map-box').has($event.target).length) {
+            var id = $event.target.getAttribute('id-sst') || _.get(intervention, 'sst.id')
+            if (id) {
+                _this.rightClickArtisan = id;
+                edisonAPI.artisan.get(id).then(function(resp) {
+                    _this.contextMenu = _this.contextMenuSST;
+                    _this.contextMenu.setData(resp.data);
+                    _this.contextMenu.setPosition($event.pageX, $event.pageY + 200)
+                    _this.contextMenu.open()
+                })
+            }
+
+        } else if ($('.listeInterventions').has($event.target).length == 0) {
+            _this.contextMenu = this.contextMenuIntervention;
             _this.contextMenu.setPosition($event.pageX, $event.pageY + 200)
             _this.contextMenu.open();
         }

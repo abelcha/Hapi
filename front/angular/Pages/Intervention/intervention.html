@@ -15,7 +15,7 @@
                 </div>
                 <info-client data="vm.data" model="vm.data.client"></info-client>
                 <info-categorie model="vm.data.categorie" change="vm.searchArtisans(newCategorie)"></info-categorie>
-                <div class="row" style="margin:0">
+                <div class="row map-box" style="margin:0">
                     <div class="col-md-8" style="padding-left:0">
                         <div class="card margin">
                             <div class="p+" style="height: 538px;overflow:hidden;">
@@ -66,18 +66,18 @@
                                     <table ng-if="vm.nearestArtisans.length" class="table table-condensed" style="padding:0;color:black">
                                         <tbody>
                                          <tr><td colspan="12" style="text-align:center;border-top: 0px;"><h4 style="margin: 0;">Actifs</h4></td></tr>
-                                            <tr ng-repeat="sst in vm.nearestArtisans" ng-if="sst.status == 'ACT'" ng-class="sst.id == vm.data.sst.id ? 'success' : ''" ng-click="vm.selectArtisan(sst);vm.showInterList()">
-                                                <td variable-length style="text-align:left">{{sst.nomSociete}} 
-                                                <small ng-if="sst.absent" class="red-text">INDISPO</small>
-                                                <small ng-if="!sst.absent" class="{{config.artisanSubStatus[sst.subStatus].color}}-text">{{config.artisanSubStatus[sst.subStatus].long_name}}</small></td>
-                                                <td ng-class="{'red-text': sst.zoneChalandise < sst.distance}">{{sst.distance}} km</td>
+                                            <tr ng-repeat="sst in vm.nearestArtisans" ng-if="sst.status == 'ACT'" ng-class="{'success':sst.id == vm.data.sst.id,'info':vm.rightClickArtisan == sst.id && vm.contextMenu.active && vm.contextMenu.model === 'artisan'}" ng-click="vm.selectArtisan(sst);vm.showInterList()">
+                                                <td id-sst="{{sst.id}}" variable-length style="text-align:left">{{sst.nomSociete}} 
+                                                <small no-click ng-if="sst.absent" class="red-text">INDISPO</small>
+                                                <small no-click ng-if="!sst.absent" class="{{config.artisanSubStatus[sst.subStatus].color}}-text">{{config.artisanSubStatus[sst.subStatus].long_name}}</small></td>
+                                                <td no-click ng-class="{'red-text': sst.zoneChalandise < sst.distance}">{{sst.distance}} km</td>
                                             </tr>
                                          <tr><td colspan="12" style="text-align:center;border-top: 0px;"><h4 style="margin: 0;">Potentiels</h4></td></tr>
-                                         <tr ng-repeat="sst in vm.nearestArtisans" ng-if="sst.status == 'POT'" ng-class="sst.id == vm.data.sst.id ? 'success' : ''" ng-click="vm.selectArtisan(sst);vm.showInterList()">
-                                                <td  variable-length style="text-align:left">{{sst.nomSociete}}
-                                                <small ng-if="sst.absent" class="red-text">INDISPO</small>
-                                                 <small ng-if="!sst.absent" class="{{config.artisanSubStatus[sst.subStatus].color}}-text">{{config.artisanSubStatus[sst.subStatus].long_name}}</small></td>
-                                                <td ng-class="{'red-text': sst.zoneChalandise < sst.distance}">{{sst.distance}} km</td>
+                                         <tr  id-sst="{{sst.id}}"  ng-repeat="sst in vm.nearestArtisans" ng-if="sst.status == 'POT'" ng-class="{'success':sst.id == vm.data.sst.id,'info':vm.rightClickArtisan === sst.id}" ng-click="vm.selectArtisan(sst);vm.showInterList()">
+                                                <td variable-length style="text-align:left">{{sst.nomSociete}}
+                                                <small no-click ng-if="sst.absent" class="red-text">INDISPO</small>
+                                                 <small no-click ng-if="!sst.absent" class="{{config.artisanSubStatus[sst.subStatus].color}}-text">{{config.artisanSubStatus[sst.subStatus].long_name}}</small></td>
+                                                <td no-click ng-class="{'red-text': sst.zoneChalandise < sst.distance}">{{sst.distance}} km</td>
                                             </tr>
 
                                         </tbody>
