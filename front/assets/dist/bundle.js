@@ -2086,7 +2086,7 @@ module.exports = {
         NEW: {
             long_name: 'New',
             short_name: 'NEW',
-            color: 'blue'
+            color: 'light-blue'
         },
         REG: {
             long_name: 'Régulier',

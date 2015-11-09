@@ -86,6 +86,7 @@ module.exports = function(db) {
             type: [Number],
             index: '2dsphere'
         },
+        managed: Boolean,
         quarantained: Boolean,
         absence: [{
             start: Date,

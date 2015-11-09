@@ -43,7 +43,6 @@
     _this.tab.hash = currentHash;
     _this.config = config;
     var title = currentFilter ? currentFilter.long_name : _this.model;
-    console.log(currentFilter)
     if ($routeParams.sstid) {
         var id = parseInt($routeParams.sstid)
         _this.customFilter = function(inter) {
@@ -63,6 +62,15 @@
     }, _.after(2, function(nw, old) {
         _this.tableParams.filter(_.omit(nw, 'hashModel', 'page', 'sstid'))
     }), true)
+
+    _this.$watch(function() {
+        return $location.hash()
+    }, function(nw, old) {
+        if (_this.tableParams) {
+            dataProvider.applyFilter(currentFilter, nw, _this.customFilter);
+            _this.tableParams.reload()
+        }
+    }, true)
 
 
     var actualiseUrl = _.throttle(function(fltrs, page) {

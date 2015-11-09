@@ -364,7 +364,7 @@
         }
 
         if (d.etat_reglement == "CHEQUE RECUPERE" ||  d.date_edition_facture) {
-            d.etat_intervention = "VRF"
+            d.etat_intervention = "INT"
         }
 
 
