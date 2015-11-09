@@ -392,7 +392,7 @@ FiltersFactory.prototype.list = {
         match: {
             aDemarcher: true,
             status: {
-                $in: ['APR', 'ENC', 'AVR']
+                $in: ['APR'/*, 'ENC', 'AVR'*/]
             },
             'login.demarchage': {
                 $exists: true

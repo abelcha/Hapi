@@ -47,6 +47,7 @@ angular.module('edison').factory('ContextMenu', function($rootScope, $location, 
     ContextMenu.prototype.open = function() {
         var _this = this;
         this.closeSub()
+        console.log('==>', _this.data)
         this.list.forEach(function(e) {
             if (e.subs) {
                 _.each(e.subs, function(sub) {

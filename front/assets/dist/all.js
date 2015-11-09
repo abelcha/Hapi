@@ -1632,13 +1632,15 @@ angular.module('edison').factory('TabContainer', function(Tab, $location) {
             return e.path == tab.path && e.hash == location.hash
         })
         this.__tabs.splice(index, 1);
-        $location.url('/intervention/list');
+        console.log('===>', (TabContainer.prevTab && TabContainer.prevTab.path))
+        $location.url((TabContainer.prevTab && TabContainer.prevTab.path) ||  '/intervention/list');
     }
 
 
 
     TabContainer.add = function(location) {
         var tab = this.find(location);
+        this.prevTab = this.selectedTab
         if (!tab) {
             this.selectedTab = new Tab(this, location);
             this.__tabs.push(this.selectedTab)
@@ -1657,7 +1659,7 @@ angular.module('edison').factory('TabContainer', function(Tab, $location) {
         var tmp = {};
         _.each(_this.__tabs, function(e) {
             if (_.includes(models, e.model) && e.url[1] !== 'list' && e.url[1] !== 'contact') {
-                var dest =  _.endsWith(e.model, 's') ? e.model : e.model + 's';
+                var dest = _.endsWith(e.model, 's') ? e.model : e.model + 's';
             } else {
                 dest = 'Recents';
             }
@@ -2388,6 +2390,7 @@ angular.module('edison').factory('ContextMenu', function($rootScope, $location, 
     ContextMenu.prototype.open = function() {
         var _this = this;
         this.closeSub()
+        console.log('==>', _this.data)
         this.list.forEach(function(e) {
             if (e.subs) {
                 _.each(e.subs, function(sub) {

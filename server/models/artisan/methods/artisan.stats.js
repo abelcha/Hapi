@@ -105,7 +105,7 @@ module.exports = function(schema) {
                                 final: 0
                             };
                         }));
-                        //        console.log(rtn)
+                        console.log(rtn)
                         resolve(rtn)
                     });
 

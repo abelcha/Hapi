@@ -583,7 +583,7 @@ FiltersFactory.prototype.list = {
         match: {
             aDemarcher: true,
             status: {
-                $in: ['APR', 'ENC', 'AVR']
+                $in: ['APR'/*, 'ENC', 'AVR'*/]
             },
             'login.demarchage': {
                 $exists: true
@@ -1303,7 +1303,6 @@ module.exports = {
         title: "Facturier/deviseur",
         action: 'facturierDeviseur',
         hide:function(artisan, user) {
-            console.log('==>', user)
             return !(user.service == 'PARTENARIAT' || user.root)
         }
     }, {

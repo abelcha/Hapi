@@ -32,7 +32,7 @@
                                 </div>
                                 <div class="p+" ng-if="vm.data.sst.id" ng-show="!bv.signalement && !bv.historique && !bv.absence">
                                     <span class="fs-subhead tc-black-2 display-block">
-                                    {{vm.data.sst.nomSociete}} - M. {{vm.data.sst.representant.nom}} {{vm.data.sst.representant.prenom}}</span>
+                                    {{vm.data.sst.nomSociete}} - M. {{vm.data.sst.representant.nom}} {{vm.data.sst.representant.prenom}} ({{vm.data.sst.pourcentage.deplacement}}/{{vm.data.sst.pourcentage.maindOeuvre}}/{{vm.data.sst.pourcentage.fourniture}})</span>
                                     <div class="paragraph fs-body-1" style="height:90px;">
                                         <p style="width:49%;float:left">
                                             Distance: {{vm.data.sst.stats.direction.distance}} ({{vm.data.sst.stats.direction.duration}})
