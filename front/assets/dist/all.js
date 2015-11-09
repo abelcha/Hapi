@@ -1951,6 +1951,9 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
             }
         },
         artisan: {
+            manage: function(id) {
+                return $http.post('/api/artisan/' + id + '/manage')
+            },
             comment: function(id, text) {
                 return $http.post('/api/artisan/' + id + '/comment', {
                     text: text
@@ -2219,6 +2222,13 @@ angular.module('edison')
             var _this = this;
             dialog.facturierDeviseur(this, function(facturier, deviseur) {
                 edisonAPI.artisan.sendFacturier(_this.id, facturier, deviseur);
+            })
+        }
+
+        Artisan.prototype.aManager = function() {
+            edisonAPI.artisan.manage(this.id).then(function(resp) {
+                LxNotificationService.success("Le sous-traitant est à manager");
+                return (cb ||  _.noop)(resp)
             })
         }
 

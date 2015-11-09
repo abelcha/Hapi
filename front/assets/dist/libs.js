@@ -29923,7 +29923,7 @@ angular.module('lumx.notification', [])
                 notificationTimeout = $timeout(function()
                 {
                     deleteNotification(data);
-                }, 10000);
+                }, 15000);
             }
         }
 

@@ -42,6 +42,13 @@ angular.module('edison')
             })
         }
 
+        Artisan.prototype.aManager = function() {
+            edisonAPI.artisan.manage(this.id).then(function(resp) {
+                LxNotificationService.success("Le sous-traitant est à manager");
+                return (cb ||  _.noop)(resp)
+            })
+        }
+
         Artisan.prototype.deArchiver = function() {
             this.status = "ACT";
             Artisan(this).save();

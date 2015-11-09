@@ -204,6 +204,9 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
             }
         },
         artisan: {
+            manage: function(id) {
+                return $http.post('/api/artisan/' + id + '/manage')
+            },
             comment: function(id, text) {
                 return $http.post('/api/artisan/' + id + '/comment', {
                     text: text

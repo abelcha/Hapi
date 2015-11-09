@@ -1297,8 +1297,11 @@ module.exports = {
             return (artisan.document && artisan.document.cni && artisan.document.kbis && artisan.document.contrat);
         }
     }, {
-        title: "Manager",
-        action: 'manager',
+        title: "à Manager",
+        action: 'aManager',
+        hide: function(artisan, user) {
+            return !user.root
+        }
     }, {
         title: "Rappel Contrat",
         action: 'rappelContrat',
@@ -1308,7 +1311,7 @@ module.exports = {
     }, {
         title: "Facturier/deviseur",
         action: 'facturierDeviseur',
-        hide:function(artisan, user) {
+        hide: function(artisan, user) {
             return !(user.service == 'PARTENARIAT' || user.root)
         }
     }, {
