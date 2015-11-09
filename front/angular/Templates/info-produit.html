@@ -98,7 +98,7 @@
                        <button ng-click="createProd()" class="btn--no-conflicts btn--m btn--black btn--flat" lx-ripple>Ajout produit</button>
                         <button ng-click="Devis(data).devisPreview()" class="btn--no-conflicts btn--m btn--black btn--flat" lx-ripple>Voir devis</button>
                         <button  ng-if="model !== 'DEVIS' && !data.reglementSurPlace"  ng-click="Intervention(data).facturePreview()" class="btn--no-conflicts btn--m btn--black btn--flat" lx-ripple>Voir Facture</button>
- <button  ng-if="model !== 'DEVIS' && data.status === 'ENC' || data.status === 'VRF' "  ng-click="Intervention(data).sendFactureAcquitte(null, true)" class="btn--no-conflicts btn--m btn--black btn--flat" lx-ripple>Envoyer Facture Acquitte</button>
+ <button  ng-if="model !== 'DEVIS"  ng-click="Intervention(data).sendFactureAcquitte(null, true)" class="btn--no-conflicts btn--m btn--black btn--flat" lx-ripple>Envoyer Facture Acquitte</button>
 
                         <a href="/devis?i={{data.id}}"ng-if="model !== 'DEVIS' && data.id">
                         <button  class="btn--no-conflicts btn--m btn--black btn--flat" lx-ripple>
