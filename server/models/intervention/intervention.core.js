@@ -62,6 +62,16 @@
             __catch(e)
         }
 
+        if (curr.aDemarcher && !prev.aDemarcher) {
+            edison.event('INTER_ADM')
+                .login(session.login)
+                .id(curr.id)
+                .service('PARTENARIAT')
+                .color('blue')
+                .message(_.template("L'intervention {{id}} est à démarcher ({{client.address.v}} - {{client.address.cp}}) ")(curr))
+                .send()
+                .save()
+        }
 
         /*   if (curr.artisan.id) {
                db.model('artisan').findOne({
