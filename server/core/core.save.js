@@ -22,6 +22,7 @@
                 }
                 data.id = nextID;
                 data._id = nextID;
+                
                 var inter = core.model()(data);
 
                 if (_.isFunction(core.preSave))
