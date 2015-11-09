@@ -114,10 +114,12 @@ angular.module('edison')
             }
         }
 
-        Artisan.prototype.envoiContrat = function(cb) {
+        Artisan.prototype.envoiContrat = function(options, cb) {
             var _this = this;
+            console.log(options.signe)
             dialog.sendContrat({
                 data: _this,
+                signe: options.signe,
                 text: _.template(textTemplate.mail.artisan.envoiContrat())(_this),
             }, function(options) {
                 LxProgressService.circular.show('#5fa2db', '#globalProgress');

@@ -19,7 +19,7 @@ var Timer = module.exports = function() {
     this.emitter.add(hour(4), "4pm");
     this.emitter.add("*/60 * * * *", "hour")
     this.emitter.add("*/20 * * * *", "20 minutes")
-
+    this.emitter.add("*/10 * * * *", "10 minutes")
 
     if (envProd) {
 
@@ -64,7 +64,7 @@ var Timer = module.exports = function() {
     })
 
 
-    this.emitter.on("hour", function() {
+    this.emitter.on("10 minutes", function() {
         db.model('intervention').fullReload().then(function() {
             console.log('inter ok')
         })

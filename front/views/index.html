@@ -132,8 +132,8 @@
                 <span ng-if="!smallWin">
                 <a href="/intervention/list/ajd?t={{value.login}}"><span class="badge blue">{{value.ajout}}</span></a>
                 <a href="/intervention/list/envoyeAjd?t={{value.login}}"><span class="badge orange">{{value.envoi}}</span></a>
-                <a href="/intervention/list/ajd?_etat=verifier#{{value.login}}"><span class="badge green">{{value.verif}}</span></a>
-                <a href="/intervention/list/ajd?_etat=annuler#{{value.login}}"><span class="badge red">{{value.annul}}</span></a>
+                <a href="/intervention/list/ajd?_etat=verifier&t={{value.login}}"><span class="badge green">{{value.verif}}</span></a>
+                <a href="/intervention/list/ajd?_etat=annuler&t={{value.login}}"><span class="badge red">{{value.annul}}</span></a>
                 </span>
             </li>
         </ul>

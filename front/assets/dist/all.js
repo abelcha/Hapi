@@ -2298,10 +2298,12 @@ angular.module('edison')
             }
         }
 
-        Artisan.prototype.envoiContrat = function(cb) {
+        Artisan.prototype.envoiContrat = function(options, cb) {
             var _this = this;
+            console.log(options.signe)
             dialog.sendContrat({
                 data: _this,
+                signe: options.signe,
                 text: _.template(textTemplate.mail.artisan.envoiContrat())(_this),
             }, function(options) {
                 LxProgressService.circular.show('#5fa2db', '#globalProgress');
@@ -2921,8 +2923,8 @@ angular.module('edison').factory('dialog', function(openPost, $mdDialog, edisonA
         sendContrat: function(options, cb) {
             $mdDialog.show({
                 controller: function DialogController($scope, $mdDialog) {
-                    options.signe = true;
                     $scope.options = options;
+                    console.log(options.signe)
                     $scope.answer = function(cancel) {
                         $mdDialog.hide();
                         if (!cancel)
@@ -2977,7 +2979,7 @@ angular.module('edison').factory('dialog', function(openPost, $mdDialog, edisonA
                 templateUrl: '/DialogTemplates/fileAndText.html',
             });
         },
-         envoiIntervention: function(data, text, cb) {
+        envoiIntervention: function(data, text, cb) {
             $mdDialog.show({
                 controller: function DialogController($scope, $mdDialog) {
                     $scope.data = data;
@@ -3945,44 +3947,6 @@ angular.module('edison').directive('mainNavbar', function($q, edisonAPI, TabCont
 
 });
 
-var archiveReglementController = function(edisonAPI, TabContainer, $routeParams, $location, LxProgressService) {
-
-    var tab = TabContainer.getCurrentTab();
-    var _this = this;
-    _this.title = 'Archives Reglements'
-    tab.setTitle('archives RGL')
-    LxProgressService.circular.show('#5fa2db', '#globalProgress');
-    edisonAPI.compta.archivesReglement().success(function(resp) {
-        LxProgressService.circular.hide()
-        _this.data = resp
-    })
-    _this.moment = moment;
-    _this.openLink = function(link) {
-        $location.url(link)
-    }
-}
-
-angular.module('edison').controller('archivesReglementController', archiveReglementController);
-
-var archivesPaiementController = function(edisonAPI, TabContainer, $routeParams, $location, LxProgressService) {
-    var _this = this;
-    var tab = TabContainer.getCurrentTab();
-    _this.type = 'paiement'
-    _this.title = 'Archives Paiements'
-    tab.setTitle('archives PAY')
-    LxProgressService.circular.show('#5fa2db', '#globalProgress');
-    edisonAPI.compta.archivesPaiement().success(function(resp) {
-        LxProgressService.circular.hide()
-        _this.data = resp
-    })
-    _this.moment = moment;
-    _this.openLink = function(link) {
-        $location.url(link)
-    }
-}
-
-angular.module('edison').controller('archivesPaiementController', archivesPaiementController);
-
  angular.module('edison').directive('artisanCategorie', ['config', function(config) {
      "use strict";
      return {
@@ -4050,7 +4014,7 @@ var ArtisanCtrl = function($timeout, $rootScope, $scope, edisonAPI, $location, $
                 return false
             } else if (options.contrat) {
                 artisan = new Artisan(resp);
-                artisan.envoiContrat.bind(resp)(function(err, res) {
+                artisan.envoiContrat.bind(resp)(options, function(err, res) {
                     if (!err) {
                         TabContainer.close(tab);
                     }
@@ -4124,6 +4088,44 @@ var ArtisanCtrl = function($timeout, $rootScope, $scope, edisonAPI, $location, $
     }
 }
 angular.module('edison').controller('ArtisanController', ArtisanCtrl);
+
+var archiveReglementController = function(edisonAPI, TabContainer, $routeParams, $location, LxProgressService) {
+
+    var tab = TabContainer.getCurrentTab();
+    var _this = this;
+    _this.title = 'Archives Reglements'
+    tab.setTitle('archives RGL')
+    LxProgressService.circular.show('#5fa2db', '#globalProgress');
+    edisonAPI.compta.archivesReglement().success(function(resp) {
+        LxProgressService.circular.hide()
+        _this.data = resp
+    })
+    _this.moment = moment;
+    _this.openLink = function(link) {
+        $location.url(link)
+    }
+}
+
+angular.module('edison').controller('archivesReglementController', archiveReglementController);
+
+var archivesPaiementController = function(edisonAPI, TabContainer, $routeParams, $location, LxProgressService) {
+    var _this = this;
+    var tab = TabContainer.getCurrentTab();
+    _this.type = 'paiement'
+    _this.title = 'Archives Paiements'
+    tab.setTitle('archives PAY')
+    LxProgressService.circular.show('#5fa2db', '#globalProgress');
+    edisonAPI.compta.archivesPaiement().success(function(resp) {
+        LxProgressService.circular.hide()
+        _this.data = resp
+    })
+    _this.moment = moment;
+    _this.openLink = function(link) {
+        $location.url(link)
+    }
+}
+
+angular.module('edison').controller('archivesPaiementController', archivesPaiementController);
 
 var AvoirsController = function(TabContainer, openPost, edisonAPI, $rootScope, LxProgressService, LxNotificationService, FlushList) {
     "use strict";

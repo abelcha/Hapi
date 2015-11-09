@@ -33,7 +33,7 @@ var ArtisanCtrl = function($timeout, $rootScope, $scope, edisonAPI, $location, $
                 return false
             } else if (options.contrat) {
                 artisan = new Artisan(resp);
-                artisan.envoiContrat.bind(resp)(function(err, res) {
+                artisan.envoiContrat.bind(resp)(options, function(err, res) {
                     if (!err) {
                         TabContainer.close(tab);
                     }

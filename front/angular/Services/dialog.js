@@ -212,8 +212,8 @@ angular.module('edison').factory('dialog', function(openPost, $mdDialog, edisonA
         sendContrat: function(options, cb) {
             $mdDialog.show({
                 controller: function DialogController($scope, $mdDialog) {
-                    options.signe = true;
                     $scope.options = options;
+                    console.log(options.signe)
                     $scope.answer = function(cancel) {
                         $mdDialog.hide();
                         if (!cancel)
@@ -268,7 +268,7 @@ angular.module('edison').factory('dialog', function(openPost, $mdDialog, edisonA
                 templateUrl: '/DialogTemplates/fileAndText.html',
             });
         },
-         envoiIntervention: function(data, text, cb) {
+        envoiIntervention: function(data, text, cb) {
             $mdDialog.show({
                 controller: function DialogController($scope, $mdDialog) {
                     $scope.data = data;

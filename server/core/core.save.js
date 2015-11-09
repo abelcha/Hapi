@@ -15,7 +15,7 @@
          return new Promise(function(resolve, reject) {
              data = req.body;
              console.log('1')
-             core.model().getNextID(function(nextID) {
+             core.model().getNextID(data, function(nextID) {
                  data.login = {
                      ajout: req.session.login
                  }
