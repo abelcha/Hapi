@@ -294,7 +294,7 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
                         categorie: categorie,
                         lat: address.lt,
                         lng: address.lg,
-                        limit: 50,
+                        limit: 150,
                         maxDistance: 100
                     }
                 });
