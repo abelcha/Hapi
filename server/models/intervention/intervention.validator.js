@@ -37,32 +37,24 @@ module.exports = function(schema) {
     var validatorPreSave = function(next) {
         var _this = this;
 
-        try {
-            UP(this.facture.address)
-            UP(this.facture)
-            UP(this.client.address)
-            _this.coutFourniture = _.reduce(_this.fourniture, function(total, e) {
-                return total += (e.quantite * e.pu)
-            }, 0)
-            _this.sst = _this.artisan.id
-            _this.enDemarchage = _this.login.demarchage;
-            _this.cache = db.model('intervention').Core.minify(_this);
-            if (isWorker) {
-                return next();
+        UP(this.facture.address)
+        UP(this.facture)
+        UP(this.client.address)
+        _this.coutFourniture = _.reduce(_this.fourniture, function(total, e) {
+            return total += (e.quantite * e.pu)
+        }, 0)
+        _this.sst = _this.artisan.id
+        _this.enDemarchage = _this.login.demarchage;
+        _this.cache = db.model('intervention').Core.minify(_this);
+        if (isWorker && _this.cb.number) {
+            if (!creditcard.validate(_this.cb.number))
+                return next(new Error('Numero de carte invalide'))
+            _this.cb = {
+                hash: encryptor.encrypt(JSON.stringify(_this.cb)),
+                preview: "**** ".repeat(3) + _this.cb.number.slice(-4)
             }
-            if (_this.cb.number) {
-                if (!creditcard.validate(_this.cb.number))
-                    return next(new Error('Numero de carte invalide'))
-                _this.cb = {
-                    hash: encryptor.encrypt(JSON.stringify(_this.cb)),
-                    preview: "**** ".repeat(3) + _this.cb.number.slice(-4)
-                }
-            }
-        } catch (e) {
-            __catch(e)
         }
-        next();
-
+        return next();
     }
 
     var validatorPostSave = function(doc) {

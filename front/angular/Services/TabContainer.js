@@ -56,14 +56,14 @@ angular.module('edison').factory('TabContainer', function(Tab, $location) {
             return e.path == tab.path && e.hash == location.hash
         })
         this.__tabs.splice(index, 1);
-        console.log('===>', (TabContainer.prevTab && TabContainer.prevTab.path))
-        $location.url((TabContainer.prevTab && TabContainer.prevTab.path) ||  '/intervention/list');
+        $location.url((this.prevTab && this.prevTab.path != this.selectedTab.path && this.prevTab.path) ||  '/intervention/list');
     }
 
 
 
     TabContainer.add = function(location) {
         var tab = this.find(location);
+        console.log(location)
         this.prevTab = this.selectedTab
         if (!tab) {
             this.selectedTab = new Tab(this, location);

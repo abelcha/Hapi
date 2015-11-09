@@ -1,7 +1,7 @@
 module.exports = function(schema) {
 
     schema.statics.getNextID = function(data, cb) {
-    	console.log('==>', data)
+        console.log('------->', data.devisOrigine)
     	if (data.devisOrigine) {
     		return cb(data.devisOrigine)
     	}

@@ -435,7 +435,6 @@
         }
 
         rtn.prixAnnonce = d.prix_ht_annonce;
-        //     console.log('==>', d.comptaPrixFinal, d.prix_ht_final, d.montant_ht_facture)
         rtn.prixFinal = d.comptaPrixFinal || d.prix_ht_final || d.montant_ht_facture || undefined;
         if (!rtn.prixFinal && rtn.status === 'VRF') {
             rtn.prixFinal = rtn.prixAnnonce || 0;
