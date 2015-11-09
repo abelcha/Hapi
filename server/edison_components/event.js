@@ -54,22 +54,21 @@ Event.prototype.save = function(cb) {
 }
 
 Event.prototype.broadcast = function(dest) {
-    this.brDest = dest
+    this.doc.dest = dest
     return this
 }
 
 Event.prototype.color = function(color) {
-    this.brColor = color
+    this.doc.color = color
     return this
 }
 Event.prototype.message = function(message) {
-    this.brMessage = message
     this.doc.message = message
     return this
 }
 
 Event.prototype.self = function() {
-    this.self = true;
+    this.doc.self = true;
     return this
 }
 
@@ -77,11 +76,11 @@ Event.prototype.send = function() {
     var _this = this;
     if (typeof io !== 'undefined') {
         io.sockets.emit('notification', {
-            message: _this.brMessage,
-            dest: _this.brDest,
-            self: _this.self,
+            message: _this.doc.message,
+            dest: _this.doc.dest,
+            self: _this.doc.self,
             service: _this.doc.service ||  null,
-            color: _this.brColor || 'blue',
+            color: _this.doc.color || 'blue',
             origin: _this.doc.login,
             icon: _this.doc.icon ||  'android'
         })
