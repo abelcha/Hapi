@@ -43,6 +43,7 @@
     _this.tab.hash = currentHash;
     _this.config = config;
     var title = currentFilter ? currentFilter.long_name : _this.model;
+    console.log(currentFilter)
     if ($routeParams.sstid) {
         var id = parseInt($routeParams.sstid)
         _this.customFilter = function(inter) {
@@ -77,15 +78,11 @@
             }
         })
     }, 250)
-    if (_this.routeParamsFilter === 'relanceClient') {
-        sorting = {
-            l: 'asc'
-        }
-    } else {
-        sorting = {
-            id: 'desc'
-        }
+
+    var sortBy = (currentFilter && currentFilter.sortBy) ||  {
+        id: 'desc'
     }
+    console.log('==>', sortBy)
     dataProvider.init(function(err, resp) {
 
 
@@ -94,7 +91,7 @@
             page: $location.search()['page'] ||  1,
             total: dataProvider.filteredData.length,
             filter: _this.embedded ? {} : _.omit($location.search(), 'hashModel', 'page', 'sstid'),
-            sorting: sorting,
+            sorting: sortBy,
             count: _this.limit || 100
         };
         var tableSettings = {

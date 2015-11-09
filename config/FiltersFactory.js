@@ -323,6 +323,9 @@ FiltersFactory.prototype.list = {
         short_name: 'i_carl',
         long_name: 'Client à relancer',
         url: 'relanceClient',
+        sortBy: {
+            l: 'asc'
+        },
         match: function() {
             return {
                 status: 'VRF',
@@ -344,6 +347,9 @@ FiltersFactory.prototype.list = {
         short_name: 'i_fact',
         long_name: 'Facture à envoyer',
         url: 'factureaEnvoyer',
+        sortBy: {
+            di: 'desc'
+        },
         match: function() {
             return {
                 status: 'ENC',
@@ -392,7 +398,7 @@ FiltersFactory.prototype.list = {
         match: {
             aDemarcher: true,
             status: {
-                $in: ['APR'/*, 'ENC', 'AVR'*/]
+                $in: ['APR' /*, 'ENC', 'AVR'*/ ]
             },
             'login.demarchage': {
                 $exists: true

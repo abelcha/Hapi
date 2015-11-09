@@ -63,7 +63,6 @@ angular.module('edison').factory('TabContainer', function(Tab, $location) {
 
     TabContainer.add = function(location) {
         var tab = this.find(location);
-        console.log(location)
         this.prevTab = this.selectedTab
         if (!tab) {
             this.selectedTab = new Tab(this, location);
