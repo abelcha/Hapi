@@ -250,6 +250,11 @@ angular.module('edison')
             var fournitureSansFournisseur = _.find(this.fourniture, function(e) {
                 return !e.fournisseur;
             })
+            if (_.get(this, 'client.telephone.tel1.length') !== 10) {
+                LxNotificationService.error("Le telephone est invalide");
+                return cb("Bad Phone")
+            }
+
             if (fournitureSansFournisseur) {
                 LxNotificationService.error("Veuillez renseigner un fournisseur");
                 return cb(fournitureSansFournisseur)
