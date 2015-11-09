@@ -9,6 +9,9 @@ module.exports = {
             return artisan.status !== 'POT';
         }
     }, {
+        title: "Demande un facturier",
+        action: 'needFacturier',
+    }, {
         title: "Archiver",
         action: 'archiver',
         hide: function(artisan) {
@@ -38,6 +41,10 @@ module.exports = {
     }, {
         title: "Facturier/deviseur",
         action: 'facturierDeviseur',
+        hide:function(artisan, user) {
+            console.log('==>', user)
+            return !(user.service == 'PARTENARIAT' || user.root)
+        }
     }, {
         title: 'Appels',
         style: {

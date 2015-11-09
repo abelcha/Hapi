@@ -614,6 +614,9 @@ angular.module('edison').directive('historiqueSst', function(edisonAPI) {
         link: function(scope, element, attrs) {
 
             var reload = function() {
+                if (!scope.data || !scope.data.id) {
+                    return 0;
+                }
                 edisonAPI.artisan.fullHistory(scope.data.id).then(function(resp) {
                     scope.hist = resp.data;
                 })
@@ -1958,6 +1961,9 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
             absence: function(id, absence) {
                 return $http.post('/api/artisan/' + id + '/absence', absence)
             },
+            needFacturier: function(id) {
+                return $http.post('/api/artisan/' + id + '/needFacturier')
+            },
             sendFacturier: function(id, facturier, deviseur) {
                 return $http.post('/api/artisan/' + id + '/sendFacturier', {
                     facturier: facturier,
@@ -2234,6 +2240,13 @@ angular.module('edison')
         };
 
 
+        Artisan.prototype.needFacturier = function(cb) {
+            edisonAPI.artisan.needFacturier(this.id).then(function(resp) {
+                LxNotificationService.success("Une notification a été envoyer au service partenariat");
+                return (cb ||  _.noop)(resp)
+            })
+        }
+
         Artisan.prototype.save = function(cb) {
             var _this = this;
 
@@ -2326,7 +2339,7 @@ angular.module('edison')
         return Artisan;
     });
 
-angular.module('edison').factory('ContextMenu', function($rootScope, $location, edisonAPI, $window, $timeout, dialog, Devis, Intervention, Artisan, contextMenuData) {
+angular.module('edison').factory('ContextMenu', function($rootScope, $location, edisonAPI, user, $window, $timeout, dialog, Devis, Intervention, Artisan, contextMenuData) {
     "use strict";
 
     var ContextMenu = function(model) {
@@ -2381,7 +2394,7 @@ angular.module('edison').factory('ContextMenu', function($rootScope, $location, 
                     sub.hidden = sub.hide && sub.hide(_this.data);
                 })
             } else {
-                e.hidden = e.hide && e.hide(_this.data);
+                e.hidden = e.hide && e.hide(_this.data, user);
             }
         });
         this.style.display = "block";
@@ -3929,6 +3942,44 @@ angular.module('edison').directive('mainNavbar', function($q, edisonAPI, TabCont
 
 });
 
+var archiveReglementController = function(edisonAPI, TabContainer, $routeParams, $location, LxProgressService) {
+
+    var tab = TabContainer.getCurrentTab();
+    var _this = this;
+    _this.title = 'Archives Reglements'
+    tab.setTitle('archives RGL')
+    LxProgressService.circular.show('#5fa2db', '#globalProgress');
+    edisonAPI.compta.archivesReglement().success(function(resp) {
+        LxProgressService.circular.hide()
+        _this.data = resp
+    })
+    _this.moment = moment;
+    _this.openLink = function(link) {
+        $location.url(link)
+    }
+}
+
+angular.module('edison').controller('archivesReglementController', archiveReglementController);
+
+var archivesPaiementController = function(edisonAPI, TabContainer, $routeParams, $location, LxProgressService) {
+    var _this = this;
+    var tab = TabContainer.getCurrentTab();
+    _this.type = 'paiement'
+    _this.title = 'Archives Paiements'
+    tab.setTitle('archives PAY')
+    LxProgressService.circular.show('#5fa2db', '#globalProgress');
+    edisonAPI.compta.archivesPaiement().success(function(resp) {
+        LxProgressService.circular.hide()
+        _this.data = resp
+    })
+    _this.moment = moment;
+    _this.openLink = function(link) {
+        $location.url(link)
+    }
+}
+
+angular.module('edison').controller('archivesPaiementController', archivesPaiementController);
+
  angular.module('edison').directive('artisanCategorie', ['config', function(config) {
      "use strict";
      return {
@@ -4070,44 +4121,6 @@ var ArtisanCtrl = function($timeout, $rootScope, $scope, edisonAPI, $location, $
     }
 }
 angular.module('edison').controller('ArtisanController', ArtisanCtrl);
-
-var archiveReglementController = function(edisonAPI, TabContainer, $routeParams, $location, LxProgressService) {
-
-    var tab = TabContainer.getCurrentTab();
-    var _this = this;
-    _this.title = 'Archives Reglements'
-    tab.setTitle('archives RGL')
-    LxProgressService.circular.show('#5fa2db', '#globalProgress');
-    edisonAPI.compta.archivesReglement().success(function(resp) {
-        LxProgressService.circular.hide()
-        _this.data = resp
-    })
-    _this.moment = moment;
-    _this.openLink = function(link) {
-        $location.url(link)
-    }
-}
-
-angular.module('edison').controller('archivesReglementController', archiveReglementController);
-
-var archivesPaiementController = function(edisonAPI, TabContainer, $routeParams, $location, LxProgressService) {
-    var _this = this;
-    var tab = TabContainer.getCurrentTab();
-    _this.type = 'paiement'
-    _this.title = 'Archives Paiements'
-    tab.setTitle('archives PAY')
-    LxProgressService.circular.show('#5fa2db', '#globalProgress');
-    edisonAPI.compta.archivesPaiement().success(function(resp) {
-        LxProgressService.circular.hide()
-        _this.data = resp
-    })
-    _this.moment = moment;
-    _this.openLink = function(link) {
-        $location.url(link)
-    }
-}
-
-angular.module('edison').controller('archivesPaiementController', archivesPaiementController);
 
 var AvoirsController = function(TabContainer, openPost, edisonAPI, $rootScope, LxProgressService, LxNotificationService, FlushList) {
     "use strict";
@@ -5066,8 +5079,6 @@ var InterventionCtrl = function(Description, Signalement, ContextMenu, $window, 
 
 angular.module('edison').controller('InterventionController', InterventionCtrl);
 
-angular.module('edison').controller('ListeArtisanController', _.noop);
-
 var LpaController = function(openPost, socket, ContextMenu, $location, $window, TabContainer, edisonAPI, $rootScope, LxProgressService, LxNotificationService, FlushList) {
     "use strict";
     var _this = this
@@ -5207,6 +5218,8 @@ var LpaController = function(openPost, socket, ContextMenu, $location, $window, 
 
 
 angular.module('edison').controller('LpaController', LpaController);
+
+angular.module('edison').controller('ListeArtisanController', _.noop);
 
 angular.module('edison').controller('ListeDevisController', _.noop);
 

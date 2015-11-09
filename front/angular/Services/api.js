@@ -212,6 +212,9 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
             absence: function(id, absence) {
                 return $http.post('/api/artisan/' + id + '/absence', absence)
             },
+            needFacturier: function(id) {
+                return $http.post('/api/artisan/' + id + '/needFacturier')
+            },
             sendFacturier: function(id, facturier, deviseur) {
                 return $http.post('/api/artisan/' + id + '/sendFacturier', {
                     facturier: facturier,

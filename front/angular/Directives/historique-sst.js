@@ -12,6 +12,9 @@ angular.module('edison').directive('historiqueSst', function(edisonAPI) {
         link: function(scope, element, attrs) {
 
             var reload = function() {
+                if (!scope.data || !scope.data.id) {
+                    return 0;
+                }
                 edisonAPI.artisan.fullHistory(scope.data.id).then(function(resp) {
                     scope.hist = resp.data;
                 })

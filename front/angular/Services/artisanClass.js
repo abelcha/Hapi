@@ -58,6 +58,13 @@ angular.module('edison')
         };
 
 
+        Artisan.prototype.needFacturier = function(cb) {
+            edisonAPI.artisan.needFacturier(this.id).then(function(resp) {
+                LxNotificationService.success("Une notification a été envoyer au service partenariat");
+                return (cb ||  _.noop)(resp)
+            })
+        }
+
         Artisan.prototype.save = function(cb) {
             var _this = this;
 

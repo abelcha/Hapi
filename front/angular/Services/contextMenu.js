@@ -1,4 +1,4 @@
-angular.module('edison').factory('ContextMenu', function($rootScope, $location, edisonAPI, $window, $timeout, dialog, Devis, Intervention, Artisan, contextMenuData) {
+angular.module('edison').factory('ContextMenu', function($rootScope, $location, edisonAPI, user, $window, $timeout, dialog, Devis, Intervention, Artisan, contextMenuData) {
     "use strict";
 
     var ContextMenu = function(model) {
@@ -53,7 +53,7 @@ angular.module('edison').factory('ContextMenu', function($rootScope, $location, 
                     sub.hidden = sub.hide && sub.hide(_this.data);
                 })
             } else {
-                e.hidden = e.hide && e.hide(_this.data);
+                e.hidden = e.hide && e.hide(_this.data, user);
             }
         });
         this.style.display = "block";

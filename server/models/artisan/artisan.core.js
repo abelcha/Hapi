@@ -53,6 +53,7 @@
         return {
             da: d(e.date.ajout),
             t: e.login.ajout,
+            fc: e.needFacturier ? 1 : undefined,
             mn: e.login.management,
             c: e.categories,
             id: e._id,

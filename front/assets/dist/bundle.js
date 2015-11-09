@@ -249,6 +249,13 @@ FiltersFactory.prototype.filter = function(inter) {
 
 FiltersFactory.prototype.list = {
     artisan: [{
+        short_name: 'a_fact',
+        long_name: 'Demande Facturier',
+        url: 'needFacturier',
+        match: {
+            'needFacturier': true
+        }
+    }, {
         short_name: 'a_all',
         long_name: 'Tous les Artisans',
         url: '',
@@ -1263,6 +1270,9 @@ module.exports = {
             return artisan.status !== 'POT';
         }
     }, {
+        title: "Demande un facturier",
+        action: 'needFacturier',
+    }, {
         title: "Archiver",
         action: 'archiver',
         hide: function(artisan) {
@@ -1292,6 +1302,10 @@ module.exports = {
     }, {
         title: "Facturier/deviseur",
         action: 'facturierDeviseur',
+        hide:function(artisan, user) {
+            console.log('==>', user)
+            return !(user.service == 'PARTENARIAT' || user.root)
+        }
     }, {
         title: 'Appels',
         style: {
