@@ -48,6 +48,13 @@ module.exports = function() {
                 ]
             }
         },
+        prix: function() {
+            return {
+                $cond: [{
+                    $eq: ['$prixFinal', 0]
+                }, '$prixAnnonce', '$prixFinal']
+            }
+        },
         cond: function(field, value, rA, rB) {
             return {
                 $cond: [{

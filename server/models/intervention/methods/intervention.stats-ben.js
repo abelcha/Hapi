@@ -48,15 +48,10 @@ module.exports = function(schema) {
 
 
 
-
-            if (req.query.model === 'ca') {
-                options.match = {
-                    'status': {
-                        $in: ['ENC', 'VRF']
-                    }
+            options.match = {
+                'status': {
+                    $in: ['ENC', 'VRF']
                 }
-            } else if (req.query.model === 'telepro') {
-                options.match = {}
             }
 
 
@@ -116,11 +111,12 @@ module.exports = function(schema) {
                 },
                 telepro: {
                     post: function(resp) {
+                        //                  console.log(resp)
                         var telepro = edison.users.service('INTERVENTION');
                         var series = _.map(telepro, function(e) {
                             return {
-                                name:e,
-                                data:db.utils.pluck(resp, e, options.maxRange)
+                                name: e,
+                                data: db.utils.pluck(resp, e, options.maxRange)
                             }
                         })
                         return {
@@ -130,14 +126,14 @@ module.exports = function(schema) {
                         }
                     },
                     project: function() {
-                       var telepro = edison.users.service('INTERVENTION');
+                        var telepro = edison.users.service('INTERVENTION');
                         var rtn = {
                             _id: options.groupId,
                         }
                         _.each(telepro, function(e) {
-                            rtn[e] = db.utils.sumCond('$login.ajout', e, '$prixFinal')
-                        })
-                        console.log(rtn)
+                                rtn[e] = db.utils.sumCond('$login.ajout', e, db.utils.prix())
+                            })
+                            //console.log(rtn)
                         return rtn;
                     }
                 },
@@ -148,12 +144,18 @@ module.exports = function(schema) {
 
 
             options.match['date.ajout'] = options.dateRange
+            console.log(JSON.stringify(options.match))
+            console.log(JSON.stringify(divider[req.query.divider].project()))
             db.model('intervention').aggregate()
                 .match(options.match)
                 .group(divider[req.query.divider].project())
                 .exec(function(err, resp) {
                     var rtn = divider[req.query.divider].post(resp);
-                    console.log(rtn);
+                    //  console.log(rtn);
+                    _.each(rtn.series, function(e) {
+                        if (e.name === 'clement_b')
+                            console.log('==>', e)
+                    })
                     resolve(rtn);
                 })
         })
