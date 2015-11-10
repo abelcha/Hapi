@@ -192,6 +192,13 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
                     params: options
                 });
             },
+            statsBenYear: function(options) {
+                return $http({
+                    method: 'GET',
+                    url: "/api/intervention/statsBenYearly",
+                    params: options
+                });
+            },
             commissions: function(options) {
                 return $http({
                     method: 'GET',

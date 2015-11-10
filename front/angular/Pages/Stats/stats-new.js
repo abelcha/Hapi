@@ -41,63 +41,78 @@ var StatsNewController = function(DateSelect, TabContainer, $routeParams, edison
          })*/
     }
 
-    var monthChange = function(curr) {
 
-        edisonAPI.intervention.statsBen(curr).then(function(resp) {
-            console.log('==>', resp.data)
-            $('#chartContainer').highcharts({
-                chart: {
-                    type: 'column'
-                },
+    var getChart = function(type, title, series, categories) {
+        return {
+            chart: {
+                type: type
+            },
+            title: {
+                text: title
+            },
+            xAxis: {
+                categories: categories
+            },
+            yAxis: {
+                min: 0,
                 title: {
-                    text: resp.data.title
+                    text: 'Chiffre'
                 },
-                xAxis: {
-                    categories: resp.data.categories
-                },
-                yAxis: {
-                    min: 0,
-                    title: {
-                        text: 'Chiffre'
-                    },
-                    stackLabels: {
-                        enabled: false,
-                        style: {
-                            fontWeight: 'bold',
-                            color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
-                        }
-                    }
-                },
-                tooltip: {
-                    formatter: function() {
-                        return '<b>' + this.x + '</b><br/>' +
-                            this.series.name + ': ' + this.y + '<br/>' +
-                            'Total: ' + this.point.stackTotal;
-                    }
-                },
-                plotOptions: {
+            },
+            plotOptions: {
+                animation: false,
+                column: {
+                    pointPadding: 0,
+                    groupPadding: 0.04,
+                    borderWidth: 0,
                     animation: false,
-                    column: {
-                        pointPadding: 0,
-                        groupPadding:0.04,
-                        borderWidth: 0,
-                        animation: false,
-                        stacking: 'normal',
-                        dataLabels: {
-                            enabled: false,
-                            color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white',
-                            style: {
-                                textShadow: '0 0 3px black'
-                            }
-                        }
-                    }
-                },
-                series: resp.data.series
-            });
+                    stacking: 'normal',
+                }
+            },
+            series: series
+        }
+    }
+
+
+    _this.typeSelect = [
+        'column',
+        'areaspline',
+        'line',
+        'pie',
+        'bar',
+        'spline',
+    ]
+    $scope.selectedType = 'column'
+
+    var monthChange = function() {
+        edisonAPI.intervention.statsBen({
+            month: $scope.selectedDate.m,
+            year: $scope.selectedDate.y,
+            group: 'day',
+            model: 'ca'
+        }).then(function(resp) {
+            console.log(resp.data);
+            var d = resp.data;
+            $('#chartContainer').highcharts(getChart($scope.selectedType, d.title, d.series, d.categories));
+        });
+    }
+
+    var yearChange = function() {
+        edisonAPI.intervention.statsBen({
+            year: $scope.selectedDate.y,
+            group: 'month',
+            model: 'ca'
+        }).then(function(resp) {
+            var d = resp.data;
+            $('#chartContainer2').highcharts(getChart($scope.selectedType, d.title, d.series, d.categories));
         });
     }
 
 
+    $scope.$watch("selectedType", function()  {
+        monthChange();
+        yearChange();
+    });
     $scope.$watch("selectedYear", yearChange);
     $scope.$watch("selectedDate", function(curr) {
         if (!curr ||  !curr.m || !curr.y)

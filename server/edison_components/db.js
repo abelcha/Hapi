@@ -69,9 +69,9 @@ module.exports = function() {
                 $exists: true
             }
         },
-        pluck: function(data, value, _id) {
-            return _.map(_.range(1, 32), function(day) {
-                var fnd = _.find(data, (_id || '_id'), day)
+        pluck: function(data, value, rangeMax) {
+            return _.map(_.range(1, rangeMax), function(day) {
+                var fnd = _.find(data, '_id', day)
                 return _.round((fnd && fnd[value]) || 0, 2);
             })
         },

@@ -36,6 +36,7 @@
                 fourniture: 30
             },
             zoneChalandise: 30,
+            newOs:true,
             address: {},
             categories: [],
             representant: {
