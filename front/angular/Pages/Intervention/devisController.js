@@ -27,7 +27,6 @@ var DevisCtrl = function(edisonAPI, $scope, $rootScope, $location, $routeParams,
     _this.data = tab.data;
 
     var closeTab = function(err) {
-        console.log('=========>', err)
         if (!err)
             TabContainer.close(tab);
     }
@@ -40,7 +39,6 @@ var DevisCtrl = function(edisonAPI, $scope, $rootScope, $location, $routeParams,
             if (err) {
                 return false;
             } else if (options.envoi) {
-                console.log(resp);
                 Devis(resp).sendDevis(closeTab);
             } else if (options.annulation) {
                 Devis(resp).annulation(closeTab);
@@ -55,7 +53,7 @@ var DevisCtrl = function(edisonAPI, $scope, $rootScope, $location, $routeParams,
     $scope.$watch(function() {
         return devis.client.civilite
     }, function(newVal, oldVal) {
-        if (oldVal !== newVal) {
+        if (oldVal != newVal) {
             devis.tva = (newVal == 'Soc.' ? 20 : 10);
         }
     })

@@ -23,32 +23,29 @@ module.exports = function(schema) {
                         $in: ['ENC', 'VRF']
                     }
                 })
-                .project({
-                    day: {
-                        $dayOfMonth: "$date.ajout",
+                .group({
+                    _id: {
+                        $dayOfMonth: "$date.ajout"
                     },
-                    recu: '$compta.reglement.recu',
-                    prixFinal: "$prixFinal",
-                    prixAnnonce: "$prixAnnonce",
-                }).exec(function(err, resp) {
-                    if (err) {
-                        reject(err);
+                    recu: db.utils.sumCond('$compta.reglement.recu', true, '$prixFinal'),
+                    potentiel: db.utils.sumCond('$compta.reglement.recu', false, '$prixFinal'),
+                })
+                .exec(function(err, resp) {
+
+                    var rtn = {
+                        title: "Chiffre D'affaire",
+                        series: [{
+                            name: 'potentiel',
+                            data: db.utils.pluck(resp, 'potentiel'),
+                            color: "#2196F3"
+                        }, {
+                            name: 'recu',
+                            data: db.utils.pluck(resp, 'recu'),
+                            color: "#4CAF50"
+                        }],
+                        categories: _.map(_.range(1, 32), String)
                     }
-                    resp = _.map(resp, function(e) {
-                        return {
-                            prix: e.prixFinal ||  e.prixAnnonce ||  0,
-                            day: e.day,
-                            recu: e.recu ? 'Encaissé' : 'En Attente'
-                        }
-                    })
-                    _.times(31, function(i) {
-                        resp.push({
-                            day: i + 1,
-                            prix: 0,
-                            recu: 'En Attente'
-                        })
-                    })
-                    resolve(resp);
+                    resolve(rtn);
                 })
         })
     }

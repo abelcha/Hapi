@@ -6,7 +6,6 @@ var DateSelect = function(dateStart) {
         m: !dateStart ? 9 : dateStart.getMonth() + 1,
         y: !dateStart ? 2013 : dateStart.getFullYear()
     }
-    console.log('==>', start)
     _this.current = {
         m: d.getMonth() + 1,
         y: d.getFullYear()

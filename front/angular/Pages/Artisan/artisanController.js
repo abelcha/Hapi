@@ -5,7 +5,6 @@ var ArtisanCtrl = function($timeout, $rootScope, $scope, edisonAPI, $location, $
     _this.dialog = dialog;
     _this.moment = moment;
     _this.contextMenu = new ContextMenu('artisan')
-    console.log('==>', artisanPrm)
     var tab = TabContainer.getCurrentTab();
     if (!tab.data) {
         var artisan = new Artisan(artisanPrm.data)
@@ -76,7 +75,6 @@ var ArtisanCtrl = function($timeout, $rootScope, $scope, edisonAPI, $location, $
     _this.loadFilesList = function() {
         edisonAPI.artisan.getFiles(artisan.id).then(function(result) {
             artisan.file = result.data;
-            console.log('==>', artisan.file)
         }, console.log)
     }
     if (artisan.id) {

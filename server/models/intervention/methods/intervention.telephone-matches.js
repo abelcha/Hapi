@@ -62,14 +62,14 @@ module.exports = function(schema) {
                         return 0
                     }
                     query.$or.push(
-                        getIn('client.telephone.origine', tel)
-                        /* $or: [
+                        // $or: [
+                             getIn('client.telephone.origine', tel),
                              getIn('client.telephone.tel1', tel),
                              getIn('client.telephone.tel2', tel),
                              getIn('client.telephone.tel3', tel),
                              getIn('client.telephone.origine', tel),
-                             getIn('client.telephone.appel', tel),
-                         ]*/
+                             getIn('client.telephone.appel', tel)
+                         //]
                     )
                 });
                 db.model('intervention').find(query, {

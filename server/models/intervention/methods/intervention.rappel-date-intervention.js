@@ -17,7 +17,6 @@ module.exports = function(schema) {
 				},
 				'status': 'ENC'
 			}).lean().populate('sst').then(function(resp) {
-				console.log('==>', resp.length)
 				_.each(resp, function(e) {
 					if (!e.sst)
 						return 0

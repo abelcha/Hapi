@@ -11,10 +11,8 @@
            var finalBuffer = [];
            var stream = scissors(filepath).pages(page).pdfStream()
            stream.on('data', function(data) {
-               console.log('DATA')
                finalBuffer.push(data);
            }).on('end', function() {
-               console.log('END')
                return cb(null, Buffer.concat(finalBuffer))
            })
        }
@@ -50,18 +48,14 @@
                    }).then(function(resp) {
                        var i = 0;
 
-                       console.log(req.body.ids, resp.length)
                        async.eachLimit(resp, 5, function(e, callback) {
                                var flush = _.find(e.compta.paiement.historique, 'dateFlush', new Date(req.body.date));
                                flush.numeroCheque = (_.find(req.body.ids, 'id', e.sst) || {}).numeroCheque
                                getPage(filepath, ++i, function(err, buffer) {
-                                   console.log('-->uauau')
-                                   console.log(err, buffer)
                                    document.upload({
                                        filename: '/V2_PRODUCTION/intervention/' + e.id + '/' + 'Lettre-cheque-' + flush.numeroCheque + '.pdf',
                                        data: buffer
                                    }).then(function(resp) {
-                                       console.log('ok upload')
                                        e.save(callback)
                                    }, callback)
                                })
@@ -69,18 +63,7 @@
                            }, function() {
                                resolve('ok')
                            })
-                           /* var flush = _.find(resp, function(e) {
-                                console.log(e.dateFlush, req.body.date)
-                                return false;
-                            });
-                            console.log('==>', flush)*/
                    })
-                   //console.log(req.body)
-                   //console.log(req.files)
-                   //fs.writeFileSync(req.files.file.buffer, '~/xxx.pdf')
-
-
-
                resolve('ok')
            }).catch(__catch);
        }

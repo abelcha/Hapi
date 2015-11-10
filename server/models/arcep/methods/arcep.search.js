@@ -11,7 +11,6 @@ module.exports = function(schema) {
                         $regex: reg
                     }
                 }).then(function(doc) {
-                    //console.log("==>", doc)
                     if (!doc || !doc.length)
                         return resolve([]);
                     return resolve(doc)

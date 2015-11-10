@@ -36,13 +36,6 @@ var StatsController = function(DateSelect, TabContainer, $routeParams, edisonAPI
             _.each(resp.data, function(e) {
                 $scope.totalYear[e.potentiel ? 'potentiel' : 'recu'] += e.montant
             })
-            console.log($scope.totalYear);
-            /*
-                        $('#chartContainer3 > *').remove()
-                        var svg2 = dimple.newSvg("#chartContainer3", 100, 400);
-                        var myChart2 = new dimple.chart(svg2, resp.data);
-                        myChart.setBounds(60, 30, 50, 300)
-            */
         })
     });
 

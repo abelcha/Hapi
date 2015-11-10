@@ -234,6 +234,12 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
             controllerAs: 'vm',
             reloadOnSearch: false
         })
+         .when('/statsnew/:type', {
+            templateUrl: "Pages/Stats/stats-new.html",
+            controller: "StatsNewController",
+            controllerAs: 'vm',
+            reloadOnSearch: false
+        })
         .otherwise({
             redirectTo: '/dashboard'
         });

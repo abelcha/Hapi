@@ -1,0 +1,32 @@
+CA / Catégorie (Annuel)
+CA / Catégorie (Mensuel)
+CA / Catégorie (Journalier)
+CA / Catégorie / Commercial (Annuel)
+CA / Catégorie / Commercial (Mensuel)
+CA / Catégorie / Commercial (Journalier)
+CA / Commercial / Jour
+CA / Commercial / semaines
+CA / Commercial / Mois
+
+/*
+CA / ligne téléphonique / jour
+CA / ligne téléphonique / semaine
+CA / ligne téléphonique / mois
+*/
+
+Statistiques performance des commerciaux
+Classement des commerciaux par CA / jour
+Classement des commerciaux par CA / semaine
+Classement des commerciaux par CA / mois
+Classement des commerciaux par CA / catégorie / jour
+Classement des commerciaux par CA / catégorie / semaine
+Classement des commerciaux par CA / catégorie / mois
+% d'annulation / commerciaux / jour
+% d'annulation / commerciaux / semaine (avec comparaison avec les autres semaines du mois)
+% d'annulation / commerciaux / mois (avec comparaison avec les autres semaines du mois)
+
+/*
+Statistique des appels
+Connaître la provenance des clients en fonction des lignes téléphonique / jour / semaine / mois
+CA / ligne téléphonique 
+*/

@@ -64,11 +64,9 @@ var LpaController = function(openPost, socket, ContextMenu, $location, $window, 
                 lpa.push(e);
             }
         })
-        console.log(lpa);
         LxProgressService.circular.show('#5fa2db', '#globalProgress');
         edisonAPI.compta.flush(lpa).then(function(resp) {
             edisonAPI.compta.flushMail(lpa).then(function(resp) {
-                console.log('yayaya')
             });
         })
     }
@@ -123,7 +121,6 @@ var LpaController = function(openPost, socket, ContextMenu, $location, $window, 
                 date: _this.search.d
             }).then(function(resp) {
                 LxProgressService.circular.hide()
-                console.log('==>', resp);
             })
     }
 

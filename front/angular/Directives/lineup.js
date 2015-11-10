@@ -90,7 +90,6 @@
     var sortBy = (currentFilter && currentFilter.sortBy) ||  {
         id: 'desc'
     }
-    console.log('==>', sortBy)
     dataProvider.init(function(err, resp) {
 
 

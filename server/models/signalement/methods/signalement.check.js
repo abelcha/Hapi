@@ -10,11 +10,13 @@ module.exports = function(schema) {
                 sign.login.done = req.session.login;
                 sign.date.done = new Date();
                 sign.save().then(function(resp) {
-                    db.model('artisan').findOne({
-                        id: resp.sst_id
+                    console.log(resp.sst_id)
+                /*    db.model('artisan').findOne({
+                        id: parseInt(resp.sst_id)
                     }).then(function(sst) {
+                        console.log('okok', !!sst)
                         return sst && sst.save().then(resolve, reject);
-                    })
+                    })*/
                 }, reject);
             })
         }

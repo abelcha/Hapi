@@ -63,7 +63,6 @@ var V1 = function(d) {
     _.each(d.document, function(e, k) {
         if (typeof e === 'object' && e.file) {
             x[k] = e.file;
-            //console.log('-->', k,  e.file);
         }
     })
 
@@ -84,7 +83,6 @@ var V1 = function(d) {
         } else {
             x.date_envoi_contrat += ' - CONTRAT SIGNE';
         }
-        //console.log('-->', x.num_contrat)
     }
     x.pas_fiable = Number(Boolean(d.info.pasFiable))
     x.travail_samedi = Number(Boolean(d.info.travailSamedi));
@@ -93,24 +91,13 @@ var V1 = function(d) {
     x.IBAN = d.IBAN ||  "aucun IBAN";
 
     x.siret = d.siret;
-    /*    } catch (e) {
-            console.log('ERR', e)
-            throw e
-        }*/
+
 
 }
 
 V1.prototype.compare = function(legacy) {
     var noComp = [
-        /*  "contrat_2014",
-          "contrat",
-          "kbis",
-          "autofacturation",
-          "cni",
-          "assurance",
-          "rib",
-          "ursaff",
-          "autres",*/
+
         "coms",
         "rappel_inter",
         "jours_intervention",
@@ -133,10 +120,8 @@ V1.prototype.send = function(cb) {
             qs: this.data
         }, function(err, resp, body) {
             if (!err && resp.statusCode === 200) {
-                console.log('sendArtisan', _this.data.id);
                 cb(null, body)
             } else {
-                //  console.log("ERR", body)
                 cb("err")
             }
             edison.event("SEND_ARTISAN").id(_this.data.id).data({

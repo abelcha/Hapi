@@ -63,8 +63,10 @@ gulp.task('jsLibs', function() {
         'bower_components/mousetrap/mousetrap.min.js',
         'bower_components/chartist/dist/chartist.min.js',
         'bower_components/Chart.js/Chart.min.js',
-        'bower_components/angular-chart.js/dist/angular-chart.min.js'
-//        'bower_components/angular-material-icons/angular-material-icons.js',
+        'bower_components/angular-chart.js/dist/angular-chart.min.js',
+        'bower_components/highcharts/highcharts.js',
+  //      'bower_components/highcharts/themes/grid.js'
+        //        'bower_components/angular-material-icons/angular-material-icons.js',
 
     ]
     return gulp.src(jslibs)

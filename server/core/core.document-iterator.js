@@ -12,13 +12,11 @@ module.exports = function(core) {
             })
         }
         return new Promise(function(resolve, reject) {
-            console.log('==>', req.query.q)
             try {
                 var q = JSON.parse(req.query.q);
             } catch(e) {
                 var q = {}
             }
-            console.log('==>', q)
             core.model().find(q, {}).then(function(resp) {
                 var i = 0;
                 async.eachLimit(resp, 10, function(e, cb) {

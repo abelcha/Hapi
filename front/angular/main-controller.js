@@ -64,10 +64,6 @@ angular.module('edison').controller('MainController', function($timeout, LxNotif
             })
             .then(function(resp) {
                 _this.statsTeleproBfm = _.sortBy(resp.data.weekStats, 'total').reverse().slice(0, 6)
-                    /*_this.statsTeleproBfm = _.reduce(classement, function(result, n, key) {
-                        return result + " " + _.capitalize(n.login).slice(0, -2)
-                    }, "")
-                    console.log('==>',  _this.statsTeleproBfm)*/
             });
 
     };
@@ -91,7 +87,7 @@ angular.module('edison').controller('MainController', function($timeout, LxNotif
 
 
     $rootScope.openTab = function(tab) {
-        //   console.log('-->', tab);
+    
     }
 
     $rootScope.closeContextMenu = function(ev) {

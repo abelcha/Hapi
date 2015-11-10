@@ -15,11 +15,9 @@
             }
             scope.save = function() {
                 edisonAPI.artisan.absence(scope.data.id, scope.absence).then(function() {
-                    console.log('yaya')
+                    LxNotificationService.success("L'absence à été enregistrer");
+                    (scope.exit || _.noop)();
                 })
-                LxNotificationService.success("L'absence à été enregistrer");
-                console.log('==>', scope.exit);
-                (scope.exit || _.noop)();
             }
         }
     }

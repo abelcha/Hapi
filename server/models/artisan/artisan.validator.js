@@ -21,7 +21,6 @@ module.exports = function(schema) {
 
 
     schema.pre('save', function(next) {
-        console.log('SAVE')
         var _this = this;
         _this.loc = [_this.address.lt, _this.address.lg]
         if (_this.status !== 'ARC') {
@@ -44,7 +43,6 @@ module.exports = function(schema) {
                     }).count(cb)
                 }
             }, function(err, result) {
-                console.log('quarantained');
                 _this.quarantained = result.quarantained;
                 _this.nbrIntervention = result.nbrIntervention;
                 _this.status = result.nbrIntervention ? "ACT" : "POT";

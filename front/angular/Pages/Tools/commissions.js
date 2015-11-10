@@ -15,7 +15,6 @@ var CommissionsController = function(DateSelect, TabContainer, $routeParams, edi
         }
         _.each($scope.list, function(x) {
             rtn.com += _this.xcalc(x);
-            console.log(x.id, x.compta.reglement.montant)
             rtn.all += x.compta.reglement.montant || 0
         })
         return rtn;
@@ -38,7 +37,6 @@ var CommissionsController = function(DateSelect, TabContainer, $routeParams, edi
             $scope.total = _this.getTotal()
         })
     }, 50)
-    console.log('test')
     $scope.$watch("selectedUser", function(curr, prev) {
         $location.search('l', curr);
         actualise();
