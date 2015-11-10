@@ -15,7 +15,7 @@
                 </div>
                 <info-client data="vm.data" model="vm.data.client"></info-client>
                 <info-categorie model="vm.data.categorie" change="vm.searchArtisans(newCategorie)"></info-categorie>
-                <div class="row map-box" style="margin:0">
+                <div class="row" style="margin:0">
                     <div class="col-md-8" style="padding-left:0">
                         <div class="card margin">
                             <div class="p+" style="height: 538px;overflow:hidden;">
@@ -62,7 +62,7 @@
                             <div class="p+" style='overflow:hidden;'>
                                 <strong class="fs-headline display-block">Artisans <button class="btn" ng-click="vm.selectArtisan(null);">Reinit</button></strong>
                                 <span class="fs-subhead tc-black-2 display-block select-style-neutral">
-                                <div  class="paragraph fs-body-1 mt+" slimscroll="{height:474}" style="height: 474px;">
+                                <div  class="paragraph map-box fs-body-1 mt+" slimscroll="{height:474}" style="height: 474px;">
                                     <table ng-if="vm.nearestArtisans.length" class="table table-condensed" style="padding:0;color:black">
                                         <tbody>
                                          <tr><td colspan="12" style="text-align:center;border-top: 0px;"><h4 style="margin: 0;">Actifs</h4></td></tr>

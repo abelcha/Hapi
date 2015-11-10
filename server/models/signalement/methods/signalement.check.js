@@ -13,7 +13,6 @@ module.exports = function(schema) {
                     db.model('artisan').findOne({
                         id: resp.sst_id
                     }).then(function(sst) {
-                        console.log('-->', !!sst)
                         return sst && sst.save().then(resolve, reject);
                     })
                 }, reject);
