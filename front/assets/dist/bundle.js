@@ -1532,6 +1532,7 @@ module.exports = {
             short_name: 'PL',
             long_name: 'Plomberie',
             order: 0,
+            color_hex: '#2196F3',
             color: 'blue white-text'
         },
         CH: {
@@ -1540,6 +1541,7 @@ module.exports = {
             short_name: 'CH',
             long_name: 'Chauffage',
             order: 1,
+            color_hex: '#F44336',
             color: 'red white-text'
         },
         EL: {
@@ -1548,6 +1550,7 @@ module.exports = {
             short_name: 'EL',
             long_name: 'Électricité',
             order: 2,
+            color_hex: '#ffeb3b',
             color: 'yellow  accent-4 black-text'
         },
         SR: {
@@ -1556,6 +1559,7 @@ module.exports = {
             short_name: 'SR',
             long_name: 'Serrurerie',
             order: 3,
+            color_hex: "#795548",
             color: 'brown white-text'
         },
         VT: {
@@ -1564,6 +1568,7 @@ module.exports = {
             short_name: 'VT',
             long_name: 'Vitrerie',
             order: 4,
+            color_hex: "#4CAF50",
             color: 'green white-text'
         },
         AS: {
@@ -1572,6 +1577,7 @@ module.exports = {
             short_name: 'AS',
             long_name: 'Assainissement',
             order: 5,
+            color_hex: "#ff9800",
             color: 'orange white-text'
         },
         CL: {
@@ -1580,6 +1586,7 @@ module.exports = {
             short_name: 'CL',
             long_name: 'Climatisation',
             order: 6,
+            color_hex: "#e0f2f1",
             color: 'teal white-text'
         },
         PT: {
@@ -1588,6 +1595,7 @@ module.exports = {
             short_name: 'PT',
             long_name: 'Peinture',
             order: 7,
+            color_hex: "#ff5722",
             color: 'deep-orange white-text'
         }
     },

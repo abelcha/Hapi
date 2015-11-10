@@ -43,6 +43,8 @@ var StatsNewController = function(DateSelect, TabContainer, $routeParams, edison
 
 
     var getChart = function(type, title, series, categories) {
+
+
         return {
             chart: {
                 type: type
@@ -59,6 +61,10 @@ var StatsNewController = function(DateSelect, TabContainer, $routeParams, edison
                     text: 'Chiffre'
                 },
             },
+            tooltip: {
+                shared: true,
+                valueSuffix: ' €'
+            },
             plotOptions: {
                 animation: false,
                 column: {
@@ -66,6 +72,18 @@ var StatsNewController = function(DateSelect, TabContainer, $routeParams, edison
                     groupPadding: 0.04,
                     borderWidth: 0,
                     animation: false,
+                    stacking: 'normal',
+                },
+                area: {
+                    stacking: 'normal',
+                    lineColor: '#666666',
+                    lineWidth: 1,
+                    marker: {
+                        lineWidth: 1,
+                        lineColor: '#666666'
+                    }
+                },
+                areaspline: {
                     stacking: 'normal',
                 }
             },
@@ -77,6 +95,7 @@ var StatsNewController = function(DateSelect, TabContainer, $routeParams, edison
     _this.typeSelect = [
         'column',
         'areaspline',
+        'area',
         'line',
         'pie',
         'bar',
@@ -84,12 +103,20 @@ var StatsNewController = function(DateSelect, TabContainer, $routeParams, edison
     ]
     $scope.selectedType = 'column'
 
+    _this.dividerSelect = [
+        'categorie',
+        'chiffre',
+        'telepro'
+    ]
+    $scope.selectedDivider = 'chiffre'
+
     var monthChange = function() {
         edisonAPI.intervention.statsBen({
             month: $scope.selectedDate.m,
             year: $scope.selectedDate.y,
             group: 'day',
-            model: 'ca'
+            model: 'ca',
+            divider: $scope.selectedDivider,
         }).then(function(resp) {
             console.log(resp.data);
             var d = resp.data;
@@ -101,10 +128,23 @@ var StatsNewController = function(DateSelect, TabContainer, $routeParams, edison
         edisonAPI.intervention.statsBen({
             year: $scope.selectedDate.y,
             group: 'month',
-            model: 'ca'
+            model: 'ca',
+            divider: $scope.selectedDivider,
         }).then(function(resp) {
             var d = resp.data;
             $('#chartContainer2').highcharts(getChart($scope.selectedType, d.title, d.series, d.categories));
+        });
+    }
+
+    var weekChange = function() {
+        edisonAPI.intervention.statsBen({
+            year: $scope.selectedDate.y,
+            group: 'week',
+            model: 'ca',
+            divider: $scope.selectedDivider,
+        }).then(function(resp) {
+            var d = resp.data;
+            $('#chartContainer3').highcharts(getChart($scope.selectedType, d.title, d.series, d.categories));
         });
     }
 
@@ -112,8 +152,21 @@ var StatsNewController = function(DateSelect, TabContainer, $routeParams, edison
     $scope.$watch("selectedType", function()  {
         monthChange();
         yearChange();
+        weekChange();
     });
-    $scope.$watch("selectedYear", yearChange);
+
+
+    $scope.$watch("selectedDivider", function()  {
+        monthChange();
+        yearChange();
+        weekChange();
+    });
+
+    $scope.$watch("selectedYear", function() {
+        yearChange();
+        weekChange();
+
+    });
     $scope.$watch("selectedDate", function(curr) {
         if (!curr ||  !curr.m || !curr.y)
             return false;

@@ -7,7 +7,11 @@ module.exports = function(schema) {
             var q = {};
             var options = {};
 
+
+            //date
+
             if (req.query.group === 'day') {
+                options.divider = 'jours'
                 var date = new Date(req.query.year, req.query.month);
                 options.dateRange = {
                     $gte: new Date(date.getFullYear(), date.getMonth() - 1, 1, -1),
@@ -19,101 +23,143 @@ module.exports = function(schema) {
                 options.maxRange = 31
 
             } else if (req.query.group == 'month') {
+                options.divider = 'mois'
                 options.dateRange = {
                     $gte: new Date(req.query.year, 0, 1),
                     $lt: new Date(req.query.year + 1, 0, 1)
                 }
-                 options.groupId = {
+                options.groupId = {
                     $month: "$date.ajout"
                 }
                 options.maxRange = 13
 
+            } else if (req.query.group == 'week') {
+                options.divider = 'semaine'
+                options.dateRange = {
+                    $gte: new Date(req.query.year, 0, 1),
+                    $lt: new Date(req.query.year + 1, 0, 1)
+                }
+                options.groupId = {
+                    $week: "$date.ajout"
+                }
+                options.maxRange = 53
             }
 
-            db.model('intervention').aggregate()
-                .match({
-                    'date.ajout': options.dateRange,
+
+
+
+
+            if (req.query.model === 'ca') {
+                options.match = {
                     'status': {
                         $in: ['ENC', 'VRF']
                     }
-                })
-                .group({
-                    _id: options.groupId,
-                    recu: db.utils.sumCond('$compta.reglement.recu', true, '$prixFinal'),
-                    potentiel: db.utils.sumCond('$compta.reglement.recu', false, '$prixFinal'),
-                })
-                .exec(function(err, resp) {
+                }
+            } else if (req.query.model === 'telepro') {
+                options.match = {}
+            }
 
-                    var rtn = {
-                        title: "Chiffre D'affaire / Mois",
-                        series: [{
-                            name: 'potentiel',
-                            data: db.utils.pluck(resp, 'potentiel', options.maxRange),
-                            color: "#2196F3"
-                        }, {
-                            name: 'recu',
-                            data: db.utils.pluck(resp, 'recu', options.maxRange),
-                            color: "#4CAF50"
-                        }],
-                        categories: _.map(_.range(1, options.maxRange), String)
+
+            //divider
+
+            var divider = {
+                chiffre: {
+                    post: function(resp) {
+                        return {
+                            title: req.query.model + ' / ' + options.divider,
+                            series: [{
+                                name: 'potentiel',
+                                data: db.utils.pluck(resp, 'potentiel', options.maxRange),
+                                color: "#26C6DA"
+                            }, {
+                                name: 'recu',
+                                data: db.utils.pluck(resp, 'recu', options.maxRange),
+                                color: "#4CAF50"
+                            }],
+                            categories: _.map(_.range(1, options.maxRange), String)
+                        }
+                    },
+                    project: function() {
+                        return {
+                            _id: options.groupId,
+                            recu: db.utils.sumCond('$compta.reglement.recu', true, '$prixFinal'),
+                            potentiel: db.utils.sumCond('$compta.reglement.recu', false, '$prixFinal'),
+                        }
                     }
-                    console.log(rtn)
+                },
+                categorie: {
+                    post: function(resp) {
+                        var categories = requireLocal('config/dataList').categories;
+                        var series = _.map(categories, function(e) {
+                            e.name = e.short_name;
+                            e.data = db.utils.pluck(resp, e.name, options.maxRange)
+                            e.color = e.color_hex;
+                            return _.pick(e, 'name', 'color', 'data');
+                        })
+
+                        return {
+                            title: req.query.model + ' / ' + options.divider,
+                            series: series,
+                            categories: _.map(_.range(1, options.maxRange), String)
+                        }
+                    },
+                    project: function() {
+                        var categories = requireLocal('config/dataList').categories;
+                        var rtn = {
+                            _id: options.groupId,
+                        }
+                        _.each(categories, function(e) {
+                            rtn[e.short_name] = db.utils.sumCond('$categorie', e.short_name, '$prixFinal')
+                        })
+                        return rtn;
+                    }
+                },
+                telepro: {
+                    post: function(resp) {
+                        var telepro = edison.users.service('INTERVENTION');
+                        var series = _.map(telepro, function(e) {
+                            return {
+                                name:e,
+                                data:db.utils.pluck(resp, e, options.maxRange)
+                            }
+                        })
+                        return {
+                            title: req.query.model + ' / ' + options.divider,
+                            series: series,
+                            categories: _.map(_.range(1, options.maxRange), String)
+                        }
+                    },
+                    project: function() {
+                       var telepro = edison.users.service('INTERVENTION');
+                        var rtn = {
+                            _id: options.groupId,
+                        }
+                        _.each(telepro, function(e) {
+                            rtn[e] = db.utils.sumCond('$login.ajout', e, '$prixFinal')
+                        })
+                        console.log(rtn)
+                        return rtn;
+                    }
+                },
+
+
+            }
+
+
+
+            options.match['date.ajout'] = options.dateRange
+            db.model('intervention').aggregate()
+                .match(options.match)
+                .group(divider[req.query.divider].project())
+                .exec(function(err, resp) {
+                    var rtn = divider[req.query.divider].post(resp);
+                    console.log(rtn);
                     resolve(rtn);
                 })
         })
     }
 
 
-
-
-
-
-
-
-
-    schema.statics.statsBenYearly = function(req, res) {
-
-
-        return new Promise(function(resolve, reject) {
-            var getYearRange = function(y) {
-                return {
-                    $gte: new Date(y, 0, 1),
-                    $lt: new Date(y + 1, 0, 1)
-                }
-            }
-            var dateRange = getYearRange(parseInt(req.query.y))
-            db.model('intervention').aggregate()
-                .match({
-                    'date.ajout': dateRange,
-                    'status': {
-                        $in: ['ENC', 'VRF']
-                    }
-                })
-                .group({
-                    _id: {
-                        $month: "$date.ajout"
-                    },
-                    recu: db.utils.sumCond('$compta.reglement.recu', true, '$prixFinal'),
-                    potentiel: db.utils.sumCond('$compta.reglement.recu', false, '$prixFinal'),
-                })
-                .exec(function(err, resp) {
-                    var rtn = {
-                        title: "Chiffre D'affaire / Année",
-                        series: [{
-                            name: 'potentiel',
-                            data: db.utils.pluck(resp, 'potentiel', 13),
-                            color: "#2196F3"
-                        }, {
-                            name: 'recu',
-                            data: db.utils.pluck(resp, 'recu', 13),
-                            color: "#4CAF50"
-                        }],
-                        categories: _.map(_.range(1, 13), String)
-                    }
-                    resolve(rtn)
-                })
-        })
-    }
 
 
 
