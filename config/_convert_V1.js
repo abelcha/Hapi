@@ -85,7 +85,7 @@ var V1 = function(d, devis, legacy) {
             if (d.facture) {
                 x.nom_facture = d.facture.nom
                 x.prenom_facture = d.facture.prenom
-                x.tel_facture = d.facture.telephone
+                x.tel_facture = d.facture.tel
                 x.mail_facture = d.facture.email
                 x.numero_facture = d.facture.address.n
                 x.adresse_facture = d.facture.address.r

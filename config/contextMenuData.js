@@ -5,9 +5,6 @@ module.exports = {
     }, {
         title: 'Ouvrir Recap',
         action: "ouvrirRecap",
-        hide: function(artisan) {
-            return artisan.status !== 'POT';
-        }
     }, {
         title: "Demande un facturier",
         action: 'needFacturier',
