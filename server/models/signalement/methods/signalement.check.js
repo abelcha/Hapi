@@ -10,8 +10,12 @@ module.exports = function(schema) {
                 sign.login.done = req.session.login;
                 sign.date.done = new Date();
                 sign.save().then(function(resp) {
-                    console.log(resp);
-                    resolve(resp)
+                    db.model('artisan').findOne({
+                        id: resp.sst_id
+                    }).then(function(sst) {
+                        console.log('-->', !!sst)
+                        return sst && sst.save().then(resolve, reject);
+                    })
                 }, reject);
             })
         }

@@ -8,7 +8,7 @@ module.exports = function(schema) {
 				db.model('artisan').findOne({
 					id: params.sst_id
 				}).then(function(resp) {
-					resp && resp.save().then(resolve, reject)
+					return resp && resp.save().then(resolve, reject)
 				})
 			})
 		})

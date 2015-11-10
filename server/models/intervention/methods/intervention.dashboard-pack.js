@@ -184,10 +184,6 @@ module.exports = function(schema) {
                     })
                     _.each(resp, function(elem) {
                         if (elem.TOTAL_VRF > 0) {
-                            console.log('=>', elem._id)
-                            /*console.log('-->', elem._id.a, elem.TOTAL_VRF)
-                            console.log('-->', elem._id.e, elem.TOTAL_VRF)
-                            console.log('-->', elem._id.v, elem.TOTAL_VRF)*/
                             set(rtn, elem._id.a, 'ajout', elem.TOTAL_VRF)
                             set(rtn, elem._id.e, 'envoi', elem.TOTAL_VRF)
                             set(rtn, elem._id.v, 'verif', elem.TOTAL_VRF)
@@ -208,7 +204,6 @@ module.exports = function(schema) {
                             set(rtn, elem._id.a, 'annul', elem.TOTAL_ANN)
                         }
                     })
-                      console.log(rtn)
                     resolve(rtn);
                 })
         });
