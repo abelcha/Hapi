@@ -183,6 +183,7 @@ module.exports = function(schema) {
                         }
                     })
                     _.each(resp, function(elem) {
+                        console.log(elem);
                         if (elem.TOTAL_VRF > 0) {
                             set(rtn, elem._id.a, 'ajout', elem.TOTAL_VRF)
                             set(rtn, elem._id.e, 'envoi', elem.TOTAL_VRF)
