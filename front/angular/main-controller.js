@@ -51,7 +51,6 @@ angular.module('edison').controller('MainController', function($timeout, LxNotif
     getSignalementStats()
 
     var reloadStats = function() {
-        console.log('reloadstats')
         edisonAPI.stats.telepro()
             .success(function(result) {
                 $scope.userStats = _.find(result, function(e) {
@@ -64,7 +63,6 @@ angular.module('edison').controller('MainController', function($timeout, LxNotif
                 date: moment().startOf('day').toDate()
             })
             .then(function(resp) {
-                console.log('reload')
                 _this.statsTeleproBfm = _.sortBy(resp.data.weekStats, 'total').reverse().slice(0, 6)
                     /*_this.statsTeleproBfm = _.reduce(classement, function(result, n, key) {
                         return result + " " + _.capitalize(n.login).slice(0, -2)

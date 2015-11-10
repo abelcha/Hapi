@@ -247,6 +247,7 @@ angular.module('edison')
         Intervention.prototype.save = function(cb) {
             var _this = this;
 
+            console.log(">>>>>>>>", this.prixFinal)
             var fournitureSansFournisseur = _.find(this.fourniture, function(e) {
                 return !e.fournisseur;
             })

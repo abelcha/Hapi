@@ -110,6 +110,9 @@ var InterventionCtrl = function(Description, Signalement, ContextMenu, $window, 
 
 
     $scope.calculPrixFinal = function() {
+        if (intervention.reglementSurPlace) {
+            return 0;
+        }
         intervention.prixFinal = 0;
         _.each(intervention.produits, function(e)  {
             intervention.prixFinal += (e.pu * e.quantite)
