@@ -182,21 +182,21 @@ module.exports = function(schema) {
                             sum: 0
                         }
                     })
+
                     _.each(resp, function(elem) {
-                        console.log(elem);
                         if (elem.TOTAL_VRF > 0) {
                             set(rtn, elem._id.a, 'ajout', elem.TOTAL_VRF)
-                            set(rtn, elem._id.e, 'envoi', elem.TOTAL_VRF)
+                            set(rtn, elem._id.a, 'envoi', elem.TOTAL_VRF)
                             set(rtn, elem._id.v, 'verif', elem.TOTAL_VRF)
                         }
                         if (elem.TOTAL_SUM > 0) {
                             set(rtn, elem._id.a, 'sum', elem.TOTAL_SUM)
-                            set(rtn, elem._id.e, 'sum', elem.TOTAL_SUM)
-                            set(rtn, elem._id.v, 'sum', elem.TOTAL_SUM)
+                            set(rtn, elem._id.a, 'sum', elem.TOTAL_SUM)
+                            set(rtn, elem._id.a, 'sum', elem.TOTAL_SUM)
                         }
                         if (elem.TOTAL_ENC > 0) {
                             set(rtn, elem._id.a, 'ajout', elem.TOTAL_ENC)
-                            set(rtn, elem._id.e, 'envoi', elem.TOTAL_ENC)
+                            set(rtn, elem._id.a, 'envoi', elem.TOTAL_ENC)
                         }
                         if (elem.TOTAL_APR > 0) {
                             set(rtn, elem._id.a, 'ajout', elem.TOTAL_APR)
