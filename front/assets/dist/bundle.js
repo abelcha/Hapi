@@ -1520,8 +1520,8 @@ module.exports = {
     }, {
         title: "Je prend !",
         action: 'demarcher',
-        hide: function(inter) {
-            return !inter.aDemarcher;
+        hide: function(inter, user) {
+            return !(inter.aDemarcher && user.service === 'PARTENARIAT')
         }
     }]
 }
