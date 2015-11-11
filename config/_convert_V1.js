@@ -107,6 +107,11 @@ var V1 = function(d, devis, legacy) {
                 //x.fourniture_edison = Number(d.fourniture[0].fournisseur != "")
                 x.tva_facture = d.tva;
             }
+            x.v2 = _.pick(d, 'appels', 'login', 'date', 'sav', 'combo', 'aDemarcher', 'enDemarchage', 'demarchePar', 'file')
+            x.v2 = JSON.stringify(x.v2);
+        } else {
+            x.v2 = _.pick(d, 'historique')
+            x.v2 = JSON.stringify(x.v2);
         }
         x.taux_tva = d.tva ||  10
         x.etat_intervention = devis ? 'DEVIS' : config.etats[d.status].old_name;

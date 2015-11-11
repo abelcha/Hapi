@@ -193,6 +193,7 @@ module.exports = function(db) {
             travailSamedi: Boolean,
             pasFiable: Boolean
         },
+        tutelle: Boolean,
         needFacturier: Boolean,
         BIC: String,
         IBAN: String,

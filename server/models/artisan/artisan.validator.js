@@ -8,14 +8,23 @@ module.exports = function(schema) {
         if (sst.quarantained) {
             return 'QUA';
         }
+        if (sst.tutelle) {
+            return 'TUT';
+        }
         if (sst.status === "POT" && _.get(d.contrat, 'ok') && _.get(d.cni, 'ok') && _.get(d.kbis, 'ok')) {
             return 'HOT';
         }
-        if ((sst.nbrIntervention < 5 && sst.nbrIntervention > 0) && moment().add(-30, "days").isBefore(sst.date.ajout)) {
+        if (_.inRange(sst.nbrIntervention, 0, 3)) {
             return "NEW";
         }
+        if (_.inRange(sst.nbrIntervention, 3, 6)) {
+            return "FORM";
+        }
+        if (_.inRange(sst.nbrIntervention, 6, 16)) {
+            return "CONF";
+        }
         if (sst.nbrIntervention > 15) {
-            return "REG";
+            return "REG"
         }
     }
 
@@ -30,6 +39,7 @@ module.exports = function(schema) {
                 nbrIntervention: function(cb) {
                     db.model("intervention").count({
                         'artisan.id': _this.id,
+                        'reglementSurPlace': true,
                         'status': {
                             $in: ['ENC', 'VRF']
                         }

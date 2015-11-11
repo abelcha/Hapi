@@ -88,7 +88,9 @@ var InterventionCtrl = function(Description, Signalement, ContextMenu, $window, 
                     _this.contextMenu = _this.contextMenuSST;
                     _this.contextMenu.setData(resp.data);
                     _this.contextMenu.setPosition($event.pageX, $event.pageY + 200)
-                    _this.contextMenu.open()
+                    _this.contextMenu.open().onClose(_.debounce(function(resp) {
+                        _this.searchArtisans(intervention.categorie)
+                    }, 500))
                 })
             }
 

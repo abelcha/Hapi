@@ -38,6 +38,7 @@
                                                 <div class="md-display-2"> {{(vm.stats.paye.final)|frnbr}} €</div>
                                             </div>
                                         </div>
+                                        <span class="display-inline md-title" ng-repeat="(key, value) in vm.sst.document" ng-if="value.ok"><i>{{key}} - </span>
                                     </div>
                                     <div class="col-sm-6">
                                         <span style="width:90px;margin-top:4px" class="label fs-body-2 {{config.etatsArtisan[vm.sst.status].color}}">{{config.etatsArtisan[vm.sst.status].long_name}}</span>
@@ -69,7 +70,8 @@
                                         <canvas id="bar" class="chart chart-bar" chart-options="vm.sstChart.options" chart-data="vm.sstChart.data" chart-labels="vm.sstChart.labels" height="200"width="700" chart-colours="vm.sstChart.colours">
                                         </canvas>
                                     </div>
-                                    <!--  <artisan-recap id="vm.sst.id"></artisan-recap> -->
+                                    <!--  <artisan-re
+                                    cap id="vm.sst.id"></artisan-recap> -->
                                 </md-content>
                             </md-tab>
                             <md-tab label="Paiements">

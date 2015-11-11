@@ -567,6 +567,16 @@ module.exports = {
             short_name: 'NEW',
             color: 'light-blue'
         },
+        CONF: {
+            long_name: 'Confirmé',
+            short_name: 'CONF',
+            color: 'teal'
+        },
+        FORM: {
+            long_name: 'Formation',
+            short_name: 'CONF',
+            color: 'orange'
+        },
         REG: {
             long_name: 'Régulier',
             short_name: 'REG',
@@ -576,6 +586,11 @@ module.exports = {
             long_name: 'Hot',
             short_name: 'HOT',
             color: 'purple'
+        },
+        TUT: {
+            long_name: "<Tutelle>",
+            short_name: "TUT",
+            color: 'brown'
         },
         QUA: {
             long_name: "<Quarantaine>",

@@ -58,11 +58,20 @@ angular.module('edison').factory('ContextMenu', function($rootScope, $location, 
         });
         this.style.display = "block";
         this.active = true;
+        return this
+    }
+
+    ContextMenu.prototype.onClose = function(callback) {
+        this.onCloseCallback = callback;
     }
 
     ContextMenu.prototype.close = function() {
         this.style.display = "none";
         this.active = false;
+        if (this.onCloseCallback) {
+           this.onCloseCallback()
+           this.onCloseCallback = null;
+        }
 
     }
 

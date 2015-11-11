@@ -126,21 +126,6 @@ module.exports = function(db) {
             description: String,
             open: Boolean
         },
-        litiges: [{
-            status: String,
-            description: String,
-            login: String,
-            date: Date,
-            regle: Boolean
-        }],
-        litigesEnCours: {
-            type: Boolean,
-            default: true
-        },
-        savEnCours: {
-            type: Boolean,
-            default: true
-        },
         categorie: {
             type: String,
             required: true
@@ -156,9 +141,6 @@ module.exports = function(db) {
             type: String,
             required: true
         },
-        descriptionTags: [
-            String
-        ],
         remarqueSms: Boolean,
         remarque: {
             type: String,
@@ -374,11 +356,6 @@ module.exports = function(db) {
             duration: Number,
             _type: String, //CONTACT/CALLBACK
         }],
-        relance: {
-            r1: Date,
-            r2: Date,
-            r3: Date,
-        },
         sms: {
             ref: 'sms',
             type: String
@@ -391,7 +368,6 @@ module.exports = function(db) {
 
         }],
         cache: {
-
         }
     }, {
         versionKey: false

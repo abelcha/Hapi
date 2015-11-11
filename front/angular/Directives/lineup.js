@@ -71,21 +71,19 @@
             _this.tableParams.reload()
         }
     }, true)
+    
 
-
-    var actualiseUrl = _.throttle(function(fltrs, page) {
+    var actualiseUrl = function(fltrs, page) {
         $location.search('page', page !== 1 ? page : undefined);
         _.each(fltrs, function(e, k) {
-            // console.log(e, k)
             if (!e) e = undefined;
             if (e !== "hashModel") {
                 $location.search(k, e);
 
             } else {
-                //console.log(e)
             }
         })
-    }, 250)
+    }
 
     var sortBy = (currentFilter && currentFilter.sortBy) ||  {
         id: 'desc'
@@ -104,7 +102,7 @@
         var tableSettings = {
             total: dataProvider.filteredData,
             getData: function($defer, params) {
-                actualiseUrl(params.filter(), params.page())
+                //actualiseUrl(params.filter(), params.page())
                 var data = dataProvider.filteredData;
                 if (!_this.embedded) {
                     data = $filter('tableFilter')(data, params.filter());

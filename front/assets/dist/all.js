@@ -773,21 +773,19 @@ angular.module('edison').directive('historiqueSst', function(edisonAPI) {
             _this.tableParams.reload()
         }
     }, true)
+    
 
-
-    var actualiseUrl = _.throttle(function(fltrs, page) {
+    var actualiseUrl = function(fltrs, page) {
         $location.search('page', page !== 1 ? page : undefined);
         _.each(fltrs, function(e, k) {
-            // console.log(e, k)
             if (!e) e = undefined;
             if (e !== "hashModel") {
                 $location.search(k, e);
 
             } else {
-                //console.log(e)
             }
         })
-    }, 250)
+    }
 
     var sortBy = (currentFilter && currentFilter.sortBy) ||  {
         id: 'desc'
@@ -806,7 +804,7 @@ angular.module('edison').directive('historiqueSst', function(edisonAPI) {
         var tableSettings = {
             total: dataProvider.filteredData,
             getData: function($defer, params) {
-                actualiseUrl(params.filter(), params.page())
+                //actualiseUrl(params.filter(), params.page())
                 var data = dataProvider.filteredData;
                 if (!_this.embedded) {
                     data = $filter('tableFilter')(data, params.filter());
@@ -2237,11 +2235,13 @@ angular.module('edison')
             })
         }
 
-        Artisan.prototype.aManager = function(cb) {
-            edisonAPI.artisan.manage(this.id).then(function(resp) {
-                LxNotificationService.success("Le sous-traitant est à manager");
-                return (cb ||  _.noop)(resp)
-            })
+        Artisan.prototype.tutelleIn = function(cb) {
+            this.tutelle = true;
+            Artisan(this).save();
+        }
+        Artisan.prototype.tutelleOut = function(cb) {
+            this.tutelle = false;
+            Artisan(this).save();
         }
 
         Artisan.prototype.deArchiver = function() {
@@ -2421,11 +2421,20 @@ angular.module('edison').factory('ContextMenu', function($rootScope, $location, 
         });
         this.style.display = "block";
         this.active = true;
+        return this
+    }
+
+    ContextMenu.prototype.onClose = function(callback) {
+        this.onCloseCallback = callback;
     }
 
     ContextMenu.prototype.close = function() {
         this.style.display = "none";
         this.active = false;
+        if (this.onCloseCallback) {
+           this.onCloseCallback()
+           this.onCloseCallback = null;
+        }
 
     }
 
@@ -3257,6 +3266,8 @@ angular.module('edison')
             })
         }
 
+
+
         Intervention.prototype.ouvrirFicheV1 = function() {
             $window.open('http://electricien13003.com/alvin/5_Gestion_des_interventions/show_res_bis_2.php?id_client=' + this.id)
         }
@@ -3345,12 +3356,12 @@ angular.module('edison')
             var _this = this;
 
             var fournitureSansFournisseur = _.find(this.fourniture, function(e) {
-                return !e.fournisseur;
-            })
-/*            if (_.get(this, 'client.telephone.tel1.length') !== 10) {
-                LxNotificationService.error("Le telephone est invalide");
-                return cb("Bad Phone")
-            }*/
+                    return !e.fournisseur;
+                })
+                /*            if (_.get(this, 'client.telephone.tel1.length') !== 10) {
+                                LxNotificationService.error("Le telephone est invalide");
+                                return cb("Bad Phone")
+                            }*/
 
             if (fournitureSansFournisseur) {
                 LxNotificationService.error("Veuillez renseigner un fournisseur");
@@ -3525,6 +3536,15 @@ angular.module('edison')
             this.cb = {
                 number: 0
             }
+        }
+        Intervention.prototype.isEnvoyable = function() {
+            if (!this.sst) {
+                return false;
+            }
+            if (this.sst.tutelle && !user.root) {
+                return false
+            }
+            return _.includes(["ANN", "APR", "ENC", undefined], this.status)
         }
 
 
@@ -4919,7 +4939,9 @@ var InterventionCtrl = function(Description, Signalement, ContextMenu, $window, 
                     _this.contextMenu = _this.contextMenuSST;
                     _this.contextMenu.setData(resp.data);
                     _this.contextMenu.setPosition($event.pageX, $event.pageY + 200)
-                    _this.contextMenu.open()
+                    _this.contextMenu.open().onClose(_.debounce(function(resp) {
+                        _this.searchArtisans(intervention.categorie)
+                    }, 500))
                 })
             }
 

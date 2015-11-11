@@ -160,6 +160,8 @@ angular.module('edison')
             })
         }
 
+
+
         Intervention.prototype.ouvrirFicheV1 = function() {
             $window.open('http://electricien13003.com/alvin/5_Gestion_des_interventions/show_res_bis_2.php?id_client=' + this.id)
         }
@@ -248,12 +250,12 @@ angular.module('edison')
             var _this = this;
 
             var fournitureSansFournisseur = _.find(this.fourniture, function(e) {
-                return !e.fournisseur;
-            })
-/*            if (_.get(this, 'client.telephone.tel1.length') !== 10) {
-                LxNotificationService.error("Le telephone est invalide");
-                return cb("Bad Phone")
-            }*/
+                    return !e.fournisseur;
+                })
+                /*            if (_.get(this, 'client.telephone.tel1.length') !== 10) {
+                                LxNotificationService.error("Le telephone est invalide");
+                                return cb("Bad Phone")
+                            }*/
 
             if (fournitureSansFournisseur) {
                 LxNotificationService.error("Veuillez renseigner un fournisseur");
@@ -428,6 +430,15 @@ angular.module('edison')
             this.cb = {
                 number: 0
             }
+        }
+        Intervention.prototype.isEnvoyable = function() {
+            if (!this.sst) {
+                return false;
+            }
+            if (this.sst.tutelle && !user.root) {
+                return false
+            }
+            return _.includes(["ANN", "APR", "ENC", undefined], this.status)
         }
 
 

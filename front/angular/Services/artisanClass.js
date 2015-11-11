@@ -42,11 +42,13 @@ angular.module('edison')
             })
         }
 
-        Artisan.prototype.aManager = function(cb) {
-            edisonAPI.artisan.manage(this.id).then(function(resp) {
-                LxNotificationService.success("Le sous-traitant est à manager");
-                return (cb ||  _.noop)(resp)
-            })
+        Artisan.prototype.tutelleIn = function(cb) {
+            this.tutelle = true;
+            Artisan(this).save();
+        }
+        Artisan.prototype.tutelleOut = function(cb) {
+            this.tutelle = false;
+            Artisan(this).save();
         }
 
         Artisan.prototype.deArchiver = function() {

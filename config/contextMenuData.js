@@ -27,10 +27,16 @@ module.exports = {
             return (artisan.document && artisan.document.cni && artisan.document.kbis && artisan.document.contrat);
         }
     }, {
-        title: "à Manager",
-        action: 'aManager',
+        title: "Mettre sous tutelle",
+        action: 'tutelleIn',
         hide: function(artisan, user) {
-            return !user.root
+            return !(user.root && !artisan.tutelle)
+        }
+    }, {
+        title: "Sortir de tutelle",
+        action: 'tutelleOut',
+        hide: function(artisan, user) {
+            return !(user.root && artisan.tutelle)
         }
     }, {
         title: "Rappel Contrat",
