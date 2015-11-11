@@ -77,13 +77,16 @@
                 <p>
                     <strong> Date d'ajout : </strong> {{artisan.date.ajout | date:"MM/dd/yyyy 'à' hh'h'mm"}}
                 </p>
+                <p ng-if="artisan.demandeFacturier.pending">
+                    <strong>Demande de facturier</strong> par {{artisan.demandeFacturier.login}} le {{artisan.demandeFacturier.date| date:"MM/dd/yyyy 'à' HH'h'mm"}}
+                </p>
             </div>
         </div>
-        <div class="col-sm-4 hidden-sm hidden-xs hidden-md" ng-if="data.newOs && data.appels.length">
+        <div class="col-sm-4 hidden-sm hidden-xs hidden-md" ng-if="data.appels.length">
             <p bold text-xxl underlined>Conversations Sous-traitants</p>
             <info-appel-sst data="data" embedded="true"></info-appel-sst>
         </div>
-        <div class="col-sm-4 hidden-sm hidden-xs hidden-md" ng-if="address && address.lt && !(data.newOs && data.appels.length)">
+        <div class="col-sm-4 hidden-sm hidden-xs hidden-md" ng-if="address && address.lt && !(data.appels.length)">
             <img style="height: auto;width: 411px;" ng-src="{{getStaticMap()}}" class="img-thumbnail" />
         </div>
     </div>

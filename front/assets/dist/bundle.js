@@ -253,7 +253,7 @@ FiltersFactory.prototype.list = {
         long_name: 'Demande Facturier',
         url: 'needFacturier',
         match: {
-            'needFacturier': true
+            'demandeFacturier.status': "PENDING"
         }
     }, {
         short_name: 'a_all',
@@ -603,6 +603,26 @@ FiltersFactory.prototype.list = {
         match: {
             aDemarcher: true,
 
+        },
+    }, {
+        short_name: 'i_nw',
+        long_name: 'Nouveaux SST',
+        url: 'nw',
+        match: {
+            'artisan.subStatus': 'NEW',
+            status: {
+                $in: ['APR', 'ENC']
+            }
+        },
+    }, {
+        short_name: 'i_tut',
+        long_name: 'Sous Tutelles',
+        url: 'tutelle',
+        match: {
+            'artisan.subStatus': 'TUT',
+            status: {
+                $in: ['APR', 'ENC']
+            }
         },
     }]
 }
@@ -1273,8 +1293,23 @@ module.exports = {
         title: 'Ouvrir Recap',
         action: "ouvrirRecap",
     }, {
-        title: "Demande un facturier",
+        title: "Demander un facturier",
         action: 'needFacturier',
+        hide: function(artisan, user) {
+            return (user.service === 'PARTENARIAT')
+        }
+    }, {
+        title: "Refuser le facturier",
+        action: 'refuseFacturier',
+        hide: function(artisan, user) {
+            return (user.service !== 'PARTENARIAT')
+        }
+    }, {
+        title: "Facturier/deviseur",
+        action: 'facturierDeviseur',
+        hide: function(artisan, user) {
+            return !(user.service == 'PARTENARIAT')
+        }
     }, {
         title: "Archiver",
         action: 'archiver',
@@ -1310,12 +1345,6 @@ module.exports = {
         action: 'rappelContrat',
         hide: function(artisan) {
             return !artisan.historique.contrat.length || (artisan.document && artisan.document.cni && artisan.document.kbis && artisan.document.contrat);
-        }
-    }, {
-        title: "Facturier/deviseur",
-        action: 'facturierDeviseur',
-        hide: function(artisan, user) {
-            return !(user.service == 'PARTENARIAT' || user.root)
         }
     }, {
         title: 'Appels',

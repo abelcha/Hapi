@@ -6,8 +6,23 @@ module.exports = {
         title: 'Ouvrir Recap',
         action: "ouvrirRecap",
     }, {
-        title: "Demande un facturier",
+        title: "Demander un facturier",
         action: 'needFacturier',
+        hide: function(artisan, user) {
+            return (user.service === 'PARTENARIAT')
+        }
+    }, {
+        title: "Refuser le facturier",
+        action: 'refuseFacturier',
+        hide: function(artisan, user) {
+            return (user.service !== 'PARTENARIAT')
+        }
+    }, {
+        title: "Facturier/deviseur",
+        action: 'facturierDeviseur',
+        hide: function(artisan, user) {
+            return !(user.service == 'PARTENARIAT')
+        }
     }, {
         title: "Archiver",
         action: 'archiver',
@@ -43,12 +58,6 @@ module.exports = {
         action: 'rappelContrat',
         hide: function(artisan) {
             return !artisan.historique.contrat.length || (artisan.document && artisan.document.cni && artisan.document.kbis && artisan.document.contrat);
-        }
-    }, {
-        title: "Facturier/deviseur",
-        action: 'facturierDeviseur',
-        hide: function(artisan, user) {
-            return !(user.service == 'PARTENARIAT' || user.root)
         }
     }, {
         title: 'Appels',

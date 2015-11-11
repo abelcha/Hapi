@@ -107,7 +107,7 @@ var V1 = function(d, devis, legacy) {
                 //x.fourniture_edison = Number(d.fourniture[0].fournisseur != "")
                 x.tva_facture = d.tva;
             }
-            x.v2 = _.pick(d, 'appels', 'login', 'date', 'sav', 'combo', 'aDemarcher', 'enDemarchage', 'demarchePar', 'file')
+            x.v2 = _.pick(d, 'newOs', 'appels', 'login', 'date', 'sav', 'combo', 'aDemarcher', 'enDemarchage', 'demarchePar', 'file')
             x.v2 = JSON.stringify(x.v2);
         } else {
             x.v2 = _.pick(d, 'historique')

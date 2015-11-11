@@ -62,7 +62,7 @@ FiltersFactory.prototype.list = {
         long_name: 'Demande Facturier',
         url: 'needFacturier',
         match: {
-            'needFacturier': true
+            'demandeFacturier.status': "PENDING"
         }
     }, {
         short_name: 'a_all',
@@ -412,6 +412,26 @@ FiltersFactory.prototype.list = {
         match: {
             aDemarcher: true,
 
+        },
+    }, {
+        short_name: 'i_nw',
+        long_name: 'Nouveaux SST',
+        url: 'nw',
+        match: {
+            'artisan.subStatus': 'NEW',
+            status: {
+                $in: ['APR', 'ENC']
+            }
+        },
+    }, {
+        short_name: 'i_tut',
+        long_name: 'Sous Tutelles',
+        url: 'tutelle',
+        match: {
+            'artisan.subStatus': 'TUT',
+            status: {
+                $in: ['APR', 'ENC']
+            }
         },
     }]
 }

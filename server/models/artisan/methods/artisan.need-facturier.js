@@ -7,7 +7,12 @@ module.exports = function(schema) {
         fn: function(artisan, req, res) {
             var _ = require('lodash')
             return new Promise(function(resolve, reject) {
-                artisan.needFacturier = true;
+                artisan.demandeFacturier = {
+                    status: 'PENDING',
+                    login: req.session.login,
+                    date: new Date()
+                }
+
                 artisan.save().then(resolve, reject)
                 edison.event('NEED_FACTURIER')
                     .login(req.session.login)

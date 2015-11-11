@@ -31,8 +31,7 @@
 
     module.exports.postSave = function(prev, curr, session) {
         try {
-
-            if (envProd && curr.artisan && curr.artisan.id) {
+            if (envProd && curr.artisan && curr.artisan.id && curr.artisan.subStatus !== 'TUT') {
                 var moment = require('moment')
                 var textTemplate = requireLocal('config/textTemplate');
                 var config = requireLocal('config/dataList');
@@ -148,7 +147,7 @@
             curr.litige.closedBy = session.login;
         }
 
-        if (curr.artisan && curr.artisan.id && curr.artisan.id !== prev.artisan.id) {
+        if (curr.artisan && curr.artisan.id && curr.artisan.id !== prev.artisan.id && curr.artisan.subStatus !== 'TUT') {
             curr.status = 'APR';
             if (envProd) {
                 db.model('artisan').findOne({

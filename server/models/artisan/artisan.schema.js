@@ -162,7 +162,6 @@ module.exports = function(db) {
             text: String,
             date: Date
         }],
-        aSurveiller: Boolean,
         historique: {
             pack: [{
                 date: {
@@ -194,7 +193,11 @@ module.exports = function(db) {
             pasFiable: Boolean
         },
         tutelle: Boolean,
-        needFacturier: Boolean,
+        demandeFacturier: {
+            status: String, //PENDING/OK/NO,
+            login: String,
+            date: Date,
+        },
         BIC: String,
         IBAN: String,
         nbrIntervention: Number,

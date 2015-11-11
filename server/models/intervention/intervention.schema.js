@@ -135,6 +135,7 @@ module.exports = function(db) {
                 type: Number,
                 ref: 'artisan'
             },
+            subStatus: String,
             nomSociete: String
         },
         description: {
@@ -367,8 +368,7 @@ module.exports = function(db) {
             origin: String, //SCAN, UPLOAD, AUTO
 
         }],
-        cache: {
-        }
+        cache: {}
     }, {
         versionKey: false
     });

@@ -695,7 +695,6 @@ angular.module('edison').directive('historiqueSst', function(edisonAPI) {
          },
          link: function(scope, elem) {
             scope.config = config;
-            console.log(config.savStatus)
          }
      }
  });
@@ -2204,7 +2203,6 @@ angular.module('edison')
         }
 
         var appelLocal = function(tel) {
-            console.log('---->', tel);
             if (tel) {
                 $window.open('callto:' + tel, '_self', false);
             }
@@ -2216,7 +2214,6 @@ angular.module('edison')
         Artisan.prototype.callTel2 = function() {
             appelLocal(this.telephone.tel2)
         }
-
 
         Artisan.prototype.typeOf = function() {
             return 'Artisan';
@@ -2259,11 +2256,26 @@ angular.module('edison')
             $window.open('callto:' + _this.telephone.tel1, '_self', false)
         };
 
+        Artisan.prototype.refuseFacturier = function() {
+            this.demandeFacturier.status = 'NO';
+            Artisan(this).save();
+        }
 
-        Artisan.prototype.needFacturier = function(cb) {
+        Artisan.prototype.needFacturier = function() {
+            if (this.demandeFacturier && moment(this.demandeFacturier.date).isAfter(moment().add(-10, 'days'))) {
+                if (this.demandeFacturier.status === 'PENDING') {
+                    LxNotificationService.error(moment(this.demandeFacturier.date).format("[Une demande à deja été éffectué le ]LLL"));
+                }
+                if (this.demandeFacturier.status === 'OK') {
+                    LxNotificationService.error("Un facturier à deja été envoyé dans les 10 derniers jours");
+                }
+                if (this.demandeFacturier.status === 'NO') {
+                    LxNotificationService.error("L'envoi d'un facturier à deja été refusé dans les 10 derniers jours");
+                }
+                return 0;
+            }
             edisonAPI.artisan.needFacturier(this.id).then(function(resp) {
                 LxNotificationService.success("Une notification a été envoyer au service partenariat");
-                return (cb ||  _.noop)(resp)
             })
         }
 
@@ -2318,7 +2330,6 @@ angular.module('edison')
 
         Artisan.prototype.envoiContrat = function(options, cb) {
             var _this = this;
-            console.log(options.signe)
             dialog.sendContrat({
                 data: _this,
                 signe: options.signe,
@@ -3370,7 +3381,7 @@ angular.module('edison')
             edisonAPI.intervention.save(_this)
                 .then(function(resp) {
                     var validationMessage = _.template("Les données de l'intervention {{id}} ont à été enregistré.")(resp.data)
-                    if ((_this.tmpID && _this.sst) || (_this.sst__id && _this.sst && _this.sst__id !== _this.sst.id)) {
+                    if ((_this.tmpID && _this.sst) || (_this.sst__id && _this.sst && _this.sst__id !== _this.sst.id) && !_this.sst.tutelle) {
                         validationMessage += "\n\n Un sms à été envoyé";
                     }
                     LxNotificationService.success(validationMessage);
@@ -3385,10 +3396,13 @@ angular.module('edison')
 
         Intervention.prototype.envoi = function(cb) {
             var _this = this;
+            if (!Intervention(_this).isEnvoyable()) {
+                return LxNotificationService.error("Vous ne pouvez pas envoyer cette intervention");
+            }
             var defaultText = textTemplate.sms.intervention.envoi.bind(_this)(user);
             dialog.envoiIntervention(_this, defaultText, function(err, text, file) {
                 if (err)
-                    return cb(err)
+                    return cb && cb(err)
                 LxProgressService.circular.show('#5fa2db', '#globalProgress');
                 edisonAPI.intervention.envoi(_this.id, {
                     sms: text,
@@ -3459,7 +3473,10 @@ angular.module('edison')
         Intervention.prototype.verificationSimple = function(cb) {
             var _this = this;
             LxProgressService.circular.show('#5fa2db', '#globalProgress');
-
+            console.log('==>', Intervention(this).isVerifiable())
+            if (!Intervention(this).isVerifiable()) {
+                return LxNotificationService.error("Vous ne pouvez pas verifier cette intervention");
+            }
             edisonAPI.intervention.verification(_this.id)
                 .then(function(resp) {
                     LxProgressService.circular.hide()
@@ -3476,6 +3493,9 @@ angular.module('edison')
         }
 
         Intervention.prototype.verification = function(cb) {
+            if (!Intervention(this).isVerifiable()) {
+                return LxNotificationService.error("Vous ne pouvez pas verifier cette intervention");
+            }
             var _this = this;
             if (!_this.reglementSurPlace) {
                 return $location.url('/intervention/' + this.id)
@@ -3541,10 +3561,26 @@ angular.module('edison')
             if (!this.sst) {
                 return false;
             }
-            if (this.sst.tutelle && !user.root) {
-                return false
+            if (this.sst.subStatus === 'QUA') {
+                return false;
+            }
+            if (this.sst.subStatus === 'TUT' && (!user.root || user.service !== 'PARTENARIAT')) {
+                return false;
             }
             return _.includes(["ANN", "APR", "ENC", undefined], this.status)
+        }
+
+        Intervention.prototype.isVerifiable = function() {
+            if (!this.artisan) {
+                return false;
+            }
+            if (this.artisan.subStatus === 'QUA') {
+                return false;
+            }
+            if (this.artisan.subStatus === 'TUT' && (!user.root || user.service !== 'PARTENARIAT')) {
+                return false;
+            }
+            return this.status === 'ENC'
         }
 
 
@@ -3990,44 +4026,6 @@ angular.module('edison').directive('mainNavbar', function($q, edisonAPI, TabCont
 
 });
 
-var archiveReglementController = function(edisonAPI, TabContainer, $routeParams, $location, LxProgressService) {
-
-    var tab = TabContainer.getCurrentTab();
-    var _this = this;
-    _this.title = 'Archives Reglements'
-    tab.setTitle('archives RGL')
-    LxProgressService.circular.show('#5fa2db', '#globalProgress');
-    edisonAPI.compta.archivesReglement().success(function(resp) {
-        LxProgressService.circular.hide()
-        _this.data = resp
-    })
-    _this.moment = moment;
-    _this.openLink = function(link) {
-        $location.url(link)
-    }
-}
-
-angular.module('edison').controller('archivesReglementController', archiveReglementController);
-
-var archivesPaiementController = function(edisonAPI, TabContainer, $routeParams, $location, LxProgressService) {
-    var _this = this;
-    var tab = TabContainer.getCurrentTab();
-    _this.type = 'paiement'
-    _this.title = 'Archives Paiements'
-    tab.setTitle('archives PAY')
-    LxProgressService.circular.show('#5fa2db', '#globalProgress');
-    edisonAPI.compta.archivesPaiement().success(function(resp) {
-        LxProgressService.circular.hide()
-        _this.data = resp
-    })
-    _this.moment = moment;
-    _this.openLink = function(link) {
-        $location.url(link)
-    }
-}
-
-angular.module('edison').controller('archivesPaiementController', archivesPaiementController);
-
  angular.module('edison').directive('artisanCategorie', ['config', function(config) {
      "use strict";
      return {
@@ -4167,6 +4165,44 @@ var ArtisanCtrl = function($timeout, $rootScope, $scope, edisonAPI, $location, $
     }
 }
 angular.module('edison').controller('ArtisanController', ArtisanCtrl);
+
+var archiveReglementController = function(edisonAPI, TabContainer, $routeParams, $location, LxProgressService) {
+
+    var tab = TabContainer.getCurrentTab();
+    var _this = this;
+    _this.title = 'Archives Reglements'
+    tab.setTitle('archives RGL')
+    LxProgressService.circular.show('#5fa2db', '#globalProgress');
+    edisonAPI.compta.archivesReglement().success(function(resp) {
+        LxProgressService.circular.hide()
+        _this.data = resp
+    })
+    _this.moment = moment;
+    _this.openLink = function(link) {
+        $location.url(link)
+    }
+}
+
+angular.module('edison').controller('archivesReglementController', archiveReglementController);
+
+var archivesPaiementController = function(edisonAPI, TabContainer, $routeParams, $location, LxProgressService) {
+    var _this = this;
+    var tab = TabContainer.getCurrentTab();
+    _this.type = 'paiement'
+    _this.title = 'Archives Paiements'
+    tab.setTitle('archives PAY')
+    LxProgressService.circular.show('#5fa2db', '#globalProgress');
+    edisonAPI.compta.archivesPaiement().success(function(resp) {
+        LxProgressService.circular.hide()
+        _this.data = resp
+    })
+    _this.moment = moment;
+    _this.openLink = function(link) {
+        $location.url(link)
+    }
+}
+
+angular.module('edison').controller('archivesPaiementController', archivesPaiementController);
 
 var AvoirsController = function(TabContainer, openPost, edisonAPI, $rootScope, LxProgressService, LxNotificationService, FlushList) {
     "use strict";

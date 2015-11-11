@@ -10,7 +10,6 @@
          },
          link: function(scope, elem) {
             scope.config = config;
-            console.log(config.savStatus)
          }
      }
  });

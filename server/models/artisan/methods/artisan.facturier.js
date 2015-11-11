@@ -34,7 +34,11 @@ module.exports = function(schema) {
                 var opt = _.pick(req.body, 'facturier', 'deviseur');
                 opt.login = req.session.login;
                 opt.date = Date.now();
+                if (artisan.demandeFacturier) {
+                    artisan.demandeFacturier.status = "OK";
+                }
                 artisan.historique.pack.push(opt)
+                edison.event('SEND_FACTURIER').login(req.session.login).id(artisan.id).save()
                 artisan.save().then(resolve, reject)
             })
         }

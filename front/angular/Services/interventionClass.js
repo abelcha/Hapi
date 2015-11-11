@@ -264,7 +264,7 @@ angular.module('edison')
             edisonAPI.intervention.save(_this)
                 .then(function(resp) {
                     var validationMessage = _.template("Les données de l'intervention {{id}} ont à été enregistré.")(resp.data)
-                    if ((_this.tmpID && _this.sst) || (_this.sst__id && _this.sst && _this.sst__id !== _this.sst.id)) {
+                    if ((_this.tmpID && _this.sst) || (_this.sst__id && _this.sst && _this.sst__id !== _this.sst.id) && !_this.sst.tutelle) {
                         validationMessage += "\n\n Un sms à été envoyé";
                     }
                     LxNotificationService.success(validationMessage);
@@ -279,10 +279,13 @@ angular.module('edison')
 
         Intervention.prototype.envoi = function(cb) {
             var _this = this;
+            if (!Intervention(_this).isEnvoyable()) {
+                return LxNotificationService.error("Vous ne pouvez pas envoyer cette intervention");
+            }
             var defaultText = textTemplate.sms.intervention.envoi.bind(_this)(user);
             dialog.envoiIntervention(_this, defaultText, function(err, text, file) {
                 if (err)
-                    return cb(err)
+                    return cb && cb(err)
                 LxProgressService.circular.show('#5fa2db', '#globalProgress');
                 edisonAPI.intervention.envoi(_this.id, {
                     sms: text,
@@ -353,7 +356,10 @@ angular.module('edison')
         Intervention.prototype.verificationSimple = function(cb) {
             var _this = this;
             LxProgressService.circular.show('#5fa2db', '#globalProgress');
-
+            console.log('==>', Intervention(this).isVerifiable())
+            if (!Intervention(this).isVerifiable()) {
+                return LxNotificationService.error("Vous ne pouvez pas verifier cette intervention");
+            }
             edisonAPI.intervention.verification(_this.id)
                 .then(function(resp) {
                     LxProgressService.circular.hide()
@@ -370,6 +376,9 @@ angular.module('edison')
         }
 
         Intervention.prototype.verification = function(cb) {
+            if (!Intervention(this).isVerifiable()) {
+                return LxNotificationService.error("Vous ne pouvez pas verifier cette intervention");
+            }
             var _this = this;
             if (!_this.reglementSurPlace) {
                 return $location.url('/intervention/' + this.id)
@@ -435,10 +444,26 @@ angular.module('edison')
             if (!this.sst) {
                 return false;
             }
-            if (this.sst.tutelle && !user.root) {
-                return false
+            if (this.sst.subStatus === 'QUA') {
+                return false;
+            }
+            if (this.sst.subStatus === 'TUT' && (!user.root || user.service !== 'PARTENARIAT')) {
+                return false;
             }
             return _.includes(["ANN", "APR", "ENC", undefined], this.status)
+        }
+
+        Intervention.prototype.isVerifiable = function() {
+            if (!this.artisan) {
+                return false;
+            }
+            if (this.artisan.subStatus === 'QUA') {
+                return false;
+            }
+            if (this.artisan.subStatus === 'TUT' && (!user.root || user.service !== 'PARTENARIAT')) {
+                return false;
+            }
+            return this.status === 'ENC'
         }
 
 
