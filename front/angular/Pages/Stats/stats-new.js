@@ -12,41 +12,12 @@ var StatsNewController = function(DateSelect, TabContainer, $routeParams, edison
     })
     $scope.selectedYear = dateSelect.current.y
 
-
-
-    var yearChange = function(curr) {
-        /* edisonAPI.intervention.statsBen({
-             y: curr
-         }).then(function(resp) {
-             console.log(resp.data)
-             $('#chartContainer2 > *').remove()
-             var svg = dimple.newSvg("#chartContainer2", 1070, 400);
-             var myChart = new dimple.chart(svg, resp.data);
-             myChart.setBounds(60, 30, 1000, 300)
-             var x = myChart.addCategoryAxis("x", "mth");
-             var y = myChart.addMeasureAxis("y", "montant");
-             y.tickFormat = ',.0f';
-             myChart.addSeries("potentiel", dimple.plot.bar);
-             myChart.addLegend(60, 10, 410, 20, "right");
-             myChart.draw();
-
-             $scope.totalYear = {
-                 potentiel: 0,
-                 recu: 0
-             }
-
-             _.each(resp.data, function(e) {
-                 $scope.totalYear[e.potentiel ? 'potentiel' : 'recu'] += e.montant
-             })
-         })*/
-    }
-
-
     var getChart = function(type, title, series, categories) {
 
 
         return {
             chart: {
+                zoomType: 'x',
                 type: type
             },
             title: {
@@ -72,7 +43,7 @@ var StatsNewController = function(DateSelect, TabContainer, $routeParams, edison
                     groupPadding: 0.04,
                     borderWidth: 0,
                     animation: false,
-                    stacking: 'normal',
+                    //  stacking: 'normal',
                 },
                 area: {
                     stacking: 'normal',

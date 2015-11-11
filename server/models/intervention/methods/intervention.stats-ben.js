@@ -77,8 +77,8 @@ module.exports = function(schema) {
                     project: function() {
                         return {
                             _id: options.groupId,
-                            recu: db.utils.sumCond('$compta.reglement.recu', true, '$prixFinal'),
-                            potentiel: db.utils.sumCond('$compta.reglement.recu', false, '$prixFinal'),
+                            recu: db.utils.sumCond('$compta.reglement.recu', true, db.utils.prix()),
+                            potentiel: db.utils.sumCond('$compta.reglement.recu', false, db.utils.prix()),
                         }
                     }
                 },
@@ -104,7 +104,7 @@ module.exports = function(schema) {
                             _id: options.groupId,
                         }
                         _.each(categories, function(e) {
-                            rtn[e.short_name] = db.utils.sumCond('$categorie', e.short_name, '$prixFinal')
+                            rtn[e.short_name] = db.utils.sumCond('$categorie', e.short_name, db.utils.prix())
                         })
                         return rtn;
                     }
@@ -133,7 +133,6 @@ module.exports = function(schema) {
                         _.each(telepro, function(e) {
                                 rtn[e] = db.utils.sumCond('$login.ajout', e, db.utils.prix())
                             })
-                            //console.log(rtn)
                         return rtn;
                     }
                 },
@@ -144,18 +143,11 @@ module.exports = function(schema) {
 
 
             options.match['date.ajout'] = options.dateRange
-            console.log(JSON.stringify(options.match))
-            console.log(JSON.stringify(divider[req.query.divider].project()))
             db.model('intervention').aggregate()
                 .match(options.match)
                 .group(divider[req.query.divider].project())
                 .exec(function(err, resp) {
                     var rtn = divider[req.query.divider].post(resp);
-                    //  console.log(rtn);
-                    _.each(rtn.series, function(e) {
-                        if (e.name === 'clement_b')
-                            console.log('==>', e)
-                    })
                     resolve(rtn);
                 })
         })

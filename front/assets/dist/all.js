@@ -3344,14 +3344,13 @@ angular.module('edison')
         Intervention.prototype.save = function(cb) {
             var _this = this;
 
-            console.log(">>>>>>>>", this.prixFinal)
             var fournitureSansFournisseur = _.find(this.fourniture, function(e) {
                 return !e.fournisseur;
             })
-            if (_.get(this, 'client.telephone.tel1.length') !== 10) {
+/*            if (_.get(this, 'client.telephone.tel1.length') !== 10) {
                 LxNotificationService.error("Le telephone est invalide");
                 return cb("Bad Phone")
-            }
+            }*/
 
             if (fournitureSansFournisseur) {
                 LxNotificationService.error("Veuillez renseigner un fournisseur");
@@ -3793,18 +3792,19 @@ angular.module('edison').factory('user', function($window) {
     return $window.app_session;
 });
 
- angular.module('edison').directive('infoAppelSst', function(mapAutocomplete, edisonAPI,config) {
-     "use strict";
-     return {
-         restrict: 'E',
-         templateUrl: '/Templates/info-appel-sst.html',
-         scope: {
-             data: "=",
-         },
-         link: function(scope, element, attrs) {
-             console.log('sweg');
-         },
-     }
+ angular.module('edison').directive('infoAppelSst', function(mapAutocomplete, edisonAPI, config) {
+    "use strict";
+    return {
+        restrict: 'E',
+        templateUrl: '/Templates/info-appel-sst.html',
+        scope: {
+            data: "=",
+        },
+        link: function(scope, element, attrs) {
+            scope.embedded = !!attrs.embedded
+            console.log(attrs.embedded);
+        },
+    }
 
  });
 
@@ -5313,41 +5313,12 @@ var StatsNewController = function(DateSelect, TabContainer, $routeParams, edison
     })
     $scope.selectedYear = dateSelect.current.y
 
-
-
-    var yearChange = function(curr) {
-        /* edisonAPI.intervention.statsBen({
-             y: curr
-         }).then(function(resp) {
-             console.log(resp.data)
-             $('#chartContainer2 > *').remove()
-             var svg = dimple.newSvg("#chartContainer2", 1070, 400);
-             var myChart = new dimple.chart(svg, resp.data);
-             myChart.setBounds(60, 30, 1000, 300)
-             var x = myChart.addCategoryAxis("x", "mth");
-             var y = myChart.addMeasureAxis("y", "montant");
-             y.tickFormat = ',.0f';
-             myChart.addSeries("potentiel", dimple.plot.bar);
-             myChart.addLegend(60, 10, 410, 20, "right");
-             myChart.draw();
-
-             $scope.totalYear = {
-                 potentiel: 0,
-                 recu: 0
-             }
-
-             _.each(resp.data, function(e) {
-                 $scope.totalYear[e.potentiel ? 'potentiel' : 'recu'] += e.montant
-             })
-         })*/
-    }
-
-
     var getChart = function(type, title, series, categories) {
 
 
         return {
             chart: {
+                zoomType: 'x',
                 type: type
             },
             title: {
@@ -5373,7 +5344,7 @@ var StatsNewController = function(DateSelect, TabContainer, $routeParams, edison
                     groupPadding: 0.04,
                     borderWidth: 0,
                     animation: false,
-                    stacking: 'normal',
+                    //  stacking: 'normal',
                 },
                 area: {
                     stacking: 'normal',

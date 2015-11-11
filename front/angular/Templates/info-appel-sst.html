@@ -1,4 +1,5 @@
-<div class="card margin">
+<div></div>
+<div class="card margin" ng-if="!embedded">
     <div class="p+">
         <strong class="fs-headline display-block">Appels Clients</strong>
         <div class="paragraph fs-body-1 mt+">
@@ -21,3 +22,11 @@
         </div>
     </div>
 </div>
+<ul ng-if="embedded">
+    <li ng-repeat="(k, v) in data.appels">{{v._type}} - {{v.date|date:"dd/MM/yy à HH'h'mm"}} - {{v.duration}} Sec - {{v.status}}
+        <br>
+        <audio controls ng-init="v.audioFile = '/api/axialis/' + v.call_id + '/get'">
+            <source ng-src="{{v.audioFile}}" type="audio/mpeg">
+        </audio>
+    </li>
+</ul>

@@ -247,14 +247,13 @@ angular.module('edison')
         Intervention.prototype.save = function(cb) {
             var _this = this;
 
-            console.log(">>>>>>>>", this.prixFinal)
             var fournitureSansFournisseur = _.find(this.fourniture, function(e) {
                 return !e.fournisseur;
             })
-            if (_.get(this, 'client.telephone.tel1.length') !== 10) {
+/*            if (_.get(this, 'client.telephone.tel1.length') !== 10) {
                 LxNotificationService.error("Le telephone est invalide");
                 return cb("Bad Phone")
-            }
+            }*/
 
             if (fournitureSansFournisseur) {
                 LxNotificationService.error("Veuillez renseigner un fournisseur");

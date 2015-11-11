@@ -32,7 +32,7 @@ module.exports = function(schema) {
                         datePlain: moment(inter.date.intervention).format('LL')
                     }
                 });
-                if (inter.reglementSurPlace) {
+                if (inter.reglementSurPlace && inter.modeReglement !== 'CB') {
                     mail.send({
                         From: "comptabilite@edison-services.fr",
                         ReplyTo: "comptabilite@edison-services.fr",
