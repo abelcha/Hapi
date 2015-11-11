@@ -27,7 +27,7 @@ angular.module("edison").filter('tableFilter', ['config', function(config) {
 
     }
     var compareDate = function(key, data, input) {
-        var md = (data[key] + 1370000000) * 1000;
+        var md = (data[key] + 137000000) * 10000;
         //console.log( input.start, input.end);
         if (md > input.start.getTime() && md < input.end.getTime()) {
             return true
