@@ -6,7 +6,7 @@
                 <input type="text" ng-model="vm.tableFilter" ng-change="vm.reloadData()" class="form-control">
                 <div when-scroll-ends="vm.loadMore()">
                     <ul class="list mt++">
-                        <li class="list-row list-row--has-separator" ng-repeat="artisan in vm.tableData | orderBy:'-da' | limitTo:vm.tableLimit " ng-right-click="vm.rowRightClick($event, artisan)" ng-click="vm.rowClick($event, artisan, false)" ng-class="{success : vm.vm.contextMenu.active && vm.vm.contextMenu.data.id === artisan.id, greyed : expendedRow === artisan.id}">
+                        <li class="list-row list-row--has-separator" ng-repeat="artisan in vm.tableData | orderBy:'-da' | limitTo:vm.tableLimit " ng-right-click="vm.rowRightClick($event, artisan)" ng-click="vm.rowClick($event, artisan, false)" ng-class="{success : vm.vm.contextMenu.active && vm.vm.contextMenu.data.id === artisan.id, greyed : expendedRow === artisan.id}">
                             <div class="list-row__content">
                                 <span><strong>{{artisan.n}}</strong> - {{artisan.tl}}</span>
                             </div>
@@ -32,13 +32,12 @@
                                                 <span class="fa fa-square" style="margin-left:25px;color:#ff9800"></span> En Cours
                                             </div>
                                             <div class="col-sm-6">
-                                                Gains depuis le {{vm.sst.date.ajout|date:"dd/MM/yyyy"}} (représente la totalité des paiement effectué) :
+                                                Gains depuis le {{vm.sst.date.ajout|date:"dd/MM/yyyy"}} (représente la totalité des paiement effectué) :
                                                 <div class="md-display-2"> {{(vm.stats.paye.paye)|frnbr}} €</div>
-                                                <br> Chiffre d’affaire (représente la totalité des montants:
+                                                <br> Chiffre d’affaire (représente la totalité des montants:
                                                 <div class="md-display-2"> {{(vm.stats.paye.final)|frnbr}} €</div>
                                             </div>
                                         </div>
-                                        <span class="display-inline md-title" ng-repeat="(key, value) in vm.sst.document" ng-if="value.ok"><i>{{key}} - </span>
                                     </div>
                                     <div class="col-sm-6">
                                         <span style="width:90px;margin-top:4px" class="label fs-body-2 {{config.etatsArtisan[vm.sst.status].color}}">{{config.etatsArtisan[vm.sst.status].long_name}}</span>
@@ -70,8 +69,7 @@
                                         <canvas id="bar" class="chart chart-bar" chart-options="vm.sstChart.options" chart-data="vm.sstChart.data" chart-labels="vm.sstChart.labels" height="200"width="700" chart-colours="vm.sstChart.colours">
                                         </canvas>
                                     </div>
-                                    <!--  <artisan-re
-                                    cap id="vm.sst.id"></artisan-recap> -->
+                                    <!--  <artisan-recap id="vm.sst.id"></artisan-recap> -->
                                 </md-content>
                             </md-tab>
                             <md-tab label="Paiements">

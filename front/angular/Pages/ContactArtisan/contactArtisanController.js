@@ -65,7 +65,7 @@ var ContactArtisanController = function($scope, $timeout, TabContainer, LxProgre
                 colours: [
                     '#F7464A', // red
                     '#46BFBD', // green
-                   
+
                 ]
             }
         });
