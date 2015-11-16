@@ -45,6 +45,13 @@ module.exports = {
                     "Edison Services\n"
             },
             envoi: function(user) {
+                var tels = this.client.telephone.tel1.match(/.{2}/g).join('.');
+                if (this.client.telephone.tel2) {
+                    tels += (' - ' + this.client.telephone.tel2.match(/.{2}/g).join('.'));
+                }
+                if (this.client.telephone.tel3) {
+                    tels += (' - ' + this.client.telephone.tel3.match(/.{2}/g).join('.'));
+                }
                 var options = {
                     precision: getPrecision(this.client.address),
                     datePlain: moment(this.date.intervention).format("[le] DD[/]MM[ à ]HH[h]mm"),
@@ -52,7 +59,7 @@ module.exports = {
                     ligne: (user.ligne ||  "0972423000").match(/.{2}/g).join('.'),
                     remarques: this.remarqueSms ? (' (' + this.remarque + ')') : '',
                     prix: this.prixAnnonce ? this.prixAnnonce + "€ HT. " : "Pas de prix annoncé. ",
-                    telClient: this.client.telephone.tel1.match(/.{2}/g).join('.')
+                    telClient: tels
                 }
                 if (this.newOs) {
                     sms = "OS {{inter.id}}\n" +
