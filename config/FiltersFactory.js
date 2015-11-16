@@ -181,9 +181,9 @@ FiltersFactory.prototype.list = {
         url: 'davr',
         match: {
             status: 'ENC',
-            'date.intervention': {
+           /* 'date.intervention': {
                 $lt: new Date(Date.now() + ms.hours(1))
-            },
+            },*/
             aDemarcher: true
         },
     }, {
@@ -401,7 +401,7 @@ FiltersFactory.prototype.list = {
         match: {
             aDemarcher: true,
             status: {
-                $in: ['APR' /*, 'ENC', 'AVR'*/ ]
+                $in: ['APR' , 'ENC', 'AVR' ]
             },
             'login.demarchage': {
                 $exists: true
