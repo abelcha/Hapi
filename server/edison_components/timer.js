@@ -63,6 +63,13 @@ var Timer = module.exports = function() {
         })
     })
 
+    this.emitter.on("hour", function() {
+        setTimeout(function() {
+            db.model('artisan').fullReload().then(function() {
+                console.log('artisan ok')
+            })
+        }, _.random(30000, 60000))
+    })
 
     this.emitter.on("10 minutes", function() {
         db.model('intervention').fullReload().then(function() {
