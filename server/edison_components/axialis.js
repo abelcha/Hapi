@@ -151,7 +151,7 @@ module.exports = {
                     call_id: req.query.call_id,
                     origin: q.call_origin,
                     _type: 'CONTACT',
-                    status_code: 401,
+                    status_code: 402,
                     description: "telephone d'origine inconnu + pas de sst_id"
                 });
             }
