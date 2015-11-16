@@ -3,6 +3,7 @@ var _ = require('lodash');
 var request = function(query) {
     var response = _.pick(query, 'status_code', 'description', 'redirect_to');
     this.json(response);
+    console.log("-->", query);
     db.model('axialis')(query).save();
     if (response.status_code === 200 && query.id_intervention) {
         var q = {
