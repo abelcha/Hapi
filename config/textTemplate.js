@@ -757,7 +757,8 @@ module.exports = {
             rappelContrat: function(user) {
                 return "Bonjour Monsieur {{representant.nom}}\n" +
                     "\n" +
-                    "Suite à notre conversation téléphonique du {{datePlain}} concernant une proposition de partenariat entre nos deux entreprises, je me permet de vous rappeler que certains documents sont essentiels à notre collaboration.\n" +
+                    "Suite à notre conversation téléphonique du {{datePlain}} concernant une proposition de partenariat entre nos deux entreprises,\n" +
+                    "je me permet de vous rappeler que certains documents sont essentiels à notre collaboration.\n" +
                     "\n" +
                     "Vous trouverez donc ci-joint la déclaration de sous-traitance à remplir.\n" +
                     "\n" +
@@ -794,7 +795,7 @@ module.exports = {
                     "\n" +
                     "<b>Yohann RHOUM</b>\n" +
                     "Service Partenariat\n" +
-                    "Port : 09.72.45.27.10 Fax : 09.72.39.33.46\n" +
+                    "Tel : 09.72.45.27.10 Fax : 09.72.39.33.46\n" +
                     "yohann.rhoum@edison-services.fr\n" +
                     "\n" +
                     "<b>Edison Services</b>\n" +
