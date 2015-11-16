@@ -50,12 +50,12 @@ module.exports = function(schema) {
                 artisan.signe = req.body.signe;
                 var communication = {
                     mailDest: envProd ? artisan.email : (req.session.email ||  'intervention@edison-services.fr'),
-                    mailReply: (req.session.email ||  'intervention@edison-services.fr')
+                    mailReply: 'yohann.rhoum@edison-services.fr'
                 }
                 PDF('contract', artisan).buffer(function(err, buffer) {
                     console.log('gotbuffer')
                     mail.send({
-                        From: "intervention@edison-services.fr",
+                        From: "yohann.rhoum@edison-services.fr",
                         ReplyTo: communication.mailReply,
                         To: communication.mailDest,
                         Subject: req.body.rappel ? "En attente de vos documents" : "Proposition de partenariat",

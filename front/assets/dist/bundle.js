@@ -3357,7 +3357,7 @@ module.exports = {
                     "\n" +
                     "<b>Yohann RHOUM</b>\n" +
                     "Service partenariat\n" +
-                    "Port : 06.37.37.59.45 Fax : 09.72.39.33.46\n" +
+                    "Port : 09.72.45.27.10 Fax : 09.72.39.33.46\n" +
                     "yohann.rhoum@edison-services.fr\n" +
                     "\n" +
                     "<b>Edison Services</b>\n" +
@@ -3405,7 +3405,7 @@ module.exports = {
                     "\n" +
                     "<b>Yohann RHOUM</b>\n" +
                     "Service Partenariat\n" +
-                    "Port : 06.37.37.59.45 Fax : 09.72.39.33.46\n" +
+                    "Port : 09.72.45.27.10 Fax : 09.72.39.33.46\n" +
                     "yohann.rhoum@edison-services.fr\n" +
                     "\n" +
                     "<b>Edison Services</b>\n" +
