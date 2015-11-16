@@ -52,8 +52,22 @@ module.exports = function(schema) {
                         level: '2',
                         ok: false
                     }).count(cb)
+                },
+                checkDoublons: function(cb) {
+                    db.model('artisan').count({
+                        $or: [{
+                            'telephone.tel1': _this.telephone.tel1
+                        }, {
+                            'email': _this.email
+                        }]
+                    }).count(cb)
                 }
             }, function(err, result) {
+                /*console.log('CHECK-->', result.checkDoublons)
+                if (result.checkDoublons) {
+                    console.log('yaay here')
+                    return next({lol:"Le sous-traitant est deja dans la base"})
+                }*/
                 _this.quarantained = result.quarantained;
                 _this.nbrIntervention = result.nbrIntervention;
                 _this.status = result.nbrIntervention ? "ACT" : "POT";
