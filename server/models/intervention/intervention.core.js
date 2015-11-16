@@ -51,7 +51,7 @@
                     to: envProd ? curr.sst.telephone.tel1 : '0633138868',
                 })
             })
-        }, 3000)
+        }, 30000)
     }
 
 
