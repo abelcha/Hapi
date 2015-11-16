@@ -55,7 +55,6 @@ module.exports = function(schema) {
             })
         })
     }
-
     schema.statics.relanceAuto = function(req, res) {
 
         return new Promise(function(resolve, reject) {
