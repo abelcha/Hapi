@@ -29,9 +29,16 @@
 
     }
 
-    module.exports.postSave = function(prev, curr, session) {
-        try {
-            if (envProd && curr.artisan && curr.artisan.id && curr.artisan.subStatus !== 'TUT') {
+
+    var sendArtisanChangedSms = function(curr) {
+        setTimeout(function() {
+            db.model('intervention').find({
+                id: curr.id
+            }).then(function(resp) {
+                if (resp.status !== 'APR')  {
+                    //si on a envoyer l'intervention entre temps
+                    return false;
+                }
                 var moment = require('moment')
                 var textTemplate = requireLocal('config/textTemplate');
                 var config = requireLocal('config/dataList');
@@ -42,6 +49,15 @@
                     text: text,
                     to: envProd ? curr.sst.telephone.tel1 : '0633138868',
                 })
+            })
+        }, 10000)
+    }
+
+
+    module.exports.postSave = function(prev, curr, session) {
+        try {
+            if (envProd && curr.artisan && curr.artisan.id && curr.artisan.subStatus !== 'TUT') {
+                sendArtisanChangedSms(curr);
             }
 
             if (curr.devisOrigine) {
@@ -72,26 +88,6 @@
                 .save()
         }
 
-        /*   if (curr.artisan.id) {
-               db.model('artisan').findOne({
-                   id: curr.artisan.id
-               }).then(function(sst) {
-                   if (!sst) {
-                       return false;
-                   }
-                   curr.sst = JSON.parse(JSON.stringify(sst));
-                   var moment = require('moment')
-                   var textTemplate = requireLocal('config/textTemplate');
-                   var config = requireLocal('config/dataList');
-                   var text = _.template(textTemplate.sms.intervention.demande.bind(curr)(session, config, moment))(curr)
-                   sms.send({
-                       link: curr.sst.id,
-                       origin: curr.id,
-                       text: text,
-                       to: envProd ? curr.sst.telephone.tel1 : '0633138868',
-                   })
-               })
-           }*/
     }
 
     module.exports.preUpdate = function(prev, curr, session) {
@@ -157,16 +153,7 @@
                         return false;
                     }
                     curr.sst = JSON.parse(JSON.stringify(sst));
-                    var moment = require('moment')
-                    var textTemplate = requireLocal('config/textTemplate');
-                    var config = requireLocal('config/dataList');
-                    var text = _.template(textTemplate.sms.intervention.demande.bind(curr)(session, config, moment))(curr)
-                    sms.send({
-                        link: curr.sst.id,
-                        origin: curr.id,
-                        text: text,
-                        to: envProd ? curr.sst.telephone.tel1 : '0633138868',
-                    })
+                    sendArtisanChangedSms();
                 })
             }
         }
