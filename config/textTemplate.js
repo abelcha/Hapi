@@ -757,14 +757,14 @@ module.exports = {
             rappelContrat: function(user) {
                 return "Bonjour Monsieur {{representant.nom}}\n" +
                     "\n" +
-                    "Suite à notre conversation téléphonique du {{datePlain}} concernant la signature d'un contrat de partenariat entre nos deux entreprises.\n" +
+                    "Suite à notre conversation téléphonique du {{datePlain}} concernant une proposition de partenariat entre nos deux entreprises, je me permet de vous rappeler que certains documents sont essentiels à notre collaboration.\n" +
                     "\n" +
                     "Vous trouverez donc ci-joint la déclaration de sous-traitance à remplir.\n" +
                     "\n" +
                     "Merci de joindre également à cette déclaration les éléments suivants :\n" +
                     "\n" +
-                    "• Extrait KBIS ou INSEE\n" +
-                    "• Photocopie R/V de la pièce d'identité du gérant\n" +
+                    "<strong>• Extrait KBIS ou INSEE</strong>\n" +
+                    "<strong>• Photocopie R/V de la pièce d'identité du gérant</strong>\n" +
                     "\n" +
                     "Vous pouvez nous transmettre ces pièces administratives par mail à :\n" +
                     "\n" +
@@ -784,8 +784,8 @@ module.exports = {
                     "\n" +
                     "• Un bloc facture Edison Services\n" +
                     "• Un bloc devis Edison Services\n" +
-                    "• Un catalogue de prix de vente du matériel\n" +
                     "• Un accès à tous nos fournisseurs\n" +
+                    "\n" +
                     "Je reste à votre entière disposition pour toutes les questions ou les remarques que vous pourriez avoir.\n" +
                     "\n" +
                     "Dans l'attente d'une réponse favorable de votre part,\n" +
