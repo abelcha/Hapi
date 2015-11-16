@@ -48,7 +48,7 @@ module.exports = function(schema) {
         ids = ids.split(',').map(function(e) {
             return parseInt(e);
         })
-        db.model('intervention').findOne({
+        db.model('intervention').find({
             id: {
                 $in: ids
             }
@@ -56,9 +56,12 @@ module.exports = function(schema) {
             if (!resp) {
                 return res.send('nope')
             }
-            var relance = RelanceClient(resp, 'relance-client-1', 'noreply.edison@gmail.com')
-            relance.send(function() {
-                res.send('ok')
+            async.eachLimit(resp, 10, function(e, cb) {
+                var relance = RelanceClient(e, 'relance-client-1', 'noreply.edison@gmail.com')
+                relance.send(function() {
+                    console.log('ok', e.id)
+                    cb(null)
+                })
             })
         })
     }
