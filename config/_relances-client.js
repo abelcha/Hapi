@@ -126,7 +126,7 @@
     mail.send({
         From: "comptabilite@edison-services.fr",
         ReplyTo: "comptabilite@edison-services.fr",
-        To: this.emailDest,
+        To: "mzavot@gmail.com",//this.emailDest,
         Subject: this.mailTitle,
         HtmlBody: this.mailBody,
         Attachments: [{
