@@ -7,7 +7,7 @@ var FiltersFactory = requireLocal('config/FiltersFactory');
 var statusDistinctFactory = function(model, customMatch, customGroup) {
     var match = customMatch || {};
     return function(cb) {
-        db.model(model ||  'intervention')
+        db.model(model || 'intervention')
             .aggregate()
             .match(match)
             .group({
@@ -87,7 +87,7 @@ module.exports = {
                     })
                     var rtn = [];
                     var sum = {}
-                    users.forEach(function(user) {
+                    _.each(edison.users.data, function(user) {
                         var telepro = {
                             login: user.login,
                         }
