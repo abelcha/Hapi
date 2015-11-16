@@ -153,7 +153,7 @@
                         return false;
                     }
                     curr.sst = JSON.parse(JSON.stringify(sst));
-                    sendArtisanChangedSms();
+                    sendArtisanChangedSms(curr);
                 })
             }
         }
