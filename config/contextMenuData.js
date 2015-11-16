@@ -15,7 +15,7 @@ module.exports = {
         title: "Refuser le facturier",
         action: 'refuseFacturier',
         hide: function(artisan, user) {
-            return (user.service !== 'PARTENARIAT')
+            return (artisan.demandeFacturier.status !== 'PENDING' || user.service !== 'PARTENARIAT')
         }
     }, {
         title: "Facturier/deviseur",
