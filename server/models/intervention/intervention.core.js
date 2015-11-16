@@ -33,11 +33,10 @@
     var sendArtisanChangedSms = function(curr) {
         setTimeout(function() {
             console.log('ten sec')
-            db.model('intervention').find({
+            db.model('intervention').findOne({
                 id: curr.id
             }).then(function(resp) {
-                console.log('==>', resp.status !== 'APR')
-                if (resp.status !== 'APR')  {
+                if (!resp || resp.status !== 'APR')  {
                     //si on a envoyer l'intervention entre temps
                     return false;
                 }
@@ -147,17 +146,15 @@
 
         if (curr.artisan && curr.artisan.id && curr.artisan.id !== prev.artisan.id && curr.artisan.subStatus !== 'TUT') {
             curr.status = 'APR';
-            if (envProd) {
-                db.model('artisan').findOne({
-                    id: curr.artisan.id
-                }).then(function(sst) {
-                    if (!sst) {
-                        return false;
-                    }
-                    curr.sst = JSON.parse(JSON.stringify(sst));
-                    sendArtisanChangedSms(curr);
-                })
-            }
+            db.model('artisan').findOne({
+                id: curr.artisan.id
+            }).then(function(sst) {
+                if (!sst) {
+                    return false;
+                }
+                curr.sst = JSON.parse(JSON.stringify(sst));
+                sendArtisanChangedSms(curr);
+            })
         }
 
 
