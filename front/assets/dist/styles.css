@@ -3230,6 +3230,40 @@ body.loading {
     -webkit-transform: scale(1.0);
   }
 }
+
+
+
+table.simulator {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table.simulator, table.simulator > th {
+    border: 1px solid black;
+    font-size: 11px;
+}
+
+.no-border {
+    border: 0px;
+    border-right: 1px solid black;
+}
+
+.border-title {
+    border-left: 1px solid black;
+}
+
+.tbl-bg {
+    background: #F5F5F5 !important;
+    -webkit-print-color-adjust: exact;
+}
+
+.bg-green {
+    background: #85C82B !important;
+    -webkit-print-color-adjust: exact;
+}
+
+
+
 md-switch.md-checked.md-primary .md-thumb {
     background-color: rgb(65, 140, 228)!important;
 }

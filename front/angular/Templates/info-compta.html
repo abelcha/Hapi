@@ -48,7 +48,7 @@
                         Attestation de TVA Non-conforme
                     </md-checkbox>
                 </div>
-                <div class="col-md-3" >
+                <div class="col-md-3">
                     <md-checkbox ng-model="data.compta.info.fournitureNC" aria-label="_" class="md-warn">
                         Cout de fourniture Non Conforme
                     </md-checkbox>
@@ -135,12 +135,70 @@
                         </div>
                     </div>
                 </div>
-                <h2 ng-if="data.compta.paiement.montant">Montant payé : {{data.compta.paiement.montant}} €</h2>
-                <br>
-                <h4 ng-click="displaySimulation = !displaySimulation"> > Simulation</h4>
-                <pre ng-if="displaySimulation"><h4>{{compta|json}}</h4></pre>
-                <h4 ng-click="displayHistorique = !displayHistorique"> > Historique Flush ({{data.compta.paiement.historique.length}})</h4>
-                <pre ng-if="displayHistorique"><h4>{{data.compta.paiement.historique|json}}</h4></pre>
+                <div class="row">
+                    <div class="col-sm-4">
+                        <h2 ng-if="data.compta.paiement.montant">Montant payé : {{data.compta.paiement.montant}} €</h2>
+                        <br>
+                        <h4 ng-click="displaySimulation = !displaySimulation"> > Simulation</h4>
+                        <pre ng-if="displaySimulation"><h4>{{compta|json}}</h4></pre>
+                        <h4 ng-click="displayHistorique = !displayHistorique"> > Historique Flush ({{data.compta.paiement.historique.length}})</h4>
+                        <pre ng-if="displayHistorique"><h4>{{data.compta.paiement.historique|json}}</h4></pre>
+                    </div>
+                    <div class="col-sm-8">
+                        <table cellspacing="0" cellpadding="8" class="simulator">
+                            <tr>
+                                <th class="bg-green"> MONTANT H.T VENTE </th>
+                                <th class="bg-green"> + {{format(compta.base)}} € </th>
+                                <th class="bg-green"> COMMISSION </th>
+                                <th class="bg-green"> REMUNERATION </th>
+                            </tr>
+                            <tr>
+                                <th class="no-border border-title"> Vente déplacement </th>
+                                <th class="no-border"> + {{format(compta.baseDeplacement)}} € </th>
+                                <th class="no-border"> {{compta.pourcentage.deplacement}} % </th>
+                                <th class="no-border"> {{format(compta.remunerationDeplacement)}} € </th>
+                            </tr>
+                            <tr class="tbl-bg">
+                                <th class="no-border border-title"> Vente M.O. & Fournitures </th>
+                                <th class="no-border"> + {{format(compta.baseMaindOeuvre + compta.venteFourniture)}} €</th>
+                                <th class="no-border"></th>
+                                <th class="no-border"></th>
+                            </tr>
+                            <tr>
+                                <th class="no-border border-title"> Coût fournitures </th>
+                                <th class="no-border"> - {{format(compta.fourniture.total)}} €</th>
+                                <th class="no-border"></th>
+                                <th class="no-border"></th>
+                            </tr>
+                            <tr class="tbl-bg">
+                                <th class="no-border border-title"> Marge globale </th>
+                                <th class="no-border"> = {{format(compta.baseMargeFourniture + compta.baseMaindOeuvre)}} € </th>
+                                <th class="no-border"> {{compta.pourcentage.fourniture}} % </th>
+                                <th class="no-border"> {{format(compta.remunerationMaindOeuvre + compta.remunerationMargeFourniture)}} € </th>
+                            </tr>
+                            <tr>
+                                <th class="no-border border-title" style="border-bottom: 1px solid black;"> Remboursement fournitures </th>
+                                <th class="no-border"> + {{format(compta.fourniture.artisan)}} € </th>
+                                <th class="no-border"></th>
+                                <th class="no-border"> {{format(compta.fourniture.artisan)}} € </th>
+                            </tr>
+                            <tr>
+                                <th colspan="2" rowspan="3" style="border: 0px">
+                                </th>
+                                <th class="no-border border-title tbl-bg" style="border-top: 1px solid black;"> TOTAL H.T </th>
+                                <th class="no-border tbl-bg" style="border-top: 1px solid black;"> {{format(compta.montantTotal)}} € </th>
+                            </tr>
+                            <tr>
+                                <th class="no-border border-title"> TVA * </th>
+                                <th class="no-border"> {{format(compta.montantTotalTVA)}} € </th>
+                            </tr>
+                            <tr>
+                                <th class="no-border border-title tbl-bg" style="border-bottom: 1px solid black;"> TOTAL T.T.C </th>
+                                <th class="no-border tbl-bg" style="border-bottom: 1px solid black;"> {{format(compta.montantTotalTTC)}} €</th>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

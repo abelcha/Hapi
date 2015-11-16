@@ -9,6 +9,7 @@ angular.module('edison').directive('infoCompta', ['config', 'Paiement',
                 displayReglement: '@',
                 dialog: '@',
                 displayPaiement: '@',
+                simulator:'@'
             },
             link: function(scope, element, attrs) {
                 scope.config = config
@@ -20,7 +21,10 @@ angular.module('edison').directive('infoCompta', ['config', 'Paiement',
                 if (!paiement.mode) {
                     paiement.mode = _.get(scope.data.sst, 'document.rib.file') ? "VIR" : "CHQ"
                 }
-
+                scope.format = function(nbr) {
+                    return nbr;
+                    return _.round(nbr, 2).toFixed(2);
+                }
                 scope.compta = new Paiement(scope.data)
                 reglement.montantTTC = scope.compta.getMontantTTC()
 
