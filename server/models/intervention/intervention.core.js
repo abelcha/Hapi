@@ -32,9 +32,11 @@
 
     var sendArtisanChangedSms = function(curr) {
         setTimeout(function() {
+            console.log('ten sec')
             db.model('intervention').find({
                 id: curr.id
             }).then(function(resp) {
+                console.log('==>', resp.status !== 'APR')
                 if (resp.status !== 'APR')  {
                     //si on a envoyer l'intervention entre temps
                     return false;
