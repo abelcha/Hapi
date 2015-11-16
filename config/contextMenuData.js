@@ -8,9 +8,9 @@ module.exports = {
     }, {
         title: "Demander un facturier",
         action: 'needFacturier',
-        hide: function(artisan, user) {
+/*        hide: function(artisan, user) {
             return (user.service === 'PARTENARIAT')
-        }
+        }*/
     }, {
         title: "Refuser le facturier",
         action: 'refuseFacturier',
