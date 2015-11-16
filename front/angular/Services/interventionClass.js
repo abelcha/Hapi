@@ -329,7 +329,11 @@ angular.module('edison')
                         textSms: textSms
                     })
                     .then(function(resp) {
-                        var validationMessage = _.template("L'intervention {{id}} est annulé")(resp.data)
+                        var msg = "L'intervention {{id}} est annulé";
+                        if (sms) {
+                            msg += "\nUn sms à été envoyé au SST";
+                        }
+                        var validationMessage = _.template(msg)(resp.data)
                         LxNotificationService.success(validationMessage);
                         if (typeof cb === 'function') {
                             cb(null, resp.data)
@@ -447,7 +451,7 @@ angular.module('edison')
             if (this.sst.subStatus === 'QUA') {
                 return false;
             }
-            if (this.sst.subStatus === 'TUT' && (!user.root || user.service !== 'PARTENARIAT')) {
+            if (this.sst.subStatus === 'TUT' && (!user.root ||  user.service !== 'PARTENARIAT')) {
                 return false;
             }
             return _.includes(["ANN", "APR", "ENC", undefined], this.status)
@@ -460,7 +464,7 @@ angular.module('edison')
             if (this.artisan.subStatus === 'QUA') {
                 return false;
             }
-            if (this.artisan.subStatus === 'TUT' && (!user.root || user.service !== 'PARTENARIAT')) {
+            if (this.artisan.subStatus === 'TUT' && (!user.root ||  user.service !== 'PARTENARIAT')) {
                 return false;
             }
             return this.status === 'ENC'
