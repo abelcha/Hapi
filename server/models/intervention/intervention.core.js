@@ -30,7 +30,7 @@
     }
 
 
-    var sendArtisanChangedSms = function(curr) {
+    var sendArtisanChangedSms = function(curr, session) {
         setTimeout(function() {
             console.log('ten sec')
             db.model('intervention').findOne({
@@ -51,14 +51,14 @@
                     to: envProd ? curr.sst.telephone.tel1 : '0633138868',
                 })
             })
-        }, 10000)
+        }, 3000)
     }
 
 
     module.exports.postSave = function(prev, curr, session) {
         try {
             if (envProd && curr.artisan && curr.artisan.id && curr.artisan.subStatus !== 'TUT') {
-                sendArtisanChangedSms(curr);
+                sendArtisanChangedSms(curr, session);
             }
 
             if (curr.devisOrigine) {
@@ -153,7 +153,7 @@
                     return false;
                 }
                 curr.sst = JSON.parse(JSON.stringify(sst));
-                sendArtisanChangedSms(curr);
+                sendArtisanChangedSms(curr, session);
             })
         }
 
