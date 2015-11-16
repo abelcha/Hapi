@@ -131,7 +131,7 @@ module.exports = function(schema) {
         var v = _.find(obj, 'login', prop);
         if (v) {
             v[vr] = _.round(v[vr] + vl);
-            v.total = v.ajout + v.envoi + v.verif + v.sum - v.annul
+            v.total = v.ajout + v.envoi + v.verif + v.sum - v.annul - v.averif
         }
     }
     schema.statics.weekStats = function(req, res) {
@@ -155,6 +155,7 @@ module.exports = function(schema) {
                     VRF: cond('$status', 'VRF', 1),
                     APR: cond('$status', 'APR', 1),
                     ANN: cond('$status', 'ANN', 1),
+                    AVR: cond('$cache.f.i_avr', 1, 1),
                     SUM: cond('$status', 'VRF', div(sub("$prixFinal", "$coutFourniture"), 300))
                 })
                 .group({
@@ -163,6 +164,7 @@ module.exports = function(schema) {
                         e: '$login.envoi',
                         v: '$login.verification'
                     },
+                    TOTAL_AVR: sum('$AVR'),
                     TOTAL_SUM: sum('$SUM'),
                     TOTAL_ENC: sum('$ENC'),
                     TOTAL_APR: sum('$APR'),
@@ -176,6 +178,7 @@ module.exports = function(schema) {
                             login: e,
                             ajout: 0,
                             envoi: 0,
+                            averif: 0,
                             verif: 0,
                             annul: 0,
                             total: 0,
@@ -203,6 +206,10 @@ module.exports = function(schema) {
                         }
                         if (elem.TOTAL_ANN > 0) {
                             set(rtn, elem._id.a, 'annul', elem.TOTAL_ANN)
+                        }
+                        if (elem.TOTAL_AVR > 0) {
+                            set(rtn, elem._id.a, 'averif', elem.TOTAL_AVR)
+
                         }
                     })
                     resolve(rtn);

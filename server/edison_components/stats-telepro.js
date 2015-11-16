@@ -1,4 +1,3 @@
-var users = requireLocal('config/_users');
 var ms = require('milliseconds');
 var async = require('async')
 var _ = require("lodash")

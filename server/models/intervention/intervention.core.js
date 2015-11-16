@@ -352,7 +352,6 @@
             d.etat_intervention = "INT"
         }
         var v2 = (d.v2 && JSON.parse(d.v2)) ||  {}
-        console.log(v2)
         var rtn = _.merge(v2, {
             tva: d.tva_facture  || (d.civilite === 'Soc.' ? 20 : 10),
             aDemarcher: d.A_DEMARCHE,

@@ -17,7 +17,6 @@ var DashboardController = function($rootScope, statsTelepro, dialog, user, ediso
     }
 
 
-    console.log('==>', _.find(statsTelepro.data, 'login', user.login))
 
     _this.reloadTask = function(usr) {
         _this.newTask = {
