@@ -16,7 +16,8 @@ module.exports = function(schema) {
         db.model('intervention').find({
             status: 'VRF',
             'date.envoiFacture': {
-                $exists: true
+                $exists: true,
+                $gt: new Date(2015, 10, 1)
             },
             'reglementSurPlace': false,
             'compta.reglement.recu': false,
@@ -43,13 +44,19 @@ module.exports = function(schema) {
     }
 
     schema.statics.relanceOne = function(req, res) {
+        var ids = req.query.ids;
+        ids = ids.split(',').map(function(e) {
+            return parseInt(e);
+        })
         db.model('intervention').findOne({
-            id: req.query.id
+            id: {
+                $in: ids
+            }
         }).lean().populate('sst').exec(function(err, resp) {
             if (!resp) {
                 return res.send('nope')
             }
-            var relance = RelanceClient(resp, req.query.model, 'noreply.edison@gmail.com')
+            var relance = RelanceClient(resp, 'relance-client-1', 'noreply.edison@gmail.com')
             relance.send(function() {
                 res.send('ok')
             })
