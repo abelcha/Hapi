@@ -56,7 +56,7 @@ module.exports = {
                 }
                 if (this.newOs) {
                     sms = "OS {{inter.id}}\n" +
-                        "Cher partenaire, merci d'interveni\n" +
+                        "Cher partenaire, merci d'intervenir\n" +
                         "{{options.datePlain}}\n" +
                         "{{inter.client.civilite}} {{inter.client.prenom}} {{inter.client.nom}}\n" +
                         "{{inter.client.address.n}} {{inter.client.address.r}} {{inter.client.address.cp}}, {{inter.client.address.v}} {{options.precision}}\n" +

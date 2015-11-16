@@ -239,7 +239,7 @@ module.exports = function(schema) {
                                     db.model('intervention').findById(inter.id)
                                         .populate('sst')
                                         .then(function(resp) {
-                                            if (!resp.appels.length) {
+                                            if (resp && resp.status === 'ENC' && !resp.appels.length) {
                                                 console.log('nocall')
                                                 sms.send({
                                                     to: resp.sst.telephone.tel1,
