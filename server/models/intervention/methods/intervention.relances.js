@@ -43,6 +43,7 @@ module.exports = function(schema) {
 
     }
 
+
     schema.statics.relanceOne = function(req, res) {
         var ids = req.query.ids;
         ids = ids.split(',').map(function(e) {
