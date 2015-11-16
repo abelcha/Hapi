@@ -20,7 +20,10 @@ module.exports = function(schema) {
             },
             'reglementSurPlace': false,
             'compta.reglement.recu': false,
-            'date.intervention': db.utils.between(from, to)
+            'facture.payeur': {
+                $ne: 'GRN'
+            },
+            'date.envoiFacture': db.utils.between(from, to)
         }).populate('sst').lean().exec(function(err, resp) {
             /*sms.send({
                 silent: true,
