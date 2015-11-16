@@ -329,6 +329,7 @@ angular.module('edison')
                         textSms: textSms
                     })
                     .then(function(resp) {
+                        console.log('==>', !!sms, !!textSms)
                         var msg = "L'intervention {{id}} est annulé";
                         if (sms) {
                             msg += "\nUn sms à été envoyé au SST";
