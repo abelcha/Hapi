@@ -14,6 +14,7 @@ module.exports = function(schema) {
         if (sst.status === "POT" && _.get(d.contrat, 'ok') && _.get(d.cni, 'ok') && _.get(d.kbis, 'ok')) {
             return 'HOT';
         }
+        console.log(sst.nbrIntervention)
         if (_.inRange(sst.nbrIntervention, 1, 3)) {
             return "NEW";
         }

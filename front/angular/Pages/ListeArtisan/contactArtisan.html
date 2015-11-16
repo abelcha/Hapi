@@ -36,6 +36,9 @@
                                                 <div class="md-display-2"> {{(vm.stats.paye.paye)|frnbr}} €</div>
                                                 <br> Chiffre d’affaire (représente la totalité des montants:
                                                 <div class="md-display-2"> {{(vm.stats.paye.final)|frnbr}} €</div>
+                                                <div class="col-sm-6 col-sm-offset-3">
+                                                    <span class="label" style="width:100px;margin-top:5px;display:block" ng-class="{'green':vm.sst.document[file].ok, 'red':!vm.sst.document[file].ok}" ng-repeat="(k, file) in config.artisanFiles">{{file}}</span> </span>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -48,6 +51,8 @@
                                         <span class="fs-subhead display-block">{{vm.sst.address.n}} {{vm.sst.address.r}}, {{vm.sst.address.cp}} {{vm.sst.address.v}}</span>
                                         <img ng-src="{{vm.getStaticMap()}}" class="img-thumbnail" />
                                         <span class=" display-block md-title"><i>Déplacement : </i>{{vm.sst.pourcentage.deplacement}} % <i>Main D'oeuvre: </i>{{vm.sst.pourcentage.maindOeuvre}} % <i>Fourniture:</i> {{vm.sst.pourcentage.fourniture}} %</span>
+                                        <span class="display-block md-title"> 
+
                                     </div>
                                 </md-content>
                             </md-tab>

@@ -383,6 +383,9 @@ FiltersFactory.prototype.list = {
         short_name: 'i_mar',
         long_name: 'MARKET',
         url: 'market',
+        sortBy:{
+            di:'desc'
+        },
         match: {
             aDemarcher: true,
             status: 'APR',
