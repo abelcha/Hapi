@@ -18,9 +18,6 @@ module.exports = function(schema) {
             'facture.email': {
                 $exists: true
             },
-            'date.intervention': {
-                $exists: true
-            },
             'compta.reglement.recu': false,
             'date.intervention': db.utils.between(from, to)
         }).populate('sst').exec(function(err, resp) {
