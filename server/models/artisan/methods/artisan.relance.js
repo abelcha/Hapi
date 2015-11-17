@@ -25,10 +25,11 @@ module.exports = function(schema) {
             'compta.reglement.recu': false,
             'date.intervention': db.utils.between(from, to)
         }).populate('sst').exec(function(err, resp) {
-            console.log('-->', resp && resp.length)
             var rtn = _.groupBy(resp, 'sst.id')
-            console.log(_.size(rtn))
             async.eachLimit(_.values(rtn), 5, function(e, cb) {
+                if (e.length > 3) {
+                    return cb(null);
+                }
                 var template = _.template(textTemplate.mail.intervention.relanceArtisanFinDeMois())({
                     options: {},
                     inters: e,
