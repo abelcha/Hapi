@@ -34,8 +34,8 @@ module.exports = function(schema) {
                     _.each(docs, function(e) {
                         rtn += "BEGIN:VCARD\n";
                         rtn += "VERSION:3.0\n" +
-                            _.template("N: {{id}} {{nomSociete}} - {{address.cp}} {{address.v}}\n")(e) +
-                            _.template("N: {{id}} {{nomSociete}} - {{address.cp}} {{address.v}}\n")(e) +
+                            _.template("N: {{nomSociete}} - {{address.cp}} {{address.v}}\n")(e) +
+                            _.template("N: {{nomSociete}} - {{address.cp}} {{address.v}}\n")(e) +
                             "TEL;WORK;VOICE: " + e.telephone.tel1 + "\n" + 
                             "EMAIL;PREF;INTERNET:" + e.email
 

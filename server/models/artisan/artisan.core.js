@@ -151,7 +151,6 @@
                     deviseur: d.num_deviseur,
                     facturier: d.num_facturier,
                 }]
-                console.log(rtn.historique.pack)
             }
             if (d.date_envoi_contrat && d.date_envoi_contrat.length >= 8) {
                 var months = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "aout", "septembre", "octobre", "novembre", "décembre"]

@@ -38,15 +38,31 @@ module.exports = function(schema) {
         var self = this;
         return new Promise(function(resolve, reject) {
             var _ = require('lodash')
+
+            var query = {
+                status: {
+                    $ne: 'ARC'
+                },
+            }
+            if (options.categorie) {
+                query.categories = {
+                    $in: [options.categorie]
+                }
+            }
+
             db.model('artisan').geoNear({
                 type: "Point",
                 coordinates: [parseFloat(options.lat), parseFloat(options.lng)]
             }, {
+                query: query,
+                limit: options.categorie ? 100 : 25,
                 distanceMultiplier: 0.001,
                 maxDistance: (parseFloat(options.maxDistance) || 100) / 0.001
             }).then(function(docs) {
+                console.log('-->', docs.length)
                 try {
-                    resolve(_.chain(docs).filter(__filter.bind(options)).map(__map).take(options.limit || 150).value())
+                    resolve(_.map(docs, __map));
+                    //resolve(_.chain(docs).filter(__filter.bind(options)).map(__map).take(options.limit || 150).value())
 
                 } catch (e) {
                     __catch(e);
