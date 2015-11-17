@@ -3,7 +3,7 @@
     <span ng-repeat="(k, v) in signalementsGrp">
     <button  class="btn--no-conflicts btn--m btn--black btn--flat" ng-click="setSelectedSubType(k)" lx-ripple>{{k}}</button>
     <br>
-    <span  ng-if="selectedSubType == k"ng-repeat="(key, value) in v" style="margin-left:20px">
+    <span  ng-if="selectedSubType == k"ng-repeat="(key, value) in v|orderBy:'-nom'" style="margin-left:20px">
          <button  class="btn--no-conflicts btn--m btn--blue btn--flat" ng-click="hide(value)" lx-ripple>{{value.nom}}</button><br>
     </span>
     </span>

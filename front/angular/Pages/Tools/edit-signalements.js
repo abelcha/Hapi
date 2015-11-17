@@ -9,8 +9,9 @@ var editSignalements = function(TabContainer, edisonAPI, $rootScope, $scope, $lo
         $scope.pl = resp.data;
     })
 
-    _this.remove = function(obj) {
-        $scope.pl.splice(_.findIndex($scope.pl, '_id', obj._id), 1);
+    _this.remove = function(_id) {
+        var i = _.findIndex($scope.pl, '_id', _id)
+        $scope.pl.splice(i, 1);
     }
     _this.save = function() {
         edisonAPI.signal.save($scope.pl).then(function(resp) {

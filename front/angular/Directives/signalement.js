@@ -14,7 +14,6 @@
             }
             edisonAPI.signal.list().then(function(resp) {
                 scope.signalementsGrp = _.groupBy(resp.data, 'subType');
-                scope.signalements = resp.data;
             })
             scope.hide = function(signal) {
 
