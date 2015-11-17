@@ -36,7 +36,8 @@ module.exports = function(schema) {
                         rtn += "VERSION:3.0\n" +
                             _.template("N: {{id}} {{nomSociete}} - {{address.cp}} {{address.v}}\n")(e) +
                             _.template("N: {{id}} {{nomSociete}} - {{address.cp}} {{address.v}}\n")(e) +
-                            "TEL;WORK;VOICE: " + e.telephone.tel1 + "\n";
+                            "TEL;WORK;VOICE: " + e.telephone.tel1 + "\n" + 
+                            "EMAIL;PREF;INTERNET:" + e.email
 
                         if (e.telephone.tel2) {
                             rtn += "TEL;WORK;VOICE: " + e.telephone.tel2 + "\n";
