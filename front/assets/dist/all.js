@@ -5346,9 +5346,25 @@ var LpaController = function(openPost, socket, ContextMenu, $location, $window, 
 
 angular.module('edison').controller('LpaController', LpaController);
 
+angular.module('edison').controller('ListeArtisanController', _.noop);
+
 angular.module('edison').controller('ListeDevisController', _.noop);
 
 angular.module('edison').controller('ListeInterventionController', _.noop);
+
+var listeSignalements = function(TabContainer, edisonAPI, $rootScope, $scope, $location, LxNotificationService, socket) {
+    "use strict";
+    var _this = this;
+    _this.tab = TabContainer.getCurrentTab();
+    _this.tab.setTitle('Liste Signalements');
+    var q = $location.search();
+    edisonAPI.signalement.list($location.search()).then(function(resp) {
+        $scope.pl = resp.data;
+        console.log('-->', resp.data)
+    })
+
+}
+angular.module('edison').controller('listeSignalements', listeSignalements);
 
 var SearchController = function(edisonAPI, TabContainer, $routeParams, $location, LxProgressService) {
     var tab = TabContainer.getCurrentTab();
@@ -5956,21 +5972,5 @@ var telephoneMatch = function(TabContainer, edisonAPI, $rootScope, $scope, $loca
 
 }
 angular.module('edison').controller('telephoneMatch', telephoneMatch);
-
-var listeSignalements = function(TabContainer, edisonAPI, $rootScope, $scope, $location, LxNotificationService, socket) {
-    "use strict";
-    var _this = this;
-    _this.tab = TabContainer.getCurrentTab();
-    _this.tab.setTitle('Liste Signalements');
-    var q = $location.search();
-    edisonAPI.signalement.list($location.search()).then(function(resp) {
-        $scope.pl = resp.data;
-        console.log('-->', resp.data)
-    })
-
-}
-angular.module('edison').controller('listeSignalements', listeSignalements);
-
-angular.module('edison').controller('ListeArtisanController', _.noop);
 
 //# sourceMappingURL=all.js.map
