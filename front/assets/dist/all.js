@@ -5105,12 +5105,12 @@ var InterventionCtrl = function(Description, Signalement, ContextMenu, $window, 
         }
         intervention.save(function(err, resp) {
             if (!err) {
-                var files = intervention.files
+              /*  var files = intervention.files
                 var tmp = intervention;
                 intervention = new Intervention(resp);
                 intervention.produits = tmp.produits;
                 intervention.fourniture = tmp.fourniture;
-                intervention.files = files
+                intervention.files = files*/
                 postSave(options, resp, function(err) {
                     if (!err) {
                         TabContainer.close(tab);

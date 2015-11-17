@@ -59,11 +59,8 @@ module.exports = function(schema) {
                 distanceMultiplier: 0.001,
                 maxDistance: (parseFloat(options.maxDistance) || 100) / 0.001
             }).then(function(docs) {
-                console.log('-->', docs.length)
                 try {
                     resolve(_.map(docs, __map));
-                    //resolve(_.chain(docs).filter(__filter.bind(options)).map(__map).take(options.limit || 150).value())
-
                 } catch (e) {
                     __catch(e);
                 }

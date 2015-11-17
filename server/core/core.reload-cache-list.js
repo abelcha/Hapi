@@ -3,7 +3,6 @@ var _ = require('lodash')
 module.exports = function(core) {
     return function(req, res) {
         return new Promise(function(resolve, reject) {
-            console.log(core.model().find)
             core.model().find({}, {
                 cache: true,
             }).sort({
