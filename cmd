@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 #!/usr/bin/env python3.5
-=======
-#!/usr/bin/env python3
->>>>>>> 52da0f649679687a76e12cee7f1c6faa3b38ee0c
 
 import requests
 import optparse
