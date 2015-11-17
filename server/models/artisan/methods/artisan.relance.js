@@ -22,9 +22,6 @@ module.exports = function(schema) {
         db.model('intervention').find({
             status: 'VRF',
             'reglementSurPlace': true,
-            'facture.email': {
-                $exists: true
-            },
             'compta.reglement.recu': false,
             'date.intervention': db.utils.between(from, to)
         }).populate('sst').exec(function(err, resp) {
