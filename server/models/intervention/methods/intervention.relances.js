@@ -52,7 +52,7 @@ module.exports = function(schema) {
         db.model('intervention').find({
             id: {
                 $in: ids
-            }
+            }//DONT FORGOT TO REMOVE FRANCE LOISIR
         }).lean().populate('sst').exec(function(err, resp) {
             if (!resp) {
                 return res.send('nope')

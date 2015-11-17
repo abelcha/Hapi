@@ -2684,9 +2684,9 @@ module.exports = {
                         "Veuillez joindre le client au:\n" +
                         "09.701.702.01 (OS {{inter.id}})\n" +
                         "Code Partenaire: {{inter.sst.id}}"
-                        "\n" +
-                        "{{options.login}}\n" +
-                        "{{options.ligne}} \n"
+                    "\n" +
+                    "{{options.login}}\n" +
+                    "{{options.ligne}} \n"
                 } else {
                     var sms = "OS {{inter.id}}\n" +
                         "Intervention chez {{inter.client.civilite}} {{inter.client.prenom}} {{inter.client.nom}} au " +
@@ -3225,6 +3225,54 @@ module.exports = {
                     "Dès réception de ces documents par nos services, votre règlement vous sera transmis sous <strong>7 jours.</strong><br>" +
                     "<br>" +
                     "Cordialement,<br>" +
+                    "<p style='text-align:right'>" +
+                    "<u><strong>Service comptabilité fournisseur</strong></u><br>" +
+                    "Vincent QUEUDRAY<br>" +
+                    "Tél.09.72.45.27.09<br></p>"
+            },
+            relanceArtisanFinDeMois: function() {
+                return "<p style='margin-top: 0px;'> Affaire de recouvrement suivie par: M. COLASS<br>" +
+                    "Ligne direct: 09.72.45.27.09<br>" +
+                    "Réf dossier: {{sst.id}}<br>" +
+                    "En copie: Monsieur le Greffier du tribunal de commerce de Paris </p>" +
+                    "<strong>OBJET : Troisième relançe concernant les réglements de nos clients</strong><br>" +
+                    "Monsieur <strong>{{sst.representant.nom}}</strong>,<br>" +
+                    "Malgré nos précédentes relances certaines de vos interventions ne sont toujours pas mis à jours." +
+                    "Dans le but de continuer notre collaboration, nous vous prions de bien vouloir nous informer de l’avancement des dossiers suivants :<br><br>" +
+                    "<table style='border-collapse: collapse;' cellspacing='0' cellpadding='8'>" +
+                    "    <tr style='background: rgb(106, 168, 79); !important;'>" +
+                    "        <th style='border: 1px solid black;font-size:13px;width: 70px;'> Date </th>" +
+                    "        <th style='border: 1px solid black;font-size:13px;'> Numéro OS </th>" +
+                    "        <th style='border: 1px solid black;font-size:13px;'> Client </th>" +
+                    "        <th style='border: 1px solid black;font-size:13px;'> Lieu de l'intervention </th>" +
+                    "        <th style='border: 1px solid black;font-size:13px;'> Montant H.T </th>" +
+                    "    </tr>" +
+                    "<% _.forEach(inters, function(e) { %>" +
+                    "           <tr>" +
+                    "               <td style='border: 1px solid black;font-size:13px;'> {{moment(e.date.intervention).format('L')}} </td>" +
+                    "               <td style='border: 1px solid black;font-size:13px;'> {{e.id}}</td>" +
+                    "               <td style='border: 1px solid black;font-size:13px;'> {{e.client.civilite}} {{e.client.nom}}</td>" +
+                    "               <td style='border: 1px solid black;font-size:13px;'> {{e.client.address.n}} {{e.client.address.r}}, {{e.client.address.cp}} - {{e.client.address.v}}</td>" +
+                    "               <td style='border: 1px solid black;font-size:13px;'> {{e.prixFinal}} €</td>" +
+                    "           </tr>" +
+                    "<% }); %>" +
+                    "</table><br>" +
+                    "Vous pouvez nous contacter :<br>" +
+                    "- Par mail à: comptabilite@edison-services.fr<br>" +
+                    "- Par courrier:<br>" +
+                    "<center><strong>" +
+                    "EDISON SERVICES<br>" +
+                    "Comptabilité Fournisseur<br>" +
+                    "32 rue Fernand Pelloutier, 92110 Clichy<br>" +
+                    "</center></strong>" +
+                    "- Par telephone: Tél. 09.72.45.27.09 (ouvert de 09h00 à 12h30 / 14h00 à 16h30)<br>" +
+                    "<br>" +
+                    "Dans le cas où l'intervention n'aurait pas été réalisée par vos soins, merci de prendre contact au plus vite avec le service comptabilité<br>" +
+                    "<br>" +
+                    "<strong>Tél. 09.72.45.27.09 </strong>(ouvert de 09h00 à 12h30 / 14h00 à 16h30)<br>" +
+                    "<br>" +
+                    "Sans nouvelles de votre part <strong><u>dans un délai de 8 jours</u></strong>, votre dossier sera directement transféré à notre cabinet de recouvrement.<br>" +
+                    "Nous vous prions d'agréer, Monsieur, nos salutations distinguées.<br>" +
                     "<p style='text-align:right'>" +
                     "<u><strong>Service comptabilité fournisseur</strong></u><br>" +
                     "Vincent QUEUDRAY<br>" +

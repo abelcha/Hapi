@@ -44,7 +44,7 @@
     "moment": "^2.10.6",
     "moment-iterator": "^1.0.8",
     "moment-timezone": "^0.4.0",
-    "mongoose": "^4.0.0",
+    "mongoose": "^4.2.6",
     "mp3-parser": "^0.2.5",
     "multer": "^0.1.8",
     "ng-stats": "^2.5.2",

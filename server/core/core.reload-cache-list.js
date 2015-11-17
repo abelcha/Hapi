@@ -14,7 +14,7 @@ module.exports = function(core) {
                 redis.set(core.redisCacheListName.envify(), cache, function() {
                     resolve(cache)
                 });
-            }, reject).catch(__catch);
-        })
+            }, reject)
+        }).catch(__catch);
     }
 }
