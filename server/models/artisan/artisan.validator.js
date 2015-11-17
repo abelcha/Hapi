@@ -37,10 +37,18 @@ module.exports = function(schema) {
 
             var async = require('async');
             async.parallel({
-                nbrIntervention: function(cb) {
+                nbrInterventionSP: function(cb) {
                     db.model("intervention").count({
                         'artisan.id': _this.id,
                         'reglementSurPlace': true,
+                        'status': {
+                            $in: ['ENC', 'VRF']
+                        }
+                    }).count(cb)
+                },
+                 nbrIntervention: function(cb) {
+                    db.model("intervention").count({
+                        'artisan.id': _this.id,
                         'status': {
                             $in: ['ENC', 'VRF']
                         }
@@ -69,7 +77,7 @@ module.exports = function(schema) {
                     return next({lol:"Le sous-traitant est deja dans la base"})
                 }*/
                 _this.quarantained = result.quarantained;
-                _this.nbrIntervention = result.nbrIntervention;
+                _this.nbrIntervention = result.nbrInterventionSP;
                 _this.status = result.nbrIntervention ? "ACT" : "POT";
                 _this.subStatus = getSubStatus(_this);
                 _this.cache = db.model('artisan').Core.minify(_this);

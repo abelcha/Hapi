@@ -36,7 +36,7 @@
                 fourniture: 30
             },
             zoneChalandise: 30,
-            newOs:true,
+            newOs: true,
             address: {},
             categories: [],
             representant: {
@@ -98,7 +98,7 @@
 
         var config = requireLocal('config/dataList');
         try {
-
+            var moment = require('moment')
 
 
             var rtn = {
@@ -147,9 +147,11 @@
                 rtn.historique.pack = [{
                     text: d.num_facturier,
                     login: 'yohann_r',
+                    date: d.num_facturier.length == 10 ? moment(d.num_facturier).toDate() : new Date,
                     deviseur: d.num_deviseur,
                     facturier: d.num_facturier,
                 }]
+                console.log(rtn.historique.pack)
             }
             if (d.date_envoi_contrat && d.date_envoi_contrat.length >= 8) {
                 var months = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "aout", "septembre", "octobre", "novembre", "décembre"]
