@@ -2683,6 +2683,7 @@ module.exports = {
                         "Prix: à partir de {{inter.prixAnnonce}}€ H.T\n" +
                         "Veuillez joindre le client au:\n" +
                         "09.701.702.01 (OS {{inter.id}})\n" +
+                        "Code Partenaire: {{inter.sst.id}}"
                         "\n" +
                         "{{options.login}}\n" +
                         "{{options.ligne}} \n"
@@ -2771,7 +2772,7 @@ module.exports = {
                     "<p>A l'organisme qui gère notre recouvrement:</p>" +
                     "<p strong center> EDISON SERVICES FRANCE<br>" +
                     "Service recouvrement<br>" +
-                    "75 rue des dames, 75017 Paris<br>" +
+                    "32 rue Fernand Pelloutier, 92110 Clichy<br>" +
                     "Tél. 09.72.50.20.22 (Ouvert de 09h00 à 12h30 / 14h00 à 16h30)</p>" +
 
                     "<p> Nous vous prions d'agréer, Madame, Monsieur, nos salutations distinguées. </p>" +
@@ -2814,7 +2815,7 @@ module.exports = {
                     "<p>A l'organisme qui gère notre comptabilité:</p>" +
                     "<p strong center> EDISON SERVICES FRANCE<br>" +
                     "Service comptabilité<br>" +
-                    "75 rue des dames, 75017 Paris<br>" +
+                    "32 rue Fernand Pelloutier, 92110 Clichy<br>" +
                     "Tél. 09.72.51.08.01 (Ouvert de 09h00 à 12h30 / 14h00 à 16h30)</p>" +
                     "<p>" +
                     "Pour un règlement par virement :<br>" +
@@ -2840,7 +2841,7 @@ module.exports = {
                     "<p>A l'organisme qui gère notre comptabilité:</p>" +
                     "<p strong center> EDISON SERVICES<br>" +
                     "Service comptabilité<br>" +
-                    "75 rue des dames, 75017 Paris<br>" +
+                    "32 rue Fernand Pelloutier, 92110 Clichy<br>" +
                     "Tél. 09.72.51.08.01 (Ouvert de 09h00 à 12h30 / 14h00 à 16h30)</p>" +
                     "<p>" +
                     "<p>Pour un règlement par virement :</p>" +
@@ -2872,7 +2873,7 @@ module.exports = {
                     "<p>A l'organisme qui gère notre comptabilité:</p>" +
                     "<p strong center> EDISON SERVICES FRANCE\n" +
                     "Service comptabilité\n" +
-                    "75 rue des dames, 75017 Paris\n" +
+                    "32 rue Fernand Pelloutier, 92110 Clichy\n" +
                     "Tél. 09.72.51.08.01 (Ouvert de 09h00 à 12h30 / 14h00 à 16h30)</p>" +
                     "<p>" +
                     "Pour un règlement par virement :</p>" +
@@ -2910,7 +2911,7 @@ module.exports = {
                     "<p> Veuillez envoyer vos documents à cette adresse: </p>" +
                     "<p strong center> EDISON SERVICES FRANCE<br>" +
                     "Service partenariat - Yohann Rhoum <br>" +
-                    "75 rue des dames, 75017 Paris<br>" +
+                    "32 rue Fernand Pelloutier, 92110 Clichy<br>" +
                     "Tél. 09.72.51.08.01 (Ouvert de 09h00 à 12h30 / 14h00 à 16h30)</p>" +
 
                     "<p> Nous vous prions d'agréer, monsieur, nos salutations distinguées. </p>" +
@@ -2989,7 +2990,7 @@ module.exports = {
                     "<p><strong>" +
                     "   EDISON SERVICES FRANCE<br>" +
                     "   Service recouvrement<br>" +
-                    "   75 rue des dames, 75017 Paris<br>" +
+                    "   32 rue Fernand Pelloutier, 92110 Clichy<br>" +
                     "   Tél. 09.72.50.20.22 (Ouvert de 09h00 à 12h30 / 14h00 à 16h30)" +
                     "</strong></p>" +
                     "<p>Cordialement.</p>"
@@ -3023,7 +3024,7 @@ module.exports = {
                     "<p><strong>" +
                     "   EDISON SERVICES FRANCE<br>" +
                     "   Service comptabilité<br>" +
-                    "   75 rue des dames, 75017 Paris<br>" +
+                    "   32 rue Fernand Pelloutier, 92110 Clichy<br>" +
                     "   Tél. 09.72.51.08.01 (Ouvert de 09h00 à 12h30 / 14h00 à 16h30)" +
                     "</strong></p>" +
                     "<p>" +
@@ -3044,7 +3045,7 @@ module.exports = {
                     "<p>A l'organisme qui gère notre comptabilité:</p>" +
                     "<p><strong> EDISON SERVICES<br>" +
                     "Service comptabilité<br>" +
-                    "75 rue des dames, 75017 Paris<br>" +
+                    "32 rue Fernand Pelloutier, 92110 Clichy<br>" +
                     "Tél. 09.72.51.08.01 (Ouvert de 09h00 à 12h30 / 14h00 à 16h30)</strong></p>" +
                     "<p>" +
                     "<p>Pour un règlement par virement :</p>" +
@@ -3156,7 +3157,7 @@ module.exports = {
                     "<strong>" +
                     "EDISON SERVICES<br>" +
                     "Comptabilité Fournisseur<br>" +
-                    "75 rue des Dames, 75017 PARIS<br>" +
+                    "32 rue Fernand Pelloutier, 92110 Clichy<br>" +
                     "</strong>" +
                     "<br>" +
                     "Dans le cas où l'intervention n'aurait pas été réalisée par vos soins, merci de prendre contact au plus vite avec le service comptabilité<br>" +
@@ -3210,7 +3211,7 @@ module.exports = {
                     "<center><strong>" +
                     "EDISON SERVICES<br>" +
                     "Comptabilité Fournisseur<br>" +
-                    "75 rue des Dames, 75017 PARIS<br>" +
+                    "32 rue Fernand Pelloutier, 92110 Clichy<br>" +
                     "</center></strong>" +
                     "<br>" +
                     "Dans le cas où l'intervention n'aurait pas été réalisée par vos soins, merci de prendre contact au plus vite avec le service comptabilité<br>" +
@@ -3362,7 +3363,7 @@ module.exports = {
                     "\n" +
                     "<b>Edison Services</b>\n" +
                     "Dépannage - Entretien - Installation - Rénovation\n" +
-                    "Siège social : 75, rue des dames - 75017 Paris\n" +
+                    "Siège social : 32, rue Fernand Pelloutier - 92110 Clichy\n" +
                     "contact@edison-services.fr - www.edison-services.fr"
             },
             rappelContrat: function(user) {
@@ -3388,7 +3389,7 @@ module.exports = {
                     "<u><b>" +
                     "Edison Services\n" +
                     "Service Partenariat\n" +
-                    "75 rue des dames - 75017 PARIS\n" +
+                    "32 rue Fernand Pelloutier -921107ClichyS\n" +
                     "</b></u>" +
                     "\n" +
                     "\n" +
@@ -3411,7 +3412,7 @@ module.exports = {
                     "\n" +
                     "<b>Edison Services</b>\n" +
                     "Dépannage - Entretien - Installation - Rénovation\n" +
-                    "Siège social : 75 rue des Dames, 75017, Paris\n" +
+                    "Siège social : 32 rue Fernand Pelloutier, 92110,Clichys\n" +
                     "contact@edison-services.fr - www.edison-services.fr\n"
             },
             dossierComplet: function() {
@@ -3443,7 +3444,7 @@ module.exports = {
                     "\n" +
                     "Edison Services\n" +
                     "Dépannage - Entretien - Installation - Rénovation\n" +
-                    "Siège social : 75, rue des dames - 75010 Paris\n" +
+                    "Siège social : 32, rue Fernand Pelloutier - 92110 Clichy\n" +
                     "contact@edison-services.fr - www.edison-services.fr\n"
             }
         },

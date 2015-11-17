@@ -24,6 +24,7 @@ var Timer = module.exports = function() {
     if (envProd) {
 
         this.emitter.on("everyday at 20", function() {
+            console.log('==>RELANCEAUTOHERE')
             db.model('intervention').relanceAuto();
         });
 
