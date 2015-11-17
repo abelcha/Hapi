@@ -73,9 +73,6 @@ module.exports = function(schema) {
                     _id: {
                         $month: "$date.ajout"
                     },
-                    /*id: {
-                            $push: '$id'
-                        },*/
                     sum_VT_pot: {
                         $sum: '$montant_vt_pot'
                     },
@@ -88,13 +85,6 @@ module.exports = function(schema) {
                     sum_reel: {
                         $sum: '$montant_reel'
                     },
-                    /*
-                        totalEnc: {
-                            $sum: '$enCours'
-                        },
-                        total: {
-                        $sum: 1
-                    }*/
                 })
                 .exec(function(err, resp) {
                     resp = _.map(resp, _.partial(_.mapValues, _, _.partial(_.round, _, 2)))

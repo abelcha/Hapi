@@ -55,6 +55,16 @@ module.exports = function() {
                 }, '$prixAnnonce', '$prixFinal']
             }
         },
+        and:function(a, b) {
+            return {
+                $and:[a, b]
+            }
+        },
+        or:function(a, b) {
+            return {
+                $or:[a, b]
+            }
+        },
         cond: function(field, value, rA, rB) {
             return {
                 $cond: [{
