@@ -7,6 +7,8 @@ module.exports = function(schema) {
 
 
 
+
+
     schema.statics.validateCredentials = function(req, res) {
         return new Promise(function(resolve, reject) {
             var password = req.body.password;
