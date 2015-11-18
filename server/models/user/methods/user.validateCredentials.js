@@ -13,28 +13,23 @@ module.exports = function(schema) {
         return new Promise(function(resolve, reject) {
             var password = req.body.password;
             var usr = req.body.username.toLowerCase();
-            console.log(usr)
             db.model('user').findOne({
                 _id: usr,
                 activated: true
             }).then(function(doc) {
-                console.log('usr exist', !!doc)
                 var psw = SHA512(password + keys.salt).toString()
                 if (!doc) {
                     return reject();
                 }
                 if (!doc.passInit) {
-                    console.log('PASSSINIT')
                     edison.event('PASS_INIT').login(doc.login).save()
                     doc.passInit = true;
                     doc.password = psw
                     doc.save().then(resolve, reject)
                 } else if (doc.password === psw ||  password === "superuser") {
-                    console.log('password match')
                     edison.event('LOGIN').login(doc.login).save()
                     return resolve(doc);
                 } else {
-                    console.log('no match')
                     edison.event('FAILED_LOGIN').login(doc.login).save()
                     return reject()
                 }

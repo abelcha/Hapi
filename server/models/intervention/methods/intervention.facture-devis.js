@@ -57,6 +57,9 @@ module.exports = function(schema) {
         var _this = this;
         try {
             var doc = JSON.parse(req.body.data);
+            if (!doc.facture || !doc.facture.nom) {
+                doc.facture = doc.client;
+            }
             var pdf = getFacturePdfObj(doc, doc.date.intervention);
             return res.send(pdf.html())
             pdf.toBuffer(function(err, buff) {
@@ -145,7 +148,7 @@ module.exports = function(schema) {
                 if (inter.reglementSurPlace) {
                     inter.facture = inter.client;
                 }
-                inter.acompte = inter.prixFinal;
+                inter.acompte = (inter.prixFinal * (inter.tva / 100 + 1));
 
                 var pdf = getFacturePdfObj(inter, inter.date.intervention, true, req.body.date);
 
