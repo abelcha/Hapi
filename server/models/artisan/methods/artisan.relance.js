@@ -28,7 +28,7 @@ module.exports = function(schema) {
             var rtn = _.groupBy(resp, 'sst.id')
             async.eachLimit(_.values(rtn), 5, function(e, cb) {
                 if (e.length > 3) {
-                    return cb(null);
+                    return cb(null); 
                 }
                 var template = _.template(textTemplate.mail.intervention.relanceArtisanFinDeMois())({
                     options: {},
