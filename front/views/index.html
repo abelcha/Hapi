@@ -97,14 +97,14 @@
             </drop-down>
             <drop-down title="Outils" icon="circle">
                 <simple-link ng-if="user.root" icon="wrench" title="Telephone Match" url="/tools/telephoneMatch"></simple-link>
-                <simple-link ng-if="user.root && user !== 'yohann_r'" icon="wrench" title="Stats C.A" url="/stats/ca"></simple-link>
-                <simple-link ng-if="user.root && user !== 'yohann_r'" icon="wrench" title="Stats [NEW]" url="/statsnew/ca"></simple-link>
-                <simple-link ng-if="user.root && user !== 'yohann_r'" icon="wrench" title="Produits" url="/tools/editProducts"></simple-link>
-                <simple-link ng-if="user.root && user !== 'yohann_r'" icon="wrench" title="Combos" url="/tools/editCombos"></simple-link>
-                <simple-link ng-if="user.root && user !== 'yohann_r'" icon="wrench" title="Utilisateurs" url="/tools/editUsers"></simple-link>
-                <simple-link ng-if="user.root && user !== 'yohann_r'" icon="wrench" title="Grand Comptes" url="/tools/editComptes"></simple-link>
+                <simple-link ng-if="user.root && user.login !== 'yohann_r'" icon="wrench" title="Stats C.A" url="/stats/ca"></simple-link>
+                <simple-link ng-if="user.root && user.login !== 'yohann_r'" icon="wrench" title="Stats [NEW]" url="/statsnew/ca"></simple-link>
+                <simple-link ng-if="user.root && user.login !== 'yohann_r'" icon="wrench" title="Produits" url="/tools/editProducts"></simple-link>
+                <simple-link ng-if="user.root && user.login !== 'yohann_r'" icon="wrench" title="Combos" url="/tools/editCombos"></simple-link>
+                <simple-link ng-if="user.root && user.login !== 'yohann_r'" icon="wrench" title="Utilisateurs" url="/tools/editUsers"></simple-link>
+                <simple-link ng-if="user.root && user.login !== 'yohann_r'" icon="wrench" title="Grand Comptes" url="/tools/editComptes"></simple-link>
                 <simple-link ng-if="user.root" icon="wrench" title="Signalements" url="/tools/editSignalements"></simple-link>
-                <simple-link ng-if="user.root && user !== 'yohann_r'" icon="dollar" title="Commissions" url="/tools/commissions"></simple-link>
+                <simple-link ng-if="user.root && user.login !== 'yohann_r'" icon="dollar" title="Commissions" url="/tools/commissions"></simple-link>
                 <simple-link icon="wrench" title="VCF Clients" extern url="/api/intervention/vcf"></simple-link>
                 <simple-link icon="wrench" title="VCF Artisan" extern url="/api/artisan/vcf"></simple-link>
             </drop-down>
