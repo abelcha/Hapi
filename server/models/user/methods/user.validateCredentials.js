@@ -13,7 +13,7 @@ module.exports = function(schema) {
         return new Promise(function(resolve, reject) {
             var password = req.body.password;
             var usr = req.body.username.toLowerCase();
-            console.log(user)
+            console.log(usr)
             db.model('user').findOne({
                 _id: usr,
                 activated: true

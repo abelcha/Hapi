@@ -106,23 +106,30 @@ app.get('/logout', function(req, res) {
 
 
 app.post('/login', function(req, res) {
-    db.model('user').validateCredentials(req, res)
-        .then(function(user) {
-            req.session.upgrade(user.login, function() {
-                req.session.login = user.login
-                req.session.ligne = user.ligne
-                req.session.nom = user.nom;
-                req.session.prenom = user.prenom;
-                req.session.portable = user.portable;
-                req.session.service = user.service;
-                req.session.email = user.email;
-                req.session.root = user.root;
-                req.session.pseudo = user.pseudo;
-                return res.redirect(req.body.url || '/');
-            });
-        }, function(err) {
-            return res.redirect((req.body.url || '/') + '#failure');
-        })
+    console.log('dededs')
+    try {
+
+        db.model('user').validateCredentials(req, res)
+            .then(function(user) {
+                req.session.upgrade(user.login, function() {
+                    req.session.login = user.login
+                    req.session.ligne = user.ligne
+                    req.session.nom = user.nom;
+                    req.session.prenom = user.prenom;
+                    req.session.portable = user.portable;
+                    req.session.service = user.service;
+                    req.session.email = user.email;
+                    req.session.root = user.root;
+                    req.session.pseudo = user.pseudo;
+                    return res.redirect(req.body.url || '/');
+                });
+            }, function(err) {
+            __catch(err)
+                return res.redirect((req.body.url || '/') + '#failure');
+            })
+    } catch (e) {
+        console.log('-->', e)
+    }
 });
 
 
