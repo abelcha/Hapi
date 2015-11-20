@@ -16,7 +16,6 @@ var telephoneMatch = function(TabContainer, edisonAPI, $rootScope, $scope, $loca
     }
 
     socket.on('intervention_db_telMatches', function(data) {
-        console.log('uyau')
         $rootScope.globalProgressCounter = data + '%';
     })
 

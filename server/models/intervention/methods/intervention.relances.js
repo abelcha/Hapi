@@ -91,7 +91,7 @@ module.exports = function(schema) {
                 days: 60
             }]
             relanceRapport = [];
-            async.eachLimit(relances, 1, _.partial(execRelance, req.query.now, _, _), function(err) {
+            async.eachLimit(relances, 1, _.partial(execRelance, Date.now(), _, _), function(err) {
                 mail.send({
                     From: "comptabilite@edison-services.fr",
                     To: "abel.chalier@gmail.com",
