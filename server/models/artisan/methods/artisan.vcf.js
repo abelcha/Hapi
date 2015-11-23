@@ -36,8 +36,7 @@ module.exports = function(schema) {
                         rtn += "VERSION:3.0\n" +
                             _.template("N: {{nomSociete}} - {{address.cp}} {{address.v}}\n")(e) +
                             _.template("N: {{nomSociete}} - {{address.cp}} {{address.v}}\n")(e) +
-                            "TEL;WORK;VOICE: " + e.telephone.tel1 + "\n" + 
-                            "EMAIL;PREF;INTERNET:" + e.email
+                            "TEL;WORK;VOICE: " + e.telephone.tel1 + "\n"
 
                         if (e.telephone.tel2) {
                             rtn += "TEL;WORK;VOICE: " + e.telephone.tel2 + "\n";
@@ -45,6 +44,8 @@ module.exports = function(schema) {
                         if (e.telephone.tel3) {
                             rtn += "TEL;WORK;VOICE: " + e.telephone.tel3 + "\n";
                         }
+                        rtn += "EMAIL;PREF;INTERNET:" + e.email
+
                         rtn += "END:VCARD\n";
 
                     })
