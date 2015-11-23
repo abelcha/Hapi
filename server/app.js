@@ -31,7 +31,6 @@ express.response.jsonStr = function(obj, headers, status) {
     return this.send(obj, headers, status);
 };
 
-console.log('-->', process.version)
 
 var app = express();
 var http = require('http').Server(app);
@@ -106,7 +105,6 @@ app.get('/logout', function(req, res) {
 
 
 app.post('/login', function(req, res) {
-    console.log('dededs')
     try {
 
         db.model('user').validateCredentials(req, res)
