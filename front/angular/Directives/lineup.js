@@ -60,11 +60,9 @@
         }
     }
     if ($routeParams.ids_in) {
-        if ($routeParams.sstids_in) {
-            var tab = $routeParams.ids_in.split(',')
-            _this.customFilter = function(inter) {
-                return _.contains(tab, inter.id);
-            }
+        var tab = JSON.parse($routeParams.ids_in)
+        _this.customFilter = function(inter) {
+            return _.contains(tab, inter.id);
         }
     }
 
@@ -72,7 +70,7 @@
     _this.$watch(function() {
         return $location.search()
     }, _.after(2, function(nw, old) {
-        _this.tableParams.filter(_.omit(nw, 'hashModel', 'page', 'sstid'))
+        _this.tableParams.filter(_.omit(nw, 'hashModel', 'page', 'sstid', 'ids_in'))
     }), true)
 
     _this.$watch(function() {
@@ -106,7 +104,7 @@
         var tableParameters = {
             page: $location.search()['page'] ||  1,
             total: dataProvider.filteredData.length,
-            filter: _this.embedded ? {} : _.omit($location.search(), 'hashModel', 'page', 'sstid'),
+            filter: _this.embedded ? {} : _.omit($location.search(), 'hashModel', 'page', 'sstid', 'ids_in'),
             sorting: sortBy,
             count: _this.limit || 100
         };

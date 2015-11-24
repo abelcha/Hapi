@@ -74,12 +74,10 @@ angular.module("edison").filter('tableFilter', ['config', function(config) {
         var rtn = [];
         //console.time('fltr')
         inputs = _.mapValues(inputs, clean);
-        console.log(inputs)
         _.each(inputs, function(e, k) {
             if (k.charAt(0) === '∆') {
                 inputs[k] = parseDate(e);
             }
-            console.log('-->', inputs)
         })
 
         _.each(dataContainer, function(data) {
