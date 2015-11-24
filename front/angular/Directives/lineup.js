@@ -59,6 +59,15 @@
             return _.contains($routeParams.sstids_in, inter.id);
         }
     }
+    if ($routeParams.ids_in) {
+        if ($routeParams.sstids_in) {
+            var tab = $routeParams.ids_in.split(',')
+            _this.customFilter = function(inter) {
+                return _.contains(tab, inter.id);
+            }
+        }
+    }
+
 
     _this.$watch(function() {
         return $location.search()
@@ -74,7 +83,7 @@
             _this.tableParams.reload()
         }
     }, true)
-    
+
 
     var actualiseUrl = function(fltrs, page) {
         $location.search('page', page !== 1 ? page : undefined);
@@ -83,8 +92,7 @@
             if (e !== "hashModel") {
                 $location.search(k, e);
 
-            } else {
-            }
+            } else {}
         })
     }
 
