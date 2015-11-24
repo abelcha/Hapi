@@ -633,6 +633,21 @@ FiltersFactory.prototype.list = {
         url: 'axialis',
         match: {
             'newOs': true,
+            'appels': {
+                $size: {
+                    $gt: 0
+                }
+            }
+        },
+    }, {
+        short_name: 'i_axno',
+        long_name: 'Axialis NoContact',
+        url: 'axialisNoContact',
+        match: {
+            'newOs': true,
+            'appels': {
+                $size: 0
+            }
         },
     }]
 }
