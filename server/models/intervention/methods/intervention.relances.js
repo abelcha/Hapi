@@ -57,7 +57,7 @@ module.exports = function(schema) {
                 return res.send('nope')
             }
             async.eachLimit(resp, 10, function(e, cb) {
-                var relance = RelanceClient(e, 'relance-client-1', e.facture.email)
+                var relance = RelanceClient(e, 'relance-client-2', e.facture.email)
                 relance.send(function() {
                     console.log('ok', e.id)
                     cb(null)
