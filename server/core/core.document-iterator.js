@@ -46,7 +46,7 @@ module.exports = function(core) {
                     }
                     resolve('ok')
                 })
-            }, reject).catch(__catch);
+            }, reject)
         })
     }
 }

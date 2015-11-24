@@ -181,9 +181,9 @@ FiltersFactory.prototype.list = {
         url: 'davr',
         match: {
             status: 'ENC',
-           /* 'date.intervention': {
-                $lt: new Date(Date.now() + ms.hours(1))
-            },*/
+            /* 'date.intervention': {
+                 $lt: new Date(Date.now() + ms.hours(1))
+             },*/
             aDemarcher: true
         },
     }, {
@@ -383,8 +383,8 @@ FiltersFactory.prototype.list = {
         short_name: 'i_mar',
         long_name: 'MARKET',
         url: 'market',
-        sortBy:{
-            di:'desc'
+        sortBy: {
+            di: 'desc'
         },
         match: {
             aDemarcher: true,
@@ -401,7 +401,7 @@ FiltersFactory.prototype.list = {
         match: {
             aDemarcher: true,
             status: {
-                $in: ['APR' , 'ENC', 'AVR' ]
+                $in: ['APR', 'ENC', 'AVR']
             },
             'login.demarchage': {
                 $exists: true
@@ -435,6 +435,13 @@ FiltersFactory.prototype.list = {
             status: {
                 $in: ['APR', 'ENC']
             }
+        },
+    }, {
+        short_name: 'i_ax',
+        long_name: 'Axialis',
+        url: 'axialis',
+        match: {
+            'newOs': true,
         },
     }]
 }
