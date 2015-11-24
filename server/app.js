@@ -102,6 +102,17 @@ app.get('/api/job', function(req, res) {
     })
 })
 
+app.get('/api/jobState', function(req, res) {
+    edison.worker.createJob({
+        name: 'stats',
+    }).then(function() {
+        res.send('OK')
+    }, function() {
+        res.send('ERR')
+    })
+
+})
+
 
 
 app.get('/logout', function(req, res) {

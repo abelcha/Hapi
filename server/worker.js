@@ -25,7 +25,7 @@ try {
                 host: redisUrl.hostname,
                 auth: redisUrl.auth.split(":")[1],
             } : undefined,
-            disableSearch: true
+            disableSearch: false
         });
 
         jobs.process('db', function(job, done) {
@@ -42,6 +42,15 @@ try {
             })
         });
 
+        jobs.process('stats', function(job, done) {
+            job.inactive(function(err, ids) {
+                // others are active, complete, failed, delayed
+                // you may want to fetch each id to get the Job object out of it...
+                console.log('-->', err, ids)
+            });
+            done();
+        })
+
         jobs.process('test', 5, function(job, done) {
             console.log(job.id, 'LAUNCHED')
             setTimeout(function() {
@@ -50,7 +59,7 @@ try {
             }, 2000)
         })
 
-        jobs.process('db_id',  function(job, done) {
+        jobs.process('db_id', function(job, done) {
             console.log(job)
 
             console.log('==>', job.data.model, job.data.method)
