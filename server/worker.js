@@ -30,12 +30,12 @@ try {
         });
 
 
-        var end = function(done, timer) {
+        var end = function() {
             var _this = this;
             return function(resp) {
                 if (_this.done) {
                     totalTime = Date.now() - _this.timeStart;
-                    console.log('[', 'DB', _this.data.model, _this.data.method, '] OK - [' + (totalTime / 1000) + ']')
+                    console.log('[', 'DB', _this.data.model, _this.data.method, '][' + _this.id + '] - [OK] - <' + (totalTime / 1000) + '>')
                     clearTimeout(_this.timer);
                     _this.done(null, resp)
                 }
@@ -46,15 +46,15 @@ try {
             var _this = this;
             _this.timeStart = Date.now()
             return setTimeout(function() {
-                console.log('[', 'DB', _this.data.model, _this.data.method, '] TIMEOUT')
-                _this.done('[' + ' DB ' + _this.data.model + ' ' + _this.data.method + '] TIMEOUT');
+                console.log('[', 'DB', _this.data.model, _this.data.method, '][' + _this.id + '] - [TIMEOUT]')
+                _this.done('[' + ' DB ' + _this.data.model + ' ' + _this.data.method + '][' + _this.id + '] -  [TIMEOUT]');
                 _this.done = null;
-            }, 52000)
+            }, _this.data.ttl || 52000)
         }
 
 
         jobs.process('db', 5, function(job, done) {
-            console.log('[', 'DB', job.data.model, job.data.method, '] LAUNCH')
+            //console.log('[', 'DB', job.data.model, job.data.method,'][' + job.id + '] - [LAUNCH]')
             job.done = done;
             job.timer = getTimer.bind(job)()
             db.model(job.data.model)[job.data.method](job.data.req)
@@ -64,18 +64,18 @@ try {
         });
 
 
-        var fn = function() {
+        var fn = function(options) {
             return new Promise(function(resolve, reject) {
                 setTimeout(function() {
                     resolve('okokokgoogoogo')
-                }, 100);
+                }, options.time || 100);
             })
         }
 
 
 
         jobs.process('db_id', 5, function(job, done) {
-            console.log('[', 'DB_ID', job.data.model, job.data.method, '] LAUNCH')
+          //  console.log('[', 'DB_ID', job.data.model, job.data.method, '][' + job.id + '] - [LAUNCH]')
             job.done = done;
             job.timer = getTimer.bind(job)()
             db.model(job.data.model)[job.data.method].fn(job.data.data, job.data.req)
@@ -87,10 +87,10 @@ try {
 
 
         jobs.process('test', 3, function(job, done) {
-            console.log('[', 'TEST', job.data.model, job.data.method, '] LAUNCH')
+           // console.log('[', job.data.model, job.data.method, '][' + job.id + '] - [LAUNCH]')
             job.done = done;
             job.timer = getTimer.bind(job)()
-            fn().then(end.bind(job)(), done)
+            fn(job.data).then(end.bind(job)(), done)
                 .catch(__catch);
         })
 

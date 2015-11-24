@@ -94,6 +94,11 @@ app.use(require('connect-redis-sessions')({
 
 app.get('/api/job', function(req, res) {
     edison.worker.createJob({
+        ttl: req.query.ttl,
+        time: req.query.time,
+        priority:req.query.priority,
+        model: "test",
+        method: req.query.name || "test",
         name: 'test',
     }).then(function() {
         res.send('OK')
