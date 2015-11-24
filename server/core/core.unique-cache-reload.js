@@ -35,6 +35,7 @@
                 return edison.worker.createJob({
                     name: 'db',
                     model: core.name,
+                    priority: 'medium',
                     method: 'throttleCacheReload',
                     req: _(docs).flatten().map('id').uniq().value()
                 }).then(function(resp) {

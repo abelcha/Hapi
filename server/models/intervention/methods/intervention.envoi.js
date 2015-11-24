@@ -9,7 +9,7 @@ module.exports = function(schema) {
     var PDFMerge = require('pdf-merge');
     var async = require('async');
     var sendSMS = function(text, to) {
-        console.log(to, text);
+        //console.log(to, text);
         return sms.send({
             to: to,
             text: text,
@@ -37,7 +37,7 @@ module.exports = function(schema) {
     var getNotice = function(doc) {
         return new Promise(function(resolve, reject) {
             PDF('notice', doc, 400).buffer(function(err, buff) {
-                console.log(err, buff)
+                //console.log(err, buff)
                 if (err)
                     return reject(err);
                 resolve({
@@ -183,7 +183,7 @@ module.exports = function(schema) {
             } else if (req.query.q === 'deviseur') {
                 var prm = getDeviseur(inter, req.session);
             } else if (req.query.q === 'notice') {
-                console.log('notice')
+                //console.log('notice')
                 var prm = getNotice(inter);
             } else if (req.query.q === 'devis') {
                 var prm = getDevis(inter, req.session)
@@ -234,14 +234,12 @@ module.exports = function(schema) {
                                 .message(_.template("L'intervention {{id}} chez {{client.civilite}} {{client.nom}} ({{client.address.cp}}) à été envoyé par {{login.envoi}}")(inter))
                                 .send()
                                 .save()
-                            console.log('okok')
                             if (inter.newOs) {
                                 setTimeout(function() {
                                     db.model('intervention').findById(inter.id)
                                         .populate('sst')
                                         .then(function(resp) {
                                             if (resp && resp.status === 'ENC' && !resp.appels.length) {
-                                                console.log('nocall')
                                                 sms.send({
                                                     to: resp.sst.telephone.tel1,
                                                     text: template.sms.intervention.rappelNoCalls(inter.id)
@@ -325,12 +323,15 @@ module.exports = function(schema) {
                             HtmlBody: text,
                             Attachments: files
                         }
-                        console.log(communication);
+//                        console.log(communication);
                         var validationPromises = [
                             mail.send(mailOptions),
                             sendSMS(req.body.sms, communication.telephone),
                         ]
-                        Promise.all(validationPromises).catch(__catch)
+                            console.log('ok1')
+                        Promise.all(validationPromises, function() {
+                            console.log('ok2')
+                        }).catch(__catch)
                         resolve('ok')
                     }, reject).catch(__catch)
                 } catch (e) {

@@ -36,7 +36,7 @@ OVH.prototype.send = function(params) {
                             HtmlBody: params.text.replaceAll('\n', '<br>'),
                         })
                     }
-                    console.log(errsend, result);
+                  //  console.log(errsend, result);
                     return resolve('ok')
                 });
             }
@@ -47,7 +47,6 @@ OVH.prototype.send = function(params) {
 
 
 OVH.prototype.jobs = function() {
-    console.log('NTM')
     var _this = this;
     return new Promise(function(resolve, reject) {
 
