@@ -218,7 +218,8 @@ module.exports = function(schema) {
                             model: 'intervention',
                             method: 'envoi',
                             data: inter,
-                            req: _.pick(req, 'body', 'session')
+                            req: _.pick(req, 'body', 'session'),
+                            priority: 'high'
                         }).then(function() {
                             inter.status = "ENC";
                             inter.date.envoi = new Date();
@@ -233,7 +234,7 @@ module.exports = function(schema) {
                                 .message(_.template("L'intervention {{id}} chez {{client.civilite}} {{client.nom}} ({{client.address.cp}}) à été envoyé par {{login.envoi}}")(inter))
                                 .send()
                                 .save()
-                                console.log('okok')
+                            console.log('okok')
                             if (inter.newOs) {
                                 setTimeout(function() {
                                     db.model('intervention').findById(inter.id)

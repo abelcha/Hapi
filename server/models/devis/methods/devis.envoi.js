@@ -50,7 +50,8 @@ module.exports = function(schema) {
                         model: 'devis',
                         method: 'envoi',
                         data: devis,
-                        req: _.pick(req, 'body', 'session')
+                        priority: 'high',
+                        req: _.pick(req, 'body', 'session'),
                     }).then(function() {
                         devis.historique.push({
                             login: req.session.login,
