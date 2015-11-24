@@ -570,9 +570,7 @@
                 }]
             }
         }
-        console.log(!rtn.reglementSurPlace, !rtn.produits, !rtn.produits.length)
         if (!rtn.reglementSurPlace && (!rtn.produits ||  !rtn.produits.length)) {
-            console.log('okok')
             rtn.produits = [{
                 ref: 'EDX121',
                 title: rtn.description,
@@ -581,7 +579,6 @@
                 quantite: 1
             }]
         }
-        console.log(rtn.produits)
 
         return rtn;
     }

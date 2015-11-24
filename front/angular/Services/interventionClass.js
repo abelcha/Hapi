@@ -445,6 +445,8 @@ angular.module('edison')
                 number: 0
             }
         }
+        
+        
         Intervention.prototype.isEnvoyable = function() {
             if (!this.sst) {
                 return false;

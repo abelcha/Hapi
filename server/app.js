@@ -92,6 +92,16 @@ app.use(require('connect-redis-sessions')({
 }))
 
 
+app.get('/api/job', function(req, res) {
+    edison.worker.createJob({
+        name: 'test',
+    }).then(function() {
+        res.send('OK')
+    }, function() {
+        res.send('ERR')
+    })
+})
+
 
 
 app.get('/logout', function(req, res) {
@@ -122,7 +132,7 @@ app.post('/login', function(req, res) {
                     return res.redirect(req.body.url || '/');
                 });
             }, function(err) {
-            __catch(err)
+                __catch(err)
                 return res.redirect((req.body.url || '/') + '#failure');
             })
     } catch (e) {
