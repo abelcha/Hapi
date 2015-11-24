@@ -421,6 +421,10 @@ module.exports = {
         type: 'Autre',
         short_name: 'AUTRE',
         long_name: 'Autre'
+    }, {
+        type: 'Autre',
+        short_name: 'PERTE',
+        long_name: 'Perte'
     }],
     getCauseAnnulation: function(short_name) {
         var _find = require('lodash/collection/find');
