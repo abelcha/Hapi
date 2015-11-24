@@ -23,20 +23,29 @@ var Timer = module.exports = function() {
 
     if (envProd) {
 
-        this.emitter.on("everyday at 20", function() {
-            console.log('==>RELANCEAUTOHERE')
-            db.model('intervention').relanceAuto();
-        });
+        if () {
 
-        this.emitter.on("everyday at 7", function() {
-            db.model('devis').relanceAuto7h()
-        });
+            this.emitter.on("everyday at 20", function() {
+                if (moment().isoWeekday() !== 6 && moment().isoWeekday() !== 7) {
+                    console.log('==>RELANCEAUTOHERE')
+                    db.model('intervention').relanceAuto();
+                }
+            });
+
+            this.emitter.on("everyday at 7", function() {
+                if (moment().isoWeekday() !== 6 && moment().isoWeekday() !== 7) {
+                    db.model('devis').relanceAuto7h()
+                }
+            });
 
 
-        this.emitter.on("everyday at 14", function() {
-            db.model('devis').relanceAuto14h()
-        });
+            this.emitter.on("everyday at 14", function() {
+                if (moment().isoWeekday() !== 6 && moment().isoWeekday() !== 7) {
+                    db.model('devis').relanceAuto14h()
+                }
+            });
 
+        }
 
         this.emitter.on("hour", function() {
             db.model('intervention').rappelDateIntervention()

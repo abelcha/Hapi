@@ -10,13 +10,12 @@ module.exports = function(schema) {
         var usr = _.find(edison.users.data, 'login', "benjamin_b");
         var realUsr = _.find(edison.users.data, 'login', e.login.ajout)
         var options = {
-                session: realUsr || usr,
-                body: {
-                    text: textTemplate.mail.devis.envoi.bind(e)(realUsr || usr, config, _, moment),
-                    auto: true,
-                }
+            session: realUsr || usr,
+            body: {
+                text: textTemplate.mail.devis.envoi.bind(e)(realUsr || usr, config, _, moment),
+                auto: true,
             }
-            //  console.log(options)
+        }
         if (envDev) {
             console.log('send devis ' + e.id);
             return callback(null)
@@ -28,8 +27,9 @@ module.exports = function(schema) {
     schema.statics.relanceAuto7h = function(req, res) {
         var async = require('async')
         var todayAt7 = moment.tz('Europe/Paris').hours(7).toDate()
-        var yesterdayAt12h30 = moment.tz('Europe/Paris').add(-1, 'days').hours(12).minutes(30).toDate()
-        var twoDaysAgo = moment.tz('Europe/Paris').add(-2, 'days').toDate();
+        var weekendOffset = moment().isoWeekday() === 1 ? -2 : 0;
+        var yesterdayAt12h30 = moment.tz('Europe/Paris').add(-1 + weekendOffset, 'days').hours(12).minutes(30).toDate()
+        var twoDaysAgo = moment.tz('Europe/Paris').add(-2 + weekendOffset, 'days').toDate();
         var oneDaysAgo = moment.tz('Europe/Paris').add(-1, 'days').toDate();
         var relanceRapport = []
         async.parallel([
@@ -81,6 +81,9 @@ module.exports = function(schema) {
         var relanceRapport = [];
 
         var todayAt7 = moment.tz('Europe/Paris').hours(7).toDate()
+        if (moment().isoWeekday() === 1) {
+            todayAt7 = todayAt7.add(-2, "days");
+        }
         db.model('devis').find({
             status: 'ATT',
             historique: {
