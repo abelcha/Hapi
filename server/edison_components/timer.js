@@ -57,7 +57,6 @@ var Timer = module.exports = function() {
             db.model('document').check(req).then(function() {
                 db.model('document').archiveScan(req).then(function() {
                     db.model('document').order(req).then(function() {
-                        console.log('DocumentFullCheck [DONE]')
                     })
                 })
             })
@@ -67,7 +66,6 @@ var Timer = module.exports = function() {
 
     this.emitter.on("4pm", function() {
         db.model('intervention').backup(function() {
-            console.log('backup [DONE]')
         })
     })
 
@@ -81,10 +79,8 @@ var Timer = module.exports = function() {
 
     this.emitter.on("10 minutes", function() {
         db.model('intervention').fullReload().then(function() {
-            console.log('inter ok')
         })
         db.model('devis').fullReload().then(function() {
-            console.log('devis ok')
         })
     })
     this.emitter.on("3pm", function() {

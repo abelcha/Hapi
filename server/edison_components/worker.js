@@ -1,9 +1,11 @@
 module.exports = {
     initJobQueue: function() {
         var kue = require("kue");
+        var key = requireLocal('config/_keys');
+
         var url = require("url");
         if (envProd || envStaging) {
-            var redisURL = url.parse(process.env.REDISCLOUD_URL);
+            var redisURL = url.parse(key.redisURL);
             var redisOptions = {
                 port: redisURL.port,
                 host: redisURL.hostname,
@@ -18,13 +20,16 @@ module.exports = {
     },
     createJob: function(options) {
         return new Promise(function(resolve, reject) {
-            console.log('[LAUNCH JOB]')
-            var job = jobs.create(options.name, options);
-            console.log('[JOB LAUNCHED]')
-            job.on('complete', resolve).on('failed', reject).on('progress', function(progress, data) {
-                io.sockets.emit(options.model + "_" + options.name + '_' + options.method, progress);
-            });
-            job.removeOnComplete(true).priority(options.priority || 'normal').ttl(50000).save()
+            var job = jobs
+                .create(options.name, options)
+                .removeOnComplete(true)
+                .priority(options.priority || 'normal')
+                .ttl(2)
+                .on('complete', resolve)
+                .on('failed', reject)
+                .on('progress', function(progress, data) {
+                    io.sockets.emit(options.model + "_" + options.name + '_' + options.method, progress);
+                }).save()
         })
     }
 }

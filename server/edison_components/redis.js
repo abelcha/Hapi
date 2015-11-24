@@ -1,5 +1,6 @@
 module.exports = function() {
     var async = require('async');
+    var key = requireLocal('config/_keys');
     var redis = require("redis");
     redis.RedisClient.prototype.delWildcard = function(key, callback) {
         var redis = this
@@ -17,7 +18,7 @@ module.exports = function() {
 
         if (envProd || envStaging) {
             var url = require('url');
-            var redisURL = url.parse(process.env.REDISCLOUD_URL);
+            var redisURL = url.parse(key.redisURL);
             redisClient = redis.createClient(redisURL.port, redisURL.hostname, {
                 no_ready_check: true
             });

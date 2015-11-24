@@ -14,13 +14,13 @@ module.exports = function(core) {
             core.model().reloadFilters(function(err) {
                 if (err)
                     reject(err);
-                console.timeEnd('reloadFilters');
-                console.time('cacheListReload')
+                //console.timeEnd('reloadFilters');
+                //console.time('cacheListReload')
                 core.model().cacheListReload().then(function() {
-                    console.timeEnd('cacheListReload')
-                    console.time('teleproStats');
+                    //  console.timeEnd('cacheListReload')
+                    // console.time('teleproStats');
                     edison.statsTelepro.reload().then(function() {
-                        console.timeEnd('teleproStats');
+                        //   console.timeEnd('teleproStats');
                         resolve('ok')
                     }, reject)
                 }, reject)

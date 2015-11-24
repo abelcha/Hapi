@@ -76,9 +76,7 @@ module.exports = {
                 mergeFilters(allFilters, 'intervention')
                 mergeFilters(allFilters, 'devis')
                 mergeFilters(allFilters, 'artisan')
-                console.time('allFilters')
                 async.parallel(allFilters, function(err, result) {
-                    console.timeEnd('allFilters')
                     if (err)
                         reject(err)
                     result = _.mapValues(result, function(e) {

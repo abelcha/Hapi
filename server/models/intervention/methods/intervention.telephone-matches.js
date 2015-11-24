@@ -89,9 +89,9 @@ module.exports = function(schema) {
                         })
                         ++i
                     console.log('progress')
-                    if (global.currenWorkerJob) {
+                   /* if (global.currenWorkerJob) {
                         global.currenWorkerJob.progress(i, _.size(q));
-                    }
+                    }*/
                     //console.log('-->', e[0].origin, _.round(100 * (i / _.size(q)), 2), '%')
                     var st = {
                         ligne: e[0].origin,
