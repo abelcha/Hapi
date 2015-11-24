@@ -36,14 +36,6 @@ module.exports = function(schema) {
 
                 if (!devis && !devis.produits || !devis.produits.length)
                     return reject('Le devis est vide')
-                        /*                if (envDev) {
-                                            devis.historique.push({
-                                                login: req.session.login,
-                                                date: new Date,
-                                            })
-                                            devis.status = 'ATT';
-                                            return devis.save().then(resolve, reject)
-                                        }*/
                 if (!isWorker) {
                     return edison.worker.createJob({
                         name: 'db_id',

@@ -133,6 +133,7 @@ module.exports = function(schema) {
                 if (!isWorker) {
                     edison.event('INTER_SENDFACT_ACQ').login(req.session.login).id(inter.id).save();
                     return edison.worker.createJob({
+                        priority: 'high',
                         name: 'db_id',
                         model: 'intervention',
                         method: 'sendFactureAcquitte',
@@ -217,6 +218,7 @@ module.exports = function(schema) {
                         name: 'db_id',
                         model: 'intervention',
                         method: 'sendFacture',
+                        priority: 'high',
                         data: inter,
                         req: _.pick(req, 'body', 'session')
                     }).then(function() {
