@@ -633,10 +633,8 @@ FiltersFactory.prototype.list = {
         url: 'axialis',
         match: {
             'newOs': true,
-            'appels': {
-                $size: {
-                    $gt: 0
-                }
+            'appels.1': {
+                $exists: true
             }
         },
     }, {
