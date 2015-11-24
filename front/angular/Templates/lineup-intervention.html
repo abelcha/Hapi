@@ -1,4 +1,8 @@
 <div>
+    <span style="margin-right:40px"ng-repeat="month in dateSelectList"><a href="/intervention/list/relanceClient?∆di={{_.padLeft(month.m, 2, '0')}}/{{month.y}}">{{month.t}}</a></span>
+    <br>
+    <br>
+    <br>
     <div class="shadow-box listeInterventions" ng-init="rl = (routeParamsFilter === 'relanceClient')">
         <table style="background:white;cursor:pointer" ng-table="tableParams" class="table table-bordered table-hover table-hover table-xstriped" id="table-list" show-filter="!embedded">
             <tbody id="tbody-list">
@@ -35,7 +39,7 @@
                         <strong ng-if="inter.d == 1 && !inter.a" class="red-text darken-1-text">A DEMARCHER</strong>
                         <strong ng-if="inter.d == 2 && !inter.a" class="light-blue-text darken-1-text">EN DEMARCHAGE ({{inter.dm}})</strong>
                     </td>
-                    <td data-title="smallWin ? 'P' : 'Prevu'" sortable="'di'" filter="{ 'di': 'text' }">
+                    <td data-title="smallWin ? 'P' : 'Prevu'" sortable="'di'" filter="{ '∆di': 'text' }">
                         <div ng-show="inter.di[0] != 1">
                             {{inter.di | relativeDate:smallWin}}
                         </div>

@@ -715,8 +715,9 @@ angular.module('edison').directive('historiqueSst', function(edisonAPI) {
      }
  });
 
- var Controller = function($timeout, TabContainer, FiltersFactory, user, ContextMenu, LxProgressService, edisonAPI, DataProvider, $routeParams, $location, $rootScope, $filter, config, ngTableParams) {
+ var Controller = function($timeout, TabContainer, FiltersFactory, user, ContextMenu, LxProgressService, edisonAPI, DataProvider, $routeParams, $location, $rootScope, $filter, config, ngTableParams, DateSelect) {
     var _this = this;
+    _this._ = _;
     LxProgressService.circular.show('#5fa2db', '#globalProgress');
     var currentFilter;
     var currentHash = $location.hash();
@@ -725,8 +726,8 @@ angular.module('edison').directive('historiqueSst', function(edisonAPI) {
     if ($routeParams.fltr) {
         currentFilter = filtersFactory.getFilterByUrl($routeParams.fltr)
     }
-
-
+    var dateSelect = new DateSelect(moment().add(-12).toDate());
+    _this.dateSelectList = dateSelect.list();
     _this.routeParamsFilter = $routeParams.fltr;
     if (_this.embedded) {
         _this.$watch('filter', function() {
@@ -890,7 +891,7 @@ angular.module('edison').directive('historiqueSst', function(edisonAPI) {
 
 
 
- angular.module('edison').directive('lineupIntervention', function($timeout, TabContainer, FiltersFactory, user, ContextMenu, LxProgressService, edisonAPI, DataProvider, $routeParams, $location, $rootScope, $filter, config, ngTableParams) {
+ angular.module('edison').directive('lineupIntervention', function($timeout, TabContainer, FiltersFactory, user, ContextMenu, LxProgressService, edisonAPI, DataProvider, $routeParams, $location, $rootScope, $filter, config, ngTableParams, DateSelect) {
     "use strict";
     var arg = arguments;
     return {
@@ -910,7 +911,7 @@ angular.module('edison').directive('historiqueSst', function(edisonAPI) {
     }
  });
 
- angular.module('edison').directive('lineupDevis', function($timeout, TabContainer, FiltersFactory, user, ContextMenu, LxProgressService, edisonAPI, DataProvider, $routeParams, $location, $rootScope, $filter, config, ngTableParams) {
+ angular.module('edison').directive('lineupDevis', function($timeout, TabContainer, FiltersFactory, user, ContextMenu, LxProgressService, edisonAPI, DataProvider, $routeParams, $location, $rootScope, $filter, config, ngTableParams, DateSelect) {
     "use strict";
     var arg = arguments;
     return {
@@ -927,7 +928,7 @@ angular.module('edison').directive('historiqueSst', function(edisonAPI) {
     }
  });
 
- angular.module('edison').directive('lineupArtisan', function($timeout, TabContainer, FiltersFactory, user, ContextMenu, LxProgressService, edisonAPI, DataProvider, $routeParams, $location, $rootScope, $filter, config, ngTableParams) {
+ angular.module('edison').directive('lineupArtisan', function($timeout, TabContainer, FiltersFactory, user, ContextMenu, LxProgressService, edisonAPI, DataProvider, $routeParams, $location, $rootScope, $filter, config, ngTableParams, DateSelect) {
     "use strict";
     var arg = arguments;
     return {
@@ -1328,16 +1329,28 @@ angular.module("edison").filter('tableFilter', ['config', function(config) {
         var x = e.split('/');
         if (x.length === 1) {
             var month = parseInt(x[0]);
+            var year = new Date().getFullYear();
             return {
-                start: new Date(2015, month - 1),
-                end: new Date(2015, month)
+                start: new Date(year, month - 1),
+                end: new Date(year, month)
             }
         } else if (x.length === 2)  {
+
+            if (x[1].length == 4) {
+                var month = parseInt(x[0]);
+                var year = parseInt(x[1]);
+                return {
+                    start: new Date(year, month - 1),
+                    end: new Date(year, month),
+                }
+            }
+
             var day = parseInt(x[0]);
             var month = parseInt(x[1]);
+            var year = new Date().getFullYear();
             return {
-                start: new Date(2015, month - 1, day),
-                end: new Date(2015, month - 1, day + 1)
+                start: new Date(year, month - 1, day),
+                end: new Date(year, month - 1, day + 1)
             }
         }
         return undefined;
@@ -1348,11 +1361,14 @@ angular.module("edison").filter('tableFilter', ['config', function(config) {
         var rtn = [];
         //console.time('fltr')
         inputs = _.mapValues(inputs, clean);
+        console.log(inputs)
         _.each(inputs, function(e, k) {
             if (k.charAt(0) === '∆') {
                 inputs[k] = parseDate(e);
             }
+            console.log('-->', inputs)
         })
+
         _.each(dataContainer, function(data) {
                 if (data.id) {
                     var psh = true;
@@ -2602,13 +2618,13 @@ angular.module('edison').factory('DataProvider',function($timeout, edisonAPI, so
 
 angular.module('edison').factory('DateSelect', function() {
     "use strict";
-    var DateSelect = function() {
+    var DateSelect = function(dateStart, dateEnd) {
 
         var _this = this;
         var d = new Date();
         _this.start = {
-            m: 9,
-            y: 2013
+            m: !dateStart ? 9 : dateStart.getMonth() + 1,
+            y: !dateStart ? 2013 : dateStart.getFullYear()
         }
         _this.current = {
             m: d.getMonth() + 1,

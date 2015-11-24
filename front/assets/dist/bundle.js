@@ -2172,6 +2172,7 @@ module.exports = {
 var DateSelect = function(dateStart) {
     var _ = require('lodash')
     var _this = this;
+    console.log('-->', dateStart)
     var d = new Date();
     _this.start = {
         m: !dateStart ? 9 : dateStart.getMonth() + 1,

@@ -1,12 +1,12 @@
 angular.module('edison').factory('DateSelect', function() {
     "use strict";
-    var DateSelect = function() {
+    var DateSelect = function(dateStart, dateEnd) {
 
         var _this = this;
         var d = new Date();
         _this.start = {
-            m: 9,
-            y: 2013
+            m: !dateStart ? 9 : dateStart.getMonth() + 1,
+            y: !dateStart ? 2013 : dateStart.getFullYear()
         }
         _this.current = {
             m: d.getMonth() + 1,
