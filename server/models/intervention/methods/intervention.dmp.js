@@ -25,8 +25,8 @@ module.exports = function(schema) {
                 }).then(function(resp) {
                     async.eachLimit(resp, 1, function(e, callback) {
                         console.log('okok', e.id)
-                        e.status = "ANN";
-                        e.causeAnnulation = "PERTE"
+                       // e.status = "ANN";
+                       // e.causeAnnulation = "PERTE"
                         e.save(callback);
                     }, function() {
                         resolve('lolok')
