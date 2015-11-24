@@ -28,7 +28,7 @@ try {
             disableSearch: true
         });
 
-        jobs.process('db', 5, function(job, done) {
+        jobs.process('db', function(job, done) {
             // console.log('==>', job.data.model, job.data.method)
             var terminated = false
             global.currenWorkerJob = job;
@@ -42,7 +42,7 @@ try {
             })
         });
 
-        jobs.process('test', function(job, done) {
+        jobs.process('test', 5, function(job, done) {
             console.log(job.id, 'LAUNCHED')
             setTimeout(function() {
                 console.log(job.id, 'DONE')
