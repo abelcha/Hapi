@@ -24,7 +24,10 @@ module.exports = function(schema) {
 						e: e,
 						datePlain: moment(e.date.intervention).format("H[h]mm")
 					})
-
+					sms.send({
+						to: e.sst.telephone.tel1,
+						text: text,
+					})
 				})
 				return resolve('ok')
 			})

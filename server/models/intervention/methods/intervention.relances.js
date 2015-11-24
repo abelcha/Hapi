@@ -32,9 +32,8 @@ module.exports = function(schema) {
                 text: 'Facture relances ' + relanceModel.target + _.pluck(resp, 'id')
             })*/
             async.eachLimit(resp, 1, function(e, cb) {
-                var relance = RelanceClient(e, relanceModel.target, 'noreply.edison@gmail.com')
+                var relance = RelanceClient(e, relanceModel.target, e.facture.email)
                 relance.send(cb)
-
             }, function() {
                 relanceRapport.push([relanceModel.target, _.pluck(resp, 'id').join(' - ')].join(' -> '))
                 callback(null)
