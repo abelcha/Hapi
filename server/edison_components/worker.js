@@ -22,7 +22,7 @@ module.exports = {
             job.on('complete', resolve).on('failed', reject).on('progress', function(progress, data) {
                 io.sockets.emit(options.model + "_" + options.name + '_' + options.method, progress);
             });
-            job.removeOnComplete(true).ttl(600000).save()
+            job.removeOnComplete(true).priority(options.priority || 'normal').ttl(600000).save()
         })
     }
 }
