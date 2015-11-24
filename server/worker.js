@@ -29,7 +29,7 @@ try {
         });
 
         jobs.process('db', function(job, done) {
-            // console.log('==>', job.data.model, job.data.method)
+            console.log('==>', job.data.model, job.data.method)
             var terminated = false
             global.currenWorkerJob = job;
             db.model(job.data.model)[job.data.method](job.data.req).then(function(result)  {
