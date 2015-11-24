@@ -44,7 +44,7 @@ module.exports = function(schema) {
                         if (e.telephone.tel3) {
                             rtn += "TEL;WORK;VOICE: " + e.telephone.tel3 + "\n";
                         }
-                        rtn += "EMAIL;PREF;INTERNET:" + e.email
+                        rtn += "EMAIL;PREF;INTERNET: " + e.email
 
                         rtn += "END:VCARD\n";
 
