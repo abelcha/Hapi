@@ -37,7 +37,7 @@ module.exports = function(core) {
                         };
 
                     core.model().update(conditions, update, options, function(a, b) {
-                        console.log(a, b)
+                        //console.log(a, b)
                         cb(a, b)
                     });
                     e = null;

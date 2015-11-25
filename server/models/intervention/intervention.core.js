@@ -222,6 +222,7 @@
                 e._status = e.status
             }
 
+            console.log(e.artisan);
             var rtn = {
                 t: e.login.ajout,
                 id: e.id,
@@ -233,6 +234,7 @@
                 n: e.client.civilite + ' ' + e.client.nom + ' ' + e.client.prenom,
                 a: e.artisan.nomSociete,
                 pa: e.prixFinal || e.prixAnnonce,
+                ss: e.artisan.subStatus,
                 da: d(e.date.ajout),
                 di: d(e.date.intervention),
                 rc: e.compta.reglement.recu ? 1 : 0,
