@@ -68,6 +68,7 @@ try {
 
 
         jobs.process('db', 5, function(job, done) {
+            __log(job.data._id, 'PROCESSED');
             console.log('[', 'DB', job.data.model, job.data.method, '][' + job.id + '] - [LAUNCH]')
             job.done = done;
             job.timer = getTimer.bind(job)()
@@ -89,6 +90,7 @@ try {
 
 
         jobs.process('db_id', 5, function(job, done) {
+            __log(job.data._id, 'PROCESSED');
             console.log('[', 'DB_ID', job.data.model, job.data.method, '][' + job.id + '] - [LAUNCH]')
             job.done = done;
             job.timer = getTimer.bind(job)()
@@ -101,6 +103,7 @@ try {
 
 
         jobs.process('test', 3, function(job, done) {
+            __log(job.data._id, 'PROCESSED');
             console.log('[', job.data.model, job.data.method, '][' + job.id + '] - [LAUNCH]')
             job.done = done;
             job.timer = getTimer.bind(job)()
