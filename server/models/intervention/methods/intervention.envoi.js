@@ -328,9 +328,7 @@ module.exports = function(schema) {
                             mail.send(mailOptions),
                             sendSMS(req.body.sms, communication.telephone),
                         ]
-                            console.log('ok1')
                         Promise.all(validationPromises, function() {
-                            console.log('ok2')
                         }).catch(__catch)
                         resolve('ok')
                     }, reject).catch(__catch)

@@ -1,6 +1,7 @@
 var Timer = module.exports = function() {
     var CronEmitter = require("cron-emitter").CronEmitter;
     var _ = require('lodash')
+    var moment = require('moment')
     var hour = function(h) {
         var moment = require('moment-timezone')
         return moment.tz('Europe/Paris').hour(h).format('[0] H [* * *]')
