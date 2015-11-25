@@ -24,8 +24,10 @@ module.exports = {
                 .create(options.name, options)
                 .removeOnComplete(true)
                 .priority(options.priority || 'normal')
-                .ttl(2)
-                .on('complete', resolve)
+                .on('complete', function(resp) {
+                    console.log(resp)
+                    resolve(resp)
+                })
                 .on('failed', reject)
                 .on('progress', function(progress, data) {
                     io.sockets.emit(options.model + "_" + options.name + '_' + options.method, progress);

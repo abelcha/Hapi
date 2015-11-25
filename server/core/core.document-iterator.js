@@ -36,7 +36,10 @@ module.exports = function(core) {
                             multi: true
                         };
 
-                    core.model().update(conditions, update, options, cb);
+                    core.model().update(conditions, update, options, function(a, b) {
+                        console.log(a, b)
+                        cb(a, b)
+                    });
                     e = null;
                     conditions = null;
                     updates = null
