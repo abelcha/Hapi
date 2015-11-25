@@ -64,31 +64,46 @@
                     <link fltr="i_litEnc" login="{{displayUser.login}}" icon="th-list" color="danger"></link>
                 </drop-down>
             </drop-down>
-            <drop-down title="Service Partenariat" icon="circle" open-default="displayUser.service === 'PARTENARIAT'">
-                <link ng-if="signalementStats" title="Signalements Manag." count="{{signalementStats[displayUser.service].level1}}" url="/listeSignalements?level=1&service={{displayUser.service}}&ok=false">
-                <link ng-if="signalementStats" title="Signalements Avert." count="{{signalementStats[displayUser.service].level2}}" url="/listeSignalements?level=2&service={{displayUser.service}}&ok=false">
-                <drop-down icon="truck" title="Artisans">
-                    <link fltr="a_all" url="/artisan/contact#informations" icon="th-list" model="artisan" no-counter="true" title="Repertoire"></link>
-                    <link fltr="a_all" icon="th-list" model="artisan" login='{{displayUser.login}}' title="Mes Artisans"></link>
-                    <link fltr="a_fact" icon="th-list" model="artisan" title="Demande facturier"></link>
-                    <link fltr="a_all" icon="th-list" model="artisan" title="Tous les Artisans" no-counter="true"></link>
-                    <li>
-                        <a href="/artisan"><i class="menu-icon fa fa-plus"></i><span class="mm-text">Nouvel Artisan</span></a>
-                    </li>
-                </drop-down>
-                <drop-down icon="phone" title="Démarchage">
-                    <link fltr="i_mar" icon="th-list" title="Market"></link>
-                    <link fltr="i_pan" icon="th-list" login="{{displayUser.login}}" hash-model="dm" title="Mon Panier"></link>
-                    <link fltr="i_davr" icon="th-list" title="Verifs" color="warning"></link>
-                    <link fltr="i_hist" icon="th-list" title="Historique" no-counter="true"></link>
-                </drop-down>
-                <drop-down icon="suitcase" title="Management">
-                    <link fltr="i_tut" icon="th-list" title="Inters. tutelle"></link>
-                    <link fltr="i_nw" icon="th-list" title="Inters. new"></link>
-                    <link fltr="i_chq" icon="th-list" login="{{displayUser.login}}" hash-model="dm" title="Relances cheques"></link>
-                    <link fltr="a_man" icon="th-list" model="artisan" login="{{displayUser.login}}" hash-model="mn" title="Mes SST"></link>
-                </drop-down>
-            </drop-down>
+<drop-down title="Service Partenariat" icon="circle" open-default="displayUser.service === 'PARTENARIAT'">
+
+    <drop-down icon="truck" title="Interventions">
+        <link fltr="i_mar" icon="th-list" title="Market"></link>
+        <link fltr="i_pan" icon="th-list" login="{{displayUser.login}}" hash-model="dm" title="Mon Panier"></link>
+    
+        
+
+    </drop-down>
+
+
+
+
+
+
+
+    <link ng-if="signalementStats" title="Signalements Manag." count="{{signalementStats[displayUser.service].level1}}" url="/listeSignalements?level=1&service={{displayUser.service}}&ok=false">
+    <link ng-if="signalementStats" title="Signalements Avert." count="{{signalementStats[displayUser.service].level2}}" url="/listeSignalements?level=2&service={{displayUser.service}}&ok=false">
+    <drop-down icon="truck" title="Artisans">
+        <link fltr="a_all" url="/artisan/contact#informations" icon="th-list" model="artisan" no-counter="true" title="Repertoire"></link>
+        <link fltr="a_all" icon="th-list" model="artisan" login='{{displayUser.login}}' title="Mes Artisans"></link>
+        <link fltr="a_fact" icon="th-list" model="artisan" title="Demande facturier"></link>
+        <link fltr="a_all" icon="th-list" model="artisan" title="Tous les Artisans" no-counter="true"></link>
+        <li>
+            <a href="/artisan"><i class="menu-icon fa fa-plus"></i><span class="mm-text">Nouvel Artisan</span></a>
+        </li>
+    </drop-down>
+    <drop-down icon="phone" title="Démarchage">
+        <link fltr="i_mar" icon="th-list" title="Market"></link>
+        <link fltr="i_pan" icon="th-list" login="{{displayUser.login}}" hash-model="dm" title="Mon Panier"></link>
+        <link fltr="i_davr" icon="th-list" title="Verifs" color="warning"></link>
+        <link fltr="i_hist" icon="th-list" title="Historique" no-counter="true"></link>
+    </drop-down>
+    <drop-down icon="suitcase" title="Management">
+        <link fltr="i_tut" icon="th-list" title="Inters. tutelle"></link>
+        <link fltr="i_nw" icon="th-list" title="Inters. new"></link>
+        <link fltr="i_chq" icon="th-list" login="{{displayUser.login}}" hash-model="dm" title="Relances cheques"></link>
+        <link fltr="a_man" icon="th-list" model="artisan" login="{{displayUser.login}}" hash-model="mn" title="Mes SST"></link>
+    </drop-down>
+</drop-down>
             <drop-down title="Service Comptabilité" icon="circle" open-default="displayUser.service === 'COMPTABILITE'">
                 <simple-link icon="credit-card" fltr="i_carl" title="Tableau des relances" url="/intervention/list/relanceClient"></simple-link>
                 <simple-link icon="credit-card" title="Liste Paiements Att." url="/compta/lpa"></simple-link>

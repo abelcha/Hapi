@@ -14,21 +14,22 @@ module.exports = function(core) {
         return new Promise(function(resolve, reject) {
             try {
                 var q = JSON.parse(req.query.q);
-            } catch(e) {
+            } catch (e) {
                 var q = {}
             }
-            core.model().find(q, {}).then(function(resp) {
+            core.model().find(q, {}).populate('sst').then(function(resp) {
                 var i = 0;
                 async.eachLimit(resp, 10, function(e, cb) {
                     if (i++ % 100 === 0) {
                         console.log(Math.round(i * 100 / resp.length) + '%')
                     }
+                    console.log(e && e.sst && e.sst.subStatus)
                     var conditions = {
                             _id: e.id
                         },
                         update = {
                             $set: {
-                                //      sms:"lol"
+                                'artisan.subStatus': (e && e.sst && e.sst.subStatus),
                                 cache: core.minify(e)
                             }
                         },
@@ -36,10 +37,7 @@ module.exports = function(core) {
                             multi: true
                         };
 
-                    core.model().update(conditions, update, options, function(a, b) {
-                        //console.log(a, b)
-                        cb(a, b)
-                    });
+                    core.model().update(conditions, update, options, cb);
                     e = null;
                     conditions = null;
                     updates = null

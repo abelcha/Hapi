@@ -222,7 +222,6 @@
                 e._status = e.status
             }
 
-            console.log(e.artisan);
             var rtn = {
                 t: e.login.ajout,
                 id: e.id,
@@ -241,6 +240,8 @@
                 ps: getPaiementArtisan(e),
                 ad: e.client.address.cp + ', ' + e.client.address.v,
                 dm: e.login.demarchage || undefined,
+                ev: e.login.envoi || undefined,
+                vf: e.login.verification || undefined
             };
             if (e.aDemarcher && !e.sst) {
                 rtn.d = e.enDemarchage ? 2 : 1;

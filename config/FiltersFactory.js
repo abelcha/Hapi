@@ -456,6 +456,36 @@ FiltersFactory.prototype.list = {
                 $size: 0
             }
         },
+    }, {
+        short_name: 'i_newapr',
+        long_name: 'News à envoyer',
+        url: 'newsaEnvoyer',
+        match: {
+            'status': 'APR',
+            'artisan.subStatus': 'NEW'
+        },
+    }, {
+        short_name: 'i_potapr',
+        long_name: 'Potentiel à env.',
+        url: 'potaEnvoyer',
+        match: {
+            'status': 'APR',
+            'artisan.subStatus': 'POT'
+        },
+    }, {
+        short_name: 'i_pavrf',
+        long_name: 'P.A Verifier',
+        url: 'newVerif',
+        group: '$login.envoi',
+        match: {
+            'login.envoi': {
+                $exists: true
+            },
+            status: 'ENC',
+            'date.intervention': {
+                $lt: new Date(Date.now() + ms.hours(1))
+            }
+        },
     }]
 }
 

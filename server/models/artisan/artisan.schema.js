@@ -20,6 +20,7 @@ module.exports = function(db) {
                 default: Date.now
             }
         },
+        transition: Boolean,
         newOs: Boolean,
         login: {
             management: String,
