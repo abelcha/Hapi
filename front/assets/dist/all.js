@@ -3610,7 +3610,7 @@ angular.module('edison')
             if (this.sst.subStatus === 'QUA') {
                 return false;
             }
-            if ((this.sst.subStatus === 'NEW' || this.sst.subStatus === 'TUT') && (!user.root ||  user.service !== 'PARTENARIAT')) {
+            if ((this.sst.subStatus === 'NEW' || this.sst.subStatus === 'TUT') && (!user.root &&  user.service !== 'PARTENARIAT')) {
                 return false;
             }
             return _.includes(["ANN", "APR", "ENC", undefined], this.status)
@@ -3623,7 +3623,7 @@ angular.module('edison')
             if (this.artisan.subStatus === 'QUA') {
                 return false;
             }
-            if ((this.sst.subStatus === 'NEW' || this.sst.subStatus === 'TUT') && (!user.root ||  user.service !== 'PARTENARIAT')) {
+            if ((this.sst.subStatus === 'NEW' || this.sst.subStatus === 'TUT') && (!user.root && user.service !== 'PARTENARIAT')) {
                 return false;
             }
             return this.status === 'ENC'
