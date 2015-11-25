@@ -8,8 +8,6 @@ module.exports = function(core) {
                 }).exec(cb)
             }
         }
-                console.log('herxxxe')
-
         try {
             if (!query) {
                 query = {}
@@ -47,7 +45,6 @@ module.exports = function(core) {
                 multi: true
             }).exec(function(err, resp) {
                 var async = require('async')
-                console.log('here')
                 async.parallel(updates, function(err, result) {
                     if (typeof cb === 'function')
                         cb(err, result)

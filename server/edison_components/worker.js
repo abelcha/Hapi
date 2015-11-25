@@ -19,19 +19,25 @@ module.exports = {
         })
     },
     createJob: function(options) {
+
+        var uuid = require('uuid');
+        var _ = require('lodash')
         return new Promise(function(resolve, reject) {
+            options._id = uuid.v4();
+            options.status = "LAUNCHED"
+            edison.event('WORKER_JOB')
+                .login(_.get(options, 'session.login'))
+                .data(options)
+                .save()
             var job = jobs
                 .create(options.name, options)
                 .removeOnComplete(true)
                 .priority(options.priority || 'normal')
-                .on('complete', function(resp) {
-                    console.log(resp)
-                    resolve(resp)
-                })
+                .on('complete', resolve)
                 .on('failed', reject)
                 .on('progress', function(progress, data) {
                     io.sockets.emit(options.model + "_" + options.name + '_' + options.method, progress);
                 }).save()
-        })
+        }).catch(__catch)
     }
 }

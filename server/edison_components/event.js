@@ -26,6 +26,7 @@ Event.prototype.type = function(type) {
     return this;
 }
 
+
 Event.prototype.id = function(id) {
     this.doc.id = parseInt(id);
     return this;

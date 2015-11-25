@@ -30,6 +30,19 @@ try {
         });
 
 
+        var __log = function(_id, status, time) {
+            db.model('event').update({
+                'data._id': _id
+            }, {
+                $set: {
+                    'data.status': status,
+                    'data.time': time
+                }
+            }).then(function(err, resp) {
+
+            })
+        }
+
         var end = function() {
             var _this = this;
             return function(resp) {
@@ -37,6 +50,7 @@ try {
                     totalTime = Date.now() - _this.timeStart;
                     console.log('[', 'DB', _this.data.model, _this.data.method, '][' + _this.id + '] - [OK] - <' + (totalTime / 1000) + '>')
                     clearTimeout(_this.timer);
+                    __log(_this.data._id, 'OK', totalTime);
                     _this.done(null, resp)
                 }
             }
@@ -54,7 +68,7 @@ try {
 
 
         jobs.process('db', 5, function(job, done) {
-            console.log('[', 'DB', job.data.model, job.data.method,'][' + job.id + '] - [LAUNCH]')
+            console.log('[', 'DB', job.data.model, job.data.method, '][' + job.id + '] - [LAUNCH]')
             job.done = done;
             job.timer = getTimer.bind(job)()
             db.model(job.data.model)[job.data.method](job.data.req)
