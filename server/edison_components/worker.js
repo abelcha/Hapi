@@ -32,7 +32,7 @@ module.exports = {
             var job = jobs
                 .create(options.name, options)
                 .removeOnComplete(true)
-                .attempts(options.attempts || 3)
+                .attempts(options.attempts || 1)
                 .priority(options.priority || 'normal')
                 .on('complete', resolve)
                 .on('failed', reject)

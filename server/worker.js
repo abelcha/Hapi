@@ -89,7 +89,7 @@ try {
             job.timer = getTimer.bind(job)()
             db.model(job.data.model)[job.data.method](job.data.req)
                 .then(end.bind(job)(), err.bind(job))
-                //.catch(__catch);
+                .catch(__catch);
 
         });
 
@@ -103,7 +103,7 @@ try {
             job.timer = getTimer.bind(job)()
             db.model(job.data.model)[job.data.method].fn(job.data.data, job.data.req)
                 .then(end.bind(job)(), err.bind(job)())
-                // .catch(__catch);
+                 .catch(__catch);
 
         });
 
