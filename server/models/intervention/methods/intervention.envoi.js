@@ -199,6 +199,39 @@ module.exports = function(schema) {
     }
 
 
+    schema.statics.send = function(req, res) {
+        //console.log('-->', req.query.id)
+
+        db.model('intervention').findById(req.query.id)
+            .populate('sst').then(function(resp) {
+                console.log('okok')
+                if (!resp)  {
+                    return console.log('noono')
+                }
+                var session = {
+                    login: resp.login.envoi,
+                    ligne: '0972403794',
+                    pseudo: 'Sylvain'
+                }
+                console.log('okok333')
+                try {
+                    var text = requireLocal('config/textTemplate').sms.intervention.envoi.bind(resp)(session, config)
+                    console.log(text);
+                } catch (e) {
+                    console.log('==-->', e)
+                }
+                console.log('here')
+                return schema.statics.envoi.fn(resp, {
+                    session: session,
+                    body: {
+                        id: req.query.id,
+                        sms: text
+                    }
+                })
+            })
+
+    }
+
     schema.statics.envoi = {
         unique: true,
         findBefore: true,
@@ -316,20 +349,19 @@ module.exports = function(schema) {
                         }
 
                         var mailOptions = {
-                            From: "intervention@edison-services.fr",
-                            ReplyTo: communication.mailReply,
-                            To: communication.mailDest,
-                            Subject: "Ordre de service d'intervention N°" + inter.id,
-                            HtmlBody: text,
-                            Attachments: files
-                        }
-//                        console.log(communication);
+                                From: "intervention@edison-services.fr",
+                                ReplyTo: communication.mailReply,
+                                To: communication.mailDest,
+                                Subject: "Ordre de service d'intervention N°" + inter.id,
+                                HtmlBody: text,
+                                Attachments: files
+                            }
+                            //                        console.log(communication);
                         var validationPromises = [
                             mail.send(mailOptions),
                             sendSMS(req.body.sms, communication.telephone),
                         ]
-                        Promise.all(validationPromises, function() {
-                        }).catch(__catch)
+                        Promise.all(validationPromises, function()  {}).catch(__catch)
                         resolve('ok')
                     }, reject).catch(__catch)
                 } catch (e) {

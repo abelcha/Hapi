@@ -5429,22 +5429,6 @@ var listeSignalements = function(TabContainer, edisonAPI, $rootScope, $scope, $l
 }
 angular.module('edison').controller('listeSignalements', listeSignalements);
 
-var SearchController = function(edisonAPI, TabContainer, $routeParams, $location, LxProgressService) {
-    var tab = TabContainer.getCurrentTab();
-    tab.setTitle('Search')
-    var _this = this;
-    LxProgressService.circular.show('#5fa2db', '#globalProgress');
-    edisonAPI.searchText($routeParams.query).success(function(resp) {
-        LxProgressService.circular.hide()
-        _this.data = resp
-    })
-    _this.openLink = function(link) {
-        $location.url(link)
-    }
-}
-
-angular.module('edison').controller('SearchController', SearchController);
-
 var StatsNewController = function(DateSelect, TabContainer, $routeParams, edisonAPI, $rootScope, $scope, $location, LxProgressService, socket) {
     "use strict";
     var _this = this;
@@ -5681,6 +5665,22 @@ var StatsController = function(DateSelect, TabContainer, $routeParams, edisonAPI
     $scope.selectedDate = _.find(dateSelect.list(), dateSelect.current)
 }
 angular.module('edison').controller('StatsController', StatsController);
+
+var SearchController = function(edisonAPI, TabContainer, $routeParams, $location, LxProgressService) {
+    var tab = TabContainer.getCurrentTab();
+    tab.setTitle('Search')
+    var _this = this;
+    LxProgressService.circular.show('#5fa2db', '#globalProgress');
+    edisonAPI.searchText($routeParams.query).success(function(resp) {
+        LxProgressService.circular.hide()
+        _this.data = resp
+    })
+    _this.openLink = function(link) {
+        $location.url(link)
+    }
+}
+
+angular.module('edison').controller('SearchController', SearchController);
 
 var CommissionsController = function(DateSelect, TabContainer, $routeParams, edisonAPI, $rootScope, $scope, $location, LxProgressService, socket) {
     "use strict";

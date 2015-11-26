@@ -26,7 +26,7 @@ module.exports = {
                     "Edison Services\n"
 
             },
-            demande: function(user, config, _moment) {
+            demande: function(user, config) {
                 _moment = (_moment || moment);
                 this.mmt = _moment(this.date.intervention);
                 this.format = this.mmt.isSame(_moment(), 'day') ? "[aujourd'hui à ]HH[h]mm" : "[le ]DD[/]MM[ à ]HH[h]mm"
@@ -45,6 +45,8 @@ module.exports = {
                     "Edison Services\n"
             },
             envoi: function(user) {
+                var mmt = require('moment')
+                var lodash = require('lodash')
                 var tels = this.client.telephone.tel1.match(/.{2}/g).join('.');
                 if (this.client.telephone.tel2) {
                     tels += (' - ' + this.client.telephone.tel2.match(/.{2}/g).join('.'));
@@ -54,7 +56,7 @@ module.exports = {
                 }
                 var options = {
                     precision: getPrecision(this.client.address),
-                    datePlain: moment(this.date.intervention).format("[le] DD[/]MM[ à ]HH[h]mm"),
+                    datePlain: mmt(this.date.intervention).format("[le] DD[/]MM[ à ]HH[h]mm"),
                     login: user.pseudo || "Arnaud",
                     ligne: (user.ligne ||  "0972423000").match(/.{2}/g).join('.'),
                     remarques: this.remarqueSms ? (' (' + this.remarque + ')') : '',
@@ -89,7 +91,7 @@ module.exports = {
                         "{{options.ligne}} \n" +
                         "Edison Services."
                 }
-                return _.template(sms)({
+                return lodash.template(sms)({
                     inter: this,
                     options: options
                 })
