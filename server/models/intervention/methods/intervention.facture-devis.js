@@ -141,10 +141,6 @@ module.exports = function(schema) {
                         req: _.pick(req, 'body', 'session')
                     }).then(resolve, reject)
                 }
-                var params = req.body;
-                if (!params.text ||  !params.date) {
-                    return reject("Invalid Request")
-                }
                 if (inter.reglementSurPlace) {
                     inter.facture = inter.client;
                 }
@@ -227,10 +223,6 @@ module.exports = function(schema) {
                 }
 
 
-                var params = req.body;
-                if (!params.text ||  !params.date) {
-                    return reject("Invalid Request")
-                }
                 try {
                     var pdf = getFacturePdfObj(inter, inter.date.intervention, req.body.acquitte, req.body.date);
 
@@ -242,8 +234,6 @@ module.exports = function(schema) {
                         mailDest: envProd ? inter.facture.email : (req.session.email ||  'contact@edison-services.fr'),
                         mailReply: (req.session.email ||  'comptabilite@edison-services.fr')
                     }
-                    console.log(communication);
-                    console.log(req.body.text.replaceAll("\n", '<br>'));
                     mail.send({
                         From: "comptabilite@edison-services.fr",
                         ReplyTo: communication.mailReply,
