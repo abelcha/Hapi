@@ -141,7 +141,6 @@ module.exports = function(schema) {
                         req: _.pick(req, 'body', 'session')
                     }).then(resolve, reject)
                 }
-                 return reject("nopnoopnop")
                 var params = req.body;
                 if (!params.text ||  !params.date) {
                     return reject("Invalid Request")
