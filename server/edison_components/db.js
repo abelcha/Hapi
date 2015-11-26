@@ -72,6 +72,11 @@ module.exports = function() {
                 }, (rA || 1), (rB || 0)]
             }
         },
+        sum:function(field) {
+            return {
+                $sum:field
+            }
+        },
         sumCond: function(field, value, rA, rB) {
             return {
                 $sum: {

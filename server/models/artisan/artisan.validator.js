@@ -28,6 +28,10 @@ module.exports = function(schema) {
         }
     }
 
+    var isBlocked = function() {
+
+    }
+
 
     schema.pre('save', function(next) {
         var _this = this;
@@ -36,7 +40,7 @@ module.exports = function(schema) {
 
             var async = require('async');
             async.parallel({
-                nbrInterventionSP: function(cb) {
+                inters_sp: function(cb) {
                     db.model("intervention").count({
                         'artisan.id': _this.id,
                         'reglementSurPlace': true,
@@ -45,7 +49,27 @@ module.exports = function(schema) {
                         }
                     }).count(cb)
                 },
-                 nbrIntervention: function(cb) {
+                inters_sp_regle: function(cb) {
+                    db.model("intervention").count({
+                        'artisan.id': _this.id,
+                        'reglementSurPlace': true,
+                        'compta.reglement.recu': true,
+                        'status': {
+                            $in: ['ENC', 'VRF']
+                        }
+                    }).count(cb)
+                },
+                inters_sp_non_regle: function(cb) {
+                    db.model("intervention").count({
+                        'artisan.id': _this.id,
+                        'reglementSurPlace': true,
+                        'compta.reglement.recu': true,
+                        'status': {
+                            $in: ['ENC', 'VRF']
+                        }
+                    }).count(cb)
+                },
+                inters_all: function(cb) {
                     db.model("intervention").count({
                         'artisan.id': _this.id,
                         'status': {
@@ -70,11 +94,6 @@ module.exports = function(schema) {
                     }).count(cb)
                 }
             }, function(err, result) {
-                /*console.log('CHECK-->', result.checkDoublons)
-                if (result.checkDoublons) {
-                    console.log('yaay here')
-                    return next({lol:"Le sous-traitant est deja dans la base"})
-                }*/
                 _this.quarantained = result.quarantained;
                 _this.nbrIntervention = result.nbrInterventionSP;
                 _this.status = result.nbrIntervention ? "ACT" : "POT";
@@ -92,7 +111,6 @@ module.exports = function(schema) {
     schema.post('save', function(doc) {
         if (!isWorker) {
             db.model('artisan').uniqueCacheReload(doc)
-                //    console.log(envProd, doc.date.dump, Date.now(), moment().subtract(5000).isAfter(doc.date.dump))
             if (envProd && (!doc.date.dump || moment().subtract(5000).isAfter(doc.date.dump))) {
                 var v1 = new V1(doc);
                 v1.send(function(resp) {

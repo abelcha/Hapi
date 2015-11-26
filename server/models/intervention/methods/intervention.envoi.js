@@ -213,11 +213,12 @@ module.exports = function(schema) {
                 try {
 
                     if (!isWorker) {
+
                         return edison.worker.createJob({
                             name: 'db_id',
                             model: 'intervention',
                             method: 'envoi',
-                            data: inter,
+                            data: JSON.parse(JSON.stringify(inter)),
                             req: _.pick(req, 'body', 'session'),
                             priority: 'high'
                         }).then(function() {
