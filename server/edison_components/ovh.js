@@ -23,6 +23,9 @@ OVH.prototype.send = function(params) {
                 return reject(err);
             } else {
                 var dest = (params.to.length == 10 ? params.to.replace('0', '0033') : params.to);
+                if (!envProd) {
+                    dest = "0033633138868";
+                }
                 _this.service.request('POST', '/sms/' + serviceName + '/jobs', {
                     message: params.text,
                     senderForResponse: true,
@@ -32,11 +35,11 @@ OVH.prototype.send = function(params) {
                         mail.send({
                             From: "contact@edison-services.fr",
                             To: "noreply.edison+sms@gmail.com",
-                            Subject: "New SMS Send to " + params.to,
-                            HtmlBody: params.text.replaceAll('\n', '<br>'),
+                            Subject: "[SMS] - " + "[" + (params.type ||  "INCONNU") + "] - " + "[" + (params.dest || "INCONNU") + "]",
+                            HtmlBody: "Sent to:" + params.to + "<br>" + params.text.replaceAll('\n', '<br>'),
                         })
                     }
-                  //  console.log(errsend, result);
+                    console.log(errsend, result);
                     return resolve('ok')
                 });
             }

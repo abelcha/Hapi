@@ -8,9 +8,15 @@ module.exports = {
     }, {
         title: "Demander un facturier",
         action: 'needFacturier',
-/*        hide: function(artisan, user) {
-            return (user.service === 'PARTENARIAT')
-        }*/
+        hide: function(artisan, user) {
+            this.style = null;
+            if (artisan.demandeFacturier && artisan.demandeFacturier.status === 'PENDING') {
+                this.style = {
+                    color: 'red'
+                }
+            }
+            return false
+        }
     }, {
         title: "Refuser le facturier",
         action: 'refuseFacturier',

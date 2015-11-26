@@ -25,10 +25,6 @@
     }
 
 
-    module.exports.postUpdate = function(prev, curr, session) {
-
-    }
-
 
     var sendArtisanChangedSms = function(curr, session) {
         setTimeout(function() {
@@ -45,19 +41,22 @@
                 var config = requireLocal('config/dataList');
                 var text = _.template(textTemplate.sms.intervention.demande.bind(curr)(session, config, moment))(curr)
                 sms.send({
-                    link: curr.sst.id,
-                    origin: curr.id,
+                    type: "DEMANDE",
+                    dest: inter.sst.telephone.nomSociete,
                     text: text,
-                    to: envProd ? curr.sst.telephone.tel1 : '0633138868',
+                    to: curr.sst.telephone.tel1
                 })
             })
         }, 30000)
     }
 
+    var sstDemandable = function(sst) {
+        return sst.subStatus !== 'TUT' && sst.subStatus !== 'QUA' && !sst.blocked
+    }
 
     module.exports.postSave = function(prev, curr, session) {
         try {
-            if (envProd && curr.artisan && curr.artisan.id && curr.artisan.subStatus !== 'TUT') {
+            if (envProd && curr.artisan && curr.artisan.id && sstDemandable(curr.artisan)) {
                 sendArtisanChangedSms(curr, session);
             }
 
@@ -91,73 +90,87 @@
 
     }
 
-    module.exports.preUpdate = function(prev, curr, session) {
-        if (curr.artisan && curr.artisan.id && curr.artisan.id !== prev.artisan.id) {
-            prev.status = 'APR';
+    module.exports.preUpdate = function(_old, _new, session, callback) {
+        if (_new.artisan && _new.artisan.id && _new.artisan.id !== _old.artisan.id) {
+            _old.status = 'APR';
         }
-        if (curr.compta.reglement.recu && !prev.compta.reglement.recu) {
-            curr.compta.reglement.historique.push({
+        if (_new.compta.reglement.recu && !_old.compta.reglement.recu) {
+            _new.compta.reglement.historique.push({
                 login: session.login,
-                montant: curr.compta.reglement.avoir.montant,
+                montant: _new.compta.reglement.avoir.montant,
             })
-            if (!curr.compta.reglement.date) {
-                curr.compta.reglement.date = Date.now()
-                curr.compta.reglement.login = session.login
+            if (!_new.compta.reglement.date) {
+                _new.compta.reglement.date = Date.now()
+                _new.compta.reglement.login = session.login
+            }
+
+
+            if (_new.sst.subStatus === "TUT") {
+                db.model('signalement').signalArtisan({
+                    inter_id: _new.id,
+                    sst_id: _new.sst.id,
+                    login: session.login,
+                    sst_nom: _new.sst.nomSociete,
+                    level: 1,
+                    nom: "INTERVENTION SOUS-TUTELLE RÉGLÉE",
+                    subType: "INTERVENTION",
+                    service: "PARTENARIAT",
+                    level: "1",
+                    _type: "INTERVENTION_SOUS_TUTELLE_RÉGLÉE",
+                })
             }
 
         }
-        if (curr.compta.paiement.ready && !prev.compta.paiement.ready) {
-            curr.compta.paiement.login = session.login
-            curr.compta.paiement.date = Date.now()
+        if (_new.compta.paiement.ready && !_old.compta.paiement.ready) {
+            _new.compta.paiement.login = session.login
+            _new.compta.paiement.date = Date.now()
         }
 
-        if (curr.sav && curr.sav.status === 'ENC' && prev.sav.status !== 'ENC') {
+        if (_new.sav && _new.sav.status === 'ENC' && _old.sav.status !== 'ENC') {
 
             edison.event('INTER_SAV')
                 .login(session.login)
-                .id(curr.id)
-                .broadcast(curr.login.ajout)
+                .id(_new.id)
+                .broadcast(_new.login.ajout)
                 .color('blue')
-                .message(_.template("Un S.A.V à été ouvert sur votre intervention {{id}} chez {{client.civilite}} {{client.nom}} ({{client.address.cp}}) ")(curr))
+                .message(_.template("Un S.A.V à été ouvert sur votre intervention {{id}} chez {{client.civilite}} {{client.nom}} ({{client.address.cp}}) ")(_new))
                 .send()
                 .save()
 
         }
+        if (_new.litige && _new.litige.open === true && _old.litige.open === void(0)) {
 
-        if (curr.litige && curr.litige.open === true && prev.litige.open === void(0)) {
-
-            curr.litige.opened = new Date();
-            curr.litige.openedBy = session.login;
+            _new.litige.opened = new Date();
+            _new.litige.openedBy = session.login;
 
             edison.event('INTER_LITIGE')
                 .login(session.login)
-                .id(curr.id)
-                .broadcast(curr.login.ajout)
+                .id(_new.id)
+                .broadcast(_new.login.ajout)
                 .color('red')
-                .message(_.template("Un litige à été ouvert par {{litige.openedBy}} sur votre intervention {{id}} chez {{client.civilite}} {{client.nom}} ({{client.address.cp}}) ")(curr))
+                .message(_.template("Un litige à été ouvert par {{litige.openedBy}} sur votre intervention {{id}} chez {{client.civilite}} {{client.nom}} ({{client.address.cp}}) ")(_new))
                 .send()
                 .save()
 
         }
-        if (curr.litige && curr.litige.open === false && prev.litige.open === true) {
-            curr.litige.closed = new Date();
-            curr.litige.closedBy = session.login;
+        if (_new.litige && _new.litige.open === false && _old.litige.open === true) {
+            _new.litige.closed = new Date();
+            _new.litige.closedBy = session.login;
         }
 
-        if (curr.artisan && curr.artisan.id && curr.artisan.id !== prev.artisan.id && curr.artisan.subStatus !== 'TUT') {
-            curr.status = 'APR';
+        if (_new.artisan && _new.artisan.id && _new.artisan.id !== _old.artisan.id && sstDemandable(_new.artisan)) {
+            _new.status = 'APR';
             db.model('artisan').findOne({
-                id: curr.artisan.id
+                id: _new.artisan.id
             }).then(function(sst) {
                 if (!sst) {
                     return false;
                 }
-                curr.sst = JSON.parse(JSON.stringify(sst));
-                sendArtisanChangedSms(curr, session);
+                _new.sst = JSON.parse(JSON.stringify(sst));
+                sendArtisanChangedSms(_new, session);
             })
         }
-
-
+        callback(null, _new)
 
     }
 

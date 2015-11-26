@@ -145,7 +145,7 @@
                         <pre ng-if="displayHistorique"><h4>{{data.compta.paiement.historique|json}}</h4></pre>
                     </div>
                     <div class="col-sm-8">
-                        <table cellspacing="0" cellpadding="8" class="simulator">
+                        <table cellspacing="0" cellpadding="8" class="simulator" ng-if="data.compta.paiement.base">
                             <tr>
                                 <th class="bg-green"> MONTANT H.T VENTE </th>
                                 <th class="bg-green"> + {{format(compta.base)}} € </th>

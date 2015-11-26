@@ -26,7 +26,7 @@ module.exports = {
                     "Edison Services\n"
 
             },
-            demande: function(user, config) {
+            demande: function(user, config, _moment) {
                 _moment = (_moment || moment);
                 this.mmt = _moment(this.date.intervention);
                 this.format = this.mmt.isSame(_moment(), 'day') ? "[aujourd'hui à ]HH[h]mm" : "[le ]DD[/]MM[ à ]HH[h]mm"

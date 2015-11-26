@@ -19,6 +19,7 @@ module.exports = function(schema) {
             id: d.id,
             nomSociete: d.nomSociete,
             distance: doc.dis.round(1),
+            blocked:d.blocked,
             categories: d.categories,
             ajout: d.date.ajout,
             status: d.status,

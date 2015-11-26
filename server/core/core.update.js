@@ -14,37 +14,51 @@ module.exports = function(core) {
 
     return function(id, req, res) {
         return new Promise(function(resolve, reject) {
-            var data = req.body
+            var _new = req.body
             core.model().findOne({
-                id: data.id
-            }).then(function(doc) {
-                if (!doc)
+                id: _new.id
+            }).then(function(_old) {
+                if (!_old)
                     return reject("ERROR => unkown " + core.name + " '" + id + "'");
 
-                if (_.isFunction(core.preUpdate))
-                    core.preUpdate(doc, data, req.session);
+                var preUpdate = core.preUpdate || function(_old, _new, session, callback) {
+                    return callback(null, _new);
+                }
+                try {
+                    preUpdate(_old, _new, req.session, function(err, nwData) {
+                        if (err) {
+                            return reject(err);
+                        }
+                        for (k in nwData) {
+                            if (!(_.contains(['id', '_id', '__v'], k))) {
+                                _old[k] = nwData[k];
+                            }
+                        }
 
-                for (k in data) {
-                    if (!(_.contains(['id', '_id', '__v'], k))) {
-                        doc[k] = data[k];
-                    }
+                        _old.save(function(err, resp) {
+                            if (err) {
+                                return mongoError(reject)(err);
+                            }
+                            edison.event('UPDATE_' + core.NAME).id(id).login(req.session.login).data({
+                                old: nwData,
+                                nw: _old
+                            })
+                            if (_.isFunction(core.postUpdate)) {
+                                core.postUpdate(resp, nwData, req.session);
+                            }
+                            resolve(resp);
+                        });
+
+                    })
+                } catch (e) {
+                    __catch(e)
                 }
 
-                doc.save().then(function(resp) {
-                    try {
-                        if (_.isFunction(core.postUpdate)) {
-                            core.postUpdate(resp, data, req.session);
-                        }
-                        edison.event('UPDATE_INTERVENTION').id(id).login(req.session.login).data({
-                            old: data,
-                            nw: doc
-                        }).save()
-                        return resolve(resp);
-                    } catch (e) {
-                        console.log(e.stack)
-                    }
-                }, mongoError(reject))
-            }, mongoError(reject))
+            })
+
+
+
+
         })
     }
 }

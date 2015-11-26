@@ -67,9 +67,10 @@
 
 
 
-    module.exports.preUpdate = function(prev, curr, session) {
+    module.exports.preUpdate = function(prev, curr, session, callback) {
         prev.historique = [];
         curr.historique = [];
+        return callback(null, curr);
     }
 
 

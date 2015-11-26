@@ -313,6 +313,13 @@ FiltersFactory.prototype.list = {
         match: {
             status: 'ACT'
         },
+    },{
+        short_name: 'a_tut',
+        long_name: 'sous-tutelle',
+        url: 'artSousTutelle',
+        match: {
+            subStatus: 'TUT'
+        },
     }],
     devis: [{
         short_name: 'd_all',
@@ -623,8 +630,9 @@ FiltersFactory.prototype.list = {
         url: 'tutelle',
         match: {
             'artisan.subStatus': 'TUT',
+            'compta.reglement.recu': false,
             status: {
-                $in: ['APR', 'ENC']
+                $in: ['APR', 'ENC', 'VRF']
             }
         },
     }, {
@@ -665,16 +673,28 @@ FiltersFactory.prototype.list = {
         },
     }, {
         short_name: 'i_pavrf',
-        long_name: 'P.A Verifier',
+        long_name: 'P.A Verifs',
         url: 'newVerif',
-        group: '$login.envoi',
         match: {
             'login.envoi': {
                 $exists: true
             },
+            'artisan.subStatus': 'NEW',
             status: 'ENC',
             'date.intervention': {
                 $lt: new Date(Date.now() + ms.hours(1))
+            }
+        },
+    }, {
+        short_name: 'i_paenv',
+        long_name: 'P.A Envoyés',
+        url: 'paEnv',
+        match: {
+            'login.envoi': {
+                $exists: true
+            },
+            status: {
+                $in: ['ENC', 'VRF']
             }
         },
     }]
@@ -1348,9 +1368,15 @@ module.exports = {
     }, {
         title: "Demander un facturier",
         action: 'needFacturier',
-/*        hide: function(artisan, user) {
-            return (user.service === 'PARTENARIAT')
-        }*/
+        hide: function(artisan, user) {
+            this.style = null;
+            if (artisan.demandeFacturier && artisan.demandeFacturier.status === 'PENDING') {
+                this.style = {
+                    color: 'red'
+                }
+            }
+            return false
+        }
     }, {
         title: "Refuser le facturier",
         action: 'refuseFacturier',
@@ -2692,7 +2718,7 @@ module.exports = {
                     "Edison Services\n"
 
             },
-            demande: function(user, config) {
+            demande: function(user, config, _moment) {
                 _moment = (_moment || moment);
                 this.mmt = _moment(this.date.intervention);
                 this.format = this.mmt.isSame(_moment(), 'day') ? "[aujourd'hui à ]HH[h]mm" : "[le ]DD[/]MM[ à ]HH[h]mm"

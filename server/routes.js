@@ -23,7 +23,9 @@ module.exports = function(app) {
 
     app.post('/api/sms/send', function(req, res) {
         sms.send({
-            to: envProd ? req.body.to : '0633138868',
+            type: "CUSTOM",
+            dest: req.body.dest,
+            to: req.body.to,
             text: req.body.text,
         })
         res.send('ok')

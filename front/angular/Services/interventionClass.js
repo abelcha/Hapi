@@ -181,8 +181,7 @@ angular.module('edison')
                     return cb(err)
                 }
                 edisonAPI.sms.send({
-                    link: _this.sst.id,
-                    origin: _this.id || _this.tmpID,
+                    dest: _this.sst.nomSociete,
                     text: text,
                     to: _this.sst.telephone.tel1,
                 }).success(function(resp) {
@@ -445,17 +444,17 @@ angular.module('edison')
                 number: 0
             }
         }
-        
-        
+
+
         Intervention.prototype.isEnvoyable = function() {
             if (!this.sst) {
                 return false;
             }
-            if (this.sst.subStatus === 'QUA') {
+            if (this.sst.subStatus === 'QUA' ||  this.sst.blocked) {
                 return false;
             }
-            if ((this.sst.subStatus === 'NEW' || this.sst.subStatus === 'TUT') && (!user.root &&  user.service !== 'PARTENARIAT')) {
-                return false;
+            if (this.sst.subStatus === 'NEW' || this.sst.subStatus === 'TUT') {
+                return user.root || user.service === 'PARTENARIAT'
             }
             return _.includes(["ANN", "APR", "ENC", undefined], this.status)
         }
@@ -464,11 +463,11 @@ angular.module('edison')
             if (!this.artisan) {
                 return false;
             }
-            if (this.artisan.subStatus === 'QUA') {
+            if (this.sst.subStatus === 'QUA' ||  this.sst.blocked) {
                 return false;
             }
-            if ((this.sst.subStatus === 'NEW' || this.sst.subStatus === 'TUT') && (!user.root && user.service !== 'PARTENARIAT')) {
-                return false;
+            if (this.sst.subStatus === 'NEW' || this.sst.subStatus === 'TUT') {
+                return user.root || user.service === 'PARTENARIAT'
             }
             return this.status === 'ENC'
         }

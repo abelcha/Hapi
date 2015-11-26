@@ -8,9 +8,11 @@ module.exports = function(schema) {
     var fs = require('fs')
     var PDFMerge = require('pdf-merge');
     var async = require('async');
-    var sendSMS = function(text, to) {
+    var sendSMS = function(text, to, dest) {
         //console.log(to, text);
         return sms.send({
+            type: "OS",
+            dest: dest,
             to: to,
             text: text,
         })
@@ -343,7 +345,8 @@ module.exports = function(schema) {
                         text = _.template(text)(inter).replaceAll('\n', '<br>')
 
                         var communication = {
-                            telephone: envProd ? inter.sst.telephone.tel1 : "0633138868",
+                            telephone: inter.sst.telephone.tel1,
+                            dest: inter.sst.nomSociete,
                             mailDest: envProd ? inter.sst.email : (req.session.email ||  'contact@edison-services.fr'),
                             mailReply: (req.session.email ||  'contact@edison-services.fr')
                         }
@@ -359,7 +362,7 @@ module.exports = function(schema) {
                             //                        console.log(communication);
                         var validationPromises = [
                             mail.send(mailOptions),
-                            sendSMS(req.body.sms, communication.telephone),
+                            sendSMS(req.body.sms, communication.telephone, communication.dest),
                         ]
                         Promise.all(validationPromises, function()  {}).catch(__catch)
                         resolve('ok')

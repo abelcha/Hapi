@@ -27,10 +27,9 @@
 
 
                 var preSave = core.preSave || function(data, session, callback) {
-                    return callback(null, doc);
+                    return callback(null, data);
                 }
-
-                preSave(data, session, function(err, resp) {
+                preSave(data, req.session, function(err, resp) {
                     if (err) {
                         return reject(err);
                     }

@@ -1,9 +1,9 @@
 module.exports = function(schema) {
-	schema.statics.add = function(req, res) {
-		console.log('ADD')
+
+	schema.statics.__add = function(signalement, login) {
 		return new Promise(function(resolve, reject)  {
-			var params = db.model('signalement')(req.body);
-			params.login.ajout = req.session.login;
+			var params = db.model('signalement')(signalement);
+			params.login.ajout = login;
 			params.date.ajout = new Date;
 			params._id = null;
 			params.save(function(err, resp) {
@@ -14,6 +14,14 @@ module.exports = function(schema) {
 				})
 			})
 		})
+	}
+
+	schema.statics.signalArtisan = function(signalement) {
+		return this.__add(signalement, signalement.login);
+	}
+
+	schema.statics.add = function(req, res) {
+		return this.__add(req.body, req.session.login);
 	}
 	schema.statics.lol = function(req, res) {
 		var x = [{

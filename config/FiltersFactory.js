@@ -122,6 +122,13 @@ FiltersFactory.prototype.list = {
         match: {
             status: 'ACT'
         },
+    },{
+        short_name: 'a_tut',
+        long_name: 'sous-tutelle',
+        url: 'artSousTutelle',
+        match: {
+            subStatus: 'TUT'
+        },
     }],
     devis: [{
         short_name: 'd_all',
@@ -432,8 +439,9 @@ FiltersFactory.prototype.list = {
         url: 'tutelle',
         match: {
             'artisan.subStatus': 'TUT',
+            'compta.reglement.recu': false,
             status: {
-                $in: ['APR', 'ENC']
+                $in: ['APR', 'ENC', 'VRF']
             }
         },
     }, {
@@ -474,16 +482,28 @@ FiltersFactory.prototype.list = {
         },
     }, {
         short_name: 'i_pavrf',
-        long_name: 'P.A Verifier',
+        long_name: 'P.A Verifs',
         url: 'newVerif',
-        group: '$login.envoi',
         match: {
             'login.envoi': {
                 $exists: true
             },
+            'artisan.subStatus': 'NEW',
             status: 'ENC',
             'date.intervention': {
                 $lt: new Date(Date.now() + ms.hours(1))
+            }
+        },
+    }, {
+        short_name: 'i_paenv',
+        long_name: 'P.A Envoyés',
+        url: 'paEnv',
+        match: {
+            'login.envoi': {
+                $exists: true
+            },
+            status: {
+                $in: ['ENC', 'VRF']
             }
         },
     }]

@@ -139,7 +139,6 @@ angular.module('edison')
         Artisan.prototype.envoiContrat = function(options, cb) {
             var _this = this;
             options = options || {};
-            console.log('-->', options, cb)
             dialog.sendContrat({
                 data: _this,
                 signe: options.signe,

@@ -108,22 +108,13 @@ module.exports = function(schema) {
                         ok: false
                     }).count(cb)
                 },
-                checkDoublons: function(cb) {
-                    db.model('artisan').count({
-                        $or: [{
-                            'telephone.tel1': _this.telephone.tel1
-                        }, {
-                            'email': _this.email
-                        }]
-                    }).count(cb)
-                }
             }, function(err, result) {
                 _this.quarantained = result.quarantained;
                 _this.status = result.inters_all ? "ACT" : "POT";
                 _this.subStatus = getSubStatus(_this, result);
                 _this.blocked = isBlocked(_this, result);
-                if (_this.subStatus || _this.blocked)
-                    console.log(_this.id, _this.subStatus, _this.blocked)
+                //if (_this.subStatus || _this.blocked)
+                //  console.log(_this.id, _this.subStatus, _this.blocked)
                 _this.cache = db.model('artisan').Core.minify(_this);
                 next();
             })

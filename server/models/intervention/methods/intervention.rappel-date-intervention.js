@@ -25,6 +25,8 @@ module.exports = function(schema) {
 						datePlain: moment(e.date.intervention).format("H[h]mm")
 					})
 					sms.send({
+						type: "RAPPEL",
+						dest: e.sst.telephone.nomSociete,
 						to: e.sst.telephone.tel1,
 						text: text,
 					})
