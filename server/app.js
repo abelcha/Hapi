@@ -199,6 +199,30 @@ app.get('/api/job/replay', function(req, res) {
 
 })
 
+app.post('/api/bug/declare', function(req, res) {
+    var textTemplate = requireLocal('config/textTemplate');
+    var options = {};
+    options.what = req.body.what || ""
+    options.on = req.body.on || ""
+    options.location = req.body.location || ""
+    options.comment = req.body.comment || ""
+    options.event = req.body.event || ""
+    options.on = req.body.on || ""
+    options.login = req.session.login
+    var text = _.template(textTemplate.mail.bug.declare())(options);
+    mail.send({
+        noBCC: true,
+        From: "intervention@edison-services.fr",
+        ReplyTo: "intervention@edison-services.fr",
+        To: 'abel.chalier@gmail.com',
+        Subject: "[BUG REQUEST] - " + req.session.login,
+        HtmlBody: text,
+    });
+    res.send('ok')
+
+})
+
+
 
 require('./routes.js')(app);
 

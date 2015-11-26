@@ -2,6 +2,24 @@ angular.module('edison').factory('dialog', function(openPost, $mdDialog, edisonA
     "use strict";
 
     return {
+
+        declareBug: function(tabs, cb) {
+            $mdDialog.show({
+                controller: function($scope, $mdDialog, config) {
+                    $scope.resp = {
+                        location: tabs.getCurrentTab().path,
+                    }
+                    $scope.answer = function(cancel) {
+                        $mdDialog.hide();
+                        if (!cancel) {
+                            return cb(null, $scope.resp)
+                        }
+                    }
+                },
+                templateUrl: '/DialogTemplates/declare-bug.html',
+            });
+        },
+
         verification: function(inter, cb) {
             $mdDialog.show({
                 controller: function DialogController($scope, $mdDialog, config) {

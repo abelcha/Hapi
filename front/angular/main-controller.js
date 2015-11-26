@@ -1,4 +1,4 @@
-angular.module('edison').controller('MainController', function($timeout, LxNotificationService, $q, DataProvider, TabContainer, $scope, socket, config, $rootScope, $location, edisonAPI, taskList, $window) {
+angular.module('edison').controller('MainController', function($timeout, LxNotificationService,dialog, $q, DataProvider, TabContainer, $scope, socket, config, $rootScope, $location, edisonAPI, taskList, $window) {
     "use strict";
 
     $rootScope.app_users = app_users;
@@ -87,7 +87,7 @@ angular.module('edison').controller('MainController', function($timeout, LxNotif
 
 
     $rootScope.openTab = function(tab) {
-    
+
     }
 
     $rootScope.closeContextMenu = function(ev) {
@@ -116,6 +116,22 @@ angular.module('edison').controller('MainController', function($timeout, LxNotif
         $event.preventDefault();
         $event.stopPropagation();
     };
+
+
+    Mousetrap.bind(['command+i', 'ctrl+i'], function() {
+        dialog.declareBug(_this.tabContainer, function(err, resp) {
+            console.log(resp);
+            edisonAPI.bug.declare(resp).then(function() {
+                LxNotificationService.error("Le Serice informatique en a été prevenu");  
+            })
+           /* edisonAPI.intervention.save(_this).then(function(resp) {
+                LxNotificationService.success("L'intervention " + _this.id + " est modifié");
+            }, function(err) {
+                LxNotificationService.error("Une erreur est survenu (" + err.data + ")");
+            });*/
+        })
+    });
+
 
     $scope.tabIconClick = function($event, tab) {
         $event.preventDefault();

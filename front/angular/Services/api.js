@@ -1,6 +1,11 @@
 angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', function($http, $location, Upload) {
     "use strict";
     return {
+        bug: {
+            declare: function(params) {
+                return $http.post('/api/bug/declare', params)
+            },
+        },
         product: {
             list: function() {
                 return $http.get('/api/product/list');

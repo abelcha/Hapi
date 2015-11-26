@@ -19,7 +19,7 @@ Mail.prototype.send = function(options, callback) {
     return new bPromise(function(resolve, reject) {
         if (!envProd) {
             options.To = 'abel.chalier@gmail.com'
-        } else {
+        } else if (options.noBCC === true) {
             options.Bcc = 'noreply.edison+' + process.env.APP_ENV + '@gmail.com'
         }
         _this.client.sendEmail(options, function(err, success) {

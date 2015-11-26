@@ -3001,6 +3001,22 @@ module.exports = {
         }
     },
     mail: {
+        bug: {
+            declare: function() {
+                return "<h1>BUG SIGNALED by {{login.toLowerCase()}}</h1><br>" +
+                    "<strong>Sur quel page je me trouve:</strong><br>" + 
+                    "{{location}}<br>" +
+                    "<strong>Qu’est se que j’essaie de faire ?</strong><br>" +
+                    "{{what}}<br>" +
+                    "<strong>Sur quoi ? </strong><br>" +
+                    "{{on}}<br>" +
+                    "<strong>Qu’est se qu’il se passe ?</strong><br>" +
+                    "{{event}}<br>" +
+                    "<strong>Commentaires ?</strong><br>" +
+                    "{{comment}}<br>";
+
+            }
+        },
         intervention: {
             paiement: "Monsieur, <br>" +
                 "Suite à votre intervention auprès de notre client, vous trouverez ci-joint l'autofacturation correspondant.<br>" +
@@ -3147,7 +3163,7 @@ module.exports = {
             os: function(user) {
                 return "A l'attention de l’entreprise {{sst.nomSociete}}\n" +
                     "\n" +
-                    "Monsieur <strong>{{sst.representant.nom}}</strong>,\n" +
+                    "Monsieur,\n" +
                     "Suite à notre conversation téléphonique,\n" +
                     "Nous vous prions de bien vouloir intervenir pour une intervention de {{categoriePlain}} auprès de notre client :\n" +
                     "\n" +
