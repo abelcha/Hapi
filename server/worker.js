@@ -30,13 +30,14 @@ try {
         });
 
 
-        var __log = function(_id, status, time) {
+        var __log = function(_id, status, time, err) {
             db.model('event').update({
                 'data._id': _id
             }, {
                 $set: {
                     'data.status': status,
-                    'data.time': time
+                    'data.time': time,
+                    'data.error': err
                 }
             }).then(function(err, resp) {
 
@@ -52,6 +53,20 @@ try {
                     clearTimeout(_this.timer);
                     __log(_this.data._id, 'OK', totalTime);
                     _this.done(null, resp)
+                }
+            }
+        }
+
+
+        var err = function() {
+            var _this = this;
+            return function(err) {
+                if (_this.done) {
+                    totalTime = Date.now() - _this.timeStart;
+                    console.log('[', 'DB', _this.data.model, _this.data.method, '][' + _this.id + '] - [FAILED] - <' + (totalTime / 1000) + '>')
+                    clearTimeout(_this.timer);
+                    __log(_this.data._id, 'FAILED', totalTime, err);
+                    _this.done(err);
                 }
             }
         }
@@ -73,10 +88,26 @@ try {
             job.done = done;
             job.timer = getTimer.bind(job)()
             db.model(job.data.model)[job.data.method](job.data.req)
-                .then(end.bind(job)(), done)
-                .catch(__catch);
+                .then(end.bind(job)(), err.bind(job))
+                //.catch(__catch);
 
         });
+
+
+
+
+        jobs.process('db_id', 5, function(job, done) {
+            __log(job.data._id, 'PROCESSED');
+            console.log('[', 'DB_ID', job.data.model, job.data.method, '][' + job.id + '] - [LAUNCH]')
+            job.done = done;
+            job.timer = getTimer.bind(job)()
+            db.model(job.data.model)[job.data.method].fn(job.data.data, job.data.req)
+                .then(end.bind(job)(), err.bind(job)())
+                // .catch(__catch);
+
+        });
+
+
 
 
         var fn = function(options) {
@@ -88,27 +119,13 @@ try {
         }
 
 
-
-        jobs.process('db_id', 5, function(job, done) {
-            __log(job.data._id, 'PROCESSED');
-            console.log('[', 'DB_ID', job.data.model, job.data.method, '][' + job.id + '] - [LAUNCH]')
-            job.done = done;
-            job.timer = getTimer.bind(job)()
-            db.model(job.data.model)[job.data.method].fn(job.data.data, job.data.req)
-                .then(end.bind(job)(), done)
-                .catch(__catch);
-
-        });
-
-
-
         jobs.process('test', 3, function(job, done) {
             __log(job.data._id, 'PROCESSED');
             console.log('[', job.data.model, job.data.method, '][' + job.id + '] - [LAUNCH]')
             job.done = done;
             job.timer = getTimer.bind(job)()
             fn(job.data).then(end.bind(job)(), done)
-                .catch(__catch);
+                //  .catch(__catch);
         })
 
     })

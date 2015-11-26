@@ -92,21 +92,6 @@ app.use(require('connect-redis-sessions')({
 }))
 
 
-app.get('/api/job', function(req, res) {
-    edison.worker.createJob({
-        ttl: req.query.ttl,
-        time: req.query.time,
-        priority:req.query.priority,
-        model: "test",
-        method: req.query.name || "test",
-        name: 'test',
-    }).then(function() {
-        res.send('OK')
-    }, function() {
-        res.send('ERR')
-    })
-})
-
 
 app.get('/logout', function(req, res) {
     if (req.session && req.session.id)  {
@@ -184,7 +169,49 @@ app.use(function(req, res, next) {
 
 
 
+app.get('/api/job/test', function(req, res) {
+    edison.worker.createJob({
+        ttl: req.query.ttl,
+        time: req.query.time,
+        priority: req.query.priority,
+        model: "test",
+        method: req.query.name ||  "test",
+        name: 'test',
+    }).then(function() {
+        res.send('OK')
+    }, function() {
+        res.send('ERR')
+    })
+})
+
+
+app.get('/api/job/replay', function(req, res) {
+    db.model('event').findOne({
+        'data._id': req.query.id
+    }).then(function(resp) {
+        if (!resp) return res.send('nip');
+        edison.worker.createJob(resp.data).then(function() {
+            res.send('OK')
+        }, function() {
+            res.send('ERR')
+        })
+    })
+
+})
+
+
 require('./routes.js')(app);
+
+
+
+
+
+
+
+
+
+
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

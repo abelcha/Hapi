@@ -65,21 +65,6 @@
                 </drop-down>
             </drop-down>
 <drop-down title="Service Partenariat" icon="circle" open-default="displayUser.service === 'PARTENARIAT'">
-
-    <drop-down icon="truck" title="Interventions">
-        <link fltr="i_mar" icon="th-list" title="Market"></link>
-        <link fltr="i_pan" icon="th-list" login="{{displayUser.login}}" hash-model="dm" title="Mon Panier"></link>
-    
-        
-
-    </drop-down>
-
-
-
-
-
-
-
     <link ng-if="signalementStats" title="Signalements Manag." count="{{signalementStats[displayUser.service].level1}}" url="/listeSignalements?level=1&service={{displayUser.service}}&ok=false">
     <link ng-if="signalementStats" title="Signalements Avert." count="{{signalementStats[displayUser.service].level2}}" url="/listeSignalements?level=2&service={{displayUser.service}}&ok=false">
     <drop-down icon="truck" title="Artisans">

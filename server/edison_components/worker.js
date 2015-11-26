@@ -38,6 +38,6 @@ module.exports = {
                 .on('progress', function(progress, data) {
                     io.sockets.emit(options.model + "_" + options.name + '_' + options.method, progress);
                 }).save()
-        }).catch(__catch)
+        })
     }
 }

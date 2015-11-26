@@ -141,10 +141,10 @@ module.exports = function(schema) {
                         req: _.pick(req, 'body', 'session')
                     }).then(resolve, reject)
                 }
-
+                 return reject("nopnoopnop")
                 var params = req.body;
                 if (!params.text ||  !params.date) {
-                    Promise.reject("Invalid Request")
+                    return reject("Invalid Request")
                 }
                 if (inter.reglementSurPlace) {
                     inter.facture = inter.client;
@@ -230,13 +230,13 @@ module.exports = function(schema) {
 
                 var params = req.body;
                 if (!params.text ||  !params.date) {
-                    Promise.reject("Invalid Request")
+                    return reject("Invalid Request")
                 }
                 try {
                     var pdf = getFacturePdfObj(inter, inter.date.intervention, req.body.acquitte, req.body.date);
 
                 } catch (e) {
-                    reject(e)
+                    return reject(e)
                 }
                 pdf.toBuffer(function(err, buffer) {
                     var communication = {
