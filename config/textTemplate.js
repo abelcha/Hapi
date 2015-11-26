@@ -45,8 +45,8 @@ module.exports = {
                     "Edison Services\n"
             },
             envoi: function(user) {
-                var mmt = require('moment')
-                var lodash = require('lodash')
+                //var mmt = require('moment')
+                //var lodash = require('lodash')
                 var tels = this.client.telephone.tel1.match(/.{2}/g).join('.');
                 if (this.client.telephone.tel2) {
                     tels += (' - ' + this.client.telephone.tel2.match(/.{2}/g).join('.'));
@@ -56,7 +56,7 @@ module.exports = {
                 }
                 var options = {
                     precision: getPrecision(this.client.address),
-                    datePlain: mmt(this.date.intervention).format("[le] DD[/]MM[ à ]HH[h]mm"),
+                    datePlain: moment(this.date.intervention).format("[le] DD[/]MM[ à ]HH[h]mm"),
                     login: user.pseudo || "Arnaud",
                     ligne: (user.ligne ||  "0972423000").match(/.{2}/g).join('.'),
                     remarques: this.remarqueSms ? (' (' + this.remarque + ')') : '',
@@ -91,7 +91,7 @@ module.exports = {
                         "{{options.ligne}} \n" +
                         "Edison Services."
                 }
-                return lodash.template(sms)({
+                return _.template(sms)({
                     inter: this,
                     options: options
                 })

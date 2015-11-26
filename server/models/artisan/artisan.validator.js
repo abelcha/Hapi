@@ -2,7 +2,7 @@ module.exports = function(schema) {
     var V1 = requireLocal('config/_convert_artisan_V1.js');
     var moment = require('moment');
 
-    var getSubStatus = function(sst) {
+    var getSubStatus = function(sst, res) {
         var _ = require('lodash');
         var d = sst.document;
         if (sst.quarantained) {
@@ -11,25 +11,49 @@ module.exports = function(schema) {
         if (sst.tutelle) {
             return 'TUT';
         }
+
         if (sst.status === "POT" && _.get(d.contrat, 'ok') && _.get(d.cni, 'ok') && _.get(d.kbis, 'ok')) {
             return 'HOT';
         }
-        if (_.inRange(sst.nbrIntervention, 1, 3)) {
-            return "NEW";
+
+        if (res.inters_sp_regle >= 15) {
+            return 'REG'
         }
-        if (_.inRange(sst.nbrIntervention, 3, 6)) {
-            return "FORM";
+        if (res.inters_sp_regle >= 5) {
+            return 'CONF'
         }
-        if (_.inRange(sst.nbrIntervention, 6, 16)) {
-            return "CONF";
+        if (res.inters_sp_regle >= 2) {
+            return 'FORM'
         }
-        if (sst.nbrIntervention > 15) {
-            return "REG"
+        if (res.inters_all >= 1) {
+            return 'NEW'
         }
+
+
+        /* 
+         if (_.inRange(res.inters_, 1, 3)) {
+             return "NEW";
+         }
+         if (_.inRange(sst.nbrIntervention, 3, 6)) {
+             return "FORM";
+         }
+         if (_.inRange(sst.nbrIntervention, 6, 16)) {
+             return "CONF";
+         }
+         if (sst.nbrIntervention > 15) {
+             return "REG"
+         }*/
     }
 
-    var isBlocked = function() {
-
+    var isBlocked = function(sst, res) {
+        if (sst.subStatus === "CONF") {
+            return res.inters_sp_non_regle >= 10;
+        } else if (sst.subStatus === "FORM") {
+            return res.inters_sp_non_regle >= 3;
+        } else if (sst.subStatus == "NEW") {
+            return res.inters_sp_non_regle >= 2;
+        }
+        return false;
     }
 
 
@@ -63,7 +87,7 @@ module.exports = function(schema) {
                     db.model("intervention").count({
                         'artisan.id': _this.id,
                         'reglementSurPlace': true,
-                        'compta.reglement.recu': true,
+                        'compta.reglement.recu': false,
                         'status': {
                             $in: ['ENC', 'VRF']
                         }
@@ -95,9 +119,11 @@ module.exports = function(schema) {
                 }
             }, function(err, result) {
                 _this.quarantained = result.quarantained;
-                _this.nbrIntervention = result.nbrInterventionSP;
-                _this.status = result.nbrIntervention ? "ACT" : "POT";
-                _this.subStatus = getSubStatus(_this);
+                _this.status = result.inters_all ? "ACT" : "POT";
+                _this.subStatus = getSubStatus(_this, result);
+                _this.blocked = isBlocked(_this, result);
+                if (_this.subStatus || _this.blocked)
+                    console.log(_this.id, _this.subStatus, _this.blocked)
                 _this.cache = db.model('artisan').Core.minify(_this);
                 next();
             })

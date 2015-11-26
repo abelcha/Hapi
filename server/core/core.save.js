@@ -22,20 +22,30 @@
                 }
                 data.id = nextID;
                 data._id = nextID;
-                
-                var inter = core.model()(data);
 
-                if (_.isFunction(core.preSave))
-                    core.preSave(data, req.session);
-                inter.save(function(err, doc) {
+                var doc = core.model()(data);
+
+
+                var preSave = core.preSave || function(data, session, callback) {
+                    return callback(null, doc);
+                }
+
+                preSave(data, session, function(err, resp) {
                     if (err) {
-                        return mongoError(reject)(err);
+                        return reject(err);
                     }
-                    edison.event('NEW_' + core.NAME).login(req.session.login).id(data.id).data(data).save();
-                    if (_.isFunction(core.postSave))
-                        core.postSave(doc, data, req.session);
-                    resolve(doc);
-                });
+                    doc.save(function(err, resp) {
+                        if (err) {
+                            return mongoError(reject)(err);
+                        }
+                        edison.event('NEW_' + core.NAME).login(req.session.login).id(data.id).data(data).save();
+                        if (_.isFunction(core.postSave))
+                            core.postSave(resp, data, req.session);
+                        resolve(resp);
+                    });
+
+                })
+
             });
         })
     }
