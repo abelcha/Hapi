@@ -250,7 +250,7 @@ module.exports = function(schema) {
                             name: 'db_id',
                             model: 'intervention',
                             method: 'envoi',
-                            data: inter,
+                            data: JSON.parse(JSON.stringify(inter)),
                             req: _.pick(req, 'body', 'session'),
                             priority: 'high'
                         }).then(function() {
