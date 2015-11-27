@@ -301,16 +301,12 @@ FiltersFactory.prototype.list = {
         short_name: 'i_chq',
         long_name: 'Relance Cheques',
         url: 'relanceCheques',
+        group:'$login.demarchage',
         match: function() {
             return {
                 status: 'VRF',
-                modeReglement: 'CHQ',
                 reglementSurPlace: true,
                 'compta.reglement.recu': false,
-                'compta.paiement.effectue': false,
-                'date.intervention': {
-                    $lt: new Date(Date.now() - ms.weeks(2)),
-                }
             }
         },
         stats: true,

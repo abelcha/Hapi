@@ -250,6 +250,9 @@ body {
     font-size: 20px!important;
 }
 
+[text-xxxxl] {
+    font-size: 25px!important;
+}
 .content-wrapper {
     padding: 64px 0px 0px!important;
 }
