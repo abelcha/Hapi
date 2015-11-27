@@ -17,6 +17,7 @@ module.exports = function(core) {
             } catch (e) {
                 var q = {}
             }
+            console.log('-->', q)
             core.model().find(q, {}).populate('sst').then(function(resp) {
                 var i = 0;
                 async.eachLimit(resp, 10, function(e, cb) {
