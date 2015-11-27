@@ -21,32 +21,37 @@ module.exports = function(core) {
             core.model().find(q, {}).populate('sst').then(function(resp) {
                 var i = 0;
                 async.eachLimit(resp, 10, function(e, cb) {
-                    if (i++ % 100 === 0) {
-                        console.log(Math.round(i * 100 / resp.length) + '%')
-                    }
-                    var conditions = {
-                            _id: e.id
-                        },
-                        update = {
-                            $set: {
-                                'artisan.subStatus': (e && e.sst && e.sst.subStatus),
-                                cache: core.minify(e)
+                        try {
+                            if (i++ % 100 === 0) {
+                                console.log(Math.round(i * 100 / resp.length) + '%')
                             }
-                        },
-                        options = {
-                            multi: true
-                        };
+                            var conditions = {
+                                    _id: e.id
+                                },
+                                update = {
+                                    $set: {
+                                        'artisan.subStatus': (e && e.sst && e.sst.subStatus),
+                                        cache: core.minify(e)
+                                    }
+                                },
+                                options = {
+                                    multi: true
+                                };
 
-                    core.model().update(conditions, update, options, cb);
-                    e = null;
-                    conditions = null;
-                    updates = null
-                }, function(err) {
-                    if (err) {
-                        return reject(err);
-                    }
-                    resolve('ok')
-                })
+                            core.model().update(conditions, update, options, cb);
+                            e = null;
+                            conditions = null;
+                            updates = null
+                        } catch (e) {
+                            __catch(e)
+                        }
+                    },
+                    function(err) {
+                        if (err) {
+                            return reject(err);
+                        }
+                        resolve('ok')
+                    })
             }, reject)
         })
     }
