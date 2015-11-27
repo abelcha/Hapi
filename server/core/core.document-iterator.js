@@ -38,8 +38,9 @@ module.exports = function(core) {
                                 options = {
                                     multi: true
                                 };
-
+                            console.log('before')
                             core.model().update(conditions, update, options, cb);
+                            console.log('after')
                             e = null;
                             conditions = null;
                             updates = null
