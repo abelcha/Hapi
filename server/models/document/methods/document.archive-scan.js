@@ -28,22 +28,22 @@ module.exports = function(schema) {
             var i = 0;
             var limit = req.query.limit || 100;
             var archiveFile = function(file, cb) {
-                console.log(String(i++) + '/' + String(limit))
+                //console.log(String(i++) + '/' + String(limit))
                 document.move('/SCAN/' + file.name, '/SCAN_ARCHIVES/' + file.name)
                     .then(function(resp) {
-                        console.log('MV', file.name)
+                       // console.log('MV', file.name)
                         edison.v1.set("UPDATE scanner SET archived='1' WHERE id='" + file.id + "'", function() {
-                            console.log('SAVED', file.name)
+                            //console.log('SAVED', file.name)
                             cb(null)
                         })
                     }, function(err) {
-                        console.log('ERR', file.name, err)
+                  //      console.log('ERR', file.name, err)
                         if (_.includes(String(err), '404')) {
                             document.move('/SCAN_ARCHIVES/' + file.name, '/SCAN/' + file.name).then(function(resp) {
-                                console.log('YEPYEPYEP')
+                    //            console.log('YEPYEPYEP')
                                 cb(null)
                             }, function() {
-                                console.log('SECERR')
+                      //          console.log('SECERR')
                                 cb(null);
                             })
                         }
