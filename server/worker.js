@@ -78,7 +78,7 @@ try {
                 console.log('[', 'DB', _this.data.model, _this.data.method, '][' + _this.id + '] - [TIMEOUT]')
                 _this.done('[' + ' DB ' + _this.data.model + ' ' + _this.data.method + '][' + _this.id + '] -  [TIMEOUT]');
                 _this.done = null;
-            }, _this.data.ttl || 28)
+            }, _this.data.ttl || 28000)
         }
 
 
