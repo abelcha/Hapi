@@ -7,39 +7,35 @@ module.exports = function(schema) {
 
 
     schema.statics.dmp = function(req, res) {
-
-        if (!isWorker) {
-            return edison.worker.createJob({
-                name: 'db',
-                model: 'intervention',
-                method: 'dmp',
-                req: _.pick(req, 'query', 'session')
-            })
-        }
-        // var lol = req.query.ids.split(',')
         return new Promise(function(resolve, reject) {
-            db.model(req.query.model || "intervention").find({
-                /*   id: {
-                       $in: lol
-                   }*/
-            }).then(function(resp) {
-                async.eachLimit(resp, 1, function(e, callback) {
-                            // e.status = "ANN";
-                            // e.causeAnnulation = "PERTE"
-                        e.save(callback);
-                    }, function() {
-                        resolve('lolok')
+            try {
+                var q = JSON.parse(req.query.q);
+            } catch (e) {
+                var q = {}
+            }
+            console.log('-->', q)
+            db.model(req.query.model || 'artisan').find(q, {}).populate('sst').then(function(resp) {
+                console.log('==>', resp.length)
+                var i = 0;
+                async.eachLimit(resp, 10, function(e, cb) {
+                        try {
+                            if (i++ % 100 === 0) {
+                                console.log(Math.round(i * 100 / resp.length) + '%')
+                            }
+                            e.save().then(function() {
+                                cb(null)
+                            })
+                        } catch (e) {
+                            __catch(e)
+                        }
+                    },
+                    function(err) {
+                        if (err) {
+                            return reject(err);
+                        }
+                        resolve('ok')
                     })
-                    /*console.log(_.pluck(resp, 'id').join(','))
-                    var i = 0;
-                    async.eachLimit(resp, 5, function(e, cb) {
-                        console.log(i++, resp.length)
-                        var v1 = new V1(e);
-                        v1.send(function() {
-                            cb(null);
-                        });
-                    }, resolve)*/
-            })
+            }, reject)
         })
     }
 }

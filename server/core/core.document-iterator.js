@@ -37,7 +37,7 @@ module.exports = function(core) {
                                 options = {
                                     multi: true
                                 };
-                            if (e && e.sst && e.sst.subStatus) {
+                            if (core.name === "intervention" && e && e.sst && e.sst.subStatus) {
                                 update.$set['artisan.subStatus'] = e.sst.subStatus
                             } else {
                                 update.$set['artisan.subStatus'] = ""
