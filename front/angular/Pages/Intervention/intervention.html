@@ -73,7 +73,7 @@
                                             'success':sst.id == vm.data.sst.id,
                                             'info':vm.rightClickArtisan == sst.id && vm.contextMenu.active && vm.contextMenu.model === 'artisan'}"
 
-                                             ng-click="!sst.blocked && vm.selectArtisan(sst);vm.showInterList()">
+                                             ng-click="vm.selectArtisan(sst);vm.showInterList()">
                                                 <td id-sst="{{sst.id}}" variable-length style="text-align:left">{{sst.nomSociete}} 
                                                 <small no-click ng-if="!sst.blocked && sst.absent" class="red-text">INDISPO</small>
                                                 <small no-click ng-if="!sst.blocked && !sst.absent" class="{{config.artisanSubStatus[sst.subStatus].color}}-text">{{config.artisanSubStatus[sst.subStatus].long_name}}</small></td>

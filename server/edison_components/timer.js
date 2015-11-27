@@ -40,14 +40,20 @@ var Timer = module.exports = function() {
 
 
         this.emitter.on("everyday at 14", function() {
-            if (moment().isoWeekday() !== 6 && moment().isoWeekday() !== 7) {
-                db.model('devis').relanceAuto14h()
-            }
+            setTimeout(function() {
+                if (moment().isoWeekday() !== 6 && moment().isoWeekday() !== 7) {
+                    db.model('devis').relanceAuto14h()
+                }
+            }, _.random(5 * 60 * 1000))
+
         });
 
 
         this.emitter.on("hour", function() {
-            db.model('intervention').rappelDateIntervention()
+            setTimeout(function() {
+
+                db.model('intervention').rappelDateIntervention()
+            }, _.random(5 * 60 * 1000))
         });
 
         this.emitter.on("20 minutes", function() {
@@ -55,19 +61,19 @@ var Timer = module.exports = function() {
             var req = {
                 query: {}
             }
-            db.model('document').check(req).then(function() {
-                db.model('document').archiveScan(req).then(function() {
-                    db.model('document').order(req).then(function() {
+            setTimeout(function() {
+
+                db.model('document').check(req).then(function() {
+                    db.model('document').archiveScan(req).then(function() {
+                        db.model('document').order(req).then(function() {})
                     })
                 })
-            })
-
+            }, _.random(10 * 60 * 1000))
         })
     }
 
     this.emitter.on("4pm", function() {
-        db.model('intervention').backup(function() {
-        })
+        db.model('intervention').backup(function() {})
     })
 
     this.emitter.on("hour", function() {
@@ -75,14 +81,15 @@ var Timer = module.exports = function() {
             db.model('artisan').fullReload().then(function() {
                 console.log('artisan ok')
             })
-        }, _.random(30000, 60000))
+        }, _.random(10 * 60 * 1000, 30 * 60 * 1000))
     })
 
     this.emitter.on("10 minutes", function() {
-        db.model('intervention').fullReload().then(function() {
-        })
-        db.model('devis').fullReload().then(function() {
-        })
+        setTimeout(function() {
+
+            db.model('intervention').fullReload().then(function() {})
+            db.model('devis').fullReload().then(function() {})
+        }, _.random(5 * 60 * 1000))
     })
     this.emitter.on("3pm", function() {
         redis.delWildcard("rs*")
@@ -91,18 +98,18 @@ var Timer = module.exports = function() {
 
 
     var test = function() {
-            var parser = require('cron-parser');
-            try {
-                var interval = parser.parseExpression("42 18 * * 6");
-                console.log('Date: ', interval.next().toString()); // Sat Dec 29 2012 00:44:00 GMT+0200 (EET) 
-                console.log('Date: ', interval.next().toString()); // Sat Dec 29 2012 00:44:00 GMT+0200 (EET) 
-                console.log('Date: ', interval.next().toString()); // Sat Dec 29 2012 00:44:00 GMT+0200 (EET) 
-                console.log('Date: ', interval.next().toString()); // Sat Dec 29 2012 00:44:00 GMT+0200 (EET) 
-                console.log('Date: ', interval.next().toString()); // Sat Dec 29 2012 00:44:00 GMT+0200 (EET) 
-                console.log('Date: ', interval.next().toString()); // Sat Dec 29 2012 00:44:00 GMT+0200 (EET) 
-            } catch (err) {
-                console.log('Error: ' + err.message);
-            }
-
+        var parser = require('cron-parser');
+        try {
+            var interval = parser.parseExpression("42 18 * * 6");
+            console.log('Date: ', interval.next().toString()); // Sat Dec 29 2012 00:44:00 GMT+0200 (EET) 
+            console.log('Date: ', interval.next().toString()); // Sat Dec 29 2012 00:44:00 GMT+0200 (EET) 
+            console.log('Date: ', interval.next().toString()); // Sat Dec 29 2012 00:44:00 GMT+0200 (EET) 
+            console.log('Date: ', interval.next().toString()); // Sat Dec 29 2012 00:44:00 GMT+0200 (EET) 
+            console.log('Date: ', interval.next().toString()); // Sat Dec 29 2012 00:44:00 GMT+0200 (EET) 
+            console.log('Date: ', interval.next().toString()); // Sat Dec 29 2012 00:44:00 GMT+0200 (EET) 
+        } catch (err) {
+            console.log('Error: ' + err.message);
         }
+
+    }
 }

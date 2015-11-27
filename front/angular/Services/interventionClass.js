@@ -463,7 +463,7 @@ angular.module('edison')
             if (!this.artisan) {
                 return false;
             }
-            if (this.sst.subStatus === 'QUA' ||  this.sst.blocked) {
+            if (this.sst.subStatus === 'QUA') {
                 return false;
             }
             if (this.sst.subStatus === 'NEW' || this.sst.subStatus === 'TUT') {
