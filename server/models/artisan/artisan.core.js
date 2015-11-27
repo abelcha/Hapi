@@ -75,24 +75,21 @@
 
 
     module.exports.preSave = function(_new, session, callback) {
-            db.model('artisan').findOne({
-                $or: [{
-                    'telephone.tel1': {
-                        $in: [_new.telephone.tel1, _new.telephone.tel2]
-                    }
-                }, {
-                    'telephone.tel2': {
+        db.model('artisan').findOne({
+            $or: [{
+                    'telephone.tel1': _new.telephone.tel1 {
                         $in: [_new.telephone.tel1, _new.telephone.tel2]
                     }
                 }, {
                     'email': _new.email
-                }]
-            }).then(function(resp) {
-                if (resp) {
-                    return callback("Le sous-traitant est déja dans la base");
                 }
-                return callback(null, _new);
-            })
+            ]
+        }).then(function(resp) {
+            if (resp) {
+                return callback("Le sous-traitant est déja dans la base");
+            }
+            return callback(null, _new);
+        })
     }
 
 
