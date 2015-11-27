@@ -31,19 +31,18 @@ module.exports = function(core) {
                                 },
                                 update = {
                                     $set: {
-                                        'artisan.subStatus': (e && e.sst && e.sst.subStatus),
                                         cache: core.minify(e)
                                     }
                                 },
                                 options = {
                                     multi: true
                                 };
-                            console.log('before')
-                            core.model().update(conditions, update, options, function(resp) {
-                                console.log('->',resp)
+                            if (e && e.sst && e.sst.subStatus) {
+                                update.$set['artisan.subStatus'] = e.sst.subStatus
+                            }
+                            core.model().update(conditions, update, options, function(err, resp) {
                                 cb(null)
                             });
-                            console.log('after')
                             e = null;
                             conditions = null;
                             updates = null
