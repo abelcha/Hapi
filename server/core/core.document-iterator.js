@@ -39,7 +39,10 @@ module.exports = function(core) {
                                     multi: true
                                 };
                             console.log('before')
-                            core.model().update(conditions, update, options, cb);
+                            core.model().update(conditions, update, options, function(resp) {
+                                console.log('->',resp)
+                                cb(null)
+                            });
                             console.log('after')
                             e = null;
                             conditions = null;
