@@ -3434,6 +3434,10 @@ body {
     float: right;
 }
 
+[text-xxxxs] {
+    font-size: 8px!important;
+}
+
 [text-xxxs] {
     font-size: 10px!important;
 }

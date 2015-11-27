@@ -51,6 +51,7 @@ angular.module('edison').controller('MainController', function($timeout, LxNotif
     getSignalementStats()
 
     var reloadStats = function() {
+        console.log('reloadStats')
         edisonAPI.stats.telepro()
             .success(function(result) {
                 $scope.userStats = _.find(result, function(e) {
@@ -70,7 +71,7 @@ angular.module('edison').controller('MainController', function($timeout, LxNotif
 
     $rootScope.user = window.app_session
     reloadStats();
-    socket.on('filterStatsReload', _.debounce(reloadStats, 30000));
+    socket.on('filterStatsReload', _.debounce(reloadStats, _.random(0, 1000)));
 
     $window.notify = function() {
         LxNotificationService.notify("test", 'android', false, "red");

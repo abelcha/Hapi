@@ -122,11 +122,15 @@ FiltersFactory.prototype.list = {
         match: {
             status: 'ACT'
         },
-    },{
+    }, {
         short_name: 'a_tut',
         long_name: 'sous-tutelle',
         url: 'artSousTutelle',
         match: {
+            status: {
+                $ne: 'ANN'
+            },
+            'compta.reglement.recu': false,
             subStatus: 'TUT'
         },
     }],
@@ -398,6 +402,9 @@ FiltersFactory.prototype.list = {
             status: 'APR',
             'login.demarchage': {
                 $exists: false
+            },
+            'artisan.id': {
+                $exists: false
             }
         },
     }, {
@@ -408,7 +415,7 @@ FiltersFactory.prototype.list = {
         match: {
             aDemarcher: true,
             status: {
-                $in: ['APR', 'ENC', 'AVR']
+                $in: ['APR']
             },
             'login.demarchage': {
                 $exists: true
@@ -482,6 +489,7 @@ FiltersFactory.prototype.list = {
         },
     }, {
         short_name: 'i_pavrf',
+        group: '$login.demarchage',
         long_name: 'P.A Verifs',
         url: 'newVerif',
         match: {
@@ -498,12 +506,13 @@ FiltersFactory.prototype.list = {
         short_name: 'i_paenv',
         long_name: 'P.A Envoyés',
         url: 'paEnv',
+        group: "$login.envoi",
         match: {
             'login.envoi': {
                 $exists: true
             },
             status: {
-                $in: ['ENC', 'VRF']
+                $in: ['ENC']
             }
         },
     }]

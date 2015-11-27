@@ -66,14 +66,14 @@
                                     <table ng-if="vm.nearestArtisans.length" class="table table-condensed" style="padding:0;color:black">
                                         <tbody>
                                          <tr><td colspan="12" style="text-align:center;border-top: 0px;"><h4 style="margin: 0;">Actifs</h4></td></tr>
-                                            <tr ng-repeat="sst in vm.nearestArtisans" 
-
+                                            <tr ng-repeat="sst in vm.nearestArtisans"  
+                                            ng-if="sst.status !== 'POT'"
                                             ng-class="{
                                             'danger grey-text':sst.blocked,
                                             'success':sst.id == vm.data.sst.id,
                                             'info':vm.rightClickArtisan == sst.id && vm.contextMenu.active && vm.contextMenu.model === 'artisan'}"
 
-                                             ng-click="vm.selectArtisan(sst);vm.showInterList()">
+                                             ng-click="!sst.blocked && vm.selectArtisan(sst);vm.showInterList()">
                                                 <td id-sst="{{sst.id}}" variable-length style="text-align:left">{{sst.nomSociete}} 
                                                 <small no-click ng-if="!sst.blocked && sst.absent" class="red-text">INDISPO</small>
                                                 <small no-click ng-if="!sst.blocked && !sst.absent" class="{{config.artisanSubStatus[sst.subStatus].color}}-text">{{config.artisanSubStatus[sst.subStatus].long_name}}</small></td>

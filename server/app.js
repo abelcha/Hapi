@@ -41,7 +41,7 @@ var fs = require('fs')
 global.io = require('socket.io')(http);
 require('./shared.js')(express);
 global.jobs = edison.worker.initJobQueue();
-
+var keys = requireLocal('config/_keys')
 global.isWorker = false;
 
 
@@ -145,7 +145,7 @@ var getEmbeddedScript = function(req) {
 app.use(function(req, res, next) {
     if (_.includes(req.url, '.'))
         return next();
-    if (req.session && !req.session.id && (!req.query.x)) {
+    if (req.session && !req.session.id && (req.query.x !== keys.commandLineQuery)) {
         if (_.startsWith(req.url, '/api/')) {
             return res.status(401).send("Unauthorized");
         } else {

@@ -38,6 +38,7 @@
                         <strong>{{inter.a}}</strong>
                         <strong ng-if="inter.d == 1 && !inter.a" class="red-text darken-1-text">A DEMARCHER</strong>
                         <strong ng-if="inter.d == 2 && !inter.a" class="light-blue-text darken-1-text">EN DEMARCHAGE ({{inter.dm}})</strong>
+                        <small text-xxxxs class="{{config.artisanSubStatus[inter.ss].color}}-text">{{config.artisanSubStatus[inter.ss].long_name}}</small>
                     </td>
                     <td data-title="smallWin ? 'P' : 'Prevu'" sortable="'di'" filter="{ '∆di': 'text' }">
                         <div ng-show="inter.di[0] != 1">

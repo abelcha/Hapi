@@ -37,11 +37,11 @@ module.exports = function(core) {
                                 options = {
                                     multi: true
                                 };
-                            if (core.name === "intervention" && e && e.sst && e.sst.subStatus) {
+                /*            if (core.name === "intervention" && e && e.sst && e.sst.subStatus) {
                                 update.$set['artisan.subStatus'] = e.sst.subStatus
                             } else {
                                 update.$set['artisan.subStatus'] = ""
-                            }
+                            }*/
                             core.model().update(conditions, update, options, function(err, resp) {
                                 cb(null)
                             });

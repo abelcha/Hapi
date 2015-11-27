@@ -26,7 +26,7 @@ for i in range(1, len(args)):
 print(args[0], options, q)
 if (options.cache):
 	q['cache'] = True
-q['x'] = "Ie1W4k2iw02029b5CFfwKgPSK3MkFrbq"
+q['x'] = "true"
 q['login'] = "CMD"
 ts = time.time()
 res = requests.get(baseUrl + args[0], params=q)

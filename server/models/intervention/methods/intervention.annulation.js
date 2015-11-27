@@ -29,7 +29,7 @@ module.exports = function(schema) {
                     .send()
                     .save()
 
-                if (inter.sst.subStatus === "TUT") {
+                if (inter.sst && inter.sst.subStatus === "TUT") {
                     db.model('signalement').signalArtisan({
                         inter_id: inter.id,
                         sst_id: inter.sst.id,
