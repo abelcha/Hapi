@@ -24,7 +24,6 @@ module.exports = function(core) {
                     if (i++ % 100 === 0) {
                         console.log(Math.round(i * 100 / resp.length) + '%')
                     }
-                    console.log(e && e.sst && e.sst.subStatus)
                     var conditions = {
                             _id: e.id
                         },
