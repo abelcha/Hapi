@@ -19,6 +19,7 @@ module.exports = function(core) {
             }
             console.log('-->', q)
             core.model().find(q, {}).populate('sst').then(function(resp) {
+                console.log('==>', resp.length)
                 var i = 0;
                 async.eachLimit(resp, 10, function(e, cb) {
                         try {
