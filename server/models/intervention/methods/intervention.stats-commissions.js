@@ -20,7 +20,7 @@ module.exports = function(schema) {
 
     var createInvoice = function(rtn, user, res) {
         var fs = require('fs');
-        var Invoice = requireLocal('invoice-ninja');
+        var Invoice = require('com-ninja');
         var input = {
 
             currencyFormat: "%d€",
