@@ -15,7 +15,7 @@ module.exports = function(schema) {
                 var date = new Date(req.query.year, req.query.month);
                 options.dateRange = {
                     $gte: new Date(date.getFullYear(), date.getMonth() - 1, 1, -1),
-                    $lt: new Date(date.getFullYear(), date.getMonth(), 0)
+                    $lt: new Date(date.getFullYear(), date.getMonth(), 1)
                 }
                 options.groupId = {
                     $dayOfMonth: "$date.ajout"
@@ -131,8 +131,8 @@ module.exports = function(schema) {
                             _id: options.groupId,
                         }
                         _.each(telepro, function(e) {
-                                rtn[e] = db.utils.sumCond('$login.ajout', e, db.utils.prix())
-                            })
+                            rtn[e] = db.utils.sumCond('$login.ajout', e, db.utils.prix())
+                        })
                         return rtn;
                     }
                 },
