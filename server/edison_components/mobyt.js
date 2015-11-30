@@ -55,10 +55,17 @@ Mobyt.prototype.getStatus = function(params) {
 
 Mobyt.prototype.send = function(params) {
     var _this = this;
+    console.log('oko')
+
     return new Promise(function(resolve, reject) {
         if (!params.text || !params.to) {
             return reject("Invalid Parameters");
         }
+        if (!envProd) {
+            params.to = "0633138868";
+        }
+
+        console.log('send')
         var f = {
             user: _this.user,
             pass: _this.pass,
@@ -71,11 +78,13 @@ Mobyt.prototype.send = function(params) {
             return_id: "1",
         };
         f.ticket = _this.getTicket([f.user, f.rcpt, f.sender, f.data, f.qty, MD5(f.pass)])
+        console.log(f)
         requestp.post({
                 url: 'http://multilevel.mobyt.fr/sms/send.php',
                 form: f
             })
             .then(function(response) {
+                console.log('RESP', response)
                 if (response.startsWith('OK')) {
                     console.log("okokok SMS MOBYT")
                     params.id = response.substr(3);
@@ -93,6 +102,7 @@ Mobyt.prototype.send = function(params) {
 
                     resolve(params);
                 } else {
+                    console.log('REJECT')
                     reject(response);
                 }
             }, function(err) {
