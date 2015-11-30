@@ -48,7 +48,7 @@ var LpaController = function(openPost, socket, ContextMenu, $location, $window, 
         var base = $rootScope.lpa[index].numeroCheque;
         if (base) {
             for (var i = index; i < $rootScope.lpa.length; i++) {
-                if ($rootScope.lpa[i].list.getList()[0].mode === 'CHQ' /*&& _.find($rootScope.lpa[i].list.getList(), 'checked', true)*/) {
+                if ($rootScope.lpa[i].list.getList()[0].mode === 'CHQ' /*&& _.find($rootScope.lpa[i].list.getList(), 'checked', true)*/ ) {
                     $rootScope.lpa[i].numeroCheque = base++
                 }
             };
@@ -67,6 +67,7 @@ var LpaController = function(openPost, socket, ContextMenu, $location, $window, 
         LxProgressService.circular.show('#5fa2db', '#globalProgress');
         edisonAPI.compta.flush(lpa).then(function(resp) {
             edisonAPI.compta.flushMail(lpa).then(function(resp) {
+                LxProgressService.circular.hide()
             });
         })
     }
@@ -117,11 +118,11 @@ var LpaController = function(openPost, socket, ContextMenu, $location, $window, 
         var ids = _($rootScope.lpa).map(_.partial(_.pick, _, 'numeroCheque', 'id')).value();
         LxProgressService.circular.show('#5fa2db', '#globalProgress');
         edisonAPI.file.uploadScans(file, {
-                ids: ids,
-                date: _this.search.d
-            }).then(function(resp) {
-                LxProgressService.circular.hide()
-            })
+            ids: ids,
+            date: _this.search.d
+        }).then(function(resp) {
+            LxProgressService.circular.hide()
+        })
     }
 
     _this.print = function(type) {
