@@ -22,7 +22,7 @@ module.exports = function(schema) {
                     }, {
                         'compta.paiement.effectue': true
                     }]
-                }).select('id categorie compta.reglement compta.paiement.effectue')
+                }).select('id categorie compta.reglement prixFinal compta.paiement.effectue')
                 .exec(function(err, resp) {
                     resolve(resp);
                 })
