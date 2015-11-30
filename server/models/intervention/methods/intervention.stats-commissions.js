@@ -17,7 +17,11 @@ module.exports = function(schema) {
             db.model('intervention').find({
                     'date.ajout': dateRange,
                     'login.ajout': req.query.l,
-                    'compta.paiement.effectue': true
+                    $or: [{
+                        'compta.reglement.recu': true
+                    }, {
+                        'compta.paiement.effectue': true
+                    }]
                 }).select('id categorie compta.reglement compta.paiement.effectue')
                 .exec(function(err, resp) {
                     resolve(resp);
