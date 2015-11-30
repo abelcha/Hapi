@@ -1,0 +1,54 @@
+{
+  "name": "invoice-ninja",
+  "version": "0.2.2",
+  "description": "Invoice PDF generator API",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:nCrazed/invoice-ninja.git"
+  },
+  "keywords": [
+    "invoice",
+    "markdown",
+    "API",
+    "pdf"
+  ],
+  "author": {
+    "name": "Edvin Malinovskis"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nCrazed/invoice-ninja/issues"
+  },
+  "homepage": "https://github.com/nCrazed/invoice-ninja",
+  "dependencies": {
+    "duplexer": "^0.1.1",
+    "markdown-pdf": "^2.2.0",
+    "split": "^0.3.0",
+    "through": "^2.3.4"
+  },
+  "_id": "invoice-ninja@0.2.2",
+  "_shasum": "d284e271f666bdd6954e9c46824f19006a786212",
+  "_from": "invoice-ninja@>=0.2.2 <0.3.0",
+  "_npmVersion": "1.4.9",
+  "_npmUser": {
+    "name": "ncrazed",
+    "email": "npm@edvin.io"
+  },
+  "maintainers": [
+    {
+      "name": "ncrazed",
+      "email": "npm@edvin.io"
+    }
+  ],
+  "dist": {
+    "shasum": "d284e271f666bdd6954e9c46824f19006a786212",
+    "tarball": "http://registry.npmjs.org/invoice-ninja/-/invoice-ninja-0.2.2.tgz"
+  },
+  "directories": {},
+  "_resolved": "https://registry.npmjs.org/invoice-ninja/-/invoice-ninja-0.2.2.tgz",
+  "readme": "ERROR: No README data found!"
+}

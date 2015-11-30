@@ -71,132 +71,170 @@
             <span ng-if="dialog" text-sm> (Prix Final: {{data.prixFinal}} €)</span>
             <br>
             <div class="paragraph fs-body-1 mt+">
-                <div class="row">
-                    <div class="col-md-2">
-                        <lx-text-field label="Base Paiement">
-                            <input ng-model="data.compta.paiement.base" type="number">
-                        </lx-text-field>
-                    </div>
-                    <div class="col-md-3">
-                        <select class="form-control" ng-model="data.compta.paiement.mode" ng-options="modePaiement.short_name as modePaiement.long_name for modePaiement in config.modePaiement"></select>
-                    </div>
-                    <div class="col-md-2">
-                        <select class="form-control" ng-model="data.compta.paiement.tva" ng-options="tva.short_name as tva.long_name for tva in config.tvaSST"></select>
-                    </div>
+                <div class="row" ng-show="allowFlush !== true" ng-click="allowFlush = !allowFlush" style="text-align: center;">
+                    <h1>MODIFIER LE PAIEMENT</h1>
                 </div>
-                <br>
-                <div class="row">
-                    <div class="col-md-3">
-                        <lx-text-field label="Déplacement">
-                            <input type="number" min="0" max="100" ng-model="data.compta.paiement.pourcentage.deplacement">
-                        </lx-text-field>
+                <div ng-if="!data.compta.paiement.historique.length || allowFlush || data.compta.paiement.ready">
+                    <div class="row" ng-if="!data.compta.paiement.historique.length || allowFlush || data.compta.paiement.ready">
+                        <div class="col-md-2">
+                            <lx-text-field label="Base Paiement">
+                                <input ng-model="data.compta.paiement.base" type="number">
+                            </lx-text-field>
+                        </div>
+                        <div class="col-md-3">
+                            <select class="form-control" ng-model="data.compta.paiement.mode" ng-options="modePaiement.short_name as modePaiement.long_name for modePaiement in config.modePaiement"></select>
+                        </div>
+                        <div class="col-md-2">
+                            <select class="form-control" ng-model="data.compta.paiement.tva" ng-options="tva.short_name as tva.long_name for tva in config.tvaSST"></select>
+                        </div>
                     </div>
-                    <div class="col-md-3">
-                        <lx-text-field label="Main D'oeuvre">
-                            <input type="number" min="0" max="100" ng-model="data.compta.paiement.pourcentage.maindOeuvre">
-                        </lx-text-field>
-                    </div>
-                    <div class="col-md-3">
-                        <lx-text-field label="Fourniture">
-                            <input type="number" min="0" max="100" ng-model="data.compta.paiement.pourcentage.fourniture">
-                        </lx-text-field>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="switch" style="float:right;margin-right:30px">
-                            <input type="checkbox" id="switch1" ng-model="data.compta.paiement.ready" class="switch__input">
-                            <label for="switch1" class="switch__label">Flush</label>
-                            <span class="switch__help"></span>
+                    <br>
+                    <div class="row" >
+                        <div class="col-md-3 col-sm-offset-9">
+                            <div class="switch" style="float:right;margin-right:30px">
+                                <input type="checkbox" id="switch1" ng-model="data.compta.paiement.ready" class="switch__input">
+                                <label for="switch1" class="switch__label">Flush</label>
+                                <span class="switch__help"></span>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-md-3">
-                        <lx-text-field label="Déplacement">
-                            <input disabled ng-model="compta.remunerationDeplacement">
-                        </lx-text-field>
+                <div class="row" ng-if="data.compta.paiement.base && (!data.compta.paiement.historique.length || allowFlush)">
+                    <div class="col-sm-10">
+                        <table cellspacing="0" cellpadding="8" class="table table-bordered table-striped">
+                            <tr>
+                                <th> MONTANT H.T VENTE </th>
+                                <th style="width: 121px;"> + {{format(compta.base)}} € </th>
+                                <th style="width: 40px;"> COMMISSION </th>
+                                <th style="width: 40px;"> REMUNERATION </th>
+                            </tr>
+                            <tr>
+                                <th> Vente déplacement </th>
+                                <th> + {{format(compta.baseDeplacement)}} € </th>
+                                <th>
+                                    <lx-text-field label="Déplacement" style="width:100px">
+                                        <input type="number" min="0" max="100" style="width: 75%;display: inline;" class="" ng-model="data.compta.paiement.pourcentage.deplacement"> %
+                                    </lx-text-field>
+                                </th>
+                                <th> {{format(compta.remunerationDeplacement)}} € </th>
+                            </tr>
+                            <tr>
+                                <th> Vente M.O. & Fournitures </th>
+                                <th> + {{format(compta.baseMaindOeuvre + compta.venteFourniture)}} €</th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                            <tr>
+                                <th> Coût fournitures </th>
+                                <th> - {{format(compta.fourniture.total)}} €</th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                            <tr>
+                                <th> Marge globale </th>
+                                <th> = {{format(compta.baseMargeFourniture + compta.baseMaindOeuvre)}} € </th>
+                                <th>
+                                    <lx-text-field label="Marge" style="width:100px">
+                                        <input type="number" min="0" max="100" style="width: 75%;display: inline;" class="" ng-model="data.compta.paiement.pourcentage.fourniture"> %
+                                    </lx-text-field>
+                                </th>
+                                <th> {{format(compta.remunerationMaindOeuvre + compta.remunerationMargeFourniture)}} € </th>
+                            </tr>
+                            <tr>
+                                <th> Remboursement fournitures </th>
+                                <th> + {{format(compta.fourniture.artisan)}} € </th>
+                                <th></th>
+                                <th> {{format(compta.fourniture.artisan)}} € </th>
+                            </tr>
+                            <tr>
+                                <th colspan="2" rowspan="3" style="background:white">
+                                </th>
+                                <th> TOTAL H.T </th>
+                                <th> {{format(compta.montantTotal)}} € </th>
+                            </tr>
+                            <tr>
+                                <th> TVA ({{data.tva}} %) </th>
+                                <th> {{format(compta.montantTotalTVA)}} € </th>
+                            </tr>
+                            <tr>
+                                <th> TOTAL T.T.C </th>
+                                <th> {{format(compta.montantTotalTTC)}} €</th>
+                            </tr>
+                        </table>
                     </div>
-                    <div class="col-md-3">
-                        <lx-text-field label="Main D'oeuvre">
-                            <input disabled ng-model="compta.remunerationMaindOeuvre">
-                        </lx-text-field>
-                    </div>
-                    <div class="col-md-3">
-                        <lx-text-field label="Fourniture">
-                            <input disabled ng-model="compta.remunerationMargeFourniture">
-                        </lx-text-field>
-                    </div>
-                </div>
-                <br>
-                <div class="row">
-                    <div class="col-md-3 col-md-offset-9">
+                    <div class="col-md-2">
                         <div class="switch" style="float:right;margin-right:30px">
                             <input type="checkbox" id="switch3" ng-model="data.compta.paiement.dette" class="switch__input">
                             <label for="switch3" class="switch__label switch_red">Dette</label>
                         </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-sm-4">
-                        <h2 ng-if="data.compta.paiement.montant">Montant payé : {{data.compta.paiement.montant}} €</h2>
-                        <br>
-                        <h4 ng-click="displaySimulation = !displaySimulation"> > Simulation</h4>
-                        <pre ng-if="displaySimulation"><h4>{{compta|json}}</h4></pre>
-                        <h4 ng-click="displayHistorique = !displayHistorique"> > Historique Flush ({{data.compta.paiement.historique.length}})</h4>
-                        <pre ng-if="displayHistorique"><h4>{{data.compta.paiement.historique|json}}</h4></pre>
-                    </div>
-                    <div class="col-sm-8">
-                        <table cellspacing="0" cellpadding="8" class="simulator" ng-if="data.compta.paiement.base">
-                            <tr>
-                                <th class="bg-green"> MONTANT H.T VENTE </th>
-                                <th class="bg-green"> + {{format(compta.base)}} € </th>
-                                <th class="bg-green"> COMMISSION </th>
-                                <th class="bg-green"> REMUNERATION </th>
-                            </tr>
-                            <tr>
-                                <th class="no-border border-title"> Vente déplacement </th>
-                                <th class="no-border"> + {{format(compta.baseDeplacement)}} € </th>
-                                <th class="no-border"> {{compta.pourcentage.deplacement}} % </th>
-                                <th class="no-border"> {{format(compta.remunerationDeplacement)}} € </th>
-                            </tr>
-                            <tr class="tbl-bg">
-                                <th class="no-border border-title"> Vente M.O. & Fournitures </th>
-                                <th class="no-border"> + {{format(compta.baseMaindOeuvre + compta.venteFourniture)}} €</th>
-                                <th class="no-border"></th>
-                                <th class="no-border"></th>
-                            </tr>
-                            <tr>
-                                <th class="no-border border-title"> Coût fournitures </th>
-                                <th class="no-border"> - {{format(compta.fourniture.total)}} €</th>
-                                <th class="no-border"></th>
-                                <th class="no-border"></th>
-                            </tr>
-                            <tr class="tbl-bg">
-                                <th class="no-border border-title"> Marge globale </th>
-                                <th class="no-border"> = {{format(compta.baseMargeFourniture + compta.baseMaindOeuvre)}} € </th>
-                                <th class="no-border"> {{compta.pourcentage.fourniture}} % </th>
-                                <th class="no-border"> {{format(compta.remunerationMaindOeuvre + compta.remunerationMargeFourniture)}} € </th>
-                            </tr>
-                            <tr>
-                                <th class="no-border border-title" style="border-bottom: 1px solid black;"> Remboursement fournitures </th>
-                                <th class="no-border"> + {{format(compta.fourniture.artisan)}} € </th>
-                                <th class="no-border"></th>
-                                <th class="no-border"> {{format(compta.fourniture.artisan)}} € </th>
-                            </tr>
-                            <tr>
-                                <th colspan="2" rowspan="3" style="border: 0px">
-                                </th>
-                                <th class="no-border border-title tbl-bg" style="border-top: 1px solid black;"> TOTAL H.T </th>
-                                <th class="no-border tbl-bg" style="border-top: 1px solid black;"> {{format(compta.montantTotal)}} € </th>
-                            </tr>
-                            <tr>
-                                <th class="no-border border-title"> TVA * </th>
-                                <th class="no-border"> {{format(compta.montantTotalTVA)}} € </th>
-                            </tr>
-                            <tr>
-                                <th class="no-border border-title tbl-bg" style="border-bottom: 1px solid black;"> TOTAL T.T.C </th>
-                                <th class="no-border tbl-bg" style="border-bottom: 1px solid black;"> {{format(compta.montantTotalTTC)}} €</th>
-                            </tr>
-                        </table>
+                <br>
+                <br>
+                <div class="row" ng-if="data.compta.paiement.historique.length" ng-repeat="elem in data.compta.paiement.historique">
+                    <div class="col-sm-10" ng-init="hist = getPaiement(elem)">
+                        <div class="panel panel-success">
+                            <div class="panel-heading">Paiement du {{elem.dateFlush|date:"dd/MM/yyyy à HH'h'mm"}} ({{elem.loginFlush}})</div>
+                            <div class="panel-body">
+                             <!--    <pre>{{hist|json}}</pre> -->
+                                <table cellspacing="0" cellpadding="8" class="table green-table table-bordered table-striped">
+                                    <tr>
+                                        <th> MONTANT H.T VENTE </th>
+                                        <th style="width: 121px;"> + {{format(hist.base)}} € </th>
+                                        <th style="width: 40px;"> COMMISSION </th>
+                                        <th style="width: 40px;"> REMUNERATION </th>
+                                    </tr>
+                                    <tr>
+                                        <th> Vente déplacement </th>
+                                        <th> + {{format(hist.baseDeplacement)}} € </th>
+                                        <th>
+                                            {{hist.pourcentage.deplacement}}%
+                                        </th>
+                                        <th> {{format(hist.remunerationDeplacement)}} € </th>
+                                    </tr>
+                                    <tr>
+                                        <th> Vente M.O. & Fournitures </th>
+                                        <th> + {{format(hist.baseMaindOeuvre + hist.venteFourniture)}} €</th>
+                                        <th></th>
+                                        <th></th>
+                                    </tr>
+                                    <tr>
+                                        <th> Coût fournitures </th>
+                                        <th> - {{format(hist.fourniture.total)}} €</th>
+                                        <th></th>
+                                        <th></th>
+                                    </tr>
+                                    <tr>
+                                        <th> Marge globale </th>
+                                        <th> = {{format(hist.baseMargeFourniture + hist.baseMaindOeuvre)}} € </th>
+                                        <th>
+                                            {{hist.pourcentage.fourniture}}%
+                                        </th>
+                                        <th> {{format(hist.remunerationMaindOeuvre + hist.remunerationMargeFourniture)}} € </th>
+                                    </tr>
+                                    <tr>
+                                        <th> Remboursement fournitures </th>
+                                        <th> + {{format(hist.fourniture.artisan)}} € </th>
+                                        <th></th>
+                                        <th> {{format(hist.fourniture.artisan)}} € </th>
+                                    </tr>
+                                    <tr>
+                                        <th colspan="2" rowspan="3" style="background:white">
+                                        </th>
+                                        <th> TOTAL H.T </th>
+                                        <th> {{format(hist.montantTotal)}} € </th>
+                                    </tr>
+                                    <tr>
+                                        <th> TVA ({{data.tva}} %) </th>
+                                        <th> {{format(hist.montantTotalTVA)}} € </th>
+                                    </tr>
+                                    <tr>
+                                        <th> TOTAL T.T.C </th>
+                                        <th> {{format(hist.montantTotalTTC)}} €</th>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

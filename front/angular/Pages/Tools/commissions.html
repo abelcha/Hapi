@@ -9,6 +9,9 @@
                 <select class="form-control" ng-model="selectedUser" ng-options="usr.login as usr.login for usr in usrs">
                 </select>
             </div>
+            <div style="padding:40px" class="col-sm-3">
+               <a target="_blank" href="/api/intervention/commissionsTabs?l={{selectedUser}}&m={{selectedDate.m}}&y={{selectedDate.y}}"><button class="btn btn-success">GENERER</button></a>
+            </div>
         </div>
         <div class="row">
             <div class="col-sm-6 col-sm-offset-1">

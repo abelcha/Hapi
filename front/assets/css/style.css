@@ -1,12 +1,15 @@
-
-
+.table-striped.green-table > tbody > tr:nth-child(2n+1) > td,
+.table-striped.green-table > tbody > tr:nth-child(2n+1) > th {
+  background:#dff0d8;
+}
 
 table.simulator {
     width: 100%;
     border-collapse: collapse;
 }
 
-table.simulator, table.simulator > th {
+table.simulator,
+table.simulator > th {
     border: 1px solid black;
     font-size: 11px;
 }
@@ -29,8 +32,6 @@ table.simulator, table.simulator > th {
     background: #85C82B !important;
     -webkit-print-color-adjust: exact;
 }
-
-
 
 md-switch.md-checked.md-primary .md-thumb {
     background-color: rgb(65, 140, 228)!important;
@@ -166,6 +167,7 @@ body {
 .display-block {
     display: block;
 }
+
 [inline-block] {
     display: inline-block;
 }
@@ -253,6 +255,7 @@ body {
 [text-xxxxl] {
     font-size: 25px!important;
 }
+
 .content-wrapper {
     padding: 64px 0px 0px!important;
 }

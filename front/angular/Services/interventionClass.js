@@ -468,9 +468,7 @@ angular.module('edison')
         }
 
         Intervention.prototype.isVerifiable = function() {
-            console.log('isVerifiable')
             if (!this.artisan) {
-                console.log('noartiasn')
                 return false;
             }
             /*            if (this.sst.subStatus === 'QUA') {

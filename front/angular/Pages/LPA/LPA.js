@@ -69,6 +69,7 @@ var LpaController = function(user, openPost, socket, ContextMenu, $location, $wi
         edisonAPI.compta.flush(lpa).then(function(resp) {
             edisonAPI.compta.flushMail(lpa).then(function(resp) {
                 LxProgressService.circular.hide()
+                 _this.reloadLPA()
             });
         })
     }

@@ -1,4 +1,4 @@
-<md-dialog aria-label="Mango (Fruit)" style=";height: 630px;">
+<md-dialog aria-label="Mango (Fruit)" style=";height: 730px;">
     <md-dialog-content class="sticky-container" style="height: 100%;background:#C4C4C4;width: 1200px">
         <div class="row" style="margin-top: 21px;">
             <div class="col-sm-9">
@@ -12,7 +12,7 @@
             <info-fourniture ng-if="displayFourniture === true" data="data" small="false" display="true"></info-fourniture>
         </div>
         <div class="row">
-            <div class="card">
+            <div class="card" style="padding:40px">
                 <div class="col-md-3" ng-if="data.compta.reglement.montantTTC >= 150">
                     <md-checkbox ng-model="data.compta.info.devisNC" aria-label="_" class="md-warn">
                         Devis non conforme

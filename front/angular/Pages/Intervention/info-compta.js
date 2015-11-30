@@ -25,6 +25,12 @@ angular.module('edison').directive('infoCompta', ['config', 'Paiement',
                     return nbr;
                     return _.round(nbr, 2).toFixed(2);
                 }
+                scope.getPaiement = function(e) {
+                    var x = _.cloneDeep(scope.data);
+                    x.compta.paiement = _.cloneDeep(e);
+                    return new Paiement(x);
+                }
+                scope.Paiement = Paiement;
                 scope.compta = new Paiement(scope.data)
                 reglement.montantTTC = scope.compta.getMontantTTC()
 
