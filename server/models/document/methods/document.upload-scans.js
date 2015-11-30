@@ -51,16 +51,26 @@
         }).then(function(resp) {
           var i = 0;
 
-          async.eachLimit(resp, 5, function(e, callback) {
-            var flush = _.find(e.compta.paiement.historique, 'dateFlush', new Date(req.body.date));
-            flush.numeroCheque = (_.find(req.body.ids, 'id', e.sst) || {}).numeroCheque
+          var gp = _.groupBy(resp, 'sst')
+          async.eachLimit(gp, 1, function(sst, callback) {
+            console.log('EACH')
             getPage(filepath, ++i, function(err, buffer) {
-              document.upload({
-                filename: '/V2_PRODUCTION/intervention/' + e.id + '/' + 'Lettre-cheque-' + flush.numeroCheque + '.pdf',
-                data: buffer
-              }).then(function(resp) {
-                e.save(callback)
-              }, callback)
+              console.log(err, buffer && buffer.length)
+              async.eachLimit(sst, 1, function(e, small_cb) {
+                console.log('/V2_DEV/intervention/' + e.id + '/' + 'Lettre-cheque-' + flush.numeroCheque + '.pdf')
+                var flush = _.find(e.compta.paiement.historique, 'dateFlush', new Date(req.body.date));
+                flush.numeroCheque = (_.find(req.body.ids, 'id', e.sst) || {}).numeroCheque
+                document.upload({
+                  filename: '/V2_DEV/intervention/' + e.id + '/' + 'Lettre-cheque-' + flush.numeroCheque + '.pdf',
+                  data: buffer
+                }).then(function(resp) {
+                  e.save(small_cb)
+                }, small_cb)
+
+              }, function() {
+                callback(null)
+              })
+
             })
 
           }, function() {

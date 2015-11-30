@@ -13,35 +13,28 @@ var OVH = function() {
 
 OVH.prototype.send = function(params) {
     var _this = this;
-    console.log('OVH.prototype.SEND')
+
     return new Promise(function(resolve, reject) {
         if (!params.text || !params.to) {
             return reject("Invalid Parameters");
         }
-        console.log('OK PARAMETERS')
 
         _this.service.request('GET', '/sms', function(err, serviceName) {
-            console.log('GET /SMS')
 
             if (err) {
                 console.log('ERR REJECT')
-
                 return reject(err);
             } else {
                 var dest = (params.to.length == 10 ? params.to.replace('0', '0033') : params.to);
-                console.log('DEST', dest)
 
                 if (!envProd) {
                     dest = "0033633138868";
                 }
-                console.log("POST /SMS/SERVICENAME")
                 _this.service.request('POST', '/sms/' + serviceName + '/jobs', {
                     message: params.text,
                     senderForResponse: true,
                     receivers: [dest]
                 }, function(errsend, result) {
-                    console.log("OK CALLBACK")
-                    console.log(!err, !params.silent, params)
                     if (!err && !params.silent)  {
                         mail.send({
                             From: "contact@edison-services.fr",
@@ -79,9 +72,5 @@ OVH.prototype.jobs = function() {
     });
 
 };
-/*var x = new OVH;
-x.jobs().then(function() {
-
-})*/
 
 module.exports = OVH;
