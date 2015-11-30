@@ -5,7 +5,7 @@ var CommissionsController = function(DateSelect, TabContainer, $routeParams, edi
     _this.tab.setTitle('Coms.');
 
     _this.xcalc = function(e) {
-        return e.categorie === 'VT' ? 1.5 : _.round((e.compta.reglement.montant || e.prixFinal) * 0.01, 2);
+        return e.categorie === 'VT' ? 1.5 : _.round(e.compta.reglement.montant * 0.01, 2);
     }
 
     _this.getTotal = function() {
