@@ -49,13 +49,13 @@
                 try {
                     console.log({
                         type: "DEMANDE",
-                        dest: curr.sst.telephone.nomSociete,
+                        dest: curr.sst.nomSociete,
                         text: text,
                         to: curr.sst.telephone.tel1
                     })
                     sms.send({
                         type: "DEMANDE",
-                        dest: curr.sst.telephone.nomSociete,
+                        dest: curr.sst.nomSociete,
                         text: text,
                         to: curr.sst.telephone.tel1
                     })
