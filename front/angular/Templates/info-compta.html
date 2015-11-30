@@ -24,7 +24,7 @@
                 </div>
                 <div class="row">
                     <div ng-class="dialog ? 'col-md-4' : 'col-md-2'" ng-if="data.compta.reglement.recu && data.compta.reglement.historique.length">
-                        <lx-text-field label="Avoir">
+                        <lx-text-field label="Avoir TTC">
                             <input min="0" ng-disabled="data.compta.reglement.avoir.effectue" ng-model="data.compta.reglement.avoir.montant" type="number">
                         </lx-text-field>
                     </div>

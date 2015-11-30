@@ -14,6 +14,11 @@ var OVH = function() {
 OVH.prototype.send = function(params) {
     var _this = this;
 
+    if (params.type === "OS") {
+        return edison.mobyt.send(params)
+    }
+
+    console.log('MOBYT')
     return new Promise(function(resolve, reject) {
         if (!params.text || !params.to) {
             return reject("Invalid Parameters");

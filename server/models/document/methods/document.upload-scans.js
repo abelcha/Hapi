@@ -60,10 +60,10 @@
               console.log(err, buffer && buffer.length)
               async.eachLimit(sst, 1, function(e, small_cb) {
                 var flush = _.find(e.compta.paiement.historique, 'dateFlush', new Date(req.body.date));
-                console.log('/V2_DEV/intervention/' + e.id + '/' + 'Lettre-cheque-' + flush.numeroCheque + '.pdf')
+                console.log('/V2_PRODUCTION/intervention/' + e.id + '/' + 'Lettre-cheque-' + flush.numeroCheque + '.pdf')
                 flush.numeroCheque = (_.find(req.body.ids, 'id', e.sst) || {}).numeroCheque
                 document.upload({
-                  filename: '/V2_DEV/intervention/' + e.id + '/' + 'Lettre-cheque-' + flush.numeroCheque + '.pdf',
+                  filename: '/V2_PRODUCTION/intervention/' + e.id + '/' + 'Lettre-cheque-' + flush.numeroCheque + '.pdf',
                   data: buffer
                 }).then(function(resp) {
                   e.save(small_cb)

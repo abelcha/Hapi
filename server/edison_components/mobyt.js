@@ -76,7 +76,20 @@ Mobyt.prototype.send = function(params) {
             })
             .then(function(response) {
                 if (response.startsWith('OK')) {
+                    console.log("okokok SMS MOBYT")
                     params.id = response.substr(3);
+
+
+
+                    mail.send({
+                        From: "contact@edison-services.fr",
+                        To: "noreply.edison+sms@gmail.com",
+                        Subject: "[SMS] - " + "[" + (params.type ||  "INCONNU") + "] - " + "[" + (params.dest || "INCONNU") + "]",
+                        HtmlBody: "Sent to:" + params.to + "<br>" + params.text.replaceAll('\n', '<br>'),
+                    })
+
+
+
                     resolve(params);
                 } else {
                     reject(response);
