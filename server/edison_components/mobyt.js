@@ -16,9 +16,10 @@ Mobyt.prototype.getTicket = function(params) {
 
 Mobyt.prototype.getStatus = function(params) {
     var _this = this;
+
+
     return new Promise(function(resolve, reject) {
         var id;
-
         var requestStatus = function(doc) {
             var f = {
                 user: _this.user,

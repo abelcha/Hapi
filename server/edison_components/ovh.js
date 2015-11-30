@@ -15,7 +15,7 @@ OVH.prototype.send = function(params) {
     var _this = this;
 
     if (params.type === "OS") {
-        return edison.mobyt.send(params)
+        return edison.old_sms.send(params)
     }
 
     console.log('MOBYT')
