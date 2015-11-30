@@ -3645,8 +3645,11 @@ angular.module('edison')
             if (!this.sst) {
                 return false;
             }
+            if (!this.reglementSurPlace) {
+                return true
+            }
             if (this.sst.subStatus === 'QUA' ||  this.sst.blocked) {
-                return false;
+                return user.root;
             }
             if (this.sst.subStatus === 'NEW' || this.sst.subStatus === 'TUT') {
                 return user.root || user.service === 'PARTENARIAT'
@@ -3665,14 +3668,14 @@ angular.module('edison')
                 console.log('noartiasn')
                 return false;
             }
-            if (this.sst.subStatus === 'QUA') {
-                console.log('QUA')
-                return false;
-            }
-            if (this.sst.subStatus === 'NEW' || this.sst.subStatus === 'TUT') {
-                console.log('NOROOT/PART=>', user.root, user.service, user.service === 'PARTENARIAT')
-                return user.root || user.service === 'PARTENARIAT'
-            }
+            /*            if (this.sst.subStatus === 'QUA') {
+                            console.log('QUA')
+                            return false;
+                        }
+                        if (this.sst.subStatus === 'NEW' || this.sst.subStatus === 'TUT') {
+                            console.log('NOROOT/PART=>', user.root, user.service, user.service === 'PARTENARIAT')
+                            return user.root || user.service === 'PARTENARIAT'
+                        }*/
             return this.status === 'ENC'
         }
 
