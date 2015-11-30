@@ -14,11 +14,9 @@ module.exports = function(schema) {
                 options.divider = 'jours'
                 var date = new Date(req.query.year, req.query.month);
                 options.dateRange = {
-                    $gte: new Date(date.getFullYear(), date.getMonth(), - 1, -1),
-                    $lt: new Date(date.getFullYear(), date.getMonth() 0, 1)
+                    $gte: new Date(date.getFullYear(), date.getMonth() - 1, 1, -1),
+                    $lt: new Date(date.getFullYear(), date.getMonth(), 0)
                 }
-
-
                 options.groupId = {
                     $dayOfMonth: "$date.ajout"
                 }
