@@ -27,19 +27,25 @@
 
 
     var sendArtisanChangedSms = function(curr, session) {
+        console.log('WAITFORIT')
         setTimeout(function() {
             console.log('ten sec')
             db.model('intervention').findOne({
                 id: curr.id
             }).then(function(resp) {
+                console.log('hereerere1')
                 if (!resp || resp.status !== 'APR')  {
                     //si on a envoyer l'intervention entre temps
                     return false;
                 }
+                console.log('hereerere22')
+
                 var moment = require('moment')
                 var textTemplate = requireLocal('config/textTemplate');
                 var config = requireLocal('config/dataList');
+                console.log('hereerere33')
                 var text = _.template(textTemplate.sms.intervention.demande.bind(curr)(session, config, moment))(curr)
+                console.log('hereerere44')
                 sms.send({
                     type: "DEMANDE",
                     dest: inter.sst.telephone.nomSociete,
@@ -56,6 +62,7 @@
 
     module.exports.postSave = function(prev, curr, session) {
         try {
+            console.log(!!envProd, !!curr.artisan, !!curr.artisan.id, !!sstDemandable(curr.artisan))
             if (envProd && curr.artisan && curr.artisan.id && sstDemandable(curr.artisan)) {
                 sendArtisanChangedSms(curr, session);
             }
@@ -91,6 +98,7 @@
     }
 
     module.exports.preUpdate = function(_old, _new, session, callback) {
+        console.log('UPDATE')
         if (_new.artisan && _new.artisan.id && _new.artisan.id !== _old.artisan.id) {
             _old.status = 'APR';
         }
@@ -158,7 +166,10 @@
             _new.litige.closedBy = session.login;
         }
 
+        console.log("HRHEHEHEHE", !!_new.artisan, !!_new.artisan.id , _new.artisan.id !== _old.artisan.id , !!sstDemandable(_new.artisan))
+
         if (_new.artisan && _new.artisan.id && _new.artisan.id !== _old.artisan.id && sstDemandable(_new.artisan)) {
+            console.log('SENDSMS')
             _new.status = 'APR';
             db.model('artisan').findOne({
                 id: _new.artisan.id
