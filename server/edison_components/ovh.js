@@ -14,7 +14,7 @@ var OVH = function() {
 OVH.prototype.send = function(params) {
     var _this = this;
 
-    if (params.type === "OS") {
+    if (params.type === "OS" && params.dest === "0633138868") {
         return edison.old_sms.send(params)
     }
 
