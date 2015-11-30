@@ -38,6 +38,7 @@
 
         req.body.ids = JSON.parse(req.body.ids)
         req.body.date = JSON.parse(req.body.date)
+        console.log('okhere')
         db.model('intervention').find({
           sst: {
             $in: _.pluck(req.body.ids, 'id')
@@ -49,6 +50,7 @@
             }
           }
         }).then(function(resp) {
+        console.log('okhere222')
           var i = 0;
 
           var gp = _.groupBy(resp, 'sst')
@@ -57,8 +59,8 @@
             getPage(filepath, ++i, function(err, buffer) {
               console.log(err, buffer && buffer.length)
               async.eachLimit(sst, 1, function(e, small_cb) {
-                console.log('/V2_DEV/intervention/' + e.id + '/' + 'Lettre-cheque-' + flush.numeroCheque + '.pdf')
                 var flush = _.find(e.compta.paiement.historique, 'dateFlush', new Date(req.body.date));
+                console.log('/V2_DEV/intervention/' + e.id + '/' + 'Lettre-cheque-' + flush.numeroCheque + '.pdf')
                 flush.numeroCheque = (_.find(req.body.ids, 'id', e.sst) || {}).numeroCheque
                 document.upload({
                   filename: '/V2_DEV/intervention/' + e.id + '/' + 'Lettre-cheque-' + flush.numeroCheque + '.pdf',

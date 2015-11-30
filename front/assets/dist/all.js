@@ -5280,14 +5280,15 @@ var InterventionCtrl = function(Description, Signalement, ContextMenu, $window, 
 
 angular.module('edison').controller('InterventionController', InterventionCtrl);
 
-var LpaController = function(openPost, socket, ContextMenu, $location, $window, TabContainer, edisonAPI, $rootScope, LxProgressService, LxNotificationService, FlushList) {
+var LpaController = function(user, openPost, socket, ContextMenu, $location, $window, TabContainer, edisonAPI, $rootScope, LxProgressService, LxNotificationService, FlushList) {
     "use strict";
     var _this = this
     var tab = TabContainer.getCurrentTab();
     tab.setTitle('LPA')
     _this.search = $location.search();
     _this.contextMenu = new ContextMenu('intervention')
-
+    _this.user = user;
+    console.log(user)
     _this.loadData = function(prevChecked) {
         LxProgressService.circular.show('#5fa2db', '#globalProgress');
         edisonAPI.compta.lpa($location.search()).then(function(result) {
