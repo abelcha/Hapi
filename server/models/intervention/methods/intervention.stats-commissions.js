@@ -8,10 +8,12 @@ module.exports = function(schema) {
                 var date = new Date(y, m);
                 return {
                     $gte: new Date(date.getFullYear(), date.getMonth(), 1, -1),
-                    $lt: new Date(date.getFullYear(), date.getMonth() + 1, 0)
+                    $lt: new Date(date.getFullYear(), date.getMonth() + 1, 1)
                 }
             }
+
             var dateRange = getMonthRange(req.query.m - 1, req.query.y)
+            console.log(dateRange)
             db.model('intervention').find({
                     'date.ajout': dateRange,
                     'login.ajout': req.query.l,
