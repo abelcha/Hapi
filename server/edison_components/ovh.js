@@ -26,11 +26,13 @@ OVH.prototype.send = function(params) {
                 if (!envProd) {
                     dest = "0033633138868";
                 }
+                console.log("here")
                 _this.service.request('POST', '/sms/' + serviceName + '/jobs', {
                     message: params.text,
                     senderForResponse: true,
                     receivers: [dest]
                 }, function(errsend, result) {
+                    console.log(!err, !params.silent, params)
                     if (!err && !params.silent)  {
                         mail.send({
                             From: "contact@edison-services.fr",
