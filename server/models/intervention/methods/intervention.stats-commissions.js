@@ -28,6 +28,7 @@ module.exports = function(schema) {
             date_now: moment().format('LLL'),
             from_name: 'EDISON-SERVICES',
             client_name: user.nom.toUpperCase() + " " + _.capitalize(user.prenom),
+
             items: _.map(rtn, function(e) {
                 return {
                     id: e.id,
@@ -40,11 +41,11 @@ module.exports = function(schema) {
             })
         }
 
-        input.montant = _.round(_.reduce(rtn, function(total, n) {
+        input._montant = _.round(_.reduce(rtn, function(total, n) {
             return total + n.pf;
         }, 0), 2)
 
-        input.total = _.round(_.reduce(rtn, function(total, n) {
+        input._total = _.round(_.reduce(rtn, function(total, n) {
             return total + n.total;
         }, 0), 2)
 
