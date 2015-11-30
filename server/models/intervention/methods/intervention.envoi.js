@@ -276,6 +276,8 @@ module.exports = function(schema) {
                                         .then(function(resp) {
                                             if (resp && resp.status === 'ENC' && !resp.appels.length) {
                                                 sms.send({
+                                                    type: "NOCALL",
+                                                    dest: resp.sst.nomSociete,
                                                     to: resp.sst.telephone.tel1,
                                                     text: template.sms.intervention.rappelNoCalls(inter.id)
                                                 })
