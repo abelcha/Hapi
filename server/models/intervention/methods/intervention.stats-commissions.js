@@ -18,7 +18,7 @@ module.exports = function(schema) {
                     'date.ajout': dateRange,
                     'login.ajout': req.query.l,
                     'compta.paiement.effectue': true
-                }).select('id categorie compta.reglement compta.paiement.effectue')
+                }).select('id categorie compta prixFinal')
                 .exec(function(err, resp) {
                     resolve(resp);
                 })
