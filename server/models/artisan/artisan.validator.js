@@ -113,7 +113,7 @@ module.exports = function(schema) {
         }
     });
     schema.post('save', function(doc) {
-        db.model('intervention').update({
+/*        db.model('intervention').update({
             'sst': doc.id
         }, {
             $set: {
@@ -125,7 +125,7 @@ module.exports = function(schema) {
         }, function(err, resp) {
             console.log('-->', err, resp)
         });
-
+*/
         if (!isWorker) {
             db.model('artisan').uniqueCacheReload(doc)
             if (envProd && (!doc.date.dump || moment().subtract(5000).isAfter(doc.date.dump))) {
