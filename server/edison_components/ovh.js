@@ -30,16 +30,17 @@ OVH.prototype.send = function(params) {
             } else {
                 var dest = (params.to.length == 10 ? params.to.replace('0', '0033') : params.to);
                 console.log('DEST', dest)
-                
+
                 if (!envProd) {
                     dest = "0033633138868";
                 }
-                console.log("here")
+                console.log("POST /SMS/SERVICENAME")
                 _this.service.request('POST', '/sms/' + serviceName + '/jobs', {
                     message: params.text,
                     senderForResponse: true,
                     receivers: [dest]
                 }, function(errsend, result) {
+                    console.log("OK CALLBACK")
                     console.log(!err, !params.silent, params)
                     if (!err && !params.silent)  {
                         mail.send({

@@ -46,12 +46,22 @@
                 console.log('hereerere33')
                 var text = _.template(textTemplate.sms.intervention.demande.bind(curr)(session, config, moment))(curr)
                 console.log('hereerere44')
-                sms.send({
-                    type: "DEMANDE",
-                    dest: inter.sst.telephone.nomSociete,
-                    text: text,
-                    to: curr.sst.telephone.tel1
-                })
+                try {
+                    console.log({
+                        type: "DEMANDE",
+                        dest: inter.sst.telephone.nomSociete,
+                        text: text,
+                        to: curr.sst.telephone.tel1
+                    })
+                    sms.send({
+                        type: "DEMANDE",
+                        dest: inter.sst.telephone.nomSociete,
+                        text: text,
+                        to: curr.sst.telephone.tel1
+                    })
+                } catch (e) {
+                    console.log('ERROR===>', e)
+                }
             })
         }, 30000)
     }
@@ -166,7 +176,7 @@
             _new.litige.closedBy = session.login;
         }
 
-        console.log("HRHEHEHEHE", !!_new.artisan, !!_new.artisan.id , _new.artisan.id !== _old.artisan.id , !!sstDemandable(_new.artisan))
+        console.log("HRHEHEHEHE", !!_new.artisan, !!_new.artisan.id, _new.artisan.id !== _old.artisan.id, !!sstDemandable(_new.artisan))
 
         if (_new.artisan && _new.artisan.id && _new.artisan.id !== _old.artisan.id && sstDemandable(_new.artisan)) {
             console.log('SENDSMS')
