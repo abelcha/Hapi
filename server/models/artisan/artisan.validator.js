@@ -28,21 +28,6 @@ module.exports = function(schema) {
         if (res.inters_all >= 1) {
             return 'NEW'
         }
-
-
-        /* 
-         if (_.inRange(res.inters_, 1, 3)) {
-             return "NEW";
-         }
-         if (_.inRange(sst.nbrIntervention, 3, 6)) {
-             return "FORM";
-         }
-         if (_.inRange(sst.nbrIntervention, 6, 16)) {
-             return "CONF";
-         }
-         if (sst.nbrIntervention > 15) {
-             return "REG"
-         }*/
     }
 
     var isBlocked = function(sst, res) {
@@ -112,6 +97,7 @@ module.exports = function(schema) {
                 _this.quarantained = result.quarantained;
                 _this.status = result.inters_all ? "ACT" : "POT";
                 console.log(_this.subStatus, _this.blocked)
+                console.log(result);
                 _this.subStatus = getSubStatus(_this, result);
                 _this.blocked = isBlocked(_this, result);
                 //if (_this.subStatus || _this.blocked)
@@ -127,6 +113,19 @@ module.exports = function(schema) {
         }
     });
     schema.post('save', function(doc) {
+        db.model('intervention').update({
+            'sst': doc.id
+        }, {
+            $set: {
+                'artisan.subStatus': doc.subStatus,
+                'cache.f.ss': doc.subStatus
+            }
+        }, {
+            multi:true
+        }, function(err, resp) {
+            console.log('-->', err, resp)
+        });
+
         if (!isWorker) {
             db.model('artisan').uniqueCacheReload(doc)
             if (envProd && (!doc.date.dump || moment().subtract(5000).isAfter(doc.date.dump))) {

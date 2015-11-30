@@ -459,6 +459,11 @@ angular.module('edison')
             return _.includes(["ANN", "APR", "ENC", undefined], this.status)
         }
 
+        Intervention.prototype.isPayable = function() {
+            return (this.status === 'ENC' || this.status === 'VRF') &&
+                user.root ||  user.service === 'COMPTABILITE'
+        }
+
         Intervention.prototype.isVerifiable = function() {
             console.log('isVerifiable')
             if (!this.artisan) {
