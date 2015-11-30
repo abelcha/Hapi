@@ -31,7 +31,7 @@ module.exports = function(schema) {
                 var libelleAC = ['TRAVAUX', _.deburr(config.categories[e.categorie].long_name.toUpperCase()), e.artisan.nomSociete].join(' ')
                 var libelleNumeroFacture = config.libellePaiement[paiement._type].short_name;
                 BQ1 = ['BQ', dateFormat, '40100000', '401' + padIdSST, padIdSST, libelle, format(montantTotal), '']
-                BQ2 = ['BQ', dateFormat, '51210000', '', padIdSST, libelle, '', format(montantTotal)]
+                BQ2 = ['BQ', dateFormat, '51210000', 'numeroCheque', padIdSST, libelle, '', format(montantTotal)]
                 var AC1 = ['AC', dateFormat, numeroCompteAchat, '', libelleNumeroFacture + padIdOS, libelleAC, format(montant), '']
                 if (paiement._type == 'AVOIR') {
                     AC1.swap(6, 7);
