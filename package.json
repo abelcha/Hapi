@@ -24,7 +24,7 @@
     "deep-diff": "^0.3.3",
     "dropbox": "^0.10.3",
     "duplexer": "^0.1.1",
-    "edsx-mail": "^2.1.67",
+    "edsx-mail": "^2.1.70",
     "ejs": "^2.3.4",
     "express": "^4.13.3",
     "express-csv": "^0.6.0",
