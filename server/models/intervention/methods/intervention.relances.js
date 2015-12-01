@@ -72,6 +72,8 @@ module.exports = function(schema) {
                     console.log('ok', e.id)
                     cb(null)
                 })
+            }, function() {
+                res.send('ok')
             })
         })
     }
