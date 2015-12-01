@@ -71,7 +71,7 @@
             <span ng-if="dialog" text-sm> (Prix Final: {{data.prixFinal}} €)</span>
             <br>
             <div class="paragraph fs-body-1 mt+">
-                <div class="row" ng-show="allowFlush !== true" ng-click="allowFlush = !allowFlush" style="text-align: center;">
+                <div class="row" ng-show="data.compta.paiement.historique.length && allowFlush !== true" ng-click="allowFlush = !allowFlush" style="text-align: center;">
                     <h1>MODIFIER LE PAIEMENT</h1>
                 </div>
                 <div ng-if="!data.compta.paiement.historique.length || allowFlush || data.compta.paiement.ready">
@@ -99,9 +99,10 @@
                         </div>
                     </div>
                 </div>
-                <div class="row" ng-if="data.compta.paiement.base && (!data.compta.paiement.historique.length || allowFlush)">
-                    <div class="col-sm-10">
-                        <table cellspacing="0" cellpadding="8" class="table table-bordered table-striped">
+                <div class="row" >
+                    <div class="col-sm-10" >
+                        <table cellspacing="0" cellpadding="8" class="table table-bordered table-striped"
+                        ng-if="data.compta.paiement.base && (!data.compta.paiement.historique.length || allowFlush)">
                             <tr>
                                 <th> MONTANT H.T VENTE </th>
                                 <th style="width: 121px;"> + {{format(compta.base)}} € </th>
