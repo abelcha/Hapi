@@ -1,6 +1,9 @@
 <div style="margin-top: -15px;">
     <div class="card" style="height:730px;width:100%">
+
         <div style="height:90%;padding:20px;overflow:scroll">
+        <div ng-if="!!lpa && !lpa.length" style="text-align: center;">
+            <h1>AUCUNS ELEMENTS</h1></div>
             <table class="table table-condensed  table-hover table-bordered">
 
                 <body>
@@ -31,7 +34,7 @@
                         <td>{{ item.login}} ({{item.date|date:"dd/MM/yy à H'h'mm"}})</td>
                         <td>{{ item.mode }}</td>
                         <td>{{ item.type }}</td>
-                        <td >{{ item.montant.base}} €</td>
+                        <td>{{ item.montant.base}} €</td>
                         <td ng-if="vm.user.login !== 'benjamin_b'">{{ item.montant.total}} €</td>
                         <td ng-if="vm.user.login !== 'benjamin_b'">{{ item.montant.legacy ? (item.montant.legacy + ' €') : "" }}</td>
                         <td ng-if="vm.user.login !== 'benjamin_b'">{{ item.montant.balance }} €</td>

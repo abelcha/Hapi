@@ -823,11 +823,7 @@ module.exports = FiltersFactory;
          _this.venteFourniture = _this.base - (_this.baseDeplacement + _this.baseMaindOeuvre);
          _this.coutFourniture = _this.fourniture.total;
          _this.baseMargeFourniture = _this.venteFourniture - _this.coutFourniture;
-         /*         if (_this.baseMargeFourniture < 0) {
-                      _this.baseMaindOeuvre += _this.baseMargeFourniture;
-                      _this.baseMargeFourniture = 0;
-                  }*/
-         _this.remunerationMargeFourniture = _this.applyCoeff(_this.baseMargeFourniture, _this.pourcentage.fourniture);
+         _this.remunerationMargeFourniture = _this.applyCoeff(_this.baseMargeFourniture, _this.pourcentage.maindOeuvre);
          _this.remboursementFourniture = _this.fourniture.artisan;
          _this.montantTotal = _round(_this.remunerationDeplacement + _this.remunerationMargeFourniture + _this.remunerationMaindOeuvre + _this.remboursementFourniture, 2);
          _this.montantTotalTVA = _round(_this.montantTotal * (paiement.tva / 100), 2);

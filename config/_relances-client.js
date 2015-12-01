@@ -81,7 +81,20 @@
     if (envDev) {
         callback(null, null);
     }
-    PDF('recouvrement', this.doc).buffer(callback)
+    var _this = this;
+    this.doc.printable = true
+    PDF([{
+        model: 'recouvrement',
+        options: _this.doc
+    }, {
+        model: 'blank',
+        options: {}
+    }, {
+        model: 'facture',
+        options: _.merge(this.doc, {
+            printable: true
+        })
+    }]).toBuffer(callback)
  }
 
 
@@ -89,7 +102,20 @@
     if (envDev) {
         callback(null, null);
     }
-    PDF('injonction', this.doc).buffer(callback)
+    var _this = this;
+    this.doc.printable = true
+    PDF([{
+        model: 'injonction',
+        options: _this.doc
+    }, {
+        model: 'blank',
+        options: {}
+    }, {
+        model: 'facture',
+        options: _.merge(this.doc, {
+            printable: true
+        })
+    }]).toBuffer(callback)
  }
 
 

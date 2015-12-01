@@ -4830,7 +4830,7 @@ angular.module('edison').directive('infoCompta', ['config', 'Paiement',
                 displayReglement: '@',
                 dialog: '@',
                 displayPaiement: '@',
-                simulator:'@'
+                simulator: '@'
             },
             link: function(scope, element, attrs) {
                 scope.config = config
@@ -4843,7 +4843,6 @@ angular.module('edison').directive('infoCompta', ['config', 'Paiement',
                     paiement.mode = _.get(scope.data.sst, 'document.rib.file') ? "VIR" : "CHQ"
                 }
                 scope.format = function(nbr) {
-                    return nbr;
                     return _.round(nbr, 2).toFixed(2);
                 }
                 scope.getPaiement = function(e) {
@@ -4873,12 +4872,16 @@ angular.module('edison').directive('infoCompta', ['config', 'Paiement',
                         paiement.montant = scope.compta.montantTotal
                     }
                 }
-                scope.$watch('data.fourniture', change, true)
+                
+                
+                scope.$watch('data.compta.paiement.pourcentage.deplacement', change, true)
+
+                scope.$watch('data.compta.paiement.pourcentage.maindOeuvre', change, true)
+
                 scope.$watchGroup(['data.compta.reglement.montant',
                     'data.compta.paiement.base',
                     'data.compta.paiement.tva',
                     'data.compta.paiement.pourcentage.deplacement',
-                    'data.compta.paiement.pourcentage.fourniture',
                     'data.compta.paiement.pourcentage.maindOeuvre',
                 ], change, true);
                 if (!scope.data.compta.paiement.base && scope.data.compta.reglement.montant) {

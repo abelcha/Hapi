@@ -136,7 +136,7 @@
                                 <th> = {{format(compta.baseMargeFourniture + compta.baseMaindOeuvre)}} € </th>
                                 <th>
                                     <lx-text-field label="Marge" style="width:100px">
-                                        <input type="number" min="0" max="100" style="width: 75%;display: inline;" class="" ng-model="data.compta.paiement.pourcentage.fourniture"> %
+                                        <input type="number" min="0" max="100" style="width: 75%;display: inline;" class="" ng-model="data.compta.paiement.pourcentage.maindOeuvre"> %
                                     </lx-text-field>
                                 </th>
                                 <th> {{format(compta.remunerationMaindOeuvre + compta.remunerationMargeFourniture)}} € </th>
@@ -209,7 +209,7 @@
                                         <th> Marge globale </th>
                                         <th> = {{format(hist.baseMargeFourniture + hist.baseMaindOeuvre)}} € </th>
                                         <th>
-                                            {{hist.pourcentage.fourniture}}%
+                                            {{hist.pourcentage.maindOeuvre}}%
                                         </th>
                                         <th> {{format(hist.remunerationMaindOeuvre + hist.remunerationMargeFourniture)}} € </th>
                                     </tr>
