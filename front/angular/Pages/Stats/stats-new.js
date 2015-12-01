@@ -15,6 +15,13 @@ var StatsNewController = function(MomentIterator, TabContainer, $routeParams, ed
         }
     }).reverse()
     var dateTarget = _.pick(_this.dateSelect[0], 'm', 'y');
+    
+    _this.yearSelect = MomentIterator(start, end).range('year', {
+        format:'YYYY'
+    }).map(function(e) {
+        return parseInt(e)
+    })
+    console.log("====", _this.yearSelect)
 
     var getChart = function(type, title, series, categories) {
 
@@ -156,5 +163,7 @@ var StatsNewController = function(MomentIterator, TabContainer, $routeParams, ed
         dateTarget.y = parseInt($location.search().y)
     }
     $scope.selectedDate = _.find(_this.dateSelect, dateTarget)
+    $scope.selectedYear = $scope.selectedDate.y.toString();
+    console.log($scope.selectedYear)
 }
 angular.module('edison').controller('StatsNewController', StatsNewController);
