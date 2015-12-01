@@ -2727,7 +2727,7 @@ module.exports = {
                 this.format = this.mmt.isSame(_moment(), 'day') ? "[aujourd'hui à ]HH[h]mm" : "[le ]DD[/]MM[ à ]HH[h]mm"
                 this.datePlain = this.mmt.format(this.format)
                 this.user = user;
-                this.user.pseudo = this.user.pseudo ||  "Arnaud";
+                this.user.pseudo = _.capitalize(this.user.pseudo ||  "arnaud");
                 this.ligneDirect = user.ligne ? (user.ligne.match(/.{2}|.{1,2}/g).join('.')) :  "09.72.44.16.63";
                 this.categorieClean = config.categories[this.categorie].suffix + " " + config.categories[this.categorie].long_name.toLowerCase()
                 return "Bonjour M. {{sst.representant.nom}} , nous cherchons a vous joindre pour une intervention {{categorieClean}}" +
