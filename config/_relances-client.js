@@ -87,9 +87,6 @@
         model: 'recouvrement',
         options: _this.doc
     }, {
-        model: 'blank',
-        options: {}
-    }, {
         model: 'facture',
         options: _.merge(this.doc, {
             printable: true
