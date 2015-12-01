@@ -25,4 +25,6 @@ angular.module('browserify', [])
     .factory('Combo', [function() {
         return require('./combo-produits');
     }])
-
+    .factory('MomentIterator', [function() {
+        return require('moment-iterator');
+    }])

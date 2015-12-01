@@ -51,7 +51,6 @@ angular.module('edison').controller('MainController', function($timeout, LxNotif
     getSignalementStats()
 
     var reloadStats = function() {
-        console.log('reloadStats')
         edisonAPI.stats.telepro()
             .success(function(result) {
                 $scope.userStats = _.find(result, function(e) {

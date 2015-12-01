@@ -1,4 +1,4 @@
-var CommissionsController = function(DateSelect, TabContainer, $routeParams, edisonAPI, $rootScope, $scope, $location, LxProgressService, socket) {
+var CommissionsController = function(MomentIterator, TabContainer, $routeParams, edisonAPI, $rootScope, $scope, $location, LxProgressService, socket) {
     "use strict";
     var _this = this;
     _this.tab = TabContainer.getCurrentTab();
@@ -19,16 +19,23 @@ var CommissionsController = function(DateSelect, TabContainer, $routeParams, edi
         })
         return rtn;
     }
+    var end = new Date();
+    var start = new Date(2013, 8, 1)
+    _this.dateSelect = MomentIterator(start, end).range('month').map(function(e) {
+        return {
+            t:e.format('MMM YYYY'),
+            m:e.month() + 1,
+            y:e.year(),
+        }
+    }).reverse()
 
-    var dateSelect = new DateSelect;
-
+    var dateTarget = _.pick(_this.dateSelect[0], 'm', 'y');
     $scope.usrs = _.filter(window.app_users, 'service', 'INTERVENTION');
 
     $scope.selectedUser = $location.search().l ||  $scope.usrs[0].login
 
     var actualise = _.debounce(function() {
         LxProgressService.circular.show('#5fa2db', '#globalProgress');
-
         edisonAPI.intervention.commissions(_.merge($scope.selectedDate, {
             l: $scope.selectedUser
         })).then(function(resp) {
@@ -46,19 +53,13 @@ var CommissionsController = function(DateSelect, TabContainer, $routeParams, edi
         $location.search('m', curr.m);
         $location.search('y', curr.y);
         actualise();
-        /* $location.search('m', curr.m);
-         $location.search('y', curr.y);
-         edisonAPI.intervention.commissions(curr).then(function(resp) {
-             console.log('==>', resp.data)
-         })*/
     })
     if ($location.search().m)  {
-        dateSelect.current.m = parseInt($location.search().m)
+        dateTarget.m = parseInt($location.search().m)
     }
     if ($location.search().y)  {
-        dateSelect.current.y = parseInt($location.search().y)
+        dateTarget.y = parseInt($location.search().y)
     }
-    _this.dateSelect = dateSelect.list()
-    $scope.selectedDate = _.find(dateSelect.list(), dateSelect.current)
+    $scope.selectedDate = _.find(_this.dateSelect, dateTarget)
 }
 angular.module('edison').controller('CommissionsController', CommissionsController);

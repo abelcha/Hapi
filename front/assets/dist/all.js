@@ -90,7 +90,6 @@ angular.module('edison').controller('MainController', function($timeout, LxNotif
     getSignalementStats()
 
     var reloadStats = function() {
-        console.log('reloadStats')
         edisonAPI.stats.telepro()
             .success(function(result) {
                 $scope.userStats = _.find(result, function(e) {
@@ -732,7 +731,7 @@ angular.module('edison').directive('historiqueSst', function(edisonAPI) {
      }
  });
 
- var Controller = function($timeout, TabContainer, FiltersFactory, user, ContextMenu, LxProgressService, edisonAPI, DataProvider, $routeParams, $location, $rootScope, $filter, config, ngTableParams, DateSelect) {
+ var Controller = function($timeout, TabContainer, FiltersFactory, user, ContextMenu, LxProgressService, edisonAPI, DataProvider, $routeParams, $location, $rootScope, $filter, config, ngTableParams, MomentIterator) {
     var _this = this;
     _this._ = _;
     LxProgressService.circular.show('#5fa2db', '#globalProgress');
@@ -745,8 +744,17 @@ angular.module('edison').directive('historiqueSst', function(edisonAPI) {
     if ($routeParams.fltr) {
         currentFilter = filtersFactory.getFilterByUrl($routeParams.fltr)
     }
-    var dateSelect = new DateSelect(moment().add(-12).toDate());
-    _this.dateSelectList = dateSelect.list();
+    var end = new Date();
+    var start = moment().add(-13, 'month').toDate()
+    _this.dateSelectList = MomentIterator(start, end).range('month').map(function(e) {
+        return {
+            ts:e.unix(),
+            t: e.format('MMM YYYY'),
+            m: e.month() + 1,
+            y: e.year(),
+        }
+    })
+
     _this.routeParamsFilter = $routeParams.fltr;
     if (_this.embedded) {
         _this.$watch('filter', function() {
@@ -916,7 +924,7 @@ angular.module('edison').directive('historiqueSst', function(edisonAPI) {
 
 
 
- angular.module('edison').directive('lineupIntervention', function($timeout, TabContainer, FiltersFactory, user, ContextMenu, LxProgressService, edisonAPI, DataProvider, $routeParams, $location, $rootScope, $filter, config, ngTableParams, DateSelect) {
+ angular.module('edison').directive('lineupIntervention', function($timeout, TabContainer, FiltersFactory, user, ContextMenu, LxProgressService, edisonAPI, DataProvider, $routeParams, $location, $rootScope, $filter, config, ngTableParams, MomentIterator) {
     "use strict";
     var arg = arguments;
     return {
@@ -936,7 +944,7 @@ angular.module('edison').directive('historiqueSst', function(edisonAPI) {
     }
  });
 
- angular.module('edison').directive('lineupDevis', function($timeout, TabContainer, FiltersFactory, user, ContextMenu, LxProgressService, edisonAPI, DataProvider, $routeParams, $location, $rootScope, $filter, config, ngTableParams, DateSelect) {
+ angular.module('edison').directive('lineupDevis', function($timeout, TabContainer, FiltersFactory, user, ContextMenu, LxProgressService, edisonAPI, DataProvider, $routeParams, $location, $rootScope, $filter, config, ngTableParams, MomentIterator) {
     "use strict";
     var arg = arguments;
     return {
@@ -953,7 +961,7 @@ angular.module('edison').directive('historiqueSst', function(edisonAPI) {
     }
  });
 
- angular.module('edison').directive('lineupArtisan', function($timeout, TabContainer, FiltersFactory, user, ContextMenu, LxProgressService, edisonAPI, DataProvider, $routeParams, $location, $rootScope, $filter, config, ngTableParams, DateSelect) {
+ angular.module('edison').directive('lineupArtisan', function($timeout, TabContainer, FiltersFactory, user, ContextMenu, LxProgressService, edisonAPI, DataProvider, $routeParams, $location, $rootScope, $filter, config, ngTableParams, MomentIterator) {
     "use strict";
     var arg = arguments;
     return {
@@ -5463,19 +5471,23 @@ var SearchController = function(edisonAPI, TabContainer, $routeParams, $location
 
 angular.module('edison').controller('SearchController', SearchController);
 
-var StatsNewController = function(DateSelect, TabContainer, $routeParams, edisonAPI, $rootScope, $scope, $location, LxProgressService, socket) {
+var StatsNewController = function(MomentIterator, TabContainer, $routeParams, edisonAPI, $rootScope, $scope, $location, LxProgressService, socket) {
     "use strict";
     var _this = this;
     _this.tab = TabContainer.getCurrentTab();
     _this.tab.setTitle('Stats');
 
 
-    var dateSelect = new DateSelect;
-    _this.yearSelect = [];
-    _.times(dateSelect.current.y - dateSelect.start.y + 1, function(k) {
-        _this.yearSelect.push(dateSelect.start.y + k);
-    })
-    $scope.selectedYear = dateSelect.current.y
+    var end = new Date();
+    var start = new Date(2013, 8, 1)
+    _this.dateSelect = MomentIterator(start, end).range('month').map(function(e) {
+        return {
+            t:e.format('MMM YYYY'),
+            m:e.month() + 1,
+            y:e.year(),
+        }
+    }).reverse()
+    var dateTarget = _.pick(_this.dateSelect[0], 'm', 'y');
 
     var getChart = function(type, title, series, categories) {
 
@@ -5610,15 +5622,13 @@ var StatsNewController = function(DateSelect, TabContainer, $routeParams, edison
         $location.search('y', curr.y);
         return monthChange(curr);
     });
-
     if ($location.search().m)  {
-        dateSelect.current.m = parseInt($location.search().m)
+        dateTarget.m = parseInt($location.search().m)
     }
     if ($location.search().y)  {
-        dateSelect.current.y = parseInt($location.search().y)
+        dateTarget.y = parseInt($location.search().y)
     }
-    _this.dateSelect = dateSelect.list()
-    $scope.selectedDate = _.find(dateSelect.list(), dateSelect.current)
+    $scope.selectedDate = _.find(_this.dateSelect, dateTarget)
 }
 angular.module('edison').controller('StatsNewController', StatsNewController);
 
@@ -5700,7 +5710,7 @@ var StatsController = function(DateSelect, TabContainer, $routeParams, edisonAPI
 }
 angular.module('edison').controller('StatsController', StatsController);
 
-var CommissionsController = function(DateSelect, TabContainer, $routeParams, edisonAPI, $rootScope, $scope, $location, LxProgressService, socket) {
+var CommissionsController = function(MomentIterator, TabContainer, $routeParams, edisonAPI, $rootScope, $scope, $location, LxProgressService, socket) {
     "use strict";
     var _this = this;
     _this.tab = TabContainer.getCurrentTab();
@@ -5721,16 +5731,23 @@ var CommissionsController = function(DateSelect, TabContainer, $routeParams, edi
         })
         return rtn;
     }
+    var end = new Date();
+    var start = new Date(2013, 8, 1)
+    _this.dateSelect = MomentIterator(start, end).range('month').map(function(e) {
+        return {
+            t:e.format('MMM YYYY'),
+            m:e.month() + 1,
+            y:e.year(),
+        }
+    }).reverse()
 
-    var dateSelect = new DateSelect;
-
+    var dateTarget = _.pick(_this.dateSelect[0], 'm', 'y');
     $scope.usrs = _.filter(window.app_users, 'service', 'INTERVENTION');
 
     $scope.selectedUser = $location.search().l ||  $scope.usrs[0].login
 
     var actualise = _.debounce(function() {
         LxProgressService.circular.show('#5fa2db', '#globalProgress');
-
         edisonAPI.intervention.commissions(_.merge($scope.selectedDate, {
             l: $scope.selectedUser
         })).then(function(resp) {
@@ -5748,20 +5765,14 @@ var CommissionsController = function(DateSelect, TabContainer, $routeParams, edi
         $location.search('m', curr.m);
         $location.search('y', curr.y);
         actualise();
-        /* $location.search('m', curr.m);
-         $location.search('y', curr.y);
-         edisonAPI.intervention.commissions(curr).then(function(resp) {
-             console.log('==>', resp.data)
-         })*/
     })
     if ($location.search().m)  {
-        dateSelect.current.m = parseInt($location.search().m)
+        dateTarget.m = parseInt($location.search().m)
     }
     if ($location.search().y)  {
-        dateSelect.current.y = parseInt($location.search().y)
+        dateTarget.y = parseInt($location.search().y)
     }
-    _this.dateSelect = dateSelect.list()
-    $scope.selectedDate = _.find(dateSelect.list(), dateSelect.current)
+    $scope.selectedDate = _.find(_this.dateSelect, dateTarget)
 }
 angular.module('edison').controller('CommissionsController', CommissionsController);
 

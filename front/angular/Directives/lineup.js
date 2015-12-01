@@ -1,4 +1,4 @@
- var Controller = function($timeout, TabContainer, FiltersFactory, user, ContextMenu, LxProgressService, edisonAPI, DataProvider, $routeParams, $location, $rootScope, $filter, config, ngTableParams, DateSelect) {
+ var Controller = function($timeout, TabContainer, FiltersFactory, user, ContextMenu, LxProgressService, edisonAPI, DataProvider, $routeParams, $location, $rootScope, $filter, config, ngTableParams, MomentIterator) {
     var _this = this;
     _this._ = _;
     LxProgressService.circular.show('#5fa2db', '#globalProgress');
@@ -11,8 +11,17 @@
     if ($routeParams.fltr) {
         currentFilter = filtersFactory.getFilterByUrl($routeParams.fltr)
     }
-    var dateSelect = new DateSelect(moment().add(-12).toDate());
-    _this.dateSelectList = dateSelect.list();
+    var end = new Date();
+    var start = moment().add(-13, 'month').toDate()
+    _this.dateSelectList = MomentIterator(start, end).range('month').map(function(e) {
+        return {
+            ts:e.unix(),
+            t: e.format('MMM YYYY'),
+            m: e.month() + 1,
+            y: e.year(),
+        }
+    })
+
     _this.routeParamsFilter = $routeParams.fltr;
     if (_this.embedded) {
         _this.$watch('filter', function() {
@@ -182,7 +191,7 @@
 
 
 
- angular.module('edison').directive('lineupIntervention', function($timeout, TabContainer, FiltersFactory, user, ContextMenu, LxProgressService, edisonAPI, DataProvider, $routeParams, $location, $rootScope, $filter, config, ngTableParams, DateSelect) {
+ angular.module('edison').directive('lineupIntervention', function($timeout, TabContainer, FiltersFactory, user, ContextMenu, LxProgressService, edisonAPI, DataProvider, $routeParams, $location, $rootScope, $filter, config, ngTableParams, MomentIterator) {
     "use strict";
     var arg = arguments;
     return {
@@ -202,7 +211,7 @@
     }
  });
 
- angular.module('edison').directive('lineupDevis', function($timeout, TabContainer, FiltersFactory, user, ContextMenu, LxProgressService, edisonAPI, DataProvider, $routeParams, $location, $rootScope, $filter, config, ngTableParams, DateSelect) {
+ angular.module('edison').directive('lineupDevis', function($timeout, TabContainer, FiltersFactory, user, ContextMenu, LxProgressService, edisonAPI, DataProvider, $routeParams, $location, $rootScope, $filter, config, ngTableParams, MomentIterator) {
     "use strict";
     var arg = arguments;
     return {
@@ -219,7 +228,7 @@
     }
  });
 
- angular.module('edison').directive('lineupArtisan', function($timeout, TabContainer, FiltersFactory, user, ContextMenu, LxProgressService, edisonAPI, DataProvider, $routeParams, $location, $rootScope, $filter, config, ngTableParams, DateSelect) {
+ angular.module('edison').directive('lineupArtisan', function($timeout, TabContainer, FiltersFactory, user, ContextMenu, LxProgressService, edisonAPI, DataProvider, $routeParams, $location, $rootScope, $filter, config, ngTableParams, MomentIterator) {
     "use strict";
     var arg = arguments;
     return {

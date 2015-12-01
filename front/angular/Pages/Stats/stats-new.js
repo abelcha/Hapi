@@ -1,16 +1,20 @@
-var StatsNewController = function(DateSelect, TabContainer, $routeParams, edisonAPI, $rootScope, $scope, $location, LxProgressService, socket) {
+var StatsNewController = function(MomentIterator, TabContainer, $routeParams, edisonAPI, $rootScope, $scope, $location, LxProgressService, socket) {
     "use strict";
     var _this = this;
     _this.tab = TabContainer.getCurrentTab();
     _this.tab.setTitle('Stats');
 
 
-    var dateSelect = new DateSelect;
-    _this.yearSelect = [];
-    _.times(dateSelect.current.y - dateSelect.start.y + 1, function(k) {
-        _this.yearSelect.push(dateSelect.start.y + k);
-    })
-    $scope.selectedYear = dateSelect.current.y
+    var end = new Date();
+    var start = new Date(2013, 8, 1)
+    _this.dateSelect = MomentIterator(start, end).range('month').map(function(e) {
+        return {
+            t:e.format('MMM YYYY'),
+            m:e.month() + 1,
+            y:e.year(),
+        }
+    }).reverse()
+    var dateTarget = _.pick(_this.dateSelect[0], 'm', 'y');
 
     var getChart = function(type, title, series, categories) {
 
@@ -145,14 +149,12 @@ var StatsNewController = function(DateSelect, TabContainer, $routeParams, edison
         $location.search('y', curr.y);
         return monthChange(curr);
     });
-
     if ($location.search().m)  {
-        dateSelect.current.m = parseInt($location.search().m)
+        dateTarget.m = parseInt($location.search().m)
     }
     if ($location.search().y)  {
-        dateSelect.current.y = parseInt($location.search().y)
+        dateTarget.y = parseInt($location.search().y)
     }
-    _this.dateSelect = dateSelect.list()
-    $scope.selectedDate = _.find(dateSelect.list(), dateSelect.current)
+    $scope.selectedDate = _.find(_this.dateSelect, dateTarget)
 }
 angular.module('edison').controller('StatsNewController', StatsNewController);
