@@ -42,7 +42,7 @@ module.exports = function(core) {
                             edison.event('UPDATE_' + core.NAME).id(id).login(req.session.login).data({
                                 old: nwData,
                                 nw: _old
-                            })
+                            }).save()
                             if (_.isFunction(core.postUpdate)) {
                                 core.postUpdate(resp, nwData, req.session);
                             }
