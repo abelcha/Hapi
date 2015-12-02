@@ -61,6 +61,16 @@ angular.module('edison').factory('dialog', function(openPost, $mdDialog, edisonA
             $mdDialog.show({
                 controller: function DialogController($scope, $mdDialog) {
                     $scope.data = inter
+
+                    Mousetrap.bind(['command+k', 'ctrl+k', 'command+f1', 'ctrl+f1'], function() {
+                        $window.open("appurl:", '_self');
+                        edisonAPI.intervention.scan(inter.id).then(function() {
+                            LxNotificationService.success("Le fichier est enregistré");
+                        })
+                        return false;
+                    });
+
+
                     $scope.answer = function(resp) {
                         $scope.data = inter;
                         $mdDialog.hide();
@@ -80,6 +90,14 @@ angular.module('edison').factory('dialog', function(openPost, $mdDialog, edisonA
             $mdDialog.show({
                 controller: function DialogController($scope, $mdDialog) {
                     $scope.data = inter
+                    Mousetrap.bind(['command+k', 'ctrl+k', 'command+f1', 'ctrl+f1'], function() {
+                        $window.open("appurl:", '_self');
+                        console.log('scane')
+                        edisonAPI.intervention.scan(inter.id).then(function() {
+                            LxNotificationService.success("Le fichier est enregistré");
+                        })
+                        return false;
+                    });
                     $scope.preview = function() {
                         openPost('/api/intervention/autofacture', {
                             data: JSON.stringify($scope.data),
