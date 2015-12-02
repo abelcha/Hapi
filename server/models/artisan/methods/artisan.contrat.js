@@ -54,12 +54,13 @@ module.exports = function(schema) {
                 }
                 PDF('contract', artisan).buffer(function(err, buffer) {
                     console.log('gotbuffer')
+                    console.log(process.cwd() + '/templates/envoiContrat.html')
                     mail.send({
                         From: "yohann.rhoum@edison-services.fr",
                         ReplyTo: communication.mailReply,
                         To: communication.mailDest,
                         Subject: req.body.rappel ? "En attente de vos documents" : "Proposition de partenariat",
-                        HtmlBody: req.body.text.replaceAll('\n', '<br>'),
+                        HtmlBody: require('fs').readFileSync(process.cwd() + '/templates/envoiContrat.html', 'utf8'),
                         Attachments: [{
                             Content: buffer.toString('base64'),
                             Name: 'Declaration de sous-traitance.pdf',
