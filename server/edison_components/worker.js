@@ -25,6 +25,7 @@ module.exports = {
         return new Promise(function(resolve, reject) {
             options._id = uuid.v4();
             options.status = "LAUNCHED"
+            console.log('[', 'DB', options.model, options.method, '] - [FIRED]')
             edison.event('WORKER_JOB')
                 .login(_.get(options, 'session.login'))
                 .data(options)
@@ -32,7 +33,7 @@ module.exports = {
             var job = jobs
                 .create(options.name, options)
                 .removeOnComplete(true)
-                .attempts(options.attempts || 1)
+                .attempts(options.attempts ||  1)
                 .priority(options.priority || 'normal')
                 .on('complete', resolve)
                 .on('failed', reject)

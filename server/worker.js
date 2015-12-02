@@ -31,14 +31,14 @@ try {
         });
 
 
-
+/*
         if (cluster.isMaster) {
             kue.app.listen(3000);
             for (var i = 0; i < process.env.CLUSTER_PROCESS_NBR; i++) {
                 console.log("fork")
                 cluster.fork();
             }
-        } else {
+        } else*/ {
 
             var __log = function(_id, status, time, err) {
                 db.model('event').update({
@@ -134,6 +134,7 @@ try {
                 console.log('[', job.data.model, job.data.method, '][' + job.id + '] - [LAUNCH]')
                 job.done = done;
                 job.timer = getTimer.bind(job)()
+                sqddqs()
                 fn(job.data).then(end.bind(job)(), done)
             })
         }
@@ -141,3 +142,5 @@ try {
 } catch (e) {
     __catch(e)
 }
+
+//process.on('uncaughtException', __catch);

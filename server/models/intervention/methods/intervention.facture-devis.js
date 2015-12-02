@@ -26,7 +26,7 @@ module.exports = function(schema) {
                 text: _.template(text)(doc),
                 id: _.padLeft(doc.id, 6, '0'),
                 date: doc.date,
-                factureQrCode:true,
+                factureQrCode: true,
                 title: "OBJET : Facture n°" + doc.id + " en attente de reglement"
             }
             /**/
@@ -54,6 +54,36 @@ module.exports = function(schema) {
         return PDF(l)
     }
 
+    schema.statics.bigJob = {
+        unique: true,
+        findBefore: true,
+        method: 'GET',
+        fn: function(inter, req, res) {
+            return new Promise(function(resolve, reject) {
+
+                if (!isWorker) {
+                    return edison.worker.createJob({
+                        priority: 'high',
+                        name: 'db_id',
+                        model: 'intervention',
+                        method: 'bigJob',
+                        data: inter,
+                        req: _.pick(req, 'body', 'session')
+                    }).then(resolve, reject)
+                }
+
+                inter.facture = inter.client;
+                getFacturePdfObj(inter, inter.date.intervention).toBuffer(function(err, buff) {
+                    console.log('======>', !!err, !!buff);
+                    if (!err && buff) {
+                        resolve('ok')
+                    } else {
+                        reject('nope')
+                    }
+                })
+            })
+        }
+    }
     schema.statics.facturePreview = function(req, res) {
         var _this = this;
         try {
