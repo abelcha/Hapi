@@ -18,18 +18,27 @@ try {
     if (envProd ||  envStaging) {
         var redisUrl = url.parse(key.redisURL);
     }
-    
 
-        var jobs = kue.createQueue({
-            prefix: 'kue'.envify(),
-            redis: envProd || envStaging ? {
-                port: redisUrl.port,
-                host: redisUrl.hostname,
-                auth: redisUrl.auth.split(":")[1],
-            } : undefined,
-            disableSearch: false
-        });
 
+    var jobs = kue.createQueue({
+        prefix: 'kue'.envify(),
+        redis: envProd || envStaging ? {
+            port: redisUrl.port,
+            host: redisUrl.hostname,
+            auth: redisUrl.auth.split(":")[1],
+        } : undefined,
+        disableSearch: false
+    });
+
+
+
+    if (cluster.isMaster) {
+        kue.app.listen(3000);
+        for (var i = 0; i < 3; i++) {
+            console.log("fork")
+            cluster.fork();
+        }
+    } else {
 
         var __log = function(_id, status, time, err) {
             db.model('event').update({
@@ -104,7 +113,7 @@ try {
             job.timer = getTimer.bind(job)()
             db.model(job.data.model)[job.data.method].fn(job.data.data, job.data.req)
                 .then(end.bind(job)(), err.bind(job)())
-                 .catch(__catch);
+                .catch(__catch);
 
         });
 
@@ -128,7 +137,7 @@ try {
             fn(job.data).then(end.bind(job)(), done)
                 //  .catch(__catch);
         })
-
+    }
 } catch (e) {
     __catch(e)
 }
