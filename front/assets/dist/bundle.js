@@ -1621,6 +1621,12 @@ module.exports = {
             return inter.status !== "AVR" && inter.status !== 'ENC'
         }
     }, {
+        title: "Auto-facture",
+        action: 'autoFacture',
+        hide: function(inter) {
+            return !inter.compta.paiement.effectue;
+        }
+    }, {
         title: "Reactiver",
         action: 'reactivation',
         hide: function(inter) {

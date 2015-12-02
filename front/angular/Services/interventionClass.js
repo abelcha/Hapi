@@ -165,6 +165,9 @@ angular.module('edison')
         Intervention.prototype.ouvrirFicheV1 = function() {
             $window.open('http://electricien13003.com/alvin/5_Gestion_des_interventions/show_res_bis_2.php?id_client=' + this.id)
         }
+        Intervention.prototype.autoFacture = function() {
+            $window.open('/api/intervention/' + this.id + '/autoFacture')
+        }
         Intervention.prototype.ouvrirFiche = function() {
             $location.url('/intervention/' + this.id)
         }
@@ -251,7 +254,7 @@ angular.module('edison')
             var fournitureSansFournisseur = _.find(this.fourniture, function(e) {
                 return !e.fournisseur;
             })
-            var fournitureSansPU =_.find(this.fourniture, function(e) {
+            var fournitureSansPU = _.find(this.fourniture, function(e) {
                     return !e.pu;
                 })
                 /*            if (_.get(this, 'client.telephone.tel1.length') !== 10) {
