@@ -34,7 +34,7 @@ try {
 
     if (cluster.isMaster) {
         kue.app.listen(3000);
-        for (var i = 0; i < 2; i++) {
+        for (var i = 0; i < 3; i++) {
             console.log("fork")
             cluster.fork();
         }

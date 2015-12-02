@@ -1,0 +1,10 @@
+./cmd job/test time=1000 -l &
+./cmd job/test time=1000 -l &
+./cmd job/test time=1000 -l &
+./cmd job/test time=1000 -l &
+./cmd job/test time=1000 -l &
+./cmd job/test time=1000 -l &
+./cmd job/test time=1000 -l &
+./cmd job/test time=1000 -l &
+./cmd job/test time=1000 -l &
+./cmd job/test time=1000 -l &
