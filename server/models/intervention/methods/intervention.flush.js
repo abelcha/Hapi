@@ -150,6 +150,7 @@ module.exports = function(schema) {
                             base: inter.montant.base,
                             payed: _.round(inter.montant.total - (inter.montant.balance - inter.montant.final), 2)
                         }
+                        doc.status = 'VRF'
                         doc.compta.paiement.ready = (hist.payed != hist.montant);
                         doc.compta.paiement.effectue = true
                         doc.compta.paiement.historique.push(hist)

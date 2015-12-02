@@ -605,7 +605,6 @@
                     }]
                 },
             }
-            console.log(rtn.compta)
         }
         if (d.date_paiement_client) {
             rtn.compta.reglement = {

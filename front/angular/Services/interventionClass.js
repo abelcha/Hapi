@@ -249,7 +249,10 @@ angular.module('edison')
             var _this = this;
 
             var fournitureSansFournisseur = _.find(this.fourniture, function(e) {
-                    return !e.fournisseur;
+                return !e.fournisseur;
+            })
+            var fournitureSansPU =_.find(this.fourniture, function(e) {
+                    return !e.pu;
                 })
                 /*            if (_.get(this, 'client.telephone.tel1.length') !== 10) {
                                 LxNotificationService.error("Le telephone est invalide");
@@ -259,6 +262,10 @@ angular.module('edison')
             if (fournitureSansFournisseur) {
                 LxNotificationService.error("Veuillez renseigner un fournisseur");
                 return cb(fournitureSansFournisseur)
+            }
+            if (fournitureSansPU) {
+                LxNotificationService.error("Veuillez renseigner un prix pour toutes les fournitures");
+                return cb(fournitureSansPU)
             }
             edisonAPI.intervention.save(_this)
                 .then(function(resp) {

@@ -13,6 +13,13 @@ angular.module('edison').directive('infoCompta', ['config', 'Paiement',
             },
             link: function(scope, element, attrs) {
                 scope.config = config
+
+                if (scope.displayReglement) {
+                    scope.showPaiement = true
+                }
+                if (scope.displayPaiement) {
+                    scope.showReglement = true
+                }
                 var reglement = scope.data.compta.reglement
                 var paiement = scope.data.compta.paiement
                 if (!scope.data.tva) {
@@ -46,12 +53,13 @@ angular.module('edison').directive('infoCompta', ['config', 'Paiement',
                 })
 
                 var change = function(newValues, oldValues, scope) {
+                    console.log('opk')
                     if (!_.isEqual(newValues, oldValues)) {
                         scope.compta = new Paiement(scope.data)
                         paiement.montant = scope.compta.montantTotal
                     }
                 }
-                
+                scope.$watch('data.fourniture', change, true)
                 
                 scope.$watch('data.compta.paiement.pourcentage.deplacement', change, true)
 

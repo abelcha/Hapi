@@ -98,6 +98,7 @@ angular.module('edison').factory('dialog', function(openPost, $mdDialog, edisonA
                         })
                         return false;
                     });
+                    $scope.data.compta.paiement.ready = true;
                     $scope.preview = function() {
                         openPost('/api/intervention/autofacture', {
                             data: JSON.stringify($scope.data),

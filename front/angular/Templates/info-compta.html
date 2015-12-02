@@ -1,7 +1,17 @@
 <div>
     <div class="card margin" ng-if="displayReglement !== 'false'">
-        <div class="p+">
+        <div class="p+" ng-click="showReglement = !showReglement;">
             <strong class="fs-headline display-block">Reglement Client <span ng-if="dialog" text-sm> (Prix Final: {{data.prixFinal}} €)</span></strong>
+            <span ng-if="!showReglement" class="fs-subhead tc-black-2 display-inline">
+                <span ng-if="!data.compta.reglement.recu">
+                    Pas de réglements
+                </span>
+            <span ng-if="data.compta.reglement.recu">
+                    Réglement recu le {{data.compta.reglement.date|date:"dd/MM/yyyy à HH'h'mm"}} par {{data.compta.reglement.login}} ({{data.compta.reglement.montant}} €)
+                </span>
+            </span>
+        </div>
+        <div class="p+" ng-if="showReglement">
             <div class="paragraph fs-body-1 mt+">
                 <div class="row">
                     <div ng-class="dialog ? 'col-md-4' : 'col-md-2'">
@@ -66,11 +76,20 @@
         </div>
     </div>
     <div class="card margin" ng-if="displayPaiement !== 'false'">
-        <div class="p+">
+        <div class="p+" ng-click="showPaiement = !showPaiement;">
             <strong class="fs-headline display-block">Paiement Sous-Traitant</strong>
             <span ng-if="dialog" text-sm> (Prix Final: {{data.prixFinal}} €)</span>
-            <br>
-            <div class="paragraph fs-body-1 mt+">
+            <span ng-if="!showReglement" class="fs-subhead tc-black-2 display-inline">
+                <span ng-if="!data.compta.reglement.recu">
+                    Pas de paiements
+                </span>
+            <span ng-if="data.compta.reglement.recu">
+                    Paiement éfféctué le {{data.compta.paiement.date|date:"dd/MM/yyyy à HH'h'mm"}} par {{data.compta.paiement.login}} ({{data.compta.paiement.montant}} €)
+                </span>
+            </span>
+        </div>
+        <div class="p+" ng-if="showPaiement">
+            <div class="paragraph fs-body-1 mt+" >
                 <div class="row" ng-show="data.compta.paiement.historique.length && allowFlush !== true" ng-click="allowFlush = !allowFlush" style="text-align: center;">
                     <h1>MODIFIER LE PAIEMENT</h1>
                 </div>
@@ -89,7 +108,7 @@
                         </div>
                     </div>
                     <br>
-                    <div class="row" >
+                    <div class="row">
                         <div class="col-md-3 col-sm-offset-9">
                             <div class="switch" style="float:right;margin-right:30px" ng-if="data.compta.paiement.base">
                                 <input type="checkbox" id="switch1" ng-model="data.compta.paiement.ready" class="switch__input">
@@ -99,10 +118,9 @@
                         </div>
                     </div>
                 </div>
-                <div class="row" >
-                    <div class="col-sm-10" >
-                        <table cellspacing="0" cellpadding="8" class="table table-bordered table-striped"
-                        ng-if="data.compta.paiement.base && (!data.compta.paiement.historique.length || allowFlush)">
+                <div class="row">
+                    <div class="col-sm-10">
+                        <table cellspacing="0" cellpadding="8" class="table table-bordered table-striped" ng-if="data.compta.paiement.base && (!data.compta.paiement.historique.length || allowFlush)">
                             <tr>
                                 <th> MONTANT H.T VENTE </th>
                                 <th style="width: 121px;"> + {{format(compta.base)}} € </th>
@@ -177,7 +195,7 @@
                         <div class="panel panel-success">
                             <div class="panel-heading">Paiement du {{elem.dateFlush|date:"dd/MM/yyyy à HH'h'mm"}} ({{elem.loginFlush}})</div>
                             <div class="panel-body">
-                             <!--    <pre>{{hist|json}}</pre> -->
+                                <!--    <pre>{{hist|json}}</pre> -->
                                 <table cellspacing="0" cellpadding="8" class="table green-table table-bordered table-striped">
                                     <tr>
                                         <th> MONTANT H.T VENTE </th>
