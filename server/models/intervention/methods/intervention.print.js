@@ -14,14 +14,51 @@ module.exports = function(schema) {
                 }).populate('sst').then(function(doc) {
                     doc = doc.toObject();
                     doc.paiement = new Paiement(doc);
-                    callback()
+                    /*   PDF({
+                           model: 'recap',
+                           options: doc
+                       })*/
+                    /*var options = {
+                        civilite: doc.client.civilite,
+                        nom: doc.client.nom,
+                        prenom: doc.client.prenom,
+                        telephone: doc.client.telephone.tel1,
+                        numero: doc.client.address.n,
+                        rue: doc.client.address.r,
+                        cp: doc.client.address.cp,
+                        ville: doc.client.address.v,
+                        prix: doc.client.address.n,
+                        id: doc.id,
+                        date: doc.date.intervention,
+                        description: doc.description
+                    }*/
+                    console.log('okok')
+                    doc.produits = [{
+                        title: 'REMISE COMMERCIALE',
+                        pu: doc.compta.paiement.avoir.montant,
+                        quantite: 1,
+                        desc: ""
+                    }]
+                    doc.type = 'avoir';
+                    var x = PDF({
+                            model: 'facture',
+                            options: options
+                        })
+                        .html()
+                    console.log('here')
+
+                    //.toBuffer(function(err, buffer) {
+                    //   res.contentType('application/pdf')
+                    // res.send(buffer);
+                    console.log(x)
+                        //  })
                 })
             }, function(err, result) {
                 //  resend(op, req.query.pdf)
                 console.log(op)
                 resolve('ok')
             })
-        })
+        }).catch(__catch)
     };
 
 
