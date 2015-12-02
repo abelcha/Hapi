@@ -145,7 +145,7 @@ try {
     __catch(e)
 }
 
-/*process.on('uncaughtException', function(a, b, c) {
+process.on('uncaughtException', function(a, b, c) {
     console.log('lalalallalal lalalala')
  //   console.log(a, b, c, 'okok')
-});*/
+});
