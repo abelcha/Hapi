@@ -25,6 +25,7 @@ express.response.sage = function(obj, headers, status) {
     return this.end();
 };
 
+console.log(require('os').cpus().length)
 
 express.response.jsonStr = function(obj, headers, status) {
     this.header('Content-Type', 'application/json');
