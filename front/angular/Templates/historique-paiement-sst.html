@@ -13,6 +13,7 @@
             <tr  ng-repeat-end ng-repeat="intervention in e.flushList.getList()">
                 <td><a href="/intervention/{{intervention.id}}">{{intervention.id}}</a></td>
                 <td>{{intervention.description}}</td>
+                <td>{{intervention.original.client.civilite}} {{intervention.original.client.nom}}</td>
                 <td>{{intervention.type}}</td>
                 <td>{{intervention.montant.base}} €</td>
                 <td>{{intervention.montant.total}} €</td>
