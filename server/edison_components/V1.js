@@ -1,6 +1,6 @@
 module.exports = {
     set: function(query, cb) {
-    	cb = cb || function(){}
+        cb = cb || function() {}
         var key = requireLocal('config/_keys');
         var request = require('request');
         request.get({
@@ -18,7 +18,7 @@ module.exports = {
         })
     },
     get: function(query, cb) {
-    	cb = cb || function(){}
+        cb = cb || function() {}
         var key = requireLocal('config/_keys');
         var request = require('request');
         request.get({
@@ -29,7 +29,12 @@ module.exports = {
             }
         }, function(err, resp, body) {
             if (resp && resp.statusCode === 200) {
-                cb(null, JSON.parse(body));
+                try {
+                    resp.parsedResponse = JSON.parse(body)
+                    cb(null, resp.parsedResponse);
+                } catch (e) {
+                    __catch(e);
+                }
             } else {
                 cb(body || 'ERR')
             }
