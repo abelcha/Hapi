@@ -178,7 +178,7 @@ app.get('/api/job/test', function(req, res) {
         model: "test",
         method: req.query.name ||  "test",
         name: 'test',
-        failt: req.query.fail,
+        fail: req.query.fail,
     }).then(function() {
         res.send('OK')
     }, function() {
