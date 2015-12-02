@@ -123,6 +123,9 @@ try {
             var fn = function(options) {
                 return new Promise(function(resolve, reject) {
                     setTimeout(function() {
+                        if (options.fail) {
+                            options.qdds.QDS();
+                        }
                         resolve('okokokgoogoogo')
                     }, options.time || 100);
                 })
