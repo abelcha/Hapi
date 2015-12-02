@@ -34,7 +34,7 @@ try {
 
     if (cluster.isMaster) {
         kue.app.listen(3000);
-        for (var i = 0; i < 3; i++) {
+        for (var i = 0; i < 2; i++) {
             console.log("fork")
             cluster.fork();
         }
@@ -135,7 +135,6 @@ try {
             job.done = done;
             job.timer = getTimer.bind(job)()
             fn(job.data).then(end.bind(job)(), done)
-                //  .catch(__catch);
         })
     }
 } catch (e) {
