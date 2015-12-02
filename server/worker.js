@@ -32,13 +32,13 @@ try {
 
 
 
-   /*     if (cluster.isMaster) {
+        if (cluster.isMaster) {
             kue.app.listen(3000);
             for (var i = 0; i < process.env.CLUSTER_PROCESS_NBR; i++) {
                 console.log("fork")
                 cluster.fork();
             }
-        } else*/ {
+        } else {
 
             var __log = function(_id, status, time, err) {
                 db.model('event').update({
@@ -126,7 +126,7 @@ try {
                         if (options.fail) {
                             options.qdds.QDS();
                         }
-                        resolve('okokokgoogoogo')
+                        resolve('ok')
                     }, options.time || 100);
                 })
             }
