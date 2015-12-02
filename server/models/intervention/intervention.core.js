@@ -557,7 +557,17 @@
                 dette: d.etat_reglement === "DETTE"
             }
         }
-        if (d.comptaPrixFinal) {
+
+        if (d.comptaPrixFinal || d.etat_reglement === 'PAIEMENT EFFECTUE') {
+            if (!d.comptaPrixFinal) {
+                d.comptaPrixFinal = rtn.prixFinal || rtn.prixAnnonce || 1;
+                d.comptaMontantFinal = (d.comptaPrixFinal / 2);
+                d.pDeplacement = 50
+                d.pMaindOeuvre = 50
+                d.pFourniture = 50
+                d.date_paiement_client = d.t_stamp
+                d.date_paiement_sst =d.t_stamp
+            }
             rtn.compta = {
                 paiement: {
                     date: toDate(d.date_paiement_sst),
@@ -580,9 +590,9 @@
                         final: d.comptaMontantFinal,
                         montant: d.comptaMontantFinal,
                         fourniture: {
-                            artisan: fournitureArtisan,
-                            edison: fournitureEdison,
-                            total: fournitureArtisan + fournitureEdison
+                            artisan: fournitureArtisan || 0,
+                            edison: fournitureEdison || 0,
+                            total: (fournitureArtisan || 0) + (fournitureEdison || 0)
                         },
                         payed: d.comptaMontantFinal,
                         mode: (d.pVirement == "0" ? "CHQ" : "VIR"),
@@ -595,6 +605,7 @@
                     }]
                 },
             }
+            console.log(rtn.compta)
         }
         if (d.date_paiement_client) {
             rtn.compta.reglement = {
