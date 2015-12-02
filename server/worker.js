@@ -4,6 +4,7 @@ var kue = require('kue');
 var url = require('url');
 var _ = require('lodash')
 require('./shared.js')();
+var cluster = require('cluster')
 
 global.isWorker = false;
 
@@ -17,7 +18,7 @@ try {
     if (envProd ||  envStaging) {
         var redisUrl = url.parse(key.redisURL);
     }
-    redis.delWildcard("kue".envify() + '*', function() {
+    
 
         var jobs = kue.createQueue({
             prefix: 'kue'.envify(),
@@ -127,8 +128,6 @@ try {
             fn(job.data).then(end.bind(job)(), done)
                 //  .catch(__catch);
         })
-
-    })
 
 } catch (e) {
     __catch(e)

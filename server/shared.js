@@ -10,7 +10,7 @@ module.exports = function() {
         var prettyError = require('pretty-error');
         console.log((new prettyError().render(e)));
     }
-
+    console.log(require('os').cpus().length)
     require('nodeify').extend();
     var key = requireLocal('config/_keys');
     var dep = require(process.cwd() + '/server/loadDependencies');

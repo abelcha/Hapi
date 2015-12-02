@@ -25,7 +25,7 @@ express.response.sage = function(obj, headers, status) {
     return this.end();
 };
 
-console.log(require('os').cpus().length)
+
 
 express.response.jsonStr = function(obj, headers, status) {
     this.header('Content-Type', 'application/json');
@@ -198,6 +198,13 @@ app.get('/api/job/replay', function(req, res) {
         })
     })
 
+})
+
+app.get('/job/clean', function(req, res) {
+    redis.delWildcard("kue".envify() + '*', function(err, resp) {
+        console.log(err, resp)
+        res.send('ok')
+    })
 })
 
 app.post('/api/bug/declare', function(req, res) {
