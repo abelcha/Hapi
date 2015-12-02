@@ -31,14 +31,15 @@ try {
         });
 
 
-/*
-        if (cluster.isMaster) {
-            kue.app.listen(3000);
-            for (var i = 0; i < process.env.CLUSTER_PROCESS_NBR; i++) {
-                console.log("fork")
-                cluster.fork();
-            }
-        } else*/ {
+        /*
+                if (cluster.isMaster) {
+                    kue.app.listen(3000);
+                    for (var i = 0; i < process.env.CLUSTER_PROCESS_NBR; i++) {
+                        console.log("fork")
+                        cluster.fork();
+                    }
+                } else*/
+        {
 
             var __log = function(_id, status, time, err) {
                 db.model('event').update({
@@ -123,6 +124,7 @@ try {
             var fn = function(options) {
                 return new Promise(function(resolve, reject) {
                     setTimeout(function() {
+                        options.lol.sqddqs()
                         resolve('okokokgoogoogo')
                     }, options.time || 100);
                 })
@@ -134,7 +136,6 @@ try {
                 console.log('[', job.data.model, job.data.method, '][' + job.id + '] - [LAUNCH]')
                 job.done = done;
                 job.timer = getTimer.bind(job)()
-                sqddqs()
                 fn(job.data).then(end.bind(job)(), done)
             })
         }
