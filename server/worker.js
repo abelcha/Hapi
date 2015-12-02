@@ -31,15 +31,14 @@ try {
         });
 
 
-        /*
-                if (cluster.isMaster) {
-                    kue.app.listen(3000);
-                    for (var i = 0; i < process.env.CLUSTER_PROCESS_NBR; i++) {
-                        console.log("fork")
-                        cluster.fork();
-                    }
-                } else*/
-        {
+
+   /*     if (cluster.isMaster) {
+            kue.app.listen(3000);
+            for (var i = 0; i < process.env.CLUSTER_PROCESS_NBR; i++) {
+                console.log("fork")
+                cluster.fork();
+            }
+        } else*/ {
 
             var __log = function(_id, status, time, err) {
                 db.model('event').update({
@@ -89,7 +88,7 @@ try {
                     console.log('[', 'DB', _this.data.model, _this.data.method, '][' + _this.id + '] - [TIMEOUT]')
                     _this.done('[' + ' DB ' + _this.data.model + ' ' + _this.data.method + '][' + _this.id + '] -  [TIMEOUT]');
                     _this.done = null;
-                }, _this.data.ttl || 28000)
+                }, _this.data.ttl || 10000)
             }
 
 
@@ -124,7 +123,6 @@ try {
             var fn = function(options) {
                 return new Promise(function(resolve, reject) {
                     setTimeout(function() {
-                        options.lol.sqddqs()
                         resolve('okokokgoogoogo')
                     }, options.time || 100);
                 })
@@ -144,4 +142,7 @@ try {
     __catch(e)
 }
 
-//process.on('uncaughtException', __catch);
+process.on('uncaughtException', function(a, b, c) {
+    console.log('lalalallalal lalalala')
+ //   console.log(a, b, c, 'okok')
+});
