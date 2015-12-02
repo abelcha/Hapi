@@ -752,6 +752,12 @@ module.exports = FiltersFactory;
         return this.__list
     }
 
+    FlushList.prototype.getFullTotal = function() {
+        this.getTotal()
+        this.getTotal(true)
+        return this.getTotal()
+    }
+
     FlushList.prototype.getTotal = function(dirtyReload) {
         var total = {
             base: 0,
@@ -762,6 +768,7 @@ module.exports = FiltersFactory;
         };
         var list = _(this.getList()).sortBy('montant.balance').reverse().value();
         _each(list, function(rtn) {
+          //  console.log(rtn.checked, (!dirtyReload || (dirtyReload && rtn.montant.balance >= 0)))
             if (rtn.checked && (!dirtyReload || (dirtyReload && rtn.montant.balance >= 0))) {
                 total.base = _round(total.base + rtn.montant.base);
                 total.montant = _round(total.montant + rtn.montant.total, 2);

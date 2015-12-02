@@ -1,22 +1,25 @@
-angular.module('edison').directive('historiqueSst', function(edisonAPI) {
+angular.module('edison').directive('historiquePaiementSst', function(edisonAPI, FlushList) {
     "use strict";
 
     return {
         restrict: 'E',
         replace: true,
-        templateUrl: '/Templates/historique-sst.html',
+        templateUrl: '/Templates/historique-paiement-sst.html',
         scope: {
             data: "=",
             exit: '&'
         },
         link: function(scope, element, attrs) {
-            console.log('herehrerh')
+            console.log('jejelollo')
             var reload = function() {
                 if (!scope.data || !scope.data.id) {
                     return 0;
                 }
-                edisonAPI.artisan.fullHistory(scope.data.id).then(function(resp) {
-                    scope.hist = resp.data;
+                edisonAPI.artisan.getCompteTiers(scope.data.id).then(function(resp) {
+                    scope.historiquePaiement = _.map(resp.data, function(e) {
+                        e.flushList = new FlushList(e.list, _.pluck(e.list, '_id'))
+                        return e;
+                    })
                 })
             }
 

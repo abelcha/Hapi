@@ -15,9 +15,18 @@
                         })
                         .unwind("compta.paiement.historique")
                         .project({
-                            'compta': true,
+                            'compta.paiement': true,
                             'artisan': true,
+                            'id':true,
+                            'date.intervention':true,
+                            'description':true,
+                            'client':true,
+                            'fourniture':true,
+                            'sst':true,
+
                         })
+//                .select('id client description compta.paiement date.intervention sst artisan fourniture')
+
                         .exec(function(err, docs) {
                             var x = _.groupBy(docs, 'compta.paiement.historique.dateFlush')
                             x = _(x).map(function(e, k) {

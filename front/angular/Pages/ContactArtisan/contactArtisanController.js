@@ -6,7 +6,6 @@ var ContactArtisanController = function($scope, $timeout, TabContainer, LxProgre
         edisonAPI.artisan.get(id)
             .then(function(resp) {
                 _this.sst = resp.data;
-                console.log(TabContainer)
                 _this.tab.setTitle('@' + _this.sst.nomSociete.slice(0, 10));
 
             })

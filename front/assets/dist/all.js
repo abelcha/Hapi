@@ -614,6 +614,49 @@ angular.module('edison').directive('ngEnter', function () {
         });
     };
 });
+angular.module('edison').directive('historiquePaiementSst', function(edisonAPI, FlushList) {
+    "use strict";
+
+    return {
+        restrict: 'E',
+        replace: true,
+        templateUrl: '/Templates/historique-paiement-sst.html',
+        scope: {
+            data: "=",
+            exit: '&'
+        },
+        link: function(scope, element, attrs) {
+            console.log('jejelollo')
+            var reload = function() {
+                if (!scope.data || !scope.data.id) {
+                    return 0;
+                }
+                edisonAPI.artisan.getCompteTiers(scope.data.id).then(function(resp) {
+                    scope.historiquePaiement = _.map(resp.data, function(e) {
+                        e.flushList = new FlushList(e.list, _.pluck(e.list, '_id'))
+                        return e;
+                    })
+                })
+            }
+
+            scope.$watch('data.id', reload)
+            scope.check = function(sign) {
+                /*  if (sign.ok)
+                      return 0;*/
+                edisonAPI.signalement.check(sign._id, sign.text).then(function(resp) {
+                    sign = _.merge(sign, resp.data);
+                })
+                scope.exit && scope.exit();
+                console.log('=>', sign)
+            }
+            scope.comment = function() {
+                edisonAPI.artisan.comment(scope.data.id, scope.comm).then(reload)
+                scope.comm = ""
+            }
+        }
+    };
+});
+
 angular.module('edison').directive('historiqueSst', function(edisonAPI) {
     "use strict";
 
@@ -626,7 +669,7 @@ angular.module('edison').directive('historiqueSst', function(edisonAPI) {
             exit: '&'
         },
         link: function(scope, element, attrs) {
-
+            console.log('herehrerh')
             var reload = function() {
                 if (!scope.data || !scope.data.id) {
                     return 0;
@@ -4109,7 +4152,7 @@ angular.module('edison').directive('mainNavbar', function($q, edisonAPI, TabCont
                     return deferred.promise;
                 },
                 change: function(x) {
-                    if (!x.link)
+                    if (!x || !x.link)
                         return 0;
                     if (x) {
                         $location.url(x.link)
@@ -4306,50 +4349,6 @@ var archivesPaiementController = function(edisonAPI, TabContainer, $routeParams,
 
 angular.module('edison').controller('archivesPaiementController', archivesPaiementController);
 
-var AvoirsController = function(TabContainer, openPost, edisonAPI, $rootScope, LxProgressService, LxNotificationService, FlushList) {
-    "use strict";
-    var _this = this
-    var tab = TabContainer.getCurrentTab();
-    tab.setTitle('Avoirs')
-    _this.loadData = function(prevChecked) {
-        LxProgressService.circular.show('#5fa2db', '#globalProgress');
-        edisonAPI.compta.avoirs().then(function(result) {
-            console.log(result)
-            $rootScope.avoirs = result.data
-            LxProgressService.circular.hide()
-        })
-    }
-    if (!$rootScope.avoirs)
-        _this.loadData()
-
-    _this.reloadAvoir = function() {
-        _this.loadData()
-    }
-
-    _this.print = function(type) {
-        console.log($rootScope.avoirs);
-        openPost('/api/intervention/printAvoir', {
-            data: $rootScope.avoirs
-        });
-    }
-
-    _this.flush = function() {
-        var list = _.filter($rootScope.avoirs, {
-            checked: true
-        })
-        edisonAPI.compta.flushAvoirs(list).then(function(resp) {
-            LxNotificationService.success(resp.data);
-            _this.reloadAvoir()
-        }).catch(function(err) {
-            LxNotificationService.error(err.data);
-        })
-    }
-
-}
-
-
-angular.module('edison').controller('avoirsController', AvoirsController);
-
 var ContactArtisanController = function($scope, $timeout, TabContainer, LxProgressService, FiltersFactory, ContextMenu, edisonAPI, DataProvider, $routeParams, $location, $q, $rootScope, $filter, config, ngTableParams) {
     "use strict";
     var _this = this;
@@ -4358,7 +4357,6 @@ var ContactArtisanController = function($scope, $timeout, TabContainer, LxProgre
         edisonAPI.artisan.get(id)
             .then(function(resp) {
                 _this.sst = resp.data;
-                console.log(TabContainer)
                 _this.tab.setTitle('@' + _this.sst.nomSociete.slice(0, 10));
 
             })
@@ -4528,6 +4526,50 @@ var ContactArtisanController = function($scope, $timeout, TabContainer, LxProgre
 
 }
 angular.module('edison').controller('ContactArtisanController', ContactArtisanController);
+
+var AvoirsController = function(TabContainer, openPost, edisonAPI, $rootScope, LxProgressService, LxNotificationService, FlushList) {
+    "use strict";
+    var _this = this
+    var tab = TabContainer.getCurrentTab();
+    tab.setTitle('Avoirs')
+    _this.loadData = function(prevChecked) {
+        LxProgressService.circular.show('#5fa2db', '#globalProgress');
+        edisonAPI.compta.avoirs().then(function(result) {
+            console.log(result)
+            $rootScope.avoirs = result.data
+            LxProgressService.circular.hide()
+        })
+    }
+    if (!$rootScope.avoirs)
+        _this.loadData()
+
+    _this.reloadAvoir = function() {
+        _this.loadData()
+    }
+
+    _this.print = function(type) {
+        console.log($rootScope.avoirs);
+        openPost('/api/intervention/printAvoir', {
+            data: $rootScope.avoirs
+        });
+    }
+
+    _this.flush = function() {
+        var list = _.filter($rootScope.avoirs, {
+            checked: true
+        })
+        edisonAPI.compta.flushAvoirs(list).then(function(resp) {
+            LxNotificationService.success(resp.data);
+            _this.reloadAvoir()
+        }).catch(function(err) {
+            LxNotificationService.error(err.data);
+        })
+    }
+
+}
+
+
+angular.module('edison').controller('avoirsController', AvoirsController);
 
 var DashboardController = function($rootScope, statsTelepro, dialog, user, edisonAPI, $scope, $filter, TabContainer, NgTableParams, $routeParams, $location, LxProgressService) {
     var _this = this;
