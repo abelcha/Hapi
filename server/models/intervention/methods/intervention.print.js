@@ -9,56 +9,75 @@ module.exports = function(schema) {
             var op = [];
             var data = JSON.parse(req.body.data);
             async.each(data, function(e, callback) {
-                db.model('intervention').findOne({
-                    id: e.id
-                }).populate('sst').then(function(doc) {
-                    doc = doc.toObject();
-                    doc.paiement = new Paiement(doc);
-                    /*   PDF({
-                           model: 'recap',
-                           options: doc
-                       })*/
-                    /*var options = {
-                        civilite: doc.client.civilite,
-                        nom: doc.client.nom,
-                        prenom: doc.client.prenom,
-                        telephone: doc.client.telephone.tel1,
-                        numero: doc.client.address.n,
-                        rue: doc.client.address.r,
-                        cp: doc.client.address.cp,
-                        ville: doc.client.address.v,
-                        prix: doc.client.address.n,
-                        id: doc.id,
-                        date: doc.date.intervention,
-                        description: doc.description
-                    }*/
-                    console.log('okok')
-                    doc.produits = [{
-                        title: 'REMISE COMMERCIALE',
-                        pu: doc.compta.paiement.avoir.montant,
-                        quantite: 1,
-                        desc: ""
-                    }]
-                    doc.type = 'avoir';
-                    var x = PDF({
-                            model: 'facture',
-                            options: options
-                        })
-                        .html()
-                    console.log('here')
-
-                    //.toBuffer(function(err, buffer) {
-                    //   res.contentType('application/pdf')
-                    // res.send(buffer);
-                    console.log(x)
-                        //  })
+                    db.model('intervention').findOne({
+                        id: e.id
+                    }).populate('sst').then(function(doc) {
+                        doc = doc.toObject();
+                        doc.paiement = new Paiement(doc);
+                        /*   PDF({
+                               model: 'recap',
+                               options: doc
+                           })*/
+                        /*var options = {
+                            civilite: doc.client.civilite,
+                            nom: doc.client.nom,
+                            prenom: doc.client.prenom,
+                            telephone: doc.client.telephone.tel1,
+                            numero: doc.client.address.n,
+                            rue: doc.client.address.r,
+                            cp: doc.client.address.cp,
+                            ville: doc.client.address.v,
+                            prix: doc.client.address.n,
+                            id: doc.id,
+                            date: doc.date.intervention,
+                            description: doc.description
+                        }*/
+                        console.log('okok')
+                        try  {
+                            doc.produits = [{
+                                ref: 'REMISE COMMERCIALE',
+                                pu: _.round(doc.compta.reglement.avoir.montant / (doc.tva / 100 + 1), 2),
+                                quantite: 1,
+                                desc: ""
+                            }]
+                            doc.type = 'avoir';
+                            doc.facture = doc.client;
+                            var x = PDF([{
+                                    model: 'facture',
+                                    options: doc
+                                }, {
+                                    model: 'recap',
+                                    options: {
+                                        representant: doc.client,
+                                        nomSociete: doc.client.nom,
+                                        address: doc.client.address,
+                                        total: doc.compta.reglement.avoir.montant,
+                                        mode: 'CHQ',
+                                        id: 4112,
+                                        interventions: [{
+                                            id: doc.id,
+                                            type: '-AVOIR',
+                                            description: doc.description,
+                                            montant: doc.compta.reglement.avoir.montant
+                                        }],
+                                        date: new Date(),
+                                    }
+                                }])
+                                .toBuffer(function(err, buffer) {
+                                    res.contentType('application/pdf')
+                                    res.send(buffer);
+                                    callback()
+                                });
+                        } catch (e) {
+                            console.log(e, e.stack)
+                        }
+                    })
+                },
+                function(err, result) {
+                    //  resend(op, req.query.pdf)
+                    console.log(op)
                 })
-            }, function(err, result) {
-                //  resend(op, req.query.pdf)
-                console.log(op)
-                resolve('ok')
-            })
-        }).catch(__catch)
+        })
     };
 
 
