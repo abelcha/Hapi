@@ -27,41 +27,25 @@
 
 
     var sendArtisanChangedSms = function(curr, session) {
-        console.log('WAITFORIT')
         setTimeout(function() {
-            console.log('ten sec')
             db.model('intervention').findOne({
                 id: curr.id
             }).then(function(resp) {
-                console.log('hereerere1')
                 if (!resp || resp.status !== 'APR')  {
                     //si on a envoyer l'intervention entre temps
                     return false;
                 }
-                console.log('hereerere22')
 
                 var moment = require('moment')
                 var textTemplate = requireLocal('config/textTemplate');
                 var config = requireLocal('config/dataList');
-                console.log('hereerere33')
                 var text = _.template(textTemplate.sms.intervention.demande.bind(curr)(session, config, moment))(curr)
-                console.log('hereerere44')
-                try {
-                    console.log({
-                        type: "DEMANDE",
-                        dest: curr.sst.nomSociete,
-                        text: text,
-                        to: curr.sst.telephone.tel1
-                    })
-                    sms.send({
-                        type: "DEMANDE",
-                        dest: curr.sst.nomSociete,
-                        text: text,
-                        to: curr.sst.telephone.tel1
-                    })
-                } catch (e) {
-                    console.log('ERROR===>', e)
-                }
+                sms.send({
+                    type: "DEMANDE",
+                    dest: curr.sst.nomSociete,
+                    text: text,
+                    to: curr.sst.telephone.tel1
+                })
             })
         }, 30000)
     }
@@ -90,19 +74,19 @@
                     })
             }
 
+
+            if (curr.aDemarcher && !prev.aDemarcher) {
+                edison.event('INTER_ADM')
+                    .login(session.login)
+                    .id(curr.id)
+                    .service('PARTENARIAT')
+                    .color('blue')
+                    .message(_.template("L'intervention {{id}} est à démarcher ({{client.address.v}} - {{client.address.cp}}) ")(curr))
+                    .send()
+                    .save()
+            }
         } catch (e) {
             __catch(e)
-        }
-
-        if (curr.aDemarcher && !prev.aDemarcher) {
-            edison.event('INTER_ADM')
-                .login(session.login)
-                .id(curr.id)
-                .service('PARTENARIAT')
-                .color('blue')
-                .message(_.template("L'intervention {{id}} est à démarcher ({{client.address.v}} - {{client.address.cp}}) ")(curr))
-                .send()
-                .save()
         }
 
     }
@@ -558,15 +542,15 @@
             }
         }
 
-        if (d.comptaPrixFinal || d.etat_reglement === 'PAIEMENT EFFECTUE') {
+        if (d.comptaPrixFinal ||  d.etat_reglement === 'PAIEMENT EFFECTUE') {
             if (!d.comptaPrixFinal) {
-                d.comptaPrixFinal = rtn.prixFinal || rtn.prixAnnonce || 1;
+                d.comptaPrixFinal = rtn.prixFinal ||  rtn.prixAnnonce || 1;
                 d.comptaMontantFinal = (d.comptaPrixFinal / 2);
                 d.pDeplacement = 50
                 d.pMaindOeuvre = 50
                 d.pFourniture = 50
                 d.date_paiement_client = d.t_stamp
-                d.date_paiement_sst =d.t_stamp
+                d.date_paiement_sst = d.t_stamp
             }
             rtn.compta = {
                 paiement: {
