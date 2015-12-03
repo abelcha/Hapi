@@ -160,7 +160,6 @@
             _new.litige.closedBy = session.login;
         }
 
-        console.log("HRHEHEHEHE", !!_new.artisan, !!_new.artisan.id, _new.artisan.id !== _old.artisan.id, !!sstDemandable(_new.artisan))
 
         if (_new.artisan && _new.artisan.id && _new.artisan.id !== _old.artisan.id && sstDemandable(_new.artisan)) {
             console.log('SENDSMS')
