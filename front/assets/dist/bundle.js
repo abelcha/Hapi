@@ -2774,6 +2774,7 @@ module.exports = {
                     prix: this.prixAnnonce ? this.prixAnnonce + "€ HT. " : "Pas de prix annoncé. ",
                     telClient: tels
                 }
+                console.log('-->', this.artisan, this.sst)
                 if (this.newOs) {
                     sms = "OS {{inter.id}}\n" +
                         "Cher partenaire, merci d'intervenir\n" +
@@ -2785,10 +2786,12 @@ module.exports = {
                         "Prix: à partir de {{inter.prixAnnonce}}€ H.T\n" +
                         "Veuillez joindre le client au:\n" +
                         "09.701.702.01 (OS {{inter.id}})\n" +
-                        "Code Partenaire: {{inter.sst.id}}"
-                    "\n" +
-                    "{{options.login}}\n" +
-                    "{{options.ligne}} \n"
+                        "Code Partenaire: {{inter.sst}}" +
+                        "\n" +
+                        "Ligne directe: {{options.ligne}}\n" +
+                        "Ligne atelier: 09.72.42.30.00\n" +
+                        "{{options.login}}\n" +
+                        "Edison Services."
                 } else {
                     var sms = "OS {{inter.id}}\n" +
                         "Intervention chez {{inter.client.civilite}} {{inter.client.prenom}} {{inter.client.nom}} au " +
@@ -2798,8 +2801,9 @@ module.exports = {
                         "{{options.prix}}\n" +
                         "Merci de prendre rdv avec le client au {{options.telClient}}" +
                         "\n" +
-                        "Ligne directe: {{options.login}}\n" +
-                        "{{options.ligne}} \n" +
+                        "Ligne directe: {{options.ligne}}\n" +
+                        "Ligne atelier: 09.72.42.30.00\n" +
+                        "{{options.login}}\n" +
                         "Edison Services."
                 }
                 return _.template(sms)({
@@ -3051,7 +3055,7 @@ module.exports = {
         bug: {
             declare: function() {
                 return "<h1>BUG SIGNALED by {{login.toLowerCase()}}</h1><br>" +
-                    "<strong>Sur quel page je me trouve:</strong><br>" + 
+                    "<strong>Sur quel page je me trouve:</strong><br>" +
                     "{{location}}<br>" +
                     "<strong>Qu’est se que j’essaie de faire ?</strong><br>" +
                     "{{what}}<br>" +
