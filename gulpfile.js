@@ -65,7 +65,8 @@ gulp.task('jsLibs', function() {
         'bower_components/Chart.js/Chart.min.js',
         'bower_components/angular-chart.js/dist/angular-chart.min.js',
         'bower_components/highcharts/highcharts.js',
-  //      'bower_components/highcharts/themes/grid.js'
+        'bower_components/ng-iban/dist/ng-iban.min.js'
+        //      'bower_components/highcharts/themes/grid.js'
         //        'bower_components/angular-material-icons/angular-material-icons.js',
 
     ]

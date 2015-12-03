@@ -1,4 +1,4 @@
-var ArtisanCtrl = function($timeout, $rootScope, $scope, edisonAPI, $location, $routeParams, ContextMenu, LxProgressService, LxNotificationService, TabContainer, config, dialog, artisanPrm, Artisan) {
+var ArtisanCtrl = function(IBAN, $timeout, $rootScope, $scope, edisonAPI, $location, $routeParams, ContextMenu, LxProgressService, LxNotificationService, TabContainer, config, dialog, artisanPrm, Artisan) {
     "use strict";
     var _this = this;
     _this.config = config;
@@ -62,6 +62,10 @@ var ArtisanCtrl = function($timeout, $rootScope, $scope, edisonAPI, $location, $
         _this.contextMenu.setPosition($event.pageX, $event.pageY)
         _this.contextMenu.setData(artisan);
         _this.contextMenu.open();
+    }
+
+    _this.validIBAN = function(iban) {
+        return !iban || IBAN.isValid(iban);
     }
 
     _this.fileExist = function(name) {

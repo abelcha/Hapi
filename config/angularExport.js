@@ -28,3 +28,6 @@ angular.module('browserify', [])
     .factory('MomentIterator', [function() {
         return require('moment-iterator');
     }])
+    .factory('IBAN', [function() {
+        return require('iban');
+    }])

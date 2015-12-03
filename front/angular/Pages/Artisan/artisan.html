@@ -78,9 +78,10 @@
                                     <input type="text" ng-model="vm.data.siret">
                                 </lx-text-field>
                             </div>
-                             <div class="col-sm-3">
-                                <lx-text-field label="IBAN">
-                                    <input type="text" ng-model="vm.data.IBAN">
+                            <div class="col-sm-4">
+                                <lx-text-field label="IBAN" error="!vm.validIBAN(vm.data.IBAN)">
+                                <!--     <input type="text" ng-model="iban"/> -->
+                                    <input type="text" ng-model="vm.data.IBAN" >
                                 </lx-text-field>
                             </div>
                             <div class="col-sm-3">
@@ -230,17 +231,15 @@
             </div>
         </div>
     </div>
-
-<div class="dropdown-menu--no-conflicts dropdown-menu--right dropdown__menu--is-dropped" style="margin-top: -215px;width: auto; height: auto; opacity: 1;" ng-style="vm.contextMenu.style">
-    <div class="dropdown-menu__content ng-scope">
-        <ul class="ng-scope">
-            <li ng-hide="item.hidden" ng-repeat="item in vm.contextMenu.list">
-                <a ng-mouseover="vm.contextMenu.closeSub()" ng-if="!item.subs" class="dropdown-link" ng-style="item.style" tabindex="0" ng-click="vm.contextMenu.close();vm.contextMenu.click(item)">{{item.title}}</a>
-                <a ng-style="item.style" ng-mouseover="vm.contextMenu.openSub(300)" ng-if="item.subs" class="dropdown-link" tabindex="0"><i no-margin align-left class="fa fa-angle-right"></i>{{item.title}}</a>
-                <a ng-style="sub.style" ng-repeat="sub in item.subs" ng-click="vm.contextMenu.close();vm.contextMenu.click(sub)" ng-hide="sub.hidden" ng-if="vm.contextMenu.mouseOverCM && item.subs" class="dropdown-link"><i no-margin align-left class=" fa fa-angle-double-right"></i>{{sub.title}}</a>
-            </li>
-        </ul>
+    <div class="dropdown-menu--no-conflicts dropdown-menu--right dropdown__menu--is-dropped" style="margin-top: -215px;width: auto; height: auto; opacity: 1;" ng-style="vm.contextMenu.style">
+        <div class="dropdown-menu__content ng-scope">
+            <ul class="ng-scope">
+                <li ng-hide="item.hidden" ng-repeat="item in vm.contextMenu.list">
+                    <a ng-mouseover="vm.contextMenu.closeSub()" ng-if="!item.subs" class="dropdown-link" ng-style="item.style" tabindex="0" ng-click="vm.contextMenu.close();vm.contextMenu.click(item)">{{item.title}}</a>
+                    <a ng-style="item.style" ng-mouseover="vm.contextMenu.openSub(300)" ng-if="item.subs" class="dropdown-link" tabindex="0"><i no-margin align-left class="fa fa-angle-right"></i>{{item.title}}</a>
+                    <a ng-style="sub.style" ng-repeat="sub in item.subs" ng-click="vm.contextMenu.close();vm.contextMenu.click(sub)" ng-hide="sub.hidden" ng-if="vm.contextMenu.mouseOverCM && item.subs" class="dropdown-link"><i no-margin align-left class=" fa fa-angle-double-right"></i>{{sub.title}}</a>
+                </li>
+            </ul>
+        </div>
     </div>
-</div>
-
 </div>

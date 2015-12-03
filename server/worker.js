@@ -33,9 +33,8 @@ try {
 
 
         if (cluster.isMaster) {
-            kue.app.listen(3000);
+            kue.app.listen(4242);
             for (var i = 0; i < process.env.CLUSTER_PROCESS_NBR; i++) {
-                console.log("fork")
                 cluster.fork();
             }
         } else {

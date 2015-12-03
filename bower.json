@@ -31,7 +31,7 @@
     "font-awesome-animation": "~0.0.6",
     "jquery": "~2.1.4",
     "lodash": "~3.10.0",
-    "lumx": "~0.3.74",
+    "lumx": "~0.3.96",
     "mdi": "~1.1.70",
     "moment": "~2.10.3",
     "mousetrap": "~1.5.3",
@@ -46,6 +46,7 @@
     "chartist": "~0.9.4",
     "angular-chart.js": "~0.8.5",
     "Chart.js": "~1.0.2",
-    "highcharts": "highcharts-release#~4.1.9"
+    "highcharts": "highcharts-release#~4.1.9",
+    "ng-iban": "~0.4.0"
   }
 }
