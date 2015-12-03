@@ -222,7 +222,7 @@ app.post('/api/bug/declare', function(req, res) {
     mail.send({
         noBCC: true,
         From: "intervention@edison-services.fr",
-        ReplyTo: "intervention@edison-services.fr",
+        ReplyTo: req.session.email,
         To: 'abel.chalier@gmail.com',
         Subject: "[BUG REQUEST] - " + req.session.login,
         HtmlBody: text,
