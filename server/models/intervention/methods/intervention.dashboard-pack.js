@@ -4,6 +4,8 @@ module.exports = function(schema) {
     var _ = require('lodash')
     schema.statics.monthComission = function(req, res) {
         return new Promise(function(resolve, reject) {
+
+
             var dateCeilling = moment().subtract(2, 'month').startOf('month').toDate();
             db.model('intervention')
                 .aggregate()
@@ -33,7 +35,7 @@ module.exports = function(schema) {
                                 $and: [{
                                     $eq: ['$categorie', 'VT']
                                 }, {
-                                    $eq: ['$compta.reglement.recu', true]
+                                    $eq: ['$compta.paiement.effectue', true]
                                 }]
                             },
                             150,
@@ -53,7 +55,7 @@ module.exports = function(schema) {
                                 $and: [{
                                     $ne: ['$categorie', 'VT']
                                 }, {
-                                    $eq: ['$compta.reglement.recu', true]
+                                    $eq: ['$compta.paiement.effectue', true]
                                 }]
                             },
                             "$prixFinal",
