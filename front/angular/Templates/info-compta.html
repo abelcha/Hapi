@@ -80,10 +80,10 @@
             <strong class="fs-headline display-block">Paiement Sous-Traitant</strong>
             <span ng-if="dialog" text-sm> (Prix Final: {{data.prixFinal}} €)</span>
             <span ng-if="!showReglement" class="fs-subhead tc-black-2 display-inline">
-                <span ng-if="!data.compta.reglement.recu">
+                <span ng-if="!data.compta.paiement.effectue">
                     Pas de paiements
                 </span>
-            <span ng-if="data.compta.reglement.recu">
+            <span ng-if="data.compta.paiement.effectue">
                     Paiement éfféctué le {{data.compta.paiement.date|date:"dd/MM/yyyy à HH'h'mm"}} par {{data.compta.paiement.login}} ({{data.compta.paiement.montant}} €)
                 </span>
             </span>
