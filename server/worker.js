@@ -31,13 +31,13 @@ try {
     });
 
 
-
+/*
     if (cluster.isMaster) {
         kue.app.listen(4242);
         for (var i = 0; i < process.env.CLUSTER_PROCESS_NBR; i++) {
             cluster.fork();
         }
-    } else {
+    } else*/ {
 
         var __log = function(_id, status, time, err) {
             db.model('event').update({
