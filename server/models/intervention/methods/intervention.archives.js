@@ -56,7 +56,7 @@ module.exports = function(schema) {
             }
           }).exec(function(err, resp) {
               resp = _.uniq(resp, function(e) {
-                return e._id.d[0]
+                return e._id.d[0].getTime()
               });
               resolve(_.map(resp, function(e) {
                   return {
