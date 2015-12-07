@@ -50,16 +50,15 @@
             }
           }
         }).then(function(resp) {
-        console.log('okhere222')
           var i = 0;
 
           var gp = _.groupBy(resp, 'sst')
           async.eachLimit(gp, 1, function(sst, callback) {
-            console.log('EACH')
             getPage(filepath, ++i, function(err, buffer) {
-              console.log(err, buffer && buffer.length)
               async.eachLimit(sst, 1, function(e, small_cb) {
                 var flush = _.find(e.compta.paiement.historique, 'dateFlush', new Date(req.body.date));
+                console.log('->', req.body.date)
+                console.log('"FLUSH', flush)
                 console.log('/V2_PRODUCTION/intervention/' + e.id + '/' + 'Lettre-cheque-' + flush.numeroCheque + '.pdf')
                 flush.numeroCheque = (_.find(req.body.ids, 'id', e.sst) || {}).numeroCheque
                 document.upload({
