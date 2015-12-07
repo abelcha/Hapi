@@ -41,7 +41,6 @@ module.exports = function(schema) {
                                 date: new Date(),
                             }
                         })
-
                         rtn.push({
                             model: 'facture',
                             options: doc
@@ -102,8 +101,8 @@ module.exports = function(schema) {
                                 options: e
                             })
                         }
-                        clean(paiementsst, "CHQ");
 
+                        clean(paiementsst, "CHQ");
                         async.eachLimit(paiementsst.interventions, 1, function(inter, small_callback) {
                             db.model('intervention').findOne({
                                 id: inter.id
@@ -134,7 +133,6 @@ module.exports = function(schema) {
 
 
     var clean = function(e, mode) {
-
         e.total = e.total.final
         e.mode = mode;
         e.interventions = _.map(_.filter(e.list.__list, {
@@ -149,6 +147,8 @@ module.exports = function(schema) {
         });
         e.list = undefined;
     }
+
+
 
     var getVirements = function(data) {
         var rtn = [];
