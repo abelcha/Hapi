@@ -57,7 +57,8 @@ module.exports = function(schema) {
                 }).exec(function(err, resp) {
                     resolve(_.map(resp, function(e) {
                         return {
-                            timestamp: (new Date(e._id.d)).getTime(),
+                            timestamp: (new Date(e._id.d[0])).getTime(),
+                            date: (new Date(e._id.d[0])),
                         }
                     }))
                 })
