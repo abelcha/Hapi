@@ -26,7 +26,7 @@ angular.module('edison').directive('infoCompta',
                     scope.data.tva = (scope.data.client.civilite == 'Soc.' ? 20 : 10)
                 }
                 if (!paiement.mode) {
-                    paiement.mode = _.get(scope.data.sst, 'document.rib.file') ? "VIR" : "CHQ"
+                    paiement.mode = _.get(scope.data.sst, 'document.rib.ok') ? "VIR" : "CHQ"
                 }
                 scope.format = function(nbr) {
                     return _.round(nbr, 2).toFixed(2);
