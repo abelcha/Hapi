@@ -214,11 +214,12 @@ app.get('/api/artisan2014', function(req, res) {
 
     var d = new Date(2015, 0, 0, 0)
     console.log(d)
-    db.model('artisan').find({}, {
-        id: 1,
+    db.model('artisan').find({
         'date.ajout': {
             $lt: d
-        },
+        }
+    }, {
+        id: 1,
         nomSociete: 1
     }).then(function(resp) {
         async.each(resp, function(e, small_cb) {
