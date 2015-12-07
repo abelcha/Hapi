@@ -31,9 +31,12 @@ module.exports = function(schema) {
     }
 
     var isBlocked = function(sst, res) {
-        if (sst.subStatus === "CONF") {
+        if (sst.subStatus === 'REG') {
+            return res.inters_sp_non_regle >= 30;
+        } else if (sst.subStatus === "CONF") {
             return res.inters_sp_non_regle >= 10;
-        } else if (sst.subStatus === "FORM") {
+        } else
+        if (sst.subStatus === "FORM") {
             return res.inters_sp_non_regle >= 3;
         } else if (sst.subStatus == "NEW") {
             return res.inters_sp_non_regle >= 2;
@@ -111,19 +114,19 @@ module.exports = function(schema) {
         }
     });
     schema.post('save', function(doc) {
-/*        db.model('intervention').update({
-            'sst': doc.id
-        }, {
-            $set: {
-                'artisan.subStatus': doc.subStatus,
-                'cache.f.ss': doc.subStatus
-            }
-        }, {
-            multi:true
-        }, function(err, resp) {
-            console.log('-->', err, resp)
-        });
-*/
+        /*        db.model('intervention').update({
+                    'sst': doc.id
+                }, {
+                    $set: {
+                        'artisan.subStatus': doc.subStatus,
+                        'cache.f.ss': doc.subStatus
+                    }
+                }, {
+                    multi:true
+                }, function(err, resp) {
+                    console.log('-->', err, resp)
+                });
+        */
         if (!isWorker) {
             db.model('artisan').uniqueCacheReload(doc)
             if (envProd && (!doc.date.dump || moment().subtract(5000).isAfter(doc.date.dump))) {
