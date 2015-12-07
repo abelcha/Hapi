@@ -193,7 +193,7 @@
                 <div class="row" ng-if="data.compta.paiement.historique.length" ng-repeat="elem in data.compta.paiement.historique">
                     <div class="col-sm-10" ng-init="hist = getPaiement(elem)">
                         <div class="panel panel-success">
-                            <div class="panel-heading">Paiement du {{elem.dateFlush|date:"dd/MM/yyyy à HH'h'mm"}} ({{elem.loginFlush}})</div>
+                            <div class="panel-heading"><a ng-click="Intervention(data).autoFacture()"> Paiement du {{elem.dateFlush|date:"dd/MM/yyyy à HH'h'mm"}} ({{elem.loginFlush}})</a></div>
                             <div class="panel-body">
                                 <!--    <pre>{{hist|json}}</pre> -->
                                 <table cellspacing="0" cellpadding="8" class="table green-table table-bordered table-striped">

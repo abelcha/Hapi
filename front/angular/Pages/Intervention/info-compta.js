@@ -1,5 +1,5 @@
-angular.module('edison').directive('infoCompta', ['config', 'Paiement',
-    function(config, Paiement) {
+angular.module('edison').directive('infoCompta',
+    function(config, Paiement, Intervention) {
         "use strict";
         return {
             restrict: 'E',
@@ -13,7 +13,7 @@ angular.module('edison').directive('infoCompta', ['config', 'Paiement',
             },
             link: function(scope, element, attrs) {
                 scope.config = config
-
+                scope.Intervention = Intervention
                 if (scope.displayReglement) {
                     scope.showPaiement = true
                 }
@@ -60,7 +60,7 @@ angular.module('edison').directive('infoCompta', ['config', 'Paiement',
                     }
                 }
                 scope.$watch('data.fourniture', change, true)
-                
+
                 scope.$watch('data.compta.paiement.pourcentage.deplacement', change, true)
 
                 scope.$watch('data.compta.paiement.pourcentage.maindOeuvre', change, true)
@@ -81,4 +81,4 @@ angular.module('edison').directive('infoCompta', ['config', 'Paiement',
         }
 
     }
-]);
+);
