@@ -55,12 +55,12 @@ module.exports = function(schema) {
                         d: '$compta.paiement.historique.dateFlush'
                     }
                 }).exec(function(err, resp) {
-                    resolve(_.map(resp, function(e) {
+                    resolve(_.uniq(_.map(resp, function(e) {
                         return {
                             timestamp: (new Date(e._id.d[0])).getTime(),
                             date: (new Date(e._id.d[0])),
                         }
-                    }))
+                    })))
                 })
                 /* redis.get("ARCHIVE_PAIEMENT".envify(), function(err, reply) {
                      if (!err && reply && !req.query.cache) {
