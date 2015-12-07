@@ -70,6 +70,7 @@
             <md-button ng-click="vm.clickTrigger('.input-file__input')" class="md-raised">Upload Scan</md-button>
             <lx-file-input style="display:none" id="fileInput" label="Upload" value="fileUploadText" change="vm.onFileUpload(e)"></lx-file-input>
             <md-button ng-if="!vm.search.d" class="md-raised md-warn" ng-click="vm.flush()">FLUSH</md-button>
+            <md-button ng-if="vm.search.d" class="md-raised md-warn" ng-click="vm.flushMail()">RENVOYER MAILS</md-button>
             <md-button class="md-raised md-primary" ng-click="vm.reloadLPA()">Reload</md-button>
         </div>
     </div>

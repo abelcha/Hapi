@@ -55,6 +55,29 @@ var LpaController = function(user, openPost, socket, ContextMenu, $location, $wi
             };
         }
     }
+    _this.flushMail = function() {
+        var rtn = [];
+
+        var lpa = [];
+        _.each(_.cloneDeep($rootScope.lpa), function(e) {
+            e.list.__list = _.filter(e.list.__list, 'checked', true);
+            if (e.list.__list.length) {
+                lpa.push(e);
+            }
+        })
+        console.log(lpa);
+        LxProgressService.circular.show('#5fa2db', '#globalProgress');
+        edisonAPI.compta.flushMail(lpa).then(function(resp) {
+            console.log('ok')
+            LxProgressService.circular.hide()
+            _this.reloadLPA()
+        }, function() {
+            console.log('failure')
+
+            LxProgressService.circular.hide()
+            _this.reloadLPA()
+        })
+    }
     _this.flush = function() {
         var rtn = [];
 
