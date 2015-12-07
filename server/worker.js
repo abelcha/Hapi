@@ -145,6 +145,6 @@ try {
 }
 
 process.on('uncaughtException', function(a, b, c) {
-    console.log('lalalallalal lalalala')
+    console.log('UNCAUGHTEXCEPTION')
         //   console.log(a, b, c, 'okok')
 });
