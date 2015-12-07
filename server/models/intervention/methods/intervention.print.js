@@ -72,6 +72,7 @@ module.exports = function(schema) {
             var ids = _(data).filter(function(e) {
                 return _.find(e.list.__list, 'checked', true)
             }).pluck('id').value()
+            console.log('--->', ids)
             if (!ids.length) {
                 return res.send('Pas de documents')
             }
@@ -97,7 +98,7 @@ module.exports = function(schema) {
                         })
                         if (!e.document.contrat.ok) {
                             op.push({
-                                model: 'contrat',
+                                model: 'contract',
                                 options: e
                             })
                         }
@@ -122,10 +123,10 @@ module.exports = function(schema) {
                         if (!op.length) {
                             return res.send('Pas de Documents')
                         }
-                        res.send(PDF(op).html())/*.toBuffer(function(err, buffer) {
+                        PDF(op).toBuffer(function(err, buffer) {
                             res.contentType('application/pdf')
                             res.send(buffer);
-                        })*/
+                        })
                     });
             }, reject)
         })
