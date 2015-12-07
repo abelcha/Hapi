@@ -122,10 +122,10 @@ module.exports = function(schema) {
                         if (!op.length) {
                             return res.send('Pas de Documents')
                         }
-                        PDF(op).toBuffer(function(err, buffer) {
+                        res.send(PDF(op).html())/*.toBuffer(function(err, buffer) {
                             res.contentType('application/pdf')
                             res.send(buffer);
-                        })
+                        })*/
                     });
             }, reject)
         })
