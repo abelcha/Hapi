@@ -108,7 +108,8 @@ module.exports = function(schema) {
                                 id: inter.id
                             }).populate('sst').then(function(doc) {
                                 doc = doc.toObject();
-                                doc.compta.paiement.base = inter.montant;
+                                console.log(inter)
+                                doc.compta.paiement.base = inter.base;
                                 doc.paiement = new Paiement(doc);
                                 op.push({
                                     model: 'auto-facture',
@@ -140,6 +141,7 @@ module.exports = function(schema) {
         }), function(x) {
             return {
                 type: x.type,
+                base: x.montant.base,
                 id: x.id,
                 montant: x.montant.final,
                 description: x.description
