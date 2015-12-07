@@ -32,7 +32,7 @@ module.exports = function(schema) {
 
     var isBlocked = function(sst, res) {
         if (sst.subStatus === 'REG') {
-            return res.inters_sp_non_regle >= 30;
+            return res.inters_sp_non_regle >= sst.interLimit;
         } else if (sst.subStatus === "CONF") {
             return res.inters_sp_non_regle >= 10;
         } else

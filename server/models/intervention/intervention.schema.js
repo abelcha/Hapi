@@ -23,6 +23,7 @@ module.exports = function(db) {
             paiementSST: String,
             demarchage: String,
         },
+
         date: {
             envoi: Date,
             ajout: {

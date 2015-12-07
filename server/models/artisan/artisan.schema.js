@@ -43,6 +43,10 @@ module.exports = function(db) {
             },
             prenom: String,
         },
+        interLimit: {
+            type: Number,
+            default: 30
+        },
         address: {
             n: {
                 type: String,
