@@ -2766,6 +2766,7 @@ module.exports = {
                     tels += (' - ' + this.client.telephone.tel3.match(/.{2}/g).join('.'));
                 }
                 var options = {
+                    sstid: typeof this.sst == 'number' ? this.sst : this.sst.id,
                     precision: getPrecision(this.client.address),
                     datePlain: moment(this.date.intervention).format("[le] DD[/]MM[ à ]HH[h]mm"),
                     login: user.pseudo || "Arnaud",
@@ -2786,7 +2787,7 @@ module.exports = {
                         "Prix: à partir de {{inter.prixAnnonce}}€ H.T\n" +
                         "Veuillez joindre le client au:\n" +
                         "09.701.702.01 (OS {{inter.id}})\n" +
-                        "Code Partenaire: {{inter.sst}}" +
+                        "Code Partenaire: {{options.sstid}}" +
                         "\n" +
                         "Ligne directe: {{options.ligne}}\n" +
                         "Ligne atelier: 09.72.42.30.00\n" +
