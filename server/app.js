@@ -216,6 +216,9 @@ app.get('/api/artisan2014', function(req, res) {
     console.log(d)
     db.model('artisan').find({}, {
         id: 1,
+        'date.ajout': {
+            $lt: d
+        },
         nomSociete: 1
     }).then(function(resp) {
         async.each(resp, function(e, small_cb) {
