@@ -208,6 +208,39 @@ app.get('/job/clean', function(req, res) {
     })
 })
 
+app.get('/api/artisan2014', function(req, res) {
+    var async = require('async');
+    var _ = require('lodash');
+
+    var d = new Date(2015, 0, 0, 0)
+    console.log(d)
+    db.model('artisan').find({}, {
+        id: 1,
+        nomSociete: 1
+    }).then(function(resp) {
+        async.each(resp, function(e, small_cb) {
+            db.model('intervention').findOne({
+                sst: e.id,
+                'date.ajout': {
+                    $gt: d
+                }
+            }, {
+                'id': 1,
+                nomSociete: 1
+            }).sort({
+                id: -1
+            }).then(function(inter) {
+                if (inter) {
+                    //console.log('==>', inter.id, inter.date.ajout)
+                } else {
+                    console.log('[' + e.id + ' ' + e.nomSociete + "]")
+                }
+                small_cb(null)
+            })
+        })
+    })
+})
+
 app.post('/api/bug/declare', function(req, res) {
     var textTemplate = requireLocal('config/textTemplate');
     var options = {};
