@@ -76,7 +76,7 @@
                                              ng-click="vm.selectArtisan(sst);vm.showInterList()">
                                                 <td id-sst="{{sst.id}}" variable-length style="text-align:left">{{sst.nomSociete}} 
                                                 <small no-click ng-if="!sst.blocked && sst.absent" class="red-text">INDISPO</small>
-                                                <small no-click ng-if="!sst.blocked && !sst.absent" class="{{config.artisanSubStatus[sst.subStatus].color}}-text">{{config.artisanSubStatus[sst.subStatus].long_name}}</small></td>
+                                                <small no-click ng-if="!sst.absent" class="{{config.artisanSubStatus[sst.subStatus].color}}-text">{{config.artisanSubStatus[sst.subStatus].long_name}}</small></td>
                                                 <td no-click ng-class="{'red-text': sst.zoneChalandise < sst.distance}">{{sst.distance}} km</td>
                                             </tr>
                                          <tr><td colspan="12" style="text-align:center;border-top: 0px;"><h4 style="margin: 0;">Potentiels</h4></td></tr>
@@ -92,7 +92,7 @@
                                                  ng-click="vm.selectArtisan(sst);vm.showInterList()">
                                                 <td id-sst="{{sst.id}}" variable-length style="text-align:left">{{sst.nomSociete}} 
                                                 <small no-click ng-if="!sst.blocked && sst.absent" class="red-text">INDISPO</small>
-                                                <small no-click ng-if="!sst.blocked" class="{{config.artisanSubStatus[sst.subStatus].color}}-text">{{config.artisanSubStatus[sst.subStatus].long_name}}</small></td>
+                                                <small no-click class="{{config.artisanSubStatus[sst.subStatus].color}}-text">{{config.artisanSubStatus[sst.subStatus].long_name}}</small></td>
                                                 <td no-click ng-class="{'red-text': sst.zoneChalandise < sst.distance}">{{sst.distance}} km</td>
                                             </tr>
                                             <tr><td style="visibility:hidden"> -------------------- </td></tr>

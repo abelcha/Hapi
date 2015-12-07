@@ -259,10 +259,10 @@ module.exports = function(schema) {
                             inter.status = "ENC";
                             inter.date.envoi = new Date();
                             inter.login.envoi = req.session.login;
-                            if (req.session.service === 'PARTENARIAT') {
+                            /*if (req.session.service === 'PARTENARIAT') {
                                 inter.date.demarchage = new Date();
                                 inter.login.demarchage = req.session.login;
-                            }
+                            }*/
                             edison.event('INTER_ENVOI').login(req.session.login).id(inter.id)
                                 .broadcast(inter.login.ajout)
                                 .color('orange')
