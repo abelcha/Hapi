@@ -36,7 +36,7 @@ module.exports = function(schema) {
             //WTF
         inter.compta.paiement.numeroCheque = inter.compta.paiement.historique[index].numeroCheque;
         inter.compta.paiement.fourniture = inter.compta.paiement.historique[index].fourniture
-        inter.compta.paiement.historique = inter.compta.paiement.historique.slice(index + 1);
+        inter.compta.paiement.historique = inter.compta.paiement.historique.slice(0, index);
         inter.sst = undefined;
         //   console.log(inter.compta.paiement.numeroCheque)
         return inter;
@@ -48,6 +48,7 @@ module.exports = function(schema) {
             var date = new Date(parseInt(ts));
             db.model('intervention')
                 .find({
+                  //  id:30226,
                     'compta.paiement.historique': {
                         $elemMatch: {
                             dateFlush: date
@@ -57,6 +58,7 @@ module.exports = function(schema) {
                 .populate('sst')
                 .select('id client description compta.paiement date.intervention sst artisan fourniture')
                 .exec(function(err, docs) {
+                //    console.log(docs[0].compta.paiement)
                     var rtn = _(docs).filter('sst').groupBy('sst.id').values().map(function(e) {
                             return {
                                 address: e[0].sst.address,
@@ -66,6 +68,9 @@ module.exports = function(schema) {
                                 list: _.map(e, _.partial(lol, _, date))
                             }
                         }).value()
+                  //  console.log('=================')
+                    //console.log(JSON.stringify(rtn, null, 2))
+
                         //  console.log(rtn);
                     resolve(rtn)
                 })
