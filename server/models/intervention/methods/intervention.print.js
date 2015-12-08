@@ -17,7 +17,7 @@ module.exports = function(schema) {
                         doc.paiement = new Paiement(doc);
                         doc.produits = [{
                             ref:'',
-                            description: 'REMISE COMMERCIALE',
+                            title: 'REMISE COMMERCIALE',
                             pu: _.round(doc.compta.reglement.avoir.montant / (doc.tva / 100 + 1), 2),
                             quantite: 1,
                             desc: ""
