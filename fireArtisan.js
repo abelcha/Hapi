@@ -10,7 +10,6 @@ var d2015 = new Date(2015, 8, 0, 0);
 console.log(d2015)
 
 /*
-
 db.model('intervention').find({
 	'date.ajout': {
 		$gt: d2015

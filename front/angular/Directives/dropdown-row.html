@@ -70,23 +70,30 @@
                 </p>
             </div>
         </div>
-        <div ng-if="_model === 'artisan'" class="col-sm-4 info-ext">
+        <div ng-if="_model === 'artisan'" class="col-sm-2">
             <div>
                 <h4>Artisan</h4>
                 <br>
-                <p>
-                    <strong> Date d'ajout : </strong> {{artisan.date.ajout | date:"MM/dd/yyyy 'à' hh'h'mm"}}
-                </p>
+                <div class="ct-chart" style="height:240"></div>
                 <p ng-if="artisan.demandeFacturier.pending">
                     <strong>Demande de facturier</strong> par {{artisan.demandeFacturier.login}} le {{artisan.demandeFacturier.date| date:"MM/dd/yyyy 'à' HH'h'mm"}}
                 </p>
             </div>
         </div>
+        <div ng-if="_model === 'artisan'" class="col-sm-4">
+            Gains depuis le {{aritsan.date.ajout|date:"dd/MM/yyyy"}} (représente la totalité des paiement effectué) :
+            <div class="md-display-2"> {{(vm.stats.paye.paye)|frnbr}} €</div>
+            <br> Chiffre d’affaire (représente la totalité des montants:
+            <div class="md-display-2"> {{(vm.stats.paye.final)|frnbr}} €</div>
+        </div>
+        <div ng-if="_model === 'artisan'" class="col-sm-3">
+            <span class="label" style="width:100px;margin-top:5px;display:block" ng-class="{'green':aritsan.document[file].ok, 'red':!aritsan.document[file].ok}" ng-repeat="(k, file) in config.artisanFiles" ng-if="file == 'contrat' || file == 'kbis' || file == 'cni' || file == 'rib'">{{file}}</span> </span>
+        </div>
         <div class="col-sm-4 hidden-sm hidden-xs hidden-md" ng-if="data.appels.length">
             <p bold text-xxl underlined>Conversations Sous-traitants</p>
             <info-appel-sst data="data" embedded="true"></info-appel-sst>
         </div>
-        <div class="col-sm-4 hidden-sm hidden-xs hidden-md" ng-if="address && address.lt && !(data.appels.length)">
+        <div class="col-sm-3 hidden-sm hidden-xs hidden-md" ng-if="address && address.lt && !(data.appels.length)">
             <img style="height: auto;width: 411px;" ng-src="{{getStaticMap()}}" class="img-thumbnail" />
         </div>
     </div>

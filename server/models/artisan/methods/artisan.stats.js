@@ -1,7 +1,7 @@
 module.exports = function(schema) {
     var async = require('async');
     var _ = require('lodash');
-    var moment = require('moment')
+    var moment = require('moment');
     schema.statics.stats = {
         unique: true,
         findBefore: true,

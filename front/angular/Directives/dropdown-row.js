@@ -49,6 +49,43 @@ angular.module('edison').directive('dropdownRow', function(Devis, productsList, 
                     scope.address = scope.client.address;
                 }
             } else if (scope._model === 'artisan') {
+
+
+
+
+                scope.loadPanel = function(id) {
+                    edisonAPI.artisan.getStats(id).then(function(resp) {
+                        new Chartist.Pie('.ct-chart', {
+                            series: [{
+                                value: resp.data.envoye.total,
+                                name: 'En cours',
+                                className: 'ct-orange',
+                                meta: 'Meta One'
+                            }, {
+                                value: resp.data.annule.total,
+                                name: 'annulé',
+                                className: 'ct-red',
+                                meta: 'Meta One'
+                            }, {
+                                value: resp.data.paye.total,
+                                name: 'payé',
+                                className: 'ct-green',
+                                meta: 'Meta One'
+                            }]
+                        }, {
+                            total: resp.data.annule.total + resp.data.paye.total + resp.data.envoye.total,
+                            donut: true,
+                            startAngle: 270,
+                            donutWidth: 62,
+                        });
+                        scope.stats = resp.data
+                    })
+
+                }
+
+                scope.loadPanel(scope.row.id)
+
+
                 pAll = [
                     edisonAPI.artisan.get(scope.row.id),
                     edisonAPI.artisan.getStats(scope.row.id)

@@ -32,9 +32,6 @@ var ContactArtisanController = function($scope, $timeout, TabContainer, LxProgre
                 donut: true,
                 startAngle: 270,
                 donutWidth: 62,
-                /* donut: true,
-                 total: 100 +resp.data.annule.total + resp.data.paye.total + resp.data.envoye.total,
-                 showLabel: false*/
             });
             _this.stats = resp.data
         })
