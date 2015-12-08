@@ -49,6 +49,7 @@
                         <span ng-if="inter.f === 1" class="fa fa-list"></span>
                         <span ng-if="!smallWin">{{(inter.pa | number:2) || 0}} €</span>
                         <span ng-if="smallWin">{{(inter.pa | number:0) || 0}}€</span>
+                        <i ng-if="inter.f.i_fall || inter.f.i_fact" style="margin-left:3px" class="fa fa-envelope-o"></i>
                     </td>
                     <td ng-init="inter._status = config.etatsHash()[inter.s];inter._etat = inter._status.long_name" data-title="smallWin ? 'S' : 'Status'" sortable="'s'" filter="{ '_etat': 'text' }">
                         <span ng-if="!smallWin" style="width:75px" class="label {{config.etatsHash()[inter.s].color}} display-block"> 

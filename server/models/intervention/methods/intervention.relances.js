@@ -9,9 +9,9 @@ module.exports = function(schema) {
     var relanceRapport;
     var mail_excludes = ["AGNES.GEORGIN@FRANCE-LOISIRS.COM", "BOUKRISBENJAMIN@GMAIL.COM", "ABEL@CHALIER.ME", "FOURNISSEURS@BABILOU.COM", "KEVIN.NGUERRET@BABILOU.COM", "CONTACT@BONAPART.FR", "CLAUDE.GUERARD@BABILOU.COM", "JULIE.LINZE@BABILOU.COM", "SARAH.MOULY@LADRESSE.COM", "SVC-HABITAT@MONDIAL-ASSISTANCE.FR", "RELANCE-PRESTATAIRE@MONDIAL-ASSISTANCE.FRR", "NCOHEN@MGC.FR", "NATHALIE_COUTANT@PICARD.FR"]
     var specials_ids = [13846, 14472, 14514, 18654, 15510, 17085, 28086, 28187, 29675, 18860, 18958, 28938, 29751, 29841, 30059, 30151, 30203, 30343, 27070, 27867, 26850, 23085, 26222, 26218, 26122, 20428, 25690, 25745, 18817, 18482, 18995, 18075, 18047, 17387, 17291, 17280, 17265, 17174, 16977, 16969, 16724, 16197, 16196, 15857, 15554, 14047, 14233, 14279, 14560, 14567, 14575, 14690, 15076, 15092, 15436, 13842, 13733, 13731, 14579, 30113, 22951, 29803, 29147, 26234, 29783, 20093, 22931, 25696, 26194, 19272, 24907, 20002, 29152, 16357, 23888, 19057, 19052, 28806, 18130, 17541, 26915, 26949, 27328, 27386, 27413, 27500, 27573, 27799, 27879, 28218, 26705, 26671, 28423, 28551, 28716, 28807, 26482, 26214, 26178, 26137, 25986, 25807, 25688, 25647, 25610, 25564, 25359, 25043, 24863, 24668, 24458, 24443, 19578, 28852, 28876, 23568, 23543, 23479, 23446, 23318, 23237, 23148, 23056, 22955, 22918, 22906, 22857, 22788, 22272, 22002, 21998, 21941, 21866, 21842, 21618, 21517, 21359, 21304, 20455, 20462, 20488, 20517, 20866, 20969, 29175, 29183, 24349, 24257, 24152, 23943, 23913, 23785, 23620, 29211, 29282, 29297, 29308, 29466, 29576, 29603, 29805, 29857, 30115, 30387, 30445, 30609, 18052, 19605, 19466, 19426, 19354, 19349, 19725, 19955]
-    /*
-        Retarder les relances /\ si recouvrement -> bleu 
-    */
+        /*
+            Retarder les relances /\ si recouvrement -> bleu 
+        */
     var execRelance = function(now, relanceModel, callback) {
         now = now ||  moment().toDate()
         var from = moment(now).add(-relanceModel.days, 'days').startOf('day').toDate();
@@ -22,6 +22,9 @@ module.exports = function(schema) {
             'date.envoiFacture': {
                 $exists: true,
                 $gt: new Date(2015, 10, 1)
+            },
+            'recouvrement.level': {
+                $ne: 3
             },
             'reglementSurPlace': false,
             'compta.reglement.recu': false,
