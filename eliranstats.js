@@ -2,24 +2,26 @@ require('./server/shared')()
 var _ = require('lodash')
 try {
     db.model('intervention').find({
-            status: 'ANN',
-            'date.ajout': {
-                $gt: new Date(2015, 0, 0)
-            }
-        }, {
-            categorie: 1,
-            status: 1,
-            client: 1
-        }).then(function(resp) {
-           // console.log('-->', )
-            resp = _.groupBy(resp, 'client.address.v');
-            _.each(resp, function(e, k) {
-                console.log([k, e.length, e[0].client.address.cp].join(';'))
-            })
-            process.exit()
-        }, function(err) {
-            console.log(err);
+        status: 'ANN',
+        'date.ajout': {
+            $gt: new Date(2015, 0, 0)
+        }
+    }).then(function(resp) {
+        // console.log('-->', )
+        resp = _.groupBy(resp, function(e) {
+            return e.client.address.v + '-' + e.categorie;
+        });
+        _.each(resp, function(e, k) {
+            var sum = _.reduce(e, function(total, x) {
+                //console.log(total, x)
+                return total + x.prixAnnonce;
+            }, 0);
+            console.log([k, e.length,sum, e[0].client.address.cp].join(';'))
         })
+        process.exit()
+    }, function(err) {
+        console.log(err);
+    })
 
 } catch (e) {
     console.log('->', e)

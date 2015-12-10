@@ -19,8 +19,12 @@ var AvoirsController = function(TabContainer, openPost, edisonAPI, $rootScope, L
     }
 
     _this.print = function(type) {
-        console.log($rootScope.avoirs);
         openPost('/api/intervention/printAvoir', {
+            data: $rootScope.avoirs
+        });
+    }
+    _this.printChq = function(type) {
+        openPost('/api/intervention/printAvoirChq', {
             data: $rootScope.avoirs
         });
     }
