@@ -9,7 +9,6 @@ module.exports = function(req, res) {
 
     var createFilter = function(options) {
         return function(cb) {
-            console.time(options.title)
             if (options.regexp && !query.match(options.regexp)) {
                 return cb(null, [])
             }
@@ -28,7 +27,6 @@ module.exports = function(req, res) {
                         }
                     };
                     var rtn = resp.map(mapFunc);
-                    console.timeEnd(options.title)
                     cb(null, rtn)
                 }, cb);
         }
@@ -243,6 +241,8 @@ module.exports = function(req, res) {
         }),
     }
 
+    console.time(query)
+
     async.parallel(filters, function(err, result) {
         //console.log('-->', err, '<--', result);
         var rtn = [];
@@ -252,6 +252,8 @@ module.exports = function(req, res) {
                 rtn.push(r)
             })
         })
+    console.timeEnd(query)
+
         res.json(rtn)
     })
 }
