@@ -83,7 +83,7 @@ angular.module('edison').directive('mainNavbar', function($q, edisonAPI, TabCont
                         deferred.resolve(resp)
                     })
                     return deferred.promise;
-                }, 300),
+                }, 600),
                 change: function(x) {
                     if (!x || !x.link)
                         return 0;
