@@ -56,7 +56,6 @@
 
     module.exports.postSave = function(prev, curr, session) {
         try {
-            console.log(!!envProd, !!curr.artisan, !!curr.artisan.id, !!sstDemandable(curr.artisan))
             if (envProd && curr.artisan && curr.artisan.id && sstDemandable(curr.artisan)) {
                 sendArtisanChangedSms(curr, session);
             }
