@@ -74,7 +74,7 @@ angular.module('edison').directive('mainNavbar', function($q, edisonAPI, TabCont
             }
 
             scope.searchBox = {
-                search: function(x) {
+                search: _.throttle(function(x) {
                     var deferred = $q.defer();
                     edisonAPI.searchText(x, {
                         limit: 10,
@@ -83,7 +83,7 @@ angular.module('edison').directive('mainNavbar', function($q, edisonAPI, TabCont
                         deferred.resolve(resp)
                     })
                     return deferred.promise;
-                },
+                }, 300),
                 change: function(x) {
                     if (!x || !x.link)
                         return 0;

@@ -79,6 +79,7 @@ module.exports = function(db) {
                     required: true
                 },
                 v: {
+                    index:true,
                     type: String,
                     required: true
                 },

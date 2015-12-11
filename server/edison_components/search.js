@@ -9,6 +9,7 @@ module.exports = function(req, res) {
 
     var createFilter = function(options) {
         return function(cb) {
+            console.time(options.title)
             if (options.regexp && !query.match(options.regexp)) {
                 return cb(null, [])
             }
@@ -19,7 +20,6 @@ module.exports = function(req, res) {
                 .then(function(resp) {
                     var mapFunc = options.mapFunc || function(e) {
                         e.mmt = moment.tz(e.date.intervention, 'Europe/Paris').format("DD/MM")
-                            //console.log(options.pre ||  '#')
                         _.set(e, 'artisan.nomSociete', _.get(e, 'artisan.nomSociete', 'A Programmer'))
                         e.artisan.nomSociete = e.artisan.nomSociete ||  'A Programmer'
                         return {
@@ -28,6 +28,7 @@ module.exports = function(req, res) {
                         }
                     };
                     var rtn = resp.map(mapFunc);
+                    console.timeEnd(options.title)
                     cb(null, rtn)
                 }, cb);
         }
@@ -39,17 +40,20 @@ module.exports = function(req, res) {
 
     var filters = {
         interventionNom: createFilter({
+            title: 'interventionNom',
             query: {
                 'client.nom': rgx
             }
         }),
         interventionId: createFilter({
+            title: 'interventionID',
             query: {
                 id: parseInt(query)
             },
             regexp: new RegExp('^[0-9]+$')
         }),
         interventionTelephone: createFilter({
+            title: 'interventionTel',
             query: {
                 $or: [{
                     'client.telephone.tel1': rgx
@@ -71,6 +75,7 @@ module.exports = function(req, res) {
             }
         }),
         interventionCodePostal: createFilter({
+            title: 'interventionCP',
             query: {
                 'client.address.cp': rgx
             },
@@ -78,7 +83,11 @@ module.exports = function(req, res) {
             template: "{{id}} - {{mmt}} - ({{client.address.cp}}) - {{client.civilite}} {{client.nom}} - {{client.address.v}} {{prixAnnonce}} €"
         }),
         interventionVille: createFilter({
+            title: 'interventionVille',
             query: {
+                'date.ajout': {
+                    $gt: moment().add(-2, 'month').toDate(),
+                },
                 'client.address.v': rgx
             },
             regexp: new RegExp('^[^0-9]+$'),
@@ -86,6 +95,7 @@ module.exports = function(req, res) {
 
         }),
         artisanId: createFilter({
+            title: 'ArtisanID',
             model: 'artisan',
             pre: '@',
             link: '/recap',
@@ -96,6 +106,7 @@ module.exports = function(req, res) {
             regexp: new RegExp('^[0-9]+$')
         }),
         artisanNom: createFilter({
+            title: 'ArtisanNom',
             pre: '@',
             model: 'artisan',
             link: '/recap',
@@ -110,16 +121,21 @@ module.exports = function(req, res) {
 
         }),
         artisanVille: createFilter({
+            title: 'ArtisanVille',
             pre: '@',
             model: 'artisan',
             link: '/recap',
             query: {
+                'date.ajout': {
+                    $gt: moment().add(-2, 'month').toDate(),
+                },
                 'address.v': rgx
             },
             template: "{{id}} ({{address.v}}) - {{nomSociete}} - {{address.cp}}"
 
         }),
         artisanCP: createFilter({
+            title: 'ArtisanCP',
             pre: '@',
             model: 'artisan',
             link: '/recap',
@@ -130,6 +146,7 @@ module.exports = function(req, res) {
 
         }),
         artisanTelephone: createFilter({
+            title: 'ArtisanTEL',
             pre: '@',
             model: 'artisan',
             link: '/recap',
@@ -151,6 +168,7 @@ module.exports = function(req, res) {
             }
         }),
         devisNom: createFilter({
+            title: 'DevisNom',
             model: 'devis',
             pre: "Dev.",
             query: {
@@ -158,6 +176,7 @@ module.exports = function(req, res) {
             }
         }),
         devisId: createFilter({
+            title: 'DevisID',
             model: 'devis',
             pre: "Dev.",
             query: {
@@ -166,6 +185,7 @@ module.exports = function(req, res) {
             regexp: new RegExp('^[0-9]+$')
         }),
         devisTelephone: createFilter({
+            title: 'DevisTel',
             model: 'devis',
             pre: "Dev.",
             query: {
@@ -188,6 +208,7 @@ module.exports = function(req, res) {
             }
         }),
         devisCodePostal: createFilter({
+            title: 'DevisCP',
             model: 'devis',
             pre: "Dev.",
             query: {
@@ -197,7 +218,11 @@ module.exports = function(req, res) {
             template: "{{id}} ({{client.address.cp}}) - {{client.civilite}} {{client.nom}} - {{client.address.v}}"
         }),
         devisVille: createFilter({
+            title: 'DevisVille',
             query: {
+                'date.ajout': {
+                    $gt: moment().add(-2, 'month').toDate(),
+                },
                 'client.address.v': rgx
             },
             regexp: new RegExp('^[^0-9]+$'),
