@@ -55,6 +55,7 @@ module.exports = function(db) {
                 default: ""
             },
             nom: {
+                index:true,
                 type: String,
                 required: true
             },
@@ -84,6 +85,7 @@ module.exports = function(db) {
                     required: true
                 },
                 cp: {
+                    index:true,
                     type: String,
                     required: true
                 },

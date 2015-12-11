@@ -2,7 +2,10 @@ module.exports = function(db) {
 
     return new db.Schema({
         _id: Number,
-        id: Number,
+        id: {
+            type: Number,
+            index: true
+        },
         isDevis: {
             type: Boolean,
             default: true
@@ -44,6 +47,7 @@ module.exports = function(db) {
             },
             prenom: String,
             nom: {
+                index: true,
                 type: String,
                 required: true
             },
@@ -66,11 +70,12 @@ module.exports = function(db) {
                     required: true
                 },
                 v: {
-                    index:true,
+                    index: true,
                     type: String,
                     required: true
                 },
                 cp: {
+                    index: true,
                     type: String,
                     required: true
                 },

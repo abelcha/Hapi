@@ -55,6 +55,9 @@ module.exports = function(req, res) {
         interventionTelephone: createFilter({
             title: 'interventionTel',
             query: {
+                'date.ajout': {
+                    $gt: moment().add(-6, 'month').toDate(),
+                },
                 $or: [{
                     'client.telephone.tel1': rgx
                 }, {
@@ -77,6 +80,9 @@ module.exports = function(req, res) {
         interventionCodePostal: createFilter({
             title: 'interventionCP',
             query: {
+                'date.ajout': {
+                    $gt: moment().add(-2, 'month').toDate(),
+                },
                 'client.address.cp': rgx
             },
             regexp: new RegExp('^[0-9]+$'),
@@ -189,6 +195,9 @@ module.exports = function(req, res) {
             model: 'devis',
             pre: "Dev.",
             query: {
+                'date.ajout': {
+                    $gt: moment().add(-6, 'month').toDate(),
+                },
                 $or: [{
                     'client.telephone.tel1': rgx
                 }, {
@@ -212,6 +221,9 @@ module.exports = function(req, res) {
             model: 'devis',
             pre: "Dev.",
             query: {
+                'date.ajout': {
+                    $gt: moment().add(-2, 'month').toDate(),
+                },
                 'client.address.cp': rgx
             },
             regexp: new RegExp('^[0-9]+$'),
