@@ -18,6 +18,9 @@ module.exports = function(schema) {
                         'artisan.id': id,
                         'date.ajout': {
                             $gt: baseDate
+                        },
+                        'prixAnnonce': {
+                            $ne: 0
                         }
                     })
                     .group({

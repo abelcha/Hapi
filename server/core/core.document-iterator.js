@@ -37,6 +37,7 @@ module.exports = function(core) {
                                 options = {
                                     multi: true
                                 };
+                                update.$set['login.management'] = e.login.ajout
                 /*            if (core.name === "intervention" && e && e.sst && e.sst.subStatus) {
                                 update.$set['artisan.subStatus'] = e.sst.subStatus
                             } else {
