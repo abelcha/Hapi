@@ -3,28 +3,19 @@ module.exports = function(schema) {
     var _ = require('lodash');
     var moment = require('moment')
 
-    schema.statics.statsNew = {
+    schema.statics.statsMonths = {
         unique: true,
         findBefore: false,
         method: "GET",
         fn: function(id, req, res) {
             return new Promise(function(resolve, reject) {
 
-                var getMonthRange = function(m, y) {
-                    var date = new Date(y, m);
-                    return {
-                        $gte: new Date(date.getFullYear(), date.getMonth(), 1, -1),
-                        $lt: new Date(date.getFullYear(), date.getMonth() + 1, 0)
-                    }
-                }
-                var dateRange = getMonthRange(req.query.m - 1, req.query.y)
-
-
                 var baseDate = moment().add('-11', 'months').startOf('month').toDate()
 
                 db.model('intervention')
                     .aggregate()
                     .match({
+                        'artisan.id': id,
                         'date.ajout': {
                             $gt: baseDate
                         }

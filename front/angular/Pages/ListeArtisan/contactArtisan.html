@@ -37,8 +37,7 @@
                                                 <br> Chiffre d’affaire (représente la totalité des montants:
                                                 <div class="md-display-2"> {{(vm.stats.paye.final)|frnbr}} €</div>
                                                 <div class="col-sm-6 col-sm-offset-3">
-                                                    <span class="label" style="width:100px;margin-top:5px;display:block" ng-class="{'green':vm.sst.document[file].ok, 'red':!vm.sst.document[file].ok}" ng-repeat="(k, file) in config.artisanFiles"
-                                                    ng-if="file == 'contrat' || file == 'kbis' || file == 'cni' || file == 'rib'">{{file}}</span> </span>
+                                                    <span class="label" style="width:100px;margin-top:5px;display:block" ng-class="{'green':vm.sst.document[file].ok, 'red':!vm.sst.document[file].ok}" ng-repeat="(k, file) in config.artisanFiles" ng-if="file == 'contrat' || file == 'kbis' || file == 'cni' || file == 'rib'">{{file}}</span> </span>
                                                 </div>
                                             </div>
                                         </div>
@@ -51,6 +50,8 @@
                                         <br>
                                         <span class="fs-subhead display-block">{{vm.sst.address.n}} {{vm.sst.address.r}}, {{vm.sst.address.cp}} {{vm.sst.address.v}}</span>
                                         <img ng-src="{{vm.getStaticMap()}}" class="img-thumbnail" />
+                                        <p class="md-display-1">P. Déplacement : <strong>{{vm.sst.pourcentage.deplacement}} %</strong></p>
+                                        <p class="md-display-1">P. Main d'oeuvre : <strong>{{vm.sst.pourcentage.maindOeuvre}} %</strong></p>
                                         <span class="display-block md-title"> 
 
                                     </div>

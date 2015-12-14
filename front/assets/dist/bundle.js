@@ -662,6 +662,9 @@ FiltersFactory.prototype.list = {
         short_name: 'i_newapr',
         long_name: 'News à envoyer',
         url: 'newsaEnvoyer',
+        sortBy: {
+            di: 'desc'
+        },
         match: {
             'status': 'APR',
             'artisan.subStatus': 'NEW'
