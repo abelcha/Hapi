@@ -171,7 +171,10 @@ module.exports = function(schema) {
                         doc.compta.paiement.effectue = true
                         doc.compta.paiement.historique.push(hist)
                             //return small_cb(null);
-                        doc.save(small_cb);
+                        doc.save(function(err, resp) {
+                            console.log(err, !!resp);
+                            small_cb(null);
+                        });
                     })
             }, function(err, resp) {
                 if (err) {
