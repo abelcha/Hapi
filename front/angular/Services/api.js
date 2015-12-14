@@ -442,6 +442,13 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
                 params: options,
                 url: ['api', 'search', text].join('/')
             })
+        },
+        bigSearch: function(text, options) {
+            return $http({
+                method: 'GET',
+                params: options,
+                url: ['api', 'bigSearch', text].join('/')
+            })
         }
     }
 }]);

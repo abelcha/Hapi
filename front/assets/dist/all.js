@@ -2336,6 +2336,13 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
                 params: options,
                 url: ['api', 'search', text].join('/')
             })
+        },
+        bigSearch: function(text, options) {
+            return $http({
+                method: 'GET',
+                params: options,
+                url: ['api', 'bigSearch', text].join('/')
+            })
         }
     }
 }]);
@@ -5616,6 +5623,7 @@ var SearchController = function(edisonAPI, TabContainer, $routeParams, $location
     var tab = TabContainer.getCurrentTab();
     tab.setTitle('Search')
     var _this = this;
+    _this.routeParams = $routeParams
     LxProgressService.circular.show('#5fa2db', '#globalProgress');
     edisonAPI.searchText($routeParams.query).success(function(resp) {
         LxProgressService.circular.hide()
