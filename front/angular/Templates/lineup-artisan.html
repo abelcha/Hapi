@@ -23,6 +23,9 @@
                 <td variable-length data-title="'Ville'" sortable="'v'" filter="{ 'v': 'text' }">
                     {{::artisan.cp}} - {{::artisan.v}}
                 </td>
+                <td data-title="'D.'" sortable="'ss'" filter="{ 'ss': 'text' }">
+                    <span ng-if="artisan.f.a_dosc">DOSSIER COMPLET</span>
+                </td>
                 <td data-title="'Status'" sortable="'s'" filter="{ 's': 'text' }">
                     <span style="width:80px;" class="label {{::config.etatsArtisan[artisan.s].color}}">{{::config.etatsArtisan[artisan.s].long_name}}</span>
                 </td>
