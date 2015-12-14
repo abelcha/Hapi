@@ -61,7 +61,16 @@ var interQuery = function(rgx, _int, callback) {
 		db.model('intervention').find({
 			$or: queries
 		}, {
-			id: 1
+			'id': 1,
+			'client.nom': 1,
+			'client.prenom': 1,
+			'client.civilite': 1,
+			'date.intervention': 1,
+			'artisan.nomSociete': 1,
+			'artisan.id': 1,
+			'status': 1,
+			'categorie': 1,
+
 		}).exec(callback)
 	}
 }
@@ -93,7 +102,13 @@ var devisQuery = function(rgx, _int) {
 		db.model('devis').find({
 			$or: queries
 		}, {
-			id: 1
+			'id': 1,
+			'client.nom': 1,
+			'client.prenom': 1,
+			'client.civilite': 1,
+			'status': 1,
+			'status': 1,
+			'categorie': 1,
 		}).exec(callback)
 	}
 }
@@ -119,10 +134,16 @@ var artisanQuery = function(rgx, _int) {
 		}, {
 			'telephone.tel1': rgx,
 		}]
-		db.model('devis').find({
+		db.model('artisan').find({
 			$or: queries
 		}, {
-			id: 1
+			'id': 1,
+			'representant.nom': 1,
+			'representant.prenom': 1,
+			'nomSociete': 1,
+			'status': 1,
+			'subStatus':1,
+			'categorie':1
 		}).exec(callback)
 	}
 }
@@ -146,12 +167,12 @@ module.exports = function(req, res) {
 		artisanQuery(rgx, _int),
 	], function(err, resp) {
 		var rtn = {
-			intervention:resp[0],
-			devis:resp[1],
-			artisan:resp[2],
+			intervention: resp[0],
+			devis: resp[1],
+			artisan: resp[2],
 		}
 		console.log(rtn)
-		res.send('ok')
+		res.send(rtn)
 	})
 
 }

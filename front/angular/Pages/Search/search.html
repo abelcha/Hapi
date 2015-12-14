@@ -1,124 +1,78 @@
 <div>
     <div class="shadow-box listeInterventions">
         <div class="row" style="margin:20px">
-            <div class="data-table-container">
-                <header class="data-table-header">
-                    <div class="data-table-header__label">
-                        <span class="fs-title">Résultats pour "{{vm.routeParams.query}}"</span>
-                    </div>
-                    <div class="data-table-header__actions">
-                        <button class="btn btn--l btn--black btn--icon" lx-ripple>
-                            <i class="mdi mdi-filter-variant"></i>
-                        </button>
-                        <lx-dropdown position="right" over-toggle="true">
-                            <button class="btn btn--l btn--black btn--icon" lx-ripple lx-dropdown-toggle>
-                                <i class="mdi mdi-dots-vertical"></i>
-                            </button>
-                            <lx-dropdown-menu>
-                                <ul>
-                                    <li><a class="dropdown-link">Action</a></li>
-                                    <li><a class="dropdown-link">Another action</a></li>
-                                    <li><a class="dropdown-link">Something else here</a></li>
-                                    <li class="dropdown-divider"></li>
-                                    <li><a class="dropdown-link dropdown-link--is-header">Header</a></li>
-                                    <li><a class="dropdown-link">Separated link</a></li>
-                                </ul>
-                            </lx-dropdown-menu>
-                        </lx-dropdown>
-                    </div>
-                </header>
-                <table class="data-table">
-                    <thead>
-                        <tr class="data-table__selectable-row">
-                            <th></th>
-                            <th>Dessert (100g serving)</th>
-                            <th>Calories</th>
-                            <th>Fat (g)</th>
-                            <th class="data-table__sortable-cell data-table__sortable-cell--desc">Carbs (g)</th>
-                            <th>Protein (g)</th>
-                            <th>Sodium (mg)</th>
-                            <th>
-                                <i class="mdi mdi-comment-text"></i>
-                                <span>Comments</span>
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr class="data-table__selectable-row data-table__selectable-row--is-selected">
-                            <td></td>
-                            <td>Frozen yogurt</td>
-                            <td>159</td>
-                            <td>6.0</td>
-                            <td>24</td>
-                            <td>4.0</td>
-                            <td>87</td>
-                            <td>Lorem ipsum</td>
-                        </tr>
-                        <tr class="data-table__selectable-row">
-                            <td></td>
-                            <td>Ice cream sandwich</td>
-                            <td>237</td>
-                            <td>9.0</td>
-                            <td>37</td>
-                            <td>4.3</td>
-                            <td>129</td>
-                            <td>Lorem ipsum</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <!--  <div class="col-sm-4">
-                <div class="mt++">
-                    <span class="fs-title display-block mb">Interventions</span>
-                    <div class="divider divider--dark"></div>
-                    <ul class="list mt++">
-                        <li class="list-row list-row--has-separator" ng-click="vm.openLink(result.link)" ng-repeat="result in vm.data" 
-                        ng-if="result.match[0] === 'i'">
-                            <div class="list-row__primary">
-                                <i class="icon icon--l icon--green icon--circled fa fa-car"></i>
-                            </div>
-                            <div class="list-row__content">
-                                <span class="display-block">{{result.description}}</span>
-                                <span class="display-block fs-body-1 tc-black-2">{{result.match}}</span>
-                            </div>
-                        </li>
-                    </ul>
+            <div class="col-sm-8 col-sm-offset-2">
+                <div class="data-table-container">
+                    <header class="data-table-header">
+                        <div class="data-table-header__label">
+                            <span class="fs-title">Résultats Interventions pour "{{vm.routeParams.query}}"</span>
+                        </div>
+                    </header>
+                    <table class="table table-condensed table-hover">
+                        <tbody>
+                            <tr ng-repeat="intervention in vm.data.intervention" ng-click="vm.open('/intervention/' + intervention.id)">
+                                <td>{{intervention.id}} - 
+                                {{intervention.client.civilite}} {{intervention.client.prenom}} <strong>{{intervention.client.nom}}</strong> - 
+                                
+                                    <span style="width:100px" class="label {{vm.config.categories[intervention.categorie].color}}">{{vm.config.categories[intervention.categorie].long_name}}</span>
+                                 - 
+                                
+                                    <span style="width:100px" class="label {{vm.config.etats[intervention.status].color}}">{{vm.config.etats[intervention.status].long_name}}</span>
+                                 - 
+                                {{intervention.date.intervention|date:"dd/MM/yy à HH'h'mm"}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
-            <div class="col-sm-4">
-                <div class="mt++">
-                    <span class="fs-title display-block mb">Artisans</span>
-                    <div class="divider divider--dark"></div>
-                    <ul class="list mt++">
-                        <li class="list-row list-row--has-separator" ng-click="vm.openLink(result.link)" ng-repeat="result in vm.data" ng-if="result.match[0] === 'a'">
-                            <div class="list-row__primary">
-                                <i class="icon icon--l icon--brown icon--circled fa fa-file"></i>
-                            </div>
-                            <div class="list-row__content">
-                                <span class="display-block">{{result.description}}</span>
-                                <span class="display-block fs-body-1 tc-black-2">{{result.match}}</span>
-                            </div>
-                        </li>
-                    </ul>
+        </div>
+        <div class="row" style="margin:20px">
+            <div class="col-sm-8 col-sm-offset-2">
+                <div class="data-table-container">
+                    <header class="data-table-header">
+                        <div class="data-table-header__label">
+                            <span class="fs-title">Résultats Devis pour "{{vm.routeParams.query}}"</span>
+                        </div>
+                    </header>
+                    <table class="table table-condensed table-hover">
+                        <tbody>
+                            <tr ng-repeat="devis in vm.data.devis" ng-click="vm.open('/devis/' + devis.id)">
+                                <td>{{devis.id}} - 
+                                {{devis.client.civilite}} {{devis.client.prenom}} <strong>{{devis.client.nom}}</strong> - 
+                                
+                                    <span style="width:100px" class="label {{vm.config.categories[devis.categorie].color}}">{{vm.config.categories[devis.categorie].long_name}}</span>
+                                 - 
+                                
+                                    <span style="width:100px" class="label {{vm.config.etatsDevis[devis.status].color}}">{{vm.config.etatsDevis[devis.status].long_name}}</span>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
-            <div class="col-sm-4">
-                <div class="mt++">
-                    <span class="fs-title display-block mb">Devis</span>
-                    <div class="divider divider--dark"></div>
-                    <ul class="list mt++">
-                        <li class="list-row list-row--has-separator" ng-click="vm.openLink(result.link)" ng-repeat="result in vm.data" ng-if="result.match[0] === 'd'">
-                            <div class="list-row__primary">
-                                <i class="icon icon--l icon--blue icon--circled fa fa-calendar"></i>
-                            </div>
-                            <div class="list-row__content">
-                                <span class="display-block">{{result.description}}</span>
-                                <span class="display-block fs-body-1 tc-black-2">{{result.match}}</span>
-                            </div>
-                        </li>
-                    </ul>
+        </div>
+         <div class="row" style="margin:20px">
+            <div class="col-sm-8 col-sm-offset-2">
+                <div class="data-table-container">
+                    <header class="data-table-header">
+                        <div class="data-table-header__label">
+                            <span class="fs-title">Résultats Artisan pour "{{vm.routeParams.query}}"</span>
+                        </div>
+                    </header>
+                    <table class="table table-condensed table-hover">
+                        <tbody>
+                            <tr ng-repeat="artisan in vm.data.artisan" ng-click="vm.open('/artisan/' + artisan.id)">
+                                <td>{{artisan.id}} - {{artisan.nomSociete}}
+                                {{artisan.civilite}} {{artisan.prenom}} <strong>{{artisan.nom}}</strong> - 
+                                
+                                    <span style="width:100px" class="label {{vm.config.artisanSubStatus[artisan.subStatus].color}}">{{vm.config.artisanSubStatus[artisan.subStatus].long_name}}</span>
+                                 - 
+                                
+                                    <span style="width:100px" class="label {{vm.config.etatsArtisan[artisan.status].color}}">{{vm.config.etatsArtisan[artisan.status].long_name}}</span>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
-            </div> -->
+            </div>
         </div>
     </div>
 </div>
