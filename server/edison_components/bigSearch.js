@@ -98,6 +98,36 @@ var devisQuery = function(rgx, _int) {
 	}
 }
 
+var artisanQuery = function(rgx, _int) {
+	return function(callback) {
+		var queries = [{
+			'_id': _int
+		}, {
+			'representant.nom': rgx,
+		}, {
+			'representant.prenom': rgx,
+		}, {
+			'email': rgx,
+		}, {
+			'nomSociete': rgx,
+		}, {
+			'address.r': rgx,
+		}, {
+			'address.cp': rgx,
+		}, {
+			'address.v': rgx,
+		}, {
+			'telephone.tel1': rgx,
+		}]
+		db.model('devis').find({
+			$or: queries
+		}, {
+			id: 1
+		}).exec(callback)
+	}
+}
+
+
 
 
 module.exports = function(req, res) {
@@ -112,9 +142,15 @@ module.exports = function(req, res) {
 
 	async.parallel([
 		interQuery(rgx, _int),
-		devisQuery(rgx, _int)
+		devisQuery(rgx, _int),
+		artisanQuery(rgx, _int),
 	], function(err, resp) {
-		console.log(err, resp)
+		var rtn = {
+			intervention:resp[0],
+			devis:resp[1],
+			artisan:resp[2],
+		}
+		console.log(rtn)
 		res.send('ok')
 	})
 
