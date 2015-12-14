@@ -65,6 +65,38 @@ FiltersFactory.prototype.list = {
             'demandeFacturier.status': "PENDING"
         }
     }, {
+        short_name: 'a_pal1',
+        long_name: 'Palier 1',
+        url: 'pa1',
+        match: {
+            'subStatus': 'NEW',
+            blocked: true
+        },
+    }, {
+        short_name: 'a_pal2',
+        long_name: 'Palier 2',
+        url: 'pa2',
+        match: {
+            'subStatus': 'FORM',
+            blocked: true
+        },
+    }, {
+        short_name: 'a_pal3',
+        long_name: 'Palier 3',
+        url: 'pa3',
+        match: {
+            'subStatus': 'CONF',
+            blocked: true
+        },
+    }, {
+        short_name: 'a_pal4',
+        long_name: 'Palier 4',
+        url: 'pa4',
+        match: {
+            'subStatus': 'REG',
+            blocked: true
+        },
+    },{
         short_name: 'a_all',
         long_name: 'Tous les Artisans',
         url: '',
@@ -115,7 +147,7 @@ FiltersFactory.prototype.list = {
                 'document.kbis.file': true
             }]
         },
-    },{
+    }, {
         short_name: 'a_dosc',
         long_name: 'Dossier Complet',
         url: 'dossierComplet',
@@ -314,7 +346,7 @@ FiltersFactory.prototype.list = {
         short_name: 'i_chq',
         long_name: 'Relance Cheques',
         url: 'relanceCheques',
-        group:'$login.demarchage',
+        group: '$login.demarchage',
         match: function() {
             return {
                 status: 'VRF',
@@ -501,7 +533,7 @@ FiltersFactory.prototype.list = {
         },
     }, {
         short_name: 'i_pavrf',
-        group: '$login.demarchage',
+        group: '$artisan.login.management',
         long_name: 'P.A Verifs',
         url: 'newVerif',
         match: {

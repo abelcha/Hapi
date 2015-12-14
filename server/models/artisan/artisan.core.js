@@ -36,6 +36,8 @@
                 fourniture: 30
             },
             zoneChalandise: 30,
+            zoneChalandise: 30,
+            interLimit: 30,
             newOs: true,
             address: {},
             categories: [],
