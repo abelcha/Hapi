@@ -291,7 +291,7 @@ FiltersFactory.prototype.list = {
             'subStatus': 'REG',
             blocked: true
         },
-    },{
+    }, {
         short_name: 'a_all',
         long_name: 'Tous les Artisans',
         url: '',
@@ -626,7 +626,7 @@ FiltersFactory.prototype.list = {
         match: {
             'litige.open': true
         },
-        
+
     }, {
         short_name: 'i_mar',
         long_name: 'MARKET',
