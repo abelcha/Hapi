@@ -21,13 +21,14 @@ module.exports = function(schema) {
 
         return new Promise(function(resolve, reject) {
             var i = 0;
+            console.log('FLUSH_MAIL')
             var total = _.reduce(req.body, function(total, e) {
                 return total + e.list.__list.length
             }, 0)
             var data = _.groupBy(req.body, 'id');
             async.eachLimit(data, 3, function(sst, cb) {
                 var k = Object.keys(data)[i++]
-               // global.currenWorkerJob.progress(i, req.body.length);
+                    // global.currenWorkerJob.progress(i, req.body.length);
                 async.waterfall([
                     function(callback) {
                         db.model('artisan').findOne({
@@ -41,7 +42,7 @@ module.exports = function(schema) {
                         artisan.total = sst[0].total.final;
                         artisan.interventions = _.map(sst[0].list.__list, function(e) {
                             return {
-                                mode:e.mode,
+                                mode: e.mode,
                                 montant: e.montant.final,
                                 description: e.description,
                                 id: e.id,
@@ -101,6 +102,7 @@ module.exports = function(schema) {
                     }
                 ], cb);
             }, function(err, resp) {
+                edison.event('FLUSH_MAIL').data(data).login(req.session.login).save();
                 console.log(err, resp);
                 if (err) {
                     reject(err);
@@ -114,10 +116,22 @@ module.exports = function(schema) {
     schema.statics.flush = function(req, res) {
         var _this = this;
 
+
+
+
+        if (!isWorker) {
+            return edison.worker.createJob({
+                name: 'db',
+                model: 'intervention',
+                method: 'flush',
+                req: _.pick(req, 'body', 'session')
+            })
+        }
+
         return new Promise(function(resolve, reject) {
 
             var date = (new Date()).setMilliseconds(0)
-
+            console.log('FLUSH')
             var data = _(req.body).pluck('list.__list').flatten().value()
             var numCheques = _(req.body).map(
                 _.partial(_.pick, _, 'numeroCheque', 'id')
@@ -135,6 +149,8 @@ module.exports = function(schema) {
                             artisan: 0,
                             edison: 0
                         })
+                        console.log('FLUSH', doc.id)
+
                         var hist = {
                             dateAjout: doc.compta.paiement.date,
                             loginAjout: doc.compta.paiement.login,
@@ -154,15 +170,14 @@ module.exports = function(schema) {
                         doc.compta.paiement.ready = (hist.payed != hist.montant);
                         doc.compta.paiement.effectue = true
                         doc.compta.paiement.historique.push(hist)
-                        //return small_cb(null);
+                            //return small_cb(null);
                         doc.save(small_cb);
                     })
             }, function(err, resp) {
                 if (err) {
                     reject(err);
                 }
-                edison.event('FLUSH').login(req.session.login).save();
-
+                edison.event('FLUSH').data(data).login(req.session.login).save();
                 resolve('ok');
             });
         }).catch(__catch)

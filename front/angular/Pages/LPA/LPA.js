@@ -90,15 +90,17 @@ var LpaController = function(user, openPost, socket, ContextMenu, $location, $wi
         })
         LxProgressService.circular.show('#5fa2db', '#globalProgress');
         edisonAPI.compta.flush(lpa).then(function(resp) {
-            edisonAPI.compta.flushMail(lpa).then(function(resp) {
-                LxProgressService.circular.hide()
-                _this.reloadLPA()
-            });
+            /*edisonAPI.compta.flushMail(lpa).then(function(resp) {
+                  LxProgressService.circular.hide()
+                  _this.reloadLPA()
+              });*/
+            alert('Les éléments ont été flushés')
         }, function() {
-            edisonAPI.compta.flushMail(lpa).then(function(resp) {
+            alert('Les éléments ont été flushés')
+            /*edisonAPI.compta.flushMail(lpa).then(function(resp) {
                 LxProgressService.circular.hide()
                 _this.reloadLPA()
-            });
+            });*/
         })
     }
 
