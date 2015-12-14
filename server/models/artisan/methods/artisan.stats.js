@@ -46,7 +46,16 @@ module.exports = function(schema) {
                 async.parallel({
                         total: sumCount({}),
                         annule: sumCount({
-                            status: 'ANN'
+                            status: 'ANN',
+                            $or: [{
+                                'prixAnnonce': {
+                                    $ne: 0
+                                }
+                            }, {
+                                'status': {
+                                    $ne: 'ANN'
+                                }
+                            }]
                         }),
                         paye: sumCount({
                             status: 'VRF',
