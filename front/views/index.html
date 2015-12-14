@@ -73,8 +73,8 @@
                     <link fltr="i_pan" icon="th-list" login="{{displayUser.login}}" hash-model="dm" title="Mon Panier"></link>
                     <link fltr="i_newapr" icon="th-list"></link>
                     <link fltr="i_potapr" icon="th-list"></link>
-                    <link fltr="i_pavrf"  hash-model="dm" icon="th-list" login="{{displayUser.login === 'yohann_r' ? '' : displayUser.login}}"></link>
-                    <link fltr="i_paenv" icon="th-list"  hash-model="ev"  login="{{displayUser.login}}"></link>
+                    <link fltr="i_pavrf" hash-model="dm" icon="th-list" login="{{displayUser.login === 'yohann_r' ? '' : displayUser.login}}"></link>
+                    <link fltr="i_paenv" icon="th-list" hash-model="ev" login="{{displayUser.login}}"></link>
                     <link fltr="i_tut" icon="th-list"></link>
                     <link fltr="i_hist" icon="th-list" title="Historique" no-counter="true"></link>
                 </drop-down>
@@ -89,11 +89,12 @@
                 <drop-down icon="truck" title="Artisans">
                     <link fltr="a_all" url="/artisan/contact#informations" icon="th-list" model="artisan" no-counter="true" title="Repertoire"></link>
                     <link fltr="a_all" icon="th-list" model="artisan" login='{{displayUser.login}}' no-counter="true" title="Mes Artisans"></link>
-                    <link fltr="a_pal1" icon="th-list" model="artisan"></link>
-                    <link fltr="a_pal2" icon="th-list" model="artisan"></link>
-                    <link fltr="a_pal3" icon="th-list" model="artisan"></link>
-                    <link fltr="a_pal4" icon="th-list" model="artisan"></link>
-
+                    <drop-down icon="truck" title="Paliers">
+                        <link fltr="a_pal1" icon="th-list" model="artisan"></link>
+                        <link fltr="a_pal2" icon="th-list" model="artisan"></link>
+                        <link fltr="a_pal3" icon="th-list" model="artisan"></link>
+                        <link fltr="a_pal4" icon="th-list" model="artisan"></link>
+                    </drop-down>
                     <link fltr="a_all" icon="th-list" model="artisan" title="Tous les Artisans" no-counter="true"></link>
                 </drop-down>
                 <!-- 
