@@ -201,7 +201,7 @@ app.get('/api/job/replay', function(req, res) {
 
 })
 
-app.get('/job/clean', function(req, res) {
+app.get('api/job/clean', function(req, res) {
     redis.delWildcard("kue".envify() + '*', function(err, resp) {
         console.log(err, resp)
         res.send('ok')
