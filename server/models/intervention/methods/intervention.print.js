@@ -16,7 +16,6 @@ module.exports = function(schema) {
             var ids = _(data).filter(function(e) {
                 return _.find(e.list.__list, 'checked', true)
             }).pluck('id').value()
-            console.log('--->', ids)
             if (!ids.length) {
                 return res.send('Pas de documents')
             }
@@ -117,19 +116,24 @@ module.exports = function(schema) {
     }
 
 
-    var getLettreCheques = function(res, req, data) {
+    var getLettreCheques = function(res, req, data, offset) {
+        console.log('-->', offset)
         return new Promise(function(resolve, reject) {
             var resend = function() {
-                if (req.query.pdf || true) {
+                var xpdf = PDF(op)
+                xpdf._html = xpdf._html.replace("</style>", " div#cheque { right:" + offset +"mm; }</style>");
+
+                if (req.query.pdf || true) {
                     if (!op.length) {
                         return resolve('Pas de documents')
                     }
-                    PDF(op).toBuffer(function(err, buffer) {
+
+                    xpdf.toBuffer(function(err, buffer) {
                         res.contentType('application/pdf')
                         res.send(buffer);
                     })
                 } else {
-                    res.send(PDF(op).html());
+                    res.send(xpdf.html());
                 }
             }
 
@@ -159,13 +163,12 @@ module.exports = function(schema) {
     schema.statics.print = function(req, res) {
         var _this = this;
         var data = JSON.parse(req.body.data);
-
         if (req.body.type === 'documents') {
             return getDocs(req, res, data)
         } else if (req.body.type === 'virement') {
             return res.table(getVirements(data))
         } else {
-            return getLettreCheques(res, req, data)
+            return getLettreCheques(res, req, data, req.body.offset)
         }
     }
 }

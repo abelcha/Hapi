@@ -2340,7 +2340,6 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
         bigSearch: function(text, options) {
             return $http({
                 method: 'GET',
-                cache:true,
                 params: options,
                 url: ['api', 'bigSearch', text].join('/')
             })
@@ -5522,17 +5521,18 @@ var LpaController = function(user, openPost, socket, ContextMenu, $location, $wi
         })
         LxProgressService.circular.show('#5fa2db', '#globalProgress');
         edisonAPI.compta.flush(lpa).then(function(resp) {
-            /*edisonAPI.compta.flushMail(lpa).then(function(resp) {
-                  LxProgressService.circular.hide()
-                  _this.reloadLPA()
-              });*/
+            LxProgressService.circular.hide()
+                /*edisonAPI.compta.flushMail(lpa).then(function(resp) {
+                      _this.reloadLPA()
+                  });*/
             alert('Les éléments ont été flushés')
         }, function() {
+            LxProgressService.circular.hide()
             alert('Les éléments ont été flushés')
-            /*edisonAPI.compta.flushMail(lpa).then(function(resp) {
-                LxProgressService.circular.hide()
-                _this.reloadLPA()
-            });*/
+                /*edisonAPI.compta.flushMail(lpa).then(function(resp) {
+                    LxProgressService.circular.hide()
+                    _this.reloadLPA()
+                });*/
         })
     }
 
@@ -5590,9 +5590,11 @@ var LpaController = function(user, openPost, socket, ContextMenu, $location, $wi
     }
 
     _this.print = function(type) {
+        console.log(_this.offset)
         openPost('/api/intervention/print', {
             type: type,
-            data: $rootScope.lpa
+            data: $rootScope.lpa,
+            offset: _this.offset || 0
         });
     }
 }

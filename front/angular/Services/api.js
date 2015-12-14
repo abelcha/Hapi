@@ -446,7 +446,6 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
         bigSearch: function(text, options) {
             return $http({
                 method: 'GET',
-                cache:true,
                 params: options,
                 url: ['api', 'bigSearch', text].join('/')
             })
