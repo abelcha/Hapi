@@ -306,6 +306,19 @@ FiltersFactory.prototype.list = {
                 'document.kbis.file': true
             }]
         },
+    },{
+        short_name: 'a_dosc',
+        long_name: 'Dossier Complet',
+        url: 'dossierComplet',
+        match: {
+            $and: [{
+                'document.cni.ok': true
+            }, {
+                'document.contrat.ok': true
+            }, {
+                'document.kbis.ok': true
+            }]
+        },
     }, {
         short_name: 'a_act',
         long_name: 'actifs',
