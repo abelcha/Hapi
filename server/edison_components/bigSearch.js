@@ -188,7 +188,6 @@ module.exports = function(req, res) {
 		devisQuery(rgx, _int),
 		artisanQuery(rgx, _int),
 	], function(err, resp) {
-		console.log(resp[0].length)
 		var rtn = {
 			intervention: resp[0],
 			devis: resp[1],
