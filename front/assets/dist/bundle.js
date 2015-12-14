@@ -258,6 +258,7 @@ FiltersFactory.prototype.list = {
     }, {
         short_name: 'a_pal1',
         long_name: 'Palier 1',
+        group: '$login.management',
         url: 'pa1',
         match: {
             'subStatus': 'NEW',
@@ -266,6 +267,7 @@ FiltersFactory.prototype.list = {
     }, {
         short_name: 'a_pal2',
         long_name: 'Palier 2',
+        group: '$login.management',
         url: 'pa2',
         match: {
             'subStatus': 'FORM',
@@ -274,6 +276,7 @@ FiltersFactory.prototype.list = {
     }, {
         short_name: 'a_pal3',
         long_name: 'Palier 3',
+        group: '$login.management',
         url: 'pa3',
         match: {
             'subStatus': 'CONF',
@@ -282,6 +285,7 @@ FiltersFactory.prototype.list = {
     }, {
         short_name: 'a_pal4',
         long_name: 'Palier 4',
+        group: '$login.management',
         url: 'pa4',
         match: {
             'subStatus': 'REG',
