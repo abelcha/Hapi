@@ -632,9 +632,6 @@ FiltersFactory.prototype.list = {
         match: {
             aDemarcher: true,
             status: 'APR',
-            'login.demarchage': {
-                $exists: false
-            },
             'artisan.id': {
                 $exists: false
             }
