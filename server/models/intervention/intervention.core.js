@@ -241,6 +241,7 @@
             var rtn = {
                 t: e.login.ajout,
                 id: e.id,
+                mn: e.sst.login.management,
                 f: !e.reglementSurPlace ? 1 : undefined,
                 ai: e.artisan.id,
                 l: !e.compta.reglement.recu && e.recouvrement.level || undefined,
