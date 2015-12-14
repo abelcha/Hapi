@@ -431,6 +431,7 @@ FiltersFactory.prototype.list = {
         match: {
             'litige.open': true
         },
+        
     }, {
         short_name: 'i_mar',
         long_name: 'MARKET',
