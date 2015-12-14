@@ -55,7 +55,7 @@ module.exports = function(db) {
                 default: ""
             },
             nom: {
-                index:true,
+                index: true,
                 type: String,
                 required: true
             },
@@ -80,12 +80,12 @@ module.exports = function(db) {
                     required: true
                 },
                 v: {
-                    index:true,
+                    index: true,
                     type: String,
                     required: true
                 },
                 cp: {
-                    index:true,
+                    index: true,
                     type: String,
                     required: true
                 },
@@ -140,7 +140,10 @@ module.exports = function(db) {
                 ref: 'artisan'
             },
             subStatus: String,
-            nomSociete: String
+            nomSociete: String,
+            login: {
+                management: String,
+            }
         },
         description: {
             type: String,

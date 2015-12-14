@@ -37,7 +37,8 @@ module.exports = function(core) {
                                 options = {
                                     multi: true
                                 };
-                                //update.$set['login.management'] = e.login.ajout
+                                update.$set['artisan.login.management'] = _.get(e, 'sst.login.management');
+                                update.$set.cache.mn = _.get(e, 'sst.login.management');
                 /*            if (core.name === "intervention" && e && e.sst && e.sst.subStatus) {
                                 update.$set['artisan.subStatus'] = e.sst.subStatus
                             } else {

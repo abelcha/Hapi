@@ -1,6 +1,6 @@
 module.exports = function(modelName, schema) {
     var core = requireLocal(['server', 'models', modelName, modelName + '.core.js'].join('/'));
-    schema.statics.dump = require('./core.dump')(core);
+    //schema.statics.dump = require('./core.dump')(core);
 
     /* on save update cachelist + filter (=cacheActualise) */
     schema.statics.uniqueCacheReload = require('./core.unique-cache-reload')(core);
