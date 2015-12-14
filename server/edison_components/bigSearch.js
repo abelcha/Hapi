@@ -138,10 +138,34 @@ var artisanQuery = function(rgx, _int) {
 			'representant.prenom': 1,
 			'nomSociete': 1,
 			'status': 1,
-			'subStatus':1,
-			'categorie':1
+			'subStatus': 1,
+			'categorie': 1
 		}).limit(1000).exec(callback)
 	}
+}
+
+
+var accentsDict = {
+	a: '[àâa]',
+	e: '[éèêe]',
+//	o: '[ôo]',
+//	u: '[ùu]',
+	'-': '[ \\-\']',
+	' ': '[ \\-\']',
+	"'": '[ \\-\']',
+}
+
+var regexpReplace = function(str, startsWith, cmp) {
+	var rtn = startsWith ? '^' : "";
+	cmp = "aeuo ";
+	for (var i = 0; i < str.length; i++) {
+		if (cmp.indexOf(str[i]) !== -1) {
+			rtn += accentsDict[str[i]];
+		} else {
+			rtn += str[i]
+		}
+	};
+	return new RegExp(rtn, 'i')
 }
 
 
@@ -153,8 +177,9 @@ module.exports = function(req, res) {
 	var regexpAccents = require('regexp-accents');
 
 	var rgx = {
-		$regex: regexpAccents(req.params.text, true, 'eE')
+		$regex: regexpReplace(req.params.text, false)
 	}
+	console.log(rgx)
 	var _int = parseInt(req.params.text) ||  0;
 
 	async.parallel([
@@ -162,6 +187,7 @@ module.exports = function(req, res) {
 		devisQuery(rgx, _int),
 		artisanQuery(rgx, _int),
 	], function(err, resp) {
+		console.log(resp[0].length)
 		var rtn = {
 			intervention: resp[0],
 			devis: resp[1],

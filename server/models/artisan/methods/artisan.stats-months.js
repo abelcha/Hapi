@@ -19,9 +19,15 @@ module.exports = function(schema) {
                         'date.ajout': {
                             $gt: baseDate
                         },
-                        'prixAnnonce': {
-                            $ne: 0
-                        }
+                        $or: [{
+                            'prixAnnonce': {
+                                $ne: 0
+                            }
+                        }, {
+                            'status': {
+                                $ne: 'ANN'
+                            }
+                        }]
                     })
                     .group({
                         _id: {
