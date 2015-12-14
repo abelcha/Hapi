@@ -52,20 +52,20 @@ module.exports = function(schema) {
                     mailDest: envProd ? artisan.email : (req.session.email ||  'intervention@edison-services.fr'),
                     mailReply: 'yohann.rhoum@edison-services.fr'
                 }
+                var html = require('fs').readFileSync(process.cwd() + '/templates/envoiContrat.html', 'utf8')
+                html = _.template(html)(artisan);
                 PDF('contract', artisan).buffer(function(err, buffer) {
-                    console.log('gotbuffer')
-                    console.log(process.cwd() + '/templates/envoiContrat.html')
                     mail.send({
                         From: "yohann.rhoum@edison-services.fr",
                         ReplyTo: communication.mailReply,
                         To: communication.mailDest,
                         Subject: req.body.rappel ? "En attente de vos documents" : "Proposition de partenariat",
-                        HtmlBody: require('fs').readFileSync(process.cwd() + '/templates/envoiContrat.html', 'utf8'),
-                        Attachments: [{
+                        HtmlBody: html,
+                       /* Attachments: [{
                             Content: buffer.toString('base64'),
                             Name: 'Declaration de sous-traitance.pdf',
                             ContentType: 'application/pdf'
-                        }]
+                        }]*/
                     }).then(resolve, reject)
                 })
             })

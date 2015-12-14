@@ -63,6 +63,7 @@
             r: e.representant.civilite + " " + e.representant.nom,
             p: e.representant.prenom,
             s: e.status,
+            bl: e.blocked,
             ss: e.subStatus,
             cp: e.address.cp,
             v: e.address.v,

@@ -4547,7 +4547,7 @@ var ContactArtisanController = function($scope, $timeout, TabContainer, LxProgre
     }
 
 
-    _this.tbz = ['informations', 'interventions', 'historique', 'stats', 'paiements'];
+    _this.tbz = ['informations', 'interventions', 'historique', 'signalement', 'stats', 'paiements'];
     var ind = _this.tbz.indexOf($location.hash());
     $scope.selectedIndex = ind >= 0 ? ind : 0
     _this.tab = TabContainer.getCurrentTab();

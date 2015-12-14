@@ -68,7 +68,12 @@
                                     <historique-sst  data="vm.sst"></historique-sst>
                                 </md-content>
                             </md-tab>
-                            <md-tab label="Stats" data-position="2">
+                            <md-tab label="Signalement"  data-position="2">
+                                <md-content>
+                                    <signalement exit="bv.init()" data="vm" ng-if="vm.sst"></signalement>
+                                </md-content>
+                            </md-tab>
+                            <md-tab label="Stats" data-position="3">
                                 <md-content class="md-padding">
                                     <h1 class="md-display-2">Stats</h1>
                                     <div class="row" style="height:500px">
@@ -78,12 +83,12 @@
                                     <!--  <artisan-recap id="vm.sst.id"></artisan-recap> -->
                                 </md-content>
                             </md-tab>
-                            <md-tab label="Paiements">
+                            <md-tab label="Paiements"  data-position="4">
                                 <md-content class="md-padding">
                                   <historique-paiement-sst data="vm.sst"></historique-paiement-sst>
                                 </md-content>
                             </md-tab>
-                            <md-tab label="JSON Dump" data-position="3">
+                            <md-tab label="JSON Dump" data-position="5">
                                 <md-content class="md-padding">
                                     <h1 class="md-display-2">DUMP</h1>
                                     <pre>{{vm.sst|json}}</pre>

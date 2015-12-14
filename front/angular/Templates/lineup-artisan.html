@@ -1,7 +1,7 @@
 <div class="shadow-box listeInterventions">
     <table style="background:white;cursor:pointer" ng-table="tableParams" class="table table-bordered table-hover table-hover table-striped" id="table-list" show-filter="true">
         <tbody id="tbody-list">
-            <tr data-id="{{::artisan.id}}" ng-repeat-start="artisan in $data" ng-right-click="rowRightClick($event, artisan)" ng-click="rowClick($event, artisan, false)" ng-class="{success : contextMenu.active && contextMenu.data.id === artisan.id, 'warning' : artisan.cnd === 1}">
+            <tr data-id="{{::artisan.id}}" ng-repeat-start="artisan in $data" ng-right-click="rowRightClick($event, artisan)" ng-click="rowClick($event, artisan, false)" ng-class="{'danger' : artisan.bl,success : contextMenu.active && contextMenu.data.id === artisan.id, 'warning' : artisan.cnd === 1}">
                 <td data-title="'id'" sortable="'id'" filter="{ 'id': 'text' }">
                     <strong>{{::artisan.id}}</strong>
                 </td>
