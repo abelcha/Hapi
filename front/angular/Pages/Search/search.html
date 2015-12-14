@@ -127,8 +127,9 @@
                                 <i class="icon icon--l icon--brown icon--circled fa fa-2x fa-map-marker"></i>
                             </div>
                             <div class="list-row__content">
-                                <span class="display-block">{{artisan.id}} - {{artisan.nomSociete}} {{artisan.civilite}} {{artisan.prenom}} <strong>{{artisan.nom}}</strong></span>
+                                <span class="display-block"><strong>{{artisan.id}}</strong> {{artisan.representant.prenom}} <strong>{{artisan.representant.nom}}</strong></span>
                                 <span class="display-block fs-body-1 tc-black-2">
+                                {{artisan.nomSociete}} -
                                 <span style="width:100px" class="label {{vm.config.etatsArtisan[artisan.status].color}}">{{vm.config.etatsArtisan[artisan.status].long_name}}</span>
  <span style="width:100px" class="label {{vm.config.artisanSubStatus[artisan.subStatus].color}}">{{vm.config.artisanSubStatus[artisan.subStatus].long_name}}</span>
                                 </span>
