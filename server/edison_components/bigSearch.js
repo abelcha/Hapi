@@ -157,7 +157,8 @@ var accentsDict = {
 
 var regexpReplace = function(str, startsWith, cmp) {
 	var rtn = startsWith ? '^' : "";
-	cmp = "aeuo ";
+	str = str.toLowerCase()
+	cmp = "ae -'";
 	for (var i = 0; i < str.length; i++) {
 		if (cmp.indexOf(str[i]) !== -1) {
 			rtn += accentsDict[str[i]];
