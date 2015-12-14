@@ -1,4 +1,4 @@
-<div>
+<!-- <div>
     <div class="shadow-box listeInterventions">
         <div class="row" style="margin:20px">
             <div class="col-sm-8 col-sm-offset-2">
@@ -71,6 +71,70 @@
                             </tr>
                         </tbody>
                     </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> -->
+<div>
+    <div class="shadow-box listeInterventions">
+        <div class="row" style="margin:20px">
+            <div class="col-sm-4">
+                <div class="mt++">
+                    <span class="fs-title display-block mb">Interventions</span>
+                    <div class="divider divider--dark"></div>
+                    <ul class="list mt++">
+                        <li class="list-row list-row--has-separator" ng-click="vm.open('/intervention/' + intervention.id)" ng-repeat="intervention in vm.data.intervention">
+                            <div class="list-row__primary">
+                                <i class="icon icon--l icon--green icon--circled fa fa-file-text-o"></i>
+                            </div>
+                            <div class="list-row__content">
+                                <span class="display-block"><strong>{{intervention.id}}</strong> - {{intervention.client.civilite}} {{intervention.client.prenom}} <strong>{{intervention.client.nom}}</strong></span>
+                                <span class="display-block fs-body-1 tc-black-2">
+                             <span style="width:100px" class="label {{vm.config.categories[intervention.categorie].color}}">{{vm.config.categories[intervention.categorie].long_name}}</span> -
+                                <span style="width:100px" class="label {{vm.config.etats[intervention.status].color}}">{{vm.config.etats[intervention.status].long_name}}</span> - {{intervention.date.intervention|date:"dd/MM/yy à HH'h'mm"}}</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="mt++">
+                    <span class="fs-title display-block mb">Devis</span>
+                    <div class="divider divider--dark"></div>
+                    <ul class="list mt++">
+                        <li class="list-row list-row--has-separator" ng-click="vm.open('/devis/' + devis.id)" ng-repeat="devis in vm.data.devis">
+                            <div class="list-row__primary">
+                                <i class="icon icon--l icon--blue icon--circled fa fa-file-o"></i>
+                            </div>
+                            <div class="list-row__content">
+                                <span class="display-block">{{devis.id}} - {{devis.client.civilite}} {{devis.client.prenom}} <strong>{{devis.client.nom}}</strong></span>
+                                <span class="display-block fs-body-1 tc-black-2">
+                             <span style="width:100px" class="label {{vm.config.categories[devis.categorie].color}}">{{vm.config.categories[devis.categorie].long_name}}</span>
+                                <span style="width:100px" class="label {{vm.config.etatsDevis[devis.status].color}}">{{vm.config.etatsDevis[devis.status].long_name}}</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="mt++">
+                    <span class="fs-title display-block mb">Artisans</span>
+                    <div class="divider divider--dark"></div>
+                    <ul class="list mt++">
+                        <li class="list-row list-row--has-separator" ng-click="vm.open('/artisan/' + artisan.id)" ng-repeat="artisan in vm.data.artisan">
+                            <div class="list-row__primary">
+                                <i class="icon icon--l icon--brown icon--circled fa fa-2x fa-map-marker"></i>
+                            </div>
+                            <div class="list-row__content">
+                                <span class="display-block">{{artisan.id}} - {{artisan.nomSociete}} {{artisan.civilite}} {{artisan.prenom}} <strong>{{artisan.nom}}</strong></span>
+                                <span class="display-block fs-body-1 tc-black-2">
+                                <span style="width:100px" class="label {{vm.config.etatsArtisan[artisan.status].color}}">{{vm.config.etatsArtisan[artisan.status].long_name}}</span>
+ <span style="width:100px" class="label {{vm.config.artisanSubStatus[artisan.subStatus].color}}">{{vm.config.artisanSubStatus[artisan.subStatus].long_name}}</span>
+                                </span>
+                            </div>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>

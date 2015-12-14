@@ -14,65 +14,67 @@ angular.module('edison').directive('mainNavbar', function($q, edisonAPI, TabCont
             scope.tabContainer = TabContainer;
 
             scope.select = function(model) {
-                if (scope.selectedTab == model) {
-                    scope.selectedTab = null
-                } else {
-                    scope.selectedTab = model
+                    if (scope.selectedTab == model) {
+                        scope.selectedTab = null
+                    } else {
+                        scope.selectedTab = model
+                    }
                 }
-            }
-            $('input[type="search"]').ready(function() {
-                $timeout(function() {
-                    $('input[type="search"]').on('keyup', function(e, w) {
-                        if (e.which == 13) {
-                            if ($('ul.md-autocomplete-suggestions>li').length) {
-                                $location.url('/search/' + $(this).val())
-                                $(this).val("")
-                                $(this).blur()
-                            }
-                        }
-                    });
-                }, 10);
-            })
-
+                /*            $('input[type="search"]').ready(function() {
+                                $timeout(function() {
+                                    $('input[type="search"]').on('keyup', function(e, w) {
+                                        if (e.which == 13) {
+                                            if ($('ul.md-autocomplete-suggestions>li').length) {
+                                                $location.url('/search/' + $(this).val())
+                                                $(this).val("")
+                                                $(this).blur()
+                                            }
+                                        }
+                                    });
+                                }, 10);
+                            })
+                */
             $rootScope.$on('closeContextMenu', function() {
                 scope.selectedTab = null;
             })
 
 
-
-
-            scope.logout = function() {
-                edisonAPI.users.logout().then(function() {
-                    $window.location.reload()
-                })
+            scope.search = function(text) {
+                $location.url('/search/' + text)
             }
 
-
-            $rootScope.$on('closeSearchBar', function() {
-                scope.searchBarSize = 100
-            })
-
-            var searchInput = 'md-autocomplete.searchBar>md-autocomplete-wrap>input'
-            $(searchInput).ready(function() {
-                $timeout(function() {
-                    $(searchInput).on('focus', function() {
-                        scope.searchFocus = true
-                        var selectors = ['.navbar-header', '.navbar-nav', '.dropdown-toggle.user-menu']
-                        scope.searchBarSize = _.reduce(selectors, function(total, el) {
-                            return total -= $(el).width();
-                        }, $(window).width() - 70)
+            scope.logout = function() {
+                    edisonAPI.users.logout().then(function() {
+                        $window.location.reload()
                     })
-                    $(searchInput).on('blur', function() {
-                        scope.searchFocus = false
-                        scope.searchBarSize = 100
-                    })
-                }, 10);
-            })
+                }
+                /*
 
+                                                            $rootScope.$on('closeSearchBar', function() {
+                                                                scope.searchBarSize = 100
+                                                            })
+                                                
+                                            var searchInput = 'md-autocomplete.searchBar>md-autocomplete-wrap>input'
+                                            $(searchInput).ready(function() {
+                                                $timeout(function() {
+                                                    $(searchInput).on('focus', function() {
+                                                        scope.searchFocus = true
+                                                        var selectors = ['.navbar-header', '.navbar-nav', '.dropdown-toggle.user-menu']
+                                                        scope.searchBarSize = _.reduce(selectors, function(total, el) {
+                                                            return total -= $(el).width();
+                                                        }, $(window).width() - 70)
+                                                    })
+                                                    $(searchInput).on('blur', function() {
+                                                        scope.searchFocus = false
+                                                        scope.searchBarSize = 100
+                                                    })
+                                                }, 10);
+                                            })
+                */
             scope.changeUser = function(usr) {
                 $rootScope.displayUser = usr
             }
-
+/*
             scope.searchBox = {
                 search: _.throttle(function(x) {
                     var deferred = $q.defer();
@@ -85,7 +87,7 @@ angular.module('edison').directive('mainNavbar', function($q, edisonAPI, TabCont
                     return deferred.promise;
                 }, 600),
                 change: function(x) {
-                    if (!x || !x.link)
+                    if (!x ||  !x.link)
                         return 0;
                     if (x) {
                         $location.url(x.link)
@@ -95,11 +97,11 @@ angular.module('edison').directive('mainNavbar', function($q, edisonAPI, TabCont
                     });
                     scope.searchText = "";
                 }
-            }
-
+            }*/
 
 
         },
+
     }
 
 });

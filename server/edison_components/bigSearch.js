@@ -50,10 +50,6 @@ var interQuery = function(rgx, _int, callback) {
 		}, {
 			'facture.tel1': rgx,
 		}, {
-			'artisan.id': _int,
-		}, {
-			'artisan.nomSociete': rgx,
-		}, {
 			'description': rgx,
 		}, {
 			'remarque': rgx,
@@ -71,7 +67,7 @@ var interQuery = function(rgx, _int, callback) {
 			'status': 1,
 			'categorie': 1,
 
-		}).exec(callback)
+		}).limit(1000).exec(callback)
 	}
 }
 
@@ -109,7 +105,7 @@ var devisQuery = function(rgx, _int) {
 			'status': 1,
 			'status': 1,
 			'categorie': 1,
-		}).exec(callback)
+		}).limit(1000).exec(callback)
 	}
 }
 
@@ -144,7 +140,7 @@ var artisanQuery = function(rgx, _int) {
 			'status': 1,
 			'subStatus':1,
 			'categorie':1
-		}).exec(callback)
+		}).limit(1000).exec(callback)
 	}
 }
 
@@ -171,7 +167,6 @@ module.exports = function(req, res) {
 			devis: resp[1],
 			artisan: resp[2],
 		}
-		console.log(rtn)
 		res.send(rtn)
 	})
 

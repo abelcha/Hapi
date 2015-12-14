@@ -38,9 +38,7 @@
                         <!-- /3. $END_NAVBAR_ICON_BUTTONS -->
                         <li>
                             <form class="navbar-form pull-left">
-                                <md-autocomplete class="searchBar" style="width:{{searchBarSize}}px" md-search-text-change="null" md-min-length="3" md-selected-item-change="searchBox.change(selectedItem)" md-menu-class="autocomplete-custom-template" md-selected-item="selectedItem" md-search-text="searchText" md-autofocus="false" md-items="item in searchBox.search(searchText)" placeholder="Recherche..." md-item-text="item.description">
-                                    <span text-xl md-highlight-text="searchText"> {{item.description}}</span>
-                                </md-autocomplete>
+                               <input type="text" class="form-control" placeholder="recherche" ng-enter="search(searchItem)" ng-model="searchItem">
                             </form>
                         </li>
                         <li class="dropdown" ng-click="userDropdown = !userDropdown">
