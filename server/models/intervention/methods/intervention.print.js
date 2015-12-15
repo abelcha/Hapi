@@ -116,14 +116,13 @@ module.exports = function(schema) {
     }
 
 
-    var getLettreCheques = function(res, req, data, offset) {
-        console.log('-->', offset)
+    var getLettreCheques = function(res, req, data, offsetX, offsetY) {
         return new Promise(function(resolve, reject) {
             var resend = function() {
                 var xpdf = PDF(op)
-                xpdf._html = xpdf._html.replace("</style>", " div#cheque { right:" + offset +"mm; }</style>");
+                xpdf._html = xpdf._html.replace("</style>", " div#cheque { right:" + offsetX +"mm; bottom:" + offsetY + "mm; }</style>");
 
-                if (req.query.pdf || true) {
+                if (req.query.pdf) {
                     if (!op.length) {
                         return resolve('Pas de documents')
                     }
@@ -168,7 +167,7 @@ module.exports = function(schema) {
         } else if (req.body.type === 'virement') {
             return res.table(getVirements(data))
         } else {
-            return getLettreCheques(res, req, data, req.body.offset)
+            return getLettreCheques(res, req, data, req.body.offsetX, req.body.offsetY)
         }
     }
 }

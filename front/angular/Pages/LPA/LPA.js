@@ -159,11 +159,11 @@ var LpaController = function(user, openPost, socket, ContextMenu, $location, $wi
     }
 
     _this.print = function(type) {
-        console.log(_this.offset)
         openPost('/api/intervention/print', {
             type: type,
             data: $rootScope.lpa,
-            offset: _this.offset || 0
+            offsetX: _this.offsetX || 0,
+            offsetY: _this.offsetY || 0
         });
     }
 }
