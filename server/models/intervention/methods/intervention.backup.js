@@ -6,7 +6,7 @@ module.exports = function(schema) {
     var getFunc = function(model) {
         return function(callback) {
             var filename = '/BACKUP/' + moment().format('YYYY-MM-DD') + '/' + model + '.json'
-            db.model(model).find().select('-_id -cache').then(function(resp) {
+            db.model(model).find().limit(10000).select('-_id -cache').then(function(resp) {
                 document.upload({
                     filename: filename,
                     data: JSON.stringify(resp),
