@@ -24,8 +24,8 @@
                     {{::artisan.cp}} - {{::artisan.v}}
                 </td>
                 <td data-title="'Dossier'" sortable="'f.a_dosc'" filter="{ 'f.a_dosc': 'text' }">
-                    <span ng-if="artisan.f.a_dosc"  class="label green">DOSSIER COMPLET</span>
-                    <span ng-if="!artisan.f.a_dosc"  class="label grey">DOSSIER IMCOMPLET</span>
+                    <span ng-if="artisan.f.a_dosc"  class="label green">COMPLET</span>
+                    <span ng-if="!artisan.f.a_dosc"  class="label grey">INCOMPLET</span>
                 </td>
                 <td data-title="'Status'" sortable="'s'" filter="{ 's': 'text' }">
                     <span style="width:80px;" class="label {{::config.etatsArtisan[artisan.s].color}}">{{::config.etatsArtisan[artisan.s].long_name}}</span>
