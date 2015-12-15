@@ -366,6 +366,10 @@ module.exports = {
         type: "client",
         short_name: "CLI_REP_P",
         long_name: "Le client ne répond pas"
+    },{
+        type: "client",
+        short_name: "CLI_REF_DEV",
+        long_name: "Le client à refusé le devis"
     }, {
         type: "client",
         short_name: "CLI_PAS_PAYE",

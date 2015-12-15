@@ -5658,19 +5658,18 @@ var StatsNewController = function(MomentIterator, TabContainer, $routeParams, ed
     var start = new Date(2013, 8, 1)
     _this.dateSelect = MomentIterator(start, end).range('month').map(function(e) {
         return {
-            t:e.format('MMM YYYY'),
-            m:e.month() + 1,
-            y:e.year(),
+            t: e.format('MMM YYYY'),
+            m: e.month() + 1,
+            y: e.year(),
         }
     }).reverse()
     var dateTarget = _.pick(_this.dateSelect[0], 'm', 'y');
-    
+
     _this.yearSelect = MomentIterator(start, end).range('year', {
-        format:'YYYY'
+        format: 'YYYY'
     }).map(function(e) {
         return parseInt(e)
     })
-    console.log("====", _this.yearSelect)
 
     var getChart = function(type, title, series, categories) {
 
@@ -5749,7 +5748,6 @@ var StatsNewController = function(MomentIterator, TabContainer, $routeParams, ed
             model: 'ca',
             divider: $scope.selectedDivider,
         }).then(function(resp) {
-            console.log(resp.data);
             var d = resp.data;
             $('#chartContainer').highcharts(getChart($scope.selectedType, d.title, d.series, d.categories));
         });
@@ -5762,6 +5760,7 @@ var StatsNewController = function(MomentIterator, TabContainer, $routeParams, ed
             model: 'ca',
             divider: $scope.selectedDivider,
         }).then(function(resp) {
+            setTotal(resp.data);
             var d = resp.data;
             $('#chartContainer2').highcharts(getChart($scope.selectedType, d.title, d.series, d.categories));
         });
@@ -5786,6 +5785,16 @@ var StatsNewController = function(MomentIterator, TabContainer, $routeParams, ed
         weekChange();
     });
 
+    var setTotal = function(data) {
+        $scope.totalYear =   {
+            recu: 0,
+            potentiel: 0,
+        }
+        _.times(data.categories.length, function(i) {
+            $scope.totalYear[data.series[0].name] += data.series[0].data[i]
+            $scope.totalYear[data.series[1].name] += data.series[1].data[i]
+        })
+    }
 
     $scope.$watch("selectedDivider", function()  {
         monthChange();
@@ -5794,6 +5803,7 @@ var StatsNewController = function(MomentIterator, TabContainer, $routeParams, ed
     });
 
     $scope.$watch("selectedYear", function() {
+
         yearChange();
         weekChange();
 
@@ -5803,8 +5813,10 @@ var StatsNewController = function(MomentIterator, TabContainer, $routeParams, ed
             return false;
         $location.search('m', curr.m);
         $location.search('y', curr.y);
-        return monthChange(curr);
-    });
+        monthChange(curr);
+        yearChange();
+        
+    }, true);
     if ($location.search().m)  {
         dateTarget.m = parseInt($location.search().m)
     }
@@ -5813,7 +5825,6 @@ var StatsNewController = function(MomentIterator, TabContainer, $routeParams, ed
     }
     $scope.selectedDate = _.find(_this.dateSelect, dateTarget)
     $scope.selectedYear = $scope.selectedDate.y.toString();
-    console.log($scope.selectedYear)
 }
 angular.module('edison').controller('StatsNewController', StatsNewController);
 
