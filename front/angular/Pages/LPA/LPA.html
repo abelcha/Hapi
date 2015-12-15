@@ -69,6 +69,7 @@
             <md-button ng-click="vm.print('documents')" class="md-raised">Documents</md-button>
             <md-button ng-click="vm.print('lettreCheques')" class="md-raised">Lettre Cheques</md-button>
             <md-button ng-click="vm.print('virement')" class="md-raised">Virements</md-button>
+            <md-button ng-click="vm.print('excel')" class="md-raised">Excel</md-button>
             <md-button ng-click="vm.clickTrigger('.input-file__input')" class="md-raised">Upload Scan</md-button>
             <lx-file-input style="display:none" id="fileInput" label="Upload" value="fileUploadText" change="vm.onFileUpload(e)"></lx-file-input>
             <md-button ng-if="!vm.search.d" class="md-raised md-warn" ng-click="vm.flush()">FLUSH</md-button>

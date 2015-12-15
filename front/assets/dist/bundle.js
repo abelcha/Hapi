@@ -1689,7 +1689,7 @@ module.exports = {
         title: "Annuler",
         action: 'annulation',
         hide: function(inter) {
-            return !inter.id || inter.status === 'ANN' || inter.status === 'VRF'
+            return !inter.id || inter.status === 'ANN' 
         }
     }, {
         title: "Recouvrement",

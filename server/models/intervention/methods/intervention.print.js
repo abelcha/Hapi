@@ -95,9 +95,32 @@ module.exports = function(schema) {
     }
 
 
+    var getExcel = function(data) {
+        var rtn = [];
+        _.each(data, function(sst) {
+            var tmp = [];
+            if (_.find(sst.list.__list, 'mode', 'CHQ'))
+                return 0;
+            tmp.push(sst.nomSociete + ' ' + sst.id);
+            var ids = _.pluck(sst.list.__list, 'id')
+            tmp.push(ids.join(', '))
+            clean(sst);
+            var total = _.reduce(sst.interventions, function(total, x) {
+                return total + x.montant;
+            }, 0)
+            tmp.push(_.round(total, 2))
+            rtn.push(tmp);
+        })
+        console.log(rtn)
+        return rtn;
+    }
+
+
 
     var getVirements = function(data) {
         var rtn = [];
+        console.log(data)
+        return 0
         _.each(data, function(sst) {
             var tmp = [];
             if (_.find(sst.list.__list, 'mode', 'CHQ'))
@@ -120,7 +143,7 @@ module.exports = function(schema) {
         return new Promise(function(resolve, reject) {
             var resend = function() {
                 var xpdf = PDF(op)
-                xpdf._html = xpdf._html.replace("</style>", " div#cheque { right:" + offsetX +"mm; bottom:" + offsetY + "mm; }</style>");
+                xpdf._html = xpdf._html.replace("</style>", " div#cheque { right:" + offsetX + "mm; bottom:" + offsetY + "mm; }</style>");
 
                 if (req.query.pdf) {
                     if (!op.length) {
@@ -162,7 +185,9 @@ module.exports = function(schema) {
     schema.statics.print = function(req, res) {
         var _this = this;
         var data = JSON.parse(req.body.data);
-        if (req.body.type === 'documents') {
+        if (req.body.type) {
+            return getExcel(req, res, data)
+        } else if (req.body.type === 'documents') {
             return getDocs(req, res, data)
         } else if (req.body.type === 'virement') {
             return res.table(getVirements(data))
