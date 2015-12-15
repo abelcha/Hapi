@@ -21,6 +21,7 @@ var Timer = module.exports = function() {
     this.emitter.add("*/60 * * * *", "hour")
     this.emitter.add("*/20 * * * *", "20 minutes")
     this.emitter.add("*/10 * * * *", "10 minutes")
+    this.emitter.add("*/4 * * * *", "4 minutes")
 
     if (envProd) {
 
@@ -84,7 +85,7 @@ var Timer = module.exports = function() {
         }, _.random(10 * 60 * 1000, 30 * 60 * 1000))
     })
 
-    this.emitter.on("10 minutes", function() {
+    this.emitter.on("4 minutes", function() {
         setTimeout(function() {
 
             db.model('intervention').fullReload().then(function() {})

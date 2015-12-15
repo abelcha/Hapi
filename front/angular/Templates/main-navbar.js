@@ -40,7 +40,9 @@ angular.module('edison').directive('mainNavbar', function($q, edisonAPI, TabCont
 
 
             scope.search = function(text) {
-                $location.url('/search/' + text)
+                if (text.length > 2) {
+                    $location.url('/search/' + text)
+                }
             }
 
             scope.logout = function() {
@@ -72,32 +74,32 @@ angular.module('edison').directive('mainNavbar', function($q, edisonAPI, TabCont
                                             })
                 */
             scope.changeUser = function(usr) {
-                $rootScope.displayUser = usr
-            }
-/*
-            scope.searchBox = {
-                search: _.throttle(function(x) {
-                    var deferred = $q.defer();
-                    edisonAPI.searchText(x, {
-                        limit: 10,
-                        flat: true
-                    }).success(function(resp) {
-                        deferred.resolve(resp)
-                    })
-                    return deferred.promise;
-                }, 600),
-                change: function(x) {
-                    if (!x ||  !x.link)
-                        return 0;
-                    if (x) {
-                        $location.url(x.link)
-                    }
-                    $timeout(function() {
-                        $(searchInput).blur();
-                    });
-                    scope.searchText = "";
+                    $rootScope.displayUser = usr
                 }
-            }*/
+                /*
+                            scope.searchBox = {
+                                search: _.throttle(function(x) {
+                                    var deferred = $q.defer();
+                                    edisonAPI.searchText(x, {
+                                        limit: 10,
+                                        flat: true
+                                    }).success(function(resp) {
+                                        deferred.resolve(resp)
+                                    })
+                                    return deferred.promise;
+                                }, 600),
+                                change: function(x) {
+                                    if (!x ||  !x.link)
+                                        return 0;
+                                    if (x) {
+                                        $location.url(x.link)
+                                    }
+                                    $timeout(function() {
+                                        $(searchInput).blur();
+                                    });
+                                    scope.searchText = "";
+                                }
+                            }*/
 
 
         },

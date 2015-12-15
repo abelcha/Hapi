@@ -37,7 +37,7 @@
                     model: core.name,
                     priority: 'medium',
                     method: 'throttleCacheReload',
-                    attempts: 5,
+                    attempts: 10,
                     req: _(docs).flatten().map('id').uniq().value()
                 }).then(function(resp) {
                     io.sockets.emit(core.listChange, {
