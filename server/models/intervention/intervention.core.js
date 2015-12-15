@@ -91,7 +91,6 @@
     }
 
     module.exports.preUpdate = function(_old, _new, session, callback) {
-        console.log('UPDATE')
         if (_new.artisan && _new.artisan.id && _new.artisan.id !== _old.artisan.id) {
             _old.status = 'APR';
         }
@@ -103,8 +102,17 @@
             if (!_new.compta.reglement.date) {
                 _new.compta.reglement.date = Date.now()
                 _new.compta.reglement.login = session.login
+                if (_new.artisan && _new.artisan.subStatus === 'NEW') {
+                    edison.event('NEW_REGLE')
+                        .login(session.login)
+                        .id(_new.artisan.id)
+                        .service('PARTENARIAT')
+                        .color('green')
+                        .message(_.template("Nous avons reçu un chèque de M. Costantino {{artisan.nomSociete}}")(_new))
+                        .send()
+                        .save()
+                }
             }
-
 
             if (_new.sst.subStatus === "TUT") {
                 db.model('signalement').signalArtisan({
