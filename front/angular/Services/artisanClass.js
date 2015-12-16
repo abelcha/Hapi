@@ -155,12 +155,12 @@ angular.module('edison')
                 });
             });
         }
-        Artisan.prototype.rappelContrat = function(cb) {
+        Artisan.prototype.relanceDocuments = function(cb) {
             var _this = this;
             _this.datePlain = moment(_this.date.ajout).format('ll')
             dialog.sendContrat({
                 data: _this,
-                text: _.template(textTemplate.mail.artisan.rappelContrat())(_this),
+                text: _.template(textTemplate.mail.artisan.relanceDocuments())(_this),
             }, function(options) {
                 LxProgressService.circular.show('#5fa2db', '#globalProgress');
                 edisonAPI.artisan.envoiContrat(_this.id, {

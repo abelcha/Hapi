@@ -1543,8 +1543,8 @@ module.exports = {
             return !(user.root && artisan.tutelle)
         }
     }, {
-        title: "Rappel Contrat",
-        action: 'rappelContrat',
+        title: "Relance Documents",
+        action: 'relanceDocuments',
         hide: function(artisan) {
             return !artisan.historique.contrat.length || (artisan.document && artisan.document.cni.ok && artisan.document.kbis.ok && artisan.document.contrat.ok);
         }
@@ -3645,7 +3645,7 @@ module.exports = {
                     "Siège social : 32, rue Fernand Pelloutier - 92110 Clichy\n" +
                     "contact@edison-services.fr - www.edison-services.fr"
             },
-            rappelContrat: function(user) {
+            relanceDocuments: function(user) {
                 return "Bonjour Monsieur {{representant.nom}}\n" +
                     "\n" +
                     "Suite à notre conversation téléphonique du {{datePlain}} concernant une proposition de partenariat entre nos deux entreprises,\n" +

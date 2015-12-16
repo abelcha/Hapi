@@ -60,8 +60,8 @@ module.exports = {
             return !(user.root && artisan.tutelle)
         }
     }, {
-        title: "Rappel Contrat",
-        action: 'rappelContrat',
+        title: "Relance Documents",
+        action: 'relanceDocuments',
         hide: function(artisan) {
             return !artisan.historique.contrat.length || (artisan.document && artisan.document.cni.ok && artisan.document.kbis.ok && artisan.document.contrat.ok);
         }
