@@ -55,7 +55,7 @@ module.exports = function(schema) {
                     }
                     var template = req.body.rappel > 0 ? 'relanceDocuments' : 'envoiContrat';
                     var attachments = [];
-                    if (artisan.document.contrat.ok) {
+                    if (!artisan.document.contrat.ok) {
                         attachments.push({
                             Content: buffer.toString('base64'),
                             Name: 'Declaration de sous-traitance.pdf',

@@ -78,6 +78,7 @@
 
 
     module.exports.preSave = function(_new, session, callback) {
+        _new.login.management = _new.login.ajout;
         db.model('artisan').findOne({
             $or: [{
                 'telephone.tel1': _new.telephone.tel1

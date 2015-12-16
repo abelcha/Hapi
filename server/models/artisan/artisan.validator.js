@@ -11,11 +11,9 @@ module.exports = function(schema) {
         if (sst.tutelle) {
             return 'TUT';
         }
-        console.log('==>', sst.oneShot)
         if (sst.oneShot) {
             return 'ONE'
         }
-
         if (sst.status === "POT" && _.get(d.contrat, 'ok') && _.get(d.cni, 'ok') && _.get(d.kbis, 'ok')) {
             return 'HOT';
         }
