@@ -80,8 +80,8 @@
                             </div>
                             <div class="col-sm-4">
                                 <lx-text-field label="IBAN" error="!vm.validIBAN(vm.data.IBAN)">
-                                <!--     <input type="text" ng-model="iban"/> -->
-                                    <input type="text" ng-model="vm.data.IBAN" >
+                                    <!--     <input type="text" ng-model="iban"/> -->
+                                    <input type="text" ng-model="vm.data.IBAN">
                                 </lx-text-field>
                             </div>
                             <div class="col-sm-3">
@@ -144,6 +144,11 @@
                         <div class="col-sm-3">
                             <md-switch class="md-primary" md-no-ink aria-label="Switch No Ink" ng-model="vm.data.newOs" style="padding: 0px;margin-top: 5px;">
                                 SMS Axialis
+                            </md-switch>
+                        </div>
+                        <div class="col-sm-3">
+                            <md-switch class="md-primary" md-no-ink aria-label="Switch No Ink" ng-model="vm.data.star" style="padding: 0px;margin-top: 5px;">
+                                Star
                             </md-switch>
                         </div>
                     </div>

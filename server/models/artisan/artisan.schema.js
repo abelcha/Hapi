@@ -31,6 +31,7 @@ module.exports = function(db) {
             type: String,
             required: true,
         },
+        star: Boolean,
         formeJuridique: {
             type: String,
             required: true
