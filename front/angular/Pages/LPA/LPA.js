@@ -159,6 +159,7 @@ var LpaController = function(user, openPost, socket, ContextMenu, $location, $wi
     }
 
     _this.print = function(type) {
+        console.log($rootScope.lpa)
         openPost('/api/intervention/print', {
             type: type,
             data: $rootScope.lpa,

@@ -14,6 +14,22 @@ express.response.table = function(obj, headers, status) {
     this.send(css + '<table><tr>' + row.join('</tr><tr>') + '</tr></table');
 }
 
+express.response.xls = function(obj, headers, status) {
+    var _this = this;
+    var xlsx = require('node-xlsx');
+
+    this.setHeader('Content-disposition', 'attachment; filename=' + obj.name + ".xlsx");
+
+    return this.send(xlsx.build([{
+            name: obj.name,
+            data: obj.data
+        }]))
+        // returns a buffer
+
+    //  this.contentType('text/csv');
+   
+};
+
 express.response.sage = function(obj, headers, status) {
     var _this = this;
     this.contentType('text/csv');

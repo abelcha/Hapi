@@ -1,5 +1,6 @@
 module.exports = function(schema) {
     var _ = require('lodash')
+    var moment = require('moment')
     var PDF = require('edsx-mail')
     var Paiement = requireLocal('config/Paiement.js')
     var async = require('async')
@@ -97,19 +98,20 @@ module.exports = function(schema) {
 
     var getExcel = function(data) {
         var rtn = [];
+        rtn.push(['ajouté par', 'date', 'id', 'Artisan ID', 'Artisan NS', 'type', 'mode', 'numero cheque', 'base', 'final'])
         _.each(data, function(sst) {
-            var tmp = [];
-            if (_.find(sst.list.__list, 'mode', 'CHQ'))
-                return 0;
-            tmp.push(sst.nomSociete + ' ' + sst.id);
             var ids = _.pluck(sst.list.__list, 'id')
-            tmp.push(ids.join(', '))
-            clean(sst);
-            var total = _.reduce(sst.interventions, function(total, x) {
-                return total + x.montant;
-            }, 0)
-            tmp.push(_.round(total, 2))
-            rtn.push(tmp);
+            _.each(sst.list.__list, function(e) {
+                    console.log(e)
+                    rtn.push([e.login, moment(e.date).format('l hh:mm'), e.id, sst.id, sst.nomSociete, e.type, e.mode, e.numeroCheque, e.montant.base, e.montant.final])
+                })
+                /*    tmp.push(ids.join(', '))
+                    clean(sst);
+                    var total = _.reduce(sst.interventions, function(total, x) {
+                        return total + x.montant;
+                    }, 0)
+                    tmp.push(_.round(total, 2))
+                    rtn.push(tmp);*/
         })
         console.log(rtn)
         return rtn;
@@ -119,8 +121,6 @@ module.exports = function(schema) {
 
     var getVirements = function(data) {
         var rtn = [];
-        console.log(data)
-        return 0
         _.each(data, function(sst) {
             var tmp = [];
             if (_.find(sst.list.__list, 'mode', 'CHQ'))
@@ -135,6 +135,7 @@ module.exports = function(schema) {
             tmp.push(_.round(total, 2))
             rtn.push(tmp);
         })
+        console.log(rtn);
         return rtn;
     }
 
@@ -185,8 +186,11 @@ module.exports = function(schema) {
     schema.statics.print = function(req, res) {
         var _this = this;
         var data = JSON.parse(req.body.data);
-        if (req.body.type) {
-            return getExcel(req, res, data)
+        if (req.body.type === 'excel') {
+            return res.xls({
+                data: getExcel(data),
+                name: 'Paiements du ' + moment().format('LL')
+            })
         } else if (req.body.type === 'documents') {
             return getDocs(req, res, data)
         } else if (req.body.type === 'virement') {
