@@ -234,6 +234,8 @@
                 return 2;
             } else if (e.compta.paiement.ready) {
                 return 1;
+            } else if (e.compta.paiement.dette) {
+                return 3;
             } else {
                 return undefined
             }

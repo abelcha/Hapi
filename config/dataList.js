@@ -83,6 +83,11 @@ module.exports = {
         color: 'green',
         icon: 'check',
         id: 1
+    }, {
+        title: 'Dette',
+        color: 'purple',
+        icon: 'unlock-alt',
+        id: 1
     }],
     reglementClient: [{
         title: '',
@@ -366,7 +371,7 @@ module.exports = {
         type: "client",
         short_name: "CLI_REP_P",
         long_name: "Le client ne répond pas"
-    },{
+    }, {
         type: "client",
         short_name: "CLI_REF_DEV",
         long_name: "Le client à refusé le devis"

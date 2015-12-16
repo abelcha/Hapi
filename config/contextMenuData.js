@@ -45,7 +45,7 @@ module.exports = {
         title: "Envoyer Contrat",
         action: 'envoiContrat',
         hide: function(artisan) {
-            return (artisan.document && artisan.document.cni && artisan.document.kbis && artisan.document.contrat);
+            return (artisan.document && artisan.document.cni.ok && artisan.document.kbis.ok && artisan.document.contrat.ok);
         }
     }, {
         title: "Mettre sous tutelle",
@@ -63,7 +63,7 @@ module.exports = {
         title: "Rappel Contrat",
         action: 'rappelContrat',
         hide: function(artisan) {
-            return !artisan.historique.contrat.length || (artisan.document && artisan.document.cni && artisan.document.kbis && artisan.document.contrat);
+            return !artisan.historique.contrat.length || (artisan.document && artisan.document.cni.ok && artisan.document.kbis.ok && artisan.document.contrat.ok);
         }
     }, {
         title: 'Appels',

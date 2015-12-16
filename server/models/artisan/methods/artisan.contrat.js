@@ -63,11 +63,11 @@ module.exports = function(schema) {
                         To: communication.mailDest,
                         Subject: req.body.rappel ? "En attente de vos documents" : "Proposition de partenariat",
                         HtmlBody: html,
-                        Attachments: [{
+                      /*  Attachments: [{
                             Content: buffer.toString('base64'),
                             Name: 'Declaration de sous-traitance.pdf',
                             ContentType: 'application/pdf'
-                        }]
+                        }]*/
                     }).then(resolve, reject)
                 })
             })
