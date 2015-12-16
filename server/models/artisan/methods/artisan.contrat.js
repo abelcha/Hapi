@@ -55,17 +55,18 @@ module.exports = function(schema) {
                     }
                     var template = req.body.rappel > 0 ? 'relanceDocuments' : 'envoiContrat';
                     var attachments = [];
-                    if (!artisan.document.contrat.ok) {
-                        attachments.push({
-                            Content: buffer.toString('base64'),
-                            Name: 'Declaration de sous-traitance.pdf',
-                            ContentType: 'application/pdf'
-                        })
-                    }
+
 
                     var html = require('fs').readFileSync(process.cwd() + '/templates/' + template + '.html', 'utf8')
                     html = _.template(html)(artisan);
                     PDF('contract', artisan).buffer(function(err, buffer) {
+                        if (!artisan.document.contrat.ok) {
+                            attachments.push({
+                                Content: buffer.toString('base64'),
+                                Name: 'Declaration de sous-traitance.pdf',
+                                ContentType: 'application/pdf'
+                            })
+                        }
                         mail.send({
                             From: "yohann.rhoum@edison-services.fr",
                             ReplyTo: communication.mailReply,
