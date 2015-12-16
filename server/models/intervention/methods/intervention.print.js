@@ -98,22 +98,13 @@ module.exports = function(schema) {
 
     var getExcel = function(data) {
         var rtn = [];
-        rtn.push(['ajouté par', 'date', 'id', 'Artisan ID', 'Artisan NS', 'type', 'mode', 'numero cheque', 'base', 'final'])
+        rtn.push(['Ajouté par', 'Date', 'id', 'Artisan ID', 'Artisan Nom Societé', 'Type', 'Mode', 'Numero Cheque', 'Base', 'Final'])
         _.each(data, function(sst) {
             var ids = _.pluck(sst.list.__list, 'id')
             _.each(sst.list.__list, function(e) {
-                    console.log(e)
-                    rtn.push([e.login, moment(e.date).format('l hh:mm'), e.id, sst.id, sst.nomSociete, e.type, e.mode, e.numeroCheque, e.montant.base, e.montant.final])
-                })
-                /*    tmp.push(ids.join(', '))
-                    clean(sst);
-                    var total = _.reduce(sst.interventions, function(total, x) {
-                        return total + x.montant;
-                    }, 0)
-                    tmp.push(_.round(total, 2))
-                    rtn.push(tmp);*/
+                rtn.push([e.login, moment(e.date).format('l hh:mm'), e.id, sst.id, sst.nomSociete, e.type, e.mode, e.numeroCheque, e.montant.base, e.montant.final])
+            })
         })
-        console.log(rtn)
         return rtn;
     }
 
