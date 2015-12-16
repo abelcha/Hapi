@@ -756,7 +756,6 @@ FiltersFactory.prototype.list = {
         short_name: 'i_relsst1',
         long_name: 'Relance SST 1',
         url: 'relsst1',
-        stats: false,
         match: function() {
             return {
                 'status': 'VRF',
@@ -772,7 +771,6 @@ FiltersFactory.prototype.list = {
         short_name: 'i_relsst2',
         long_name: 'Relance SST 2',
         url: 'relsst2',
-        stats: false,
         match: function() {
             return {
                 'status': 'VRF',
@@ -788,7 +786,6 @@ FiltersFactory.prototype.list = {
         short_name: 'i_relsst3',
         long_name: 'Relance SST 3',
         url: 'relsst3',
-        stats: false,
         match: function() {
             return {
                 'status': 'VRF',
@@ -804,8 +801,16 @@ FiltersFactory.prototype.list = {
         short_name: 'i_relsst4',
         long_name: 'Relance SST 4',
         url: 'relsst4',
-        stats: false,
         match: function() {
+            console.log(JSON.stringify({
+                'status': 'VRF',
+                'compta.reglement.recu': false,
+                'reglementSurPlace': true,
+                'date.intervention': {
+                    $lt: new Date(Date.now() - ms.weeks(4)),
+                    $gt: new Date(2015, 8, 1),
+                }
+            }))
             return {
                 'status': 'VRF',
                 'compta.reglement.recu': false,

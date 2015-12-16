@@ -4,6 +4,13 @@
         <br>
         <br>
     </div>
+    <div ng-if="routeParamsFilter.startsWith('relsst')">
+        <span style="margin-right:40px" ng-repeat="n in [1, 2, 3, 4]">
+        <a href="/intervention/list/relsst{{n}}">{{n}} Semaine</a></span>
+        
+        <br>
+        <br>
+    </div>
     <div class="shadow-box listeInterventions" ng-init="rl = (routeParamsFilter === 'relanceClient')">
         <table style="background:white;cursor:pointer" ng-table="tableParams" class="table table-bordered table-hover table-hover table-xstriped" id="table-list" show-filter="!embedded">
             <tbody id="tbody-list">
