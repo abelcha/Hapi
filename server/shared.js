@@ -19,8 +19,9 @@ module.exports = function() {
     global.envStaging = process.env.APP_ENV === "STAGING";
     global.redis = edison.redis();
     global.db = edison.db();
-    global.sms = new edison.ovh();
-    global.old_sms = new edison.mobyt(key.mobyt.login, key.mobyt.pass);
+    //global.sms = new edison.ovh();
+    //global.old_sms = new edison.mobyt(key.mobyt.login, key.mobyt.pass);
+    global.sms = new edison.mobyt(key.mobyt.login, key.mobyt.pass);
     global.mail = new edison.mail;
     global.document = new edison.dropbox();
     edison.extendPrototypes();

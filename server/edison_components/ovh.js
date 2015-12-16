@@ -13,11 +13,11 @@ var OVH = function() {
 
 OVH.prototype.send = function(params) {
     var _this = this;
-
+/*
     if (params.type === "OS") {
         return old_sms.send(params)
     }
-
+*/
     console.log('MOBYT')
     return new Promise(function(resolve, reject) {
         if (!params.text || !params.to) {
