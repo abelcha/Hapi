@@ -220,6 +220,7 @@ module.exports = function(db) {
             pasFiable: Boolean
         },
         tutelle: Boolean,
+        oneShot: Boolean,
         demandeFacturier: {
             status: String, //PENDING/OK/NO,
             login: String,

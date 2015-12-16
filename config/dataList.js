@@ -600,6 +600,11 @@ module.exports = {
             short_name: 'HOT',
             color: 'purple'
         },
+        ONE: {
+            long_name: 'OneShot',
+            short_name: 'ONE',
+            color: 'deep-orange darken-4'
+        },
         TUT: {
             long_name: "<Tutelle>",
             short_name: "TUT",
