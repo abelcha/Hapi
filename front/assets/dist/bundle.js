@@ -2785,11 +2785,8 @@ module.exports = {
             },
             rappelArtisan: function() {
                 return "OS {{e.id}}\n" +
-                    "Bonjour M. {{e.sst.representant.nom}},\n" +
-                    "nous vous rapellons que vous avez une intervention à effectuer chez {{e.client.civilite}} {{e.client.nom}} ({{e.client.address.cp}})" +
-                    "aujourd'hui à {{datePlain}}\n" +
-                    "Edison Services\n"
-
+                    "N'oubliez pas votre RDV aujourd'hui à 13h00 chez {e.client.civilite}} {{e.client.nom}} ({{e.client.address.cp}})\n" +
+                    "Edison Services";
             },
             demande: function(user, config, _moment) {
                 _moment = (_moment || moment);
@@ -2800,14 +2797,12 @@ module.exports = {
                 this.user.pseudo = _.capitalize(this.user.pseudo ||  "arnaud");
                 this.ligneDirect = user.ligne ? (user.ligne.match(/.{2}|.{1,2}/g).join('.')) :  "09.72.44.16.63";
                 this.categorieClean = config.categories[this.categorie].suffix + " " + config.categories[this.categorie].long_name.toLowerCase()
-                return "Bonjour M. {{sst.representant.nom}} , nous cherchons a vous joindre pour une intervention {{categorieClean}}" +
-                    " à faire {{datePlain}}, situé à {{client.address.cp}}, {{client.address.v}}.\n" +
-                    " Pourriez-vous vous rendre disponible ?\n" +
-                    "Merci de nous contacter au plus vite au 09.72.42.30.00.\n" +
-                    "Merci d'avance pour votre réponse.\n" +
-                    "{{user.pseudo}}\n" +
-                    "Ligne Directe: {{ligneDirect}}\n" +
-                    "Edison Services\n"
+
+                return "Bonjour M. {{sst.representant.nom}},\n" +
+                    "nous avons une intervention {{categorieClean}} le {{datePlain} à {{client.address.v}} ({{client.address.cp}}).\n" +
+                    "Etes-vous disponible ?\n" +
+                    "Merci de prendre contact avec Edison Services.\n" +
+                    "{{user.pseudo}} au {{ligneDirect}}\n";
             },
             envoi: function(user) {
                 //var mmt = require('moment')
@@ -2829,36 +2824,25 @@ module.exports = {
                     prix: this.prixAnnonce ? this.prixAnnonce + "€ HT. " : "Pas de prix annoncé. ",
                     telClient: tels
                 }
-                console.log('-->', this.artisan, this.sst)
                 if (this.newOs) {
-                    sms = "OS {{inter.id}}\n" +
-                        "Cher partenaire, merci d'intervenir\n" +
-                        "{{options.datePlain}}\n" +
+                    var sms = "OS {{inter.id}}\n" +
+                        "RDV le {{options.datePlain}}.\n" +
                         "{{inter.client.civilite}} {{inter.client.prenom}} {{inter.client.nom}}\n" +
                         "{{inter.client.address.n}} {{inter.client.address.r}} {{inter.client.address.cp}}, {{inter.client.address.v}} {{options.precision}}\n" +
-                        "Pour la raison suivante:\n" +
-                        "{{inter.description}}{{options.remarques}}\n" +
-                        "Prix: à partir de {{inter.prixAnnonce}}€ H.T\n" +
-                        "Veuillez joindre le client au:\n" +
-                        "09.701.702.01 (OS {{inter.id}})\n" +
-                        "Code Partenaire: {{options.sstid}}" +
-                        "\n" +
-                        "Ligne directe: {{options.ligne}}\n" +
-                        "Ligne atelier: 09.72.42.30.00\n" +
-                        "{{options.login}}\n" +
+                        "{{inter.description}}{{options.remarques}}.\n" +
+                        "A Partir de {{options.prix}}\n" +
+                        "Tel: {{options.telClient}}" +
+                        "{{options.login}}: {{options.ligne}} (OS {{inter.id}}) ou 09.72.42.30.00\n" +
                         "Edison Services."
                 } else {
                     var sms = "OS {{inter.id}}\n" +
-                        "Intervention chez {{inter.client.civilite}} {{inter.client.prenom}} {{inter.client.nom}} au " +
+                        "RDV le {{options.datePlain}}.\n" +
+                        "{{inter.client.civilite}} {{inter.client.prenom}} {{inter.client.nom}}\n" +
                         "{{inter.client.address.n}} {{inter.client.address.r}} {{inter.client.address.cp}}, {{inter.client.address.v}} {{options.precision}}\n" +
-                        "{{options.datePlain}}.\n" +
-                        "Pour la raison suivante: {{inter.description}}{{options.remarques}}.\n" +
-                        "{{options.prix}}\n" +
-                        "Merci de prendre rdv avec le client au {{options.telClient}}" +
-                        "\n" +
-                        "Ligne directe: {{options.ligne}}\n" +
-                        "Ligne atelier: 09.72.42.30.00\n" +
-                        "{{options.login}}\n" +
+                        "{{inter.description}}{{options.remarques}}.\n" +
+                        "A Partir de {{options.prix}}\n" +
+                        "Tel: {{options.telClient}}" +
+                        "{{options.login}}: {{options.ligne}} ou 09.72.42.30.00\n" +
                         "Edison Services."
                 }
                 return _.template(sms)({
