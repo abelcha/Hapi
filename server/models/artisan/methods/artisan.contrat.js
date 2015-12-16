@@ -47,29 +47,35 @@ module.exports = function(schema) {
                         artisan.save().then(resolve, reject);
                     })
                 }
-                artisan.signe = req.body.signe;
-                var communication = {
-                    mailDest: envProd ? artisan.email : (req.session.email ||  'intervention@edison-services.fr'),
-                    mailReply: 'yohann.rhoum@edison-services.fr'
-                }
-                var template = artisan.historique.contrat.length > 0 ? 'rappelContrat' : 'envoiContrat';
+                try {
 
-                var html = require('fs').readFileSync(process.cwd() + '/templates/' + template + '.html', 'utf8')
-                html = _.template(html)(artisan);
-                PDF('contract', artisan).buffer(function(err, buffer) {
-                    mail.send({
-                        From: "yohann.rhoum@edison-services.fr",
-                        ReplyTo: communication.mailReply,
-                        To: communication.mailDest,
-                        Subject: req.body.rappel ? "En attente de vos documents" : "Proposition de partenariat",
-                        HtmlBody: html,
-                        Attachments: [{
-                            Content: buffer.toString('base64'),
-                            Name: 'Declaration de sous-traitance.pdf',
-                            ContentType: 'application/pdf'
-                        }]
-                    }).then(resolve, reject)
-                })
+                    artisan.signe = req.body.signe;
+                    var communication = {
+                        mailDest: envProd ? artisan.email : (req.session.email ||  'intervention@edison-services.fr'),
+                        mailReply: 'yohann.rhoum@edison-services.fr'
+                    }
+                    var template = artisan.historique.contrat.length > 0 ? 'rappelContrat' : 'envoiContrat';
+
+                    var html = require('fs').readFileSync(process.cwd() + '/templates/' + template + '.html', 'utf8')
+                    html = _.template(html)(artisan);
+                    PDF('contract', artisan).buffer(function(err, buffer) {
+                        mail.send({
+                            From: "yohann.rhoum@edison-services.fr",
+                            ReplyTo: communication.mailReply,
+                            To: communication.mailDest,
+                            Subject: req.body.rappel ? "En attente de vos documents" : "Proposition de partenariat",
+                            HtmlBody: html,
+                            Attachments: [{
+                                Content: buffer.toString('base64'),
+                                Name: 'Declaration de sous-traitance.pdf',
+                                ContentType: 'application/pdf'
+                            }]
+                        }).then(resolve, reject)
+                    })
+                } catch (e) {
+                    console.log(e)
+                    console.log(e.stack)
+                }
             })
 
         }
