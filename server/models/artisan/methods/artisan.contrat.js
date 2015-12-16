@@ -52,7 +52,9 @@ module.exports = function(schema) {
                     mailDest: envProd ? artisan.email : (req.session.email ||  'intervention@edison-services.fr'),
                     mailReply: 'yohann.rhoum@edison-services.fr'
                 }
-                var html = require('fs').readFileSync(process.cwd() + '/templates/envoiContrat.html', 'utf8')
+                var template = artisan.historique.contrat.length > 0 ? 'rappelContrat' : 'envoiContrat';
+
+                var html = require('fs').readFileSync(process.cwd() + '/templates/' + template + '.html', 'utf8')
                 html = _.template(html)(artisan);
                 PDF('contract', artisan).buffer(function(err, buffer) {
                     mail.send({
