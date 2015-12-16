@@ -802,15 +802,6 @@ FiltersFactory.prototype.list = {
         long_name: 'Relance SST 4',
         url: 'relsst4',
         match: function() {
-            console.log(JSON.stringify({
-                'status': 'VRF',
-                'compta.reglement.recu': false,
-                'reglementSurPlace': true,
-                'date.intervention': {
-                    $lt: new Date(Date.now() - ms.weeks(4)),
-                    $gt: new Date(2015, 8, 1),
-                }
-            }))
             return {
                 'status': 'VRF',
                 'compta.reglement.recu': false,
