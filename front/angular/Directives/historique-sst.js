@@ -10,7 +10,6 @@ angular.module('edison').directive('historiqueSst', function(edisonAPI) {
             exit: '&'
         },
         link: function(scope, element, attrs) {
-            console.log('herehrerh')
             var reload = function() {
                 if (!scope.data || !scope.data.id) {
                     return 0;
@@ -28,7 +27,6 @@ angular.module('edison').directive('historiqueSst', function(edisonAPI) {
                     sign = _.merge(sign, resp.data);
                 })
                 scope.exit && scope.exit();
-                console.log('=>', sign)
             }
             scope.comment = function() {
                 edisonAPI.artisan.comment(scope.data.id, scope.comm).then(reload)

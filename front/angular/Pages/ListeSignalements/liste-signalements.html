@@ -1,31 +1,83 @@
 <div class="card margin">
     <div class="p+" style="width:95%;min-height:800px">
-        <div ng-if="pl.length === 0" style="text-align: center;">
-            <br>
-            <br>
-            <br>
-            <br>
-            <h1 text-xxxxl>AUCUNS SIGNALEMENTS</h1>
+        <div class="row">
+            <lx-tabs>
+                <lx-tab heading="Signalements Level 0">
+                    <div class="row" style="margin: 0;">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <td><strong>Date</strong></td>
+                                    <td><strong>Login</strong></td>
+                                    <td><strong>Intervention</strong></td>
+                                    <td><strong>Artisan</strong></td>
+                                    <td><strong>Signalement</strong></td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="p in pl|filter:{'level':'0'}">
+                                    <td>{{p.date.ajout|date:"dd/MM/yy à HH'h'mm"}}</td>
+                                    <td>{{p.login.ajout}}</td>
+                                    <td><a href="/intervention/{{p.inter_id}}">{{p.inter_id}}</a></td>
+                                    <td><a href="/artisan/{{p.sst_id}}/recap#historique">{{p.sst_nom}}</a></td>
+                                    <td>{{p.nom}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </lx-tab>
+                <lx-tab heading="Signalement Level 1">
+                        <div class="row" style="margin: 0;">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <td><strong>Date</strong></td>
+                                        <td><strong>Login</strong></td>
+                                        <td><strong>Intervention</strong></td>
+                                        <td><strong>Artisan</strong></td>
+                                        <td><strong>Signalement</strong></td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="p in pl|filter:{'level':'1'}">
+                                        <td>{{p.date.ajout|date:"dd/MM/yy à HH'h'mm"}}</td>
+                                        <td>{{p.login.ajout}}</td>
+                                        <td><a href="/intervention/{{p.inter_id}}">{{p.inter_id}}</a></td>
+                                        <td><a href="/artisan/{{p.sst_id}}/recap#historique">{{p.sst_nom}}</a></td>
+                                        <td>{{p.nom}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                </lx-tab>
+                <lx-tab heading="Signalement Level 2">
+                    <div class="row" style="margin: 0;">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <td><strong>Date</strong></td>
+                                    <td><strong>Login</strong></td>
+                                    <td><strong>Intervention</strong></td>
+                                    <td><strong>Artisan</strong></td>
+                                    <td><strong>Signalement</strong></td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="p in pl|filter:{'level':'2'}">
+                                    <td>{{p.date.ajout|date:"dd/MM/yy à HH'h'mm"}}</td>
+                                    <td>{{p.login.ajout}}</td>
+                                    <td><a href="/intervention/{{p.inter_id}}">{{p.inter_id}}</a></td>
+                                    <td><a href="/artisan/{{p.sst_id}}/recap#historique">{{p.sst_nom}}</a></td>
+                                    <td>{{p.nom}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </lx-tab>
+            </lx-tabs>
         </div>
-        <table class="table table-hover">
-            <thead>
-                <tr>
-                    <td><strong>Date</strong></td>
-                    <td><strong>Login</strong></td>
-                    <td><strong>Intervention</strong></td>
-                    <td><strong>Artisan</strong></td>
-                    <td><strong>Signalement</strong></td>
-                </tr>
-            </thead>
-            <tbody>
-                <tr ng-repeat="p in pl">
-                    <td>{{p.date.ajout|date:"dd/MM/yy à HH'h'mm"}}</td>
-                    <td>{{p.login.ajout}}</td>
-                    <td><a href="/intervention/{{p.inter_id}}">{{p.inter_id}}</a></td>
-                    <td><a href="/artisan/{{p.sst_id}}/recap#historique">{{p.sst_nom}}</a></td>
-                    <td>{{p.nom}}</td>
-                </tr>
-            </tbody>
-        </table>
+        <div ng-if="pl.length === 0" style="text-align: center;">
+            <h1 style="margin-top:100px" text-xxxxl>AUCUNS SIGNALEMENTS</h1>
+        </div>
     </div>
 </div>

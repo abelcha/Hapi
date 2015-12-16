@@ -1,9 +1,12 @@
 <div class="panel panel-success widget-support-tickets" id="dashboard-support-tickets">
     <div class="panel-heading">
-        <span class="panel-title"><i class="panel-title-icon fa fa-bullhorn"></i>Historique</span>
+        <span class="panel-title" ng-click="showSignalements = !showSignalements"><i class="panel-title-icon fa fa-bullhorn"></i>Signalement</span>
         <div class="panel-heading-controls">
             <div class="panel-heading-text"><a href="#">{{hist.length}} Elements</a></div>
         </div>
+    </div>
+    <div class="panel-padding no-padding-vr">
+        <signalement exit="showSignalements = false" data="data" ng-if="showSignalements"></signalement>
     </div>
     <div class="panel-body tab-content-padding">
         <div class="panel-padding no-padding-vr">

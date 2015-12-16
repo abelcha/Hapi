@@ -70,7 +70,7 @@
             <drop-down title="Service Partenariat" icon="circle" open-default="displayUser.service === 'PARTENARIAT'">
                 <drop-down icon="truck" title="Interventions">
                     <link fltr="i_mar" icon="university" title="Market" no-counter="true"></link>
-                    <link fltr="i_pan" icon="shopping-basket" login="{{displayUser.login}}" hash-model="dm" title="Mon Panier" icon="shopping-basket"></link>
+                    <link fltr="i_pan" icon="shopping-cart" login="{{displayUser.login}}" hash-model="dm" title="Mon Panier" i></link>
                     <link fltr="i_newapr" icon="th-list"></link>
                     <link fltr="i_potapr" icon="th-list"></link>
                     <link fltr="i_pavrf" hash-model="dm" icon="th-list" login="{{displayUser.login === 'yohann_r' ? '' : displayUser.login}}"></link>
@@ -79,9 +79,8 @@
                     <link fltr="i_hist" icon="history" title="Historique" no-counter="true"></link>
                 </drop-down>
                 <drop-down icon="briefcase" title="Management">
-                    <link ng-if="signalementStats" icon="exclamation" title="Signalements Lvl.0" url="/listeSignalements?level=0&service={{displayUser.service}}&ok=false">
-                    <link ng-if="signalementStats" icon="exclamation" title="Signalements Lvl.1" count="{{signalementStats[displayUser.service].level1}}" url="/listeSignalements?level=1&service={{displayUser.service}}&ok=false">
-                    <link ng-if="signalementStats" icon="exclamation" title="Signalements Lvl.2" count="{{signalementStats[displayUser.service].level2}}" url="/listeSignalements?level=2&service={{displayUser.service}}&ok=false">
+                    <link ng-if="signalementStats" icon="warning" title="Signalement" url="/listeSignalements?level=0&service={{displayUser.service}}&ok=false">
+                   
                     <link fltr="a_tut" icon="th-list" model="artisan" title="Sst sous-tutelle"></link>
                     <link fltr="i_chq" icon="calendar" login="{{displayUser.login}}" hash-model="dm" title="Relances cheques"></link>
                     <link fltr="a_fact" icon="clipboard" model="artisan" title="Demande facturier"></link>
