@@ -48,7 +48,7 @@ module.exports = function(schema) {
                     })
                 }
                 try {
-                    artisan.signe = req.body.signe;
+                    artisan.signe = req.body.rappel || req.body.signe;
                     var communication = {
                         mailDest: envProd ? artisan.email : (req.session.email ||  'intervention@edison-services.fr'),
                         mailReply: 'yohann.rhoum@edison-services.fr'
