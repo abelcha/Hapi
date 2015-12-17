@@ -1,0 +1,33 @@
+{
+  "apps" : [{
+    // Application #1
+    "name"        : "worker",
+    "script"      : "server/worker.js",
+    "args"        : ["--toto=heya coco", "-d", "1"],
+    "watch"       : true,
+    "merge_logs"  : true,
+    "cwd"         : "/this/is/a/path/to/start/script",
+    "env": {
+      "NODE_ENV": "development",
+      "AWESOME_SERVICE_API_TOKEN": "xxx"
+    },
+    "env_production" : {
+       "NODE_ENV": "production",
+       "POSTMARK_API_KEY":"b2c424bc-af2b-4175-b76f-c863bb3915c3",
+
+    },
+    "env_staging" : {
+       "NODE_ENV" : "staging",
+       "TEST"     : true
+    }
+  },{
+    // Application #2
+    "name"       : "web",
+    "script"     : "server/web.js",
+    "instances"  : 4,
+    "exec_mode"  : "cluster_mode",
+    "error_file" : "/var/log/child-err.log",
+    "out_file"   : "/var/log/child-out.log",
+    "pid_file"   : "/var/log/child.pid"
+  }]
+}
