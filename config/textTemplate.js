@@ -66,7 +66,7 @@ module.exports = {
                         "{{inter.client.address.n}} {{inter.client.address.r}} {{inter.client.address.cp}}, {{inter.client.address.v}} {{options.precision}}\n" +
                         "{{inter.description}}{{options.remarques}}.\n" +
                         "A Partir de {{options.prix}}\n" +
-                        "Tel: 09.701.702.01 (OS {{inter.id}})" +
+                        "Tel: 09.701.702.01 (OS {{inter.id}})\n" +
                         "{{options.login}}: {{options.ligne}} ou 09.72.42.30.00\n" +
                         "Edison Services."
                 } else {
@@ -76,7 +76,7 @@ module.exports = {
                         "{{inter.client.address.n}} {{inter.client.address.r}} {{inter.client.address.cp}}, {{inter.client.address.v}} {{options.precision}}\n" +
                         "{{inter.description}}{{options.remarques}}.\n" +
                         "A Partir de {{options.prix}}\n" +
-                        "Tel: {{options.telClient}}" +
+                        "Tel: {{options.telClient}}\n" +
                         "{{options.login}}: {{options.ligne}} ou 09.72.42.30.00\n" +
                         "Edison Services."
                 }
