@@ -79,7 +79,7 @@
                     <link fltr="i_hist" icon="history" title="Historique" no-counter="true"></link>
                 </drop-down>
                 <drop-down icon="briefcase" title="Management">
-                    <link ng-if="signalementStats" icon="warning" title="Signalement" url="/listeSignalements?level=0&service={{displayUser.service}}&ok=false">
+                    <link ng-if="signalementStats" icon="warning" title="Signalement" url="/listeSignalements?&service={{displayUser.service}}&ok=false">
                     <link fltr="a_tut" icon="th-list" model="artisan" title="Sst sous-tutelle"></link>
                     <simple-link icon="money" title="Relances Artisan" fltr="i_relsst1" url="/intervention/list/relsst1"></simple-link>
                     <link fltr="i_chq" icon="calendar" login="{{displayUser.login}}" hash-model="dm" title="Relances cheques"></link>
