@@ -60,6 +60,7 @@
     "postmark": "^1.2.1",
     "pretty-bytes": "^2.0.1",
     "pretty-error": "^1.1.2",
+    "prok": "0.0.7",
     "redis": "^1.0.0",
     "regexp-accents": "^1.0.1",
     "request": "^2.65.0",

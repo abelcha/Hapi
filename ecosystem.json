@@ -1,5 +1,5 @@
 {
-  "apps" : [{
+  "apps" : [/*{
     // Application #1
     "name"        : "worker",
     "script"      : "server/worker.js",
@@ -22,14 +22,14 @@
        "NODE_ENV" : "staging",
        "TEST"     : true
     }
-  },{
+  },*/{
     // Application #2
     "name"       : "web",
-    "script"     : "server/web.js",
+    "script"     : "server/app.js",
     "instances"  : 1,
     "exec_mode"  : "fork_mode",
-    "error_file" : "/var/log/child-err.log",
-    "out_file"   : "/var/log/child-out.log",
-    "pid_file"   : "/var/log/child.pid"
+    "error_file" : "/var/log/pm2/child-err.log",
+    "out_file"   : "/var/log/pm2/child-out.log",
+    "pid_file"   : "/var/log/pm2/child.pid"
   }]
 }
