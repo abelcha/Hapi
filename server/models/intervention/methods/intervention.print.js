@@ -176,8 +176,8 @@ module.exports = function(schema) {
 
     schema.statics.print = function(req, res) {
         var _this = this;
+        console.log("data")
         var data = JSON.parse(req.body.data);
-        console.log(data)
         if (req.body.type === 'excel') {
             return res.xls({
                 data: getExcel(data),
