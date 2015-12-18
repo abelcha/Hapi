@@ -1,35 +1,33 @@
 {
-  "apps" : [/*{
+  "apps": [{
     // Application #1
-    "name"        : "worker",
-    "script"      : "server/worker.js",
-    "args"        : ["--toto=heya coco", "-d", "1"],
-    "watch"       : true,
-    "merge_logs"  : true,
-    "cwd"         : "/this/is/a/path/to/start/script",
+    "name": "worker",
+    "script": "server/worker.js",
+    "merge_logs": true,
     "env": {
-      "NODE_ENV": "development",
-      "AWESOME_SERVICE_API_TOKEN": "xxx"
+      "PLATFORM": "DIGITAL_OCEAN",
+      "NODE_ENV": "production",
+      "POSTMARK_API_KEY": "b2c424bc-af2b-4175-b76f-c863bb3915c3",
+      "POSTMARK_API_TOKEN": "b2c424bc-af2b-4175-b76f-c863bb3915c3",
+      "POSTMARK_INBOUND_ADDRESS": "c5021a62758dc77ac5cdccfa3df754c3@inbound.postmarkapp.com",
+      "POSTMARK_SMTP_SERVER": "smtp.postmarkapp.com"
     },
-    "env_production" : {
-       "NODE_ENV": "production",
-       "POSTMARK_API_KEY":"b2c424bc-af2b-4175-b76f-c863bb3915c3",
+    "exec_mode": "fork_mode",
+    "intances": 1,
+  }, {
+    // Application #2
+    "name": "web",
+    "env": {
+      "NODE_ENV": "PRODUCTION",
+      "PLATFORM": "DIGITAL_OCEAN",
 
     },
-    "exec_mode":"fork_mode",
-    "intances":1,
-    "env_staging" : {
-       "NODE_ENV" : "staging",
-       "TEST"     : true
-    }
-  },*/{
-    // Application #2
-    "name"       : "web",
-    "script"     : "server/app.js",
-    "instances"  : 1,
-    "exec_mode"  : "fork_mode",
-    "error_file" : "/var/log/pm2/child-err.log",
-    "out_file"   : "/var/log/pm2/child-out.log",
-    "pid_file"   : "/var/log/pm2/child.pid"
+    "merge_logs": true,
+    "script": "server/app.js",
+    "instances": 1,
+    "exec_mode": "fork_mode",
+    "error_file": "/var/log/pm2/child-err.log",
+    "out_file": "/var/log/pm2/child-out.log",
+    "pid_file": "/var/log/pm2/child.pid"
   }]
 }
