@@ -176,6 +176,9 @@ module.exports = function(schema) {
 
     schema.statics.print = function(req, res) {
         var _this = this;
+        if (!req.body.data) {
+            return res.send('nope')
+        }
        /* if (!data) {
             return res.send('no data')
         }*/
