@@ -176,10 +176,10 @@ module.exports = function(schema) {
 
     schema.statics.print = function(req, res) {
         var _this = this;
-        if (!data) {
+       /* if (!data) {
             return res.send('no data')
-        }
-        var data = JSON.parse(req.body.data);
+        }*/
+        var data = JSON.parse(req.body.data || "");
         if (req.body.type === 'excel') {
             return res.xls({
                 data: getExcel(data),
