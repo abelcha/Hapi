@@ -85,7 +85,7 @@ var Timer = module.exports = function() {
         }, _.random(10 * 60 * 1000, 30 * 60 * 1000))
     })
 
-    this.emitter.on("4 minutes", function() {
+    this.emitter.on("10 minutes", function() {
         setTimeout(function() {
 
             db.model('intervention').fullReload().then(function() {})
