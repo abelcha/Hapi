@@ -16,6 +16,8 @@
        "POSTMARK_API_KEY":"b2c424bc-af2b-4175-b76f-c863bb3915c3",
 
     },
+    "exec_mode":"fork_mode",
+    "intances":1,
     "env_staging" : {
        "NODE_ENV" : "staging",
        "TEST"     : true
@@ -24,8 +26,8 @@
     // Application #2
     "name"       : "web",
     "script"     : "server/web.js",
-    "instances"  : 4,
-    "exec_mode"  : "cluster_mode",
+    "instances"  : 1,
+    "exec_mode"  : "fork_mode",
     "error_file" : "/var/log/child-err.log",
     "out_file"   : "/var/log/child-out.log",
     "pid_file"   : "/var/log/child.pid"
