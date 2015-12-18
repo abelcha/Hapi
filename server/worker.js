@@ -15,14 +15,14 @@ try {
     global.sms = new edison.mobyt(key.mobyt.login, key.mobyt.pass);
     global.isWorker = true;
 
-    if (envProd ||  envStaging) {
+    if ((envProd ||  envStaging) && process.env.PLATFORM !== 'DIGITAL_OCEAN') {
         var redisUrl = url.parse(key.redisURL);
     }
     //    redis.delWildcard("kue".envify() + '*', function(err, resp) {
 
     var jobs = kue.createQueue({
         prefix: 'kue'.envify(),
-        redis: envProd || envStaging ? {
+        redis: (envProd || envStaging) && process.env.PLATFORM !== 'DIGITAL_OCEAN' ? {
             port: redisUrl.port,
             host: redisUrl.hostname,
             auth: redisUrl.auth.split(":")[1],
@@ -31,13 +31,14 @@ try {
     });
 
 
-/*
-    if (cluster.isMaster) {
-        kue.app.listen(4242);
-        for (var i = 0; i < process.env.CLUSTER_PROCESS_NBR; i++) {
-            cluster.fork();
-        }
-    } else*/ {
+    /*
+        if (cluster.isMaster) {
+            kue.app.listen(4242);
+            for (var i = 0; i < process.env.CLUSTER_PROCESS_NBR; i++) {
+                cluster.fork();
+            }
+        } else*/
+    {
 
         var __log = function(_id, status, time, err) {
             db.model('event').update({
