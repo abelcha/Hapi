@@ -16,7 +16,7 @@ module.exports = function() {
     var redisClient;
     try {
 
-        if (envProd || envStaging || process.env.PLATFORM === 'DIGITAL_OCEAN') {
+        if (envProd || envStaging && process.env.PLATFORM !== 'DIGITAL_OCEAN') {
             var url = require('url');
             var redisURL = url.parse(key.redisURL);
             redisClient = redis.createClient(redisURL.port, redisURL.hostname, {
