@@ -61,12 +61,18 @@ global.jobs = edison.worker.initJobQueue();
 var keys = requireLocal('config/_keys')
 global.isWorker = false;
 
-
 new edison.timer();
 
 app.all('/api/call/:call_id', edison.axialis.info)
+
 app.get('/api/client/:id/svi/contact', edison.axialis.contact)
 app.get('/api/client/:id/svi/callback', edison.axialis.callback)
+
+if (process.env.PLATFORM === 'HEROKU') {
+    app.use(function(req, res, next) {
+        res.redirect('http://edison.services/')
+    })
+}
 
 app.get('/favicon.ico', function(req, res) {
     res.sendFile(process.cwd() + '/front/assets/img/favicon.ico')
