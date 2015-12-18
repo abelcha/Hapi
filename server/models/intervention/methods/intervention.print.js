@@ -179,11 +179,7 @@ module.exports = function(schema) {
         if (!req.body.data) {
             return res.send('nope')
         }
-       /* if (!data) {
-            return res.send('no data')
-        }*/
-        console.log('-->', req.body.data)
-        var data = JSON.parse(req.body.data || "");
+        var data = JSON.parse(req.body.data);
         if (req.body.type === 'excel') {
             return res.xls({
                 data: getExcel(data),
