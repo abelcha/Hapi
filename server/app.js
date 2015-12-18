@@ -70,7 +70,7 @@ app.get('/api/client/:id/svi/callback', edison.axialis.callback)
 
 if (process.env.PLATFORM === 'HEROKU') {
     app.use(function(req, res, next) {
-        res.redirect('http://edison.services/')
+        res.redirect('http://edison.services/' + req.url)
     })
 }
 
