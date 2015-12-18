@@ -32,13 +32,13 @@ try {
 
 
 
-    if (process.env.PLATFORM === 'DIGITAL_OCEAN' && cluster.isMaster) {
+/*    if (process.env.PLATFORM === 'DIGITAL_OCEAN' && cluster.isMaster) {
         console.log('MASTER')
         kue.app.listen(3042);
         for (var i = 0; i < process.env.CLUSTER_PROCESS_NBR; i++) {
             cluster.fork();
         }
-    } else {
+    } else */{
         console.log('SLAVE')
         var __log = function(_id, status, time, err) {
             db.model('event').update({
