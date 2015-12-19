@@ -207,7 +207,7 @@ gulp.task('watch', function() {
 
 gulp.task('libs', ['vendor-js', 'vendor-css'])
 
-gulp.task('js', ['clean:js', 'shared', 'scripts']);
+gulp.task('js', ['shared', 'scripts']);
 
 gulp.task('build', ['js', 'styles']);
 
