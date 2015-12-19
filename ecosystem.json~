@@ -6,7 +6,7 @@
     "merge_logs": true,
     "env": {
       "PLATFORM": "DIGITAL_OCEAN",
-      "APP_ENV": "PRODUCTION",
+      "NODE_ENV": "production",
       "CLUSTER_PROCESS_NBR": 4,
       "POSTMARK_API_KEY": "b2c424bc-af2b-4175-b76f-c863bb3915c3",
       "POSTMARK_API_TOKEN": "b2c424bc-af2b-4175-b76f-c863bb3915c3",
@@ -20,7 +20,7 @@
     // Application #2
     "name": "web",
     "env": {
-      "APP_ENV": "PRODUCTION",
+      "NODE_ENV": "PRODUCTION",
       "PLATFORM": "DIGITAL_OCEAN",
       "MONGOLAB_URI": "mongodb://heroku_app33756489:hrkm1jfvok3i2hsopg9t99jvvd@ds041981-a0.mongolab.com:41981/heroku_app33756489"
       

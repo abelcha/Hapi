@@ -120,7 +120,6 @@
         var tableSettings = {
             total: dataProvider.filteredData,
             getData: function($defer, params) {
-                //actualiseUrl(params.filter(), params.page())
                 var data = dataProvider.filteredData;
                 if (!_this.embedded) {
                     data = $filter('tableFilter')(data, params.filter());
@@ -141,8 +140,6 @@
         if (TabContainer.getCurrentTab() && _this.tab.fullUrl === TabContainer.getCurrentTab().fullUrl) {
             dataProvider.applyFilter(currentFilter, _this.tab.hash, _this.customFilter);
             _this.tableParams.reload();
-            //_this.tableParams.orderBy(_this.tableParams.$params.sorting)
-            //_this.tableParams.filter(_this.tableParams.$params.filter)
         }
     })
 
@@ -179,7 +176,6 @@
                 allowDuplicates: false
             });
         } else {
-            // $('.drpdwn').remove()
             if (_this.expendedRow === inter.id) {
                 _this.expendedRow = undefined;
             } else {
