@@ -5,5 +5,4 @@ bower_components
 dump.rdb
 *.zip
 *.sql
-front/assets/dist
 *~
