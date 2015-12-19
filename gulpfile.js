@@ -2,10 +2,8 @@
 var gulp = require('gulp'),
     autoprefixer = require('gulp-autoprefixer'),
     minifycss = require('gulp-minify-css'),
-    jshint = require('gulp-jshint'),
     uglify = require('gulp-uglify'),
     rename = require('gulp-rename'),
-    clean = require('gulp-clean'),
     concat = require('gulp-concat'),
     notify = require('gulp-notify'),
     ngAnnotate = require('gulp-ng-annotate'),
@@ -199,13 +197,6 @@ gulp.task('clean:js', function() {
         .pipe(rm())
 })
 
-// Clean
-gulp.task('clean', function() {
-    return gulp.src([paths.dist.css + paths.dist.cssDest, paths.dist.js + paths.dist.jsDest], {
-            read: false
-        })
-        .pipe(clean());
-});
 
 gulp.task('watch', function() {
     gulp.watch(paths.shared, ['shared']);
