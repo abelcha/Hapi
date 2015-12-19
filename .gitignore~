@@ -1,8 +1,0 @@
-node_modules
-bower_components
-.foreman
-.nodemon
-dump.rdb
-*.zip
-*.sql
-*~
