@@ -19,6 +19,7 @@ var strip = function(s) {
 
 Description.prototype.search = function(str) {
     var _map = require('lodash/collection/map');
+    
     var _sortBy = require('lodash/collection/sortby');
     var resemblance = require('resemblance');
     str = str.toUpperCase()
