@@ -1,4 +1,3 @@
-
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 var Description = function(inter) {
     this.inter = inter;
@@ -19,8 +18,7 @@ var strip = function(s) {
 
 Description.prototype.search = function(str) {
     var _map = require('lodash/collection/map');
-    
-    var _sortBy = require('lodash/collection/sortby');
+    var _sortBy = require('lodash/collection/sortBy');
     var resemblance = require('resemblance');
     str = str.toUpperCase()
     var list = _map(this.data, function(e) {
@@ -190,7 +188,7 @@ Description.prototype.data = [
 
 module.exports = Description;
 
-},{"lodash/collection/map":17,"lodash/collection/sortby":18,"resemblance":97}],2:[function(require,module,exports){
+},{"lodash/collection/map":17,"lodash/collection/sortBy":18,"resemblance":97}],2:[function(require,module,exports){
 var ms = require('milliseconds');
 var _each = require('lodash/collection/each');
 FiltersFactory = function(model) {

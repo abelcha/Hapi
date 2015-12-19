@@ -16,14 +16,12 @@ table.simulator > th {
 
 .no-border {
     border: 0px;
-    
     border-right: 1px solid black;
 }
 
 .border-title {
     border-left: 1px solid black;
 }
-
 
 .tbl-bg {
     background: #F5F5F5 !important;
