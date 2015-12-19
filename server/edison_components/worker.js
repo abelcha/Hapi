@@ -4,7 +4,7 @@ module.exports = {
         var key = requireLocal('config/_keys');
 
         var url = require("url");
-        if (envProd || envStaging) {
+        if ((envProd || envStaging) && process.env.PLATFORM !== 'DIGITAL_OCEAN') {
             var redisURL = url.parse(key.redisURL);
             var redisOptions = {
                 port: redisURL.port,
