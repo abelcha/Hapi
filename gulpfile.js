@@ -95,18 +95,20 @@ var paths = {
 
 gulp.task('vendor-js', function() {
     return gulp.src(paths.vendor.js)
+
         .pipe(concat(paths.dist.jsVendorDest))
         .pipe(gulp.dest(paths.dist.js))
         .pipe(rename({
             suffix: '.min'
         }))
-        .pipe(uglify({
-            mangle: false,
-        }))
+        .pipe(uglify())
+        .on('error', gutil.log)
+        .pipe(sourcemaps.write('./'))
         .pipe(gulp.dest(paths.dist.js))
         .pipe(notify({
             message: 'VendorJs task complete'
         }));
+
 })
 
 
