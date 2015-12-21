@@ -1,6 +1,6 @@
 'use strict'
 
-var cluster = require('cluster')
+/*var cluster = require('cluster')
 
 if (cluster.isMaster) {
     console.log('MASSSTER')
@@ -18,7 +18,7 @@ if (cluster.isMaster) {
 }
 console.log('==>SLAVE', process.pid)
 
-
+*/
 
 var express = require('express');
 
@@ -78,11 +78,11 @@ var _ = require('lodash')
 var fs = require('fs')
 var io_redis = require('socket.io-redis');
 global.io = require('socket.io')(http);
-io.adapter(io_redis({
+/*io.adapter(io_redis({
     host: 'localhost',
     port: 6379
 }));
-
+*/
 require('./shared.js')(express);
 global.jobs = edison.worker.initJobQueue();
 var keys = requireLocal('config/_keys')
