@@ -4244,46 +4244,6 @@ angular.module('edison').directive('mainNavbar', ["$q", "edisonAPI", "TabContain
 
 }]);
 
-var archiveReglementController = function(edisonAPI, TabContainer, $routeParams, $location, LxProgressService) {
-
-    var tab = TabContainer.getCurrentTab();
-    var _this = this;
-    _this.title = 'Archives Reglements'
-    tab.setTitle('archives RGL')
-    LxProgressService.circular.show('#5fa2db', '#globalProgress');
-    edisonAPI.compta.archivesReglement().success(function(resp) {
-        LxProgressService.circular.hide()
-        _this.data = resp
-    })
-    _this.moment = moment;
-    _this.openLink = function(link) {
-        $location.url(link)
-    }
-}
-archiveReglementController.$inject = ["edisonAPI", "TabContainer", "$routeParams", "$location", "LxProgressService"];
-
-angular.module('edison').controller('archivesReglementController', archiveReglementController);
-
-var archivesPaiementController = function(edisonAPI, TabContainer, $routeParams, $location, LxProgressService) {
-    var _this = this;
-    var tab = TabContainer.getCurrentTab();
-    _this.type = 'paiement'
-    _this.title = 'Archives Paiements'
-    tab.setTitle('archives PAY')
-    LxProgressService.circular.show('#5fa2db', '#globalProgress');
-    edisonAPI.compta.archivesPaiement().success(function(resp) {
-        LxProgressService.circular.hide()
-        _this.data = resp
-    })
-    _this.moment = moment;
-    _this.openLink = function(link) {
-        $location.url(link)
-    }
-}
-archivesPaiementController.$inject = ["edisonAPI", "TabContainer", "$routeParams", "$location", "LxProgressService"];
-
-angular.module('edison').controller('archivesPaiementController', archivesPaiementController);
-
  angular.module('edison').directive('artisanCategorie', ["config", function(config) {
      "use strict";
      return {
@@ -4477,6 +4437,46 @@ AvoirsController.$inject = ["TabContainer", "openPost", "edisonAPI", "$rootScope
 
 
 angular.module('edison').controller('avoirsController', AvoirsController);
+
+var archiveReglementController = function(edisonAPI, TabContainer, $routeParams, $location, LxProgressService) {
+
+    var tab = TabContainer.getCurrentTab();
+    var _this = this;
+    _this.title = 'Archives Reglements'
+    tab.setTitle('archives RGL')
+    LxProgressService.circular.show('#5fa2db', '#globalProgress');
+    edisonAPI.compta.archivesReglement().success(function(resp) {
+        LxProgressService.circular.hide()
+        _this.data = resp
+    })
+    _this.moment = moment;
+    _this.openLink = function(link) {
+        $location.url(link)
+    }
+}
+archiveReglementController.$inject = ["edisonAPI", "TabContainer", "$routeParams", "$location", "LxProgressService"];
+
+angular.module('edison').controller('archivesReglementController', archiveReglementController);
+
+var archivesPaiementController = function(edisonAPI, TabContainer, $routeParams, $location, LxProgressService) {
+    var _this = this;
+    var tab = TabContainer.getCurrentTab();
+    _this.type = 'paiement'
+    _this.title = 'Archives Paiements'
+    tab.setTitle('archives PAY')
+    LxProgressService.circular.show('#5fa2db', '#globalProgress');
+    edisonAPI.compta.archivesPaiement().success(function(resp) {
+        LxProgressService.circular.hide()
+        _this.data = resp
+    })
+    _this.moment = moment;
+    _this.openLink = function(link) {
+        $location.url(link)
+    }
+}
+archivesPaiementController.$inject = ["edisonAPI", "TabContainer", "$routeParams", "$location", "LxProgressService"];
+
+angular.module('edison').controller('archivesPaiementController', archivesPaiementController);
 
 var ContactArtisanController = function($scope, $timeout, TabContainer, LxProgressService, FiltersFactory, ContextMenu, edisonAPI, DataProvider, $routeParams, $location, $q, $rootScope, $filter, config, ngTableParams) {
     "use strict";
@@ -5442,7 +5442,7 @@ var LpaController = function(user, openPost, socket, ContextMenu, $location, $wi
     _this.contextMenu = new ContextMenu('intervention')
     _this.user = user;
     _this.offsetX = 1;
-    _this.offsetY = -4;
+    _this.offsetY = -5;
     console.log(user)
     _this.loadData = function(prevChecked) {
         LxProgressService.circular.show('#5fa2db', '#globalProgress');

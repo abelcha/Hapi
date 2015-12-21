@@ -7,7 +7,7 @@ var LpaController = function(user, openPost, socket, ContextMenu, $location, $wi
     _this.contextMenu = new ContextMenu('intervention')
     _this.user = user;
     _this.offsetX = 1;
-    _this.offsetY = -4;
+    _this.offsetY = -5;
     console.log(user)
     _this.loadData = function(prevChecked) {
         LxProgressService.circular.show('#5fa2db', '#globalProgress');
