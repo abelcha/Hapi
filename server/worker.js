@@ -31,11 +31,13 @@ try {
     });
 
 
-
+    console.log('FILDEPUTE')
     if (process.env.PLATFORM === 'DIGITAL_OCEAN' && cluster.isMaster) {
         console.log(process.pid, 'MASTER')
         kue.app.listen(3042);
         for (var i = 0; i < process.env.CLUSTER_PROCESS_NBR; i++) {
+        console.log('FORK')
+
             cluster.fork();
         }
     } else {

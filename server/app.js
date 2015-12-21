@@ -1,4 +1,25 @@
 'use strict'
+
+var cluster = require('cluster')
+
+if (cluster.isMaster) {
+    console.log('MASSSTER')
+
+    // Count the machine's CPUs
+    var cpuCount = require('os').cpus().length;
+    console.log("CPU", cpuCount)
+    // Create a worker for each CPU
+    for (var i = 0; i < process.env.CLUSTER_PROCESS_NBR; i++) {
+        console.log('FORK')
+        cluster.fork();
+    }
+    return 0;
+// Code to run if we're in a worker process
+}
+console.log('==>SLAVE', process.pid)
+
+
+
 var express = require('express');
 
 express.response.pdf = function(obj, headers, status) {
@@ -230,6 +251,15 @@ app.get('/api/job/clean', function(req, res) {
     })
 })
 
+
+app.get('/api/block', function(req, res) {
+    for (var i = 0; i< 1000000000; i++) {
+        if (i % 1000000 == 0) {
+            console.log('-->', i)
+        }
+    };
+    res.send('ok')
+})
 
 
 app.get('/api/artisan2014', function(req, res) {

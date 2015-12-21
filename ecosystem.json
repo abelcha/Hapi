@@ -14,21 +14,20 @@
       "POSTMARK_SMTP_SERVER": "smtp.postmarkapp.com",
       "MONGOLAB_URI": "mongodb://heroku_app33756489:hrkm1jfvok3i2hsopg9t99jvvd@ds041981-a0.mongolab.com:41981/heroku_app33756489"
     },
-    "exec_mode": "fork_mode",
-    "intances": 1,
   }, {
     // Application #2
     "name": "web",
     "env": {
+      "CLUSTER_PROCESS_NBR": 4,
       "APP_ENV": "PRODUCTION",
       "PLATFORM": "DIGITAL_OCEAN",
       "MONGOLAB_URI": "mongodb://heroku_app33756489:hrkm1jfvok3i2hsopg9t99jvvd@ds041981-a0.mongolab.com:41981/heroku_app33756489"
       
     },
+  //  "exec_mode" : "cluster_mode",
+   // "instances" : 5,
     "merge_logs": true,
     "script": "server/app.js",
-    "instances": 5,
-    "exec_mode": "fork_mode",
     "error_file": "/var/log/pm2/child-err.log",
     "out_file": "/var/log/pm2/child-out.log",
     "pid_file": "/var/log/pm2/child.pid"
