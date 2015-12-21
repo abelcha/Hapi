@@ -137,7 +137,7 @@ module.exports = function(schema) {
                 var xpdf = PDF(op)
                 xpdf._html = xpdf._html.replace("</style>", " div#cheque { right:" + -offsetX + "mm; bottom:" + offsetY + "mm; }</style>");
 
-                if (req.query.pdf || false) {
+                if (req.query.pdf || true) {
                     if (!op.length) {
                         return resolve('Pas de documents')
                     }
