@@ -133,14 +133,14 @@ app.use(require('body-parser').urlencoded({
 app.use(require('compression')());
 
 
-app.use(function(req, res, next) {
+/*app.use(function(req, res, next) {
 var requestIp = require('request-ip');
 var clientIp = requestIp.getClientIp(req); 
 console.log(clientIp)
 next()
 
 });
-
+*/
 
 
 app.use(require('connect-redis-sessions')({
