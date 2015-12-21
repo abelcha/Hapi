@@ -1,6 +1,6 @@
 'use strict'
 
-/*var cluster = require('cluster')
+var cluster = require('cluster')
 
 if (cluster.isMaster) {
     console.log('MASSSTER')
@@ -18,7 +18,7 @@ if (cluster.isMaster) {
 }
 console.log('==>SLAVE', process.pid)
 
-*/
+
 
 var express = require('express');
 
