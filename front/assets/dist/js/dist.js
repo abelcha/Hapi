@@ -432,6 +432,218 @@ angular.module('edison').config(["$routeProvider", "$locationProvider", function
     $locationProvider.html5Mode(true);
 }]);
 
+angular.module("edison").filter('contactFilter', ["config", function(config) {
+    "use strict";
+
+    var clean = function(str) {
+        return _.deburr(str).toLowerCase();
+    }
+
+    var compare = function(a, b, strictMode) {
+        if (typeof a === "string") {
+            return clean(a).includes(b);
+        } else if (!strictMode) {
+            return clean(String(a)).startsWith(b);
+        } else {
+            return a === parseInt(b);
+        }
+    }
+    return function(dataContainer, input) {
+        var rtn = [];
+        input = clean(input);
+        _.each(dataContainer, function(data) {
+            if (!data.stringify)
+                data.stringify = clean(JSON.stringify(data))
+            if (!input || data.stringify.indexOf(input) >= 0) {
+                rtn.push(data);
+            } else {
+            }
+        })
+        return rtn;
+    }
+}]);
+
+angular.module('edison').filter('crlf', function() {
+	"use strict";
+    return function(text) {
+        return text.split(/\n/g).join('<br>');
+    };
+});
+
+ angular.module('edison').filter('frnbr', function() {
+ 	"use strict";
+ 	return function(num) {
+ 		var n = _.round((num || 0), 2).toString(),
+ 			p = n.indexOf('.');
+ 		return n.replace(/\d(?=(?:\d{3})+(?:\.|$))/g, function($0, i) {
+ 			return (p < 0 || i < p ? ($0 + ' ') : $0).replace('.', ',');
+ 		});
+ 	};
+ });
+
+angular.module('edison').filter('loginify', function() {
+    "use strict";
+    return function(obj) {
+        if (!obj)
+            return "";
+        return obj.slice(0, 1).toUpperCase() + obj.slice(1, -2)
+    };
+});
+
+angular.module('edison').filter('relativeDate', function() {
+    "use strict";
+    return function(date, smallWin) {
+        var d = moment((date + 137000000) * 10000);
+        var l = moment().subtract(4, 'days');
+        if (d < l) {
+            return smallWin ? d.format('DD/MM') : d.format('DD/MM/YY')
+        } else {
+            var x = d.fromNow().toString()
+            if (smallWin) {
+                x = x
+                    .replace('quelques secondes', '')
+                    .replace(' minutes', 'mn')
+                    .replace(' minute', 'mn')
+                    .replace(' une', '1')
+                    .replace(' heures', 'H')
+                    .replace(' heure', 'H')
+                    .replace(' jours', 'J')
+                    .replace(' jour', 'J')
+                    .replace('il y a', '-')
+                    .replace(' un', '1')
+                    .replace('dans ', '+')
+            }
+            return x;
+        }
+        // return moment((date + 1370000000) * 1000).fromNow(no).toString()
+    };
+});
+
+angular.module('edison').filter('reverse', function() {
+    "use strict";
+    return function(items) {
+        if (!items)
+            return [];
+        return items.slice().reverse();
+    };
+});
+
+angular.module("edison").filter('tableFilter', ["config", function(config) {
+    "use strict";
+
+    var clean = function(str) {
+        return _.deburr(str).toLowerCase();
+    }
+
+    var compare = function(a, b, strictMode) {
+        if (typeof a === "string") {
+            return clean(a).includes(b);
+        } else if (!strictMode) {
+            return clean(String(a)).startsWith(b);
+        } else {
+            return a === parseInt(b);
+        }
+    }
+    var compareCustom = function(key, data, input) {
+        if (key === '_categorie') {
+            var cell = config.categoriesHash()[data.c].long_name;
+            return compare(cell, input);
+        }
+        if (key === '_etat') {
+            var cell = config.etatsHash()[data.s].long_name
+            return compare(cell, input);
+        }
+        return true;
+
+    }
+    var compareDate = function(key, data, input) {
+        var md = (data[key] + 137000000) * 10000;
+        //console.log( input.start, input.end);
+        if (md > input.start.getTime() && md < input.end.getTime()) {
+            return true
+        }
+        return false;
+    }
+
+    var parseDate = function(e) {
+        if (!(/^[0-9\/]+$/).test(e) ||  _.endsWith(e, '/')) {
+            return undefined;
+        }
+        var x = e.split('/');
+        if (x.length === 1) {
+            var month = parseInt(x[0]);
+            var year = new Date().getFullYear();
+            return {
+                start: new Date(year, month - 1),
+                end: new Date(year, month)
+            }
+        } else if (x.length === 2)  {
+
+            if (x[1].length == 4) {
+                var month = parseInt(x[0]);
+                var year = parseInt(x[1]);
+                return {
+                    start: new Date(year, month - 1),
+                    end: new Date(year, month),
+                }
+            }
+
+            var day = parseInt(x[0]);
+            var month = parseInt(x[1]);
+            var year = new Date().getFullYear();
+            return {
+                start: new Date(year, month - 1, day),
+                end: new Date(year, month - 1, day + 1)
+            }
+        }
+        return undefined;
+    }
+
+
+    return function(dataContainer, inputs, strictMode) {
+        var rtn = [];
+        //console.time('fltr')
+        inputs = _.mapValues(inputs, clean);
+        _.each(inputs, function(e, k) {
+            if (k.charAt(0) === '∆') {
+                inputs[k] = parseDate(e);
+            }
+        })
+
+        _.each(dataContainer, function(data) {
+                if (data.id) {
+                    var psh = true;
+                    _.each(inputs, function(input, k) {
+                        if (input && _.size(input) > 0) {
+                            if (k.charAt(0) === '_') {
+                                if (!compareCustom(k, data, input)) {
+                                    psh = false;
+                                    return false
+                                }
+                            } else if (k.charAt(0) === '∆') {
+                                if (!compareDate(k.slice(1), data, input)) {
+                                    psh = false;
+                                    return false
+                                }
+                            } else {
+                                if (!compare(data[k], input, strictMode)) {
+                                    psh = false;
+                                    return false
+                                }
+                            }
+                        }
+                    });
+                    if (psh === true) {
+                        rtn.push(data);
+                    }
+                }
+            })
+            //console.timeEnd('fltr')
+
+        return rtn;
+    }
+}]);
+
  angular.module('edison').directive('absenceSst', ["edisonAPI", "LxNotificationService", "user", function(edisonAPI, LxNotificationService, user) {
     "use strict";
     return {
@@ -1299,218 +1511,6 @@ angular.module('edison').directive('ngRightClick', ["$parse", function($parse) {
         }
     }
  }]);
-
-angular.module("edison").filter('contactFilter', ["config", function(config) {
-    "use strict";
-
-    var clean = function(str) {
-        return _.deburr(str).toLowerCase();
-    }
-
-    var compare = function(a, b, strictMode) {
-        if (typeof a === "string") {
-            return clean(a).includes(b);
-        } else if (!strictMode) {
-            return clean(String(a)).startsWith(b);
-        } else {
-            return a === parseInt(b);
-        }
-    }
-    return function(dataContainer, input) {
-        var rtn = [];
-        input = clean(input);
-        _.each(dataContainer, function(data) {
-            if (!data.stringify)
-                data.stringify = clean(JSON.stringify(data))
-            if (!input || data.stringify.indexOf(input) >= 0) {
-                rtn.push(data);
-            } else {
-            }
-        })
-        return rtn;
-    }
-}]);
-
-angular.module('edison').filter('crlf', function() {
-	"use strict";
-    return function(text) {
-        return text.split(/\n/g).join('<br>');
-    };
-});
-
- angular.module('edison').filter('frnbr', function() {
- 	"use strict";
- 	return function(num) {
- 		var n = _.round((num || 0), 2).toString(),
- 			p = n.indexOf('.');
- 		return n.replace(/\d(?=(?:\d{3})+(?:\.|$))/g, function($0, i) {
- 			return (p < 0 || i < p ? ($0 + ' ') : $0).replace('.', ',');
- 		});
- 	};
- });
-
-angular.module('edison').filter('loginify', function() {
-    "use strict";
-    return function(obj) {
-        if (!obj)
-            return "";
-        return obj.slice(0, 1).toUpperCase() + obj.slice(1, -2)
-    };
-});
-
-angular.module('edison').filter('relativeDate', function() {
-    "use strict";
-    return function(date, smallWin) {
-        var d = moment((date + 137000000) * 10000);
-        var l = moment().subtract(4, 'days');
-        if (d < l) {
-            return smallWin ? d.format('DD/MM') : d.format('DD/MM/YY')
-        } else {
-            var x = d.fromNow().toString()
-            if (smallWin) {
-                x = x
-                    .replace('quelques secondes', '')
-                    .replace(' minutes', 'mn')
-                    .replace(' minute', 'mn')
-                    .replace(' une', '1')
-                    .replace(' heures', 'H')
-                    .replace(' heure', 'H')
-                    .replace(' jours', 'J')
-                    .replace(' jour', 'J')
-                    .replace('il y a', '-')
-                    .replace(' un', '1')
-                    .replace('dans ', '+')
-            }
-            return x;
-        }
-        // return moment((date + 1370000000) * 1000).fromNow(no).toString()
-    };
-});
-
-angular.module('edison').filter('reverse', function() {
-    "use strict";
-    return function(items) {
-        if (!items)
-            return [];
-        return items.slice().reverse();
-    };
-});
-
-angular.module("edison").filter('tableFilter', ["config", function(config) {
-    "use strict";
-
-    var clean = function(str) {
-        return _.deburr(str).toLowerCase();
-    }
-
-    var compare = function(a, b, strictMode) {
-        if (typeof a === "string") {
-            return clean(a).includes(b);
-        } else if (!strictMode) {
-            return clean(String(a)).startsWith(b);
-        } else {
-            return a === parseInt(b);
-        }
-    }
-    var compareCustom = function(key, data, input) {
-        if (key === '_categorie') {
-            var cell = config.categoriesHash()[data.c].long_name;
-            return compare(cell, input);
-        }
-        if (key === '_etat') {
-            var cell = config.etatsHash()[data.s].long_name
-            return compare(cell, input);
-        }
-        return true;
-
-    }
-    var compareDate = function(key, data, input) {
-        var md = (data[key] + 137000000) * 10000;
-        //console.log( input.start, input.end);
-        if (md > input.start.getTime() && md < input.end.getTime()) {
-            return true
-        }
-        return false;
-    }
-
-    var parseDate = function(e) {
-        if (!(/^[0-9\/]+$/).test(e) ||  _.endsWith(e, '/')) {
-            return undefined;
-        }
-        var x = e.split('/');
-        if (x.length === 1) {
-            var month = parseInt(x[0]);
-            var year = new Date().getFullYear();
-            return {
-                start: new Date(year, month - 1),
-                end: new Date(year, month)
-            }
-        } else if (x.length === 2)  {
-
-            if (x[1].length == 4) {
-                var month = parseInt(x[0]);
-                var year = parseInt(x[1]);
-                return {
-                    start: new Date(year, month - 1),
-                    end: new Date(year, month),
-                }
-            }
-
-            var day = parseInt(x[0]);
-            var month = parseInt(x[1]);
-            var year = new Date().getFullYear();
-            return {
-                start: new Date(year, month - 1, day),
-                end: new Date(year, month - 1, day + 1)
-            }
-        }
-        return undefined;
-    }
-
-
-    return function(dataContainer, inputs, strictMode) {
-        var rtn = [];
-        //console.time('fltr')
-        inputs = _.mapValues(inputs, clean);
-        _.each(inputs, function(e, k) {
-            if (k.charAt(0) === '∆') {
-                inputs[k] = parseDate(e);
-            }
-        })
-
-        _.each(dataContainer, function(data) {
-                if (data.id) {
-                    var psh = true;
-                    _.each(inputs, function(input, k) {
-                        if (input && _.size(input) > 0) {
-                            if (k.charAt(0) === '_') {
-                                if (!compareCustom(k, data, input)) {
-                                    psh = false;
-                                    return false
-                                }
-                            } else if (k.charAt(0) === '∆') {
-                                if (!compareDate(k.slice(1), data, input)) {
-                                    psh = false;
-                                    return false
-                                }
-                            } else {
-                                if (!compare(data[k], input, strictMode)) {
-                                    psh = false;
-                                    return false
-                                }
-                            }
-                        }
-                    });
-                    if (psh === true) {
-                        rtn.push(data);
-                    }
-                }
-            })
-            //console.timeEnd('fltr')
-
-        return rtn;
-    }
-}]);
 
 angular.module('edison').factory('TabContainer', ["$location", "$window", "$q", "edisonAPI", function($location, $window, $q, edisonAPI) {
     "use strict";
@@ -4727,185 +4727,6 @@ DashboardController.$inject = ["$rootScope", "statsTelepro", "dialog", "user", "
 
 angular.module('edison').controller('DashboardController', DashboardController);
 
-var LpaController = function(user, openPost, socket, ContextMenu, $location, $window, TabContainer, edisonAPI, $rootScope, LxProgressService, LxNotificationService, FlushList) {
-    "use strict";
-    var _this = this
-    var tab = TabContainer.getCurrentTab();
-    tab.setTitle('LPA')
-    _this.search = $location.search();
-    _this.contextMenu = new ContextMenu('intervention')
-    _this.user = user;
-    _this.offsetX = 1;
-    _this.offsetY = -4;
-    console.log(user)
-    _this.loadData = function(prevChecked) {
-        LxProgressService.circular.show('#5fa2db', '#globalProgress');
-        edisonAPI.compta.lpa($location.search()).then(function(result) {
-            _.each(result.data, function(sst) {
-                sst.list = new FlushList(sst.list, prevChecked);
-                if (_this.search.d) {
-                    _this.checkArtisan(sst);
-                }
-                _this.reloadList(sst)
-            })
-            $rootScope.lpa = result.data
-            LxProgressService.circular.hide()
-        })
-    }
-
-
-
-
-    _this.rowRightClick = function($event, inter) {
-        edisonAPI.intervention.get(inter.id, {
-                populate: 'sst'
-            })
-            .then(function(resp) {
-                _this.contextMenu.setData(resp.data);
-                _this.contextMenu.setPosition($event.pageX, $event.pageY + 200)
-                _this.contextMenu.open();
-            })
-    }
-
-
-
-    if (!$rootScope.lpa)
-        _this.loadData()
-    _this.checkArtisan = function(sst) {
-
-        sst.checked = !sst.checked
-        _.each(sst.list.getList(), function(e) {
-            e.checked = sst.checked;
-        })
-    }
-    _this.updateNumeroCheque = function(index) {
-        var base = $rootScope.lpa[index].numeroCheque;
-        if (base) {
-            for (var i = index; i < $rootScope.lpa.length; i++) {
-                if ($rootScope.lpa[i].list.getList()[0].mode === 'CHQ' /*&& _.find($rootScope.lpa[i].list.getList(), 'checked', true)*/ ) {
-                    $rootScope.lpa[i].numeroCheque = base++
-                }
-            };
-        }
-    }
-    _this.flushMail = function() {
-        var rtn = [];
-
-        var lpa = [];
-        _.each(_.cloneDeep($rootScope.lpa), function(e) {
-            e.list.__list = _.filter(e.list.__list, 'checked', true);
-            if (e.list.__list.length) {
-                lpa.push(e);
-            }
-        })
-        console.log(lpa);
-        LxProgressService.circular.show('#5fa2db', '#globalProgress');
-        edisonAPI.compta.flushMail(lpa).then(function(resp) {
-            console.log('ok')
-            LxProgressService.circular.hide()
-            _this.reloadLPA()
-        }, function() {
-            console.log('failure')
-
-            LxProgressService.circular.hide()
-            _this.reloadLPA()
-        })
-    }
-    _this.flush = function() {
-        var rtn = [];
-
-        var lpa = [];
-        _.each(_.cloneDeep($rootScope.lpa), function(e) {
-            e.list.__list = _.filter(e.list.__list, 'checked', true);
-            if (e.list.__list.length) {
-                lpa.push(e);
-            }
-        })
-        LxProgressService.circular.show('#5fa2db', '#globalProgress');
-        edisonAPI.compta.flush(lpa).then(function(resp) {
-            LxProgressService.circular.hide()
-                /*edisonAPI.compta.flushMail(lpa).then(function(resp) {
-                      _this.reloadLPA()
-                  });*/
-            alert('Les éléments ont été flushés')
-        }, function() {
-            LxProgressService.circular.hide()
-            alert('Les éléments ont été flushés')
-                /*edisonAPI.compta.flushMail(lpa).then(function(resp) {
-                    LxProgressService.circular.hide()
-                    _this.reloadLPA()
-                });*/
-        })
-    }
-
-    socket.on('intervention_db_flushMail', function(data) {
-        if (data === 100) {
-            $rootScope.globalProgressCounter = "";
-            LxProgressService.circular.hide();
-            _this.reloadLPA()
-        } else {
-            $rootScope.globalProgressCounter = data + '%';
-        }
-
-    })
-
-    _this.selectToggle = function(artisan, item) {
-        if (this.search.d) {
-            return false;
-        }
-        item.checked = !item.checked;
-        _this.reloadList(artisan)
-    }
-    _this.reloadList = function(artisan) {
-
-        artisan.total = artisan.list.getTotal()
-        artisan.total = artisan.list.getTotal(true)
-        artisan.total = artisan.list.getTotal()
-    }
-    _this.reloadLPA = function() {
-        var rtn = [];
-        _.each($rootScope.lpa, function(sst) {
-            _.each(sst.list.getList(), function(e) {
-                if (e.checked) {
-                    rtn.push(e.id);
-                }
-            })
-        })
-        _this.loadData(rtn)
-    }
-
-    _this.clickTrigger = function(elem) {
-        window.setTimeout(function() {
-            angular.element(elem).trigger('click');
-        }, 0)
-    }
-
-    _this.onFileUpload = function(file) {
-        var ids = _($rootScope.lpa).map(_.partial(_.pick, _, 'numeroCheque', 'id')).value();
-        LxProgressService.circular.show('#5fa2db', '#globalProgress');
-        edisonAPI.file.uploadScans(file, {
-            ids: ids,
-            date: _this.search.d
-        }).then(function(resp) {
-            LxProgressService.circular.hide()
-        })
-    }
-
-   /* _this.print = function(type) {
-        console.log($rootScope.lpa)
-        openPost('/api/intervention/print', {
-            type: type,
-            data: $rootScope.lpa,
-            offsetX: _this.offsetX || 0,
-            offsetY: _this.offsetY || 0
-        });
-    }*/
-}
-LpaController.$inject = ["user", "openPost", "socket", "ContextMenu", "$location", "$window", "TabContainer", "edisonAPI", "$rootScope", "LxProgressService", "LxNotificationService", "FlushList"];
-
-
-angular.module('edison').controller('LpaController', LpaController);
-
 
  angular.module('edison').directive('edisonMap', ["$window", "Map", "mapAutocomplete", "Address", function($window, Map, mapAutocomplete, Address) {
          "use strict";
@@ -5611,6 +5432,185 @@ var InterventionCtrl = function(Description, Signalement, ContextMenu, $window, 
 InterventionCtrl.$inject = ["Description", "Signalement", "ContextMenu", "$window", "$timeout", "$rootScope", "$scope", "$location", "$routeParams", "dialog", "fourniture", "LxNotificationService", "LxProgressService", "TabContainer", "edisonAPI", "Address", "$q", "mapAutocomplete", "productsList", "config", "interventionPrm", "Intervention", "Map"];
 
 angular.module('edison').controller('InterventionController', InterventionCtrl);
+
+var LpaController = function(user, openPost, socket, ContextMenu, $location, $window, TabContainer, edisonAPI, $rootScope, LxProgressService, LxNotificationService, FlushList) {
+    "use strict";
+    var _this = this
+    var tab = TabContainer.getCurrentTab();
+    tab.setTitle('LPA')
+    _this.search = $location.search();
+    _this.contextMenu = new ContextMenu('intervention')
+    _this.user = user;
+    _this.offsetX = 1;
+    _this.offsetY = -4;
+    console.log(user)
+    _this.loadData = function(prevChecked) {
+        LxProgressService.circular.show('#5fa2db', '#globalProgress');
+        edisonAPI.compta.lpa($location.search()).then(function(result) {
+            _.each(result.data, function(sst) {
+                sst.list = new FlushList(sst.list, prevChecked);
+                if (_this.search.d) {
+                    _this.checkArtisan(sst);
+                }
+                _this.reloadList(sst)
+            })
+            $rootScope.lpa = result.data
+            LxProgressService.circular.hide()
+        })
+    }
+
+
+
+
+    _this.rowRightClick = function($event, inter) {
+        edisonAPI.intervention.get(inter.id, {
+                populate: 'sst'
+            })
+            .then(function(resp) {
+                _this.contextMenu.setData(resp.data);
+                _this.contextMenu.setPosition($event.pageX, $event.pageY + 200)
+                _this.contextMenu.open();
+            })
+    }
+
+
+
+    if (!$rootScope.lpa)
+        _this.loadData()
+    _this.checkArtisan = function(sst) {
+
+        sst.checked = !sst.checked
+        _.each(sst.list.getList(), function(e) {
+            e.checked = sst.checked;
+        })
+    }
+    _this.updateNumeroCheque = function(index) {
+        var base = $rootScope.lpa[index].numeroCheque;
+        if (base) {
+            for (var i = index; i < $rootScope.lpa.length; i++) {
+                if ($rootScope.lpa[i].list.getList()[0].mode === 'CHQ' /*&& _.find($rootScope.lpa[i].list.getList(), 'checked', true)*/ ) {
+                    $rootScope.lpa[i].numeroCheque = base++
+                }
+            };
+        }
+    }
+    _this.flushMail = function() {
+        var rtn = [];
+
+        var lpa = [];
+        _.each(_.cloneDeep($rootScope.lpa), function(e) {
+            e.list.__list = _.filter(e.list.__list, 'checked', true);
+            if (e.list.__list.length) {
+                lpa.push(e);
+            }
+        })
+        console.log(lpa);
+        LxProgressService.circular.show('#5fa2db', '#globalProgress');
+        edisonAPI.compta.flushMail(lpa).then(function(resp) {
+            console.log('ok')
+            LxProgressService.circular.hide()
+            _this.reloadLPA()
+        }, function() {
+            console.log('failure')
+
+            LxProgressService.circular.hide()
+            _this.reloadLPA()
+        })
+    }
+    _this.flush = function() {
+        var rtn = [];
+
+        var lpa = [];
+        _.each(_.cloneDeep($rootScope.lpa), function(e) {
+            e.list.__list = _.filter(e.list.__list, 'checked', true);
+            if (e.list.__list.length) {
+                lpa.push(e);
+            }
+        })
+        LxProgressService.circular.show('#5fa2db', '#globalProgress');
+        edisonAPI.compta.flush(lpa).then(function(resp) {
+            LxProgressService.circular.hide()
+                /*edisonAPI.compta.flushMail(lpa).then(function(resp) {
+                      _this.reloadLPA()
+                  });*/
+            alert('Les éléments ont été flushés')
+        }, function() {
+            LxProgressService.circular.hide()
+            alert('Les éléments ont été flushés')
+                /*edisonAPI.compta.flushMail(lpa).then(function(resp) {
+                    LxProgressService.circular.hide()
+                    _this.reloadLPA()
+                });*/
+        })
+    }
+
+    socket.on('intervention_db_flushMail', function(data) {
+        if (data === 100) {
+            $rootScope.globalProgressCounter = "";
+            LxProgressService.circular.hide();
+            _this.reloadLPA()
+        } else {
+            $rootScope.globalProgressCounter = data + '%';
+        }
+
+    })
+
+    _this.selectToggle = function(artisan, item) {
+        if (this.search.d) {
+            return false;
+        }
+        item.checked = !item.checked;
+        _this.reloadList(artisan)
+    }
+    _this.reloadList = function(artisan) {
+
+        artisan.total = artisan.list.getTotal()
+        artisan.total = artisan.list.getTotal(true)
+        artisan.total = artisan.list.getTotal()
+    }
+    _this.reloadLPA = function() {
+        var rtn = [];
+        _.each($rootScope.lpa, function(sst) {
+            _.each(sst.list.getList(), function(e) {
+                if (e.checked) {
+                    rtn.push(e.id);
+                }
+            })
+        })
+        _this.loadData(rtn)
+    }
+
+    _this.clickTrigger = function(elem) {
+        window.setTimeout(function() {
+            angular.element(elem).trigger('click');
+        }, 0)
+    }
+
+    _this.onFileUpload = function(file) {
+        var ids = _($rootScope.lpa).map(_.partial(_.pick, _, 'numeroCheque', 'id')).value();
+        LxProgressService.circular.show('#5fa2db', '#globalProgress');
+        edisonAPI.file.uploadScans(file, {
+            ids: ids,
+            date: _this.search.d
+        }).then(function(resp) {
+            LxProgressService.circular.hide()
+        })
+    }
+
+    _this.print = function(type) {
+        console.log($rootScope.lpa)
+        openPost('/api/intervention/print', {
+            type: type,
+            data: $rootScope.lpa,
+            offsetX: _this.offsetX || 0,
+            offsetY: _this.offsetY || 0
+        });
+    }
+}
+LpaController.$inject = ["user", "openPost", "socket", "ContextMenu", "$location", "$window", "TabContainer", "edisonAPI", "$rootScope", "LxProgressService", "LxNotificationService", "FlushList"];
+
+
+angular.module('edison').controller('LpaController', LpaController);
 
 angular.module('edison').controller('ListeArtisanController', _.noop);
 

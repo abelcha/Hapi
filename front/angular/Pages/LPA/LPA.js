@@ -162,7 +162,7 @@ var LpaController = function(user, openPost, socket, ContextMenu, $location, $wi
         })
     }
 
-   /* _this.print = function(type) {
+    _this.print = function(type) {
         console.log($rootScope.lpa)
         openPost('/api/intervention/print', {
             type: type,
@@ -170,7 +170,7 @@ var LpaController = function(user, openPost, socket, ContextMenu, $location, $wi
             offsetX: _this.offsetX || 0,
             offsetY: _this.offsetY || 0
         });
-    }*/
+    }
 }
 
 
