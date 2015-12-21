@@ -18,6 +18,7 @@ module.exports = function(db) {
             ref: 'artisan'
         },
         sst_nom: String,
+        text: String,
         _type: String,
         subType: String,
         level: String,

@@ -7,7 +7,7 @@ module.exports = function(schema) {
         fn: function(sign, req, res) {
             return new Promise(function(resolve, reject) {
                 sign.ok = !sign.ok ;
-                console.log('okok')
+                sign.text = req.body.text
                 sign.login.done = req.session.login;
                 sign.date.done = new Date();
                 sign.save().then(function(resp) {
