@@ -13,7 +13,7 @@ options, args = parser.parse_args()
 #print( 'Query string:', options, args)
 
 if (options.live):
-	baseUrl = "http://edsx.herokuapp.com/api/"
+	baseUrl = "http://edison.services/api/"
 elif (options.staging):
 	baseUrl = "http://edsx-dev.herokuapp.com/api/"
 else:

@@ -105,11 +105,6 @@ app.get('/favicon.ico', function(req, res) {
     res.sendFile(process.cwd() + '/front/assets/img/favicon.ico')
 })
 
-
-app.get('/api/loltest', function(req, res) {
-    res.send('ok')
-})
-
 app.use(require("multer")({
     inMemory: true,
     onFileUploadStart: function(file, req, res) {
@@ -149,7 +144,7 @@ app.use(require('connect-redis-sessions')({
 
 
 app.use(function(req, res, next) {
-    if (!req.session.root && req.headers['x-forwarded-for'] !== '141.105.72.198') {
+    if (req.session.root === false && req.headers['x-forwarded-for'] !== '141.105.72.198') {
         return next('BAD IP')
     }
     next(null)
@@ -377,7 +372,6 @@ app.use(function(err, req, res, next) {
 
 process.on('uncaughtException', __catch);
 
-console.log('==>', process.pid)
 
 http.listen(port, function() {
     console.log('listening on *:' + port);
