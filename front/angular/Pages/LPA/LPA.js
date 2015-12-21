@@ -7,7 +7,7 @@ var LpaController = function(user, openPost, socket, ContextMenu, $location, $wi
     _this.contextMenu = new ContextMenu('intervention')
     _this.user = user;
     _this.offsetX = 0;
-    _this.offsety = -10;
+    _this.offsetY = -4;
     console.log(user)
     _this.loadData = function(prevChecked) {
         LxProgressService.circular.show('#5fa2db', '#globalProgress');
@@ -160,7 +160,7 @@ var LpaController = function(user, openPost, socket, ContextMenu, $location, $wi
         })
     }
 
-    _this.print = function(type) {
+   /* _this.print = function(type) {
         console.log($rootScope.lpa)
         openPost('/api/intervention/print', {
             type: type,
@@ -168,7 +168,7 @@ var LpaController = function(user, openPost, socket, ContextMenu, $location, $wi
             offsetX: _this.offsetX || 0,
             offsetY: _this.offsetY || 0
         });
-    }
+    }*/
 }
 
 
