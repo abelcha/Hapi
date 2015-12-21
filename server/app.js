@@ -141,13 +141,20 @@ next()
 
 });
 */
-
-
 app.use(require('connect-redis-sessions')({
     client: redis,
     app: "EDISON".envify(),
     ttl: 999999999
 }))
+
+
+app.use(function(req, res, next) {
+    if (!req.session.root && req.headers['x-forwarded-for'] !== '141.105.72.198') {
+        return next('BAD IP')
+    }
+    next(null)
+})
+
 
 
 
@@ -189,7 +196,7 @@ app.post('/login', function(req, res) {
 
 
 app.get("/api/ping", function(req, res)  {
-    console.log(req.headers['x-forwarded-for'] || req.connection.remoteAddress)
+    console.log("==>", req.headers['x-forwarded-for'])
     res.json(Date.now());
 })
 
