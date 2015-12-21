@@ -25,6 +25,8 @@ var LpaController = function(user, openPost, socket, ContextMenu, $location, $wi
     }
 
 
+
+
     _this.rowRightClick = function($event, inter) {
         edisonAPI.intervention.get(inter.id, {
                 populate: 'sst'
