@@ -188,7 +188,8 @@ app.post('/login', function(req, res) {
 });
 
 
-app.get("/ping", function(req, res)  {
+app.get("/api/ping", function(req, res)  {
+    console.log(req.headers['x-forwarded-for'] || req.connection.remoteAddress)
     res.json(Date.now());
 })
 
