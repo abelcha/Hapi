@@ -81,13 +81,13 @@
             </div>
         </div>
         <div ng-if="_model === 'artisan'" class="col-sm-4">
-            Gains depuis le {{aritsan.date.ajout|date:"dd/MM/yyyy"}} (représente la totalité des paiement effectué) :
+            Gains depuis le {{artisan.date.ajout|date:"dd/MM/yyyy"}} (représente la totalité des paiement effectué) :
             <div class="md-display-2"> {{(vm.stats.paye.paye)|frnbr}} €</div>
             <br> Chiffre d’affaire (représente la totalité des montants:
             <div class="md-display-2"> {{(vm.stats.paye.final)|frnbr}} €</div>
         </div>
         <div ng-if="_model === 'artisan'" class="col-sm-3">
-            <span class="label" style="width:100px;margin-top:5px;display:block" ng-class="{'green':aritsan.document[file].ok, 'red':!aritsan.document[file].ok}" ng-repeat="(k, file) in config.artisanFiles" ng-if="file == 'contrat' || file == 'kbis' || file == 'cni' || file == 'rib'">{{file}}</span> </span>
+            <span class="label" style="width:100px;margin-top:5px;display:block" ng-class="{'green':artisan.document[file].ok, 'red':!artisan.document[file].ok}" ng-repeat="(k, file) in config.artisanFiles" ng-if="file == 'contrat' || file == 'kbis' || file == 'cni' || file == 'rib'">{{file}}</span> </span>
         </div>
         <div class="col-sm-4 hidden-sm hidden-xs hidden-md" ng-if="data.appels.length">
             <p bold text-xxl underlined>Conversations Sous-traitants</p>
