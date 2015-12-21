@@ -4,6 +4,7 @@
     "name": "worker",
     "script": "server/worker.js",
     "merge_logs": true,
+    "watch": ["node_modules/edsx-mail/*.js", "server/routes.js", "config/*.js", "server/edison_components/*", "server/models/*", "server/app.js", "server/worker.js", "server/core/*", "invoice-ninja/*/*.js"],
     "env": {
       "PLATFORM": "DIGITAL_OCEAN",
       "APP_ENV": "PRODUCTION",
@@ -22,8 +23,8 @@
       "APP_ENV": "PRODUCTION",
       "PLATFORM": "DIGITAL_OCEAN",
       "MONGOLAB_URI": "mongodb://heroku_app33756489:hrkm1jfvok3i2hsopg9t99jvvd@ds041981-a0.mongolab.com:41981/heroku_app33756489"
-      
     },
+    "watch": ["server", "config"],
   //  "exec_mode" : "cluster_mode",
    // "instances" : 5,
     "merge_logs": true,
