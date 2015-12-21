@@ -57,7 +57,7 @@ var Timer = module.exports = function() {
             }, _.random(5 * 60 * 1000))
         });
 
-        this.emitter.on("20 minutes", function() {
+        this.emitter.on("4 minutes", function() {
 
             var req = {
                 query: {}
