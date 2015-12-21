@@ -135,7 +135,7 @@ module.exports = function(schema) {
         return new Promise(function(resolve, reject) {
             var resend = function() {
                 var xpdf = PDF(op)
-                xpdf._html = xpdf._html.replace("</style>", " div#cheque { right:" + offsetX + "mm; bottom:" + offsetY + "mm; }</style>");
+                xpdf._html = xpdf._html.replace("</style>", " div#cheque { right:" + -offsetX + "mm; bottom:" + offsetY + "mm; }</style>");
 
                 if (req.query.pdf || true) {
                     if (!op.length) {

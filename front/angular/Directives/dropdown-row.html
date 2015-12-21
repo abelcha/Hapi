@@ -41,7 +41,7 @@
                 <p ng-if="data.date.intervention">Intervention le {{data.date.intervention | date:"dd/MM/yy à HH'h'mm"}} par <a href="/artisan/{{data.sst.id}}/recap">{{data.sst.nomSociete}}</a></p>
                 <p ng-if="data.date.envoiFacture"><a ng-click="Intervention(data).facturePreview()">Facture</a> envoyé le {{data.date.envoiFacture | date:"dd/MM/yy à HH'h'mm"}} par {{data.login.envoiFacture || 'inconnu'}}</p>
                 <p ng-if="data.date.verification">Verifié le {{data.date.verification | date:"dd/MM/yy à HH'h'mm"}} par {{data.login.verification || 'inconnu'}}</p>
-                <p ng-if="data.compta.reglement.recu">Réglement encaissé le {{data.date.envoi | date:"dd/MM/yy à HH'h'mm"}} par {{data.compta.reglement.login}}</p>
+                <p ng-if="data.compta.reglement.recu">Réglement encaissé le {{data.compta.reglement.date | date:"dd/MM/yy à HH'h'mm"}} par {{data.compta.reglement.login}}</p>
                 <p ng-if="data.compta.paiement.effectue">Paiement éffectué le {{data.compta.paiement.date | date:"dd/MM/yy à HH'h'mm"}} par {{data.compta.paiement.login}}</p>
                 <p ng-if="data.status === 'ANN' && data.date.annulation">Annulé le {{data.date.annulation | date:"dd/MM/yy à HH'h'mm"}} par {{data.login.annulation}} <i ng-if="data.causeAnnulation">({{config.getCauseAnnulation(data.causeAnnulation).long_name}})</i></p>
                 <p ng-if="data.litige.opened">Litige Ouvert le {{data.litige.opened | date:"dd/MM/yy à HH'h'mm"}} par {{data.litige.openedBy}} <u text-xs>({{data.litige.description}})</u></p>
