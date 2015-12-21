@@ -133,6 +133,14 @@ app.use(require('body-parser').urlencoded({
 app.use(require('compression')());
 
 
+app.use(function(req, res, next) {
+var requestIp = require('request-ip');
+var clientIp = requestIp.getClientIp(req); 
+console.log(clientIp)
+next()
+
+});
+
 
 
 app.use(require('connect-redis-sessions')({
@@ -155,7 +163,7 @@ app.get('/logout', function(req, res) {
 
 app.post('/login', function(req, res) {
     try {
-
+       // if (req.session.root)
         db.model('user').validateCredentials(req, res)
             .then(function(user) {
                 req.session.upgrade(user.login, function() {
