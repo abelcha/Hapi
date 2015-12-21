@@ -27,27 +27,38 @@
 
 
     var sendArtisanChangedSms = function(curr, session) {
+        console.log("[-------]SENDOKOK")
         setTimeout(function() {
+
+            console.log("[-------]TIMEOUT")
             db.model('intervention').findOne({
                 id: curr.id
             }).then(function(resp) {
                 if (!resp || resp.status !== 'APR')  {
-                    //si on a envoyer l'intervention entre temps
+                    console.log("[-------]FLASE")
+                        //si on a envoyer l'intervention entre temps
                     return false;
                 }
+                try {
 
-                var moment = require('moment')
-                var textTemplate = requireLocal('config/textTemplate');
-                var config = requireLocal('config/dataList');
-                var text = _.template(textTemplate.sms.intervention.demande.bind(curr)(session, config, moment))(curr)
-                sms.send({
-                    type: "DEMANDE",
-                    dest: curr.sst.nomSociete,
-                    text: text,
-                    to: curr.sst.telephone.tel1
-                })
+                    var moment = require('moment')
+                    var textTemplate = requireLocal('config/textTemplate');
+                    var config = requireLocal('config/dataList');
+                    console.log("[-------]HERE")
+                    var text = _.template(textTemplate.sms.intervention.demande.bind(curr)(session, config, moment))(curr)
+                    console.log('==>', text)
+                    sms.send({
+                        type: "DEMANDE",
+                        dest: curr.sst.nomSociete,
+                        text: text,
+                        to: curr.sst.telephone.tel1
+                    })
+                    console.log('SMS SENDED')
+                } catch (e) {
+                    console.log('-->', e, e.stack)
+                }
             })
-        }, 30000)
+        }, 5000)
     }
 
     var sstDemandable = function(sst) {
@@ -57,6 +68,7 @@
     module.exports.postSave = function(prev, curr, session) {
         try {
             if (envProd && curr.artisan && curr.artisan.id && sstDemandable(curr.artisan)) {
+                console.log('SEND ARTI CHANGED')
                 sendArtisanChangedSms(curr, session);
             }
 
@@ -178,6 +190,7 @@
                     return false;
                 }
                 _new.sst = JSON.parse(JSON.stringify(sst));
+                console.log('SEND ARTI CHANGED')
                 sendArtisanChangedSms(_new, session);
             })
         }

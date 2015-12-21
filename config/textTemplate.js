@@ -24,17 +24,20 @@ module.exports = {
                     "Edison Services";
             },
             demande: function(user, config, _moment) {
+                var _capitalize = require('lodash/string/capitalize')
                 _moment = (_moment || moment);
                 this.mmt = _moment(this.date.intervention);
                 this.format = this.mmt.isSame(_moment(), 'day') ? "[aujourd'hui à ]HH[h]mm" : "[le ]DD[/]MM[ à ]HH[h]mm"
                 this.datePlain = this.mmt.format(this.format)
+                console.log(this.mmt.toDate(), this.datePlain)
+                
                 this.user = user;
-                this.user.pseudo = _.capitalize(this.user.pseudo ||  "arnaud");
+                this.user.pseudo = _capitalize(this.user.pseudo ||  "arnaud");
                 this.ligneDirect = user.ligne ? (user.ligne.match(/.{2}|.{1,2}/g).join('.')) :  "09.72.44.16.63";
                 this.categorieClean = config.categories[this.categorie].suffix + " " + config.categories[this.categorie].long_name.toLowerCase()
 
                 return "Bonjour M. {{sst.representant.nom}},\n" +
-                    "nous avons une intervention {{categorieClean}} le {{datePlain} à {{client.address.v}} ({{client.address.cp}}).\n" +
+                    "nous avons une intervention {{categorieClean}} le {{datePlain}} à {{client.address.v}} ({{client.address.cp}}).\n" +
                     "Etes-vous disponible ?\n" +
                     "Merci de prendre contact avec Edison Services.\n" +
                     "{{user.pseudo}} au {{ligneDirect}}\n";

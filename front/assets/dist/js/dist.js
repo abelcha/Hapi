@@ -432,6 +432,218 @@ angular.module('edison').config(["$routeProvider", "$locationProvider", function
     $locationProvider.html5Mode(true);
 }]);
 
+angular.module("edison").filter('contactFilter', ["config", function(config) {
+    "use strict";
+
+    var clean = function(str) {
+        return _.deburr(str).toLowerCase();
+    }
+
+    var compare = function(a, b, strictMode) {
+        if (typeof a === "string") {
+            return clean(a).includes(b);
+        } else if (!strictMode) {
+            return clean(String(a)).startsWith(b);
+        } else {
+            return a === parseInt(b);
+        }
+    }
+    return function(dataContainer, input) {
+        var rtn = [];
+        input = clean(input);
+        _.each(dataContainer, function(data) {
+            if (!data.stringify)
+                data.stringify = clean(JSON.stringify(data))
+            if (!input || data.stringify.indexOf(input) >= 0) {
+                rtn.push(data);
+            } else {
+            }
+        })
+        return rtn;
+    }
+}]);
+
+angular.module('edison').filter('crlf', function() {
+	"use strict";
+    return function(text) {
+        return text.split(/\n/g).join('<br>');
+    };
+});
+
+ angular.module('edison').filter('frnbr', function() {
+ 	"use strict";
+ 	return function(num) {
+ 		var n = _.round((num || 0), 2).toString(),
+ 			p = n.indexOf('.');
+ 		return n.replace(/\d(?=(?:\d{3})+(?:\.|$))/g, function($0, i) {
+ 			return (p < 0 || i < p ? ($0 + ' ') : $0).replace('.', ',');
+ 		});
+ 	};
+ });
+
+angular.module('edison').filter('loginify', function() {
+    "use strict";
+    return function(obj) {
+        if (!obj)
+            return "";
+        return obj.slice(0, 1).toUpperCase() + obj.slice(1, -2)
+    };
+});
+
+angular.module('edison').filter('relativeDate', function() {
+    "use strict";
+    return function(date, smallWin) {
+        var d = moment((date + 137000000) * 10000);
+        var l = moment().subtract(4, 'days');
+        if (d < l) {
+            return smallWin ? d.format('DD/MM') : d.format('DD/MM/YY')
+        } else {
+            var x = d.fromNow().toString()
+            if (smallWin) {
+                x = x
+                    .replace('quelques secondes', '')
+                    .replace(' minutes', 'mn')
+                    .replace(' minute', 'mn')
+                    .replace(' une', '1')
+                    .replace(' heures', 'H')
+                    .replace(' heure', 'H')
+                    .replace(' jours', 'J')
+                    .replace(' jour', 'J')
+                    .replace('il y a', '-')
+                    .replace(' un', '1')
+                    .replace('dans ', '+')
+            }
+            return x;
+        }
+        // return moment((date + 1370000000) * 1000).fromNow(no).toString()
+    };
+});
+
+angular.module('edison').filter('reverse', function() {
+    "use strict";
+    return function(items) {
+        if (!items)
+            return [];
+        return items.slice().reverse();
+    };
+});
+
+angular.module("edison").filter('tableFilter', ["config", function(config) {
+    "use strict";
+
+    var clean = function(str) {
+        return _.deburr(str).toLowerCase();
+    }
+
+    var compare = function(a, b, strictMode) {
+        if (typeof a === "string") {
+            return clean(a).includes(b);
+        } else if (!strictMode) {
+            return clean(String(a)).startsWith(b);
+        } else {
+            return a === parseInt(b);
+        }
+    }
+    var compareCustom = function(key, data, input) {
+        if (key === '_categorie') {
+            var cell = config.categoriesHash()[data.c].long_name;
+            return compare(cell, input);
+        }
+        if (key === '_etat') {
+            var cell = config.etatsHash()[data.s].long_name
+            return compare(cell, input);
+        }
+        return true;
+
+    }
+    var compareDate = function(key, data, input) {
+        var md = (data[key] + 137000000) * 10000;
+        //console.log( input.start, input.end);
+        if (md > input.start.getTime() && md < input.end.getTime()) {
+            return true
+        }
+        return false;
+    }
+
+    var parseDate = function(e) {
+        if (!(/^[0-9\/]+$/).test(e) ||  _.endsWith(e, '/')) {
+            return undefined;
+        }
+        var x = e.split('/');
+        if (x.length === 1) {
+            var month = parseInt(x[0]);
+            var year = new Date().getFullYear();
+            return {
+                start: new Date(year, month - 1),
+                end: new Date(year, month)
+            }
+        } else if (x.length === 2)  {
+
+            if (x[1].length == 4) {
+                var month = parseInt(x[0]);
+                var year = parseInt(x[1]);
+                return {
+                    start: new Date(year, month - 1),
+                    end: new Date(year, month),
+                }
+            }
+
+            var day = parseInt(x[0]);
+            var month = parseInt(x[1]);
+            var year = new Date().getFullYear();
+            return {
+                start: new Date(year, month - 1, day),
+                end: new Date(year, month - 1, day + 1)
+            }
+        }
+        return undefined;
+    }
+
+
+    return function(dataContainer, inputs, strictMode) {
+        var rtn = [];
+        //console.time('fltr')
+        inputs = _.mapValues(inputs, clean);
+        _.each(inputs, function(e, k) {
+            if (k.charAt(0) === '∆') {
+                inputs[k] = parseDate(e);
+            }
+        })
+
+        _.each(dataContainer, function(data) {
+                if (data.id) {
+                    var psh = true;
+                    _.each(inputs, function(input, k) {
+                        if (input && _.size(input) > 0) {
+                            if (k.charAt(0) === '_') {
+                                if (!compareCustom(k, data, input)) {
+                                    psh = false;
+                                    return false
+                                }
+                            } else if (k.charAt(0) === '∆') {
+                                if (!compareDate(k.slice(1), data, input)) {
+                                    psh = false;
+                                    return false
+                                }
+                            } else {
+                                if (!compare(data[k], input, strictMode)) {
+                                    psh = false;
+                                    return false
+                                }
+                            }
+                        }
+                    });
+                    if (psh === true) {
+                        rtn.push(data);
+                    }
+                }
+            })
+            //console.timeEnd('fltr')
+
+        return rtn;
+    }
+}]);
+
  angular.module('edison').directive('absenceSst', ["edisonAPI", "LxNotificationService", "user", function(edisonAPI, LxNotificationService, user) {
     "use strict";
     return {
@@ -1300,216 +1512,185 @@ angular.module('edison').directive('ngRightClick', ["$parse", function($parse) {
     }
  }]);
 
-angular.module("edison").filter('contactFilter', ["config", function(config) {
+ angular.module('edison').directive('infoAppelSst', ["mapAutocomplete", "edisonAPI", "config", function(mapAutocomplete, edisonAPI, config) {
     "use strict";
-
-    var clean = function(str) {
-        return _.deburr(str).toLowerCase();
+    return {
+        restrict: 'E',
+        templateUrl: '/Templates/info-appel-sst.html',
+        scope: {
+            data: "=",
+        },
+        link: function(scope, element, attrs) {
+            scope.embedded = !!attrs.embedded
+            console.log(attrs.embedded);
+        },
     }
 
-    var compare = function(a, b, strictMode) {
-        if (typeof a === "string") {
-            return clean(a).includes(b);
-        } else if (!strictMode) {
-            return clean(String(a)).startsWith(b);
-        } else {
-            return a === parseInt(b);
+ }]);
+
+ angular.module('edison').directive('infoFacture', ["mapAutocomplete", "edisonAPI", "config", function(mapAutocomplete, edisonAPI,config) {
+     "use strict";
+     return {
+         restrict: 'E',
+         templateUrl: '/Templates/info-facture.html',
+         scope: {
+             data: "=",
+         },
+         link: function(scope, element, attrs) {
+             var model = scope.data;
+             scope.config = config;
+             scope.autocomplete = mapAutocomplete;
+             scope.changeAddressFacture = function(place) {
+                 mapAutocomplete.getPlaceAddress(place).then(function(addr) {
+                     scope.data.facture = scope.data.facture ||  {}
+                     scope.data.facture.address = addr;
+                 });
+             }
+             edisonAPI.compte.list().then(function(resp) {
+                 scope.grndComptes = resp.data
+             })
+
+             scope.changeGrandCompte = function() {
+                 // var x = _.clone(config.compteFacturation[scope.data.facture.compte])
+                 var x  = scope.data.facture.compte
+                 scope.data.facture = _.find(scope.grndComptes, 'ref', scope.data.facture.compte);
+                 scope.data.facture.payeur = "GRN";
+                 scope.data.facture.compte = x;
+             }
+         },
+     }
+
+ }]);
+
+angular.module('edison').directive('infoFourniture', ["config", "fourniture", function(config, fourniture) {
+        "use strict";
+        return {
+            restrict: 'E',
+            templateUrl: '/Templates/info-fourniture.html',
+            scope: {
+                data: "=",
+                display: "=",
+                small:"="
+            },
+            link: function(scope, element, attrs) {
+                scope.config = config
+                scope.dsp = scope.display || false
+                scope.data.fourniture = scope.data.fourniture || [];
+                scope.fourniture = fourniture.init(scope.data.fourniture);
+            },
         }
+
     }
-    return function(dataContainer, input) {
-        var rtn = [];
-        input = clean(input);
-        _.each(dataContainer, function(data) {
-            if (!data.stringify)
-                data.stringify = clean(JSON.stringify(data))
-            if (!input || data.stringify.indexOf(input) >= 0) {
-                rtn.push(data);
-            } else {
-            }
-        })
-        return rtn;
-    }
-}]);
+]);
 
-angular.module('edison').filter('crlf', function() {
-	"use strict";
-    return function(text) {
-        return text.split(/\n/g).join('<br>');
-    };
-});
-
- angular.module('edison').filter('frnbr', function() {
- 	"use strict";
- 	return function(num) {
- 		var n = _.round((num || 0), 2).toString(),
- 			p = n.indexOf('.');
- 		return n.replace(/\d(?=(?:\d{3})+(?:\.|$))/g, function($0, i) {
- 			return (p < 0 || i < p ? ($0 + ' ') : $0).replace('.', ',');
- 		});
- 	};
- });
-
-angular.module('edison').filter('loginify', function() {
+angular.module('edison').directive('mainNavbar', ["$q", "edisonAPI", "TabContainer", "$timeout", "$rootScope", "$location", "$window", function($q, edisonAPI, TabContainer, $timeout, $rootScope, $location, $window) {
     "use strict";
-    return function(obj) {
-        if (!obj)
-            return "";
-        return obj.slice(0, 1).toUpperCase() + obj.slice(1, -2)
-    };
-});
+    return {
+        restrict: 'E',
+        templateUrl: '/Templates/main-navbar.html',
+        scope: {
+            data: "=",
+            display: "=",
+            small: "="
+        },
+        link: function(scope, element, attrs) {
+            scope.root = $rootScope;
+            scope._ = _;
+            scope.tabContainer = TabContainer;
 
-angular.module('edison').filter('relativeDate', function() {
-    "use strict";
-    return function(date, smallWin) {
-        var d = moment((date + 137000000) * 10000);
-        var l = moment().subtract(4, 'days');
-        if (d < l) {
-            return smallWin ? d.format('DD/MM') : d.format('DD/MM/YY')
-        } else {
-            var x = d.fromNow().toString()
-            if (smallWin) {
-                x = x
-                    .replace('quelques secondes', '')
-                    .replace(' minutes', 'mn')
-                    .replace(' minute', 'mn')
-                    .replace(' une', '1')
-                    .replace(' heures', 'H')
-                    .replace(' heure', 'H')
-                    .replace(' jours', 'J')
-                    .replace(' jour', 'J')
-                    .replace('il y a', '-')
-                    .replace(' un', '1')
-                    .replace('dans ', '+')
-            }
-            return x;
-        }
-        // return moment((date + 1370000000) * 1000).fromNow(no).toString()
-    };
-});
-
-angular.module('edison').filter('reverse', function() {
-    "use strict";
-    return function(items) {
-        if (!items)
-            return [];
-        return items.slice().reverse();
-    };
-});
-
-angular.module("edison").filter('tableFilter', ["config", function(config) {
-    "use strict";
-
-    var clean = function(str) {
-        return _.deburr(str).toLowerCase();
-    }
-
-    var compare = function(a, b, strictMode) {
-        if (typeof a === "string") {
-            return clean(a).includes(b);
-        } else if (!strictMode) {
-            return clean(String(a)).startsWith(b);
-        } else {
-            return a === parseInt(b);
-        }
-    }
-    var compareCustom = function(key, data, input) {
-        if (key === '_categorie') {
-            var cell = config.categoriesHash()[data.c].long_name;
-            return compare(cell, input);
-        }
-        if (key === '_etat') {
-            var cell = config.etatsHash()[data.s].long_name
-            return compare(cell, input);
-        }
-        return true;
-
-    }
-    var compareDate = function(key, data, input) {
-        var md = (data[key] + 137000000) * 10000;
-        //console.log( input.start, input.end);
-        if (md > input.start.getTime() && md < input.end.getTime()) {
-            return true
-        }
-        return false;
-    }
-
-    var parseDate = function(e) {
-        if (!(/^[0-9\/]+$/).test(e) ||  _.endsWith(e, '/')) {
-            return undefined;
-        }
-        var x = e.split('/');
-        if (x.length === 1) {
-            var month = parseInt(x[0]);
-            var year = new Date().getFullYear();
-            return {
-                start: new Date(year, month - 1),
-                end: new Date(year, month)
-            }
-        } else if (x.length === 2)  {
-
-            if (x[1].length == 4) {
-                var month = parseInt(x[0]);
-                var year = parseInt(x[1]);
-                return {
-                    start: new Date(year, month - 1),
-                    end: new Date(year, month),
-                }
-            }
-
-            var day = parseInt(x[0]);
-            var month = parseInt(x[1]);
-            var year = new Date().getFullYear();
-            return {
-                start: new Date(year, month - 1, day),
-                end: new Date(year, month - 1, day + 1)
-            }
-        }
-        return undefined;
-    }
-
-
-    return function(dataContainer, inputs, strictMode) {
-        var rtn = [];
-        //console.time('fltr')
-        inputs = _.mapValues(inputs, clean);
-        _.each(inputs, function(e, k) {
-            if (k.charAt(0) === '∆') {
-                inputs[k] = parseDate(e);
-            }
-        })
-
-        _.each(dataContainer, function(data) {
-                if (data.id) {
-                    var psh = true;
-                    _.each(inputs, function(input, k) {
-                        if (input && _.size(input) > 0) {
-                            if (k.charAt(0) === '_') {
-                                if (!compareCustom(k, data, input)) {
-                                    psh = false;
-                                    return false
-                                }
-                            } else if (k.charAt(0) === '∆') {
-                                if (!compareDate(k.slice(1), data, input)) {
-                                    psh = false;
-                                    return false
-                                }
-                            } else {
-                                if (!compare(data[k], input, strictMode)) {
-                                    psh = false;
-                                    return false
-                                }
-                            }
-                        }
-                    });
-                    if (psh === true) {
-                        rtn.push(data);
+            scope.select = function(model) {
+                    if (scope.selectedTab == model) {
+                        scope.selectedTab = null
+                    } else {
+                        scope.selectedTab = model
                     }
                 }
+                /*            $('input[type="search"]').ready(function() {
+                                $timeout(function() {
+                                    $('input[type="search"]').on('keyup', function(e, w) {
+                                        if (e.which == 13) {
+                                            if ($('ul.md-autocomplete-suggestions>li').length) {
+                                                $location.url('/search/' + $(this).val())
+                                                $(this).val("")
+                                                $(this).blur()
+                                            }
+                                        }
+                                    });
+                                }, 10);
+                            })
+                */
+            $rootScope.$on('closeContextMenu', function() {
+                scope.selectedTab = null;
             })
-            //console.timeEnd('fltr')
 
-        return rtn;
+
+            scope.search = function(text) {
+                if (text.length > 2) {
+                    $location.url('/search/' + text)
+                }
+            }
+
+            scope.logout = function() {
+                    edisonAPI.users.logout().then(function() {
+                        $window.location.reload()
+                    })
+                }
+                /*
+
+                                                            $rootScope.$on('closeSearchBar', function() {
+                                                                scope.searchBarSize = 100
+                                                            })
+                                                
+                                            var searchInput = 'md-autocomplete.searchBar>md-autocomplete-wrap>input'
+                                            $(searchInput).ready(function() {
+                                                $timeout(function() {
+                                                    $(searchInput).on('focus', function() {
+                                                        scope.searchFocus = true
+                                                        var selectors = ['.navbar-header', '.navbar-nav', '.dropdown-toggle.user-menu']
+                                                        scope.searchBarSize = _.reduce(selectors, function(total, el) {
+                                                            return total -= $(el).width();
+                                                        }, $(window).width() - 70)
+                                                    })
+                                                    $(searchInput).on('blur', function() {
+                                                        scope.searchFocus = false
+                                                        scope.searchBarSize = 100
+                                                    })
+                                                }, 10);
+                                            })
+                */
+            scope.changeUser = function(usr) {
+                    $rootScope.displayUser = usr
+                }
+                /*
+                            scope.searchBox = {
+                                search: _.throttle(function(x) {
+                                    var deferred = $q.defer();
+                                    edisonAPI.searchText(x, {
+                                        limit: 10,
+                                        flat: true
+                                    }).success(function(resp) {
+                                        deferred.resolve(resp)
+                                    })
+                                    return deferred.promise;
+                                }, 600),
+                                change: function(x) {
+                                    if (!x ||  !x.link)
+                                        return 0;
+                                    if (x) {
+                                        $location.url(x.link)
+                                    }
+                                    $timeout(function() {
+                                        $(searchInput).blur();
+                                    });
+                                    scope.searchText = "";
+                                }
+                            }*/
+
+
+        },
+
     }
+
 }]);
 
 angular.module('edison').factory('TabContainer', ["$location", "$window", "$q", "edisonAPI", function($location, $window, $q, edisonAPI) {
@@ -4063,186 +4244,45 @@ angular.module('edison').factory('user', ["$window", function($window) {
     return $window.app_session;
 }]);
 
- angular.module('edison').directive('infoAppelSst', ["mapAutocomplete", "edisonAPI", "config", function(mapAutocomplete, edisonAPI, config) {
-    "use strict";
-    return {
-        restrict: 'E',
-        templateUrl: '/Templates/info-appel-sst.html',
-        scope: {
-            data: "=",
-        },
-        link: function(scope, element, attrs) {
-            scope.embedded = !!attrs.embedded
-            console.log(attrs.embedded);
-        },
+var archiveReglementController = function(edisonAPI, TabContainer, $routeParams, $location, LxProgressService) {
+
+    var tab = TabContainer.getCurrentTab();
+    var _this = this;
+    _this.title = 'Archives Reglements'
+    tab.setTitle('archives RGL')
+    LxProgressService.circular.show('#5fa2db', '#globalProgress');
+    edisonAPI.compta.archivesReglement().success(function(resp) {
+        LxProgressService.circular.hide()
+        _this.data = resp
+    })
+    _this.moment = moment;
+    _this.openLink = function(link) {
+        $location.url(link)
     }
+}
+archiveReglementController.$inject = ["edisonAPI", "TabContainer", "$routeParams", "$location", "LxProgressService"];
 
- }]);
+angular.module('edison').controller('archivesReglementController', archiveReglementController);
 
- angular.module('edison').directive('infoFacture', ["mapAutocomplete", "edisonAPI", "config", function(mapAutocomplete, edisonAPI,config) {
-     "use strict";
-     return {
-         restrict: 'E',
-         templateUrl: '/Templates/info-facture.html',
-         scope: {
-             data: "=",
-         },
-         link: function(scope, element, attrs) {
-             var model = scope.data;
-             scope.config = config;
-             scope.autocomplete = mapAutocomplete;
-             scope.changeAddressFacture = function(place) {
-                 mapAutocomplete.getPlaceAddress(place).then(function(addr) {
-                     scope.data.facture = scope.data.facture ||  {}
-                     scope.data.facture.address = addr;
-                 });
-             }
-             edisonAPI.compte.list().then(function(resp) {
-                 scope.grndComptes = resp.data
-             })
-
-             scope.changeGrandCompte = function() {
-                 // var x = _.clone(config.compteFacturation[scope.data.facture.compte])
-                 var x  = scope.data.facture.compte
-                 scope.data.facture = _.find(scope.grndComptes, 'ref', scope.data.facture.compte);
-                 scope.data.facture.payeur = "GRN";
-                 scope.data.facture.compte = x;
-             }
-         },
-     }
-
- }]);
-
-angular.module('edison').directive('infoFourniture', ["config", "fourniture", function(config, fourniture) {
-        "use strict";
-        return {
-            restrict: 'E',
-            templateUrl: '/Templates/info-fourniture.html',
-            scope: {
-                data: "=",
-                display: "=",
-                small:"="
-            },
-            link: function(scope, element, attrs) {
-                scope.config = config
-                scope.dsp = scope.display || false
-                scope.data.fourniture = scope.data.fourniture || [];
-                scope.fourniture = fourniture.init(scope.data.fourniture);
-            },
-        }
-
+var archivesPaiementController = function(edisonAPI, TabContainer, $routeParams, $location, LxProgressService) {
+    var _this = this;
+    var tab = TabContainer.getCurrentTab();
+    _this.type = 'paiement'
+    _this.title = 'Archives Paiements'
+    tab.setTitle('archives PAY')
+    LxProgressService.circular.show('#5fa2db', '#globalProgress');
+    edisonAPI.compta.archivesPaiement().success(function(resp) {
+        LxProgressService.circular.hide()
+        _this.data = resp
+    })
+    _this.moment = moment;
+    _this.openLink = function(link) {
+        $location.url(link)
     }
-]);
+}
+archivesPaiementController.$inject = ["edisonAPI", "TabContainer", "$routeParams", "$location", "LxProgressService"];
 
-angular.module('edison').directive('mainNavbar', ["$q", "edisonAPI", "TabContainer", "$timeout", "$rootScope", "$location", "$window", function($q, edisonAPI, TabContainer, $timeout, $rootScope, $location, $window) {
-    "use strict";
-    return {
-        restrict: 'E',
-        templateUrl: '/Templates/main-navbar.html',
-        scope: {
-            data: "=",
-            display: "=",
-            small: "="
-        },
-        link: function(scope, element, attrs) {
-            scope.root = $rootScope;
-            scope._ = _;
-            scope.tabContainer = TabContainer;
-
-            scope.select = function(model) {
-                    if (scope.selectedTab == model) {
-                        scope.selectedTab = null
-                    } else {
-                        scope.selectedTab = model
-                    }
-                }
-                /*            $('input[type="search"]').ready(function() {
-                                $timeout(function() {
-                                    $('input[type="search"]').on('keyup', function(e, w) {
-                                        if (e.which == 13) {
-                                            if ($('ul.md-autocomplete-suggestions>li').length) {
-                                                $location.url('/search/' + $(this).val())
-                                                $(this).val("")
-                                                $(this).blur()
-                                            }
-                                        }
-                                    });
-                                }, 10);
-                            })
-                */
-            $rootScope.$on('closeContextMenu', function() {
-                scope.selectedTab = null;
-            })
-
-
-            scope.search = function(text) {
-                if (text.length > 2) {
-                    $location.url('/search/' + text)
-                }
-            }
-
-            scope.logout = function() {
-                    edisonAPI.users.logout().then(function() {
-                        $window.location.reload()
-                    })
-                }
-                /*
-
-                                                            $rootScope.$on('closeSearchBar', function() {
-                                                                scope.searchBarSize = 100
-                                                            })
-                                                
-                                            var searchInput = 'md-autocomplete.searchBar>md-autocomplete-wrap>input'
-                                            $(searchInput).ready(function() {
-                                                $timeout(function() {
-                                                    $(searchInput).on('focus', function() {
-                                                        scope.searchFocus = true
-                                                        var selectors = ['.navbar-header', '.navbar-nav', '.dropdown-toggle.user-menu']
-                                                        scope.searchBarSize = _.reduce(selectors, function(total, el) {
-                                                            return total -= $(el).width();
-                                                        }, $(window).width() - 70)
-                                                    })
-                                                    $(searchInput).on('blur', function() {
-                                                        scope.searchFocus = false
-                                                        scope.searchBarSize = 100
-                                                    })
-                                                }, 10);
-                                            })
-                */
-            scope.changeUser = function(usr) {
-                    $rootScope.displayUser = usr
-                }
-                /*
-                            scope.searchBox = {
-                                search: _.throttle(function(x) {
-                                    var deferred = $q.defer();
-                                    edisonAPI.searchText(x, {
-                                        limit: 10,
-                                        flat: true
-                                    }).success(function(resp) {
-                                        deferred.resolve(resp)
-                                    })
-                                    return deferred.promise;
-                                }, 600),
-                                change: function(x) {
-                                    if (!x ||  !x.link)
-                                        return 0;
-                                    if (x) {
-                                        $location.url(x.link)
-                                    }
-                                    $timeout(function() {
-                                        $(searchInput).blur();
-                                    });
-                                    scope.searchText = "";
-                                }
-                            }*/
-
-
-        },
-
-    }
-
-}]);
+angular.module('edison').controller('archivesPaiementController', archivesPaiementController);
 
  angular.module('edison').directive('artisanCategorie', ["config", function(config) {
      "use strict";
@@ -4388,46 +4428,6 @@ var ArtisanCtrl = function(IBAN, $timeout, $rootScope, $scope, edisonAPI, $locat
 }
 ArtisanCtrl.$inject = ["IBAN", "$timeout", "$rootScope", "$scope", "edisonAPI", "$location", "$routeParams", "ContextMenu", "LxProgressService", "LxNotificationService", "TabContainer", "config", "dialog", "artisanPrm", "Artisan"];
 angular.module('edison').controller('ArtisanController', ArtisanCtrl);
-
-var archiveReglementController = function(edisonAPI, TabContainer, $routeParams, $location, LxProgressService) {
-
-    var tab = TabContainer.getCurrentTab();
-    var _this = this;
-    _this.title = 'Archives Reglements'
-    tab.setTitle('archives RGL')
-    LxProgressService.circular.show('#5fa2db', '#globalProgress');
-    edisonAPI.compta.archivesReglement().success(function(resp) {
-        LxProgressService.circular.hide()
-        _this.data = resp
-    })
-    _this.moment = moment;
-    _this.openLink = function(link) {
-        $location.url(link)
-    }
-}
-archiveReglementController.$inject = ["edisonAPI", "TabContainer", "$routeParams", "$location", "LxProgressService"];
-
-angular.module('edison').controller('archivesReglementController', archiveReglementController);
-
-var archivesPaiementController = function(edisonAPI, TabContainer, $routeParams, $location, LxProgressService) {
-    var _this = this;
-    var tab = TabContainer.getCurrentTab();
-    _this.type = 'paiement'
-    _this.title = 'Archives Paiements'
-    tab.setTitle('archives PAY')
-    LxProgressService.circular.show('#5fa2db', '#globalProgress');
-    edisonAPI.compta.archivesPaiement().success(function(resp) {
-        LxProgressService.circular.hide()
-        _this.data = resp
-    })
-    _this.moment = moment;
-    _this.openLink = function(link) {
-        $location.url(link)
-    }
-}
-archivesPaiementController.$inject = ["edisonAPI", "TabContainer", "$routeParams", "$location", "LxProgressService"];
-
-angular.module('edison').controller('archivesPaiementController', archivesPaiementController);
 
 var AvoirsController = function(TabContainer, openPost, edisonAPI, $rootScope, LxProgressService, LxNotificationService, FlushList) {
     "use strict";
@@ -5031,7 +5031,7 @@ angular.module('edison').directive('infoCompta',
 );
 
  angular.module('edison').directive('produits',
-     ["config", "productsList", "dialog", "openPost", "LxNotificationService", "Intervention", "Devis", "Combo", "edisonAPI", function(config, productsList, dialog, openPost, LxNotificationService, Intervention, Devis, Combo, edisonAPI) {
+     ["config", "productsList", "dialog", "openPost", "LxNotificationService", "Intervention", "Devis", "edisonAPI", function(config, productsList, dialog, openPost, LxNotificationService, Intervention, Devis, edisonAPI) {
          "use strict";
          return {
              restrict: 'E',
@@ -5433,6 +5433,8 @@ InterventionCtrl.$inject = ["Description", "Signalement", "ContextMenu", "$windo
 
 angular.module('edison').controller('InterventionController', InterventionCtrl);
 
+angular.module('edison').controller('ListeArtisanController', _.noop);
+
 var LpaController = function(user, openPost, socket, ContextMenu, $location, $window, TabContainer, edisonAPI, $rootScope, LxProgressService, LxNotificationService, FlushList) {
     "use strict";
     var _this = this
@@ -5607,8 +5609,6 @@ LpaController.$inject = ["user", "openPost", "socket", "ContextMenu", "$location
 
 
 angular.module('edison').controller('LpaController', LpaController);
-
-angular.module('edison').controller('ListeArtisanController', _.noop);
 
 angular.module('edison').controller('ListeDevisController', _.noop);
 

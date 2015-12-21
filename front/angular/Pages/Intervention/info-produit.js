@@ -1,5 +1,5 @@
  angular.module('edison').directive('produits',
-     function(config, productsList, dialog, openPost, LxNotificationService, Intervention, Devis, Combo, edisonAPI) {
+     function(config, productsList, dialog, openPost, LxNotificationService, Intervention, Devis, edisonAPI) {
          "use strict";
          return {
              restrict: 'E',

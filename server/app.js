@@ -325,6 +325,7 @@ app.use(function(err, req, res, next) {
 
 process.on('uncaughtException', __catch);
 
+console.log('==>', process.pid)
 
 http.listen(port, function() {
     console.log('listening on *:' + port);
