@@ -145,7 +145,7 @@ app.use(require('connect-redis-sessions')({
 
 app.use(function(req, res, next) {
     if (req.session.root === false && req.headers['x-forwarded-for'] !== '141.105.72.198') {
-        return next('BAD IP')
+        return next('BAD IP' + req.session.login)
     }
     next(null)
 })
