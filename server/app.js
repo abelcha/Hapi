@@ -48,7 +48,7 @@ express.response.xls = function(obj, headers, status) {
         // returns a buffer
 
     //  this.contentType('text/csv');
-   
+
 };
 
 express.response.sage = function(obj, headers, status) {
@@ -76,7 +76,13 @@ var port = (process.env.PORT || 8080);
 var path = require('path');
 var _ = require('lodash')
 var fs = require('fs')
+var io_redis = require('socket.io-redis');
 global.io = require('socket.io')(http);
+io.adapter(io_redis({
+    host: 'localhost',
+    port: 6379
+}));
+
 require('./shared.js')(express);
 global.jobs = edison.worker.initJobQueue();
 var keys = requireLocal('config/_keys')
@@ -253,7 +259,7 @@ app.get('/api/job/clean', function(req, res) {
 
 
 app.get('/api/block', function(req, res) {
-    for (var i = 0; i< 1000000000; i++) {
+    for (var i = 0; i < 1000000000; i++) {
         if (i % 1000000 == 0) {
             console.log('-->', i)
         }
