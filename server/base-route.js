@@ -9,6 +9,10 @@ module.exports = function(app, express) {
         return res.status(404).send()
     })
 
+    app.get('/loaderio-52e4c613b16fcf8369dbca3b9e206881', function(req, res) {
+        return res.send("loaderio-52e4c613b16fcf8369dbca3b9e206881")
+    })
+
     app.all('/api/call/:call_id', edison.axialis.info)
 
     app.get('/api/client/:id/svi/contact', edison.axialis.contact)
