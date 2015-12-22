@@ -143,7 +143,7 @@ app.use(require('connect-redis-sessions')({
 
 
 app.use(function(req, res, next) {
-    if (req.session.root === false && req.headers['x-forwarded-for'] !== '141.105.72.198') {
+    if (req.session && req.session.root === false && req.headers['x-forwarded-for'] !== '141.105.72.198') {
         return res.status(400).send('BAD IP ADDRESS')
     }
     next(null)
