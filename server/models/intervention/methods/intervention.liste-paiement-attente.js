@@ -38,7 +38,7 @@ module.exports = function(schema) {
         inter.compta.paiement.fourniture = inter.compta.paiement.historique[index].fourniture
         inter.compta.paiement.historique = inter.compta.paiement.historique.slice(0, index);
         inter.sst = undefined;
-        console.log(inter.compta.paiement.numeroCheque)
+        console.log(inter.compta.paiement)
         return inter;
     }
 
