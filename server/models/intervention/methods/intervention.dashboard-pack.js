@@ -232,7 +232,7 @@ module.exports = function(schema) {
                         monthComission: resp[0],
                         weekStats: resp[1],
                     }
-                    redis.setex(token, 60, JSON.stringify(rtn), function() {
+                    redis.setex(token, 15, JSON.stringify(rtn), function() {
                         res.json(rtn)
                     });
                 })

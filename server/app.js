@@ -25,7 +25,7 @@ var http = require('http').Server(app);
 var port = (process.env.PORT || 8080);
 var path = require('path');
 
-
+global.workerID = cluster.worker.id;
 require('./shared.js')(express);
 
 edison.expressMiddleware(express)

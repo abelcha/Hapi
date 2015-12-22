@@ -1,4 +1,4 @@
-angular.module('edison').factory('DataProvider',function($timeout, edisonAPI, socket, $rootScope, config) {
+angular.module('edison').factory('DataProvider', function($timeout, edisonAPI, socket, $rootScope, config) {
     "use strict";
     var DataProvider = function(model, hashModel) {
         var _this = this;
@@ -21,13 +21,19 @@ angular.module('edison').factory('DataProvider',function($timeout, edisonAPI, so
 
     DataProvider.prototype.data = {}
 
+    DataProvider.prototype.trie = {}
+
     DataProvider.prototype.setData = function(data) {
+        var _this = this;
         this.data[this.model] = data;
+        _this.trie[this.model] = {};
+        _.each(data, function(e) {
+            _this.getTrie()[e.id] = e;
+        })
     };
 
     DataProvider.prototype.init = function(cb) {
         var _this = this;
-
         if (_this.getData())
             return cb(_this.getData());
         edisonAPI[_this.model].list({
@@ -73,23 +79,33 @@ angular.module('edison').factory('DataProvider',function($timeout, edisonAPI, so
 
     DataProvider.prototype.updateData = function(newRows) {
         var _this = this;
+
         if (this.getData()) {
-            var id_list = _(newRows).flatten().map('id').value();
-            for (var i = 0; i < _this.getData().length && id_list.length; i++) {
-                var pos = id_list.indexOf(_this.getData()[i].id)
-                if (pos >= 0) {
-                    _this.getData()[i] = newRows[pos];
-                    id_list.splice(pos, 1);
+            _.each(newRows, function(e) {
+                var tmp = _this.getTrie()[e.id];
+                if (tmp) {
+                    _.merge(_this.getTrie()[e.id], e);
+                } else {
+                    _this.getData().unshift(e);
                 }
-            };
-            if (id_list.length) {
-                var z = _.filter(newRows, function(e) {
-                    return _.includes(id_list, e.id);
-                })
-                _.each(z, function(x) {
-                    _this.getData().unshift(x)
-                })
-            }
+            })
+
+            /* var id_list = _(newRows).flatten().map('id').value();
+             for (var i = 0; i < _this.getData().length && id_list.length; i++) {
+                 var pos = id_list.indexOf(_this.getData()[i].id)
+                 if (pos >= 0) {
+                     _this.getData()[i] = newRows[pos];
+                     id_list.splice(pos, 1);
+                 }
+             };
+             if (id_list.length) {
+                 var z = _.filter(newRows, function(e) {
+                     return _.includes(id_list, e.id);
+                 })
+                 _.each(z, function(x) {
+                     _this.getData().unshift(x)
+                 })
+             }*/
             $rootScope.$broadcast(_this.socketListChange());
         }
 
@@ -98,7 +114,9 @@ angular.module('edison').factory('DataProvider',function($timeout, edisonAPI, so
     DataProvider.prototype.getData = function() {
         return this.data[this.model];
     }
-
+    DataProvider.prototype.getTrie = function() {
+        return this.trie[this.model];
+    }
 
     DataProvider.prototype.isInit = function() {
         return this.model && this.data && this.data[this.model];

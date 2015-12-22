@@ -56,7 +56,7 @@ try {
             return function(resp) {
                 if (_this.done) {
                     totalTime = Date.now() - _this.timeStart;
-                    console.log(process.pid, '[', 'DB', _this.data.model, _this.data.method, '][' + _this.id + '] - [OK] - <' + (totalTime / 1000) + '>')
+                    console.log('[', 'DB', _this.data.model, _this.data.method, '][' + _this.id + '] - [OK] - <' + (totalTime / 1000) + '>')
                     clearTimeout(_this.timer);
                     __log(_this.data._id, 'OK', totalTime);
                     _this.done(null, resp)
@@ -70,7 +70,7 @@ try {
             return function(err) {
                 if (_this.done) {
                     totalTime = Date.now() - _this.timeStart;
-                    console.log(process.pid, '[', 'DB', _this.data.model, _this.data.method, '][' + _this.id + '] - [FAILED] - <' + (totalTime / 1000) + '>')
+                    console.log('[', 'DB', _this.data.model, _this.data.method, '][' + _this.id + '] - [FAILED] - <' + (totalTime / 1000) + '>')
                     clearTimeout(_this.timer);
                     __log(_this.data._id, 'FAILED', totalTime, err);
                     _this.done(err);
@@ -82,7 +82,7 @@ try {
             var _this = this;
             _this.timeStart = Date.now()
             return setTimeout(function() {
-                console.log(process.pid, '[', 'DB', _this.data.model, _this.data.method, '][' + _this.id + '] - [TIMEOUT]')
+                console.log('[', 'DB', _this.data.model, _this.data.method, '][' + _this.id + '] - [TIMEOUT]')
                 _this.done('[' + ' DB ' + _this.data.model + ' ' + _this.data.method + '][' + _this.id + '] -  [TIMEOUT]');
                 _this.done = null;
             }, _this.data.ttl || 30000)
@@ -91,7 +91,7 @@ try {
 
         jobs.process('db', 5, function(job, done) {
             __log(job.data._id, 'PROCESSED');
-            console.log(process.pid, '[', 'DB', job.data.model, job.data.method, '][' + job.id + '] - [LAUNCH]')
+            console.log('[', 'DB', job.data.model, job.data.method, '][' + job.id + '] - [LAUNCH]')
             job.done = done;
             job.timer = getTimer.bind(job)()
             db.model(job.data.model)[job.data.method](job.data.req)
@@ -105,7 +105,7 @@ try {
 
         jobs.process('db_id', 5, function(job, done) {
             __log(job.data._id, 'PROCESSED');
-            console.log(process.pid, '[', 'DB_ID', job.data.model, job.data.method, '][' + job.id + '] - [LAUNCH]')
+            console.log('[', 'DB_ID', job.data.model, job.data.method, '][' + job.id + '] - [LAUNCH]')
             job.done = done;
             job.timer = getTimer.bind(job)()
             db.model(job.data.model)[job.data.method].fn(job.data.data, job.data.req)
@@ -131,7 +131,7 @@ try {
 
         jobs.process('test', 3, function(job, done) {
             __log(job.data._id, 'PROCESSED');
-            console.log(process.pid, '[', job.data.model, job.data.method, '][' + job.id + '] - [LAUNCH]')
+            console.log('[', job.data.model, job.data.method, '][' + job.id + '] - [LAUNCH]')
             job.done = done;
             job.timer = getTimer.bind(job)()
             fn(job.data).then(end.bind(job)(), done)
@@ -143,6 +143,6 @@ try {
 }
 
 process.on('uncaughtException', function(a, b, c) {
-    console.log(process.pid, 'UNCAUGHTEXCEPTION')
-        //   console.log(process.pid, a, b, c, 'okok')
+    console.log('UNCAUGHTEXCEPTION')
+        //   console.log(a, b, c, 'okok')
 });
