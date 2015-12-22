@@ -5,6 +5,10 @@ module.exports = function(app, express) {
     var fs = require('fs')
     var keys = requireLocal('config/_keys')
 
+    app.get('/socket.io', function(res, req) {
+        return res.status(404).send()
+    })
+
     app.all('/api/call/:call_id', edison.axialis.info)
 
     app.get('/api/client/:id/svi/contact', edison.axialis.contact)
