@@ -11,7 +11,7 @@ if (cluster.isMaster) {
         // Create a worker for each CPU
     for (var i = 0; i < process.env.CLUSTER_PROCESS_NBR; i++) {
         console.log('FORK')
-        setTimeout( cluster.fork.bind(cluster), i * 1000)
+        setTimeout(cluster.fork.bind(cluster), i * 1000)
 
     }
     return 0;
@@ -30,16 +30,38 @@ var port = (process.env.PORT || 8080);
 var path = require('path');
 var io_redis = require('socket.io-redis');
 
-global.io = require('socket.io')(http);
-io.set('transports', ['polling']);
-io.adapter(io_redis({
-    host: 'localhost',
-    port: 6379
-}));
 
 
 
 require('./shared.js')(express);
+
+
+var socket = require('socket.io-client')('http://localhost:1995');
+global.io = {
+    sockets: {
+        emit: function(title, data) {
+            socket.emit('___bridge_message___', {
+                title: title,
+                data: data
+            })
+        }
+    }
+}
+
+
+setInterval(function() {
+    io.sockets.emit('test', {
+        lol: 'yolo',
+        swag: 42
+    })
+}, 3000)
+
+
+
+//global.io = require('socket.io')(http);
+//io.set('transports', ['polling']);
+//io.adapter(io_redis(redis));
+
 edison.expressMiddleware(express)
 global.jobs = edison.worker.initJobQueue();
 global.isWorker = false;

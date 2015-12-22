@@ -1,7 +1,6 @@
 angular.module('edison').factory('socket', function(socketFactory) {
-    "use strict";
-    return socketFactory({
-    	port:1995
-    });
+	"use strict";
+	return socketFactory({
+		ioSocket: io.connect('http://localhost:1995')
+	});
 });
-
