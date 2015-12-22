@@ -1515,187 +1515,6 @@ angular.module('edison').directive('ngRightClick', ["$parse", function($parse) {
     }
  }]);
 
- angular.module('edison').directive('infoAppelSst', ["mapAutocomplete", "edisonAPI", "config", function(mapAutocomplete, edisonAPI, config) {
-    "use strict";
-    return {
-        restrict: 'E',
-        templateUrl: '/Templates/info-appel-sst.html',
-        scope: {
-            data: "=",
-        },
-        link: function(scope, element, attrs) {
-            scope.embedded = !!attrs.embedded
-            console.log(attrs.embedded);
-        },
-    }
-
- }]);
-
- angular.module('edison').directive('infoFacture', ["mapAutocomplete", "edisonAPI", "config", function(mapAutocomplete, edisonAPI,config) {
-     "use strict";
-     return {
-         restrict: 'E',
-         templateUrl: '/Templates/info-facture.html',
-         scope: {
-             data: "=",
-         },
-         link: function(scope, element, attrs) {
-             var model = scope.data;
-             scope.config = config;
-             scope.autocomplete = mapAutocomplete;
-             scope.changeAddressFacture = function(place) {
-                 mapAutocomplete.getPlaceAddress(place).then(function(addr) {
-                     scope.data.facture = scope.data.facture ||  {}
-                     scope.data.facture.address = addr;
-                 });
-             }
-             edisonAPI.compte.list().then(function(resp) {
-                 scope.grndComptes = resp.data
-             })
-
-             scope.changeGrandCompte = function() {
-                 // var x = _.clone(config.compteFacturation[scope.data.facture.compte])
-                 var x  = scope.data.facture.compte
-                 scope.data.facture = _.find(scope.grndComptes, 'ref', scope.data.facture.compte);
-                 scope.data.facture.payeur = "GRN";
-                 scope.data.facture.compte = x;
-             }
-         },
-     }
-
- }]);
-
-angular.module('edison').directive('infoFourniture', ["config", "fourniture", function(config, fourniture) {
-        "use strict";
-        return {
-            restrict: 'E',
-            templateUrl: '/Templates/info-fourniture.html',
-            scope: {
-                data: "=",
-                display: "=",
-                small:"="
-            },
-            link: function(scope, element, attrs) {
-                scope.config = config
-                scope.dsp = scope.display || false
-                scope.data.fourniture = scope.data.fourniture || [];
-                scope.fourniture = fourniture.init(scope.data.fourniture);
-            },
-        }
-
-    }
-]);
-
-angular.module('edison').directive('mainNavbar', ["$q", "edisonAPI", "TabContainer", "$timeout", "$rootScope", "$location", "$window", function($q, edisonAPI, TabContainer, $timeout, $rootScope, $location, $window) {
-    "use strict";
-    return {
-        restrict: 'E',
-        templateUrl: '/Templates/main-navbar.html',
-        scope: {
-            data: "=",
-            display: "=",
-            small: "="
-        },
-        link: function(scope, element, attrs) {
-            scope.root = $rootScope;
-            scope._ = _;
-            scope.tabContainer = TabContainer;
-
-            scope.select = function(model) {
-                    if (scope.selectedTab == model) {
-                        scope.selectedTab = null
-                    } else {
-                        scope.selectedTab = model
-                    }
-                }
-                /*            $('input[type="search"]').ready(function() {
-                                $timeout(function() {
-                                    $('input[type="search"]').on('keyup', function(e, w) {
-                                        if (e.which == 13) {
-                                            if ($('ul.md-autocomplete-suggestions>li').length) {
-                                                $location.url('/search/' + $(this).val())
-                                                $(this).val("")
-                                                $(this).blur()
-                                            }
-                                        }
-                                    });
-                                }, 10);
-                            })
-                */
-            $rootScope.$on('closeContextMenu', function() {
-                scope.selectedTab = null;
-            })
-
-
-            scope.search = function(text) {
-                if (text.length > 2) {
-                    $location.url('/search/' + text)
-                }
-            }
-
-            scope.logout = function() {
-                    edisonAPI.users.logout().then(function() {
-                        $window.location.reload()
-                    })
-                }
-                /*
-
-                                                            $rootScope.$on('closeSearchBar', function() {
-                                                                scope.searchBarSize = 100
-                                                            })
-                                                
-                                            var searchInput = 'md-autocomplete.searchBar>md-autocomplete-wrap>input'
-                                            $(searchInput).ready(function() {
-                                                $timeout(function() {
-                                                    $(searchInput).on('focus', function() {
-                                                        scope.searchFocus = true
-                                                        var selectors = ['.navbar-header', '.navbar-nav', '.dropdown-toggle.user-menu']
-                                                        scope.searchBarSize = _.reduce(selectors, function(total, el) {
-                                                            return total -= $(el).width();
-                                                        }, $(window).width() - 70)
-                                                    })
-                                                    $(searchInput).on('blur', function() {
-                                                        scope.searchFocus = false
-                                                        scope.searchBarSize = 100
-                                                    })
-                                                }, 10);
-                                            })
-                */
-            scope.changeUser = function(usr) {
-                    $rootScope.displayUser = usr
-                }
-                /*
-                            scope.searchBox = {
-                                search: _.throttle(function(x) {
-                                    var deferred = $q.defer();
-                                    edisonAPI.searchText(x, {
-                                        limit: 10,
-                                        flat: true
-                                    }).success(function(resp) {
-                                        deferred.resolve(resp)
-                                    })
-                                    return deferred.promise;
-                                }, 600),
-                                change: function(x) {
-                                    if (!x ||  !x.link)
-                                        return 0;
-                                    if (x) {
-                                        $location.url(x.link)
-                                    }
-                                    $timeout(function() {
-                                        $(searchInput).blur();
-                                    });
-                                    scope.searchText = "";
-                                }
-                            }*/
-
-
-        },
-
-    }
-
-}]);
-
 angular.module('edison').factory('TabContainer', ["$location", "$window", "$q", "edisonAPI", function($location, $window, $q, edisonAPI) {
     "use strict";
     var Tab = function(args, options, prevTab) {
@@ -4216,7 +4035,7 @@ angular.module('edison').factory('productsList', ["$q", "dialog", "openPost", "e
 angular.module('edison').factory('socket', ["socketFactory", function(socketFactory) {
 	"use strict";
 	return socketFactory({
-		ioSocket: io.connect('http://edison.services:1995')
+		ioSocket: io.connect('127.0.0.1:1995')
 	});
 }]);
 
@@ -4247,6 +4066,187 @@ angular.module('edison').factory('taskList', ["dialog", "edisonAPI", function(di
 angular.module('edison').factory('user', ["$window", function($window) {
     "use strict";
     return $window.app_session;
+}]);
+
+ angular.module('edison').directive('infoAppelSst', ["mapAutocomplete", "edisonAPI", "config", function(mapAutocomplete, edisonAPI, config) {
+    "use strict";
+    return {
+        restrict: 'E',
+        templateUrl: '/Templates/info-appel-sst.html',
+        scope: {
+            data: "=",
+        },
+        link: function(scope, element, attrs) {
+            scope.embedded = !!attrs.embedded
+            console.log(attrs.embedded);
+        },
+    }
+
+ }]);
+
+ angular.module('edison').directive('infoFacture', ["mapAutocomplete", "edisonAPI", "config", function(mapAutocomplete, edisonAPI,config) {
+     "use strict";
+     return {
+         restrict: 'E',
+         templateUrl: '/Templates/info-facture.html',
+         scope: {
+             data: "=",
+         },
+         link: function(scope, element, attrs) {
+             var model = scope.data;
+             scope.config = config;
+             scope.autocomplete = mapAutocomplete;
+             scope.changeAddressFacture = function(place) {
+                 mapAutocomplete.getPlaceAddress(place).then(function(addr) {
+                     scope.data.facture = scope.data.facture ||  {}
+                     scope.data.facture.address = addr;
+                 });
+             }
+             edisonAPI.compte.list().then(function(resp) {
+                 scope.grndComptes = resp.data
+             })
+
+             scope.changeGrandCompte = function() {
+                 // var x = _.clone(config.compteFacturation[scope.data.facture.compte])
+                 var x  = scope.data.facture.compte
+                 scope.data.facture = _.find(scope.grndComptes, 'ref', scope.data.facture.compte);
+                 scope.data.facture.payeur = "GRN";
+                 scope.data.facture.compte = x;
+             }
+         },
+     }
+
+ }]);
+
+angular.module('edison').directive('infoFourniture', ["config", "fourniture", function(config, fourniture) {
+        "use strict";
+        return {
+            restrict: 'E',
+            templateUrl: '/Templates/info-fourniture.html',
+            scope: {
+                data: "=",
+                display: "=",
+                small:"="
+            },
+            link: function(scope, element, attrs) {
+                scope.config = config
+                scope.dsp = scope.display || false
+                scope.data.fourniture = scope.data.fourniture || [];
+                scope.fourniture = fourniture.init(scope.data.fourniture);
+            },
+        }
+
+    }
+]);
+
+angular.module('edison').directive('mainNavbar', ["$q", "edisonAPI", "TabContainer", "$timeout", "$rootScope", "$location", "$window", function($q, edisonAPI, TabContainer, $timeout, $rootScope, $location, $window) {
+    "use strict";
+    return {
+        restrict: 'E',
+        templateUrl: '/Templates/main-navbar.html',
+        scope: {
+            data: "=",
+            display: "=",
+            small: "="
+        },
+        link: function(scope, element, attrs) {
+            scope.root = $rootScope;
+            scope._ = _;
+            scope.tabContainer = TabContainer;
+
+            scope.select = function(model) {
+                    if (scope.selectedTab == model) {
+                        scope.selectedTab = null
+                    } else {
+                        scope.selectedTab = model
+                    }
+                }
+                /*            $('input[type="search"]').ready(function() {
+                                $timeout(function() {
+                                    $('input[type="search"]').on('keyup', function(e, w) {
+                                        if (e.which == 13) {
+                                            if ($('ul.md-autocomplete-suggestions>li').length) {
+                                                $location.url('/search/' + $(this).val())
+                                                $(this).val("")
+                                                $(this).blur()
+                                            }
+                                        }
+                                    });
+                                }, 10);
+                            })
+                */
+            $rootScope.$on('closeContextMenu', function() {
+                scope.selectedTab = null;
+            })
+
+
+            scope.search = function(text) {
+                if (text.length > 2) {
+                    $location.url('/search/' + text)
+                }
+            }
+
+            scope.logout = function() {
+                    edisonAPI.users.logout().then(function() {
+                        $window.location.reload()
+                    })
+                }
+                /*
+
+                                                            $rootScope.$on('closeSearchBar', function() {
+                                                                scope.searchBarSize = 100
+                                                            })
+                                                
+                                            var searchInput = 'md-autocomplete.searchBar>md-autocomplete-wrap>input'
+                                            $(searchInput).ready(function() {
+                                                $timeout(function() {
+                                                    $(searchInput).on('focus', function() {
+                                                        scope.searchFocus = true
+                                                        var selectors = ['.navbar-header', '.navbar-nav', '.dropdown-toggle.user-menu']
+                                                        scope.searchBarSize = _.reduce(selectors, function(total, el) {
+                                                            return total -= $(el).width();
+                                                        }, $(window).width() - 70)
+                                                    })
+                                                    $(searchInput).on('blur', function() {
+                                                        scope.searchFocus = false
+                                                        scope.searchBarSize = 100
+                                                    })
+                                                }, 10);
+                                            })
+                */
+            scope.changeUser = function(usr) {
+                    $rootScope.displayUser = usr
+                }
+                /*
+                            scope.searchBox = {
+                                search: _.throttle(function(x) {
+                                    var deferred = $q.defer();
+                                    edisonAPI.searchText(x, {
+                                        limit: 10,
+                                        flat: true
+                                    }).success(function(resp) {
+                                        deferred.resolve(resp)
+                                    })
+                                    return deferred.promise;
+                                }, 600),
+                                change: function(x) {
+                                    if (!x ||  !x.link)
+                                        return 0;
+                                    if (x) {
+                                        $location.url(x.link)
+                                    }
+                                    $timeout(function() {
+                                        $(searchInput).blur();
+                                    });
+                                    scope.searchText = "";
+                                }
+                            }*/
+
+
+        },
+
+    }
+
 }]);
 
 var archiveReglementController = function(edisonAPI, TabContainer, $routeParams, $location, LxProgressService) {
