@@ -16,11 +16,10 @@ module.exports = function(schema) {
                         doc = doc.toObject();
                         doc.paiement = new Paiement(doc);
                         doc.produits = [{
-                            ref: '',
-                            title: 'REMISE COMMERCIALE',
+                            ref: 'EDI142AV',
                             pu: _.round(doc.compta.reglement.avoir.montant / (doc.tva / 100 + 1), 2),
                             quantite: 1,
-                            desc: ""
+                            desc: 'REMISE COMMERCIALE'
                         }]
                         doc.type = 'avoir';
                         doc.facture = doc.client;
@@ -28,7 +27,6 @@ module.exports = function(schema) {
                             model: 'facture',
                             options: doc
                         })
-                        console.log('oko')
                         callback()
                     })
                 },
