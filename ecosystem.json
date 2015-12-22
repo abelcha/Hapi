@@ -33,7 +33,7 @@
     "out_file": "/var/log/pm2/child-out.log",
     "pid_file": "/var/log/pm2/child.pid"
   }, {
-    "name":"socket-bridge",
-    "script":"server/socket-bridge.js"
-    }]
+    "name": "socket-bridge",
+    "script": "server/socket-bridge.js"
+  }]
 }

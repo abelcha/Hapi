@@ -49,14 +49,6 @@ global.io = {
 }
 
 
-setInterval(function() {
-    io.sockets.emit('test', {
-        lol: 'yolo',
-        swag: 42
-    })
-}, 3000)
-
-
 
 /*global.io = require('socket.io')(http);
 var socketlist = []
