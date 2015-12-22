@@ -2,7 +2,7 @@
 
 var cluster = require('cluster')
 
-if (cluster.isMaster) {
+/*if (cluster.isMaster) {
     console.log('MASSTER')
 
     // Count the machine's CPUs
@@ -16,8 +16,12 @@ if (cluster.isMaster) {
     }
     return 0;
     // Code to run if we're in a worker process
-}
+}*/
 console.log('==>SLAVE', process.pid)
+
+
+
+
 
 var express = require('express');
 var app = express();

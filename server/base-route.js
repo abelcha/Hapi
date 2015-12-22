@@ -27,6 +27,24 @@ module.exports = function(app, express) {
         }
     }));
 
+
+
+    var Logger = require('le_node');
+    var log = new Logger({
+        token: 'ad0947b5-9007-4d57-b13c-5d65146aaafc'
+    });
+    app.use(function(req, res, next) {
+        var obj = {
+            url:req.originalUrl,
+            date:new Date,
+
+        }
+        console.log(req.url);
+        next()
+        //log.notice()
+    })
+
+
     app.use(express.static(path.join(process.cwd(), 'front', 'bower_components')));
     app.use(express.static(path.join(process.cwd(), 'front', 'assets')));
     app.use(express.static(path.join(process.cwd(), 'front', 'angular')));

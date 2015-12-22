@@ -29,6 +29,7 @@
     "ejs": "^2.3.4",
     "express": "^4.13.3",
     "express-csv": "^0.6.0",
+    "express-winston": "^1.2.0",
     "ftp-client": "^0.2.2",
     "ftp-get": "^0.3.1",
     "ftp-stream": "0.0.3",
@@ -41,6 +42,7 @@
     "jsftp": "^1.5.2",
     "json_encode": "^0.1.0",
     "kue": "^0.9.6",
+    "le_node": "^1.1.1",
     "lodash": "^3.10.1",
     "markdown-pdf": "^2.2.0",
     "md5": "^2.0.0",
@@ -79,7 +81,8 @@
     "stream-to-buffer": "^0.1.0",
     "through": "^2.3.4",
     "uuid": "^2.0.1",
-    "waitress": "^0.1.5"
+    "waitress": "^0.1.5",
+    "winston": "^2.1.1"
   },
   "devDependencies": {
     "browserify": "^11.2.0",
