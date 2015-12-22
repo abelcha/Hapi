@@ -34,7 +34,7 @@ var paths = {
             'bower_components/angular-slimscroll/angular-slimscroll.js',
             'bower_components/angular-material/angular-material.js',
             'bower_components/socket.io/socket.io.js',
-            'bower_components/angular-socket-io/socket.min.js',
+            'bower_components/angular-socket-io/socket.js',
             'bower_components/ngmap/build/scripts/ng-map.js',
             'bower_components/ng-file-upload/ng-file-upload.min.js',
             'bower_components/pickadate/lib/compressed/picker.js',
