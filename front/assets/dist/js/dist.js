@@ -4032,11 +4032,11 @@ angular.module('edison').factory('productsList', ["$q", "dialog", "openPost", "e
 
 }]);
 
-angular.module('edison').factory('socket', ["socketFactory", "$location", function(socketFactory, $location) {
+angular.module('edison').factory('socket', ["socketFactory", function(socketFactory) {
 	"use strict";
-	console.log($location.protocol + $location.hostname + ':1995')
+	console.log(location.protocol + location.hostname + ':1995')
 	return socketFactory({
-		ioSocket: io.connect($location.protocol + $location.hostname + ':1995')
+		ioSocket: io.connect(location.protocol + location.hostname + ':1995')
 	});
 }]);
 
