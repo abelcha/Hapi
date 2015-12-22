@@ -8,7 +8,7 @@
     "env": {
       "PLATFORM": "DIGITAL_OCEAN",
       "APP_ENV": "PRODUCTION",
-      "CLUSTER_PROCESS_NBR": 2,
+      "CLUSTER_PROCESS_NBR": 1,
       "POSTMARK_API_KEY": "b2c424bc-af2b-4175-b76f-c863bb3915c3",
       "POSTMARK_API_TOKEN": "b2c424bc-af2b-4175-b76f-c863bb3915c3",
       "POSTMARK_INBOUND_ADDRESS": "c5021a62758dc77ac5cdccfa3df754c3@inbound.postmarkapp.com",
