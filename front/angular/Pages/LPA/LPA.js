@@ -14,6 +14,7 @@ var LpaController = function(user, openPost, socket, ContextMenu, $location, $wi
         edisonAPI.compta.lpa($location.search()).then(function(result) {
             _.each(result.data, function(sst) {
                 sst.list = new FlushList(sst.list, prevChecked);
+                sst.numeroCheque = artisan.list.getList()[0].numeroCheque
                 if (_this.search.d) {
                     _this.checkArtisan(sst);
                 }
