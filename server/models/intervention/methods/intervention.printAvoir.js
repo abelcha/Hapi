@@ -2,6 +2,7 @@ module.exports = function(schema) {
     var _ = require('lodash')
     var PDF = require('edsx-mail')
     var Paiement = requireLocal('config/Paiement.js')
+    var config = requireLocal('config/dataList.js');
     var async = require('async')
 
     schema.statics.printAvoir = function(req, res) {
@@ -19,7 +20,7 @@ module.exports = function(schema) {
                             ref: 'EDI142AV',
                             pu: _.round(doc.compta.reglement.avoir.montant / (doc.tva / 100 + 1), 2),
                             quantite: 1,
-                            desc: 'REMISE COMMERCIALE'
+                            desc: (_.find(config.typeAvoir, 'short_name', doc.compta.reglement.avoir._type) || {}).long_name
                         }]
                         doc.type = 'avoir';
                         doc.facture = doc.client;
