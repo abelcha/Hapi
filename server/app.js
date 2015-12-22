@@ -59,6 +59,7 @@ setInterval(function() {
 */
 
 global.io = require('socket.io')(http);
+socketlist = []
 io.sockets.on('connection', function(socket) {
     socketlist.push(socket);
     socket.emit('socket_is_connected','You are connected!');
