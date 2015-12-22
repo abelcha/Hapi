@@ -39,7 +39,7 @@ module.exports = function(app, express) {
             date:new Date,
 
         }
-        console.log(req.url);
+        console.log(new Date, req.url);
         next()
         //log.notice()
     })
