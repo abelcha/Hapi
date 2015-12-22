@@ -1,6 +1,7 @@
-angular.module('edison').factory('socket', function(socketFactory) {
+angular.module('edison').factory('socket', function(socketFactory, $location) {
 	"use strict";
+	console.log($location.protocol + $location.hostname + ':1995')
 	return socketFactory({
-		ioSocket: io.connect('127.0.0.1:1995')
+		ioSocket: io.connect($location.protocol + $location.hostname + ':1995')
 	});
 });
