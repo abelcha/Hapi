@@ -11,6 +11,10 @@ module.exports = function(app) {
         }
     }
 
+    app.get('/socket.io/', function(req, res) {
+        return res.send('')
+    })
+
 
     app.get('/api/:fn', function(req, res) {
         if (typeof edison.methods[req.params.fn] === 'function') {
