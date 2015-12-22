@@ -1,5 +1,7 @@
 module.exports = function(schema) {
 
+    var _ = require('lodash')
+
     var __filter = function(doc, i) {
         var d = doc.obj;
         return d.status !== 'ARC' && (!this.categorie || d.categories.indexOf(this.categorie) !== -1);
@@ -38,6 +40,14 @@ module.exports = function(schema) {
 
     schema.statics.rankArtisans = function(options) {
         var self = this;
+        if (!isWorker) {
+            return edison.worker.createJob({
+                name: 'db',
+                model: 'artisan',
+                method: 'rankArtisans',
+                req: options
+            })
+        }
         return new Promise(function(resolve, reject) {
             var _ = require('lodash')
 
