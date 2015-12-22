@@ -36,7 +36,7 @@ var io_redis = require('socket.io-redis');
 require('./shared.js')(express);
 
 
-/*var socket = require('socket.io-client')('http://localhost:1995');
+var socket = require('socket.io-client')('http://localhost:1995');
 global.io = {
     sockets: {
         emit: function(title, data) {
@@ -56,9 +56,9 @@ setInterval(function() {
     })
 }, 3000)
 
-*/
 
-global.io = require('socket.io')(http);
+
+/*global.io = require('socket.io')(http);
 var socketlist = []
 io.sockets.on('connection', function(socket) {
     socketlist.push(socket);
@@ -67,7 +67,7 @@ io.sockets.on('connection', function(socket) {
       console.log('socket closed');
       socketlist.splice(socketlist.indexOf(socket), 1);
     });
-});
+});*/
 //io.set('transports', ['polling']);
 //io.adapter(io_redis(redis));
 
