@@ -50,7 +50,6 @@ global.io = {
 
 
 setInterval(function() {
-    
     io.sockets.emit('test', {
         lol: 'yolo',
         swag: 42
