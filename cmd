@@ -8,6 +8,7 @@ parser = optparse.OptionParser()
 parser.add_option('-l', '--live', action="store_true", dest="live", default=False)
 parser.add_option('-s', '--staging', action="store_true", dest="staging", default=False)
 parser.add_option('-c', '--cache', action="store_true", dest="cache", default=False)
+parser.add_option('-x', '--hide_response', action="store_true", dest="cache", default=False)
 options, args = parser.parse_args()
 
 #print( 'Query string:', options, args)

@@ -210,16 +210,33 @@ module.exports = function(schema) {
     }
 
 
+    var reload = function(req, rescallback) {
+
+    }
+
     schema.statics.dashboardStats = function(req, res) {
-        Promise.all([
-            this.monthComission(req, res),
-            this.weekStats(req, res),
-        ]).then(function(resp) {
-            var rtn = {
-                monthComission: resp[0],
-                weekStats: resp[1],
+        var _this = this;
+        var token = ('dashboardStats' + req.query.date).envify()
+        redis.get(token, function(err, reply) {
+            if (!err && reply && !req.query.cache) {
+                console.log('cached')
+                return res.jsonStr(reply)
+            } else {
+                console.log('nocached')
+
+                Promise.all([
+                    _this.monthComission(req, res),
+                    _this.weekStats(req, res),
+                ]).then(function(resp) {
+                    var rtn = {
+                        monthComission: resp[0],
+                        weekStats: resp[1],
+                    }
+                    redis.setex(token, 5, JSON.stringify(rtn), function() {
+                        res.json(rtn)
+                    });
+                })
             }
-            res.json(rtn)
         })
     }
 
