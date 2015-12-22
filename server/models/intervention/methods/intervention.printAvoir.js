@@ -72,11 +72,6 @@ module.exports = function(schema) {
                                 date: new Date(),
                             }
                         })
-                        rtn.push({
-                            model: 'facture',
-                            options: doc
-                        })
-                        console.log('oko')
                         callback()
                     })
                 },
