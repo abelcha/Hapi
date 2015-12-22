@@ -19,7 +19,7 @@
     // Application #2
     "name": "web",
     "env": {
-      "CLUSTER_PROCESS_NBR": 2,
+      "CLUSTER_PROCESS_NBR": 1,
       "APP_ENV": "PRODUCTION",
       "PLATFORM": "DIGITAL_OCEAN",
       "MONGOLAB_URI": "mongodb://heroku_app33756489:hrkm1jfvok3i2hsopg9t99jvvd@ds041981-a0.mongolab.com:41981/heroku_app33756489"

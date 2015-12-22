@@ -19,10 +19,6 @@ if (cluster.isMaster) {
 }
 console.log('==>SLAVE', process.pid)
 
-
-
-
-
 var express = require('express');
 var app = express();
 var http = require('http').Server(app);
@@ -30,17 +26,16 @@ var port = (process.env.PORT || 8080);
 var path = require('path');
 
 
-
-
 require('./shared.js')(express);
-
 
 edison.expressMiddleware(express)
 
 global.io = edison.socket()
 global.jobs = edison.worker.initJobQueue();
 global.isWorker = false;
-new edison.timer();
+if (cluster.worker.id == 1) {
+    new edison.timer();
+}
 require('./base-route.js')(app, express)
 require('./routes.js')(app);
 require('./error-route.js')(app)
