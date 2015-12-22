@@ -2,7 +2,7 @@
 
 var cluster = require('cluster')
 
-/*if (cluster.isMaster) {
+if (cluster.isMaster) {
     console.log('MASSTER')
 
     // Count the machine's CPUs
@@ -16,7 +16,7 @@ var cluster = require('cluster')
     }
     return 0;
     // Code to run if we're in a worker process
-}*/
+}
 console.log('==>SLAVE', process.pid)
 
 
@@ -31,7 +31,11 @@ var path = require('path');
 var io_redis = require('socket.io-redis');
 
 global.io = require('socket.io')(http);
-io.adapter(io_redis({ host: 'localhost', port: 6379 }));
+io.set('transports', ['polling']);
+io.adapter(io_redis({
+    host: 'localhost',
+    port: 6379
+}));
 
 
 
