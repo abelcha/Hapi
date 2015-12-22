@@ -59,7 +59,7 @@ setInterval(function() {
 */
 
 global.io = require('socket.io')(http);
-io.server.close();
+io.close();
 //io.set('transports', ['polling']);
 //io.adapter(io_redis(redis));
 
