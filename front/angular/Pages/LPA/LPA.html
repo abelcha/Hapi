@@ -15,7 +15,7 @@
                             <a style="color:black" href="/artisan/{{artisan.id}}/recap#interventions">{{artisan.id}} - {{artisan.nomSociete}}</a>
                             </h2></td>
                         <td colspan="3">
-                            <input ng-if="artisan.list.getList()[0].mode === 'CHQ'" type="text" class="form-control" ng-model="artisan.list.__list.numeroCheque" ng-change="vm.updateNumeroCheque($index, artisan.id)">
+                            <input ng-if="artisan.list.getList()[0].mode === 'CHQ'" type="text" class="form-control" ng-model="artisan.numeroCheque" ng-change="vm.updateNumeroCheque($index, artisan.id)">
                         </td>
                         <td colspan="12"></td>
                     </tr>

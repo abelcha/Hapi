@@ -4429,55 +4429,6 @@ var ArtisanCtrl = function(IBAN, $timeout, $rootScope, $scope, edisonAPI, $locat
 ArtisanCtrl.$inject = ["IBAN", "$timeout", "$rootScope", "$scope", "edisonAPI", "$location", "$routeParams", "ContextMenu", "LxProgressService", "LxNotificationService", "TabContainer", "config", "dialog", "artisanPrm", "Artisan"];
 angular.module('edison').controller('ArtisanController', ArtisanCtrl);
 
-var AvoirsController = function(TabContainer, openPost, edisonAPI, $rootScope, LxProgressService, LxNotificationService, FlushList) {
-    "use strict";
-    var _this = this
-    var tab = TabContainer.getCurrentTab();
-    tab.setTitle('Avoirs')
-    _this.loadData = function(prevChecked) {
-        LxProgressService.circular.show('#5fa2db', '#globalProgress');
-        edisonAPI.compta.avoirs().then(function(result) {
-            console.log(result)
-            $rootScope.avoirs = result.data
-            LxProgressService.circular.hide()
-        })
-    }
-    if (!$rootScope.avoirs)
-        _this.loadData()
-
-    _this.reloadAvoir = function() {
-        _this.loadData()
-    }
-
-    _this.print = function(type) {
-        openPost('/api/intervention/printAvoir', {
-            data: $rootScope.avoirs
-        });
-    }
-    _this.printChq = function(type) {
-        openPost('/api/intervention/printAvoirChq', {
-            data: $rootScope.avoirs
-        });
-    }
-
-    _this.flush = function() {
-        var list = _.filter($rootScope.avoirs, {
-            checked: true
-        })
-        edisonAPI.compta.flushAvoirs(list).then(function(resp) {
-            LxNotificationService.success(resp.data);
-            _this.reloadAvoir()
-        }).catch(function(err) {
-            LxNotificationService.error(err.data);
-        })
-    }
-
-}
-AvoirsController.$inject = ["TabContainer", "openPost", "edisonAPI", "$rootScope", "LxProgressService", "LxNotificationService", "FlushList"];
-
-
-angular.module('edison').controller('avoirsController', AvoirsController);
-
 var ContactArtisanController = function($scope, $timeout, TabContainer, LxProgressService, FiltersFactory, ContextMenu, edisonAPI, DataProvider, $routeParams, $location, $q, $rootScope, $filter, config, ngTableParams) {
     "use strict";
     var _this = this;
@@ -4653,6 +4604,55 @@ var ContactArtisanController = function($scope, $timeout, TabContainer, LxProgre
 }
 ContactArtisanController.$inject = ["$scope", "$timeout", "TabContainer", "LxProgressService", "FiltersFactory", "ContextMenu", "edisonAPI", "DataProvider", "$routeParams", "$location", "$q", "$rootScope", "$filter", "config", "ngTableParams"];
 angular.module('edison').controller('ContactArtisanController', ContactArtisanController);
+
+var AvoirsController = function(TabContainer, openPost, edisonAPI, $rootScope, LxProgressService, LxNotificationService, FlushList) {
+    "use strict";
+    var _this = this
+    var tab = TabContainer.getCurrentTab();
+    tab.setTitle('Avoirs')
+    _this.loadData = function(prevChecked) {
+        LxProgressService.circular.show('#5fa2db', '#globalProgress');
+        edisonAPI.compta.avoirs().then(function(result) {
+            console.log(result)
+            $rootScope.avoirs = result.data
+            LxProgressService.circular.hide()
+        })
+    }
+    if (!$rootScope.avoirs)
+        _this.loadData()
+
+    _this.reloadAvoir = function() {
+        _this.loadData()
+    }
+
+    _this.print = function(type) {
+        openPost('/api/intervention/printAvoir', {
+            data: $rootScope.avoirs
+        });
+    }
+    _this.printChq = function(type) {
+        openPost('/api/intervention/printAvoirChq', {
+            data: $rootScope.avoirs
+        });
+    }
+
+    _this.flush = function() {
+        var list = _.filter($rootScope.avoirs, {
+            checked: true
+        })
+        edisonAPI.compta.flushAvoirs(list).then(function(resp) {
+            LxNotificationService.success(resp.data);
+            _this.reloadAvoir()
+        }).catch(function(err) {
+            LxNotificationService.error(err.data);
+        })
+    }
+
+}
+AvoirsController.$inject = ["TabContainer", "openPost", "edisonAPI", "$rootScope", "LxProgressService", "LxNotificationService", "FlushList"];
+
+
+angular.module('edison').controller('avoirsController', AvoirsController);
 
 var DashboardController = function($rootScope, statsTelepro, dialog, user, edisonAPI, $scope, $filter, TabContainer, NgTableParams, $routeParams, $location, LxProgressService) {
     var _this = this;

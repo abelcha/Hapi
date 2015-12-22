@@ -25,7 +25,7 @@ module.exports = function(schema) {
         });
     }
 
-    var lol = function(inter, date) {
+    var getHisto = function(inter, date) {
 
         var index = _.findIndex(inter.compta.paiement.historique, 'dateFlush', date)
         inter = JSON.parse(JSON.stringify(inter));
@@ -38,7 +38,6 @@ module.exports = function(schema) {
         inter.compta.paiement.fourniture = inter.compta.paiement.historique[index].fourniture
         inter.compta.paiement.historique = inter.compta.paiement.historique.slice(0, index);
         inter.sst = undefined;
-        console.log(inter.compta.paiement)
         return inter;
     }
 
@@ -48,7 +47,7 @@ module.exports = function(schema) {
             var date = new Date(parseInt(ts));
             db.model('intervention')
                 .find({
-                      id:36539,
+                  //    id:36539,
                     'compta.paiement.historique': {
                         $elemMatch: {
                             dateFlush: date
@@ -65,7 +64,7 @@ module.exports = function(schema) {
                                 nomSociete: e[0].sst.nomSociete,
                                 id: e[0].sst.id,
                                 representant: e[0].sst.representant,
-                                list: _.map(e, _.partial(lol, _, date))
+                                list: _.map(e, _.partial(getHisto, _, date))
                             }
                         }).value()
                   //  console.log('=================')

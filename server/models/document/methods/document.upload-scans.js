@@ -50,35 +50,46 @@
             }
           }
         }).then(function(resp) {
-          var i = 0;
+          try {
+            var i = 0;
+            console.log('nzekpzaekpeazkpeaz')
+            console.log(req.body.ids)
+            var gp = _.groupBy(resp, 'sst')
+            async.eachLimit(gp, 1, function(sst, callback) {
+                console.log('heehe')
+                  //getPage(filepath, ++i, function(err, buffer) {
+                buffer = "lol"
+                console.log('getpage')
+                async.eachLimit(sst, 1, function(e, small_cb) {
+                  var flush = _.find(e.compta.paiement.historique, 'dateFlush', new Date(req.body.date));
+                  console.log('->', req.body.date)
+                  console.log('"FLUSH', flush)
+                  flush.numeroCheque = (_.find(req.body.ids, 'id', e.sst) || {}).numeroCheque
+                  console.log('--==>', (_.find(req.body.ids, 'id', e.sst)))
+                  console.log('/V2_PRODUCTION/intervention/' + e.id + '/' + 'Lettre-cheque-' + flush.numeroCheque + '.pdf')
+                    //return small_cb(null)
+                  document.upload({
+                    filename: '/V2_PRODUCTION/intervention/' + e.id + '/' + 'Lettre-cheque-' + flush.numeroCheque + '.pdf',
+                    data: buffer
+                  }).then(function(resp) {
+                    e.save(small_cb)
+                  }, small_cb)
 
-          var gp = _.groupBy(resp, 'sst')
-          async.eachLimit(gp, 1, function(sst, callback) {
-            getPage(filepath, ++i, function(err, buffer) {
-              async.eachLimit(sst, 1, function(e, small_cb) {
-                var flush = _.find(e.compta.paiement.historique, 'dateFlush', new Date(req.body.date));
-                console.log('->', req.body.date)
-                console.log('"FLUSH', flush)
-                console.log('/V2_PRODUCTION/intervention/' + e.id + '/' + 'Lettre-cheque-' + flush.numeroCheque + '.pdf')
-                flush.numeroCheque = (_.find(req.body.ids, 'id', e.sst) || {}).numeroCheque
-                console.log('--==>', (_.find(req.body.ids, 'id', e.sst)))
-                //return small_cb(null)
-                document.upload({
-                  filename: '/V2_PRODUCTION/intervention/' + e.id + '/' + 'Lettre-cheque-' + flush.numeroCheque + '.pdf',
-                  data: buffer
-                }).then(function(resp) {
-                  e.save(small_cb)
-                }, small_cb)
+                }, function() {
+                  callback(null)
+                })
 
-              }, function() {
-                callback(null)
+                //})
+
+              },
+
+              function() {
+                resolve('ok')
               })
-
-            })
-
-          }, function() {
-            resolve('ok')
-          })
+          } catch (e) {
+            console.log(e)
+            console.log(e.stack)
+          }
         })
         resolve('ok')
       }).catch(__catch);
