@@ -59,7 +59,14 @@ setInterval(function() {
 */
 
 global.io = require('socket.io')(http);
-io.close();
+io.sockets.on('connection', function(socket) {
+    socketlist.push(socket);
+    socket.emit('socket_is_connected','You are connected!');
+    socket.on('close', function () {
+      console.log('socket closed');
+      socketlist.splice(socketlist.indexOf(socket), 1);
+    });
+});
 //io.set('transports', ['polling']);
 //io.adapter(io_redis(redis));
 
