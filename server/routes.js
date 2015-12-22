@@ -9,11 +9,6 @@ module.exports = function(app) {
             console.log(err.stack || JSON.stringify(err, undefined, 1))
             this.status(400).send(JSON.stringify(err, undefined, 1));
         }
-    }
-
-    app.get('/socket.io/', function(req, res) {
-        return res.send('')
-    })
 
 
     app.get('/api/:fn', function(req, res) {
