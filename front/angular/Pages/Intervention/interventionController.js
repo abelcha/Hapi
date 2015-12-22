@@ -285,7 +285,7 @@ var InterventionCtrl = function(Description, Signalement, ContextMenu, $window, 
 
     var updateTmpIntervention = _.after(5, _.throttle(function() {
         edisonAPI.intervention.saveTmp(intervention);
-    }, 2000))
+    }, 30000))
 
     if (!intervention.id) {
         $scope.$watch(function() {

@@ -60,7 +60,7 @@ var DevisCtrl = function(edisonAPI, $scope, $rootScope, $location, $routeParams,
 
     var updateTmpDevis = _.after(5, _.throttle(function() {
         edisonAPI.devis.saveTmp(devis);
-    }, 2000))
+    }, 30000))
 
     if (!devis.id) {
         $scope.$watch(function() {

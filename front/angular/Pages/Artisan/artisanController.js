@@ -100,7 +100,7 @@ var ArtisanCtrl = function(IBAN, $timeout, $rootScope, $scope, edisonAPI, $locat
     var updateTmpArtisan = _.after(5, _.throttle(function() {
         edisonAPI.artisan.saveTmp(artisan);
 
-    }, 2000))
+    }, 30000))
 
     if (!artisan.id) {
         $scope.$watch(function() {
