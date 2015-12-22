@@ -1687,6 +1687,10 @@ module.exports = {
         long_name: "Le client ne répond pas"
     }, {
         type: "client",
+        short_name: "CLI_AUT_SOL",
+        long_name: "Le client a trouvé une autre solution"
+    },  {
+        type: "client",
         short_name: "CLI_REF_DEV",
         long_name: "Le client à refusé le devis"
     }, {

@@ -62,6 +62,7 @@
                 console.log('/V2_PRODUCTION/intervention/' + e.id + '/' + 'Lettre-cheque-' + flush.numeroCheque + '.pdf')
                 flush.numeroCheque = (_.find(req.body.ids, 'id', e.sst) || {}).numeroCheque
                 console.log('--==>', (_.find(req.body.ids, 'id', e.sst)))
+                small_cb(null)
                 document.upload({
                   filename: '/V2_PRODUCTION/intervention/' + e.id + '/' + 'Lettre-cheque-' + flush.numeroCheque + '.pdf',
                   data: buffer

@@ -6,6 +6,9 @@
                 <body>
                     <tr ng-repeat="av in avoirs" ng-click="av.checked = !av.checked;">
                         <td><a href="/intervention/{{av.id}}">{{av.id}}</td>
+                        <td style="width:100px">
+                            <input type="number" class="form-control" ng-model="av.numeroCheque" placeholder="numeroCheque">
+                        </td>
                         <td>{{av.client.civilite}} {{av.client.nom}}</td>
                         <td>{{av.compta.reglement.montant}} € </td>
                         <td>{{config.avoir(av.compta.reglement.avoir._type).long_name}}</td>

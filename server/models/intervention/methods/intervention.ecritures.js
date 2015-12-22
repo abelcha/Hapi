@@ -200,13 +200,13 @@ module.exports = function(schema) {
                             } else if (R.avoir._type === 'ERR_FACT') {
                                 var comptaVTA2 = compte.VT2;
                             }
-                            var VTA1 = ['VT', dateAvoir, compte.VT1, CLTOS, AOS, libelleAV, '', montantAvoir.TTC]
-                            var VTA2 = ['VT', dateAvoir, compte.VT2, '', AOS, libelleAV, montantAvoir.HT, '']
-                            var VTA3 = ['VT', dateAvoir, compte.VT3, '', AOS, libelleAV, montantAvoir.TVA, '']
+                            var LIB = 'AVOIR ' + OS + " " + e.client.civilite + " " + e.client.nom
+                            var VTA1 = ['VT', dateAvoir, compte.VT1, CLTOS, AOS, LIB, '', montantAvoir.TTC]
+                            var VTA2 = ['VT', dateAvoir, compte.VT2, "", AOS, LIB, montantAvoir.HT, '']
+                            var VTA3 = ['VT', dateAvoir, compte.VT3, "", AOS, LIB, montantAvoir.TVA, '']
                             rtn.push(VTA1, VTA2, VTA3)
-
-                            var BQA1 = ['BQ', dateAvoir, compte.VT1, CLTOS, P.numeroCheque, libelleAV, montantAvoir.TTC, '']
-                            var BQA2 = ['BQ', dateAvoir, compte.BQA2, '', P.numeroCheque, libelleAV, '', montantAvoir.TTC]
+                            var BQA1 = ['BQ', dateAvoir, compte.VT1, CLTOS, R.avoir.numeroCheque, "CHQ " + LIB, montantAvoir.TTC, '']
+                            var BQA2 = ['BQ', dateAvoir, compte.BQA2, "", R.avoir.numeroCheque, "CHQ " + LIB, '', montantAvoir.TTC]
                             rtn.push(BQA1, BQA2)
                         }
                         cb(null)

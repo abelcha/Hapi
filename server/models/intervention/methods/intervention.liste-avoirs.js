@@ -17,6 +17,7 @@ module.exports = function(schema) {
                         numeroCheque: e.numeroCheque,
                         montant: e.compta.reglement.avoir.montant,
                     }
+                    doc.compta.reglement.avoir.numeroCheque = e.numeroCheque;
                     doc.compta.reglement.avoir.effectue = true;
                     doc.compta.reglement.avoir.date = date;
                     doc.compta.reglement.historique.push(hist)

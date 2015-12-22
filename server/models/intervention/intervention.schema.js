@@ -240,7 +240,8 @@ module.exports = function(db) {
                         type: Boolean,
                         default: false
                     },
-                    date: Date
+                    date: Date,
+                    numeroCheque: String,
                 },
                 historique: [{
                     _type: {
@@ -257,6 +258,7 @@ module.exports = function(db) {
                         type: Date,
                         default: Date.now
                     },
+                    numeroCheque: String,
                 }]
             },
             paiement: {

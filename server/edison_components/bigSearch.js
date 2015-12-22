@@ -180,7 +180,6 @@ module.exports = function(req, res) {
 	var rgx = {
 		$regex: regexpReplace(req.params.text, false)
 	}
-	console.log(rgx)
 	var _int = parseInt(req.params.text) ||  0;
 
 	async.parallel([
