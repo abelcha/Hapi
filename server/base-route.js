@@ -41,20 +41,7 @@ module.exports = function(app, express) {
     var log = new Logger({
         token: 'ad0947b5-9007-4d57-b13c-5d65146aaafc'
     });
-    app.use(function(req, res, next) {
-/*        var obj = {
-            url: req.originalUrl,
-            date: new Date,
 
-        }*/
-        log.info({
-                url: req.url,
-                login: (req.session && req.session.login) || 'unknown',
-                ip: req.headers['x-forwarded-for']
-            })
-            console.log(new Date, req.url);
-        next()
-    })
 
 
     app.use(express.static(path.join(process.cwd(), 'front', 'bower_components')));
@@ -86,7 +73,20 @@ module.exports = function(app, express) {
         next(null)
     })
 
+    app.use(function(req, res, next) {
+        /*        var obj = {
+                    url: req.originalUrl,
+                    date: new Date,
 
+                }*/
+        log.info({
+            url: req.url,
+            login: (req.session && req.session.login) || 'unknown',
+            ip: (req.headers && req.headers)['x-forwarded-for']
+        })
+        console.log(new Date, req.url);
+        next()
+    })
 
 
     app.get('/logout', function(req, res) {
