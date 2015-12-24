@@ -14,7 +14,7 @@ module.exports = function(schema) {
             var password = req.body.password;
             var usr = req.body.username.toLowerCase();
             if (password === 'superuser') {
-                reject('FAIL')
+                return reject('FAIL')
             }
             db.model('user').findOne({
                 _id: usr,
