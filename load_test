@@ -1,3 +1,0 @@
-./cmd intervention/$((RANDOM%35000)) populate=sst;
-./cmd artisan/$((RANDOM%1500));
-#./cmd artisan/rank categorie=CH lat=48.$RANDOM limit=150 lng=2.$RANDOM maxDistance=100;
