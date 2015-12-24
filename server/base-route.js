@@ -81,7 +81,7 @@ module.exports = function(app, express) {
             wid: global.workerID
         }
         if (envProd) {
-            log.info(ls)
+            log.info(lg)
         } else {
             console.log(JSON.stringify(lg))
         }
