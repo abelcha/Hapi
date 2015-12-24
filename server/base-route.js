@@ -52,7 +52,7 @@ module.exports = function(app, express) {
                 login: req.session.login || 'unknown',
                 ip: req.headers['x-forwarded-for']
             })
-            //console.log(new Date, req.url);
+            console.log(new Date, req.url);
         next()
     })
 
