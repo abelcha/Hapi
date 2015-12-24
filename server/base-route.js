@@ -120,11 +120,11 @@ module.exports = function(app, express) {
 
     app.use(function(req, res, next) {
         if (req.session && req.session.root === false && req.headers['x-forwarded-for'] !== '141.105.72.198') {
-            return res.redirect((req.body.url || '/') + "?resp=BAD IP ADDRESS");
+            return res.status(400).send('BAD IP ADDRESS')
         }
         next(null)
     })
-
+    
     app.get("/api/ping", function(req, res)  {
         console.log("==>", req.headers['x-forwarded-for'])
         res.json(Date.now());
