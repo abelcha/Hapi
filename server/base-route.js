@@ -116,8 +116,7 @@ module.exports = function(app, express) {
                         return res.redirect(req.body.url || '/');
                     });
                 }, function(err) {
-                    __catch(err)
-                    return res.redirect((req.body.url || '/') + '#failure');
+                    return res.redirect((req.body.url || '/'));
                 })
         } catch (e) {
             console.log('-->', e)
