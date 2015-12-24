@@ -49,7 +49,7 @@ module.exports = function(app, express) {
         }*/
         log.info({
                 url: req.url,
-                login: req.session.login || 'unknown',
+                login: (req.session && req.session.login) || 'unknown',
                 ip: req.headers['x-forwarded-for']
             })
             console.log(new Date, req.url);
