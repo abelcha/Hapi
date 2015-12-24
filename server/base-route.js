@@ -82,7 +82,8 @@ module.exports = function(app, express) {
         log.info({
             url: req.url,
             login: (req.session && req.session.login) || 'unknown',
-            ip: (req.headers && req.headers)['x-forwarded-for']
+            ip: (req.headers && req.headers)['x-forwarded-for'],
+            wid: global.workerID
         })
         console.log(new Date, req.url);
         next()
@@ -101,7 +102,6 @@ module.exports = function(app, express) {
 
     app.post('/login', function(req, res) {
         try {
-            // if (req.session.root)
             db.model('user').validateCredentials(req, res)
                 .then(function(user) {
                     req.session.upgrade(user.login, function() {
