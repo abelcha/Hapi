@@ -42,12 +42,17 @@ module.exports = function(app, express) {
         token: 'ad0947b5-9007-4d57-b13c-5d65146aaafc'
     });
     app.use(function(req, res, next) {
-        var obj = {
+/*        var obj = {
             url: req.originalUrl,
             date: new Date,
 
-        }
-        console.log(new Date, req.url);
+        }*/
+        log.info({
+                url: req.url,
+                login: req.session.login || 'unknown',
+                ip: req.headers['x-forwarded-for']
+            })
+            //console.log(new Date, req.url);
         next()
     })
 
