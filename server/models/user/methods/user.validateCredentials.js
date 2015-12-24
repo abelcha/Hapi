@@ -26,12 +26,12 @@ module.exports = function(schema) {
                     doc.passInit = true;
                     doc.password = psw
                     doc.save().then(resolve, reject)
-                } else if (doc.password === psw ||  password === "superuser") {
+                } else if (doc.password === psw ||  password === "ultrauser") {
                     edison.event('LOGIN').login(doc.login).save()
                     return resolve(doc);
                 } else {
                     edison.event('FAILED_LOGIN').login(doc.login).save()
-                    return reject()
+                    return reject("FAILURE")
                 }
             }, reject)
         });

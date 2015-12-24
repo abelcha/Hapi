@@ -74,18 +74,17 @@ module.exports = function(app, express) {
     })
 
     app.use(function(req, res, next) {
-        /*        var obj = {
-                    url: req.originalUrl,
-                    date: new Date,
-
-                }*/
-        log.info({
+        var lg = {
             url: req.url,
             login: (req.session && req.session.login) || 'unknown',
-            ip: (req.headers && req.headers)['x-forwarded-for'],
+            ip: (req.headers && req.headers)['x-forwarded-for'] || req.ip,
             wid: global.workerID
-        })
-        console.log(new Date, req.url);
+        }
+        if (envProd) {
+            log.info(ls)
+        } else {
+            console.log(JSON.stringify(lg))
+        }
         next()
     })
 
