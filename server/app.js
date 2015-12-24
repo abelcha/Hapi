@@ -3,27 +3,19 @@
 var cluster = require('cluster')
 
 if (cluster.isMaster) {
-    console.log('MASSTER')
-
-    // Count the machine's CPUs
     var cpuCount = require('os').cpus().length;
-    console.log("CPU", cpuCount)
-        // Create a worker for each CPU
     for (var i = 0; i < process.env.CLUSTER_PROCESS_NBR; i++) {
-        console.log('FORK')
         setTimeout(cluster.fork.bind(cluster), i * 1000)
-
     }
     return 0;
-    // Code to run if we're in a worker process
 }
-console.log('==>SLAVE', process.pid)
-
 var express = require('express');
 var app = express();
 var http = require('http').Server(app);
 var port = (process.env.PORT || 8080);
 var path = require('path');
+global.isWorker = false;
+
 
 global.workerID = cluster.worker.id;
 require('./shared.js')(express);
@@ -32,7 +24,6 @@ edison.expressMiddleware(express)
 
 global.io = edison.socket()
 global.jobs = edison.worker.initJobQueue();
-global.isWorker = false;
 if (cluster.worker.id == 1) {
     new edison.timer();
 }

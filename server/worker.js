@@ -1,24 +1,18 @@
-// === BEGIN: KUE SETUP ===
-
 var kue = require('kue');
 var url = require('url');
 var _ = require('lodash')
+global.isWorker = true;
 require('./shared.js')();
 var cluster = require('cluster')
-
-global.isWorker = false;
-
 
 try {
     var key = requireLocal('config/_keys');
 
     global.sms = new edison.mobyt(key.mobyt.login, key.mobyt.pass);
-    global.isWorker = true;
 
     if ((envProd ||  envStaging) &&  process.env.PLATFORM !== 'DIGITAL_OCEAN') {
         var redisUrl = url.parse(key.redisURL);
     }
-    //    redis.delWildcard("kue".envify() + '*', function(err, resp) {
 
     var jobs = kue.createQueue({
         prefix: 'kue'.envify(),

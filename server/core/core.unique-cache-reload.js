@@ -1,73 +1,74 @@
     module.exports = function(core) {
-        var _ = require('lodash');
+      var _ = require('lodash');
+      var __throttle_cache_name = '__throttle_cache_reloa' + core.name
 
-                _.mixin({
-                    debounceArgs: function(fn, timeout, options) {
-                        var __dbArgs = []
-                        var __dbFn = _.debounce(function() {
-                            fn.call(undefined, __dbArgs);
-                            __dbArgs = []
-                        }, timeout, options);
-                        return function() {
-                            __dbArgs.push(_.values(arguments));
-                            __dbFn();
-                        }
-                    },
-                    throttleArgs: function(fn, timeout, options) {
-                        var _thArgs = []
-                        var _thFn = _.throttle(function() {
-                            fn.call(undefined, _thArgs);
-                            _thArgs = []
-                        }, timeout, options);
-                        return function() {
-                            _thArgs.push(_.values(arguments));
-                            _thFn();
-                        }
-                    },
+
+
+      var applyCacheReload = function(ids) {
+        console.log(ids);
+
+        return edison.worker.createJob({
+          name: 'db',
+          model: core.name,
+          priority: 'medium',
+          method: 'throttleCacheReload',
+          attempts: 10,
+          req: ids
+        }).then(function(resp) {
+          io.sockets.emit(core.listChange, {
+            data: resp,
+            ts: _.now()
+          });
+          edison.statsTelepro.reload();
+        })
+      }
+
+      if (!global.isWorker && global.workerID === 1) {
+        setInterval(function() {
+          redis.get(__throttle_cache_name, function(err, resp) {
+            if (!err && resp) {
+              var list = JSON.parse(resp);
+              console.log(core.NAME + 'PUSH =======>>', list)
+              redis.del(__throttle_cache_name, function() {
+                console.log(Object.keys(list))
+                return applyCacheReload(Object.keys(list).map(_.parseInt))
+              })
+            }
+          })
+        }, 1500)
+      }
+
+      return function(doc) {
+        redis.get(__throttle_cache_name, function(err, resp) {
+          var list = JSON.parse(resp ||  "{}");
+          list[doc.id] = list[doc.id] ? list[doc.id] + 1 : 1;
+          redis.setex(__throttle_cache_name, 10, JSON.stringify(list), function(err, resp) {
+            console.log(err, resp)
+          });
+        });
+      }
+
+      /*  return _.throttleArgs(function(docs) {
+
+            if (!isWorker) {
+                console.time('throttleCacheReload')
+                return edison.worker.createJob({
+                    name: 'db',
+                    model: core.name,
+                    priority: 'medium',
+                    method: 'throttleCacheReload',
+                    attempts: 10,
+                    req: _(docs).flatten().map('id').uniq().value()
+                }).then(function(resp) {
+                    io.sockets.emit(core.listChange, {
+                        data: resp,
+                        ts: _.now()
+                    });
+                    edison.statsTelepro.reload();
                 })
-        
-/*        if (global.workerID === 1 && core.name === 'intervention') {
+            }
 
-            setInterval(function() {
-                redis.get('cacheReload' + core.name, function(err, resp) {
-                    console.log('=======', err, resp)
-                })
-            }, 5000)
-
-        }
-        return function(doc) {
-            redis.get('cacheReload' + core.name, function(err, resp) {
-              //  console.log('-->', err, resp)
-                var list = JSON.parse(resp ||  "{}");
-               console.log('===>', list)
-                list[doc.id] = 1
-                redis.set('cacheReload' + core.name, JSON.stringify(list), function(err, resp) {
-                    console.log(err, resp)
-                });
-            });
-        }*/
-
-           return _.throttleArgs(function(docs) {
-
-               if (!isWorker) {
-                   console.time('throttleCacheReload')
-                   return edison.worker.createJob({
-                       name: 'db',
-                       model: core.name,
-                       priority: 'medium',
-                       method: 'throttleCacheReload',
-                       attempts: 10,
-                       req: _(docs).flatten().map('id').uniq().value()
-                   }).then(function(resp) {
-                       io.sockets.emit(core.listChange, {
-                           data: resp,
-                           ts: _.now()
-                       });
-                       edison.statsTelepro.reload();
-                   })
-               }
-
-           }, 5000, {
-               leading: true
-           })
+        }, 5000, {
+            leading: true
+        })*/
     }

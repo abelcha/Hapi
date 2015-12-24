@@ -43,13 +43,12 @@ module.exports = function(app, express) {
     });
     app.use(function(req, res, next) {
         var obj = {
-            url:req.originalUrl,
-            date:new Date,
+            url: req.originalUrl,
+            date: new Date,
 
         }
         console.log(new Date, req.url);
         next()
-        //log.notice()
     })
 
 
