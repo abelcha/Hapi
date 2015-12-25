@@ -5,6 +5,7 @@ module.exports = function(app, express) {
     var fs = require('fs')
     var keys = requireLocal('config/_keys')
 
+
     app.get('/socket.io', function(req, res) {
         return res.status(404).send()
     })

@@ -24,14 +24,15 @@ edison.expressMiddleware(express)
 
 global.io = edison.socket()
 global.jobs = edison.worker.initJobQueue();
-if (cluster.worker.id == 1) {
-    new edison.timer();
-}
 require('./base-route.js')(app, express)
 require('./routes.js')(app);
 require('./error-route.js')(app)
 process.on('uncaughtException', __catch);
 
+
+if (cluster.worker.id == 1 && process.env.PLATFORM === 'DIGITAL_OCEAN') {
+    new edison.timer();
+}
 http.listen(port, function() {
     console.log('listening on *:' + port);
     return !envDev && edison.event('REBOOT').save()
