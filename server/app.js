@@ -31,6 +31,7 @@ process.on('uncaughtException', __catch);
 
 
 if (cluster.worker.id == 1 && process.env.PLATFORM === 'DIGITAL_OCEAN') {
+	console.log('TIMER')
     new edison.timer();
 }
 http.listen(port, function() {
