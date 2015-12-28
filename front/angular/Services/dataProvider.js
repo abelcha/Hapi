@@ -79,20 +79,15 @@ angular.module('edison').factory('DataProvider', function($timeout, edisonAPI, s
 
     DataProvider.prototype.updateData = function(newRows) {
         var _this = this;
-        console.log("NEW ROW", newRows)
         if (this.getData()) {
             _.each(newRows, function(e) {
-                console.log('-->', e)
                 var tmp = _this.getTrie()[e.id];
-                console.log('-->OLD-->', tmp)
                 if (tmp) {
-                    console.log('NO OLD-->')
                     _.merge(_this.getTrie()[e.id], e);
                 } else {
-                    console.log('NO OLD-->')
                     _this.getData().unshift(e);
+                    _this.getTrie()[e.id] = e;
                 }
-                console.log(_this.getTrie(), _this.getData())
             })
 
             /* var id_list = _(newRows).flatten().map('id').value();
