@@ -334,7 +334,7 @@ exports.staticMap = function(center, zoom, size, scale, callback, sensor, maptyp
     }
   }
   args.sensor = sensor || 'false';
-
+  args.key = 'AIzaSyAqBJQFYhCOUalxHgF1L0mhw8lGME-A1mY';
   var path = '/maps/api/staticmap';
   return makeRequest(path, args, config('secure'), callback, 'binary');
 };
