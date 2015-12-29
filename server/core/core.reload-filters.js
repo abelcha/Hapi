@@ -36,7 +36,7 @@ module.exports = function(core) {
                         }
                     }
                     tmp.update.$set[field] = 1;
-                    tmp.query['$or'] = [{}, {}]
+                   // tmp.query['$or'] = [{}, {}]
                    /* tmp.query['$or'][0][field] = 0;
                     tmp.query['$or'][1][field] = {
                         $exists: false
