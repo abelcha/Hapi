@@ -9,10 +9,11 @@
                             <span ng-if="vm.data.login" class="fs-subhead tc-black-2 display-block">Ajoute le {{vm.data.date.ajout| date:"dd/MM à HH:mm"}} par {{vm.data.login.ajout}}</span>
                         </div>
                         <div style="float:right;width:40%">
-                            <button ng-if="!vm.data.id || vm.data.origin === 'DEM'" class="btn--no-conflicts btn--l {{vm.config.etatsArtisan[vm.data.status].color}} white-text btn--flat" lx-ripple><strong>{{vm.config.etatsArtisan[vm.data.status].long_name}}</strong></button>
-                            <button ng-if="!vm.data.id || vm.data.origin === 'DEM'" class="btn--no-conflicts btn--l {{vm.config.artisanSubStatus[vm.data.subStatus].color}} accent-2 white-text btn--flat" lx-ripple><strong>{{vm.config.artisanSubStatus[vm.data.subStatus].long_name}}</strong></button>
-                            <button ng-if="!vm.data.id || vm.data.origin === 'DEM'" ng-click="vm.data.origin = 'DEM'" class="btn--no-conflicts btn--l white-text  {{vm.data.origin === 'DEM' ? 'blue' : 'grey' }} btn--flat" lx-ripple><strong>DÉMARCHÉ</strong></button>
-                            <button ng-if="!vm.data.id || vm.data.origin === 'CAND'" ng-click="vm.data.origin = 'CAND'" class="btn--no-conflicts btn--l white-text  {{vm.data.origin === 'CAND' ? 'yellow darken' : 'grey' }} btn--flat" lx-ripple><strong>CANDIDAT</strong></button>
+                            <button ng-if="vm.data.id" class="btn--no-conflicts btn--l {{vm.config.etatsArtisan[vm.data.status].color}} white-text btn--flat" lx-ripple><strong>{{vm.config.etatsArtisan[vm.data.status].long_name}}</strong></button>
+                            <button ng-if="vm.data.id" class="btn--no-conflicts btn--l {{vm.config.artisanSubStatus[vm.data.subStatus].color}} accent-2 white-text btn--flat" lx-ripple><strong>{{vm.config.artisanSubStatus[vm.data.subStatus].long_name}}</strong></button>
+                            
+                            <button ng-if="vm.data.origin == 'DEM'" ng-click="vm.data.origin = 'CAND'" class="btn--no-conflicts btn--l white-text  {{vm.data.origin === 'DEM' ? 'blue' : 'grey' }} btn--flat" lx-ripple><strong>DÉMARCHÉ</strong></button>
+                            <button  ng-if="vm.data.origin == 'CAND'" ng-click="vm.data.origin = 'DEM'" class="btn--no-conflicts btn--l white-text  {{vm.data.origin === 'CAND' ? 'yellow darken' : 'grey' }} btn--flat" lx-ripple><strong>CANDIDAT</strong></button>
                         </div>
                     </div>
                 </div>

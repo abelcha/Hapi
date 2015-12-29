@@ -98,7 +98,15 @@
                         <link fltr="a_pal3" icon="th-list" model="artisan"></link>
                         <link fltr="a_pal4" icon="th-list" model="artisan"></link>
                     </drop-down>
-                    <link fltr="a_all" icon="users" model="artisan" title="Tous les Artisans" no-counter="true"></link>
+                     <drop-down icon="truck" title="Tous les Artisans" icon="truck">
+                        <link icon="th-list" model="artisan" login='{{displayUser.login}}' no-counter="true" title="New" url="/artisan/list?ss=NEW"></link>
+                        <link icon="th-list" model="artisan" login='{{displayUser.login}}' no-counter="true" title="Hot" url="/artisan/list?ss=HOT"></link>
+                        <link icon="th-list" model="artisan" login='{{displayUser.login}}' no-counter="true" title="OneShot" url="/artisan/list?ss=ONE"></link>
+                        <link icon="th-list" model="artisan" login='{{displayUser.login}}' no-counter="true" title="Formation" url="/artisan/list?ss=FORM"></link>
+                        <link icon="th-list" model="artisan" login='{{displayUser.login}}' no-counter="true" title="Confirmé" url="/artisan/list?ss=CONF"></link>
+                        <link icon="th-list" model="artisan" login='{{displayUser.login}}' no-counter="true" title="Regulier" url="/artisan/list?ss=REG"></link>
+                        <link icon="th-list" model="artisan" login='{{displayUser.login}}' no-counter="true" title="Quarantaine" url="/artisan/list?ss=QUA"></link>
+                    </drop-down>
                 </drop-down>
                 <!-- 
 

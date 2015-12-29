@@ -176,7 +176,7 @@ FiltersFactory.prototype.list = {
         long_name: 'sous-tutelle',
         url: 'artSousTutelle',
         match: {
-           'tutelle':true
+            'tutelle': true
         },
     }],
     devis: [{
