@@ -547,6 +547,9 @@ FiltersFactory.prototype.list = {
         short_name: 'i_chq',
         long_name: 'Relance Cheques',
         url: 'relanceCheques',
+        sortBy: {
+            di: 'desc'
+        },
         match: function() {
             return {
                 status: 'VRF',
