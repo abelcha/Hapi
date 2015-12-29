@@ -586,6 +586,7 @@ FiltersFactory.prototype.list = {
             return {
                 status: 'VRF',
                 'compta.reglement.recu': false,
+                'compta.paiement.effectue': false,
                 reglementSurPlace: false,
             }
         },
