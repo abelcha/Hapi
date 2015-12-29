@@ -183,8 +183,8 @@ FiltersFactory.prototype.list = {
         long_name: 'sous-tutelle',
         url: 'artSousTutelle',
         match: {
-            'status':{
-                $ne:'ARC'
+            'status': {
+                $ne: 'ARC'
             },
             'tutelle': true
         },
@@ -356,12 +356,12 @@ FiltersFactory.prototype.list = {
         short_name: 'i_chq',
         long_name: 'Relance Cheques',
         url: 'relanceCheques',
-        group: '$login.demarchage',
         match: function() {
             return {
                 status: 'VRF',
                 reglementSurPlace: true,
                 'compta.reglement.recu': false,
+                'artisan.subStatus': 'NEW'
             }
         },
         stats: true,
