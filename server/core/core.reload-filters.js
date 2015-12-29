@@ -3,7 +3,7 @@ module.exports = function(core) {
     return function(query, cb, a, b) {
         var updateFactory = function(obj) {
             return function(cb) {
-                console.log('db.' + core.name + 's.update(' + JSON.stringify(obj.query) + ', ' + JSON.stringify(obj.update) + ',{multi:true}' + ')')
+            //    console.log('db.' + core.name + 's.update(' + JSON.stringify(obj.query) + ', ' + JSON.stringify(obj.update) + ',{multi:true}' + ')')
                 core.model().update(obj.query, obj.update, {
                     multi: true
                 }).exec(cb)
