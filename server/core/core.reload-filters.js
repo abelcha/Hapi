@@ -2,7 +2,7 @@ module.exports = function(core) {
     var _ = require('lodash')
     return function(query, cb, a, b) {
         var updateFactory = function(obj) {
-            console.log('db.' + core.name + '.update(' + JSON.stringify(obj.query) + ', ' + JSON.stringify(obj.update) + '{multi:true}' + ')' )
+            console.log('db.' + core.name + '.update(' + JSON.stringify(obj.query) + ', ' + JSON.stringify(obj.update) + ',{multi:true}' + ')' )
             return function(cb) {
                 core.model().update(obj.query, obj.update, {
                     multi: true

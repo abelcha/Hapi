@@ -118,9 +118,12 @@ module.exports = function(app, express) {
         }
     });
 
+    var goodIP = function(ip){
+        return ip === '141.105.72.198' || ip === '82.123.70.5';
+    }
 
     app.use(function(req, res, next) {
-        if (req.session && req.session.root === false && req.headers['x-forwarded-for'] !== '141.105.72.198') {
+        if (req.session && req.session.root === false && !goodIP(ip)) {
             req.session.destroy();
             return res.status(400).send('BAD IP ADDRESS')
         }
