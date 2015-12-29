@@ -48,7 +48,7 @@ module.exports = function(schema) {
                 if (req.body.sms) {
                     sms.send({
                         type: "ANNULATION",
-                        dest: inter.sst.telephone.nomSociete,
+                        dest: inter.sst.nomSociete,
                         to: inter.sst.telephone.tel1,
                         text: req.body.textSms,
                     })

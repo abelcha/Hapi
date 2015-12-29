@@ -553,7 +553,6 @@ FiltersFactory.prototype.list = {
         match: function() {
             return {
                 'status': 'VRF',
-
                 'reglementSurPlace': true,
                 'compta.reglement.recu': false,
                 'compta.paiement.effectue': false,
