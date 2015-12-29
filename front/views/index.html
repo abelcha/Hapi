@@ -99,6 +99,7 @@
                         <link fltr="a_pal4" icon="th-list" model="artisan"></link>
                     </drop-down>
                      <drop-down icon="truck" title="Tous les Artisans" icon="truck">
+                        <link icon="th-list" model="artisan" login='{{displayUser.login}}' no-counter="true" title="All" url="/artisan/list"></link>
                         <link icon="th-list" model="artisan" login='{{displayUser.login}}' no-counter="true" title="New" url="/artisan/list?ss=NEW"></link>
                         <link icon="th-list" model="artisan" login='{{displayUser.login}}' no-counter="true" title="Hot" url="/artisan/list?ss=HOT"></link>
                         <link icon="th-list" model="artisan" login='{{displayUser.login}}' no-counter="true" title="OneShot" url="/artisan/list?ss=ONE"></link>

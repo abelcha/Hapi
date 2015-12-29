@@ -13,7 +13,7 @@ var Timer = module.exports = function() {
     //    this.emitter.add("*/120 * * * *", "every hour");
     //    this.emitter.add("*/5 * * * *", "every 5 minutes");
     // this.emitter.add("*/2 * * * *", "every minute");
-    this.emitter.add(hour(20), "everyday at 20")
+    this.emitter.add(hour(18), "everyday at 20")
     this.emitter.add(hour(7 - 1), "everyday at 7")
     this.emitter.add(hour(14 - 1), "everyday at 14")
     this.emitter.add(hour(3), "3pm");
