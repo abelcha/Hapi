@@ -22,7 +22,6 @@ module.exports = function(schema) {
             return new Promise(function(resolve, reject) {
 
                 var JSFtp = require("jsftp");
-                var mp3 = require('mp3-parser');
                 var streamToBuffer = require('stream-to-buffer')
                 var ftp = new JSFtp({
                     host: "ftp.axialys.net",
