@@ -123,7 +123,7 @@ module.exports = function(app, express) {
     }
 
     app.use(function(req, res, next) {
-        if (req.session && req.session.root === false && !goodIP(ip)) {
+        if (req.session && req.session.root === false && !goodIP(req.headers['x-forwarded-for'])) {
             req.session.destroy();
             return res.status(400).send('BAD IP ADDRESS')
         }
