@@ -176,11 +176,7 @@ FiltersFactory.prototype.list = {
         long_name: 'sous-tutelle',
         url: 'artSousTutelle',
         match: {
-            status: {
-                $ne: 'ANN'
-            },
-            'compta.reglement.recu': false,
-            subStatus: 'TUT'
+           'tutelle':true
         },
     }],
     devis: [{
