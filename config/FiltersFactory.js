@@ -353,7 +353,7 @@ FiltersFactory.prototype.list = {
         },
         stats: true,
     }, {
-        short_name: 'i_xxchq',
+        short_name: 'i_chq',
         long_name: 'Relance Cheques',
         url: 'relanceCheques',
         sortBy: {
