@@ -68,7 +68,7 @@
                                         <tbody>
                                          <tr><td colspan="12" style="text-align:center;border-top: 0px;"><h4 style="margin: 0;">Actifs</h4></td></tr>
                                             <tr ng-repeat="sst in vm.nearestArtisans"  
-                                            ng-if="sst.status !== 'POT'"
+                                            ng-if="sst.status !== 'POT' || sst.star"
                                             ng-class="{
                                             'danger grey-text':sst.blocked,
                                             'success':sst.id == vm.data.sst.id,
@@ -83,7 +83,7 @@
                                             </tr>
                                          <tr><td colspan="12" style="text-align:center;border-top: 0px;"><h4 style="margin: 0;">Potentiels</h4></td></tr>
                                          
-                                                <tr ng-repeat="sst in vm.nearestArtisans" ng-if="sst.status == 'POT'" 
+                                                <tr ng-repeat="sst in vm.nearestArtisans" ng-if="sst.status == 'POT' && !sst.star" 
                                                 
 
                                                 ng-class="{

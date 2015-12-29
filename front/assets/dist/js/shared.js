@@ -363,11 +363,18 @@ FiltersFactory.prototype.list = {
             status: 'ACT'
         },
     }, {
+        short_name: 'a_star',
+        long_name: 'star',
+        url: 'star',
+        match: {
+            star: true
+        },
+    }, {
         short_name: 'a_tut',
         long_name: 'sous-tutelle',
         url: 'artSousTutelle',
         match: {
-           'tutelle':true
+            'tutelle': true
         },
     }],
     devis: [{
