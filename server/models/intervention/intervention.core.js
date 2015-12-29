@@ -27,15 +27,12 @@
 
 
     var sendArtisanChangedSms = function(curr, session) {
-        console.log("[-------]SENDOKOK")
         setTimeout(function() {
 
-            console.log("[-------]TIMEOUT")
             db.model('intervention').findOne({
                 id: curr.id
             }).then(function(resp) {
                 if (!resp || resp.status !== 'APR')  {
-                    console.log("[-------]FLASE")
                         //si on a envoyer l'intervention entre temps
                     return false;
                 }
@@ -44,18 +41,14 @@
                     var moment = require('moment')
                     var textTemplate = requireLocal('config/textTemplate');
                     var config = requireLocal('config/dataList');
-                    console.log("[-------]HERE")
                     var text = _.template(textTemplate.sms.intervention.demande.bind(curr)(session, config, moment))(curr)
-                    console.log('==>', text)
                     sms.send({
                         type: "DEMANDE",
                         dest: curr.sst.nomSociete,
                         text: text,
                         to: curr.sst.telephone.tel1
                     })
-                    console.log('SMS SENDED')
                 } catch (e) {
-                    console.log('-->', e, e.stack)
                 }
             })
         }, 5000)
@@ -120,7 +113,7 @@
                         .id(_new.artisan.id)
                         .service('PARTENARIAT')
                         .color('green')
-                        .message(_.template("Nous avons reçu un chèque de M. Costantino {{artisan.nomSociete}}")(_new))
+                        .message(_.template("Nous avons reçu un chèque de M. {{artisan.representant.nom}} ({{artisan.nomSociete}})")(_new))
                         .send()
                         .save()
                 }
