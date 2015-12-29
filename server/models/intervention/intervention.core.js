@@ -120,7 +120,7 @@
                         .id(_new.artisan.id)
                         .service('PARTENARIAT')
                         .color('green')
-                        .message(_.template("Nous avons reçu un chèque de M. {{artisan.representant.nom}} ({{artisan.nomSociete}})")(_new))
+                        .message(_.template("Nous avons reçu un chèque de M. {{sst.representant.nom}} ({{sst.nomSociete}})")(_new))
                         .send()
                         .save()
                 }
