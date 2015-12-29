@@ -91,7 +91,7 @@ var devisQuery = function(rgx, _int) {
 		}, {
 			'client.telephone.tel1': rgx,
 		}, {
-			'client.telephone.tel1': rgx,
+			'client.telephone.tel2': rgx,
 		}, {
 			'client.telephone.tel3': rgx,
 		}]
