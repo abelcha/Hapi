@@ -27,29 +27,36 @@
 
 
     var sendArtisanChangedSms = function(curr, session) {
+        if (curr.sst.subStatus === 'NEW') {
+            edison.event('SST_NEW_SELECTIONNE')
+                .login(session.login)
+                .id(curr.id)
+                .service('PARTENARIAT')
+                .color('blue')
+                .message(_.template("Le sst NEW {{sst.nomSociete}} (M. {{sst.representant.nom}}) à été selectionné sur l'intervention {{id}}")(curr))
+                .send()
+                .save()
+        }
         setTimeout(function() {
 
             db.model('intervention').findOne({
                 id: curr.id
             }).then(function(resp) {
                 if (!resp || resp.status !== 'APR')  {
-                        //si on a envoyer l'intervention entre temps
+                    //si on a envoyer l'intervention entre temps
                     return false;
                 }
-                try {
+                var moment = require('moment')
+                var textTemplate = requireLocal('config/textTemplate');
+                var config = requireLocal('config/dataList');
+                var text = _.template(textTemplate.sms.intervention.demande.bind(curr)(session, config, moment))(curr)
+                sms.send({
+                    type: "DEMANDE",
+                    dest: curr.sst.nomSociete,
+                    text: text,
+                    to: curr.sst.telephone.tel1
+                })
 
-                    var moment = require('moment')
-                    var textTemplate = requireLocal('config/textTemplate');
-                    var config = requireLocal('config/dataList');
-                    var text = _.template(textTemplate.sms.intervention.demande.bind(curr)(session, config, moment))(curr)
-                    sms.send({
-                        type: "DEMANDE",
-                        dest: curr.sst.nomSociete,
-                        text: text,
-                        to: curr.sst.telephone.tel1
-                    })
-                } catch (e) {
-                }
             })
         }, 5000)
     }

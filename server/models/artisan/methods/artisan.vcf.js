@@ -25,9 +25,6 @@ module.exports = function(schema) {
                     return resolve(reply)
                 }
                 db.model('artisan').find({
-                    status: {
-                        $ne: 'ARC'
-                    }
                 }).sort('-id').select('id nomSociete address telephone').limit(req.query.limit ||  3000).then(function(docs) {
                     console.log('->', docs.length)
                     var rtn = "";
