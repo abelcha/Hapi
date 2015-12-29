@@ -537,7 +537,7 @@ FiltersFactory.prototype.list = {
         url: 'potaEnvoyer',
         match: {
             'status': 'APR',
-            'artisan.subStatus': 'POT'
+            'artisan.status': 'POT'
         },
     }, {
         short_name: 'i_pavrf',
