@@ -45,6 +45,7 @@ module.exports = function(core) {
                 multi: true
             }).exec(function(err, resp) {
                 var async = require('async')
+                console.log(JSON.stringify(updates, null, 2))
                 async.parallel(updates, function(err, result) {
                     if (typeof cb === 'function')
                         cb(err, result)
