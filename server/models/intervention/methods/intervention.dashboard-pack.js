@@ -219,11 +219,8 @@ module.exports = function(schema) {
         var token = ('dashboardStats' + req.query.date).envify()
         redis.get(token, function(err, reply) {
             if (!err && reply && !req.query.cache) {
-                console.log('cached')
                 return res.jsonStr(reply)
             } else {
-                console.log('nocached')
-
                 Promise.all([
                     _this.monthComission(req, res),
                     _this.weekStats(req, res),
