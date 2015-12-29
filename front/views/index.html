@@ -80,9 +80,9 @@
                 </drop-down>
                 <drop-down icon="briefcase" title="Management">
                     <drop-down ng-if="signalementStats" icon="briefcase" title="Signalement">
-                        <link icon="warning" title="Signalement 0" url="/listeSignalements?&service={{displayUser.service}}&ok=false&level=0">
-                        <link icon="warning" title="Signalement 1" url="/listeSignalements?&service={{displayUser.service}}&ok=false&level=1">
-                        <link icon="warning" title="Signalement 2" url="/listeSignalements?&service={{displayUser.service}}&ok=false&level=2">
+                        <link icon="warning" title="Level 0" url="/listeSignalements?&service={{displayUser.service}}&ok=false&level=0">
+                        <link icon="warning" title="Level 1" url="/listeSignalements?&service={{displayUser.service}}&ok=false&level=1">
+                        <link icon="warning" title="Level 2" url="/listeSignalements?&service={{displayUser.service}}&ok=false&level=2">
                     </drop-down>
                     <link fltr="a_tut" icon="th-list" model="artisan" title="Sst sous-tutelle"></link>
                     <simple-link icon="money" title="Relances Artisan" fltr="i_relsst1" url="/intervention/list/relsst1"></simple-link>
