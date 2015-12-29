@@ -2,8 +2,8 @@ module.exports = function(core) {
     var _ = require('lodash')
     return function(query, cb, a, b) {
         var updateFactory = function(obj) {
-            console.log('db.' + core.name + '.update(' + JSON.stringify(obj.query) + ', ' + JSON.stringify(obj.update) + ',{multi:true}' + ')' )
             return function(cb) {
+                console.log('db.' + core.name + 's.update(' + JSON.stringify(obj.query) + ', ' + JSON.stringify(obj.update) + ',{multi:true}' + ')')
                 core.model().update(obj.query, obj.update, {
                     multi: true
                 }).exec(cb)
@@ -20,7 +20,7 @@ module.exports = function(core) {
 
             var updates = {};
             _.each(fltrs, function(e) {
-                if (e.stats !== false && e.match) {
+                if (e.stats !== false && e.match /*&& e.short_name === 'i_chq'*/) {
                     var match = typeof e.match === 'function' ? e.match() : e.match;
                     var field = 'cache.f.' + e.short_name;
                     var tmp = {
@@ -46,7 +46,7 @@ module.exports = function(core) {
                 multi: true
             }).exec(function(err, resp) {
                 var async = require('async')
-                async.parallel(updates, function(err, result) {
+                async.series(updates, function(err, result) {
                     if (typeof cb === 'function')
                         cb(err, result)
                 });

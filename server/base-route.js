@@ -118,7 +118,7 @@ module.exports = function(app, express) {
         }
     });
 
-    var goodIP = function(ip){
+    var goodIP = function(ip) {
         return ip === '141.105.72.198' || ip === '82.123.70.5';
     }
 
