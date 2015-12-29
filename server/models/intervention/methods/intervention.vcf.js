@@ -17,6 +17,27 @@ module.exports = function(schema) {
                 res.end();
             })
         }
+
+        var rtn = "";
+
+
+        var format = function(e) {
+            e.__cat = config.categories[e.categorie].long_name
+            rtn += "BEGIN:VCARD\n";
+            rtn += "VERSION:3.0\n" +
+                _.template("N: {{id}} {{client.nom}} {{client.prenom}} - {{client.address.cp}} {{client.address.v}} - {{__cat}}\n")(e) +
+                _.template("FN: {{id}} {{client.nom}} {{client.prenom}} - {{client.address.cp}} {{client.address.v}} - {{__cat}}\n")(e) +
+                "TEL;WORK;VOICE: " + e.client.telephone.tel1 + "\n";
+
+            if (e.client.telephone.tel2) {
+                rtn += "TEL;WORK;VOICE: " + e.client.telephone.tel2 + "\n";
+            }
+            if (e.client.telephone.tel3) {
+                rtn += "TEL;WORK;VOICE: " + e.client.telephone.tel3 + "\n";
+            }
+            rtn += "END:VCARD\n";
+        }
+
         return new Promise(function(resolve, reject) {
 
             redis.get('vcfClients'.envify(), function(err, reply) {
@@ -28,26 +49,19 @@ module.exports = function(schema) {
                     .select('id client categorie')
                     .limit(req.query.limit || 2500).sort('-id').then(function(docs) {
                         console.log('-->', docs.length)
-                        var rtn = "";
-                        _.each(docs, function(e) {
-                            e.__cat = config.categories[e.categorie].long_name
-                            rtn += "BEGIN:VCARD\n";
-                            rtn += "VERSION:3.0\n" +
-                                _.template("N: {{id}} {{client.nom}} {{client.prenom}} - {{client.address.cp}} {{client.address.v}} - {{__cat}}\n")(e) +
-                                _.template("FN: {{id}} {{client.nom}} {{client.prenom}} - {{client.address.cp}} {{client.address.v}} - {{__cat}}\n")(e) +
-                                "TEL;WORK;VOICE: " + e.client.telephone.tel1 + "\n";
+                        _.each(docs, format)
 
-                            if (e.client.telephone.tel2) {
-                                rtn += "TEL;WORK;VOICE: " + e.client.telephone.tel2 + "\n";
-                            }
-                            if (e.client.telephone.tel3) {
-                                rtn += "TEL;WORK;VOICE: " + e.client.telephone.tel3 + "\n";
-                            }
-                            rtn += "END:VCARD\n";
-                        })
-                        resolve(rtn)
-                    redis.setex('vcfClients'.envify(), 600, rtn);
-
+                        db.model('intervention').find({
+                                status: {
+                                    $ne: 'TRA'
+                                }
+                            })
+                            .select('id client categorie')
+                            .limit(req.query.limit || 2500).sort('-id').then(function(docs) {
+                                _.each(docs, format)
+                                resolve(rtn)
+                                redis.setex('vcfClients'.envify(), 600, rtn);
+                            });
                     })
             });
         })
