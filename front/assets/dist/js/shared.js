@@ -553,8 +553,10 @@ FiltersFactory.prototype.list = {
         match: function() {
             return {
                 'status': 'VRF',
+
                 'reglementSurPlace': true,
                 'compta.reglement.recu': false,
+                'compta.paiement.effectue': false,
                 'artisan.subStatus': 'NEW'
             }
         },
@@ -567,7 +569,6 @@ FiltersFactory.prototype.list = {
             return {
                 status: 'VRF',
                 modeReglement: 'CHQ',
-                'compta.paiement.effectue': false,
                 reglementSurPlace: true,
                 'compta.reglement.recu': false,
                 'date.intervention': {
