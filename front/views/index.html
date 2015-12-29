@@ -33,7 +33,7 @@
                 <a href="/artisan" style="height: 31px;padding: 4px;" class="btn btn-primary btn-block btn-outline dark">Ajout d'un artisan</a>
             </div>
             <drop-down id="service-intervention" title="Service Intervention" icon="circle" open-default="displayUser.service === 'INTERVENTION'">
-                <link fltr="i_all" icon="th-list" title="Liste Interventions"></link>
+                <link fltr="i_all" icon="th-list" title="Liste Interventions" ng-if="user.login !== 'fredtest'"></link>
                 <drop-down title="Mes Interventions" icon="calendar" open-default="displayUser.service === 'INTERVENTION'">
                     <link fltr="i_tall" icon="th-list" color="default" text-white="true" bold="true" title="{{dateFormat}}" login="{{displayUser.login}}"></link>
                     <link fltr="i_tenv" icon="th-list" login="{{displayUser.login}}"></link>
