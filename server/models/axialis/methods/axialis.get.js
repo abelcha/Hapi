@@ -16,13 +16,17 @@
                     user: key.axialis.username,
                     pass: key.axialis.password
                 });
-
                 ftp.get(filename, function(err, socket) {
                     if (err || !socket) {
-                        return callback(err)
+                        callback(err)
+                    } else {
+                        callback(null, socket)
                     }
-                    return callback(null, socket)
+                    ftp.raw.quit(function(err, data) {
+                        if (err) return console.error(err);
 
+                        console.log("Bye!");
+                    });
                 })
             }
 
@@ -34,22 +38,25 @@
                     return res.contentType("audio/mpeg").sendFile(filePath)
                 })
             }
+            console.log('GET')
             getFile(call_id + ".mp3", function(err, socket) {
                 if (err) {
                     return res.status(404).send('not found');
                 }
-                socket.pipe(res.contentType("audio/mpeg"));
+                console.log('PIPE')
+                res.contentType("audio/mpeg")
+                socket.pipe(res);
 
                 var tmpFilePath = '/tmp/' + uuid.v4()
                 var myFile = fs.createWriteStream(tmpFilePath);
 
-                socket.pipe(myFile)
-                    .on('finish', function() {
-                        console.log('ok')
-                        fs.rename(tmpFilePath, filePath, function(err, resp) {
-                            console.log(err, resp)
-                        })
-                    });
+                /*    socket.pipe(myFile)
+                        .on('finish', function() {
+                            console.log('ok')
+                            fs.rename(tmpFilePath, filePath, function(err, resp) {
+                                console.log(err, resp)
+                            })
+                        });*/
                 socket.on('error', function(exc) {
                     sys.log("FTP ERROR: " + exc);
                 });
