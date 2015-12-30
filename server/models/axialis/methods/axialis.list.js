@@ -9,6 +9,7 @@ module.exports = function(schema) {
     schema.statics.get = {
         unique: true,
         findBefore: false,
+        
         method: 'GET',
         fn: function(call_id, req, res) {
             /* var ftp = require('ftp-get')
