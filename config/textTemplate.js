@@ -35,7 +35,7 @@ module.exports = {
                 this.user.pseudo = _capitalize(this.user.pseudo ||  "arnaud");
                 this.ligneDirect = user.ligne ? (user.ligne.match(/.{2}|.{1,2}/g).join('.')) :  "09.72.44.16.63";
                 this.categorieClean = config.categories[this.categorie].suffix + " " + config.categories[this.categorie].long_name.toLowerCase()
-                return "M. ZENATI,\n" +
+                return "M. {{sst.representant.nom}},\n" +
                     "Etes vous disponible pour une intervention {{categorieClean}} {{datePlain}} à  {{client.address.v}} {{client.address.cp}} ?\n" +
                     "{{user.pseudo}} : {{ligneDirect}}\n" +
                     "Edison Services";

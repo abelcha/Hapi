@@ -201,7 +201,6 @@ module.exports = function(schema) {
                         }
                         if (elem.TOTAL_AVR > 0) {
                             set(rtn, elem._id.a, 'averif', elem.TOTAL_AVR)
-
                         }
                     })
                     resolve(rtn);
