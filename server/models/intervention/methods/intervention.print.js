@@ -41,6 +41,7 @@ module.exports = function(schema) {
                             }
                         })
                         if (!e.document.contrat.ok) {
+                            e.signe = true
                             op.push({
                                 model: 'contract',
                                 options: e
