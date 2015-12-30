@@ -96,11 +96,11 @@ module.exports = function(schema) {
     }
 
 
-    var cond = function(vr, val, res) {
+    var cond = function(a, b, c, d) {
         return {
             $cond: [{
-                $eq: [vr, val]
-            }, res, 0]
+                $eq: [a, b]
+            }, c || 1, d || 0]
         }
     }
     var sum = function(vr) {
@@ -128,27 +128,99 @@ module.exports = function(schema) {
     }
     schema.statics.weekStats = function(req, res) {
         //ligue 1
+        var dt = new Date(req.query.date);
         return new Promise(function(resolve, reject) {
-            var dateCeilling = moment().startOf('week').toDate();
-
             db.model('intervention')
                 .aggregate()
                 .match({
-                    'date.ajout': {
-                        $gt: new Date(req.query.date)
-                    },
+                    $or: [{
+                        $and: [{
+                            'date.verification': {
+                                $gt: dt
+                            },
+                            'status': 'VRF'
+                        }]
+                    }, {
+                        $and: [{
+                            'date.annulation': {
+                                $gt: dt
+                            },
+                            'status': 'ANN'
+                        }]
+                    }, {
+                        'date.ajout': {
+                            $gt: dt
+                        }
+                    }],
                 })
                 .project({
                     'login.ajout': 1,
                     'login.envoi': 1,
                     'login.verification': 1,
                     TOTAL: 1,
-                    ENC: cond('$status', 'ENC', 1),
-                    VRF: cond('$status', 'VRF', 1),
-                    APR: cond('$status', 'APR', 1),
-                    ANN: cond('$status', 'ANN', 1),
-                    AVR: cond('$cache.f.i_avr', 1, 1),
-                    SUM: cond('$status', 'VRF', div(sub("$prixFinal", "$coutFourniture"), 300))
+
+                    ANN: {
+                        $cond: [{
+                            $and: [{
+                                $eq: ['$status', 'ANN']
+                            }, {
+                                $gt: ['$date.annulation', dt]
+                            }]
+                        }, 1, 0]
+                    },
+                    VRF: {
+                        $cond: [{
+                            $and: [{
+                                $eq: ['$status', 'VRF']
+                            }, {
+                                $gt: ['$date.verification', dt]
+                            }]
+                        }, 1, 0]
+                    },
+                    ENC: {
+                        $cond: [{
+                            $and: [{
+                                $or: [{
+                                    $eq: ['$status', 'ENC']
+                                }, {
+                                    $eq: ['$status', 'VRF']
+                                }]
+                            }, {
+                                $gt: ['$date.ajout', dt]
+                            }]
+                        }, 1, 0]
+                    },
+                    APR: {
+                        $cond: [{
+                            $and: [{
+                                $eq: ['$status', 'APR']
+                            }, {
+                                $gt: ['$date.ajout', dt]
+                            }]
+                        }, 1, 0]
+                    },
+                    AVR: {
+                        $cond: [{
+                            $and: [{
+                                $eq: ['$cache.f.i_avr', 1]
+                            }, {
+                                $gt: ['$date.ajout', dt]
+                            }]
+                        }, 1, 0]
+                    },
+                    SUM: {
+                        $cond: [{
+                            $and: [{
+                                $or: [{
+                                    $eq: ['$status', 'ENC']
+                                }, {
+                                    $eq: ['$status', 'VRF']
+                                }]
+                            }, {
+                                $gt: ['$date.ajout', dt]
+                            }]
+                        }, div(sub("$prixFinal", "$coutFourniture"), 100), 0]
+                    },
                 })
                 .group({
                     _id: {
@@ -164,6 +236,7 @@ module.exports = function(schema) {
                     TOTAL_ANN: sum('$ANN'),
                 })
                 .exec(function(err, resp) {
+                    console.log(resp)
                     var rtn = edison.users.service('INTERVENTION')
                     rtn = _.map(rtn, function(e) {
                         return {
@@ -180,16 +253,17 @@ module.exports = function(schema) {
 
                     _.each(resp, function(elem) {
                         if (elem.TOTAL_VRF > 0) {
-                            set(rtn, elem._id.a, 'ajout', elem.TOTAL_VRF)
-                            set(rtn, elem._id.a, 'envoi', elem.TOTAL_VRF)
+                            //    set(rtn, elem._id.a, 'ajout', elem.TOTAL_VRF)
+                            //    set(rtn, elem._id.a, 'envoi', elem.TOTAL_VRF)
                             set(rtn, elem._id.v, 'verif', elem.TOTAL_VRF)
                         }
                         if (elem.TOTAL_SUM > 0) {
                             set(rtn, elem._id.a, 'sum', elem.TOTAL_SUM)
-                            set(rtn, elem._id.a, 'sum', elem.TOTAL_SUM)
-                            set(rtn, elem._id.a, 'sum', elem.TOTAL_SUM)
+                                //    set(rtn, elem._id.a, 'sum', elem.TOTAL_SUM)
+                                //    set(rtn, elem._id.a, 'sum', elem.TOTAL_SUM)
                         }
                         if (elem.TOTAL_ENC > 0) {
+                            // set(rtn, elem._id.a, 'ajout', elem.TOTAL_ENC)
                             set(rtn, elem._id.a, 'ajout', elem.TOTAL_ENC)
                             set(rtn, elem._id.a, 'envoi', elem.TOTAL_ENC)
                         }
@@ -217,7 +291,7 @@ module.exports = function(schema) {
         var _this = this;
         var token = ('dashboardStats' + req.query.date).envify()
         redis.get(token, function(err, reply) {
-            if (!err && reply && !req.query.cache) {
+            if (!err && reply && false && !req.query.cache) {
                 return res.jsonStr(reply)
             } else {
                 Promise.all([
