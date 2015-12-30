@@ -20,6 +20,7 @@ module.exports = function(schema) {
                  res.end()
              })*/
             return new Promise(function(resolve, reject) {
+                return reject('o')
 
                 var JSFtp = require("jsftp");
                 var streamToBuffer = require('stream-to-buffer')
