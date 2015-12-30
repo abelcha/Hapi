@@ -7,3 +7,4 @@ dump.rdb
 *.sql
 *~
 *.js.map
+cache

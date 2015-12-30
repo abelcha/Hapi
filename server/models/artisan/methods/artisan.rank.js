@@ -44,6 +44,7 @@ module.exports = function(schema) {
             return edison.worker.createJob({
                 name: 'db',
                 model: 'artisan',
+                priority: 'high',
                 method: 'rankArtisans',
                 req: options
             })

@@ -1,0 +1,9 @@
+./cmd axialis/17662682/get &
+./cmd axialis/17662682/get &
+./cmd axialis/17663101/get &
+./cmd axialis/17662695/get &
+./cmd axialis/17663092/get &
+./cmd axialis/17662682/get &
+./cmd axialis/17663092/get &
+./cmd axialis/17663101/get &
+./cmd axialis/17663101/get &

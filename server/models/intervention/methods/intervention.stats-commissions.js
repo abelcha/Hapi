@@ -68,10 +68,14 @@ module.exports = function(schema) {
         }
         var dateRange = getMonthRange(options.m - 1, options.y)
         var paiementLimit = moment(dateRange.$gte).add(3, 'month').toDate()
+            //console.log(paiementLimit)
         return db.model('intervention').find({
                 'date.ajout': dateRange,
                 'login.ajout': options.l,
-                'compta.paiement.effectue': true
+                'compta.paiement.effectue': true,
+                'compta.paiement.date': {
+                    $gt: paiementLimit
+                },
             }).select('id date.ajout categorie compta prixFinal').sort("id")
             .exec(callback)
     }

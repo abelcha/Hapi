@@ -81,10 +81,10 @@ module.exports = function(schema) {
                         impaye: sumCount({
                             status: 'VRF',
                             reglementSurPlace: true,
-                            'compta.reglement.recu': false,
+                            'compta.paiement.effectue': false,
                         }),
                         paye: sumCount({
-                            'compta.reglement.recu': true,
+                            'compta.paiement.effectue': true,
                         }),
                         _lastInter: function(cb) {
                             db.model('intervention').findOne({
