@@ -67,14 +67,14 @@ module.exports = function(schema) {
             }
         }
         var dateRange = getMonthRange(options.m - 1, options.y)
-        var paiementLimit = moment(dateRange.$gte).add(3, 'month').toDate()
-            //console.log(paiementLimit)
+        var paiementLimit = moment(dateRange.$gte).add(4, 'month').toDate()
+        console.log(paiementLimit)
         return db.model('intervention').find({
                 'date.ajout': dateRange,
                 'login.ajout': options.l,
                 'compta.paiement.effectue': true,
                 'compta.paiement.date': {
-                    $gt: paiementLimit
+                    $lt: paiementLimit
                 },
             }).select('id date.ajout categorie compta prixFinal').sort("id")
             .exec(callback)
@@ -95,6 +95,7 @@ module.exports = function(schema) {
     schema.statics.commissions = function(req, res) {
         return new Promise(function(resolve, reject) {
             getComs(req.query, function(err, resp) {
+             //   console.log(resp)
                 resolve(resp);
             })
         })
