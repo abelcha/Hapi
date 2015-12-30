@@ -79,6 +79,14 @@ var InterventionCtrl = function(Description, Signalement, ContextMenu, $window, 
     _this.contextMenu.setData(intervention);
 
 
+    _this.isAbsent = function(abs) {
+        if (!abs || !abs.length) {
+            return false;
+        }
+        return moment().isAfter(abs[abs.length - 1].start) && moment().isBefore(abs[abs.length - 1].end)
+    }
+
+
     _this.rowRightClick = function($event, inter) {
         if ($('.map-box').has($event.target).length) {
             var id = $event.target.getAttribute('id-sst') || _.get(intervention, 'sst.id')
@@ -193,12 +201,12 @@ var InterventionCtrl = function(Description, Signalement, ContextMenu, $window, 
         }
         intervention.save(function(err, resp) {
             if (!err) {
-              /*  var files = intervention.files
-                var tmp = intervention;
-                intervention = new Intervention(resp);
-                intervention.produits = tmp.produits;
-                intervention.fourniture = tmp.fourniture;
-                intervention.files = files*/
+                /*  var files = intervention.files
+                  var tmp = intervention;
+                  intervention = new Intervention(resp);
+                  intervention.produits = tmp.produits;
+                  intervention.fourniture = tmp.fourniture;
+                  intervention.files = files*/
                 postSave(options, resp, function(err) {
                     if (!err) {
                         TabContainer.close(tab);
