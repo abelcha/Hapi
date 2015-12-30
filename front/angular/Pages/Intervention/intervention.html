@@ -35,9 +35,7 @@
                                     {{vm.data.sst.nomSociete}} - M. {{vm.data.sst.representant.nom}} {{vm.data.sst.representant.prenom}} ({{vm.data.sst.pourcentage.deplacement}}/{{vm.data.sst.pourcentage.maindOeuvre}})</span>
                                     <div class="paragraph fs-body-1" style="height:90px;">
                                         <p style="width:49%;float:left">
-                                            <strong ng-if="vm.isAbsent(vm.data.sst.absence)">Absent du {{vm.data.sst.absence[vm.data.sst.absence.length - 1].start|date:"dd/MM/yy à HH'h'mm"}} au {{vm.data.sst.absence[vm.data.sst.absence.length - 1].end|date:"dd/MM/yy à HH'h'mm"}} (par {{vm.data.sst.absence[vm.data.sst.absence.length - 1].login}})</strong>
-                                            Distance: {{vm.data.sst.stats.direction.distance}} ({{vm.data.sst.stats.direction.duration}})
-                                            <br>
+                                            <strong ng-if="vm.isAbsent(vm.data.sst.absence)">Absent du {{vm.data.sst.absence[vm.data.sst.absence.length - 1].start|date:"dd/MM/yy à HH'h'mm"}} au {{vm.data.sst.absence[vm.data.sst.absence.length - 1].end|date:"dd/MM/yy à HH'h'mm"}} <br>par {{vm.data.sst.absence[vm.data.sst.absence.length - 1].login}})<br></strong> Distance: {{vm.data.sst.stats.direction.distance}} ({{vm.data.sst.stats.direction.duration}})
                                             <br> Dernière Intervention: {{vm.data.sst.stats._lastInter.relative}} ({{vm.data.sst.stats._lastInter.id}})
                                             <br> Interventions en cours: {{vm.data.sst.stats.envoye.total}}
                                             <br> Montant des en cours: {{vm.data.sst.stats.envoye.montant}}€
@@ -213,8 +211,8 @@
                         <div class="row" style="margin:0" ng-if="vm.data.status === 'VRF'">
                             <div class="card margin">
                                 <div class="p+">
-                             <strong class="fs-headline display-block">Recouvrement</strong>
-                             <br>
+                                    <strong class="fs-headline display-block">Recouvrement</strong>
+                                    <br>
                                     <div style="width:24.5%;display:inline-block">
                                         <button ng-click="vm.data.recouvrement.level = (vm.data.recouvrement.level === 0 ? null : 0)" style="display: block;width:100%" ng-class="{'grey':vm.data.recouvrement.level === 0}" class="btn--no-conflicts btn--m lighten-3 btn--raised" lx-ripple>Pas de Contact</button>
                                     </div>
