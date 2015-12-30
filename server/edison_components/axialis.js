@@ -47,6 +47,7 @@ var request = function(query) {
                         .message(_.template("La conversation téléphonique du client {{id}} ({{client.civilite}} {{client.nom}}) a été upload")(resp))
                         .send()
                         .save()
+                    db.model('axialis').get.fn(query.call_id);
                 }, 25 * 60 * 1000);
             }
         })
