@@ -11,5 +11,10 @@ module.exports = {
     postmark: "b2c424bc-af2b-4175-b76f-c863bb3915c3",
     dropbox: "vPCwuQ_iHHkAAAAAAAAEYXCJS5OETTlvzmXbhc1kjFOsMKO2futzgS-VM8p8S1un",
     salt: "3AlqPodMzLUTYUYqyv3Fqs2JF17aXFWEzA61V8ZNb5ylEvS67Y1sHvjHeZe7EtQ",
-    commandLineQuery: "Ie1W4k2iw02029b5CFfwKgPSK3MkFrbq"
+    commandLineQuery: "Ie1W4k2iw02029b5CFfwKgPSK3MkFrbq",
+    axialis: {
+        hostname: "ftp.axialys.net",
+        username: "edison",
+        password: "/@8.r2DmXcZwvdKs"
+    }
 }
