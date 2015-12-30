@@ -107,6 +107,7 @@
             _old.status = 'APR';
         }
         if (_new.compta.reglement.recu && !_old.compta.reglement.recu) {
+            _new.status = 'VRF';
             _new.compta.reglement.historique.push({
                 login: session.login,
                 montant: _new.compta.reglement.avoir.montant,
