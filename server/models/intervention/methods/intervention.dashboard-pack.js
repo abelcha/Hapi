@@ -236,7 +236,6 @@ module.exports = function(schema) {
                     TOTAL_ANN: sum('$ANN'),
                 })
                 .exec(function(err, resp) {
-                    console.log(resp)
                     var rtn = edison.users.service('INTERVENTION')
                     rtn = _.map(rtn, function(e) {
                         return {
