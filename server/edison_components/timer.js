@@ -1,4 +1,5 @@
 var Timer = module.exports = function() {
+    var ms = require('milliseconds')
     var CronEmitter = require("cron-emitter").CronEmitter;
     var _ = require('lodash')
     var moment = require('moment')
@@ -14,8 +15,8 @@ var Timer = module.exports = function() {
     //    this.emitter.add("*/5 * * * *", "every 5 minutes");
     // this.emitter.add("*/2 * * * *", "every minute");
     this.emitter.add(hour(18), "everyday at 20")
-    this.emitter.add(hour(7 - 1), "everyday at 7")
-    this.emitter.add(hour(14 - 1), "everyday at 14")
+    this.emitter.add(hour(8), "everyday at 7")
+    this.emitter.add(hour(14), "everyday at 14")
     this.emitter.add(hour(3), "3pm");
     this.emitter.add(hour(4), "4pm");
     this.emitter.add("*/60 * * * *", "hour")
@@ -28,15 +29,16 @@ var Timer = module.exports = function() {
 
         this.emitter.on("everyday at 20", function() {
             if (moment().isoWeekday() !== 6 && moment().isoWeekday() !== 7) {
-                console.log('==>RELANCEAUTOHERE')
                 db.model('intervention').relanceAuto();
             }
         });
 
         this.emitter.on("everyday at 7", function() {
-            if (moment().isoWeekday() !== 6 && moment().isoWeekday() !== 7) {
-                db.model('devis').relanceAuto7h()
-            }
+            setTimeout(function() {
+                if (moment().isoWeekday() !== 6 && moment().isoWeekday() !== 7) {
+                    db.model('devis').relanceAuto7h()
+                }
+            }, _.random(ms.minutes(2), ms.minutes(10)))
         });
 
 
@@ -45,7 +47,7 @@ var Timer = module.exports = function() {
                 if (moment().isoWeekday() !== 6 && moment().isoWeekday() !== 7) {
                     db.model('devis').relanceAuto14h()
                 }
-            }, _.random(5 * 60 * 1000))
+            }, _.random(ms.minutes(2), ms.minutes(10)))
 
         });
 
@@ -54,7 +56,7 @@ var Timer = module.exports = function() {
             setTimeout(function() {
 
                 db.model('intervention').rappelDateIntervention()
-            }, _.random(5 * 60 * 1000))
+            }, _.random(ms.minutes(2), ms.minutes(10)))
         });
 
         this.emitter.on("4 minutes", function() {
@@ -69,7 +71,7 @@ var Timer = module.exports = function() {
                         db.model('document').order(req).then(function() {})
                     })
                 })
-            }, _.random(10 * 60 * 1000))
+            }, _.random(ms.minutes(2), ms.minutes(10)))
         })
     }
 
@@ -82,7 +84,7 @@ var Timer = module.exports = function() {
             db.model('artisan').fullReload().then(function() {
                 console.log('artisan ok')
             })
-        }, _.random(10 * 60 * 1000, 30 * 60 * 1000))
+        }, _.random(ms.minutes(2), ms.minutes(10)))
     })
 
     this.emitter.on("10 minutes", function() {
@@ -90,7 +92,7 @@ var Timer = module.exports = function() {
 
             db.model('intervention').fullReload().then(function() {})
             db.model('devis').fullReload().then(function() {})
-        }, _.random(5 * 60 * 1000))
+        }, _.random(ms.minutes(2), ms.minutes(10)))
     })
     this.emitter.on("3pm", function() {
         redis.delWildcard("rs*")

@@ -1,7 +1,7 @@
 <div>
     <div class="row">
         <div class="col-sm-6">
-            <div class="shadow-box" style="min-height:200px">
+            <div class="shadow-box" style="min-height:500px">
                 <div style="padding:20px;overflow: hidden;">
                     <strong class="fs-headline display-inline">
                     <span>Classement</span>
@@ -12,7 +12,7 @@
                     <br>
                     <br>
                     <table ng-table="vm.tableParams" class="table table-striped" show-filter="false">
-                        <tr ng-repeat="user in $data" ng-class="{success:$index === 0}">
+                        <tr ng-repeat="user in $data" ng-class="{success:$index === 0}" ng-if="user.total || user.averif || user.annul">
                             <td title="'Login'" sortable="'login'">
                                 {{_.capitalize(user.login).slice(0, -2)}}
                             </td>
@@ -43,7 +43,7 @@
             </div>
         </div>
         <div class="col-sm-6">
-            <div class="shadow-box" style="padding:20px;overflow: hidden;min-height:200px">
+            <div class="shadow-box" style="padding:20px;overflow: hidden;min-height:288px">
                 <strong class="fs-headline display-inline">Commissions</strong>
                 <table class="table">
                     <thead>
@@ -67,7 +67,7 @@
                 </table>
             </div>
             <br>
-            <div class="shadow-box" style="padding:20px;overflow: hidden;min-height:200px">
+            <div class="shadow-box" style="padding:20px;overflow: hidden;min-height:192px">
                 <div class="row">
                     <div class="col-lg-3 col-md-6">
                         <div class="panel panel-primary">
