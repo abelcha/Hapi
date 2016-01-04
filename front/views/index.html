@@ -184,13 +184,13 @@
         <ul list-justify>
             <li style="margin:0px 10px;padding:5px" ng-repeat="(key, value) in vm.statsTeleproBfm">
                 <span class="badge white black-text" style="font-size:15px">{{_.capitalize(value.login).slice(0, -2)}}</span>
-                <a href="/intervention/list/ajd?t={{value.login}}"><span class="badge">{{value.total}} Points</span></a>
+                <a href="/intervention/list/ajd#{{value.login}}"><span class="badge">{{value.total}} Points</span></a>
                 <span ng-if="!smallWin">
-                <a href="/intervention/list/ajd?t={{value.login}}"><span class="badge">{{value.ajout}}</span></a>
-                <a href="/intervention/list/envoyeAjd?t={{value.login}}"><span class="badge orange">{{value.envoi}}</span></a>
-                <a href="/intervention/list/ajd?_etat=verifier&t={{value.login}}"><span class="badge green">{{value.verif}}</span></a>
-                <a href="/intervention/list/ajd?_etat=averifie&t={{value.login}}"><span class="badge brown">{{value.averif}}</span></a>
-                <a href="/intervention/list/annules#{{value.login}}"><span class="badge red">{{value.annul}}</span></a>
+                <a href="/intervention/list/ajd#{{value.login}}"><span class="badge">{{value.ajout}}</span></a>
+                <a href="/intervention/list/envoyeAjd#{{value.login}}"><span class="badge orange">{{value.envoi}}</span></a>
+                <a href="/intervention/list/verifieAjd#{{value.login}}"><span class="badge green">{{value.verif}}</span></a>
+                <a href="/intervention/list/aVerifier#{{value.login}}"><span class="badge brown">{{value.averif}}</span></a>
+                <a href="/intervention/list/annuleAjd#{{value.login}}"><span class="badge red">{{value.annul}}</span></a>
                 </span>
             </li>
         </ul>
