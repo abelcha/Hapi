@@ -295,20 +295,33 @@ FiltersFactory.prototype.list = {
                 }
             }
         },
-    },{
+    }, {
         short_name: 'i_tvrf',
         long_name: "Verifié Aujourd'hui",
         group: '$login.verification',
         url: 'verifieAjd',
         match: function() {
             return {
-                'status': 'VRF',
-                'date.verification': {
-                    $gt: today()
-                }
+
+                $or: [{
+                    $and: [{
+                        'date.verification': {
+                            $gt: today()
+                        },
+                        'status': 'VRF',
+                    }]
+                }, {
+                    $and: [{
+                        'date.annulation': {
+                            $exists: true,
+                            $gt: today()
+                        },
+                        'status': 'ANN',
+                    }]
+                }]
             }
         },
-    },  {
+    }, {
         short_name: 'i_avr',
         long_name: 'A vérifier',
         url: 'aVerifier',

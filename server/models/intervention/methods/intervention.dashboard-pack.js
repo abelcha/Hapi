@@ -172,7 +172,7 @@ module.exports = function(schema) {
                             }, {
                                 $gt: ['$date.annulation', dt]
                             }]
-                        }, 1, 0]
+                        }, 2, 0]
                     },
                     VRF: {
                         $cond: [{
@@ -192,7 +192,7 @@ module.exports = function(schema) {
                             }, {
                                 $ifNull: ['$date.envoi', true]
                             }]
-                        }, -1.5, 0]
+                        }, 1, 0]
                     },
                     ENC: {
                         $cond: [{
@@ -280,7 +280,7 @@ module.exports = function(schema) {
                         }
                      //   console.log('-->', elem, elem.TOTAL_ANNULE_VRF)
                         if (elem.TOTAL_ANNULE_VRF > 0) {
-                            set(rtn, elem._id.n, 'annul_vrf', elem.TOTAL_ANNULE_VRF)
+                            set(rtn, elem._id.n, 'verif', elem.TOTAL_ANNULE_VRF)
                         }
                         if (elem.TOTAL_SUM > 0) {
                             set(rtn, elem._id.a, 'sum', elem.TOTAL_SUM)
