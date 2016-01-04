@@ -77,8 +77,8 @@ module.exports = function(app, express) {
         }
         if (envProd) {
             log.info(lg)
-        } else {
             console.log(JSON.stringify(lg))
+        } else {
         }
         next()
     })
@@ -128,6 +128,11 @@ module.exports = function(app, express) {
             return res.status(400).send('BAD IP ADDRESS')
         }
         next(null)
+    })
+
+    app.get("/api/new_call", function(req, res)  {
+        console.log("==>", req.headers['x-forwarded-for'], req.query)
+        res.json(Date.now());
     })
 
     app.get("/api/ping", function(req, res)  {
