@@ -291,7 +291,7 @@ module.exports = function(schema) {
         var _this = this;
         var token = ('dashboardStats' + req.query.date).envify()
         redis.get(token, function(err, reply) {
-            if (!err && reply && !req.query.cache) {
+            if (!err && reply && false && !req.query.cache) {
                 return res.jsonStr(reply)
             } else {
                 Promise.all([
