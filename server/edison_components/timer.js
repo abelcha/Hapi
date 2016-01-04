@@ -87,7 +87,7 @@ var Timer = module.exports = function() {
         }, _.random(ms.minutes(2), ms.minutes(10)))
     })
 
-    this.emitter.on("10 minutes", function() {
+    this.emitter.on("20 minutes", function() {
         db.model('intervention').update({
             'cache.f.i_avr': 1,
             'cache.s': 0
