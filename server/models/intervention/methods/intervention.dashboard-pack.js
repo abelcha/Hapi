@@ -133,7 +133,9 @@ module.exports = function(schema) {
             db.model('intervention')
                 .aggregate()
                 .match({
-                    'login.ajout': edison.users.service('INTERVENTION'),
+                    'login.ajout': {
+                        $in edison.users.service('INTERVENTION')
+                    },
                     $or: [{
                         $and: [{
                             'date.verification': {
