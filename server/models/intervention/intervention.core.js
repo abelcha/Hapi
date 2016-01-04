@@ -282,7 +282,7 @@
                 ad: e.client.address.cp + ', ' + e.client.address.v,
                 dm: e.login.demarchage || undefined,
                 ev: e.login.envoi || undefined,
-                vf: e.login.verification || undefined
+                vf: e.login.verification || e.login.annulation  || undefined
             };
             if (e.aDemarcher && !e.sst) {
                 rtn.d = e.enDemarchage ? 2 : 1;
