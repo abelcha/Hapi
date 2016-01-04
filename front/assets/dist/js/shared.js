@@ -822,6 +822,18 @@ FiltersFactory.prototype.list = {
                 }
             }
         },
+    }, {
+        short_name: 'i_ann',
+        long_name: "Annulés",
+        url: 'annules',
+        match: function() {
+            return {
+                status: "ANN",
+                'date.annulation': {
+                    $gt: today()
+                }
+            }
+        },
     }]
 }
 
