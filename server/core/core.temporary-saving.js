@@ -3,7 +3,7 @@ module.exports = function(core) {
     return function(req, res) {
         if (req.body.tmpID) {
             var key = core.redisTemporarySaving(req.body.tmpID).envify();
-            redis.setex(key, 600, JSON.stringify(req.body), function() {
+            redis.setex(key, 10 * 60 * 60, JSON.stringify(req.body), function() {
                 res.send('ok')
             });
         } else if (req.query.id) {
