@@ -88,11 +88,20 @@ var Timer = module.exports = function() {
     })
 
     this.emitter.on("10 minutes", function() {
-        setTimeout(function() {
-
+        db.model('intervention').update({
+            'cache.f.i_avr': 1,
+            'cache.s': 0
+        }, {
+            $set: {
+                'cache.s': 3
+            }
+        }, {
+            multi: true
+        }, function(a, b) {
+            console.log(a, b)
             db.model('intervention').fullReload().then(function() {})
             db.model('devis').fullReload().then(function() {})
-        }, _.random(ms.minutes(2), ms.minutes(10)))
+        })
     })
     this.emitter.on("3pm", function() {
         redis.delWildcard("rs*")
