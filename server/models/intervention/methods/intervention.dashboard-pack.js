@@ -151,6 +151,7 @@ module.exports = function(schema) {
                         'date.ajout': {
                             $gt: dt
                         },
+                    }, {
                         '$cache.f.i_avr': 1
                     }],
                 })
