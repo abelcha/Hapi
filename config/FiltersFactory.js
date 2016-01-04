@@ -302,24 +302,26 @@ FiltersFactory.prototype.list = {
         url: 'verifieAjd',
         match: function() {
             return {
-
                 $or: [{
                     $and: [{
                         'date.verification': {
                             $gt: today()
-                        },
-                        'status': 'VRF',
-                    }]
+                        }
+                    }, {
+                        'status': 'VRF'
+                    }, ]
                 }, {
                     $and: [{
-                        'date.ajout': {
+                        'date.envoi': {
                             $exists: true
-                        },
+                        }
+                    }, {
                         'date.annulation': {
                             $gt: today()
-                        },
-                        'status': 'ANN',
-                    }]
+                        }
+                    }, {
+                        'status': 'ANN'
+                    }, ]
                 }]
             }
         },
