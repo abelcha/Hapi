@@ -201,11 +201,12 @@ module.exports = function(schema) {
                     },
                     AVR: {
                         $cond: [{
-                            $and: [{
+                            $eq: ['$cache.f.i_avr', 1]
+                           /* $and: [{
                                 $eq: ['$cache.f.i_avr', 1]
                             }, {
                                 $gt: ['$date.ajout', dt]
-                            }]
+                            }]*/
                         }, 1, 0]
                     },
                     SUM: {

@@ -82,7 +82,7 @@ module.exports = function(schema) {
 
         var todayAt7 = moment.tz('Europe/Paris').hours(7).toDate()
         if (moment().isoWeekday() === 1) {
-            todayAt7 = todayAt7.add(-2, "days");
+            todayAt7 =  moment.tz('Europe/Paris').hours(7).add(-2, "days").toDate()
         }
         db.model('devis').find({
             status: 'ATT',
