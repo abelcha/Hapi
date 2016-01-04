@@ -312,8 +312,10 @@ FiltersFactory.prototype.list = {
                     }]
                 }, {
                     $and: [{
+                        'date.ajout': {
+                            $exists: true
+                        },
                         'date.annulation': {
-                            $exists: true,
                             $gt: today()
                         },
                         'status': 'ANN',
