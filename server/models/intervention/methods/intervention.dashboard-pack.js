@@ -2,6 +2,7 @@ module.exports = function(schema) {
     var moment = require('moment')
     var async = require('async')
     var _ = require('lodash')
+    var ms = require('milliseconds')
     schema.statics.monthComission = function(req, res) {
         return new Promise(function(resolve, reject) {
 
@@ -255,6 +256,7 @@ module.exports = function(schema) {
                     TOTAL_ANN: sum('$ANN'),
                 })
                 .exec(function(err, resp) {
+                    console.log(err)
                     var rtn = edison.users.service('INTERVENTION')
                     rtn = _.map(rtn, function(e) {
                         return {
@@ -314,7 +316,7 @@ module.exports = function(schema) {
         var _this = this;
         var token = ('dashboardStats' + req.query.date).envify()
         redis.get(token, function(err, reply) {
-            if (!err && reply && !req.query.cache) {
+            if (!err && reply && false &&  !req.query.cache) {
                 return res.jsonStr(reply)
             } else {
                 Promise.all([
