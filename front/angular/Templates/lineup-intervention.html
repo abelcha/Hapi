@@ -59,7 +59,7 @@
                         <i ng-if="inter.f.i_fall || inter.f.i_fact" style="margin-left:3px" class="fa fa-envelope-o"></i>
                     </td>
                     <td ng-init="inter._status = config.etatsHash()[inter.s];inter._etat = inter._status.long_name" data-title="smallWin ? 'S' : 'Status'" sortable="'s'" filter="{ '_etat': 'text' }">
-                        <span ng-if="!smallWin" style="width:75px" class="label {{config.etatsHash()[inter.s].color}} display-block"> 
+                        <span ng-if="!smallWin" style="width:75px" class="label {{inter.s === 4 && inter.ev ? 'black-text' : ''}} {{config.etatsHash()[inter.s].color}} display-block"> 
                         {{config.etatsHash()[inter.s].long_name}}</span>
                         <span ng-if="smallWin" style="width:34px" class="label {{config.etatsHash()[inter.s].color}} display-block"> 
                         {{config.etatsHash()[inter.s].short_name}}</span>
