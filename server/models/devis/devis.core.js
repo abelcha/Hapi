@@ -35,7 +35,7 @@
                 civilite: 'M.'
             },
             date: {
-                ajout: Date.now() + ms.days('1'),
+                ajout: Date.now() + ms.days(1),
             },
             historique: []
         }

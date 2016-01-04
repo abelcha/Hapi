@@ -182,6 +182,17 @@ module.exports = function(schema) {
                             }]
                         }, 1, 0]
                     },
+                    ANNULE_VRF: {
+                        $cond: [{
+                            $and: [{
+                                $eq: ['$status', 'ANN']
+                            }, {
+                                $gt: ['$date.annulation', dt]
+                            }, {
+                                $gt: ['$date.envoi', dt - ms.days(360)]
+                            }]
+                        }, 1, 0]
+                    },
                     ENC: {
                         $cond: [{
                             $and: [{
@@ -232,9 +243,11 @@ module.exports = function(schema) {
                     _id: {
                         a: '$login.ajout',
                         e: '$login.envoi',
+                        n: '$login.annulation',
                         v: '$login.verification'
                     },
                     TOTAL_AVR: sum('$AVR'),
+                    TOTAL_ANNULE_VRF: sum('$ANNULE_VRF'),
                     TOTAL_SUM: sum('$SUM'),
                     TOTAL_ENC: sum('$ENC'),
                     TOTAL_APR: sum('$APR'),
@@ -248,6 +261,7 @@ module.exports = function(schema) {
                             login: e,
                             ajout: 0,
                             envoi: 0,
+                            annul_vrf: 0,
                             averif: 0,
                             verif: 0,
                             annul: 0,
@@ -261,6 +275,9 @@ module.exports = function(schema) {
                             //    set(rtn, elem._id.a, 'ajout', elem.TOTAL_VRF)
                             //    set(rtn, elem._id.a, 'envoi', elem.TOTAL_VRF)
                             set(rtn, elem._id.v, 'verif', elem.TOTAL_VRF)
+                        }
+                        if (elem.TOTAL_ANNULE_VRF > 0) {
+                            set(rtn, elem._id.n, 'verif', elem.TOTAL_VRF)
                         }
                         if (elem.TOTAL_SUM > 0) {
                             set(rtn, elem._id.a, 'sum', elem.TOTAL_SUM)
@@ -281,6 +298,7 @@ module.exports = function(schema) {
                         if (elem.TOTAL_AVR > 0) {
                             set(rtn, elem._id.a, 'averif', elem.TOTAL_AVR)
                         }
+
                     })
                     resolve(rtn);
                 })
