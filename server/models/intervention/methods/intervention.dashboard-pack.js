@@ -152,7 +152,7 @@ module.exports = function(schema) {
                             $gt: dt
                         },
                     }, {
-                        '$cache.f.i_avr': 1
+                        'cache.f.i_avr': 1
                     }],
                 })
                 .project({
