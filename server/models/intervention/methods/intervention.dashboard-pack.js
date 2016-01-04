@@ -183,7 +183,7 @@ module.exports = function(schema) {
                             }]
                         }, 1, 0]
                     },
-                    ANNULE_VRF: {
+/*                    ANNULE_VRF: {
                         $cond: [{
                             $and: [{
                                 $eq: ['$status', 'ANN']
@@ -193,7 +193,7 @@ module.exports = function(schema) {
                                 $ifNull: ['$date.envoi', true]
                             }]
                         }, 1, 0]
-                    },
+                    },*/
                     ENC: {
                         $cond: [{
                             $and: [{
@@ -248,7 +248,7 @@ module.exports = function(schema) {
                         v: '$login.verification'
                     },
                     TOTAL_AVR: sum('$AVR'),
-                    TOTAL_ANNULE_VRF: sum('$ANNULE_VRF'),
+              //      TOTAL_ANNULE_VRF: sum('$ANNULE_VRF'),
                     TOTAL_SUM: sum('$SUM'),
                     TOTAL_ENC: sum('$ENC'),
                     TOTAL_APR: sum('$APR'),
@@ -279,9 +279,9 @@ module.exports = function(schema) {
                             set(rtn, elem._id.v, 'verif', elem.TOTAL_VRF)
                         }
                      //   console.log('-->', elem, elem.TOTAL_ANNULE_VRF)
-                        if (elem.TOTAL_ANNULE_VRF > 0) {
+                       /* if (elem.TOTAL_ANNULE_VRF > 0) {
                             set(rtn, elem._id.n, 'verif', elem.TOTAL_ANNULE_VRF)
-                        }
+                        }*/
                         if (elem.TOTAL_SUM > 0) {
                             set(rtn, elem._id.a, 'sum', elem.TOTAL_SUM)
                                 //    set(rtn, elem._id.a, 'sum', elem.TOTAL_SUM)
