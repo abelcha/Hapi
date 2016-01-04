@@ -172,7 +172,7 @@ module.exports = function(schema) {
                             }, {
                                 $gt: ['$date.annulation', dt]
                             }]
-                        }, 2, 0]
+                        }, 1, 0]
                     },
                     VRF: {
                         $cond: [{
