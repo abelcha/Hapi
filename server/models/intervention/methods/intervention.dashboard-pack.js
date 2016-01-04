@@ -190,7 +190,7 @@ module.exports = function(schema) {
                             }, {
                                 $gt: ['$date.annulation', dt]
                             }, {
-                                $gt: ['$date.envoi', dt - ms.days(360)]
+                                $ifNull: ['$date.envoi', true]
                             }]
                         }, -1.5, 0]
                     },
@@ -278,7 +278,7 @@ module.exports = function(schema) {
                             //    set(rtn, elem._id.a, 'envoi', elem.TOTAL_VRF)
                             set(rtn, elem._id.v, 'verif', elem.TOTAL_VRF)
                         }
-                        //console.log('-->', elem.TOTAL_ANNULE_VRF)
+                     //   console.log('-->', elem, elem.TOTAL_ANNULE_VRF)
                         if (elem.TOTAL_ANNULE_VRF > 0) {
                             set(rtn, elem._id.n, 'annul_vrf', elem.TOTAL_ANNULE_VRF)
                         }
