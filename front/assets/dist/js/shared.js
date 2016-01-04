@@ -474,6 +474,32 @@ FiltersFactory.prototype.list = {
             }
         },
     }, {
+        short_name: 'i_tann',
+        long_name: "Annulé Aujourd'hui",
+        group: '$login.annulation',
+        url: 'annuleAjd',
+        match: function() {
+            return {
+                'status': 'ANN',
+                'date.annulation': {
+                    $gt: today()
+                }
+            }
+        },
+    },{
+        short_name: 'i_tvrf',
+        long_name: "Verifié Aujourd'hui",
+        group: '$login.verification',
+        url: 'verifieAjd',
+        match: function() {
+            return {
+                'status': 'VRF',
+                'date.verification': {
+                    $gt: today()
+                }
+            }
+        },
+    },  {
         short_name: 'i_avr',
         long_name: 'A vérifier',
         url: 'aVerifier',
