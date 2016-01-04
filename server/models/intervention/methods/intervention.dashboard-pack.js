@@ -278,6 +278,7 @@ module.exports = function(schema) {
                             //    set(rtn, elem._id.a, 'envoi', elem.TOTAL_VRF)
                             set(rtn, elem._id.v, 'verif', elem.TOTAL_VRF)
                         }
+                        //console.log('-->', elem.TOTAL_ANNULE_VRF)
                         if (elem.TOTAL_ANNULE_VRF > 0) {
                             set(rtn, elem._id.n, 'annul_vrf', elem.TOTAL_ANNULE_VRF)
                         }
@@ -316,7 +317,7 @@ module.exports = function(schema) {
         var _this = this;
         var token = ('dashboardStats' + req.query.date).envify()
         redis.get(token, function(err, reply) {
-            if (!err && reply && false &&  !req.query.cache) {
+            if (!err && reply &&  !req.query.cache) {
                 return res.jsonStr(reply)
             } else {
                 Promise.all([
