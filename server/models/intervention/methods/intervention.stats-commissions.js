@@ -27,7 +27,7 @@ module.exports = function(schema) {
             invoice_number: "e.id",
             date_now: moment().format('LLL'),
             from_name: 'EDISON-SERVICES',
-            client_name: user.nom.toUpperCase() + " " + _.capitalize(user.prenom),
+            client_name: (user.nom || '').toUpperCase() + " " + _.capitalize(user.prenom),
 
             items: _.map(rtn, function(e) {
                 return {
