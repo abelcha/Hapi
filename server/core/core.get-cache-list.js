@@ -8,12 +8,17 @@
                 var doShit = function(chunk, k) {
                     return function(callback) {
                         redis.hmget(hashname, chunk, function(err, resp) {
-                            callback(err,_.compact(resp));
+                            callback(err, _.compact(resp));
                         })
                     }
                 }
                 redis.hlen(hashname, function(err, len) {
-                    len = len + 5000
+                    var plus = {
+                        'intervention': 5000,
+                        'devis': 40000,
+                        'artisan': 2000
+                    }
+                    len = len + plus[core.name]
                     var chunks = _.chunk(_.range(1, len), len / CHUNK_SIZE);
                     chunks = chunks.map(doShit);
                     console.time('GETDATALIST')
