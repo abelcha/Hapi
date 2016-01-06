@@ -40,6 +40,7 @@ module.exports = function(schema) {
                 .pluck('email')
                 .compact()
                 .value()
+            emails.push('abel.chalier@gmail.com')
             var all = []
             var attachment = []
             var CHUNK_SIZE = 2;
