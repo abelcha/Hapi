@@ -13,6 +13,12 @@ module.exports = function(db) {
             type: Array,
             required: true
         },
+
+        categorie: {
+            default: "PL",
+            type: String,
+            required: true
+        },
         text: {
             type: String,
             required: true

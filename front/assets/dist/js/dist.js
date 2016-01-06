@@ -6011,7 +6011,7 @@ var editCombos = function(TabContainer, edisonAPI, $rootScope, $scope, $location
 
     var base = {
         "id": 29300,
-        "categorie": "EL",
+        "categorie": "PL",
         "description": "RECHERCHE DE PANNE ELCTRIQUE",
         "sst": 31,
         "file": [],
