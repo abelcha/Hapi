@@ -120,6 +120,7 @@ angular.module('edison').controller('MainController', ["$timeout", "LxNotificati
     })
     socket.on('notification', function(data) {
         console.log('NOTIF', data)
+        
         if (data.dest === $rootScope.user.login && (data.dest !== data.origin || data.self)) {
             LxNotificationService.notify(data.message, data.icon || 'android', false, data.color);
         }
@@ -2723,22 +2724,6 @@ angular.module('edison').factory('DataProvider', ["$timeout", "edisonAPI", "sock
                 }
             })
 
-            /* var id_list = _(newRows).flatten().map('id').value();
-             for (var i = 0; i < _this.getData().length && id_list.length; i++) {
-                 var pos = id_list.indexOf(_this.getData()[i].id)
-                 if (pos >= 0) {
-                     _this.getData()[i] = newRows[pos];
-                     id_list.splice(pos, 1);
-                 }
-             };
-             if (id_list.length) {
-                 var z = _.filter(newRows, function(e) {
-                     return _.includes(id_list, e.id);
-                 })
-                 _.each(z, function(x) {
-                     _this.getData().unshift(x)
-                 })
-             }*/
             $rootScope.$broadcast(_this.socketListChange());
         }
 
@@ -4308,6 +4293,55 @@ archivesPaiementController.$inject = ["edisonAPI", "TabContainer", "$routeParams
 
 angular.module('edison').controller('archivesPaiementController', archivesPaiementController);
 
+var AvoirsController = function(TabContainer, openPost, edisonAPI, $rootScope, LxProgressService, LxNotificationService, FlushList) {
+    "use strict";
+    var _this = this
+    var tab = TabContainer.getCurrentTab();
+    tab.setTitle('Avoirs')
+    _this.loadData = function(prevChecked) {
+        LxProgressService.circular.show('#5fa2db', '#globalProgress');
+        edisonAPI.compta.avoirs().then(function(result) {
+            console.log(result)
+            $rootScope.avoirs = result.data
+            LxProgressService.circular.hide()
+        })
+    }
+    if (!$rootScope.avoirs)
+        _this.loadData()
+
+    _this.reloadAvoir = function() {
+        _this.loadData()
+    }
+
+    _this.print = function(type) {
+        openPost('/api/intervention/printAvoir', {
+            data: $rootScope.avoirs
+        });
+    }
+    _this.printChq = function(type) {
+        openPost('/api/intervention/printAvoirChq', {
+            data: $rootScope.avoirs
+        });
+    }
+
+    _this.flush = function() {
+        var list = _.filter($rootScope.avoirs, {
+            checked: true
+        })
+        edisonAPI.compta.flushAvoirs(list).then(function(resp) {
+            LxNotificationService.success(resp.data);
+            _this.reloadAvoir()
+        }).catch(function(err) {
+            LxNotificationService.error(err.data);
+        })
+    }
+
+}
+AvoirsController.$inject = ["TabContainer", "openPost", "edisonAPI", "$rootScope", "LxProgressService", "LxNotificationService", "FlushList"];
+
+
+angular.module('edison').controller('avoirsController', AvoirsController);
+
  angular.module('edison').directive('artisanCategorie', ["config", function(config) {
      "use strict";
      return {
@@ -4452,55 +4486,6 @@ var ArtisanCtrl = function(IBAN, $timeout, $rootScope, $scope, edisonAPI, $locat
 }
 ArtisanCtrl.$inject = ["IBAN", "$timeout", "$rootScope", "$scope", "edisonAPI", "$location", "$routeParams", "ContextMenu", "LxProgressService", "LxNotificationService", "TabContainer", "config", "dialog", "artisanPrm", "Artisan"];
 angular.module('edison').controller('ArtisanController', ArtisanCtrl);
-
-var AvoirsController = function(TabContainer, openPost, edisonAPI, $rootScope, LxProgressService, LxNotificationService, FlushList) {
-    "use strict";
-    var _this = this
-    var tab = TabContainer.getCurrentTab();
-    tab.setTitle('Avoirs')
-    _this.loadData = function(prevChecked) {
-        LxProgressService.circular.show('#5fa2db', '#globalProgress');
-        edisonAPI.compta.avoirs().then(function(result) {
-            console.log(result)
-            $rootScope.avoirs = result.data
-            LxProgressService.circular.hide()
-        })
-    }
-    if (!$rootScope.avoirs)
-        _this.loadData()
-
-    _this.reloadAvoir = function() {
-        _this.loadData()
-    }
-
-    _this.print = function(type) {
-        openPost('/api/intervention/printAvoir', {
-            data: $rootScope.avoirs
-        });
-    }
-    _this.printChq = function(type) {
-        openPost('/api/intervention/printAvoirChq', {
-            data: $rootScope.avoirs
-        });
-    }
-
-    _this.flush = function() {
-        var list = _.filter($rootScope.avoirs, {
-            checked: true
-        })
-        edisonAPI.compta.flushAvoirs(list).then(function(resp) {
-            LxNotificationService.success(resp.data);
-            _this.reloadAvoir()
-        }).catch(function(err) {
-            LxNotificationService.error(err.data);
-        })
-    }
-
-}
-AvoirsController.$inject = ["TabContainer", "openPost", "edisonAPI", "$rootScope", "LxProgressService", "LxNotificationService", "FlushList"];
-
-
-angular.module('edison').controller('avoirsController', AvoirsController);
 
 var ContactArtisanController = function($scope, $timeout, TabContainer, LxProgressService, FiltersFactory, ContextMenu, edisonAPI, DataProvider, $routeParams, $location, $q, $rootScope, $filter, config, ngTableParams) {
     "use strict";
@@ -5402,7 +5387,7 @@ var InterventionCtrl = function(Description, Signalement, ContextMenu, $window, 
             intervention.sst.stats = result[1].data
             if (!first) {
                 intervention.compta.paiement.pourcentage = _.clone(intervention.sst.pourcentage);
-                intervention.newOs = intervention.sst.newOs;
+              //  intervention.newOs = intervention.sst.newOs;
             }
             edisonAPI.getDistance(latLng(sst.address), latLng(intervention.client.address))
                 .then(function(dir) {
