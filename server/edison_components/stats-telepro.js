@@ -61,7 +61,7 @@ var cleanUp = function(name, telepro, result) {
 
 var mergeFilters = function(allFilters, model) {
     var filters = FiltersFactory(model).getAllFilters();
-    _.each(filters, function(e) {
+    _.each(_.shuffle(filters), function(e) {
         if (e.stats !== false && e.match) {
             var match = typeof e.match === 'function' ? e.match() : e.match;
             allFilters[e.short_name] = statusDistinctFactory(model, match, e.group, e.short_name);
@@ -79,7 +79,7 @@ module.exports = {
             mergeFilters(allFilters, 'intervention')
             mergeFilters(allFilters, 'devis')
             mergeFilters(allFilters, 'artisan')
-            async.parallel(_.shuffle(allFilters), function(err, result) {
+            async.parallel(allFilters, function(err, result) {
                 if (err)
                     reject(err)
                 result = _.mapValues(result, function(e) {
@@ -99,7 +99,7 @@ module.exports = {
                     }
                     rtn.push(telepro);
                 });
-                redis.setex('statsTelepro'.envify(), 30, JSON.stringify(rtn), function() {
+                redis.setex('statsTelepro'.envify(), 10, JSON.stringify(rtn), function() {
                     if (typeof io !== 'undefined') {
                         io.sockets.emit('filterStatsReload', rtn);
                     }

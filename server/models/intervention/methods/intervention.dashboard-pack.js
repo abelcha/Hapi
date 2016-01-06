@@ -124,7 +124,7 @@ module.exports = function(schema) {
         var v = _.find(obj, 'login', prop);
         if (v) {
             v[vr] = _.round(v[vr] + vl);
-            v.total = v.ajout + v.envoi + v.verif + v.sum - v.annul - v.averif
+            v.total = v.ajout + v.envoi + v.verif + v.sum - v.annul - parseInt(v.averif / 10)
         }
     }
     schema.statics.weekStats = function(req, res) {
