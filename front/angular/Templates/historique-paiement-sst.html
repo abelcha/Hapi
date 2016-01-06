@@ -2,7 +2,6 @@
     <table class="table table-striper table-condensed table-bordered">
         <tbody>
             <tr ng-repeat-start="e in historiquePaiement|orderBy:'-timestamp'" class="grey lighten-1" text-xxxl bold>
-                <!-- <td><pre>{{e.flushList.getList()[0]|json}}</pre></td> -->
                 <td>{{e.flushList.getList()[0].login}}</td>
                 <td>{{e.flushList.getList()[0].date|date:"dd/MM/yyyy"}}</td>
                 <td>{{e.flushList.getList()[0].mode}}</td>

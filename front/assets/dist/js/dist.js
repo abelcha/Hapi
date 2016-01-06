@@ -671,15 +671,18 @@ angular.module('edison').directive('historiquePaiementSst', ["edisonAPI", "Flush
             exit: '&'
         },
         link: function(scope, element, attrs) {
-            console.log('jejelollo')
             var reload = function() {
                 if (!scope.data || !scope.data.id) {
                     return 0;
+                }
+                var getPaiement = function(x) {
+                    console.log('-->', x)
                 }
                 edisonAPI.artisan.getCompteTiers(scope.data.id).then(function(resp) {
                     scope.historiquePaiement = _.map(resp.data, function(e) {
                         e.flushList = new FlushList(e.list, _.pluck(e.list, '_id'))
                         _.map(e.flushList.getList() , function(x) {
+//                            x.paiement = x.compta.paiement.historique
                             x.original = _.find(e.list, 'id', x.id)
                         })
                         return e;
