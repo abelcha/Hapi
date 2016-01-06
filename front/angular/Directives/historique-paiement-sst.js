@@ -17,6 +17,13 @@ angular.module('edison').directive('historiquePaiementSst', function(edisonAPI, 
                 var getPaiement = function(x) {
                     console.log('-->', x)
                 }
+                scope.getTotal = function(arr) {
+                    var rtn = 0;
+                    _.each(arr, function(e) {
+                        rtn += e.original.compta.paiement.historique.final
+                    })
+                    return _.round(rtn, 2);
+                }
                 edisonAPI.artisan.getCompteTiers(scope.data.id).then(function(resp) {
                     scope.historiquePaiement = _.map(resp.data, function(e) {
                         e.flushList = new FlushList(e.list, _.pluck(e.list, '_id'))

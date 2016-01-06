@@ -57,7 +57,9 @@
                                         x.compta.paiement.base = x.compta.paiement.historique.base
                                         x.compta.paiement.final = x.compta.paiement.historique.final
                                         x.compta.paiement.payed = x.compta.paiement.historique.payed
-                                        x.compta.paiement.mode = x.compta.paiement.historique.mode
+                                        x.compta.paiement.total = x.compta.paiement.historique.total
+                                        x.compta.paiement._mode = x.compta.paiement.historique._mode
+                                        x.compta.paiement.type = x.compta.paiement.historique.type
                                         return x;
                                         //return getHisto(x, new Date(k))
                                     }),
