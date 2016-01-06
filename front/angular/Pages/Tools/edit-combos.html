@@ -28,8 +28,8 @@
                         <select style="width:120px" class="form-control" ng-model="p.categorie" ng-options="cat.short_name as cat.long_name for cat in config.categories">
                         </select>
                     </td>
-                    <td>
-                        <input class="form-control" ng-model="p.text">
+                    <td style="width: 367px;">
+                        <input class="form-control" ng-model="p.text" >
                     </td>
                     <td style="width:1%">
                         <button class="btn--no-conflicts btn--l btn--red btn--icon" ng-click="vm.remove(p)">
