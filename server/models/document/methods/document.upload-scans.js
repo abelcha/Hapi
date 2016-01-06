@@ -58,7 +58,6 @@
             async.eachLimit(gp, 1, function(sst, callback) {
                 console.log('heehe')
                 getPage(filepath, ++i, function(err, buffer) {
-                  buffer = "lol"
                   console.log('getpage')
                   async.eachLimit(sst, 1, function(e, small_cb) {
                     var flush = _.find(e.compta.paiement.historique, 'dateFlush', new Date(req.body.date));
