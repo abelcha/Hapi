@@ -635,7 +635,7 @@ FiltersFactory.prototype.list = {
     }, {
         short_name: 'i_pavrf',
         group: '$artisan.login.management',
-        long_name: 'P.A Verifs',
+        long_name: 'Verifs News',
         url: 'newVerif',
         match: {
             'login.envoi': {
@@ -649,7 +649,7 @@ FiltersFactory.prototype.list = {
         },
     }, {
         short_name: 'i_paenv',
-        long_name: 'P.A Envoyés',
+        long_name: 'Mes Inters Envoyés',
         url: 'paEnv',
         group: "$login.envoi",
         match: {

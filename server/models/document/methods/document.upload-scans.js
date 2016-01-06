@@ -35,7 +35,6 @@
         fs.writeFileSync(filepath, req.files.file.buffer);
 
 
-
         req.body.ids = JSON.parse(req.body.ids)
         req.body.date = JSON.parse(req.body.date)
         console.log('okhere')
@@ -73,15 +72,11 @@
                     }).then(function(resp) {
                       e.save(small_cb)
                     }, small_cb)
-
                   }, function() {
                     callback(null)
                   })
-
                 })
-
               },
-
               function() {
                 resolve('ok')
               })

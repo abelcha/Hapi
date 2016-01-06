@@ -15,7 +15,7 @@ angular.module('edison').directive('historiquePaiementSst', function(edisonAPI, 
                     return 0;
                 }
                 var getPaiement = function(x) {
-                    console.log('-->', x)
+                    console.log('-->', x);
                 }
                 scope.getTotal = function(arr) {
                     var rtn = 0;
@@ -28,7 +28,6 @@ angular.module('edison').directive('historiquePaiementSst', function(edisonAPI, 
                     scope.historiquePaiement = _.map(resp.data, function(e) {
                         e.flushList = new FlushList(e.list, _.pluck(e.list, '_id'))
                         _.map(e.flushList.getList() , function(x) {
-//                            x.paiement = x.compta.paiement.historique
                             x.original = _.find(e.list, 'id', x.id)
                         })
                         return e;

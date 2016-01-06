@@ -21,7 +21,7 @@ module.exports = function(schema) {
         if (res.inters_sp_regle >= 15) {
             return 'REG'
         }
-        if (res.inters_sp_regle >= 5) {
+        if (res.inters_sp_regle >= 10) {
             return 'CONF'
         }
         if (res.inters_sp_regle >= 2) {
