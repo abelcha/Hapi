@@ -90,22 +90,6 @@ angular.module('edison').factory('DataProvider', function($timeout, edisonAPI, s
                 }
             })
 
-            /* var id_list = _(newRows).flatten().map('id').value();
-             for (var i = 0; i < _this.getData().length && id_list.length; i++) {
-                 var pos = id_list.indexOf(_this.getData()[i].id)
-                 if (pos >= 0) {
-                     _this.getData()[i] = newRows[pos];
-                     id_list.splice(pos, 1);
-                 }
-             };
-             if (id_list.length) {
-                 var z = _.filter(newRows, function(e) {
-                     return _.includes(id_list, e.id);
-                 })
-                 _.each(z, function(x) {
-                     _this.getData().unshift(x)
-                 })
-             }*/
             $rootScope.$broadcast(_this.socketListChange());
         }
 

@@ -296,25 +296,8 @@ FiltersFactory.prototype.list = {
         long_name: 'Tous les Artisans',
         url: '',
         match: {},
+        stats: false,
         noCache: true,
-    }, {
-        short_name: 'a_man',
-        long_name: 'A Manager',
-        url: 'aManager',
-        group: '$login.management',
-        match: {
-            'login.management': {
-                $exists: true
-            }
-        },
-    }, {
-        short_name: 'a_sur',
-        long_name: 'A Surveiller',
-        url: 'aSurveiller',
-        group: '$login.management',
-        match: {
-            'aSurveiller': true
-        },
     }, {
         short_name: 'a_arc',
         long_name: 'archivés',
@@ -330,19 +313,6 @@ FiltersFactory.prototype.list = {
             status: 'POT'
         },
     }, {
-        short_name: 'a_dos',
-        long_name: 'DossierIncomplet',
-        url: 'dossierIncomplet',
-        match: {
-            $or: [{
-                'document.cni.file': true
-            }, {
-                'document.contrat.file': true
-            }, {
-                'document.kbis.file': true
-            }]
-        },
-    }, {
         short_name: 'a_dosc',
         long_name: 'Dossier Complet',
         url: 'dossierComplet',
@@ -354,20 +324,6 @@ FiltersFactory.prototype.list = {
             }, {
                 'document.kbis.ok': true
             }]
-        },
-    }, {
-        short_name: 'a_act',
-        long_name: 'actifs',
-        url: 'actif',
-        match: {
-            status: 'ACT'
-        },
-    }, {
-        short_name: 'a_star',
-        long_name: 'star',
-        url: 'star',
-        match: {
-            star: true
         },
     }, {
         short_name: 'a_tut',
@@ -384,6 +340,7 @@ FiltersFactory.prototype.list = {
         short_name: 'd_all',
         long_name: 'Tous les devis',
         url: '',
+        stats:false,
         match: {},
         noCache: true,
     }, {
@@ -395,15 +352,6 @@ FiltersFactory.prototype.list = {
                 'date.ajout': {
                     $gt: today()
                 }
-            }
-        },
-    }, {
-        short_name: 'd_tra',
-        long_name: "Transferé",
-        url: 'transfert',
-        match: function() {
-            return {
-                'status': 'TRA',
             }
         },
     }, {
@@ -433,20 +381,10 @@ FiltersFactory.prototype.list = {
         },
     }],
     intervention: [{
-        short_name: 'i_davr',
-        long_name: 'Demarchages a verifié',
-        url: 'davr',
-        match: {
-            status: 'ENC',
-            /* 'date.intervention': {
-                 $lt: new Date(Date.now() + ms.hours(1))
-             },*/
-            aDemarcher: true
-        },
-    }, {
         short_name: 'i_all',
         long_name: 'Toutes les inters',
         url: '',
+        stats: false,
         match: {},
         noCache: true,
     }, {
@@ -486,20 +424,7 @@ FiltersFactory.prototype.list = {
                 }
             }
         },
-    },{
-        short_name: 'i_tvrf',
-        long_name: "Verifié Aujourd'hui",
-        group: '$login.verification',
-        url: 'verifieAjd',
-        match: function() {
-            return {
-                'status': 'VRF',
-                'date.verification': {
-                    $gt: today()
-                }
-            }
-        },
-    },  {
+    }, {
         short_name: 'i_avr',
         long_name: 'A vérifier',
         url: 'aVerifier',
@@ -519,35 +444,15 @@ FiltersFactory.prototype.list = {
             'status': 'APR',
         },
     }, {
-        short_name: 'i_pay',
-        long_name: 'Payés',
-        url: 'paye',
-        stats: false,
-    }, {
-        short_name: 'i_rgl',
-        long_name: 'Réglé',
-        url: 'regle',
-        stats: false,
-    }, {
-        short_name: 'i_vrf',
-        long_name: 'Verifié',
-        url: 'verifie',
-        match: function() {
-            return {
-                status: 'VRF',
-            }
-        },
-        stats: true,
-    }, {
         short_name: 'i_iar',
         long_name: 'Intervenant à régler',
         url: 'iar',
         match: function() {
             return {
-                "compta.reglement.recu": true,
                 "compta.paiement.effectue": false,
-                "compta.paiement.ready": false,
+                "compta.reglement.recu": true,
                 "compta.paiement.dette": false,
+                "compta.paiement.ready": false,
                 "status": {
                     $ne: 'ANN'
                 }
@@ -583,22 +488,6 @@ FiltersFactory.prototype.list = {
                 'compta.reglement.recu': false,
                 'compta.paiement.effectue': false,
                 'artisan.subStatus': 'NEW'
-            }
-        },
-        stats: true,
-    }, {
-        short_name: 'i_wtf1',
-        long_name: 'Payé mais pas reglés',
-        url: 'payePasRegle',
-        match: function() {
-            return {
-                status: 'VRF',
-                modeReglement: 'CHQ',
-                reglementSurPlace: true,
-                'compta.reglement.recu': false,
-                'date.intervention': {
-                    $lt: new Date(Date.now() - ms.weeks(2)),
-                }
             }
         },
         stats: true,
@@ -647,15 +536,6 @@ FiltersFactory.prototype.list = {
             'sav.status': 'ENC'
         },
     }, {
-        short_name: 'i_lit',
-        long_name: 'Tous les litiges',
-        url: 'litiges',
-        match: {
-            'litige': {
-                $exists: true
-            }
-        },
-    }, {
         short_name: 'i_litEnc',
         long_name: 'Litiges non résolus',
         url: 'litigesEnCours',
@@ -667,6 +547,7 @@ FiltersFactory.prototype.list = {
         short_name: 'i_mar',
         long_name: 'MARKET',
         url: 'market',
+        stats: false,
         sortBy: {
             di: 'desc'
         },
@@ -694,21 +575,12 @@ FiltersFactory.prototype.list = {
     }, {
         short_name: 'i_hist',
         long_name: 'Historique',
+        stats: false,
         url: 'historique',
         group: '$login.demarchage',
         match: {
             aDemarcher: true,
 
-        },
-    }, {
-        short_name: 'i_nw',
-        long_name: 'Nouveaux SST',
-        url: 'nw',
-        match: {
-            'artisan.subStatus': 'NEW',
-            status: {
-                $in: ['APR', 'ENC']
-            }
         },
     }, {
         short_name: 'i_tut',
@@ -800,51 +672,6 @@ FiltersFactory.prototype.list = {
                 'date.intervention': {
                     $lt: new Date(Date.now() - ms.weeks(1)),
                     $gt: new Date(Date.now() - ms.weeks(2)),
-                }
-            }
-        },
-    }, {
-        short_name: 'i_relsst2',
-        long_name: 'Relance SST 2',
-        url: 'relsst2',
-        match: function() {
-            return {
-                'status': 'VRF',
-                'compta.reglement.recu': false,
-                'reglementSurPlace': true,
-                'date.intervention': {
-                    $lt: new Date(Date.now() - ms.weeks(2)),
-                    $gt: new Date(Date.now() - ms.weeks(3)),
-                }
-            }
-        },
-    }, {
-        short_name: 'i_relsst3',
-        long_name: 'Relance SST 3',
-        url: 'relsst3',
-        match: function() {
-            return {
-                'status': 'VRF',
-                'compta.reglement.recu': false,
-                'reglementSurPlace': true,
-                'date.intervention': {
-                    $lt: new Date(Date.now() - ms.weeks(3)),
-                    $gt: new Date(Date.now() - ms.weeks(4)),
-                }
-            }
-        },
-    }, {
-        short_name: 'i_relsst4',
-        long_name: 'Relance SST 4',
-        url: 'relsst4',
-        match: function() {
-            return {
-                'status': 'VRF',
-                'compta.reglement.recu': false,
-                'reglementSurPlace': true,
-                'date.intervention': {
-                    $lt: new Date(Date.now() - ms.weeks(4)),
-                    $gt: new Date(2015, 8, 1),
                 }
             }
         },

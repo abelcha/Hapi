@@ -1,7 +1,10 @@
 module.exports = function(db) {
 
     var schema = new db.Schema({
-        _id: Number,
+        _id: {
+            type: Number,
+            index: true
+        },
         id: {
             type: Number,
             index: true
@@ -14,8 +17,14 @@ module.exports = function(db) {
         subStatus: String,
         causeAnnulation: String,
         login: {
-            ajout: String,
-            envoi: String,
+            ajout: {
+                type: String,
+                index: true
+            },
+            envoi: {
+                type: String,
+                index: true
+            },
             envoiFacture: String,
             annulation: String,
             verification: String,
@@ -28,6 +37,7 @@ module.exports = function(db) {
             envoi: Date,
             ajout: {
                 type: Date,
+                index: true,
                 default: Date.now
             },
             envoiFacture: Date,
@@ -98,7 +108,6 @@ module.exports = function(db) {
             location: [],
         },
         facture: {
-
             compte: String,
             payeur: String,
             nom: String,
@@ -137,9 +146,13 @@ module.exports = function(db) {
         artisan: {
             id: {
                 type: Number,
+                index: true,
                 ref: 'artisan'
             },
-            subStatus: String,
+            subStatus: {
+                type: String,
+                index: true
+            },
             nomSociete: String,
             login: {
                 management: String,
@@ -181,7 +194,8 @@ module.exports = function(db) {
         combo: String,
         modeReglement: {
             type: String,
-            default: 'CHQ'
+            default: 'CHQ',
+            index: true
         },
         prixAnnonce: {
             type: Number,
@@ -227,7 +241,8 @@ module.exports = function(db) {
                 },
                 recu: {
                     type: Boolean,
-                    default: false
+                    default: false,
+                    index: true
                 },
                 montant: {
                     type: Number,
@@ -357,7 +372,10 @@ module.exports = function(db) {
             default: false,
         },
         appels: [{
-            call_id: String,
+            call_id: {
+                type: String,
+                index: true
+            },
             date: {
                 type: Date,
                 default: Date.now

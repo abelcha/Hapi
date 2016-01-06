@@ -7,7 +7,7 @@ module.exports = function(schema) {
         if (!isWorker) {
             return edison.worker.createJob({
                 name: 'db',
-                model: 'intervention',
+                model: 'devis',
                 method: 'vcf',
                 req: _.pick(req, 'query', 'session')
             }).then(function(resp) {
@@ -45,7 +45,11 @@ module.exports = function(schema) {
                     console.log('cache');
                     return resolve(reply)
                 }
-                db.model('intervention').find()
+                db.model('devis').find({
+                        status: {
+                            $ne: 'TRA'
+                        }
+                    })
                     .select('id client categorie')
                     .limit(req.query.limit || 2500).sort('-id').then(function(docs) {
                         console.log('-->', docs.length)

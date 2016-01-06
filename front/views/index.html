@@ -33,7 +33,7 @@
                 <a href="/artisan" style="height: 31px;padding: 4px;" class="btn btn-primary btn-block btn-outline dark">Ajout d'un artisan</a>
             </div>
             <drop-down id="service-intervention" title="Service Intervention" icon="circle" open-default="displayUser.service === 'INTERVENTION'">
-                <link fltr="i_all" icon="th-list" title="Liste Interventions" ng-if="user.login !== 'fredtest'"></link>
+                <link fltr="i_all" no-counter="true" icon="th-list" title="Liste Interventions" ng-if="user.login !== 'fredtest'"></link>
                 <drop-down title="Mes Interventions" icon="calendar" open-default="displayUser.service === 'INTERVENTION'">
                     <link fltr="i_tall" icon="th-list" color="default" text-white="true" bold="true" title="{{dateFormat}}" login="{{displayUser.login}}"></link>
                     <link fltr="i_tenv" icon="th-list" login="{{displayUser.login}}"></link>
@@ -49,7 +49,7 @@
                     <link fltr="i_carl" icon="th-list" color="warning" login="{{displayUser.login}}"></link>
                 </drop-down>
                 <drop-down icon="hospital-o" title="Mes Devis">
-                    <link fltr="d_all" model="devis" icon="th-list" title="Tous les Devis" color="default"></link>
+                    <link fltr="d_all" no-counter="true" model="devis" icon="th-list" title="Tous les Devis" color="default"></link>
                     <link fltr="d_tall" model="devis" text-white="true" bold="true" title="{{dateFormat}}" color="success" icon="th-list" login="{{displayUser.login}}"></link>
                     <link fltr="d_aev" model="devis" icon="th-list" color="danger" login="{{displayUser.login}}"></link>
                     <link fltr="d_att" model="devis" icon="th-list" color="warning" login="{{displayUser.login}}"></link>
@@ -109,35 +109,6 @@
                         <link icon="th-list" model="artisan" login='{{displayUser.login}}' no-counter="true" title="Quarantaine" url="/artisan/list?ss=QUA"></link>
                     </drop-down>
                 </drop-down>
-                <!-- 
-
-
-    <link ng-if="signalementStats" title="Signalements Manag." count="{{signalementStats[displayUser.service].level1}}" url="/listeSignalements?level=1&service={{displayUser.service}}&ok=false">
-    <link ng-if="signalementStats" title="Signalements Avert." count="{{signalementStats[displayUser.service].level2}}" url="/listeSignalements?level=2&service={{displayUser.service}}&ok=false">
-    <drop-down icon="truck" title="Artisans">
-        <link fltr="a_all" url="/artisan/contact#informations" icon="th-list" model="artisan" no-counter="true" title="Repertoire"></link>
-        <link fltr="a_all" icon="th-list" model="artisan" login='{{displayUser.login}}' title="Mes Artisans"></link>
-        <link fltr="a_fact" icon="th-list" model="artisan" title="Demande facturier"></link>
-        <link fltr="a_all" icon="th-list" model="artisan" title="Tous les Artisans" no-counter="true"></link>
-        <li>
-            <a href="/artisan"><i class="menu-icon fa fa-plus"></i><span class="mm-text">Nouvel Artisan</span></a>
-        </li>
-    </drop-down>
-    <drop-down icon="phone" title="Démarchage">
-        <link fltr="i_mar" icon="th-list" title="Market"></link>
-        <link fltr="i_pan" icon="th-list" login="{{displayUser.login}}" hash-model="dm" title="Mon Panier"></link>
-        <link fltr="i_davr" icon="th-list" title="Verifs" color="warning"></link>
-        <link fltr="i_hist" icon="th-list" title="Historique" no-counter="true"></link>
-    </drop-down>
-    <drop-down icon="suitcase" title="Management">
-        <link fltr="i_tut" icon="th-list" title="Inters. tutelle"></link>
-        <link fltr="i_nw" icon="th-list" title="Inters. new"></link>
-        <link fltr="i_chq" icon="th-list" login="{{displayUser.login}}" hash-model="dm" title="Relances cheques"></link>
-        <link fltr="a_man" icon="th-list" model="artisan" login="{{displayUser.login}}" hash-model="mn" title="Mes SST"></link>
-    </drop-down>
-
-
-     -->
             </drop-down>
             <drop-down title="Service Comptabilité" icon="circle" open-default="displayUser.service === 'COMPTABILITE'">
                 <simple-link icon="credit-card" title="Relances Client" fltr="i_carl" url="/intervention/list/relanceClient?ss=new"></simple-link>
@@ -160,6 +131,7 @@
                 <simple-link ng-if="user.root && user.login !== 'yohann_r'" icon="dollar" title="Commissions" url="/tools/commissions"></simple-link>
                 <simple-link icon="wrench" title="VCF Clients" extern url="/api/intervention/vcf"></simple-link>
                 <simple-link icon="wrench" title="VCF Artisan" extern url="/api/artisan/vcf"></simple-link>
+                <simple-link icon="wrench" title="VCF Devis" extern url="/api/devis/vcf"></simple-link>
             </drop-down>
         </side-bar>
         <div class="page-header" style="background: #f4f4f4 url(/img/mooning.png);">

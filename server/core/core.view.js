@@ -6,7 +6,7 @@ module.exports = function(core) {
         var _this = this;
         id = parseInt(id);
         if (id == 0 || isNaN(id))
-            return Promise.reject(id + "id no a valid ID")
+            return Promise.reject(id + "DOES NOT EXIST")
         return new Promise(function(resolve, reject) {
 
             var prm = core.model().findOne({

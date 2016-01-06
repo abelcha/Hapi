@@ -3,9 +3,10 @@ var async = require('async')
 var _ = require("lodash")
 var FiltersFactory = requireLocal('config/FiltersFactory');
 
-var statusDistinctFactory = function(model, customMatch, customGroup) {
+var statusDistinctFactory = function(model, customMatch, customGroup, name) {
     var match = customMatch || {};
     return function(cb) {
+        //console.time(name)
         db.model(model || 'intervention')
             .aggregate()
             .match(match)
@@ -26,7 +27,10 @@ var statusDistinctFactory = function(model, customMatch, customGroup) {
                 login: '$_id.telepro',
                 total: 1,
                 montant: db.utils.round("$mnt")
-            }).exec(cb);
+            }).exec(function(err, resp) {
+                //console.timeEnd(name)
+                cb(err, resp)
+            });
     }
 }
 
@@ -60,7 +64,7 @@ var mergeFilters = function(allFilters, model) {
     _.each(filters, function(e) {
         if (e.stats !== false && e.match) {
             var match = typeof e.match === 'function' ? e.match() : e.match;
-            allFilters[e.short_name] = statusDistinctFactory(model, match, e.group);
+            allFilters[e.short_name] = statusDistinctFactory(model, match, e.group, e.short_name);
         }
     });
 }
@@ -68,47 +72,43 @@ var mergeFilters = function(allFilters, model) {
 
 
 module.exports = {
-    reload: _.throttle(function() {
+    reload: function() {
+        console.log('filterStatsReload')
         return new Promise(function(resolve, reject) {
-
-            try {
-                var allFilters = {};
-                mergeFilters(allFilters, 'intervention')
-                mergeFilters(allFilters, 'devis')
-                mergeFilters(allFilters, 'artisan')
-                async.parallel(allFilters, function(err, result) {
-                    if (err)
-                        reject(err)
-                    result = _.mapValues(result, function(e) {
-                        return _.groupBy(e, 'login')
+            var allFilters = {};
+            mergeFilters(allFilters, 'intervention')
+            mergeFilters(allFilters, 'devis')
+            mergeFilters(allFilters, 'artisan')
+            async.parallel(_.shuffle(allFilters), function(err, result) {
+                if (err)
+                    reject(err)
+                result = _.mapValues(result, function(e) {
+                    return _.groupBy(e, 'login')
+                })
+                var rtn = [];
+                var sum = {}
+                _.each(edison.users.data, function(user) {
+                    var telepro = {
+                        login: user.login,
+                    }
+                    _.each(result, function(fltr, key) {
+                        cleanUp(key, telepro, result);
                     })
-                    var rtn = [];
-                    var sum = {}
-                    _.each(edison.users.data, function(user) {
-                        var telepro = {
-                            login: user.login,
-                        }
-                        _.each(result, function(fltr, key) {
-                            cleanUp(key, telepro, result);
-                        })
-                        if (telepro._id) {
-                            delete telepro._id;
-                        }
-                        rtn.push(telepro);
-                    });
-                    redis.set('statsTelepro'.envify(), JSON.stringify(rtn), function() {
-                        if (typeof io !== 'undefined') {
-                            io.sockets.emit('filterStatsReload', rtn);
-                        }
-                        return resolve(rtn);
-                    });
-
+                    if (telepro._id) {
+                        delete telepro._id;
+                    }
+                    rtn.push(telepro);
                 });
-            } catch (e) {
-                __catch(e)
-            }
+                redis.setex('statsTelepro'.envify(), 30, JSON.stringify(rtn), function() {
+                    if (typeof io !== 'undefined') {
+                        io.sockets.emit('filterStatsReload', rtn);
+                    }
+                    return resolve(rtn);
+                });
+
+            });
         });
-    }, 5000),
+    },
     get: function(req, res) {
         var _this = this;
         redis.get('statsTelepro'.envify(), function(err, reply) {

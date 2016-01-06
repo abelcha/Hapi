@@ -13,7 +13,7 @@ module.exports = function(core) {
         return new Promise(function(resolve, reject) {
             core.model().reloadFilters(function(err) {
                 if (err)
-                    reject(err);
+                    return reject(err);
                 console.timeEnd('reloadFilters');
                 console.time('cacheListReload')
                 core.model().cacheListReload().then(function() {
