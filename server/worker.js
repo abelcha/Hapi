@@ -136,7 +136,8 @@ try {
     __catch(e)
 }
 
-process.on('uncaughtException', function(a, b, c) {
+process.on('uncaughtException', function(err) {
     console.log('UNCAUGHTEXCEPTION')
+    console.log(err.stack)
         //   console.log(a, b, c, 'okok')
 });

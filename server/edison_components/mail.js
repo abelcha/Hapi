@@ -26,8 +26,10 @@ Mail.prototype.send = function(options, callback) {
         }
         _this.client.sendEmail(options, function(err, success) {
             console.log(options.To, options.Bcc)
-            if (err)
+            if (err)  {
+                console.log(err)
                 return reject(err);
+            }
             return resolve(success)
         })
     }).nodeify(callback);

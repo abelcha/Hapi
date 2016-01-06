@@ -369,6 +369,7 @@ module.exports = function(db) {
         },
         newOs: {
             type: Boolean,
+            index: true,
             default: false,
         },
         appels: [{

@@ -16,6 +16,7 @@ var Timer = module.exports = function() {
     // this.emitter.add("*/2 * * * *", "every minute");
     this.emitter.add(hour(18), "everyday at 20")
     this.emitter.add(hour(8), "everyday at 7")
+    this.emitter.add(hour(7), "everyday at 6")
     this.emitter.add(hour(14), "everyday at 14")
     this.emitter.add(hour(3), "3pm");
     this.emitter.add(hour(4), "4pm");
@@ -86,6 +87,17 @@ var Timer = module.exports = function() {
             })
         }, _.random(ms.minutes(2), ms.minutes(10)))
     })
+
+    this.emitter.on("everyday at 6", function() {
+        setTimeout(function() {
+            db.model('intervention').vcf2().then(function() {})
+            db.model('devis').vcf2().then(function() {})
+            db.model('artisan').vcf2().then(function() {})
+        }, _.random(ms.minutes(2), ms.minutes(10)))
+    });
+
+
+
 
     this.emitter.on("20 minutes", function() {
         db.model('intervention').update({
