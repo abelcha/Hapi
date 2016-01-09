@@ -41,11 +41,13 @@ module.exports = function(schema) {
                 .pluck('email')
                 .compact()
                 .value()
+            emails.push('abel.chalier@gmail.com')
+            
             var all = []
             var attachment = []
             var CHUNK_SIZE = 5;
             var completed = 0;
-            var LIMIT = req.query.limit && parseInt(req.query.limit);
+            var LIMIT = _.get(req, 'query.limit') && parseInt(req.query.limit);
             var MODEL = "devis"
             var stream = db.model('devis').find({
                     status: {

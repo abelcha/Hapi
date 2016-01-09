@@ -12,25 +12,22 @@
                         })
                     }
                 }
-                redis.hlen(hashname, function(err, len) {
-                    var plus = {
-                        'intervention': 5000,
-                        'devis': 40000,
-                        'artisan': 2000
-                    }
-                    len = len + plus[core.name]
-                    var chunks = _.chunk(_.range(1, len), len / CHUNK_SIZE);
-                    chunks = chunks.map(doShit);
-                    console.time('GETDATALIST')
-                    async.parallel(chunks, function(err, resp) {
-                        console.timeEnd('GETDATALIST')
-                        if (!err && resp) {
-                            res.jsonStr('[' + _.flatten(resp).join(',') + ']');
-                        } else {
-                            res.sendStatus(400).send('failure')
-                        }
+                core.model().findOne({}).sort("-id")
+                    .exec(function(err, resp) {
+                        len = resp.id + 5;
+                        console.log('-->', len)
+                        var chunks = _.chunk(_.range(1, len), len / CHUNK_SIZE);
+                        chunks = chunks.map(doShit);
+                        console.time('GETDATALIST')
+                        async.parallel(chunks, function(err, resp) {
+                            console.timeEnd('GETDATALIST')
+                            if (!err && resp) {
+                                res.jsonStr('[' + _.flatten(resp).join(',') + ']');
+                            } else {
+                                res.sendStatus(400).send('failure')
+                            }
+                        })
                     })
-                })
             })
         }
     }

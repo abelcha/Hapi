@@ -45,7 +45,7 @@ module.exports = function(schema) {
             var attachment = []
             var CHUNK_SIZE = 2;
             var completed = 0;
-            var LIMIT = req.query.limit && parseInt(req.query.limit);
+            var LIMIT = _.get(req, 'query.limit') && parseInt(req.query.limit);
             var MODEL = "artisan"
             var stream = db.model(MODEL).find()
                 .select('id nomSociete address telephone')

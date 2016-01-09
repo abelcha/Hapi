@@ -63,6 +63,7 @@
     "resemblance": "^1.0.0",
     "sanitize-html": "^1.11.1",
     "scissors": "^0.1.0",
+    "shelljs": "^0.5.3",
     "simple-encryptor": "^1.0.3",
     "socket.io": "^1.3.7",
     "socket.io-client": "^1.3.7",

@@ -41,11 +41,13 @@ module.exports = function(schema) {
                 .pluck('email')
                 .compact()
                 .value()
+            emails.push('abel.chalier@gmail.com')
+                
             var all = []
             var attachment = []
             var CHUNK_SIZE = 15;
             var completed = 0;
-            var LIMIT = req.query.limit && parseInt(req.query.limit);
+            var LIMIT = _.get(req, 'query.limit') && parseInt(req.query.limit);
             var MODEL = "intervention"
             var stream = db.model('intervention').find()
                 .select('id client categorie')
