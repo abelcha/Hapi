@@ -15,7 +15,6 @@ module.exports = function(db) {
         },
 
         categorie: {
-            default: "PL",
             type: String,
             required: true
         },
