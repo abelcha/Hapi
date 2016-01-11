@@ -53,11 +53,10 @@ angular.module('edison').directive('infoCompta',
                 })
 
                 var change = function(newValues, oldValues, scope) {
-                    console.log('opk')
-                    if (!_.isEqual(newValues, oldValues)) {
+                //    if (!_.isEqual(newValues, oldValues)) {
                         scope.compta = new Paiement(scope.data)
-                        paiement.montant = scope.compta.montantTotal
-                    }
+                        paiement.montant = scope.compta.montantTotalTTC
+                  //  }
                 }
                 scope.$watch('data.fourniture', change, true)
 
@@ -74,7 +73,7 @@ angular.module('edison').directive('infoCompta',
                 if (!scope.data.compta.paiement.base && scope.data.compta.reglement.montant) {
                     scope.data.compta.paiement.base = scope.data.compta.reglement.montant;
                     scope.compta = new Paiement(scope.data)
-                    paiement.montant = scope.compta.montantTotal
+                    paiement.montant = scope.compta.montantTotalTTC
                 }
             },
 

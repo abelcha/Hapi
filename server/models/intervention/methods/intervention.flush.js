@@ -157,6 +157,7 @@ module.exports = function(schema) {
                             dateFlush: date,
                             loginFlush: req.session.login,
                             pourcentage: doc.compta.paiement.pourcentage,
+                            tva: doc.compta.paiement.tva,
                             _type: inter.type,
                             fourniture: fourniture,
                             mode: doc.compta.paiement.mode,

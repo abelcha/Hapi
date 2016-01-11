@@ -14,11 +14,12 @@
                 balance: _round(e.compta.paiement.montant - _this.getPreviousMontant(e), 2),
                 final: _round(e.compta.paiement.montant - _this.getPreviousMontant(e), 2),
             }
-            if (e.compta.paiement.tva) {
+            console.log('-->', rtn)
+          /*  if (e.compta.paiement.tva) {
                 var tva = (e.compta.paiement.tva + 100) / 100
                 rtn.montant.balance = _round(rtn.montant.balance * tva, 2)
                 rtn.montant.legacy = _round(rtn.montant.legacy * tva, 2)
-            }
+            }*/
             rtn.id = e.id
             rtn.description = e.description;
             rtn.date = e.compta.paiement.date;

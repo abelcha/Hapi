@@ -70,7 +70,6 @@ var LpaController = function(user, openPost, socket, ContextMenu, $location, $wi
                 lpa.push(e);
             }
         })
-        console.log(lpa);
         LxProgressService.circular.show('#5fa2db', '#globalProgress');
         edisonAPI.compta.flushMail(lpa).then(function(resp) {
             console.log('ok')

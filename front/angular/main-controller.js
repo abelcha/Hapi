@@ -20,7 +20,6 @@ angular.module('edison').controller('MainController', function($timeout, LxNotif
     }
 
     $rootScope.addIntervention = function() {
-        console.log($scope.user.service, $scope.userStats.i_avr.total, $scope.user.maxInterAverif )
         if ($scope.user.service !== 'INTERVENTION' || (!$scope.userStats.i_avr.total || !$scope.userStats.i_avr.total || ($scope.user.maxInterAverif > $scope.userStats.i_avr.total))) {
             $location.url('/intervention')
         } else {
@@ -72,7 +71,6 @@ angular.module('edison').controller('MainController', function($timeout, LxNotif
                 date: moment().startOf('day').toDate()
             })
             .then(function(resp) {
-                console.log(resp)
                 _this.statsTeleproBfm = _.sortBy(resp.data.weekStats, 'total').reverse().slice(0, 6)
             });
 
@@ -135,7 +133,6 @@ angular.module('edison').controller('MainController', function($timeout, LxNotif
 
     Mousetrap.bind(['command+i', 'ctrl+i'], function() {
         dialog.declareBug(_this.tabContainer, function(err, resp) {
-            console.log(resp);
             edisonAPI.bug.declare(resp).then(function() {
                     LxNotificationService.error("Le Serice informatique en a été prevenu");
                 })

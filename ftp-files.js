@@ -1,13 +1,91 @@
-  var watch = require('gulp-watch')
   var moment = require('moment')
-  var toWatch = ['/home/abel/ftp/supervisor/calls/1601/calls-160104.xml',
-    '/home/abel/ftp/supervisor/recording/record-160104-142715.wav'
-  ]
-  var records = moment().format('[/home/abel/ftp/supervisor/recordings/][record-]YYMMDD*')
-  var xml = moment().format('[/home/abel/ftp/supervisor/recordings/][record-]YYMMDD*')
-  console.log(records)
-    //  var x  =moment().format('/home/abel/ftp/supervisor/calls/1601/*')
-    /*  watch(, function(a, b) {
-        console.log(a, b)
-      })
-    */
+  var date = new Date(2016, 0, 4, 4);
+  var records = moment(date).format('[../ftp/*/recordings/][record-]YYMMDD[*.wav]')
+  var xml = moment(date).format('[../ftp/*/calls/]YYMM[/calls-]YYMMDD[*.xml]')
+  var glob = require('glob');
+  var _ = require('lodash');
+  var shell = require('shelljs')
+  var md5 = require('md5');
+  var fs = require('fs')
+  var async = require('async')
+  require('./server/shared.js')()
+
+
+
+  var parseFile = function(fileName) {
+    var XML = require('pixl-xml');
+
+    var content = fs.readFileSync(fileName, 'utf-8');
+    try {
+      var parsed = XML.parse(content);
+    } catch (e) {
+      try {
+        var parsed = XML.parse(content + '</calls>');
+        return parsed;
+      } catch (e) {
+        console.log(JSON.stringify(e, undefined, 2))
+        return 0
+      }
+    }
+  }
+  var xmlFiles = glob.sync(xml)
+  _.each(xmlFiles, function(e) {
+    fs.watchFile(e, {
+      interval: 1
+    }, (curr, prev) => {
+
+
+      var getHash = function(call) {
+        return call.time + ':0' + (call.to ||  call.from || "").slice(8, 10)
+      }
+
+      var filterContent = function(e) {
+        return e.withoperator !== 'never'
+      }
+
+
+
+      var asyncEach = function(e, callback) {
+        db.intervention.findOne({
+          'date.ajout': {
+            $gt: moment().startOf('day').toDate()
+          },
+          $or: [{
+            'client.telephone.tel1': e.to
+          }, {
+            'client.telephone.tel2': e.to
+          }, {
+            'client.telephone.tel3': e.to
+          }]
+        })
+        callback(null)
+      }
+
+      var mapContent = function(call) {
+        if (call.from._Data) {
+          call.from = call.from._Data
+        }
+        if (call.to._Data) {
+          call.to = call.to._Data
+        }
+        call.dest = call.to;
+        call.to = call.to.slice(0, 10)
+        var d = call.duration.split(':').map(_.partial(parseInt, _, 10))
+        call.duration = d[0] * 3600 + d[1] * 60 + d[2]
+        call._id = moment(getHash(call), "DD/MM/YY HH:mm:ss:SSS").toDate()
+
+        return call
+      }
+
+
+      var content = parseFile(e)
+      if (content) {
+        var upd = content.call.filter(filterContent).map(mapContent)
+        async.eachLimit(upd, 1, asyncEach, function() {
+          console.log('OKOK')
+          process.exit()
+        })
+      }
+    });
+  })
+  shell.exec("sleep 0.01 && echo '' >> ../ftp/supervisor/calls/1601/calls-160104.xml")

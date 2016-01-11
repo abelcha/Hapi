@@ -34,6 +34,7 @@
          _this.remboursementFourniture = _this.fourniture.artisan;
          _this.montantTotal = _round(_this.remunerationDeplacement + _this.remunerationMargeFourniture + _this.remunerationMaindOeuvre + _this.remboursementFourniture, 2);
          _this.montantTotalTVA = _round(_this.montantTotal * (paiement.tva / 100), 2);
+         _this.tvaPaiement = paiement.tva
          _this.montantTotalTTC = _round(_this.montantTotal + _this.montantTotalTVA, 2);
      }
  }

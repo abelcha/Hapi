@@ -59,7 +59,6 @@ angular.module('edison').controller('MainController', ["$timeout", "LxNotificati
     }
 
     $rootScope.addIntervention = function() {
-        console.log($scope.user.service, $scope.userStats.i_avr.total, $scope.user.maxInterAverif )
         if ($scope.user.service !== 'INTERVENTION' || (!$scope.userStats.i_avr.total || !$scope.userStats.i_avr.total || ($scope.user.maxInterAverif > $scope.userStats.i_avr.total))) {
             $location.url('/intervention')
         } else {
@@ -111,7 +110,6 @@ angular.module('edison').controller('MainController', ["$timeout", "LxNotificati
                 date: moment().startOf('day').toDate()
             })
             .then(function(resp) {
-                console.log(resp)
                 _this.statsTeleproBfm = _.sortBy(resp.data.weekStats, 'total').reverse().slice(0, 6)
             });
 
@@ -174,7 +172,6 @@ angular.module('edison').controller('MainController', ["$timeout", "LxNotificati
 
     Mousetrap.bind(['command+i', 'ctrl+i'], function() {
         dialog.declareBug(_this.tabContainer, function(err, resp) {
-            console.log(resp);
             edisonAPI.bug.declare(resp).then(function() {
                     LxNotificationService.error("Le Serice informatique en a été prevenu");
                 })
@@ -5028,11 +5025,10 @@ angular.module('edison').directive('infoCompta',
                 })
 
                 var change = function(newValues, oldValues, scope) {
-                    console.log('opk')
-                    if (!_.isEqual(newValues, oldValues)) {
+                //    if (!_.isEqual(newValues, oldValues)) {
                         scope.compta = new Paiement(scope.data)
-                        paiement.montant = scope.compta.montantTotal
-                    }
+                        paiement.montant = scope.compta.montantTotalTTC
+                  //  }
                 }
                 scope.$watch('data.fourniture', change, true)
 
@@ -5049,7 +5045,7 @@ angular.module('edison').directive('infoCompta',
                 if (!scope.data.compta.paiement.base && scope.data.compta.reglement.montant) {
                     scope.data.compta.paiement.base = scope.data.compta.reglement.montant;
                     scope.compta = new Paiement(scope.data)
-                    paiement.montant = scope.compta.montantTotal
+                    paiement.montant = scope.compta.montantTotalTTC
                 }
             },
 
@@ -5541,7 +5537,6 @@ var LpaController = function(user, openPost, socket, ContextMenu, $location, $wi
                 lpa.push(e);
             }
         })
-        console.log(lpa);
         LxProgressService.circular.show('#5fa2db', '#globalProgress');
         edisonAPI.compta.flushMail(lpa).then(function(resp) {
             console.log('ok')
