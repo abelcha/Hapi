@@ -95,7 +95,10 @@ module.exports = {
             }, {
                 'client.telephone.tel3': req.query.call_origin
             }],
-            status: 'ENC'
+            status: {
+                $in: ['ENC', 'VRF']
+            },
+            'compta.reglement.recu': false
         }).populate('sst').sort('-id').then(function(resp) {
             if (!resp) {
                 return request.bind(res)({
