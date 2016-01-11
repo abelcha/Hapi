@@ -12,6 +12,7 @@
                     <th>P</th>
                     <th>Référence</th>
                     <th><i class="fa fa-plus"></i></th>
+                    <th>Categorie</th>
                     <th>Désignation</th>
                     <th>PU</th>
                     <th>Modif</th>
@@ -28,6 +29,10 @@
                     <td style="width:1%">
                         <md-checkbox ng-model="p.single" ng-change="p.open = p.single" aria-label="Checkbox 2" class="md-warn md-align-top-left">
                         </md-checkbox>
+                    </td>
+                    <td style="width:120px">
+                        <select style="width:120px" class="form-control" ng-model="p.categorie" ng-options="cat.short_name as cat.long_name for cat in config.categories">
+                        </select>
                     </td>
                     <td style="width:40%">
                         <input capitalize type="text" style="width: 93%;display: inline;" placeholder="description" class="form-control" ng-model="p.title" ng-change="changeElemTitle(p)">

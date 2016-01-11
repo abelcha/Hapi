@@ -1,6 +1,7 @@
 module.exports = function(db) {
 
     return new db.Schema({
+        categorie: String,
         pu: {
             type: Number,
             required: true
