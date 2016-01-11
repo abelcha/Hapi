@@ -6,7 +6,7 @@
                
 
      <md-item-template>
-          <strong ng-if="item.categorie">{{config.categories[item.categorie].long_name}} -</strong> {{item.ref}} -  {{item.title}} - {{item.pu}}€
+          <strong ng-if="item.categorie">{{item.categorie}} -</strong> {{item.ref}} -  {{item.title}} - {{item.pu}}€
         </md-item-template>
 
 
@@ -14,7 +14,7 @@
         </md-content>
         <span class="fs-subhead tc-black-2 display-block">Pour generation de factures/devis</span>
         <br>
-        <select ng-if="displayfact()" style="width:40%" class="form-control" ng-model="data.combo" ng-options="cmb.ref as cmb.title for cmb in (combo | filter:{ categorie: data.categorie })" default-option="Combos">
+        <select ng-if="displayfact()" style="width:40%" class="form-control" ng-model="data.combo" ng-options="cmb.ref as cmb.title for cmb in combo" default-option="Combos">
             <option value="" disabled>Combos</option>
         </select>
         <br>

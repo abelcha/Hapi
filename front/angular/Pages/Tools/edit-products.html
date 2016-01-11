@@ -31,8 +31,7 @@
                         </md-checkbox>
                     </td>
                     <td style="width:120px">
-                        <select style="width:120px" class="form-control" ng-model="p.categorie" ng-options="cat.short_name as cat.long_name for cat in config.categories">
-                        </select>
+                        <input type="text" style="width: 93%;display: inline;" placeholder="Categorie" class="form-control" ng-model="p.categorie">
                     </td>
                     <td style="width:40%">
                         <input capitalize type="text" style="width: 93%;display: inline;" placeholder="description" class="form-control" ng-model="p.title" ng-change="changeElemTitle(p)">
