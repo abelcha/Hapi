@@ -26,7 +26,8 @@ module.exports = function(app, express) {
     }
 
     app.get('/favicon.ico', function(req, res) {
-        res.sendFile(process.cwd() + '/front/assets/img/favicon.ico')
+
+        res.sendFile(process.cwd() + '/front/assets/img/favicon'  + (envDev ? '-dev' : '') +'.ico')
     })
 
     app.use(require("multer")({

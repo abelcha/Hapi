@@ -75,6 +75,7 @@ module.exports = function(schema) {
             doc.facture.tel = doc.client.telephone.tel1;
             doc.datePlain = moment.tz('Europe/Paris').format('LL');
             doc.user = user;
+            doc.hideTelephone = true;
             doc.acquitte = false;
             doc.type = "devis"
             PDF('facture', doc).buffer(function(err, buff) {

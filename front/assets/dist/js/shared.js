@@ -547,7 +547,7 @@ FiltersFactory.prototype.list = {
         short_name: 'i_mar',
         long_name: 'MARKET',
         url: 'market',
-        stats: false,
+        stats: true,
         sortBy: {
             di: 'desc'
         },
