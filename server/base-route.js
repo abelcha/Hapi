@@ -103,6 +103,7 @@ module.exports = function(app, express) {
                         req.session.login = user.login
                         req.session.ligne = user.ligne
                         req.session.nom = user.nom;
+                        req.session.maxInterAverif = user.maxInterAverif;
                         req.session.prenom = user.prenom;
                         req.session.portable = user.portable;
                         req.session.service = user.service;

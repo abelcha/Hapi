@@ -13,6 +13,13 @@ module.exports = function(schema) {
             })
             db.model('user').remove({}, function() {
                 db.model('user').create(userList).then(function(resp) {
+                    var spawn = require('child_process').spawn;
+                    if (envProd) {
+                        console.log('PROD')
+                        spawn('pm2', ['restart', 'all'])
+                    } else {
+                        console.log('DEV')
+                    }
                     edison.users.data = resp;
                     resolve(resp)
                 }, reject)

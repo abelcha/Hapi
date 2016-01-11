@@ -1,5 +1,6 @@
 <div class="card margin">
     <style type="text/css">
+
     </style>
     <div class="p+" style="width:95%">
         <div class="row">
@@ -16,6 +17,7 @@
                     <th>Email</th>
                     <th>Pseudo</th>
                     <th>Service</th>
+                    <th>Max A-verif</th>
                     <th>Ligne</th>
                     <th>Root</th>
                     <th>init pw</th>
@@ -28,7 +30,7 @@
                     <td>
                         <input type="text" class="form-control" ng-model="p.login">
                     </td>
-                     <td>
+                    <td>
                         <input type="text" class="form-control" ng-model="p.oldLogin">
                     </td>
                     <td>
@@ -44,6 +46,9 @@
                             <option value="INFORMATIQUE">INFORMATIQUE</option>
                             <option value="COMPTABILITE">COMPTABILITE</option>
                         </select>
+                    </td>
+                    <td style="width:5px">
+                        <input ng-if="p.service === 'INTERVENTION'" type="number" class="form-control" ng-model="p.maxInterAverif">
                     </td>
                     <td>
                         <input type="text" class="form-control" ng-model="p.ligne">
@@ -69,15 +74,10 @@
             </tbody>
         </table>
     </div>
-
-
-
- <div class="fab" style="position: fixed;right: 40px;z-index: 999;top: 87%;">
+    <div class="fab" style="position: fixed;right: 40px;z-index: 999;top: 87%;">
         <button ng-click="vm.save()" class="btn--no-conflicts btn--l btn--black btn--fab green"><i class="fa fa-check"></i></button>
     </div>
     <div class="fab" style="position: fixed;right: 100px;z-index: 999;top: 87%;">
         <button ng-click="usrs.push({single:false, open:true})" class="btn--no-conflicts btn--l btn--black btn--fab blue"><i class="fa fa-plus"></i></button>
     </div>
-
-
 </div>

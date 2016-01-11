@@ -8,6 +8,10 @@ module.exports = function(db) {
         nom: String,
         prenom: String,
         pseudo: String,
+        maxInterAverif: {
+            type: Number,
+            default: 100
+        },
         login: {
             type: String,
             required: true

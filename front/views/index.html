@@ -24,7 +24,7 @@
         <main-navbar></main-navbar>
         <side-bar ng-if="displayUser.login && interventionsStats" ng-mouseenter="toggleSidebar(false)" ng-mouseleave="toggleSidebar(true)">
             <div style="padding: 11px 33px;" class="menu-content animated fadeIn">
-                <a href="/intervention" style="height: 31px;padding: 4px;" class="btn btn-primary btn-block btn-outline dark">Ajout d'une intervention</a>
+                <a style="height: 31px;padding: 4px;" class="btn btn-primary btn-block btn-outline dark" ng-click="addIntervention()">Ajout d'une intervention</a>
             </div>
             <div style="padding: 11px 33px;" class="menu-content animated fadeIn" ng-if="displayUser.service === 'INTERVENTION'">
                 <a href="/devis" style="height: 31px;padding: 4px;" class="btn btn-primary btn-block btn-outline dark">Ajout d'un devis</a>
@@ -63,7 +63,6 @@
                 </drop-down>
                 <drop-down icon="bolt" open-default="userStats.i_litEnc.total" title="Mes Litiges">
                     <link fltr="i_lit" title="Tous les litiges" login="{{displayUser.login}}" icon="th-list"></link>
-                    <link fltr="i_lit" login="{{displayUser.login}}" icon="th-list"></link>
                     <link fltr="i_litEnc" login="{{displayUser.login}}" icon="th-list" color="danger"></link>
                 </drop-down>
             </drop-down>

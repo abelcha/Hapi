@@ -37,8 +37,7 @@ module.exports = {
                 this.categorieClean = config.categories[this.categorie].suffix + " " + config.categories[this.categorie].long_name.toLowerCase()
                 return "M. {{sst.representant.nom}},\n" +
                     "Etes vous disponible pour une intervention {{categorieClean}} {{datePlain}} à  {{client.address.v}} {{client.address.cp}} ?\n" +
-                    "{{user.pseudo}} : {{ligneDirect}}\n" +
-                    "Edison Services";
+                    "{{user.pseudo}} : {{ligneDirect}}\n";
                 /*  return "Bonjour M. {{sst.representant.nom}},\n" +
                       "nous avons une intervention {{categorieClean}} {{datePlain}} à {{client.address.v}} ({{client.address.cp}}).\n" +
                       "Etes-vous disponible ?\n" +

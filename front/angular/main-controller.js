@@ -1,4 +1,4 @@
-angular.module('edison').controller('MainController', function($timeout, LxNotificationService,dialog, $q, DataProvider, TabContainer, $scope, socket, config, $rootScope, $location, edisonAPI, taskList, $window) {
+angular.module('edison').controller('MainController', function($timeout, LxNotificationService, dialog, $q, DataProvider, TabContainer, $scope, socket, config, $rootScope, $location, edisonAPI, taskList, $window) {
     "use strict";
 
     $rootScope.app_users = app_users;
@@ -16,6 +16,14 @@ angular.module('edison').controller('MainController', function($timeout, LxNotif
     $rootScope.toggleSidebar = function(open) {
         if ($rootScope.sideBarMode === true) {
             $rootScope.sideBarIsClosed = open;
+        }
+    }
+
+    $rootScope.addIntervention = function() {
+        if ($scope.user.service === 'INTERVENTION' && ($scope.userStats.i_mark && !$scope.userStats.i_avr.total || ($scope.user.maxInterAverif > $scope.userStats.i_avr.total))) {
+            $location.url('/intervention')
+        } else {
+            LxNotificationService.error("Impossible: Vous avez dépasser votre quota d'intervention à vérifié (" + $scope.userStats.i_avr.total + ' > ' + $scope.user.maxInterAverif + ')')
         }
     }
 
@@ -82,7 +90,7 @@ angular.module('edison').controller('MainController', function($timeout, LxNotif
     })
     socket.on('notification', function(data) {
         console.log('NOTIF', data)
-        
+
         if (data.dest === $rootScope.user.login && (data.dest !== data.origin || data.self)) {
             LxNotificationService.notify(data.message, data.icon || 'android', false, data.color);
         }
@@ -128,13 +136,13 @@ angular.module('edison').controller('MainController', function($timeout, LxNotif
         dialog.declareBug(_this.tabContainer, function(err, resp) {
             console.log(resp);
             edisonAPI.bug.declare(resp).then(function() {
-                LxNotificationService.error("Le Serice informatique en a été prevenu");  
-            })
-           /* edisonAPI.intervention.save(_this).then(function(resp) {
-                LxNotificationService.success("L'intervention " + _this.id + " est modifié");
-            }, function(err) {
-                LxNotificationService.error("Une erreur est survenu (" + err.data + ")");
-            });*/
+                    LxNotificationService.error("Le Serice informatique en a été prevenu");
+                })
+                /* edisonAPI.intervention.save(_this).then(function(resp) {
+                     LxNotificationService.success("L'intervention " + _this.id + " est modifié");
+                 }, function(err) {
+                     LxNotificationService.error("Une erreur est survenu (" + err.data + ")");
+                 });*/
         })
     });
 
