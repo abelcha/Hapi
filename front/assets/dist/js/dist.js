@@ -59,8 +59,8 @@ angular.module('edison').controller('MainController', ["$timeout", "LxNotificati
     }
 
     $rootScope.addIntervention = function() {
-        console.log($scope.user.service, $scope.userStats.i_avr.total, $scope.userStats.i_avr.total)
-        if ($scope.user.service === 'INTERVENTION' && (!$scope.userStats.i_avr.total || !$scope.userStats.i_avr.total || ($scope.user.maxInterAverif > $scope.userStats.i_avr.total))) {
+        console.log($scope.user.service, $scope.userStats.i_avr.total, $scope.user.maxInterAverif )
+        if ($scope.user.service !== 'INTERVENTION' || (!$scope.userStats.i_avr.total || !$scope.userStats.i_avr.total || ($scope.user.maxInterAverif > $scope.userStats.i_avr.total))) {
             $location.url('/intervention')
         } else {
             LxNotificationService.error("Impossible: Vous avez dépasser votre quota d'intervention à vérifié (" + $scope.userStats.i_avr.total + ' > ' + $scope.user.maxInterAverif + ')')
@@ -4272,6 +4272,46 @@ angular.module('edison').directive('mainNavbar', ["$q", "edisonAPI", "TabContain
 
 }]);
 
+var archiveReglementController = function(edisonAPI, TabContainer, $routeParams, $location, LxProgressService) {
+
+    var tab = TabContainer.getCurrentTab();
+    var _this = this;
+    _this.title = 'Archives Reglements'
+    tab.setTitle('archives RGL')
+    LxProgressService.circular.show('#5fa2db', '#globalProgress');
+    edisonAPI.compta.archivesReglement().success(function(resp) {
+        LxProgressService.circular.hide()
+        _this.data = resp
+    })
+    _this.moment = moment;
+    _this.openLink = function(link) {
+        $location.url(link)
+    }
+}
+archiveReglementController.$inject = ["edisonAPI", "TabContainer", "$routeParams", "$location", "LxProgressService"];
+
+angular.module('edison').controller('archivesReglementController', archiveReglementController);
+
+var archivesPaiementController = function(edisonAPI, TabContainer, $routeParams, $location, LxProgressService) {
+    var _this = this;
+    var tab = TabContainer.getCurrentTab();
+    _this.type = 'paiement'
+    _this.title = 'Archives Paiements'
+    tab.setTitle('archives PAY')
+    LxProgressService.circular.show('#5fa2db', '#globalProgress');
+    edisonAPI.compta.archivesPaiement().success(function(resp) {
+        LxProgressService.circular.hide()
+        _this.data = resp
+    })
+    _this.moment = moment;
+    _this.openLink = function(link) {
+        $location.url(link)
+    }
+}
+archivesPaiementController.$inject = ["edisonAPI", "TabContainer", "$routeParams", "$location", "LxProgressService"];
+
+angular.module('edison').controller('archivesPaiementController', archivesPaiementController);
+
  angular.module('edison').directive('artisanCategorie', ["config", function(config) {
      "use strict";
      return {
@@ -4416,46 +4456,6 @@ var ArtisanCtrl = function(IBAN, $timeout, $rootScope, $scope, edisonAPI, $locat
 }
 ArtisanCtrl.$inject = ["IBAN", "$timeout", "$rootScope", "$scope", "edisonAPI", "$location", "$routeParams", "ContextMenu", "LxProgressService", "LxNotificationService", "TabContainer", "config", "dialog", "artisanPrm", "Artisan"];
 angular.module('edison').controller('ArtisanController', ArtisanCtrl);
-
-var archiveReglementController = function(edisonAPI, TabContainer, $routeParams, $location, LxProgressService) {
-
-    var tab = TabContainer.getCurrentTab();
-    var _this = this;
-    _this.title = 'Archives Reglements'
-    tab.setTitle('archives RGL')
-    LxProgressService.circular.show('#5fa2db', '#globalProgress');
-    edisonAPI.compta.archivesReglement().success(function(resp) {
-        LxProgressService.circular.hide()
-        _this.data = resp
-    })
-    _this.moment = moment;
-    _this.openLink = function(link) {
-        $location.url(link)
-    }
-}
-archiveReglementController.$inject = ["edisonAPI", "TabContainer", "$routeParams", "$location", "LxProgressService"];
-
-angular.module('edison').controller('archivesReglementController', archiveReglementController);
-
-var archivesPaiementController = function(edisonAPI, TabContainer, $routeParams, $location, LxProgressService) {
-    var _this = this;
-    var tab = TabContainer.getCurrentTab();
-    _this.type = 'paiement'
-    _this.title = 'Archives Paiements'
-    tab.setTitle('archives PAY')
-    LxProgressService.circular.show('#5fa2db', '#globalProgress');
-    edisonAPI.compta.archivesPaiement().success(function(resp) {
-        LxProgressService.circular.hide()
-        _this.data = resp
-    })
-    _this.moment = moment;
-    _this.openLink = function(link) {
-        $location.url(link)
-    }
-}
-archivesPaiementController.$inject = ["edisonAPI", "TabContainer", "$routeParams", "$location", "LxProgressService"];
-
-angular.module('edison').controller('archivesPaiementController', archivesPaiementController);
 
 var AvoirsController = function(TabContainer, openPost, edisonAPI, $rootScope, LxProgressService, LxNotificationService, FlushList) {
     "use strict";
