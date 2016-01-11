@@ -20,7 +20,7 @@ angular.module('edison').controller('MainController', function($timeout, LxNotif
     }
 
     $rootScope.addIntervention = function() {
-        console.log($scope.user.service , )
+        console.log($scope.user.service, $scope.userStats.i_avr.total, !$scope.userStats.i_avr.total)
         if ($scope.user.service === 'INTERVENTION' && (!$scope.userStats.i_avr.total || !$scope.userStats.i_avr.total || ($scope.user.maxInterAverif > $scope.userStats.i_avr.total))) {
             $location.url('/intervention')
         } else {
