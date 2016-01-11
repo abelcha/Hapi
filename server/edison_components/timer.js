@@ -55,8 +55,9 @@ var Timer = module.exports = function() {
 
         this.emitter.on("hour", function() {
             setTimeout(function() {
-
-                db.model('intervention').rappelDateIntervention()
+                if (moment().hour() > 7 && moment().hour() < 21) {
+                    db.model('intervention').rappelDateIntervention()
+                }
             }, _.random(ms.minutes(2), ms.minutes(10)))
         });
 
