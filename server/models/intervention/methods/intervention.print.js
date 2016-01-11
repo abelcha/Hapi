@@ -27,6 +27,7 @@ module.exports = function(schema) {
             }).then(function(docs) {
 
                 async.eachLimit(docs, 1, function(e, big_callback) {
+                        e = JSON.parse(JSON.stringify(e))
                         var paiementsst = _.find(data, 'id', e.id);
                         if (paiementsst.list.__list[0].mode === 'VIR') {
                             return big_callback(null)
@@ -34,6 +35,8 @@ module.exports = function(schema) {
                         op.push({
                             model: 'letter',
                             options: {
+                                qrcodeText1:'ASWR-XX-' + moment().format('DD-MM-YYYY'),
+                                qrcodeText2: e.id + ' - ' + e.nomSociete.slice(0, 10),
                                 address: e.address,
                                 dest: e.representant,
                                 text: textTemplate.lettre.artisan.rappelDocuments.bind(e)(),

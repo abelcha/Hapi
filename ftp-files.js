@@ -45,20 +45,38 @@
 
 
 
-      var asyncEach = function(e, callback) {
-        db.intervention.findOne({
-          'date.ajout': {
-            $gt: moment().startOf('day').toDate()
-          },
-          $or: [{
-            'client.telephone.tel1': e.to
-          }, {
-            'client.telephone.tel2': e.to
-          }, {
-            'client.telephone.tel3': e.to
-          }]
+      /*   var asyncEach = function(e, callback) {
+           db.intervention.findOne({
+             'date.ajout': {
+               $gt: moment().startOf('day').toDate()
+             },
+             $or: [{
+               'client.telephone.tel1': e.to
+             }, {
+               'client.telephone.tel2': e.to
+             }, {
+               'client.telephone.tel3': e.to
+             }]
+           }, function(err, resp) {
+             if (resp) {
+               resp.calls.push(resp);
+               e.archived = true
+             }
+           })
+
+         }*/
+
+      var insertEach = function(call, callback)  {
+        db.model('call').update({
+          _id: call._id
+        }, {
+          $set: call
+        }, {
+          upsert: true
+        }).exec(function(err, resp) {
+          console.log(err, resp);
+          callback(null)
         })
-        callback(null)
       }
 
       var mapContent = function(call) {
@@ -68,12 +86,13 @@
         if (call.to._Data) {
           call.to = call.to._Data
         }
+        call.poste = e.split('/')[2];
         call.dest = call.to;
         call.to = call.to.slice(0, 10)
         var d = call.duration.split(':').map(_.partial(parseInt, _, 10))
-        call.duration = d[0] * 3600 + d[1] * 60 + d[2]
+        call.duration = d[0] * 3600 + d[1] * 60 + d[2];
         call._id = moment(getHash(call), "DD/MM/YY HH:mm:ss:SSS").toDate()
-
+        call.date = call._id
         return call
       }
 
@@ -81,7 +100,7 @@
       var content = parseFile(e)
       if (content) {
         var upd = content.call.filter(filterContent).map(mapContent)
-        async.eachLimit(upd, 1, asyncEach, function() {
+        async.eachLimit(upd, 1, insertEach, function(err, resp) {
           console.log('OKOK')
           process.exit()
         })

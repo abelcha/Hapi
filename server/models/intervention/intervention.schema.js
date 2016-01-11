@@ -372,6 +372,17 @@ module.exports = function(db) {
             index: true,
             default: false,
         },
+        calls: [{
+            io: String,
+            status: String,
+            withoperator: String,
+            from: String,
+            poste: String,
+            to: String,
+            dest: String,
+            duration: Number,
+            date: Date
+        }],
         appels: [{
             call_id: {
                 type: String,

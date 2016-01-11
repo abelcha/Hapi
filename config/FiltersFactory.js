@@ -458,7 +458,7 @@ FiltersFactory.prototype.list = {
         },
     }, {
         short_name: 'i_paenv',
-        long_name: 'Mes Inters Envoyés',
+        long_name: 'Mes Inters Env.',
         url: 'paEnv',
         group: "$login.envoi",
         match: {
