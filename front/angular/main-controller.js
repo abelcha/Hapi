@@ -20,7 +20,7 @@ angular.module('edison').controller('MainController', function($timeout, LxNotif
     }
 
     $rootScope.addIntervention = function() {
-        if ($scope.user.service === 'INTERVENTION' && ($scope.userStats.i_mark && !$scope.userStats.i_avr.total || ($scope.user.maxInterAverif > $scope.userStats.i_avr.total))) {
+        if ($scope.user.service === 'INTERVENTION' && (!$scope.userStats.i_mark || !$scope.userStats.i_avr.total || ($scope.user.maxInterAverif > $scope.userStats.i_avr.total))) {
             $location.url('/intervention')
         } else {
             LxNotificationService.error("Impossible: Vous avez dépasser votre quota d'intervention à vérifié (" + $scope.userStats.i_avr.total + ' > ' + $scope.user.maxInterAverif + ')')
