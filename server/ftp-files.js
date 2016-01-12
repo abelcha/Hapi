@@ -32,7 +32,7 @@
   _.each(xmlFiles, function(e) {
     fs.watchFile(e, {
       interval: 1
-    }, (curr, prev) => {
+    }, _.delay(function(curr, prev) {
 
       console.log('FTPCHANGE')
       var getHash = function(call) {
@@ -110,6 +110,11 @@
        //   process.exit()
         })
       }
-    });
+    }, 1000);
   })
+
+  setInterval(function() {
+    var x = "/home/abel/ftp/maxime/calls/1601/calls-160112.xml"
+    console.log(x, fs.existsSync(x)))
+  }, 200)
  // shell.exec("sleep 0.01 && echo '' >> ' +  + '/harald/calls/1601/calls-160104.xml")
