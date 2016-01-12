@@ -25,7 +25,7 @@ module.exports = function(schema) {
 					$gt: moment().startOf('day').toDate()
 				}
 			}, function(err, resp) {
-				async.eachLimit(resp, 1, function(call, big_callback) {
+				async.eachLimit(resp, 20, function(call, big_callback) {
 					var external_num = (call.io === 'incoming' ? call.from : call.to);
 					async.parallel([
 						function getIntervention(cb) {
