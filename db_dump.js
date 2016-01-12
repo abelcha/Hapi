@@ -37,6 +37,8 @@ document.upload({
 		filename: '/DB-BACKUP/' + archiveName
 	})
 	.then(function(resp) {
+		console.log('rm', '-fr', archivePath, dbName)
+		rm('-fr', archivePath, dbName)
 		console.log('[OK]', resp)
 		exit()
 
