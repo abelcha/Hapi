@@ -34,7 +34,7 @@
       interval: 1
     }, (curr, prev) => {
 
-
+      console.log('FTPCHANGE')
       var getHash = function(call) {
         return call.time + ':0' + (call.to ||  call.from || "").slice(8, 10)
       }
