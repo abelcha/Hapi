@@ -5,7 +5,7 @@ var fs = require('fs');
 
 var moment = require('moment');
 var dateFormat = moment().format('YYYY-MM-DD--HH[h]mm');
-var dumpPath = process.cwd() + '/dump-' + dateFormat;
+var dumpPath = process.cwd() + 'dump-' + dateFormat;
 var fileName = 'EDISON-BACKUP-' + dateFormat;
 var dbName = '/' + dumpPath + '/' + fileName
 var archivePath = dumpPath + '.tar.gz';
@@ -38,7 +38,7 @@ document.upload({
 	})
 	.then(function(resp) {
 		console.log('rm', '-fr', archivePath, dbName)
-		rm('-fr', archivePath, dbName)
+		rm('-fr', archivePath, dumpPath)
 		console.log('[OK]', resp)
 		exit()
 
