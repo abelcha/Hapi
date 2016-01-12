@@ -6,7 +6,7 @@ export GOPATH=/Users/abelchalier/Desktop/golang
 # Look in ~/.oh-my-zsh/themes/
 # Optionally, if you set this to "random", it'll load a random theme each
 # time that oh-my-zsh is loaded.
-ZSH_THEME="amuse"
+ZSH_THEME="robbyrussell"
 
 export EDITOR="emacs"
 export LC_ALL=en_US.UTF-8
