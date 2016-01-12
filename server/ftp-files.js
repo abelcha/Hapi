@@ -19,9 +19,11 @@
     var content = fs.readFileSync(fileName, 'utf-8');
     try {
       var parsed = XML.parse(content);
+      console.log(parsed && parsed.length)
     } catch (e) {
       try {
         var parsed = XML.parse(content + '</calls>');
+        console.log(parsed && parsed.length)
         return parsed;
       } catch (e) {
         console.log(JSON.stringify(e, undefined, 2))
@@ -32,7 +34,7 @@
   var xmlFiles = glob.sync(xml)
   _.each(xmlFiles, function(e) {
       fs.watchFile(e, {
-        interval: 1
+        interval: 1000
       }, (curr, prev) => {
 
 
@@ -89,7 +91,7 @@
           }
           call.to = call.to.replace(/^0033/, '0')
           call.from = call.from.replace(/^0033/, '0')
-          call.poste = e.split('/')[2];
+          call.poste = e.split('/')[3];
           call.dest = call.to;
           call.origin = call.from;
           call.from = call.from.slice(0, 10);
