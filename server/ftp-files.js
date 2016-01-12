@@ -89,7 +89,9 @@
           }
           call.to = call.to.replace(/^0033/, '0')
           call.from = call.from.replace(/^0033/, '0')
-          call.poste = e.split('/')[2];
+          call.poste = e.split('/')[e.split('/').findIndex(function(x) {
+            return x === 'ftp'
+          }) + 1]
           call.dest = call.to;
           call.origin = call.from;
           call.from = call.from.slice(0, 10);
