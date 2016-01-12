@@ -87,12 +87,13 @@ module.exports = function(schema) {
                              return callback(null, 'ok')
                          }*/
                         var textTemplate = requireLocal('config/textTemplate.js');
+                        var virement = artisan.interventions[0].mode === 'VIR';
                         mail.send({
                             From: "comptabilite@edison-services.fr",
                             ReplyTo: "comptabilite@edison-services.fr",
                             To: artisan.email,
                             Subject: "Paiement du " + moment().format('LL'),
-                            HtmlBody: textTemplate.mail.intervention.paiement,
+                            HtmlBody: textTemplate.mail.intervention.paiement(virement),
                             Attachments: [{
                                 Content: buffer.toString('base64'),
                                 Name: "Recap " + moment().format('LL') + ".pdf",
