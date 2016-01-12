@@ -1,5 +1,6 @@
   var moment = require('moment')
-  var date = new Date()//new Date(2015,10, 5, 4);
+  var date = new Date() //new Date(2015,10, 5, 4);
+  process.env.FTP_PATH = process.env.FTP_PATH || "/Users/abelchalier/Desktop/ftp"
   var records = moment(date).format('[' + process.env.FTP_PATH + '/*/recordings/][record-]YYMMDD[*.wav]')
   var xml = moment(date).format('[' + process.env.FTP_PATH + '/*/calls/]YYMM[/calls-]YYMMDD[*.xml]')
   var glob = require('glob');
@@ -30,91 +31,86 @@
   }
   var xmlFiles = glob.sync(xml)
   _.each(xmlFiles, function(e) {
-    fs.watchFile(e, {
-      interval: 1000
-    }, function(curr, prev) {
-
-      console.log('FTPCHANGE')
-      var getHash = function(call) {
-        return call.time + ':0' + (call.to ||  call.from || "").slice(8, 10)
-      }
-
-      var filterContent = function(e) {
-        return e.withoperator !== 'never'
-      }
+      fs.watchFile(e, {
+        interval: 1
+      }, (curr, prev) => {
 
 
-
-      /*   var asyncEach = function(e, callback) {
-           db.intervention.findOne({
-             'date.ajout': {
-               $gt: moment().startOf('day').toDate()
-             },
-             $or: [{
-               'client.telephone.tel1': e.to
-             }, {
-               'client.telephone.tel2': e.to
-             }, {
-               'client.telephone.tel3': e.to
-             }]
-           }, function(err, resp) {
-             if (resp) {
-               resp.calls.push(resp);
-               e.archived = true
-             }
-           })
-
-         }*/
-
-      var insertEach = function(call, callback)  {
-        db.model('conversation').update({
-          _id: call._id
-        }, {
-          $set: call
-        }, {
-          upsert: true
-        }).exec(function(err, resp) {
-          console.log(err, resp);
-          callback(null)
-        })
-      }
-
-      var mapContent = function(call) {
-        if (call.from._Data) {
-          call.from = call.from._Data
+        var getHash = function(call) {
+          return call.time + ':0' + (call.to ||  call.from || "").slice(8, 10)
         }
-        if (call.to._Data) {
-          call.to = call.to._Data
-        }
-        call.to = call.to.replace(/^0033/, '0')
-        call.from = call.from.replace(/^0033/, '0')
-        call.poste = e.split('/')[2];
-        call.dest = call.to;
-        call.origin = call.from;
-        call.from = call.from.slice(0, 10);
-        call.to = call.to.slice(0, 10)
-        var d = call.duration.split(':').map(_.partial(parseInt, _, 10))
-        call.duration = d[0] * 3600 + d[1] * 60 + d[2];
-        call._id = moment(getHash(call), "DD/MM/YY HH:mm:ss:SSS").toDate()
-        call.date = call._id
-        call.archived = false;
-        return call
-      }
 
-      console.log('-->', e, fs.existsSync(e))
-      var content = parseFile(e)
-      if (content) {
-        var upd = content.call.filter(filterContent).map(mapContent)
-        async.eachLimit(upd, 1, insertEach, function(err, resp) {
-          console.log('OKOK')
-       //   process.exit()
-        })
-      }
+        var filterContent = function(e) {
+          return e.withoperator !== 'never'
+        }
+
+
+
+        /*   var asyncEach = function(e, callback) {
+             db.intervention.findOne({
+               'date.ajout': {
+                 $gt: moment().startOf('day').toDate()
+               },
+               $or: [{
+                 'client.telephone.tel1': e.to
+               }, {
+                 'client.telephone.tel2': e.to
+               }, {
+                 'client.telephone.tel3': e.to
+               }]
+             }, function(err, resp) {
+               if (resp) {
+                 resp.calls.push(resp);
+                 e.archived = true
+               }
+             })
+
+           }*/
+
+        var insertEach = function(call, callback)  {
+          db.model('conversation').update({
+            _id: call._id
+          }, {
+            $set: call
+          }, {
+            upsert: true
+          }).exec(function(err, resp) {
+            console.log(err, resp);
+            callback(null)
+          })
+        }
+
+        var mapContent = function(call) {
+          if (call.from._Data) {
+            call.from = call.from._Data
+          }
+          if (call.to._Data) {
+            call.to = call.to._Data
+          }
+          call.to = call.to.replace(/^0033/, '0')
+          call.from = call.from.replace(/^0033/, '0')
+          call.poste = e.split('/')[2];
+          call.dest = call.to;
+          call.origin = call.from;
+          call.from = call.from.slice(0, 10);
+          call.to = call.to.slice(0, 10)
+          var d = call.duration.split(':').map(_.partial(parseInt, _, 10))
+          call.duration = d[0] * 3600 + d[1] * 60 + d[2];
+          call._id = moment(getHash(call), "DD/MM/YY HH:mm:ss:SSS").toDate()
+          call.date = call._id
+          call.archived = false;
+          return call
+        }
+
+
+        var content = parseFile(e)
+        if (content) {
+          var upd = content.call.filter(filterContent).map(mapContent)
+          async.eachLimit(upd, 1, insertEach, function(err, resp) {
+            console.log('OKOK')
+              //   process.exit()
+          })
+        }
+      });
     })
-  })
-
-  setInterval(function() {
-    var x = "/home/abel/ftp/maxime/calls/1601/calls-160112.xml"
-    console.log(x, fs.existsSync(x))
-  }, 100)
- // shell.exec("sleep 0.01 && echo '' >> ' +  + '/harald/calls/1601/calls-160104.xml")
+    // shell.exec("sleep 0.01 && echo '' >> ' +  + '/harald/calls/1601/calls-160104.xml")
