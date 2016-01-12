@@ -52,8 +52,11 @@ module.exports = function(schema) {
         var closestIndex = _.findIndex(files, function(e) {
           return e.nbr > nbr
         })
+        console.log('CLOSEST INDEX=>', closestIndex)
         var closest = _.merge(files[closestIndex - 1], conversation.toObject());
+        console.log('CLOSEST=>', closest)
         var overlaps = _.merge(files[closestIndex], conversation.toObject());
+        console.log('CLOSEST=>', overlaps)
 
 
         getDuration(closest.path).then(function(duration) {
@@ -99,6 +102,5 @@ module.exports = function(schema) {
         console.log('ERR', e)
       }
     }
-
   }
 }
