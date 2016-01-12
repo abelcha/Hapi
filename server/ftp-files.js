@@ -101,7 +101,7 @@
         return call
       }
 
-
+      console.log('-->', e, fs.existsSync(e))
       var content = parseFile(e)
       if (content) {
         var upd = content.call.filter(filterContent).map(mapContent)
