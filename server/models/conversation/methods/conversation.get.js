@@ -19,7 +19,7 @@ module.exports = function(schema) {
           return Math.round(this.getTime() / 1000)
         }
         console.log('C')
-
+        console.log('====>', conversation)
 
         var filepath = path.join(conversation.poste, "recordings");
         var filename = moment(conversation._id).format("[/record-]YYMMDD[-]HHmmss[.wav]")
