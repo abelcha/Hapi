@@ -84,6 +84,7 @@ var Timer = module.exports = function() {
                 query: {}
             }
             setTimeout(function() {
+                console.log('REFRESH')
                 db.model('conversation').refresh().then(function(resp) {
                     console.log('CONVERSATION===>', resp)
                 })
