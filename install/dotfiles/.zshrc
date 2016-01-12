@@ -13,7 +13,7 @@ export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
 
 #alias astip="46.101.144.38"
-alias deploy="echo 'sh edison-api/deploy.sh'| ssh abel@46.101.137.217"
+alias deploy="echo 'sh edsx/deploy.sh'| ssh abel@46.101.137.217"
 alias vp="vagrant up"
 alias vs="vagrant ssh"
 alias untar="tar xvfz "
