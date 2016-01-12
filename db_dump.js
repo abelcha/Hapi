@@ -1,5 +1,6 @@
 require('shelljs/global');
 require('./server/shared')()
+var colors = require('colors');
 var fs = require('fs');
 
 var moment = require('moment');
@@ -11,17 +12,26 @@ var archivePath = dumpPath + '.tar.gz';
 var archiveName = fileName + '.tar.gz';
 
 
+console.log('rm', '-fr', "./dump")
 rm('-fr', "./dump")
+
+console.log('mongodump -d EDISON --excludeCollectionsWithPrefix=event')
 exec('mongodump -d EDISON --excludeCollectionsWithPrefix=event');
 
+console.log('rm', dumpPath)
 rm(dumpPath)
+
+console.log('./dump', dumpPath)
 mv('./dump', dumpPath)
 
+console.log('mv', dumpPath + '/EDISON', dbName)
 mv(dumpPath + '/EDISON', dbName);
 
+console.log('exec', ['tar', '-zcvf', archivePath, dumpPath].join(' '))
 exec(['tar', '-zcvf', archivePath, dumpPath].join(' '))
-//exec(['mongorestore', dumpPath].join(' '))
+exec(['mongorestore', dumpPath].join(' '))
 
+console.log('UPLOAD...')
 document.upload({
 		data: fs.readFileSync(archivePath),
 		filename: '/DB-BACKUP/' + archiveName
