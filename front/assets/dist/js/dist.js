@@ -226,7 +226,7 @@ var getDevis = function($route, $q, edisonAPI) {
     var id = $route.current.params.id;
     if ($route.current.params.i) {
         return edisonAPI.intervention.get($route.current.params.i, {
-            select: 'client categorie tva -_id conversation'
+            select: 'client categorie tva -_id conversations'
         });
     } else if (id.length > 10) {
         return edisonAPI.devis.getTmp(id);
@@ -4093,6 +4093,22 @@ angular.module('edison').factory('user', ["$window", function($window) {
     return {
         restrict: 'E',
         templateUrl: '/Templates/info-appel-sst.html',
+        scope: {
+            data: "=",
+        },
+        link: function(scope, element, attrs) {
+            scope.embedded = !!attrs.embedded
+            console.log(attrs.embedded);
+        },
+    }
+
+ }]);
+
+ angular.module('edison').directive('infoConversation', ["mapAutocomplete", "edisonAPI", "config", function(mapAutocomplete, edisonAPI, config) {
+    "use strict";
+    return {
+        restrict: 'E',
+        templateUrl: '/Templates/info-conversation.html',
         scope: {
             data: "=",
         },

@@ -89,11 +89,18 @@
         <div ng-if="_model === 'artisan'" class="col-sm-3">
             <span class="label" style="width:100px;margin-top:5px;display:block" ng-class="{'green':artisan.document[file].ok, 'red':!artisan.document[file].ok}" ng-repeat="(k, file) in config.artisanFiles" ng-if="file == 'contrat' || file == 'kbis' || file == 'cni' || file == 'rib'">{{file}}</span> </span>
         </div>
-        <div class="col-sm-4 hidden-sm hidden-xs hidden-md" ng-if="data.appels.length">
-            <p bold text-xxl underlined>Conversations Sous-traitants</p>
-            <info-appel-sst data="data" embedded="true"></info-appel-sst>
+        <div class="col-sm-4 hidden-sm hidden-xs hidden-md" ng-if="data.appels.length || data.conversations.length">
+            <p ng-if="data.appels.length" bold text-xxl underlined>Conversations Sous-traitants</p>
+            <info-appel-sst ng-if="data.appels.length" data="data" embedded="true"></info-appel-sst>
+            <p ng-if="data.conversations.length" bold text-xxl underlined>Conversations Client</p>
+            <li ng-repeat="v in data.conversations">{{v.poste}} - {{v._id|date:"dd/MM/yy à HH'h'mm"}} - {{v.duration}} Sec - {{v.status}}
+                <br>
+                <audio preload="none" style="background:red" controls ng-init="v.audioFile = '/api/conversation/' + v._id + '/get'">
+                    <source ng-src="{{v.audioFile}}" type="audio/mpeg">
+                </audio>
+            </li>
         </div>
-        <div class="col-sm-3 hidden-sm hidden-xs hidden-md" ng-if="address && address.lt && !(data.appels.length)">
+        <div class="col-sm-3 hidden-sm hidden-xs hidden-md" ng-if="address && address.lt && !(data.appels.length || !data.appels.conversations)">
             <img style="height: auto;width: 411px;" ng-src="{{getStaticMap()}}" class="img-thumbnail" />
         </div>
     </div>

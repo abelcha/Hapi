@@ -36,6 +36,7 @@ module.exports = function(schema) {
           console.log('MATCH')
           return res.sendFile(completePath)
         }
+          console.log('FIND')
 
         var files = glob.sync(path.join(process.env.FTP_PATH, filepath, fileRegexp))
           .map(function(e) {
@@ -47,6 +48,7 @@ module.exports = function(schema) {
           }).sort(function(a, b) {
             return a.nbr - b.nbr
           })
+        console.log("length=>", path.join(process.env.FTP_PATH, filepath, fileRegexp))
         var closestIndex = _.findIndex(files, function(e) {
           return e.nbr > nbr
         })
