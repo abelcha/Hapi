@@ -1,5 +1,5 @@
 sudo apt-get update
-sudo apt-get install -y emacs-nox curl wget git zsh  golang nginx redis-server scp pdftk htop proftpd ffmpeg
+sudo apt-get install -y emacs23-nox curl wget git zsh  golang nginx redis-server scp pdftk htop proftpd ffmpeg
 
 #config
 sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
