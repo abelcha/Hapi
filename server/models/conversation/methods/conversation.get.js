@@ -52,6 +52,9 @@ module.exports = function(schema) {
         var closestIndex = _.findIndex(files, function(e) {
           return e.nbr > nbr
         })
+        if (closestIndex < 0) {
+          return res.status(404).send('not found')
+        }
         console.log('CLOSEST INDEX=>', closestIndex)
         var closest = _.merge(files[closestIndex - 1], conversation.toObject());
         console.log('CLOSEST=>', closest)
