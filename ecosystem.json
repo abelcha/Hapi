@@ -44,6 +44,7 @@
     "env": {
       "FTP_PATH": "/home/abel/ftp",
       "APP_ENV": "PRODUCTION",
+      "PLATFORM": "DIGITAL_OCEAN",
       "MONGOLAB_URI": "mongodb://heroku_app33756489:hrkm1jfvok3i2hsopg9t99jvvd@ds041981-a0.mongolab.com:41981/heroku_app33756489"
     },
     "script": "server/ftp-files.js"
