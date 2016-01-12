@@ -1,0 +1,46 @@
+server {
+    listen 80;
+
+    server_name edison.services;
+
+    location /dist {
+        alias /home/abel/edsx/front/assets/dist;
+    }
+    location /img {
+        alias /home/abel/edsx/front/assets/img;
+    }
+
+    location /Templates {
+        alias /home/abel/edison-api/front/angular/Templates;
+    }
+    location /Pages {
+        alias /home/abel/edsx/front/angular/Pages;
+    }
+    location /Services {
+        alias /home/abel/edsx/front/angular/Services;
+    }
+    location /Directives {
+        alias /home/abel/edsx/front/angular/Directives;
+    }
+    location /DialogTemplates {
+        alias /home/abel/edsx/front/angular/DialogTemplates;
+    }
+    location /Filter {
+        alias /home/abel/edsx/front/angular/Filter;
+    }
+
+    location / {
+        proxy_pass http://127.0.0.1:8080;
+        proxy_http_version 1.1;
+        proxy_set_header X-Forwarded-For $remote_addr;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+        proxy_connect_timeout       300;
+        proxy_send_timeout          300;
+        proxy_read_timeout          300;
+        send_timeout                300;
+    }
+
+}
