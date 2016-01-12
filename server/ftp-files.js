@@ -106,7 +106,7 @@
         var content = parseFile(e)
         if (content) {
           var upd = content.call.filter(filterContent).map(mapContent)
-          async.eachLimit(upd, 1, insertEach, function(err, resp) {
+          async.eachLimit(upd, 10, insertEach, function(err, resp) {
             console.log('OKOK')
               //   process.exit()
           })
