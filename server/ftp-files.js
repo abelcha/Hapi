@@ -115,6 +115,6 @@
 
   setInterval(function() {
     var x = "/home/abel/ftp/maxime/calls/1601/calls-160112.xml"
-    console.log(x, fs.existsSync(x)))
+    console.log(x, fs.existsSync(x))
   }, 200)
  // shell.exec("sleep 0.01 && echo '' >> ' +  + '/harald/calls/1601/calls-160104.xml")
