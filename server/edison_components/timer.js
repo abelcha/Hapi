@@ -24,7 +24,7 @@ var Timer = module.exports = function() {
     this.emitter.add("*/20 * * * *", "20 minutes")
     this.emitter.add("*/10 * * * *", "10 minutes")
     this.emitter.add("*/4 * * * *", "4 minutes")
-    this.emitter.add("*/3 * * * *", "3 minutes")
+    this.emitter.add("*/10 * * * *", "10 minutes")
 
     if (envProd) {
 
@@ -78,7 +78,7 @@ var Timer = module.exports = function() {
         })
 
 
-        this.emitter.on("3 minutes", function() {
+        this.emitter.on("10 minutes", function() {
 
             var req = {
                 query: {}
