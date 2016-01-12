@@ -93,9 +93,9 @@ module.exports = function(schema) {
             })
           }
         })
+      } catch (err) {
+        console.log('ERR', e)
       }
-    } catch (err) {
-      console.log('ERR', e)
     }
 
   }
