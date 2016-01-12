@@ -144,10 +144,10 @@ var Timer = module.exports = function() {
         });
     })
 
-     var exec = require('child_process').exec;
-        exec(command.join(' '), function(error, stdout, stderr) {
-            console.log(error, stdout, stderr);
-        });
+    var exec = require('child_process').exec;
+    exec('node db_dump.js', function(error, stdout, stderr) {
+        console.log(error, stdout, stderr);
+    });
 
     var test = function() {
         var parser = require('cron-parser');
