@@ -86,8 +86,12 @@
         if (call.to._Data) {
           call.to = call.to._Data
         }
+        call.to = call.to.replace(/^0033/, '0')
+        call.from = call.from.replace(/^0033/, '0')
         call.poste = e.split('/')[2];
         call.dest = call.to;
+        call.origin = call.from;
+        call.from = call.from.slice(0, 10);
         call.to = call.to.slice(0, 10)
         var d = call.duration.split(':').map(_.partial(parseInt, _, 10))
         call.duration = d[0] * 3600 + d[1] * 60 + d[2];
@@ -107,4 +111,4 @@
       }
     });
   })
-  shell.exec("sleep 0.01 && echo '' >> ../ftp/supervisor/calls/1601/calls-160104.xml")
+ // shell.exec("sleep 0.01 && echo '' >> ../ftp/harald/calls/1601/calls-160104.xml")
