@@ -8,7 +8,7 @@
   var md5 = require('md5');
   var fs = require('fs')
   var async = require('async')
-  require('./server/shared.js')()
+  require('./shared.js')()
   console.log(xml)
 
 
