@@ -19,11 +19,9 @@
     var content = fs.readFileSync(fileName, 'utf-8');
     try {
       var parsed = XML.parse(content);
-      console.log(parsed && parsed.length)
     } catch (e) {
       try {
         var parsed = XML.parse(content + '</calls>');
-        console.log(parsed && parsed.length)
         return parsed;
       } catch (e) {
         console.log(JSON.stringify(e, undefined, 2))
