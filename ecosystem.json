@@ -7,6 +7,7 @@
     "watch": ["node_modules/edsx-mail/*.js", "server/routes.js", "config/*.js", "server/edison_components/*", "server/models/*", "server/app.js", "server/worker.js", "server/core/*", "invoice-ninja/*/*.js"],
     "env": {
       "PLATFORM": "DIGITAL_OCEAN",
+      "CACHE_PATH": "/home/abel/edison-api/cache",
       "APP_ENV": "PRODUCTION",
       "CLUSTER_PROCESS_NBR": 2,
       "FTP_PATH": "/home/abel/ftp",
@@ -21,6 +22,7 @@
     "name": "web",
     "env": {
       "FTP_PATH": "/home/abel/ftp",
+      "CACHE_PATH": "/home/abel/edison-api/cache",
       "CLUSTER_PROCESS_NBR": 2,
       "APP_ENV": "PRODUCTION",
       "PLATFORM": "DIGITAL_OCEAN",
@@ -37,5 +39,11 @@
   }, {
     "name": "socket-bridge",
     "script": "server/socket-bridge.js"
+  }, {
+    "name": "ftp-files",
+    "env": {
+      "FTP_PATH": "/home/abel/ftp",
+    },
+    "script": "server/ftp-files.js"
   }]
 }

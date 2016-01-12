@@ -1,7 +1,7 @@
   var moment = require('moment')
   var date = new Date()//new Date(2015,10, 5, 4);
-  var records = moment(date).format('[../ftp/*/recordings/][record-]YYMMDD[*.wav]')
-  var xml = moment(date).format('[../ftp/*/calls/]YYMM[/calls-]YYMMDD[*.xml]')
+  var records = moment(date).format('[' + process.env.FTP_PATH + '/*/recordings/][record-]YYMMDD[*.wav]')
+  var xml = moment(date).format('[' + process.env.FTP_PATH + '/*/calls/]YYMM[/calls-]YYMMDD[*.xml]')
   var glob = require('glob');
   var _ = require('lodash');
   var shell = require('shelljs')
@@ -112,4 +112,4 @@
       }
     });
   })
- // shell.exec("sleep 0.01 && echo '' >> ../ftp/harald/calls/1601/calls-160104.xml")
+ // shell.exec("sleep 0.01 && echo '' >> ' +  + '/harald/calls/1601/calls-160104.xml")

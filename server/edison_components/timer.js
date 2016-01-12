@@ -24,6 +24,7 @@ var Timer = module.exports = function() {
     this.emitter.add("*/20 * * * *", "20 minutes")
     this.emitter.add("*/10 * * * *", "10 minutes")
     this.emitter.add("*/4 * * * *", "4 minutes")
+    this.emitter.add("*/3 * * * *", "3 minutes")
 
     if (envProd) {
 
@@ -75,6 +76,20 @@ var Timer = module.exports = function() {
                 })
             }, _.random(ms.minutes(2), ms.minutes(10)))
         })
+
+
+        this.emitter.on("3 minutes", function() {
+
+            var req = {
+                query: {}
+            }
+            setTimeout(function() {
+                db.model('conversation').refresh().then(function(resp) {
+                    console.log('CONVERSATION===>', resp)
+                })
+            })
+        })
+
     }
 
     this.emitter.on("4pm", function() {

@@ -9,3 +9,4 @@ dump*
 *~
 *.js.map
 cache
+*.tar.gz

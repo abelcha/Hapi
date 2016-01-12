@@ -17,13 +17,13 @@ module.exports = function(schema) {
 		return new Promise(function(resolve, reject) {
 
 			db.model('conversation').find({
-				//archived: false,
+				archived: false,
 				from: {
 					$ne: 'Anonymous'
 				},
-				/*date: {
+				date: {
 					$gt: moment().startOf('day').toDate()
-				}*/
+				}
 			}, function(err, resp) {
 				async.eachLimit(resp, 1, function(call, big_callback) {
 					var external_num = (call.io === 'incoming' ? call.from : call.to);
@@ -79,7 +79,7 @@ module.exports = function(schema) {
 							console.log('SST', resp[2]._id)
 						}
 						if (!resp[0] && !resp[1]) {
-							console.log('NOOP',  external_num)
+							console.log('NOOP', external_num)
 							big_callback(null)
 						} else {
 							call.archived = true;
