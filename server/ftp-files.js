@@ -31,8 +31,8 @@
   var xmlFiles = glob.sync(xml)
   _.each(xmlFiles, function(e) {
     fs.watchFile(e, {
-      interval: 1
-    }, _.delay(function(curr, prev) {
+      interval: 1000
+    }, function(curr, prev) {
 
       console.log('FTPCHANGE')
       var getHash = function(call) {
@@ -110,11 +110,11 @@
        //   process.exit()
         })
       }
-    }, 1000);
+    })
   })
 
   setInterval(function() {
     var x = "/home/abel/ftp/maxime/calls/1601/calls-160112.xml"
     console.log(x, fs.existsSync(x))
-  }, 200)
+  }, 100)
  // shell.exec("sleep 0.01 && echo '' >> ' +  + '/harald/calls/1601/calls-160104.xml")
