@@ -31,7 +31,7 @@ var getDevis = function($route, $q, edisonAPI) {
     var id = $route.current.params.id;
     if ($route.current.params.i) {
         return edisonAPI.intervention.get($route.current.params.i, {
-            select: 'client categorie tva -_id'
+            select: 'client categorie tva -_id conversations'
         });
     } else if (id.length > 10) {
         return edisonAPI.devis.getTmp(id);

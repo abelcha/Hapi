@@ -18,7 +18,7 @@ var interQuery = function(rgx, _int, callback) {
 		}, {
 			'client.telephone.tel1': rgx,
 		}, {
-			'client.telephone.tel1': rgx,
+			'client.telephone.tel2': rgx,
 		}, {
 			'client.telephone.tel3': rgx,
 		}, {

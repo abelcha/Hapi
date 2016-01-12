@@ -73,10 +73,17 @@ module.exports = function(db) {
             telephone: {
                 tel1: {
                     type: String,
-                    required: true
+                    required: true,
+                    index: true
                 },
-                tel2: String,
-                tel3: String,
+                tel2: {
+                    type: String,
+                    index: true
+                },
+                tel3: {
+                    type: String,
+                    index: true
+                },
                 origine: String,
                 appel: String,
             },
@@ -112,8 +119,14 @@ module.exports = function(db) {
             payeur: String,
             nom: String,
             prenom: String,
-            tel: String,
-            tel2: String,
+            tel: {
+                type: String,
+                index: true
+            },
+            tel2: {
+                type: String,
+                index: true
+            },
             email: String,
             address: {
                 n: String,
@@ -372,7 +385,7 @@ module.exports = function(db) {
             index: true,
             default: false,
         },
-        calls: [{
+        conversations: [{
             io: String,
             status: String,
             withoperator: String,
@@ -381,7 +394,7 @@ module.exports = function(db) {
             to: String,
             dest: String,
             duration: Number,
-            date: Date
+            _id: Date
         }],
         appels: [{
             call_id: {

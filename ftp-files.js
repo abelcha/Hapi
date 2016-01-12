@@ -1,5 +1,5 @@
   var moment = require('moment')
-  var date = new Date(2016, 0, 4, 4);
+  var date = new Date()//new Date(2015,10, 5, 4);
   var records = moment(date).format('[../ftp/*/recordings/][record-]YYMMDD[*.wav]')
   var xml = moment(date).format('[../ftp/*/calls/]YYMM[/calls-]YYMMDD[*.xml]')
   var glob = require('glob');
@@ -9,7 +9,7 @@
   var fs = require('fs')
   var async = require('async')
   require('./server/shared.js')()
-
+  console.log(xml)
 
 
   var parseFile = function(fileName) {
@@ -67,7 +67,7 @@
          }*/
 
       var insertEach = function(call, callback)  {
-        db.model('call').update({
+        db.model('conversation').update({
           _id: call._id
         }, {
           $set: call
@@ -97,6 +97,7 @@
         call.duration = d[0] * 3600 + d[1] * 60 + d[2];
         call._id = moment(getHash(call), "DD/MM/YY HH:mm:ss:SSS").toDate()
         call.date = call._id
+        call.archived = false;
         return call
       }
 
@@ -106,7 +107,7 @@
         var upd = content.call.filter(filterContent).map(mapContent)
         async.eachLimit(upd, 1, insertEach, function(err, resp) {
           console.log('OKOK')
-          process.exit()
+       //   process.exit()
         })
       }
     });

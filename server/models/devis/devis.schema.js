@@ -54,11 +54,18 @@ module.exports = function(db) {
             email: String,
             telephone: {
                 tel1: {
+                    index: true,
                     type: String,
                     required: true
                 },
-                tel2: String,
-                tel3: String
+                tel2: {
+                    type: String,
+                    index: true
+                },
+                tel3: {
+                    type: String,
+                    index: true
+                },
             },
             address: {
                 n: {
@@ -90,6 +97,17 @@ module.exports = function(db) {
             type: Number,
             ref: 'intervention'
         },
+         conversations: [{
+            io: String,
+            status: String,
+            withoperator: String,
+            from: String,
+            poste: String,
+            to: String,
+            dest: String,
+            duration: Number,
+            _id: Date
+        }],
         combo: String,
         comboText: String,
         categorie: String,
