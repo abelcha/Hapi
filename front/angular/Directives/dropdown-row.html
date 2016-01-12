@@ -95,7 +95,7 @@
             <p ng-if="data.conversations.length" bold text-xxl underlined>Conversations Client</p>
             <li ng-repeat="v in data.conversations">{{v.poste}} - {{v._id|date:"dd/MM/yy à HH'h'mm"}} - {{v.duration}} Sec - {{v.status}}
                 <br>
-                <audio preload="none" style="background:red" controls ng-init="v.audioFile = '/api/conversation/' + v._id + '/get'">
+                <audio preload="none" style="background:red;width: 100%;" controls ng-init="v.audioFile = '/api/conversation/' + v._id + '/get'">
                     <source ng-src="{{v.audioFile}}" type="audio/mpeg">
                 </audio>
             </li>
