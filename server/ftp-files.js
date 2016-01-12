@@ -89,7 +89,7 @@
           }
           call.to = call.to.replace(/^0033/, '0')
           call.from = call.from.replace(/^0033/, '0')
-          call.poste = e.split('/')[3];
+          call.poste = e.split('/')[2];
           call.dest = call.to;
           call.origin = call.from;
           call.from = call.from.slice(0, 10);
