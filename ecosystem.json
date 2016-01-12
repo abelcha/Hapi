@@ -15,7 +15,7 @@
       "POSTMARK_API_TOKEN": "b2c424bc-af2b-4175-b76f-c863bb3915c3",
       "POSTMARK_INBOUND_ADDRESS": "c5021a62758dc77ac5cdccfa3df754c3@inbound.postmarkapp.com",
       "POSTMARK_SMTP_SERVER": "smtp.postmarkapp.com",
-      "MONGOLAB_URI": "mongodb://heroku_app33756489:hrkm1jfvok3i2hsopg9t99jvvd@ds041981-a0.mongolab.com:41981/heroku_app33756489"
+      "MONGOLAB_URI": "127.0.0.1:27017/EDISON"
     },
   }, {
     // Application #2
@@ -26,7 +26,7 @@
       "CLUSTER_PROCESS_NBR": 2,
       "APP_ENV": "PRODUCTION",
       "PLATFORM": "DIGITAL_OCEAN",
-      "MONGOLAB_URI": "mongodb://heroku_app33756489:hrkm1jfvok3i2hsopg9t99jvvd@ds041981-a0.mongolab.com:41981/heroku_app33756489"
+      "MONGOLAB_URI": "127.0.0.1:27017/EDISON"
     },
     "watch": ["server", "config"],
     //  "exec_mode" : "cluster_mode",
@@ -45,7 +45,7 @@
       "FTP_PATH": "/home/abel/ftp",
       "APP_ENV": "PRODUCTION",
       "PLATFORM": "DIGITAL_OCEAN",
-      "MONGOLAB_URI": "mongodb://heroku_app33756489:hrkm1jfvok3i2hsopg9t99jvvd@ds041981-a0.mongolab.com:41981/heroku_app33756489"
+      "MONGOLAB_URI": "127.0.0.1:27017/EDISON"
     },
     "script": "server/ftp-files.js"
   }]

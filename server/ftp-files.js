@@ -41,7 +41,7 @@
         }
 
         var filterContent = function(e) {
-          return e.withoperator !== 'never'
+          return e.withoperator !== 'never' && parseInt(e.duration) > 15 
         }
 
 
