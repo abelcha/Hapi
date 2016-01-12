@@ -19,6 +19,7 @@ var Timer = module.exports = function() {
     this.emitter.add(hour(7), "everyday at 6")
     this.emitter.add(hour(14), "everyday at 14")
     this.emitter.add(hour(3), "3pm");
+    this.emitter.add(hour(0), "midnight");
     this.emitter.add(hour(4), "4pm");
     this.emitter.add("*/60 * * * *", "hour")
     this.emitter.add("*/20 * * * *", "20 minutes")
@@ -136,7 +137,17 @@ var Timer = module.exports = function() {
         redis.delWildcard("rs*")
     })
 
+    this.emitter.on("midnight", function() {
+        var exec = require('child_process').exec;
+        exec(command.join(' '), function(error, stdout, stderr) {
+            console.log(error, stdout, stderr);
+        });
+    })
 
+     var exec = require('child_process').exec;
+        exec(command.join(' '), function(error, stdout, stderr) {
+            console.log(error, stdout, stderr);
+        });
 
     var test = function() {
         var parser = require('cron-parser');
