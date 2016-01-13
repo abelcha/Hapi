@@ -11,7 +11,7 @@ server {
     }
 
     location /Templates {
-        alias /home/abel/edison-api/front/angular/Templates;
+        alias /home/abel/edsx/front/angular/Templates;
     }
     location /Pages {
         alias /home/abel/edsx/front/angular/Pages;

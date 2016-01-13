@@ -21,7 +21,7 @@ module.exports = function(app, express) {
 
     if (process.env.PLATFORM === 'HEROKU') {
         app.use(function(req, res, next) {
-            res.redirect('http://edison.services' + req.url)
+            res.redirect('http://46.101.137.217' + req.url)
         })
     }
 
