@@ -1,4 +1,5 @@
 sudo add-apt-repository ppa:mc3man/trusty-media
+sudo add-apt-repository ppa:fkrull/deadsnakes
 sudo apt-get update
 sudo apt-get install emacs23-nox 
 sudo apt-get install curl 
@@ -38,3 +39,5 @@ sudo npm install -g gulp n nodemon pm2 prok
 #rsub
 sudo wget -O /usr/local/bin/rsub https://raw.github.com/aurora/rmate/master/rmate
 sudo chmod a+x /usr/local/bin/rsub
+cd ..
+npm install

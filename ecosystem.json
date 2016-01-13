@@ -33,9 +33,6 @@
     // "instances" : 5,
     "merge_logs": true,
     "script": "server/app.js",
-    "error_file": "/var/log/pm2/child-err.log",
-    "out_file": "/var/log/pm2/child-out.log",
-    "pid_file": "/var/log/pm2/child.pid"
   }, {
     "name": "socket-bridge",
     "script": "server/socket-bridge.js"
