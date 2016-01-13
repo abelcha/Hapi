@@ -1,6 +1,5 @@
 require('shelljs/global');
 require('./server/shared')()
-var colors = require('colors');
 var fs = require('fs');
 
 var moment = require('moment');
