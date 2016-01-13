@@ -5,6 +5,12 @@ module.exports = function(app, express) {
     var fs = require('fs')
     var keys = requireLocal('config/_keys')
 
+    if (process.env.PLATFORM === 'HEROKU') {
+        app.use(function(req, res, next) {
+            res.redirect('http://46.101.137.217' + req.url)
+        })
+    }
+
 
     app.get('/socket.io', function(req, res) {
         return res.status(404).send()
@@ -19,15 +25,10 @@ module.exports = function(app, express) {
     app.get('/api/client/:id/svi/contact', edison.axialis.contact)
     app.get('/api/client/:id/svi/callback', edison.axialis.callback)
 
-    if (process.env.PLATFORM === 'HEROKU') {
-        app.use(function(req, res, next) {
-            res.redirect('http://46.101.137.217' + req.url)
-        })
-    }
 
     app.get('/favicon.ico', function(req, res) {
 
-        res.sendFile(process.cwd() + '/front/assets/img/favicon'  + (envDev ? '-dev' : '') +'.ico')
+        res.sendFile(process.cwd() + '/front/assets/img/favicon' + (envDev ? '-dev' : '') + '.ico')
     })
 
     app.use(require("multer")({
@@ -79,8 +80,7 @@ module.exports = function(app, express) {
         if (envProd) {
             log.info(lg)
             console.log(JSON.stringify(lg))
-        } else {
-        }
+        } else {}
         next()
     })
 
@@ -121,7 +121,7 @@ module.exports = function(app, express) {
     });
 
     var goodIP = function(ip) {
-        return ip === '141.105.72.198' || ip === '82.123.70.5';
+        return ip === '141.105.72.198' ||  ip === '82.123.70.5';
     }
 
     app.use(function(req, res, next) {
