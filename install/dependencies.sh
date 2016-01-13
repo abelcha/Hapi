@@ -1,3 +1,4 @@
+sudo add-apt-repository ppa:mc3man/trusty-media
 sudo apt-get update
 sudo apt-get install emacs23-nox 
 sudo apt-get install curl 
@@ -10,12 +11,12 @@ sudo apt-get install redis-server
 sudo apt-get install scp 
 sudo apt-get install pdftk 
 sudo apt-get install htop 
-sudo apt-get install proftpd 
-sudo apt-get install ffmpeg
+sudo apt-get install proftpd
+sudo apt-get install ffmpeg 
 
 #config
 sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
-
+sudo chsh -s $(which zsh)
 #mongo install
 echo "install mongo"
 
