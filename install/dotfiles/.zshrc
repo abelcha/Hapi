@@ -1,6 +1,6 @@
 # Path to your oh-my-zsh installation.
-export ZSH=/Users/abelchalier/.oh-my-zsh
-export GOPATH=/Users/abelchalier/Desktop/golang
+export ZSH=/home/abel/.oh-my-zsh
+export GOPATH=/home/abel/golang
 
 # Set name of the theme to load.
 # Look in ~/.oh-my-zsh/themes/
