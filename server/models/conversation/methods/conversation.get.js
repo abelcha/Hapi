@@ -74,6 +74,8 @@ module.exports = function(schema) {
               cacheFilePath
             ]
             exec(command.join(' '), function(error, stdout, stderr) {
+              console.log("WWW", error, stdout, stderr)
+
               return res.sendFile(cacheFilePath)
             });
           } else {
