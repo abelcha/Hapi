@@ -1,5 +1,5 @@
   var moment = require('moment')
-  var date = new Date(moment().add(-1, 'days').toDate()) ;
+  var date = new Date(moment().add(-1, 'days').toDate());
   process.env.FTP_PATH = process.env.FTP_PATH || "/Users/abelchalier/Desktop/ftp"
   var records = moment(date).format('[' + process.env.FTP_PATH + '/*/recordings/][record-]YYMMDD[*.wav]')
   var xml = moment(date).format('[' + process.env.FTP_PATH + '/*/calls/]YYMM[/calls-]YYMMDD[*.xml]')
@@ -40,7 +40,7 @@
         }
 
         var filterContent = function(e) {
-          return e.withoperator !== 'never' && parseInt(e.duration.split(':').join('')) > 10 
+          return e.withoperator !== 'never' && parseInt(e.duration.split(':').join('')) > 10
         }
 
 
@@ -68,7 +68,8 @@
 
         var insertEach = function(call, callback)  {
           db.model('conversation').update({
-            _id: call._id
+            _id: call._id,
+            archived: false
           }, {
             $set: call
           }, {
@@ -108,7 +109,7 @@
         if (content) {
           var upd = content.call.filter(filterContent).map(mapContent)
           async.eachLimit(upd, 10, insertEach, function(err, resp) {
-              //   process.exit()
+            //   process.exit()
           })
         }
       });
