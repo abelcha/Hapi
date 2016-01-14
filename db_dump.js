@@ -2,6 +2,7 @@ require('shelljs/global');
 require('./server/shared')()
 var fs = require('fs');
 
+
 var moment = require('moment');
 var dateFormat = moment().format('YYYY-MM-DD--HH[h]mm');
 var dumpPath = process.cwd() + 'dump-' + dateFormat;
