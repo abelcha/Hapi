@@ -11,6 +11,7 @@
   var async = require('async')
   require('./shared.js')()
   console.log(xml)
+  
 
   setInterval(function() {
     var exec = require('child_process').exec;
