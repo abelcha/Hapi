@@ -82,7 +82,6 @@
           }, {
             upsert: true
           }).exec(function(err, resp) {
-            console.log(err, resp, call);
             callback(null)
           })
         }
@@ -115,7 +114,6 @@
         var content = parseFile(e)
         if (content) {
           var upd = content.call.filter(filterContent).map(mapContent)
-          console.log('==>', upd.length)
           async.eachLimit(upd, 10, insertEach, function(err, resp) {
             //   process.exit()
           })
