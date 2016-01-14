@@ -1,5 +1,5 @@
   var moment = require('moment')
-  var date = new Date(moment().add(-1, 'days').toDate());
+  var date = new Date(moment().toDate());
   process.env.FTP_PATH = process.env.FTP_PATH || "/Users/abelchalier/Desktop/ftp"
   var records = moment(date).format('[' + process.env.FTP_PATH + '/*/recordings/][record-]YYMMDD[*.wav]')
   var xml = moment(date).format('[' + process.env.FTP_PATH + '/*/calls/]YYMM[/calls-]YYMMDD[*.xml]')
@@ -11,6 +11,13 @@
   var async = require('async')
   require('./shared.js')()
   console.log(xml)
+
+  setInterval(function() {
+    var exec = require('child_process').exec;
+    exec('pm2 restart ftp-files', function(error, stdout, stderr) {
+      console.log(error, stdout, stderr);
+    });
+  }, 60000)
 
 
   var parseFile = function(fileName) {
@@ -67,7 +74,6 @@
            }*/
 
         var insertEach = function(call, callback)  {
-          console.log('--==>>>', call._id)
           db.model('conversation').update({
             _id: call._id,
             archived: false
@@ -109,6 +115,7 @@
         var content = parseFile(e)
         if (content) {
           var upd = content.call.filter(filterContent).map(mapContent)
+          console.log('==>', upd.length)
           async.eachLimit(upd, 10, insertEach, function(err, resp) {
             //   process.exit()
           })
