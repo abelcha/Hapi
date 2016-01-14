@@ -67,6 +67,7 @@
            }*/
 
         var insertEach = function(call, callback)  {
+          console.log('--==>>>', call._id)
           db.model('conversation').update({
             _id: call._id,
             archived: false
