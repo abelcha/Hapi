@@ -149,7 +149,7 @@ FiltersFactory.prototype.list = {
         short_name: 'd_all',
         long_name: 'Tous les devis',
         url: '',
-        stats:false,
+        stats: false,
         match: {},
         noCache: true,
     }, {
@@ -409,6 +409,15 @@ FiltersFactory.prototype.list = {
         match: {
             'newOs': true,
             'appels.1': {
+                $exists: true
+            }
+        },
+    }, {
+        short_name: 'i_conv',
+        long_name: 'Conversations',
+        url: 'conversation',
+        match: {
+            'conversations.1': {
                 $exists: true
             }
         },
