@@ -6,7 +6,7 @@ module.exports = function(schema) {
         return new Promise(function(resolve, reject) {
             _.each(compteList, function(e) {
                 if (!e.email ||  !e.nom || !e.address.r || !e.address.v ||  !e.address.cp || !e.address.n) {
-                    return reject('Les coordonées de facturations de ' + e.nom + ' sont incompletes')
+                    return reject('Les Coordonnées de facturations de ' + e.nom + ' sont incompletes')
                 }
                 e.nom = e.nom.toUpperCase();
                 e.email = e.email.toUpperCase();

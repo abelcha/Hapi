@@ -1,7 +1,7 @@
 <div id="expended" style="height:220px">
     <div class="row">
         <div class="col-sm-4 info-ext" ng-if="_model === 'intervention'||_model === 'devis'">
-            <p bold text-xxl underlined>Coordonées client</p>
+            <p bold text-xxl underlined>Coordonnées client</p>
             <p>{{client.civilite}} {{client.prenom}} {{client.nom}}</p>
             <p>{{client.address.n}} {{client.address.r}}, </p>
             <p>{{client.address.cp}} {{client.address.v}}</p>
@@ -10,7 +10,7 @@
                 ({{data.reglementSurPlace ? 'Reglement sur place' : ' Reglement par facture'}} - {{data.modeReglement}})
                 <p ng-if="_model === 'intervention'">
                 </p>
-                <p ng-if="_model === 'intervention' && !data.reglementSurPlace" bold text-xxl underlined>Coordonées Facturation</p>
+                <p ng-if="_model === 'intervention' && !data.reglementSurPlace" bold text-xxl underlined>Coordonnées Facturation</p>
                 <div ng-if="!data.reglementSurPlace && data.facture.nom && data.facture.address.r">
                     <p>{{data.facture.prenom}} {{data.facture.nom}} ({{config.typePayeurObj[data.facture.payeur]}})</p>
                     <p>{{data.facture.address.n}} {{data.facture.address.r}}, {{data.facture.address.cp}} {{data.facture.address.v}}</p>

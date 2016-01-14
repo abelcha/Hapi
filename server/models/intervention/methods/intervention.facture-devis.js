@@ -155,7 +155,7 @@ module.exports = function(schema) {
                 }
                 var f = inter.facture;
                 if (!f.email ||  !f.nom || !f.address.r || !f.address.v ||  !f.address.cp || !f.address.n) {
-                    return reject('Les coordonées de facturations sont incompletes')
+                    return reject('Les Coordonnées de facturations sont incompletes')
                 }
                 f.prenom = f.prenom ||  "";
                 if (!inter.produits || !inter.produits.length) {
@@ -228,7 +228,7 @@ module.exports = function(schema) {
 
                 var f = inter.facture;
                 if (!f.email ||  !f.nom || !f.address.r || !f.address.v ||  !f.address.cp || !f.address.n || !f.tel) {
-                    return reject('Les coordonées de facturations sont incompletes')
+                    return reject('Les Coordonnées de facturations sont incompletes')
                 }
                 f.prenom = f.prenom ||  "";
                 if (!inter.produits || !inter.produits.length) {
