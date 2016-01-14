@@ -560,7 +560,7 @@ module.exports = {
         long_name: 'Erreur de facturation',
     }, {
         short_name: 'REM_COM',
-        long_name: 'Remise Commercial'
+        long_name: 'Remise Commerciale'
     }, {
         short_name: 'TROP_PERCU',
         long_name: 'Trop Percu'
