@@ -46,7 +46,6 @@ module.exports = function(app, express) {
     });
 
 
-
     app.use(express.static(path.join(process.cwd(), 'front', 'bower_components')));
     app.use(express.static(path.join(process.cwd(), 'front', 'assets')));
     app.use(express.static(path.join(process.cwd(), 'front', 'angular')));
