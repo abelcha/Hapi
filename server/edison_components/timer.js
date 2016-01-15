@@ -139,7 +139,7 @@ var Timer = module.exports = function() {
 
     this.emitter.on("midnight", function() {
         var exec = require('child_process').exec;
-        exec(command.join(' '), function(error, stdout, stderr) {
+        exec("node db_dump.js", function(error, stdout, stderr) {
             console.log(error, stdout, stderr);
         });
     })
