@@ -59,6 +59,7 @@
             if (res && fs.existsSync(filePath)) {
                 return fs.readFile(filePath, function(err, file) {
                     console.log('CACHED')
+                    res.setHeader('Content-disposition', 'attachment; filename=' + call_id + '.mp3');
                     return res.contentType("audio/mpeg").sendFile(filePath)
                 })
             }
