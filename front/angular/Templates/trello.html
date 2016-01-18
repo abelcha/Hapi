@@ -7,7 +7,7 @@
             </span></md-subheader>
             </a>
             <md-list-item ng-repeat="task in tasklist.checkItems" ng-click="check(task)" ng-class="{'barred':task.checked}">
-                <p> {{ task.name }} {{task.checked}}</p>
+                <p> {{ task.name }}</p>
                 <md-checkbox class="md-secondary" ng-model="task.checked"></md-checkbox>
             </md-list-item>
         </md-list>
