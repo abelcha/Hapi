@@ -9,7 +9,7 @@ module.exports = function(schema) {
     var Facture = requireLocal('config/validate-facture');
 
     var getFacturePdfObj = function(doc, date, acquitte, reverse) {
-
+        console.log('==>', date)
         doc.datePlain = moment(date).format('LL');
         doc.acquitte = acquitte;
         /*        doc.produits.unshift({
@@ -177,7 +177,7 @@ module.exports = function(schema) {
                 }
                 inter.acompte = (inter.prixFinal * (inter.tva / 100 + 1));
 
-                var pdf = getFacturePdfObj(inter, inter.date.intervention, true, req.body.date);
+                var pdf = getFacturePdfObj(inter, req.body.date, true, req.body.date);
 
                 pdf.toBuffer(function(err, buffer) {
                     var communication = {

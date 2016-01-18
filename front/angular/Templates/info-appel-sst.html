@@ -12,9 +12,10 @@
                         <td>{{v.status}}</td>
                         <td><a target="_blank" href="/api/axialis/{{v.call_id}}/get">Conversation</a></td>
                         <td>
-                            <audio style="width: 100%;background:#00FF9C"  preload="none" controls ng-init="v.audioFile = '/api/axialis/' + v.call_id + '/get'">
+                            <audio style="width: 90%;" preload="none" controls ng-init="v.audioFile = '/api/axialis/' + v.call_id + '/get'">
                                 <source ng-src="{{v.audioFile}}" type="audio/mpeg">
                             </audio>
+                            <a target="_blank" href="{{v.audioFile}}" download> <i style="color:black" class="fa fa-2x fa-download"></i></a>
                         </td>
                     </tr>
                 </tbody>
@@ -28,6 +29,6 @@
         <audio style="width: 90%" preload="none" controls ng-init="v.audioFile = '/api/axialis/' + v.call_id + '/get'">
             <source ng-src="{{v.audioFile}}" type="audio/mpeg">
         </audio>
-        <a target="_blank" href="{{v.audioFile}}" download > <i  style="color:black" class="fa fa-2x fa-download"></i></a>
+        <a target="_blank" href="{{v.audioFile}}" download> <i style="color:black" class="fa fa-2x fa-download"></i></a>
     </li>
 </ul>
