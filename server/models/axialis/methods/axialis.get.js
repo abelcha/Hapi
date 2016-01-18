@@ -70,6 +70,7 @@
                 console.log('PIPE')
                 if (res) {
                     res.contentType("audio/mpeg")
+                    res.setHeader('Content-disposition', 'attachment; filename=' + call_id + '.mp3');
                     socket.pipe(res);
                 }
 
