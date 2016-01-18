@@ -86,8 +86,6 @@ module.exports = function(schema) {
 							call.save(big_callback)
 						}
 					})
-
-
 				}, function(err, resp) {
 					console.log(JSON.stringify(err, null, 2), resp)
 					resolve([err, resp])

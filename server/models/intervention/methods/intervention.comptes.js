@@ -34,7 +34,8 @@ module.exports = function(schema) {
         var dateRange = getMonthRange(req.query.m - 1, req.query.y)
         return new Promise(function(resolve, reject) {
             db.model('intervention').find({
-                'date.ajout': dateRange
+                'compta.reglement.recu': true,
+                'compta.reglement.date': dateRange
             }, {}).then(function(docs) {
                 var rtn = docs.map(function(e) {
                     return [
