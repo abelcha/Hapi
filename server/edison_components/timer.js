@@ -14,6 +14,7 @@ var Timer = module.exports = function() {
     //    this.emitter.add("*/120 * * * *", "every hour");
     //    this.emitter.add("*/5 * * * *", "every 5 minutes");
     // this.emitter.add("*/2 * * * *", "every minute");
+
     this.emitter.add(hour(18), "everyday at 20")
     this.emitter.add(hour(8), "everyday at 7")
     this.emitter.add(hour(7), "everyday at 6")
@@ -139,7 +140,7 @@ var Timer = module.exports = function() {
 
     this.emitter.on("midnight", function() {
         var exec = require('child_process').exec;
-        exec(command.join(' '), function(error, stdout, stderr) {
+        exec("node db_dump.js", function(error, stdout, stderr) {
             console.log(error, stdout, stderr);
         });
     })
