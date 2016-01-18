@@ -27,6 +27,7 @@ module.exports = function(schema) {
         var cacheFilePath = process.env.CACHE_PATH + '/conversation/' + moment(conversation.date).format('YYMMDD-HHmmssSSS') + '.wav'
         var nbr = parseInt(filename.slice(-10, -4))
         var completePath = path.join(process.env.FTP_PATH, filepath, filename);
+        res.setHeader('Content-disposition', 'attachment; filename=' + conversation._id + '.mp3');
         console.log('HERE')
         if (fs.existsSync(cacheFilePath)) {
           console.log('CACHE')
@@ -36,7 +37,7 @@ module.exports = function(schema) {
           console.log('MATCH')
           return res.sendFile(completePath)
         }
-          console.log('FIND')
+        console.log('FIND')
 
         var files = glob.sync(path.join(process.env.FTP_PATH, filepath, fileRegexp))
           .map(function(e) {
