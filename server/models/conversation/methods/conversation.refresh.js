@@ -68,9 +68,10 @@ module.exports = function(schema) {
 					], function(err, resp) {
 						if (resp[0]) {
 							console.log('INTERVENTION', resp[0]._id)
+							if (!_.find(resp[0].conversations, '_id', call.toObject()._id))
 							resp[0].conversations.push(call.toObject())
 							resp[0].save();
-						} else if (resp[1]) {
+						} else if (!_.find(resp[1].conversations, '_id', call.toObject()._id)) {
 							console.log('DEVIS', resp[1]._id)
 							resp[1].conversations.push(call.toObject())
 							resp[1].save();
