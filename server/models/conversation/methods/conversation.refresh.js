@@ -22,7 +22,7 @@ module.exports = function(schema) {
 					$ne: 'Anonymous'
 				},
 				date: {
-					$gt: moment().startOf('month').toDate()
+					$gt: moment().startOf('day').toDate()
 				}
 			}, function(err, resp) {
 				async.eachLimit(resp, 20, function(call, big_callback) {
