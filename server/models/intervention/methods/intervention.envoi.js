@@ -339,19 +339,20 @@ module.exports = function(schema) {
                         if (req.body.file) {
                             inter.textfileSupp = (_.endsWith(files[files.length - 1], 'pdf') ? 'un document supplementaine' : 'une photo transmises par le client');
                         }
+                        var user = edison.users.get(inter.login.ajout);
                         var c = config.categories[inter.categorie]
                         inter.categoriePlain = c.suffix + ' ' + c.long_name.toLowerCase();
                         inter.fileSupp = req.body.file;
-                        inter.__login = req.session.pseudo || 'Arnaud';
+                        inter.__login = user.pseudo || 'Arnaud';
                         inter.datePlain = moment.tz(new Date(inter.date.intervention), "Europe/Paris").format('DD/MM/YYYY à HH\\hmm')
-                        var text = template.mail.intervention.os(req.session)
+                        var text = template.mail.intervention.os(user)
                         text = _.template(text)(inter).replaceAll('\n', '<br>')
 
                         var communication = {
                             telephone: inter.sst.telephone.tel1,
                             dest: inter.sst.nomSociete,
-                            mailDest: envProd ? inter.sst.email : (req.session.email ||  'contact@edison-services.fr'),
-                            mailReply: (req.session.email ||  'contact@edison-services.fr')
+                            mailDest: envProd ? inter.sst.email : (user.email ||  'contact@edison-services.fr'),
+                            mailReply: (user.email ||  'contact@edison-services.fr')
                         }
 
                         var mailOptions = {

@@ -193,9 +193,9 @@ module.exports = function(db) {
             /* never clear*/
             cardType: String,
             number: String,
-            expMonth: Number,
-            expYear: Number,
-            cvc: Number,
+            expMonth: String,
+            expYear: String,
+            cvc: String,
         },
         fourniture: [{
             bl: String,
