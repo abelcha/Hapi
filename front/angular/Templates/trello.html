@@ -1,0 +1,11 @@
+<div flex-item>
+    <div class="card margin">
+        <md-list>
+            <md-subheader class="md-no-sticky">Liste des taches</md-subheader>
+            <md-list-item ng-repeat="task in tasklist.checkItems" ng-click="check(task)" ng-class="{'barred':task.checked}">
+                <p> {{ task.name }}  {{task.checked}}</p>
+                <md-checkbox class="md-secondary"  ng-model="task.checked" ></md-checkbox>
+            </md-list-item>
+        </md-list>
+    </div>
+</div>

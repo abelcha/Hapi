@@ -23,7 +23,11 @@ module.exports = function() {
     //global.old_sms = new edison.mobyt(key.mobyt.login, key.mobyt.pass);
     global.sms = new edison.mobyt(key.mobyt.login, key.mobyt.pass);
     global.mail = new edison.mail;
+    global.trello = new edison.trello(key.trello.key, key.trello.token);
+    global.tasklist = new edison.tasklist();
     global.document = new edison.dropbox();
     edison.extendPrototypes();
     edison.users = new edison.users();
+
+//    edison.tasklist = new edison.tasklist(key.trello.key, key.trello.secret)
 }

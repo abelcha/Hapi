@@ -1,0 +1,5 @@
+curl 'https://trello.com/1/cards/569c2558f0d581d9ee141de3/checklist/569c2559c38b75a6649919b9/checkItem/569c25daf64d7291416f78cf' -X PUT \
+--data 'state=complete&token=27c943dc7534fade34f5cd1363257d945ee4dfa20b205770bb26202bc3a3dedc&key=5a9e1889d35e915be9d70f3950005704'
+#checklists/569c2559c38b75a6649919b9/checkItems/569c25e1c040de62092d2e42
+#cards/569c2558f0d581d9ee141de3/checklist/569c2559c38b75a6649919b9/checkItem/569c25daf64d7291416f78cf
+

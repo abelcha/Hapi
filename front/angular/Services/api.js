@@ -321,6 +321,19 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
                 });
             },
         },
+        tasklist: {
+            get: function(date, login) {
+                return $http.get('/api/tasklist/' + date + '/' + login);
+            },
+            check: function(listid, taskid) {
+                return $http.post('/api/tasklist/' + listid + '/check/' + taskid);
+            },
+            update: function(task) {
+                return $http.post('/api/tasklist/', {
+                    task:task
+                });
+            }
+        },
         task: {
             add: function(params) {
                 return $http.post('/api/task/add', params)

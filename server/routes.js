@@ -31,6 +31,24 @@ module.exports = function(app) {
         res.send('ok')
     })
 
+    app.get('/api/tasklist/:date/:user/', function(req, res) {
+        tasklist.getTasks(req.params.date, req.params.user, function(err, resp) {
+            if (err) {
+                return res.status(500).json(err)
+            }
+            res.json(resp);
+        })
+    });
+
+    app.post('/api/tasklist/', function(req, res) {
+        tasklist.updateTask(req.body.task, function(err, resp) {
+            if (err) {
+                return res.status(500).json(err)
+            }
+            res.json(resp);
+        })
+    })
+
     app.get('/api/stats/telepro', edison.statsTelepro.get.bind(edison.statsTelepro));
     app.get('/api/stats/day', edison.statsDay);
 

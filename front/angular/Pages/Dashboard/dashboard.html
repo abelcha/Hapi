@@ -34,7 +34,7 @@
                             <td title="'Ann.'" sortable="'annul'">
                                 -{{user.annul}}
                             </td>
-                             <td title="'A Verif.'" sortable="'averif'">
+                            <td title="'A Verif.'" sortable="'averif'">
                                 -{{user.averif}}
                             </td>
                         </tr>
@@ -165,40 +165,7 @@
     <div class="row">
         <div class="col-sm-6">
             <div class="shadow-box" style="min-height:200px">
-                <div class="shadow-box" style="min-height:200px">
-                    <div style="padding:20px">
-                        <div class="row">
-                            <div class="col-sm-3">
-                                <select class="form-control" ng-model="vm.newTask.to" ng-options="users.login as users.login for users in root.app_users" ng-change="vm.reloadTask(vm.newTask.to)">
-                                </select>
-                            </div>
-                            <div class="col-sm-7">
-                                <input type="text" class="form-control" ng-model="vm.newTask.text" ng-enter="vm.addTask()" />
-                            </div>
-                            <div class="col-sm-2">
-                                <button class="form-control btn btn-success" ng-click="vm.addTask()">Ajouter</button>
-                            </div>
-                            <br>
-                            <br>
-                        </div>
-                        <table class="table  table-hover">
-                            <thead>
-                                <tr>
-                                    <th>Date</th>
-                                    <th>Origine</th>
-                                    <th style="width:70%">Text</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr ng-repeat="p in vm.taskList" ng-class="{barred:p.checked}" ng-click="vm.check(p)">
-                                    <td>{{p.date|date:"dd/MM/yy à HH'h'mm"}}</td>
-                                    <td>{{p.from}}</td>
-                                    <td>{{p.text}}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                <trello></trello>
             </div>
         </div>
         <div class="col-sm-6">
