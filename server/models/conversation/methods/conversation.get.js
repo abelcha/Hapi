@@ -5,6 +5,18 @@ module.exports = function(schema) {
     method: 'GET',
     fn: function(conversation, req, res) {
       try {
+
+        var vopPostes = {
+          '0972403794 Front-office - Sylvain': 'tayeb',
+          '0972540801 Back-office - Maxime': 'maxime',
+          '0972475214 Back-office - Adrien': 'anthony',
+          '0972441663 Front-office - Benjamin': 'benjamin',
+          '0972432279 Front-office - Laurent': 'laurent',
+          '0972539775 Back-office - Superviseur': 'supervisor',
+          '0972459659 Front-office - Fabien': 'harald',
+          '0972484983 Back-office - Sebastien':'gregory'
+        }
+
         console.log('A')
         var fs = require('fs');
         var glob = require('glob')
@@ -21,16 +33,18 @@ module.exports = function(schema) {
         console.log('C')
         console.log('====>', conversation)
 
-        var filepath = path.join(conversation.poste, "recordings");
+        var poste = conversation.status === 'transfered' ? vopPostes[conversation.dest] : conversation.poste;
+        console.log('-->', poste)
+        var filepath = path.join(poste, "recordings");
         var filename = moment(conversation._id).format("[/record-]YYMMDD[-]HHmmss[.wav]")
         var fileRegexp = moment(conversation._id).format("[/record-]YYMMDD[-*.wav]")
         var cacheFilePath = process.env.CACHE_PATH + '/conversation/' + moment(conversation.date).format('YYMMDD-HHmmssSSS') + '.wav'
         var nbr = parseInt(filename.slice(-10, -4))
         var completePath = path.join(process.env.FTP_PATH, filepath, filename);
-        res.setHeader('Content-disposition', 'attachment; filename=' + conversation._id + '.mp3');
+        //res.setHeader('Content-disposition', 'attachment; filename=' + conversation._id + '.mp3');
         console.log('HERE')
         if (fs.existsSync(cacheFilePath)) {
-          console.log('CACHE')
+          console.log('CACHE', cacheFilePath)
           return res.sendFile(cacheFilePath);
         }
         if (fs.existsSync(completePath)) {

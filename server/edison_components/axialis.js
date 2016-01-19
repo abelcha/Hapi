@@ -3,7 +3,7 @@ var _ = require('lodash');
 var request = function(query) {
     var response = _.pick(query, 'status_code', 'description', 'redirect_to');
     this.json(response);
-    console.log("-->", query);
+    console.log("-=-=->", query);
     db.model('axialis')(query).save();
     if (response.status_code === 200 && query.id_intervention) {
         var q = {
@@ -124,7 +124,7 @@ module.exports = {
     contact: function(req, res) {
         var _ = require('lodash');
         var q = req.query;
-
+        console.log('==>', req.query)
 
         if (req.query.api_key !== 'F8v0x13ftadh89rm0e9x18b62ZqgEl47') {
             return res.sendStatus(401)

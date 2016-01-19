@@ -25,7 +25,7 @@ module.exports = function(schema) {
 					$gt: moment().startOf('day').toDate()
 				}
 			}, function(err, resp) {
-				async.eachLimit(resp, 20, function(call, big_callback) {
+				async.eachLimit(resp, 5, function(call, big_callback) {
 					var external_num = (call.io === 'incoming' ? call.from : call.to);
 					async.parallel([
 						function getIntervention(cb) {
@@ -34,7 +34,7 @@ module.exports = function(schema) {
 									'client.telephone.tel1': external_num
 								}, {
 									'client.telephone.tel2': external_num
-								  }, {
+								}, {
 									'client.telephone.tel3': external_num
 								}, {
 									'facture.tel': external_num
@@ -78,7 +78,7 @@ module.exports = function(schema) {
 						if (resp[2]) {
 							console.log('SST', resp[2]._id)
 						}
-						if (!resp[0] && !resp[1]) {
+						if (!resp[0] && !resp[1] && !resp[2]) {
 							console.log('NOOP', external_num)
 							big_callback(null)
 						} else {
