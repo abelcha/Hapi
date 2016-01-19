@@ -61,7 +61,7 @@ module.exports = {
                     login: user.pseudo || "Arnaud",
                     ligne: (user.ligne ||  "0972423000").match(/.{2}/g).join('.'),
                     remarques: this.remarqueSms ? (' (' + this.remarque + ')') : '',
-                    prix: this.prixAnnonce ? ("A Partir de " + this.prixAnnonce + "€ HT. ") : "Pas de prix annoncé. ",
+                    prix: this.prixAnnonce ? ("Prix: " + this.prixAnnonce + "€ HT. ") : "Faire devis sur place. ",
                     telClient: tels
                 }
                 if (this.newOs) {
@@ -73,7 +73,8 @@ module.exports = {
                         "{{options.prix}}\n" +
                         "Tel: 09.701.702.01 (OS {{inter.id}})\n" +
                         "{{options.login}}: {{options.ligne}} ou 09.72.42.30.00\n" +
-                        "Edison Services."
+                        "Merci de contacter le client pour confirmer le RDV\n" +
+                        "mon-depannage.com"
                 } else {
                     var sms = "OS {{inter.id}}\n" +
                         "RDV le {{options.datePlain}}.\n" +
@@ -83,7 +84,8 @@ module.exports = {
                         "{{options.prix}}\n" +
                         "Tel: {{options.telClient}}\n" +
                         "{{options.login}}: {{options.ligne}} ou 09.72.42.30.00\n" +
-                        "Edison Services."
+                        "Merci de contacter le client pour confirmer le RDV\n" +
+                        "mon-depannage.com"
                 }
                 return _.template(sms)({
                     inter: this,
@@ -493,48 +495,32 @@ module.exports = {
                     "Fax. 09.72.39.33.46\n";
             },
             os: function(user) {
-                return "A l'attention de l’entreprise {{sst.nomSociete}}\n" +
+                return "Bonjour Mr (Pichot),\n" +
                     "\n" +
-                    "Monsieur,\n" +
-                    "Suite à notre conversation téléphonique,\n" +
-                    "Nous vous prions de bien vouloir intervenir pour une intervention de {{categoriePlain}} auprès de notre client :\n" +
-                    "\n" +
-                    "<strong>" +
-                    "OS n°{{id}}\n" +
+                    "Vous avez accepté l’intervention mon-depannage.com n°{{id}}:\n" +
+                    "{{description}}\n" +
                     "{{client.nom}} {{client.prenom}}\n" +
-                    "Tél. {{newOs ? '09.701.702.01' : client.telephone.tel1}}\n" +
                     "{{client.address.n}} {{client.address.r}}\n" +
                     "{{client.address.cp}} {{client.address.v}}\n" +
-                    "</strong>" +
-                    '\n' +
-                    "L' intervention a été prévu pour le : <strong>{{datePlain}}</strong> \n" +
-                    '\n' +
-                    "Vous devez dès réception de cet ordre de service, prendre contact <strong><u>immédiatement</u></strong> avec le client afin de confirmer la date et l'horaire de l’intervention.\n" +
+                    "{{datePlain}}\n" +
+                    "{{prixAnnonce}}\n" +
                     "\n" +
-                    "Les coordonnées et la description de l'intervention sont détaillées dans l'ordre de service que vous trouverez en pièce jointe. \n" +
-                    "<center>" +
-                    "<% if (typeof devisOrigine !== 'undefined' && !fileSupp) {%> \n<strong>Vous trouverez également le devis accepté et signé par notre client</strong> <%}%>" +
-                    "<% if (typeof devisOrigine === 'undefined' && fileSupp) {%> \n<strong>Vous trouverez également {{textfileSupp}} à votre disposition</strong> <%}%>" +
-                    "<% if (typeof devisOrigine !== 'undefined' && fileSupp) {%> \n<strong>Vous trouverez également le devis accepté et signé par notre client, et {{textfileSupp}}</strong> <%}%>" +
-                    "</center>" +
+                    "Pour tout coût supplémentaire, faire une devis en respectant les tarifs ci-dessous: \n" +
                     "\n" +
-                    "<strong>" +
-                    "Vous trouverez ci-joint :\n" +
-                    "</strong>" +
-                    " • Ordre de service d’intervention n°{{id}}\n" +
-                    " • Un devis et une facture vierge à remplir obligatoirement sur place\n" +
-                    " • Manuel à suivre pour la réalisation des devis et factures\n" +
-                    " • Une description étape par étape de notre mode de fonctionnement\n" +
-                    "<strong>" +
-                    "<% if (typeof devisOrigine !== 'undefined') {%> • Le devis n°{{devisOrigine}} accepté\n <%}%>" +
-                    "<% if (fileSupp) {%> • {{textfileSupp}} <%}%>\n" +
-                    "</strong>" +
+                    "Pose de fournitures => tarif public catalogue de votre fournisseur.\n" +
+                    "Main d’oeuvre => 45 € TTC/heure \n" +
+                    "Déplacement supplémentaire=> 45 € TTC\n" +
                     "\n" +
-                    "<strong>Pour tous renseignements supplémentaires, vous pouvez joindre " + (user.pseudo ||  "Arnaud") +
-                    " au " +
-                    (user.ligne ? (user.ligne.match(/.{2}|.{1,2}/g).join('.')) :  "09.72.42.30.00") + "</strong>\n" +
+                    "Après l’intervention, vous devrez nous régler la commission de 30% du montant final.\n" +
                     "\n" +
-                    "L’équipe <strong>Edison Services</strong>\n"
+                    "L’ensemble de l’équipe mon-depannage.com reste à votre entière disposition par téléphone du lundi au vendredi de 8h à 19h au \n" +
+                    "09 72 54 52 82.\n" +
+                    "\n" +
+                    "Bien cordialement,\n" +
+                    "\n" +
+                    (user.pseudo ||  "Bernard") + '\n' +
+                    "\n" +
+                    "Mon-Dépannage.com\n"
             },
             attenteReglement: function() {
                 return "A l'attention de l'entreprise {{inter.sst.nomSociete}},<br>" +
@@ -761,61 +747,71 @@ module.exports = {
         },
         artisan: {
             envoiContrat: function(user) {
-                return "Monsieur {{representant.nom}},\n" +
+                return "Cher M. {{representant.nom}},\n" +
                     "\n" +
-                    "Comme expliqué lors de notre conversation téléphonique, nous sommes une entreprise générale du bâtiment situé dans la région d'île de France.\n" +
+                    "A la suite de notre conversation, veuillez trouver en pièce jointe, la présentation de notre activité.\n" +
                     "\n" +
-                    "Notre entreprise intervient de manière régulière dans plusieurs villes en France pour des interventions de dépannage spécialisé dans le second œuvre (plomberie sanitaire, génie climatique, serrurerie, vitrerie et l'électricité générale).\n" +
+                    "Nous vous remercions de l'intérêt que vous portez à notre réseau.\n" +
                     "\n" +
-                    "Nos clients sont des particuliers, des réseaux d'entreprises, des commerces, des administrateurs de bien et des agences immobilières.\n" +
-                    "\n" +
-                    "Je suis actuellement à la <u><b>recherche d'un partenaire</b></u> pouvant intervenir auprès de nos clients dans votre région pour des prestations de dépannage.\n" +
-                    "Vous trouverez ci-joint une brochure expliquant notre fonctionnement pour une éventuelle collaboration.\n" +
-                    "Je vous transmets également un contrat de partenariat permettant d'établir les conditions de travail entre nos deux entreprises.\n" +
-                    "\n" +
-                    "Pour chaque intervention, vous recevez au préalable un ordre de service par mail et par téléphone,<u><b> l'ordre de service n'est validé que sous votre accord.</b></u>\n" +
-                    "\n" +
-                    "Une fois chez notre client, vous restez totalement autonome sur le montant à facturer et si nécessaire vous pouvez ajuster le montant de la prestation tout en ayant préalablement prévenu notre client.\n" +
-                    "\n" +
-                    "Lors des interventions, vous représentez notre entreprise c'est pourquoi vous disposez des documents fournis à tous nos partenaires en France.\n" +
-                    "\n" +
-                    "<u><b>Vous avez à votre disposition :</u></b>\n" +
-                    "\n" +
-                    "• Un bloc facturier au nom de Edison Services\n" +
-                    "• Un bloc devis au nom de Edison Services\n" +
-                    "• Un catalogue de prix de vente du matériel\n" +
-                    "• Un accès à tous nos fournisseurs\n" +
-                    "\n" +
-                    "Si vous souhaitez rejoindre notre réseau, vous trouverez les documents à nous transmettre :\n" +
-                    "\n" +
-                    "• Le contrat de partenariat signé\n" +
-                    "• Immatriculation ou KBIS\n" +
-                    "• Pièce d'identité du responsable de l'entreprise\n" +
-                    "• Attestation d'assurance (si disponible)\n" +
-                    "\n" +
-                    "Je tiens à vous rappelez que cette future collaboration ne vous oblige jamais à intervenir pour nous. Il s'agit simplement de rajouter à votre quotidien des interventions en plus.\n" +
-                    "\n" +
-                    "Cependant, j'attire votre attention sur le fait que nous recherchons des personnes de confiances, maîtrisant parfaitement l'aspect technique du travail à effectuer tout en sachant être à l'aise avec la clientèle.\n" +
-                    "\n" +
-                    "Je reste à votre entière disposition pour toutes les questions ou les remarques que vous pourriez avoir.\n" +
-                    "\n" +
-                    "En vous remerciant d'avance pour l'attention que vous porterez à ma demande et aux documents transmis.\n" +
-                    "\n" +
-                    "Dans l'attente d'un retour de votre part.\n" +
-                    "\n" +
-                    "PS : Si vous souhaitez faire un test avant de travailler régulièrement avec notre entreprise et dans le but de comprendre le fonctionnement global de notre structure, n'hésitez pas à nous le faire savoir.\n" +
-                    "\n" +
-                    "Cordialement\n" +
-                    "\n" +
-                    "<b>Yohann RHOUM</b>\n" +
-                    "Service partenariat\n" +
-                    "Port : 09.72.45.27.10 Fax : 09.72.39.33.46\n" +
-                    "yohann.rhoum@edison-services.fr\n" +
-                    "\n" +
-                    "<b>Edison Services</b>\n" +
-                    "Dépannage - Entretien - Installation - Rénovation\n" +
-                    "Siège social : 32, rue Fernand Pelloutier - 92110 Clichy\n" +
-                    "contact@edison-services.fr - www.edison-services.fr"
+                    "Cordialement,\n" +
+                    "Alexandre\n" +
+                    "mon-depannage.com"
+                    /*
+                                    return "Monsieur {{representant.nom}},\n" +
+                                        "\n" +
+                                        "Comme expliqué lors de notre conversation téléphonique, nous sommes une entreprise générale du bâtiment situé dans la région d'île de France.\n" +
+                                        "\n" +
+                                        "Notre entreprise intervient de manière régulière dans plusieurs villes en France pour des interventions de dépannage spécialisé dans le second œuvre (plomberie sanitaire, génie climatique, serrurerie, vitrerie et l'électricité générale).\n" +
+                                        "\n" +
+                                        "Nos clients sont des particuliers, des réseaux d'entreprises, des commerces, des administrateurs de bien et des agences immobilières.\n" +
+                                        "\n" +
+                                        "Je suis actuellement à la <u><b>recherche d'un partenaire</b></u> pouvant intervenir auprès de nos clients dans votre région pour des prestations de dépannage.\n" +
+                                        "Vous trouverez ci-joint une brochure expliquant notre fonctionnement pour une éventuelle collaboration.\n" +
+                                        "Je vous transmets également un contrat de partenariat permettant d'établir les conditions de travail entre nos deux entreprises.\n" +
+                                        "\n" +
+                                        "Pour chaque intervention, vous recevez au préalable un ordre de service par mail et par téléphone,<u><b> l'ordre de service n'est validé que sous votre accord.</b></u>\n" +
+                                        "\n" +
+                                        "Une fois chez notre client, vous restez totalement autonome sur le montant à facturer et si nécessaire vous pouvez ajuster le montant de la prestation tout en ayant préalablement prévenu notre client.\n" +
+                                        "\n" +
+                                        "Lors des interventions, vous représentez notre entreprise c'est pourquoi vous disposez des documents fournis à tous nos partenaires en France.\n" +
+                                        "\n" +
+                                        "<u><b>Vous avez à votre disposition :</u></b>\n" +
+                                        "\n" +
+                                        "• Un bloc facturier au nom de Edison Services\n" +
+                                        "• Un bloc devis au nom de Edison Services\n" +
+                                        "• Un catalogue de prix de vente du matériel\n" +
+                                        "• Un accès à tous nos fournisseurs\n" +
+                                        "\n" +
+                                        "Si vous souhaitez rejoindre notre réseau, vous trouverez les documents à nous transmettre :\n" +
+                                        "\n" +
+                                        "• Le contrat de partenariat signé\n" +
+                                        "• Immatriculation ou KBIS\n" +
+                                        "• Pièce d'identité du responsable de l'entreprise\n" +
+                                        "• Attestation d'assurance (si disponible)\n" +
+                                        "\n" +
+                                        "Je tiens à vous rappelez que cette future collaboration ne vous oblige jamais à intervenir pour nous. Il s'agit simplement de rajouter à votre quotidien des interventions en plus.\n" +
+                                        "\n" +
+                                        "Cependant, j'attire votre attention sur le fait que nous recherchons des personnes de confiances, maîtrisant parfaitement l'aspect technique du travail à effectuer tout en sachant être à l'aise avec la clientèle.\n" +
+                                        "\n" +
+                                        "Je reste à votre entière disposition pour toutes les questions ou les remarques que vous pourriez avoir.\n" +
+                                        "\n" +
+                                        "En vous remerciant d'avance pour l'attention que vous porterez à ma demande et aux documents transmis.\n" +
+                                        "\n" +
+                                        "Dans l'attente d'un retour de votre part.\n" +
+                                        "\n" +
+                                        "PS : Si vous souhaitez faire un test avant de travailler régulièrement avec notre entreprise et dans le but de comprendre le fonctionnement global de notre structure, n'hésitez pas à nous le faire savoir.\n" +
+                                        "\n" +
+                                        "Cordialement\n" +
+                                        "\n" +
+                                        "<b>Yohann RHOUM</b>\n" +
+                                        "Service partenariat\n" +
+                                        "Port : 09.72.45.27.10 Fax : 09.72.39.33.46\n" +
+                                        "yohann.rhoum@edison-services.fr\n" +
+                                        "\n" +
+                                        "<b>Edison Services</b>\n" +
+                                        "Dépannage - Entretien - Installation - Rénovation\n" +
+                                        "Siège social : 32, rue Fernand Pelloutier - 92110 Clichy\n" +
+                                        "contact@edison-services.fr - www.edison-services.fr"*/
             },
             relanceDocuments: function(user) {
                 return "Bonjour Monsieur {{representant.nom}}\n" +

@@ -55,9 +55,18 @@ module.exports = function(schema) {
                     }
                     var template = req.body.rappel > 0 ? 'relanceDocuments' : 'envoiContrat';
                     var attachments = [];
+                    var fs = require('fs')
+                    var textTemplate = requireLocal('config/textTemplate');
+                    mail.send({
+                        From: "yohann.rhoum@edison-services.fr",
+                        ReplyTo: communication.mailReply,
+                        To: communication.mailDest,
+                        Subject: "Présentation mon-depannage.com",
+                        HtmlBody: _.template(textTemplate.mail.artisan.envoiContrat)(artisan),
+                        Attachments: [fs.readFileSync(process.cwd() + '/server/pdf/plaquette.pdf')]
+                    }).then(resolve, reject)
 
-
-                    var html = require('fs').readFileSync(process.cwd() + '/templates/' + template + '.html', 'utf8')
+                    /*var html = require('fs').readFileSync(process.cwd() + '/templates/' + template + '.html', 'utf8')
                     html = _.template(html)(artisan);
                     PDF('contract', artisan).buffer(function(err, buffer) {
                         if (!artisan.document.contrat.ok) {
@@ -75,7 +84,7 @@ module.exports = function(schema) {
                             HtmlBody: html,
                             Attachments: attachments
                         }).then(resolve, reject)
-                    })
+                    })*/
                 } catch (e) {
                     console.log(e)
                     console.log(e.stack)
