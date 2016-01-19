@@ -34,7 +34,7 @@ module.exports = function(schema) {
 									'client.telephone.tel1': external_num
 								}, {
 									'client.telephone.tel2': external_num
-								}, {
+								  }, {
 									'client.telephone.tel3': external_num
 								}, {
 									'facture.tel': external_num
