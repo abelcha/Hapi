@@ -63,7 +63,13 @@ module.exports = function(schema) {
                         To: communication.mailDest,
                         Subject: "Présentation mon-depannage.com",
                         HtmlBody: _.template(textTemplate.mail.artisan.envoiContrat)(artisan),
-                        Attachments: [fs.readFileSync(process.cwd() + '/front/assets/pdf/plaquette.pdf')]
+                        Attachments: [{
+                                Content: fs.readFileSync(process.cwd() + '/front/assets/pdf/plaquette.pdf'),
+                                Name: 'Présentation mon-depannage.pdf',
+                                ContentType: 'application/pdf'
+                            }
+
+                        ]
                     }).then(resolve, reject)
 
                     /*var html = require('fs').readFileSync(process.cwd() + '/templates/' + template + '.html', 'utf8')
