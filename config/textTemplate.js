@@ -495,7 +495,7 @@ module.exports = {
                     "Fax. 09.72.39.33.46\n";
             },
             os: function(user) {
-                return "Bonjour Mr (Pichot),\n" +
+                return "Bonjour,\n" +
                     "\n" +
                     "Vous avez accepté l’intervention mon-depannage.com n°{{id}}:\n" +
                     "{{description}}\n" +
