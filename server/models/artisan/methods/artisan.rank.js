@@ -62,26 +62,35 @@ module.exports = function(schema) {
                     $in: [options.categorie]
                 }
             }
+            try {
+                console.log('a')
+                db.model('artisan').geoNear({
+                    type: "Point",
+                    coordinates: [parseFloat(options.lat), parseFloat(options.lng)]
+                }, {
+                    spherical: true,
+                    query: query,
+                    limit: options.categorie ? 100 : 25,
+                    distanceMultiplier: 0.001,
+                    maxDistance: (parseFloat(options.maxDistance) || 100) / 0.001
+                }).then(function(docs) {
+                    console.log('b')
+                    try {
+                        resolve(_.map(docs, __map));
+                    } catch (e) {
+                        __catch(e);
+                    }
+                }, function(err) {
+                    console.log('-->', err)
+                })
+            } catch (err) {
+                console.log(err)
+            }
 
-            db.model('artisan').geoNear({
-                type: "Point",
-                coordinates: [parseFloat(options.lat), parseFloat(options.lng)]
-            }, {
-                query: query,
-                limit: options.categorie ? 100 : 25,
-                distanceMultiplier: 0.001,
-                maxDistance: (parseFloat(options.maxDistance) || 100) / 0.001
-            }).then(function(docs) {
-                try {
-                    resolve(_.map(docs, __map));
-                } catch (e) {
-                    __catch(e);
-                }
-            }, reject)
         })
     }
     schema.statics.rank = function(req, res) {
-
+        console.log('alpha');
         return this.rankArtisans(req.query)
     }
 

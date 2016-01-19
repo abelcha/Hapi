@@ -9,7 +9,7 @@
       "PLATFORM": "DIGITAL_OCEAN",
       "CACHE_PATH": "/home/abel/edison-api/cache",
       "APP_ENV": "PRODUCTION",
-      "CLUSTER_PROCESS_NBR": 2,
+      "CLUSTER_PROCESS_NBR": 1,
       "FTP_PATH": "/home/abel/ftp",
       "POSTMARK_API_KEY": "b2c424bc-af2b-4175-b76f-c863bb3915c3",
       "POSTMARK_API_TOKEN": "b2c424bc-af2b-4175-b76f-c863bb3915c3",
@@ -23,7 +23,7 @@
     "env": {
       "FTP_PATH": "/home/abel/ftp",
       "CACHE_PATH": "/home/abel/edison-api/cache",
-      "CLUSTER_PROCESS_NBR": 2,
+      "CLUSTER_PROCESS_NBR": 1,
       "APP_ENV": "PRODUCTION",
       "PLATFORM": "DIGITAL_OCEAN",
       "MONGOLAB_URI": "127.0.0.1:27017/EDISON"

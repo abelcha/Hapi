@@ -30,41 +30,41 @@ var Timer = module.exports = function() {
     if (envProd) {
 
 
-        this.emitter.on("everyday at 20", function() {
+        this.emitter.on("everyday at 20", function() {/*
             if (moment().isoWeekday() !== 6 && moment().isoWeekday() !== 7) {
                 db.model('intervention').relanceAuto();
-            }
+            }*/
         });
 
         this.emitter.on("everyday at 7", function() {
-            setTimeout(function() {
+  /*          setTimeout(function() {
                 if (moment().isoWeekday() !== 6 && moment().isoWeekday() !== 7) {
                     db.model('devis').relanceAuto7h()
                 }
-            }, _.random(ms.minutes(2), ms.minutes(10)))
+            }, _.random(ms.minutes(2), ms.minutes(10)))*/
         });
 
 
         this.emitter.on("everyday at 14", function() {
-            setTimeout(function() {
+/*            setTimeout(function() {
                 if (moment().isoWeekday() !== 6 && moment().isoWeekday() !== 7) {
                     db.model('devis').relanceAuto14h()
                 }
             }, _.random(ms.minutes(2), ms.minutes(10)))
-
+*/
         });
 
 
         this.emitter.on("hour", function() {
-            setTimeout(function() {
+/*            setTimeout(function() {
                 if (moment().hour() > 7 && moment().hour() < 21) {
                     db.model('intervention').rappelDateIntervention()
                 }
-            }, _.random(ms.minutes(2), ms.minutes(10)))
+            }, _.random(ms.minutes(2), ms.minutes(10)))*/
         });
 
         this.emitter.on("4 minutes", function() {
-
+/*
             var req = {
                 query: {}
             }
@@ -75,12 +75,12 @@ var Timer = module.exports = function() {
                         db.model('document').order(req).then(function() {})
                     })
                 })
-            }, _.random(ms.minutes(2), ms.minutes(10)))
+            }, _.random(ms.minutes(2), ms.minutes(10)))*/
         })
 
 
         this.emitter.on("10 minutes", function() {
-
+/*
             var req = {
                 query: {}
             }
@@ -89,13 +89,13 @@ var Timer = module.exports = function() {
                 db.model('conversation').refresh().then(function(resp) {
                     console.log('CONVERSATION===>', resp)
                 })
-            })
+            })*/
         })
 
     }
 
     this.emitter.on("4pm", function() {
-        db.model('intervention').backup(function() {})
+        //db.model('intervention').backup(function() {})
     })
 
     this.emitter.on("hour", function() {
@@ -107,11 +107,11 @@ var Timer = module.exports = function() {
     })
 
     this.emitter.on("everyday at 6", function() {
-        setTimeout(function() {
+        /*setTimeout(function() {
             db.model('intervention').vcf2().then(function() {})
             db.model('devis').vcf2().then(function() {})
             db.model('artisan').vcf2().then(function() {})
-        }, _.random(ms.minutes(2), ms.minutes(10)))
+        }, _.random(ms.minutes(2), ms.minutes(10)))*/
     });
 
 
@@ -138,10 +138,11 @@ var Timer = module.exports = function() {
     })
 
     this.emitter.on("midnight", function() {
+/*
         var exec = require('child_process').exec;
         exec(command.join(' '), function(error, stdout, stderr) {
             console.log(error, stdout, stderr);
-        });
+        });*/
     })
 
 

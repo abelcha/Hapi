@@ -4,6 +4,7 @@ module.exports = function() {
 	return {
 		sockets: {
 			emit: function(title, data) {
+			    console.log('herelol')
 				socket.emit('___bridge_message___', {
 					title: title,
 					data: data
