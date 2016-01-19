@@ -72,7 +72,7 @@ module.exports = {
                         "{{inter.description}}{{options.remarques}}.\n" +
                         "{{options.prix}}\n" +
                         "Tel: 09.701.702.01 (OS {{inter.id}})\n" +
-                        "{{options.login}}: {{options.ligne}} ou 09.72.42.30.00\n" +
+                        "{{options.login}}: 09.72.54.52.82\n" +
                         "Merci de contacter le client pour confirmer le RDV\n" +
                         "mon-depannage.com"
                 } else {
@@ -83,7 +83,7 @@ module.exports = {
                         "{{inter.description}}{{options.remarques}}.\n" +
                         "{{options.prix}}\n" +
                         "Tel: {{options.telClient}}\n" +
-                        "{{options.login}}: {{options.ligne}} ou 09.72.42.30.00\n" +
+                        "{{options.login}}: 09.72.54.52.82\n" +
                         "Merci de contacter le client pour confirmer le RDV\n" +
                         "mon-depannage.com"
                 }

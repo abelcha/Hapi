@@ -71,7 +71,7 @@ Mobyt.prototype.send = function(params) {
             pass: _this.pass,
             data: params.text + "\nSTOP 36608",
             rcpt: params.to.length == 10 ? params.to.replace('0', '+33') : params.to,
-            sender: 'Edison Srv.',
+            sender: 'M-DEPANNAGE',
             qty: 'n',
             operation: 'MULTITEXT',
             domaine: "http://multilevel.mobyt.fr",
