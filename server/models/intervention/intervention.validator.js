@@ -46,15 +46,7 @@ module.exports = function(schema) {
         _this.sst = _this.artisan.id
         _this.enDemarchage = _this.login.demarchage;
         _this.cache = db.model('intervention').Core.minify(_this);
-        console.log('==>',_this.conversations)
-        console.log('=========================')
-        console.log('=========================')
-        console.log('=========================')
-        console.log('=========================')
-        console.log('=========================')
-        console.log('=========================')
-        _this.conversations = _.uniq(_this.conversations, '_id');
-        console.log('==>',_this.conversations)
+        _this.conversations = _.uniq(_this.conversations, JSON.stringify);
         if (isWorker && _this.cb.number) {
             if (!creditcard.validate(_this.cb.number))
                 return next(new Error('Numero de carte invalide'))
