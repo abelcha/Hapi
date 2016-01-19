@@ -40,7 +40,7 @@
   var xmlFiles = glob.sync(xml)
   _.each(xmlFiles, function(e) {
       fs.watchFile(e, {
-        interval: 1000
+        interval: 3000
       }, (curr, prev) => {
 
         var getHash = function(call) {
