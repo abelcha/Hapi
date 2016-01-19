@@ -64,7 +64,7 @@ module.exports = function(schema) {
                         Subject: "Présentation mon-depannage.com",
                         HtmlBody: _.template(textTemplate.mail.artisan.envoiContrat)(artisan),
                         Attachments: [{
-                                Content: fs.readFileSync(process.cwd() + '/front/assets/pdf/plaquette.pdf'),
+                                Content: fs.readFileSync(process.cwd() + '/front/assets/pdf/plaquette.pdf').toString('base64'),
                                 Name: 'Présentation mon-depannage.pdf',
                                 ContentType: 'application/pdf'
                             }
