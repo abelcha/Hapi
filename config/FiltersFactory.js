@@ -417,7 +417,7 @@ FiltersFactory.prototype.list = {
         long_name: 'Conversations',
         url: 'conversation',
         match: {
-            'conversations.1': {
+            'conversations.0': {
                 $exists: true
             }
         },

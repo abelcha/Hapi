@@ -95,10 +95,6 @@ var Timer = module.exports = function() {
 
     }
 
-    this.emitter.on("4pm", function() {
-        db.model('intervention').backup(function() {})
-    })
-
     this.emitter.on("hour", function() {
         setTimeout(function() {
             db.model('artisan').fullReload().then(function() {
