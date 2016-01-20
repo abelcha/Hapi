@@ -38,7 +38,7 @@
                 .save()
         }
         setTimeout(function() {
-
+            return 0;
             db.model('intervention').findOne({
                 id: curr.id
             }).then(function(resp) {
