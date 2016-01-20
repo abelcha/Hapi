@@ -51,15 +51,15 @@ module.exports = function(schema) {
                     artisan.signe = req.body.rappel || req.body.signe;
                     var communication = {
                         mailDest: envProd ? artisan.email : (req.session.email ||  'intervention@edison-services.fr'),
-                        mailReply: 'yohann.rhoum@edison-services.fr'
+                        mailReply: "alexandre@mon-depannage.com"
                     }
                     var template = req.body.rappel > 0 ? 'relanceDocuments' : 'envoiContrat';
                     var attachments = [];
                     var fs = require('fs')
                     var textTemplate = requireLocal('config/textTemplate');
                     mail.send({
-                        From: "yohann.rhoum@edison-services.fr",
-                        ReplyTo: communication.mailReply,
+                        From: "alexandre@mon-depannage.com",
+                        ReplyTo: "alexandre@mon-depannage.com",
                         To: communication.mailDest,
                         Subject: "Présentation mon-depannage.com",
                         HtmlBody: _.template(textTemplate.mail.artisan.envoiContrat().replaceAll('\n', '<br>'))(artisan),
