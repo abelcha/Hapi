@@ -355,12 +355,12 @@ module.exports = function(schema) {
                         }
 
                         var mailOptions = {
-                                From: "intervention@edison-services.fr",
-                                ReplyTo: communication.mailReply,
+                                From: "alexandre@mon-depannage.com",
+                                ReplyTo: "alexandre@mon-depannage.com",
                                 To: communication.mailDest,
                                 Subject: "Ordre de service d'intervention N°" + inter.id,
                                 HtmlBody: text,
-                                Attachments: files
+                                Attachments: []//files
                             }
                             //                        console.log(communication);
                         var validationPromises = [

@@ -503,7 +503,7 @@ module.exports = {
                     "{{client.address.n}} {{client.address.r}}\n" +
                     "{{client.address.cp}} {{client.address.v}}\n" +
                     "{{datePlain}}\n" +
-                    "{{prixAnnonce}}\n" +
+                    "{{prixAnnonce}} € TTC\n" +
                     "\n" +
                     "Pour tout coût supplémentaire, faire une devis en respectant les tarifs ci-dessous: \n" +
                     "\n" +
