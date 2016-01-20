@@ -505,7 +505,7 @@ module.exports = {
                     "{{datePlain}}\n" +
                     "{{prixAnnonce ? (prixAnnonce + ' € TTC') : 'Pas de prix annoncé'}}\n" +
                     "\n" +
-                    "Pour tout coût supplémentaire, faire une devis en respectant les tarifs ci-dessous: \n" +
+                    "Pour tout coût supplémentaire, faire un devis en respectant les tarifs ci-dessous: \n" +
                     "\n" +
                     "Pose de fournitures => tarif public catalogue de votre fournisseur.\n" +
                     "Main d’oeuvre => 45 € TTC/heure \n" +
