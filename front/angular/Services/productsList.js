@@ -93,7 +93,7 @@ angular.module('edison').factory('productsList', function($q, dialog, openPost, 
             })
         },
         flagship: function() {
-            return _.max(this.produits, 'pu');
+            return _.mapBy(this.produits, 'pu');
         },
         total: function() {
             var total = _.round(_.sum(this.produits, function(e)  {

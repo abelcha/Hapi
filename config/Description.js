@@ -16,8 +16,8 @@ var strip = function(s) {
 }
 
 Description.prototype.search = function(str) {
-    var _map = require('lodash/collection/map');
-    var _sortBy = require('lodash/collection/sortBy');
+    var _map = require('lodash/map');
+    var _sortBy = require('lodash/sortBy');
     var resemblance = require('resemblance');
     str = str.toUpperCase()
     var list = _map(this.data, function(e) {

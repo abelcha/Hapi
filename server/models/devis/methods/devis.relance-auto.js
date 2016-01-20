@@ -43,7 +43,7 @@ module.exports = function(schema) {
                         $gt: yesterdayAt12h30
                     }
                 }).then(function(resp) {
-                    relanceRapport.push(["YesterdayAfter14H", _.pluck(resp, 'id').join(' - ')].join(' -> '))
+                    relanceRapport.push(["YesterdayAfter14H", _.map(resp, 'id').join(' - ')].join(' -> '))
                     async.eachLimit(resp, 1, send, cb)
                 })
             },
@@ -58,7 +58,7 @@ module.exports = function(schema) {
                         $gte: twoDaysAgo
                     }
                 }).then(function(resp) {
-                    relanceRapport.push(["YesterdayBefore14h", _.pluck(resp, 'id').join(' - ')].join(' -> '))
+                    relanceRapport.push(["YesterdayBefore14h", _.map(resp, 'id').join(' - ')].join(' -> '))
                     async.eachLimit(resp, 1, send, cb);
                 })
             }
@@ -93,7 +93,7 @@ module.exports = function(schema) {
                 $gt: todayAt7
             }
         }).then(function(resp) {
-            relanceRapport.push(['TodayBefore14H', _.pluck(resp, 'id').join(' - ')].join(' -> '))
+            relanceRapport.push(['TodayBefore14H', _.map(resp, 'id').join(' - ')].join(' -> '))
             async.eachLimit(resp, 1, send, function() {
                 mail.send({
                     From: "comptabilite@edison-services.fr",

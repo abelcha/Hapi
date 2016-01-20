@@ -28,7 +28,7 @@ require('./base-route.js')(app, express)
 require('./routes.js')(app);
 require('./error-route.js')(app)
 process.on('uncaughtException', __catch);
-
+console.log("WORKER_ID", cluster.worker.id)
 
 if (cluster.worker.id == 1 && process.env.PLATFORM === 'DIGITAL_OCEAN') {
 	console.log('TIMER')
@@ -38,5 +38,10 @@ http.listen(port, function() {
     console.log('listening on *:' + port);
     return !envDev && edison.event('REBOOT').save()
 });
+
+process.on('SIGTERM', function() {
+	console.log('SIGTERMXXXX')
+})
+
 
 module.exports = app;

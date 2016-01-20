@@ -36,7 +36,7 @@ Users.prototype.service = function(service) {
     return _(this.data).filter({
         activated: true,
         service: service
-    }).pluck('login').value()
+    }).map('login').value()
 }
 
 Users.prototype.find = function(login) {

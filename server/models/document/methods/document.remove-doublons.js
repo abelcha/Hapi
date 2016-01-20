@@ -9,11 +9,11 @@ module.exports = function(schema) {
 
         return new Promise(function(resolve, reject) {
             edison.v1.get("SELECT COUNT(name) AS cnt, name, id FROM  scanner WHERE name != '0' AND name!='' GROUP BY name HAVING COUNT( name) >1", function(err, resp) {
-                var _in = _.pluck(resp, 'name').join("', '")
+                var _in = _.map(resp, 'name').join("', '")
                 _.each(resp.slice(0, 100), function(e) {
                         edison.v1.get("SELECT * FROM scanner WHERE name='" + e.name + "'", function(err, files) {
-                            var max = _.max(files, diffCompare);
-                            var min = _.min(files, diffCompare);
+                            var max = _.mapBy(files, diffCompare);
+                            var min = _.minBy(files, diffCompare);
                             //console.log(max.moved, min.moved);
                             var archived = Number(min.archived == 1 || max.archived == 1);
                             var setMax = "UPDATE scanner SET checked='0', moved='0', archived='0', name='' WHERE id='" + max.id + "'";

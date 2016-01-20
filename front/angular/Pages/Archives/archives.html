@@ -3,7 +3,7 @@
         <div class="data-table-container">
             <header class="data-table-header">
                 <div class="data-table-header__label">
-                    <span class="fs-title">{{vm.title}}</span>
+                    <span class="fs-title">{{vm.title}} - <a target="_blank" href="/api/artisan/comptes?m={{remise._id.mth}}&download=true" download>Comptes Tiers Artisans</a></span>
                 </div>
             </header>
             <table class="table">
@@ -22,6 +22,7 @@
                         </th>
                     </tr>
                 </thead> -->
+
                 <tbody ng-if="vm.type === 'paiement'">
                     <tr ng-repeat="remise in vm.data|orderBy:'-timestamp'">
                         <td>{{vm.moment(remise.timestamp).format('llll')}}</td>
@@ -35,7 +36,7 @@
                     <tr ng-repeat="remise in vm.data|orderBy:'-date'">
                         <td>{{vm.moment(remise.date).format('MMMM YYYY');}}</td>
                         <td><a target="_blank" href="/api/intervention/ecritureReglements?m={{remise._id.mth}}&y={{remise._id.yr}}" >Voir Ecriture </a></td>
-                          <td><a target="_blank" href="/api/intervention/comptesClient?m={{remise._id.mth}}&y={{remise._id.yr}}&download=true" download>Comptes Tiers Client</a></td>
+                          <td><a target="_blank" href="/api/intervention/comptes?m={{remise._id.mth}}&y={{remise._id.yr}}&download=true" download>Comptes Tiers Client</a></td>
                         <td><a target="_blank" href="/api/intervention/ecritureReglements?m={{remise._id.mth}}&y={{remise._id.yr}}&download=true" download >Telecharger Ecriture</a></td>
                     </tr>
                 </tbody>

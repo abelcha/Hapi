@@ -42,13 +42,13 @@ module.exports = function(schema) {
             /*sms.send({
                 silent: true,
                 to: '0633138868',
-                text: 'Facture relances ' + relanceModel.target + _.pluck(resp, 'id')
+                text: 'Facture relances ' + relanceModel.target + _.map(resp, 'id')
             })*/
             async.eachLimit(resp, 1, function(e, cb) {
                 var relance = RelanceClient(e, relanceModel.target, e.facture.email)
                 relance.send(cb)
             }, function() {
-                relanceRapport.push([relanceModel.target, _.pluck(resp, 'id').join(' - ')].join(' -> '))
+                relanceRapport.push([relanceModel.target, _.map(resp, 'id').join(' - ')].join(' -> '))
                 callback(null)
             })
         })

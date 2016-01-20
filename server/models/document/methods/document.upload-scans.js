@@ -40,7 +40,7 @@
         console.log('okhere')
         db.model('intervention').find({
           sst: {
-            $in: _.pluck(req.body.ids, 'id')
+            $in: _.map(req.body.ids, 'id')
           },
           'compta.paiement.historique': {
             $elemMatch: {

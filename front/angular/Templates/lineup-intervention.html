@@ -1,6 +1,6 @@
 <div>
     <div ng-if="routeParamsFilter == 'relanceClient'">
-        <span style="margin-right:40px" ng-repeat="month in dateSelectList"><a href="/intervention/list/relanceClient?∆di={{_.padLeft(month.m, 2, '0')}}/{{month.y}}">{{month.t}}</a></span>
+        <span style="margin-right:40px" ng-repeat="month in dateSelectList"><a href="/intervention/list/relanceClient?∆di={{_.padStart(month.m, 2, '0')}}/{{month.y}}">{{month.t}}</a></span>
         <br>
         <br>
     </div>

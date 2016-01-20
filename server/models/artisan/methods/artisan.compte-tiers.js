@@ -2,7 +2,7 @@
     module.exports = function(schema) {
 
         var getHisto = function(inter, date) {
-            console.log(_.pluck(inter.compta.paiement.historique), date)
+            console.log(_.map(inter.compta.paiement.historique), date)
             var index = _.findIndex(inter.compta.paiement.historique, 'dateFlush', date)
             inter = JSON.parse(JSON.stringify(inter));
             if (index === -1) {

@@ -24,7 +24,7 @@ module.exports = {
                     "Edison Services";
             },
             demande: function(user, config, _moment) {
-                var _capitalize = require('lodash/string/capitalize')
+                var _capitalize = require('lodash/capitalize')
                 _moment = (_moment || moment);
                 this.mmt = _moment(this.date.intervention);
                 this.format = this.mmt.isSame(_moment(), 'day') ? "[aujourd'hui à ]HH[h]mm" : "[le ]DD[/]MM[ à ]HH[h]mm"
@@ -279,11 +279,12 @@ module.exports = {
         artisan: {
             rappelDocuments: function() {
                 return "<strong> OBJET: En attente de vos documents administratifs </strong>" +
+                    "<p>A l'attention de l’entreprise {{" + this.nomSociete + "}}</p><br>" +
                     "<p> Monsieur, </p>" +
                     "<p> Depuis plusieurs mois <b><u>vous intervenez régulièrement</u></b> auprès de nos clients." +
                     "<p> A chaque attestation de paiement reçu, nous vous avons transmis un <b><u>contrat de déclaration de sous-traitance</u></b> à remplir et à nous faire parvenir accompagné des documents administratifs obligatoires. </p>" +
                     "<p> Cependant, à ce jour nous sommes toujours dans l'attente de ces documents obligatoires. </p>" +
-                    "<p> En effet, depuis la loi de fincance de 1er janvier 2014 concernant la sous-traitance dans le secteur du bâtiment, nous avons l'obligation de déclarer l'ensemble de nos sous-traitants intervenants chez nos clients. </p>" +
+                    "<p> En effet, depuis la loi de finance de 1er janvier 2014 concernant la sous-traitance dans le secteur du bâtiment, nous avons l'obligation de déclarer l'ensemble de nos sous-traitants intervenants chez nos clients. </p>" +
                     "<p> Merci de nous transmettre vos documents administratifs suivants: </p>" +
                     "<p>" +
                     (!this.document.kbis.ok ? "&emsp;&emsp; ☐ &emsp;&emsp; KBIS ou immatriculation <br>" : '') +

@@ -13,7 +13,7 @@
          console.log(dbl.SCAN.join("', '"))
          return res.send('ok')
          edison.v1.get("SELECT name FROM scanner WHERE moved='1' ", function(err, resp) {
-             resp = _.pluck(resp, 'name');
+             resp = _.map(resp, 'name');
 
              _.each(resp.slice(0, 10), function(e) {
                  var fnd = _.findIndex(dbl.SCAN, function(x) {

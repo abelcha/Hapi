@@ -1,5 +1,5 @@
 var ms = require('milliseconds');
-var _each = require('lodash/collection/each');
+var _each = require('lodash/each');
 FiltersFactory = function(model) {
     if (!(this instanceof FiltersFactory)) {
         return new FiltersFactory(model);

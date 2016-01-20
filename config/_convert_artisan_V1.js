@@ -107,7 +107,7 @@ V1.prototype.compare = function(legacy) {
     _.each(this.data, function(e, k) {
         if (!_.includes(noComp, k) && e != legacy[k]) {
             if (!(!e && !legacy[k]))
-                console.log(_.padRight(k, 20, " "), "---------> ", _.padRight("'" + e + "'", 30, ' '), "'" + legacy[k] + "'")
+                console.log(_.padEnd(k, 20, " "), "---------> ", _.padEnd("'" + e + "'", 30, ' '), "'" + legacy[k] + "'")
         }
     })
 }

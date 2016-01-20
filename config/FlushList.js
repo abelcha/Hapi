@@ -1,6 +1,6 @@
-    var _each = require('lodash/collection/each');
-    var _includes = require('lodash/collection/includes');
-    var _round = require('lodash/math/round')
+    var _each = require('lodash/each');
+    var _includes = require('lodash/includes');
+    var _round = require('lodash/round')
 
     var FlushList = function(interArray, prevChecked) {
         var _this = this;

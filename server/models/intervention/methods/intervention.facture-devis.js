@@ -24,7 +24,7 @@ module.exports = function(schema) {
                 address: doc.facture.address,
                 dest: doc.facture,
                 text: _.template(text)(doc),
-                id: _.padLeft(doc.id, 6, '0'),
+                id: _.padStart(doc.id, 6, '0'),
                 date: doc.date,
                 factureQrCode: true,
                 title: "OBJET : Facture n°" + doc.id + " en attente de reglement"

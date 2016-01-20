@@ -38,7 +38,7 @@ var paths = {
             'bower_components/ngmap/build/scripts/ng-map.js',
             'bower_components/ng-file-upload/ng-file-upload.min.js',
             'bower_components/pickadate/lib/compressed/picker.js',
-            'bower_components/lodash/lodash.min.js',
+            'bower_components/lodash/dist/lodash.min.js',
             'bower_components/angular-xeditable/dist/js/xeditable.min.js',
             'bower_components/pickadate/lib/compressed/picker.date.js',
             'bower_components/pickadate/lib/compressed/picker.time.js',

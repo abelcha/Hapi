@@ -31,6 +31,18 @@ var DevisCtrl = function(edisonAPI, $scope, $rootScope, $location, $routeParams,
             TabContainer.close(tab);
     }
 
+
+
+    _this.searchArtisans = function(categorie) {
+        if (_.get(devis, 'client.address.lt')) {
+            edisonAPI.artisan.getNearest(devis.client.address, categorie || devis.categorie)
+                .success(function(result) {
+                    _this.nearestArtisans = result;
+                });
+        }
+    }
+    _this.searchArtisans();
+
     _this.saveDevis = function(options) {
         if (!devis.produits ||  !devis.produits.length) {
             return LxNotificationService.error("Veuillez ajouter au moins 1 produit");

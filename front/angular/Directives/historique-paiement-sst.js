@@ -26,7 +26,7 @@ angular.module('edison').directive('historiquePaiementSst', function(edisonAPI, 
                 }
                 edisonAPI.artisan.getCompteTiers(scope.data.id).then(function(resp) {
                     scope.historiquePaiement = _.map(resp.data, function(e) {
-                        e.flushList = new FlushList(e.list, _.pluck(e.list, '_id'))
+                        e.flushList = new FlushList(e.list, _.map(e.list, '_id'))
                         _.map(e.flushList.getList() , function(x) {
                             x.original = _.find(e.list, 'id', x.id)
                         })

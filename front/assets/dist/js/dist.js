@@ -905,7 +905,7 @@ angular.module('edison').directive('historiquePaiementSst', ["edisonAPI", "Flush
                 }
                 edisonAPI.artisan.getCompteTiers(scope.data.id).then(function(resp) {
                     scope.historiquePaiement = _.map(resp.data, function(e) {
-                        e.flushList = new FlushList(e.list, _.pluck(e.list, '_id'))
+                        e.flushList = new FlushList(e.list, _.map(e.list, '_id'))
                         _.map(e.flushList.getList() , function(x) {
                             x.original = _.find(e.list, 'id', x.id)
                         })
@@ -4082,7 +4082,7 @@ angular.module('edison').factory('productsList', ["$q", "dialog", "openPost", "e
             })
         },
         flagship: function() {
-            return _.max(this.produits, 'pu');
+            return _.mapBy(this.produits, 'pu');
         },
         total: function() {
             var total = _.round(_.sum(this.produits, function(e)  {
@@ -4936,6 +4936,18 @@ var DevisCtrl = function(edisonAPI, $scope, $rootScope, $location, $routeParams,
         if (!err)
             TabContainer.close(tab);
     }
+
+
+
+    _this.searchArtisans = function(categorie) {
+        if (_.get(devis, 'client.address.lt')) {
+            edisonAPI.artisan.getNearest(devis.client.address, categorie || devis.categorie)
+                .success(function(result) {
+                    _this.nearestArtisans = result;
+                });
+        }
+    }
+    _this.searchArtisans();
 
     _this.saveDevis = function(options) {
         if (!devis.produits ||  !devis.produits.length) {

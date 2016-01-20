@@ -61,7 +61,7 @@ var V1 = function(d, devis, legacy) {
         x[_.deburr(categorie.long_name).toLowerCase()] = '1';
         x.categorie = _.deburr(categorie.long_name).toUpperCase();
         x.description = d.description;
-        x.remarque_interne = _.pluck(d.comments, 'text').join('\n') ||  ""
+        x.remarque_interne = _.map(d.comments, 'text').join('\n') ||  ""
         x.prix_ht_annonce = d.prixAnnonce;
         x.prix_ht_final = d.prixFinal;
         x.id_sst_selectionne = _.get(d, 'artisan.id', 0);
@@ -167,7 +167,7 @@ V1.prototype.compare = function() {
     _.each(this.data, function(e, k) {
         if (!_.includes(noComp, k) && e != _this.legacy[k]) {
             if (!(!e && !_this.legacy[k]))
-                console.log(_.padRight(k, 20, " "), "---------> ", _.padRight("'" + e + "'", 30, ' '), "'" + _this.legacy[k] + "'")
+                console.log(_.padEnd(k, 20, " "), "---------> ", _.padEnd("'" + e + "'", 30, ' '), "'" + _this.legacy[k] + "'")
         }
     })
 }

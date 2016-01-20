@@ -17,7 +17,7 @@ module.exports = function(schema) {
         }, {
             id: 1
         }).then(function(resp) {
-            async.eachLimit(_.pluck(resp, "id"), 10, function(id, callback) {
+            async.eachLimit(_.map(resp, "id"), 10, function(id, callback) {
                 db.model('intervention').dump({
                     query: {
                         id: id,

@@ -41,7 +41,6 @@ module.exports = function(schema) {
             db.model(req.query.model || 'intervention').find({
                 'client.address.lt': 0,
                 'client.address.lg': 0
-                    //id: 26237
             }).limit(25).then(function(doc) {
                 try {
                     console.log("-->", doc.length)

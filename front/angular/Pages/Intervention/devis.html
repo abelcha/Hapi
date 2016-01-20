@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col-md-12 " style="height:100%">
             <div class="form-horizontal" style="overflow:hidden;height:100%" novalidate>
-                <info-client  data="vm.data"  model="vm.data.client"></info-client>
+                <info-client data="vm.data" model="vm.data.client"></info-client>
                 <br>
                 <info-categorie model="vm.data.categorie" change="vm.searchArtisans(newCategorie)"></info-categorie>
                 <br>
@@ -11,7 +11,7 @@
                         <div class="p+">
                             <button ng-click="vm.data.categorie = undefined" style="font-weight:900;float:left" class="btn--no-conflicts btn--m {{config.categories[vm.data.categorie].color}} btn--flat" lx-ripple> {{config.categories[vm.data.categorie].long_name}}</button>
                             <div class="fs-body-1 mt+" style="padding-top:10px">
-                                <edison-map is-new="vm.isNew" height="big" data="vm.data" client="vm.data.client"></edison-map>
+                                <edison-map is-new="vm.isNew" height="big" data="vm.data" client="vm.data.client" xmarkers="vm.nearestArtisans"></edison-map>
                             </div>
                         </div>
                     </div>
@@ -55,11 +55,8 @@
             <i class="fa" ng-class="vm.data.id ? 'fa-circle-o' : 'fa-plus'"></i>
         </button>
         <div class="fab__actions fab__actions--left">
-           
             <button ng-if="vm.data.status && vm.data.status !== 'TRA'" ng-click="vm.saveDevis({transfert:true})" class="btn--no-conflicts btn--l btn--black btn--fab green" lx-ripple lx-tooltip="Transferer" tooltip-position="top"><i class="fa fa-plus"></i></button>
-           
             <button ng-if="vm.data.status" ng-click="vm.saveDevis({annulation:true})" class="btn--no-conflicts btn--l btn--black btn--fab red" lx-ripple lx-tooltip="Annuler" tooltip-position="top"><i class="fa fa-close"></i></button>
-           
             <button ng-click="vm.saveDevis({envoi:true})" class="btn--no-conflicts btn--l btn--black btn--fab orange" lx-ripple lx-tooltip="Envoyer" tooltip-position="top"><i class="fa fa-send"></i></button>
         </div>
     </div>

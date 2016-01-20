@@ -57,7 +57,7 @@ module.exports = function(schema) {
                 var query = {
                     $or: []
                 };
-                _.each(_.pluck(e, 'client'), function(tel) {
+                _.each(_.map(e, 'client'), function(tel) {
                     if (!tel) {
                         return 0
                     }
@@ -107,7 +107,7 @@ module.exports = function(schema) {
                         PAY: reduce(rtn, {
                             paiementRecu: true
                         }),
-                        list: _.pluck(rtn, 'id').join(','),
+                        list: _.map(rtn, 'id').join(','),
                         calls: e.length
                     }
                     artn.push(st)
@@ -167,7 +167,7 @@ module.exports = function(schema) {
             if (err) {
                 return res.status.send("nope")
             }
-            var rtn = _.pluck(resp, 'id');
+            var rtn = _.map(resp, 'id');
             res.json(rtn)
         })
     }

@@ -7,7 +7,6 @@ module.exports = function(schema) {
         method: 'GET',
         fn: function(inter, req, res) {
             return new Promise(function(resolve, reject) {
-                //db.model('intervention').uniqueCacheReload(inter)
                 res.send('ok')
                 inter.save().then(resolve, reject)
             })

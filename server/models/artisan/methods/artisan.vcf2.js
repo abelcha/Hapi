@@ -36,8 +36,10 @@ module.exports = function(schema) {
         return new Promise(function(resolve, reject) {
 
             var emails = _(edison.users.data)
-                .filter('service', 'INTERVENTION')
-                .pluck('email')
+                .filter(function(e) {
+                    return e.service == 'PARTENARIAT' || e.service === 'INTERVENTION'
+                })
+                .map('email')
                 .compact()
                 .value()
             emails.push('abel.chalier@gmail.com')

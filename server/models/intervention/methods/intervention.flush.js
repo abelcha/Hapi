@@ -133,7 +133,7 @@ module.exports = function(schema) {
 
             var date = (new Date()).setMilliseconds(0)
             console.log('FLUSH')
-            var data = _(req.body).pluck('list.__list').flatten().value()
+            var data = _(req.body).map('list.__list').flatten().value()
             var numCheques = _(req.body).map(
                 _.partial(_.pick, _, 'numeroCheque', 'id')
             ).value()

@@ -16,7 +16,7 @@ module.exports = function(schema) {
             }
             var ids = _(data).filter(function(e) {
                 return _.find(e.list.__list, 'checked', true)
-            }).pluck('id').value()
+            }).map('id').value()
             if (!ids.length) {
                 return res.send('Pas de documents')
             }
@@ -104,7 +104,7 @@ module.exports = function(schema) {
         var rtn = [];
         rtn.push(['Ajouté par', 'Date', 'id', 'Artisan ID', 'Artisan Nom Societé', 'Type', 'Mode', 'Numero Cheque', 'Base', 'Final'])
         _.each(data, function(sst) {
-            var ids = _.pluck(sst.list.__list, 'id')
+            var ids = _.map(sst.list.__list, 'id')
             _.each(sst.list.__list, function(e) {
                 rtn.push([e.login, moment(e.date).format('l hh:mm'), e.id, sst.id, sst.nomSociete, e.type, e.mode, e.numeroCheque, e.montant.base, e.montant.final])
             })
@@ -121,7 +121,7 @@ module.exports = function(schema) {
             if (_.find(sst.list.__list, 'mode', 'CHQ'))
                 return 0;
             tmp.push(sst.nomSociete + ' ' + sst.id);
-            var ids = _.pluck(sst.list.__list, 'id')
+            var ids = _.map(sst.list.__list, 'id')
             tmp.push(ids.join(', '))
             clean(sst);
             var total = _.reduce(sst.interventions, function(total, x) {

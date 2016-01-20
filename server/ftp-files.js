@@ -6,6 +6,7 @@
   var glob = require('glob');
   var _ = require('lodash');
   var shell = require('shelljs')
+  var ms = require('milliseconds');
   var md5 = require('md5');
   var fs = require('fs')
   var async = require('async')
@@ -18,7 +19,7 @@
     exec('pm2 restart ftp-files', function(error, stdout, stderr) {
       console.log(error, stdout, stderr);
     });
-  }, 60000)
+  }, ms.hours(1))
 
 
   var parseFile = function(fileName) {

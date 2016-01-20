@@ -1,7 +1,7 @@
- var _each = require('lodash/collection/each');
- var _get = require('lodash/object/get')
- var _clone = require('lodash/lang/clone')
- var _round = require('lodash/math/round')
+ var _each = require('lodash/each');
+ var _get = require('lodash/get')
+ var _clone = require('lodash/clone')
+ var _round = require('lodash/round')
 
  var Paiement = function(inter) {
      var _this = this
