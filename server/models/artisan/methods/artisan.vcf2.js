@@ -20,7 +20,8 @@ module.exports = function(schema) {
             rtn += "BEGIN:VCARD\n";
             rtn += "VERSION:3.0\n" +
                 _.template("N: {{id}} - {{nomSociete}} - {{representant.nom}} {{representant.prenom}} - {{address.cp}} {{address.v}}}\n")(e) +
-                _.template("FN: {{id}} - {{nomSociete}} - {{representant.nom}} {{representant.prenom}} - {{address.cp}} {{address.v}}}\n")(e) +
+                _.template("FN: {{id}} - {{nomSociete}} - {{representant.nom}} {{representant.prenom}} - {{address.cp}} {{address.v}}\n")(e) +
+                _.template("EMAIL: {{email}}\n")(e) +
                 "TEL;WORK;VOICE: " + e.telephone.tel1 + "\n";
 
             if (e.telephone.tel2) {
