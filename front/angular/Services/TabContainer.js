@@ -81,7 +81,7 @@ angular.module('edison').factory('TabContainer', function(Tab, $location) {
         var models = ["intervention", "artisan", "devis", 'tools', 'compta'];
         var tmp = {};
         _.each(_this.__tabs, function(e) {
-            if (_.includes(models, e.model) && e.url[1] !== 'list' && e.url[1] !== 'contact') {
+            if (_.contains(models, e.model) && e.url[1] !== 'list' && e.url[1] !== 'contact') {
                 var dest = _.endsWith(e.model, 's') ? e.model : e.model + 's';
             } else {
                 dest = 'Recents';

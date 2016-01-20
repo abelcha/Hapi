@@ -58,9 +58,9 @@ angular.module('edison').factory('productsList', function($q, dialog, openPost, 
                 var haystack = _.deburr(this.ps[i].title).toLowerCase();
                 var haystack2 = _.deburr(this.ps[i].ref).toLowerCase();
                 var haystack3 = _.deburr(this.ps[i].desc).toLowerCase();
-                if (_.includes(haystack, needle) ||
-                    _.includes(haystack2, needle) ||
-                    _.includes(haystack3, needle)) {
+                if (_.contains(haystack, needle) ||
+                    _.contains(haystack2, needle) ||
+                    _.contains(haystack3, needle)) {
                     var x = _.clone(this.ps[i])
                     x.random = _.random();
                     rtn.push(x)

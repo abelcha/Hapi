@@ -18,13 +18,13 @@ var V1 = function(d) {
     x.nom_societe = d.nomSociete;
     x.forme_juridique = config.formeJuridique[d.formeJuridique].long_name
 
-    x.plomberie = Number(_.includes(d.categories, "PL"));
-    x.chauffage = Number(_.includes(d.categories, "CH"));
-    x.electricite = Number(_.includes(d.categories, "EL"));
-    x.serrurerie = Number(_.includes(d.categories, "SR"));
-    x.vitrerie = Number(_.includes(d.categories, "VT"));
-    x.climatisation = Number(_.includes(d.categories, "CL"));
-    x.peinture = Number(_.includes(d.categories, "PT"));
+    x.plomberie = Number(_.contains(d.categories, "PL"));
+    x.chauffage = Number(_.contains(d.categories, "CH"));
+    x.electricite = Number(_.contains(d.categories, "EL"));
+    x.serrurerie = Number(_.contains(d.categories, "SR"));
+    x.vitrerie = Number(_.contains(d.categories, "VT"));
+    x.climatisation = Number(_.contains(d.categories, "CL"));
+    x.peinture = Number(_.contains(d.categories, "PT"));
 
     x.categorie = []
     _.each(d.categories, function(e) {
@@ -105,7 +105,7 @@ V1.prototype.compare = function(legacy) {
     ]
     var _this = this;
     _.each(this.data, function(e, k) {
-        if (!_.includes(noComp, k) && e != legacy[k]) {
+        if (!_.contains(noComp, k) && e != legacy[k]) {
             if (!(!e && !legacy[k]))
                 console.log(_.padEnd(k, 20, " "), "---------> ", _.padEnd("'" + e + "'", 30, ' '), "'" + legacy[k] + "'")
         }

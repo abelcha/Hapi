@@ -165,7 +165,7 @@ V1.prototype.compare = function() {
     ]
     var _this = this;
     _.each(this.data, function(e, k) {
-        if (!_.includes(noComp, k) && e != _this.legacy[k]) {
+        if (!_.contains(noComp, k) && e != _this.legacy[k]) {
             if (!(!e && !_this.legacy[k]))
                 console.log(_.padEnd(k, 20, " "), "---------> ", _.padEnd("'" + e + "'", 30, ' '), "'" + _this.legacy[k] + "'")
         }

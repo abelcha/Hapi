@@ -30,7 +30,7 @@
                                })
                            }, function(err) {
                                //console.log('ERR <', e.name, err, '>')
-                               if (_.includes(String(err), '403')) {
+                               if (_.contains(String(err), '403')) {
                                    edison.v1.set("UPDATE scanner SET ordered='1' WHERE id='" + e.id + "'", function() {
                                    //    console.log('ARCHIVED', e.name)
                                        cb(null)
