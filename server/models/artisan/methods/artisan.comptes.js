@@ -1,4 +1,5 @@
 module.exports = function(schema) {
+    var lodash = require('lodash')
     var getMonthRange = function(m, y) {
         var date = new Date(y, m);
         return {
@@ -8,10 +9,9 @@ module.exports = function(schema) {
     }
 
     var artisanMap = function(e) {
-        var _padStart = require('lodash/padStart')
         var config = requireLocal('config/dataList.js');
         return [
-            '401401' + _padStart(e._id, 5, '0'),
+            '401401' + _.padLeft(e._id, 5, '0'),
             config.formeJuridique[e.formeJuridique].long_name,
             e.nomSociete,
             e.address.n,

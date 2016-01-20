@@ -168,7 +168,7 @@ angular.module('edison').factory('TabContainer', ['$location', '$window', '$q', 
         ]
         if (this.noClose) {
             tab = this._tabs[0]
-        } else if (_.find(noOpen, _.partial(_.contains, url)) && this.getTabSimple(url)) {
+        } else if (_.find(noOpen, _.partial(_.includes, url)) && this.getTabSimple(url)) {
             tab = this.getTabSimple(url);
         } else if (this.noClose || this.isOpen(url, options)) {
             tab = this.getTab(url, options)

@@ -38,7 +38,7 @@ module.exports = function(schema) {
                         })
                     }, function(err) {
                   //      console.log('ERR', file.name, err)
-                        if (_.contains(String(err), '404')) {
+                        if (_.includes(String(err), '404')) {
                             document.move('/SCAN_ARCHIVES/' + file.name, '/SCAN/' + file.name).then(function(resp) {
                     //            console.log('YEPYEPYEP')
                                 cb(null)

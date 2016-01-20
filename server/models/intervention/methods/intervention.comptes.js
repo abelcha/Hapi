@@ -9,9 +9,8 @@ module.exports = function(schema) {
         }
     }
     var clientMap = function(e) {
-        var _padStart = require('lodash/padStart')
         return [
-            '411CLT' + _padStart(e._id, 6, '0'),
+            '411CLT' + _.padLeft(e._id, 6, '0'),
             e.client.civilite,
             e.client.nom + ' ' + e.client.prenom,
             e.client.address.n,

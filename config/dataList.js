@@ -443,8 +443,7 @@ module.exports = {
         long_name: 'Perte'
     }],
     getCauseAnnulation: function(short_name) {
-        var _find = require('lodash/find');
-        return _find(this.causeAnnulation, function(e) {
+        return this.causeAnnulation.find(function(e) {
             return e.short_name === short_name
         })
     },
@@ -569,8 +568,7 @@ module.exports = {
         long_name: 'Trop Percu'
     }],
     avoir: function(short_name) {
-        var _find = require('lodash/find');
-        return _find(this.typeAvoir, function(e) {
+        return this.typeAvoir.find(function(e) {
             return e.short_name === short_name
         })
     },

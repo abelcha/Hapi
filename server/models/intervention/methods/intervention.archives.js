@@ -17,7 +17,7 @@ module.exports = function(schema) {
             d: '$compta.paiement.historique.dateFlush'
           }
         }).exec(function(err, resp) {
-          resp = _.uniqBy(resp, function(e) {
+          resp = _.uniq(resp, function(e) {
             return (new Date(e._id.d)).getTime()
           });
           resolve(_.map(resp, function(e) {

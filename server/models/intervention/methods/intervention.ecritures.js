@@ -51,11 +51,11 @@ module.exports = function(schema) {
             var formeJuridique = _.get(artisan, 'formeJuridique', 'SARL');
             _.each(sst, function(e, k) {
                 var paiement = e.compta.paiement.historique
-                var padIdSST = _.padStart(e.artisan.id, 5, '0')
-                var padIdOS = _.padStart(e.id, 6, '0')
+                var padIdSST = _.padLeft(e.artisan.id, 5, '0')
+                var padIdOS = _.padLeft(e.id, 6, '0')
                 var libelle = paiement.mode + (paiement.numeroCheque || '') + ' ' + e.artisan.nomSociete
                 var montant = Math.abs(paiement.final);
-                var numeroCompteAchat = '604' + _.padStart(config.categories[e.categorie].id_compta, 5, '0')
+                var numeroCompteAchat = '604' + _.padLeft(config.categories[e.categorie].id_compta, 5, '0')
                 var libelleAC = ['TRAVAUX', _.deburr(config.categories[e.categorie].long_name.toUpperCase()), e.artisan.nomSociete].join(' ')
                 var libelleNumeroFacture = config.libellePaiement[paiement._type].short_name;
                 BQ1 = ['BQ', dateFormat, '40100000', '401' + padIdSST, padIdSST, libelle, format(montantTotal), '']
@@ -197,13 +197,13 @@ module.exports = function(schema) {
                             TVA: format(R.montant * (e.tva / 100))
                         }
                         var compte = {
-                            VT1: _.padEnd('4110' + e.tva, 8, '0'),
+                            VT1: _.padRight('4110' + e.tva, 8, '0'),
                             VT2: ['7040', e.tva, '0', config.categories[e.categorie].id_compta].join(''),
-                            VT3: ['445870', _.padStart(e.tva, 2, '0')].join(''),
+                            VT3: ['445870', _.padLeft(e.tva, 2, '0')].join(''),
                             BQA2: '51210000'
                         }
 
-                        var OS = _.padStart(e.id, 6, '0');
+                        var OS = _.padLeft(e.id, 6, '0');
                         var FOS = 'F' + OS;
                         var AOS = 'A' + OS;
                         var CLTOS = 'CLT' + OS;

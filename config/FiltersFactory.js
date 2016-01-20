@@ -1,5 +1,4 @@
 var ms = require('milliseconds');
-var _each = require('lodash/each');
 FiltersFactory = function(model) {
     if (!(this instanceof FiltersFactory)) {
         return new FiltersFactory(model);
@@ -21,7 +20,7 @@ var dateInter = function(inter) {
 FiltersFactory.prototype.__getFilterBy = function(key, value) {
     var _this = this;
     var rtn;
-    _each(_this.list[_this.model], function(e, k) {
+    _this.list[_this.model].forEach(function(e, k) {
         if (e[key] === value) {
             rtn = e
             return false;
@@ -47,7 +46,7 @@ FiltersFactory.prototype.getAllFilters = function(model) {
 FiltersFactory.prototype.filter = function(inter) {
     var _this = this;
     this.fltr = {};
-    _each(_this.list[_this.model], function(e, k) {
+    _this.list[_this.model].forEach(function(e, k) {
         if (!e.noCache && e.fn && typeof e.fn === 'function' && e.fn(inter)) {
             _this.fltr[e.short_name] = 1;
         }

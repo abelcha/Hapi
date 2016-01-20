@@ -468,7 +468,7 @@ angular.module('edison')
             if (this.sst.subStatus === 'NEW' || this.sst.subStatus === 'TUT') {
                 return user.root || user.service === 'PARTENARIAT'
             }
-            return _.contains(["ANN", "APR", "ENC", undefined], this.status)
+            return _.includes(["ANN", "APR", "ENC", undefined], this.status)
         }
 
         Intervention.prototype.isPayable = function() {

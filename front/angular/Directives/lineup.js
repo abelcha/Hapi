@@ -65,13 +65,13 @@
     }
     if ($routeParams.sstids_in) {
         _this.customFilter = function(inter) {
-            return _.contains($routeParams.sstids_in, inter.id);
+            return _.includes($routeParams.sstids_in, inter.id);
         }
     }
     if ($routeParams.ids_in) {
         var tab = JSON.parse($routeParams.ids_in)
         _this.customFilter = function(inter) {
-            return _.contains(tab, inter.id);
+            return _.includes(tab, inter.id);
         }
     }
 

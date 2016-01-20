@@ -1,30 +1,28 @@
-    var _each = require('lodash/each');
-    var _includes = require('lodash/includes');
-    var _round = require('lodash/round')
+    var _ = require('lodash')
 
     var FlushList = function(interArray, prevChecked) {
         var _this = this;
         var list = [];
-        _each(interArray, function(e) {
+        _.each(interArray, function(e) {
             var rtn = {}
             rtn.montant = {
                 base: e.compta.paiement.base,
                 total: e.compta.paiement.montant,
                 legacy: _this.getPreviousMontant(e),
-                balance: _round(e.compta.paiement.montant - _this.getPreviousMontant(e), 2),
-                final: _round(e.compta.paiement.montant - _this.getPreviousMontant(e), 2),
+                balance: _.round(e.compta.paiement.montant - _this.getPreviousMontant(e), 2),
+                final: _.round(e.compta.paiement.montant - _this.getPreviousMontant(e), 2),
             }
             console.log('-->', rtn)
           /*  if (e.compta.paiement.tva) {
                 var tva = (e.compta.paiement.tva + 100) / 100
-                rtn.montant.balance = _round(rtn.montant.balance * tva, 2)
-                rtn.montant.legacy = _round(rtn.montant.legacy * tva, 2)
+                rtn.montant.balance = _.round(rtn.montant.balance * tva, 2)
+                rtn.montant.legacy = _.round(rtn.montant.legacy * tva, 2)
             }*/
             rtn.id = e.id
             rtn.description = e.description;
             rtn.date = e.compta.paiement.date;
             rtn.login = e.compta.paiement.login
-            rtn.checked = _includes(prevChecked, rtn.id)
+            rtn.checked = _.includes(prevChecked, rtn.id)
             rtn.mode = e.compta.paiement.mode
             rtn.numeroCheque = e.compta.paiement.numeroCheque
             rtn.type = rtn.montant.legacy !== 0 ? (rtn.montant.balance > 0 ? 'COMPLEMENT' : 'AVOIR') : 'AUTO-FACT'
@@ -58,26 +56,26 @@
             final: 0
         };
         var list = _(this.getList()).sortBy('montant.balance').reverse().value();
-        _each(list, function(rtn) {
+        _.each(list, function(rtn) {
           //  console.log(rtn.checked, (!dirtyReload || (dirtyReload && rtn.montant.balance >= 0)))
             if (rtn.checked && (!dirtyReload || (dirtyReload && rtn.montant.balance >= 0))) {
-                total.base = _round(total.base + rtn.montant.base);
-                total.montant = _round(total.montant + rtn.montant.total, 2);
-                total.legacy = _round(total.legacy + rtn.montant.legacy, 2);
-                total.balance = _round(total.balance + rtn.montant.balance, 2);
+                total.base = _.round(total.base + rtn.montant.base);
+                total.montant = _.round(total.montant + rtn.montant.total, 2);
+                total.legacy = _.round(total.legacy + rtn.montant.legacy, 2);
+                total.balance = _.round(total.balance + rtn.montant.balance, 2);
                 if (total.balance + rtn.montant.balance < 0) {
                     if (total.final == 0) {
                         rtn.montant.final = 0;
                     } else {
-                        rtn.montant.final = _round(rtn.montant.balance - total.balance, 2);
+                        rtn.montant.final = _.round(rtn.montant.balance - total.balance, 2);
                         if (rtn.montant.final < rtn.montant.balance) {
                             rtn.montant.final = rtn.montant.balance
                         }
                     }
                 }
-                total.final = _round(total.final + rtn.montant.final, 2);
+                total.final = _.round(total.final + rtn.montant.final, 2);
             } else {
-                rtn.montant.final = _round(rtn.montant.balance, 2)
+                rtn.montant.final = _.round(rtn.montant.balance, 2)
             }
         })
         this.__list = _(list).sortBy('id').value();

@@ -150,7 +150,7 @@ module.exports = function(app, express) {
     }
 
     app.use(function(req, res, next) {
-        if (_.contains(req.url, '.'))
+        if (_.includes(req.url, '.'))
             return next();
         if (req.session && !req.session.id && (req.query.x !== keys.commandLineQuery)) {
             if (_.startsWith(req.url, '/api/')) {

@@ -155,7 +155,7 @@ angular.module('edison').controller('MainController', ["$timeout", "LxNotificati
 
     this.tabContainer = TabContainer;
     $scope.$on("$locationChangeStart", function(event) {
-        if (_.includes(["/intervention", '/devis', '/artisan', '/'], $location.path())) {
+        if (_.contains(["/intervention", '/devis', '/artisan', '/'], $location.path())) {
             return 0
         }
         TabContainer.add($location).order();
@@ -1851,7 +1851,7 @@ angular.module('edison').factory('TabContainer', ["Tab", "$location", function(T
         var models = ["intervention", "artisan", "devis", 'tools', 'compta'];
         var tmp = {};
         _.each(_this.__tabs, function(e) {
-            if (_.contains(models, e.model) && e.url[1] !== 'list' && e.url[1] !== 'contact') {
+            if (_.includes(models, e.model) && e.url[1] !== 'list' && e.url[1] !== 'contact') {
                 var dest = _.endsWith(e.model, 's') ? e.model : e.model + 's';
             } else {
                 dest = 'Recents';
@@ -4047,9 +4047,9 @@ angular.module('edison').factory('productsList', ["$q", "dialog", "openPost", "e
                 var haystack = _.deburr(this.ps[i].title).toLowerCase();
                 var haystack2 = _.deburr(this.ps[i].ref).toLowerCase();
                 var haystack3 = _.deburr(this.ps[i].desc).toLowerCase();
-                if (_.contains(haystack, needle) ||
-                    _.contains(haystack2, needle) ||
-                    _.contains(haystack3, needle)) {
+                if (_.includes(haystack, needle) ||
+                    _.includes(haystack2, needle) ||
+                    _.includes(haystack3, needle)) {
                     var x = _.clone(this.ps[i])
                     x.random = _.random();
                     rtn.push(x)
@@ -5725,6 +5725,21 @@ angular.module('edison').controller('ListeDevisController', _.noop);
 
 angular.module('edison').controller('ListeInterventionController', _.noop);
 
+var listeSignalements = function(TabContainer, edisonAPI, $rootScope, $scope, $location, LxNotificationService, socket) {
+    "use strict";
+    var _this = this;
+    _this.tab = TabContainer.getCurrentTab();
+    _this.tab.setTitle('Liste Signalements');
+    _this.activeTab = parseInt($location.search().level || 0)
+    var q = $location.search();
+    edisonAPI.signalement.list($location.search()).then(function(resp) {
+        $scope.pl = resp.data;
+    })
+
+}
+listeSignalements.$inject = ["TabContainer", "edisonAPI", "$rootScope", "$scope", "$location", "LxNotificationService", "socket"];
+angular.module('edison').controller('listeSignalements', listeSignalements);
+
 var SearchController = function(edisonAPI, TabContainer, $routeParams, $location, LxProgressService, config) {
     var tab = TabContainer.getCurrentTab();
     tab.setTitle('Search')
@@ -5746,21 +5761,6 @@ var SearchController = function(edisonAPI, TabContainer, $routeParams, $location
 SearchController.$inject = ["edisonAPI", "TabContainer", "$routeParams", "$location", "LxProgressService", "config"];
 
 angular.module('edison').controller('SearchController', SearchController);
-
-var listeSignalements = function(TabContainer, edisonAPI, $rootScope, $scope, $location, LxNotificationService, socket) {
-    "use strict";
-    var _this = this;
-    _this.tab = TabContainer.getCurrentTab();
-    _this.tab.setTitle('Liste Signalements');
-    _this.activeTab = parseInt($location.search().level || 0)
-    var q = $location.search();
-    edisonAPI.signalement.list($location.search()).then(function(resp) {
-        $scope.pl = resp.data;
-    })
-
-}
-listeSignalements.$inject = ["TabContainer", "edisonAPI", "$rootScope", "$scope", "$location", "LxNotificationService", "socket"];
-angular.module('edison').controller('listeSignalements', listeSignalements);
 
 var StatsNewController = function(MomentIterator, TabContainer, $routeParams, edisonAPI, $rootScope, $scope, $location, LxProgressService, socket) {
     "use strict";

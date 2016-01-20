@@ -54,7 +54,7 @@ module.exports = function(schema) {
                             if (!res.length) {
                                 res = {
                                     dt: month + (year * 100),
-                                    date: [_.padStart(month, 2, '0'), year % 2000].join('/'),
+                                    date: [_.padLeft(month, 2, '0'), year % 2000].join('/'),
                                     total: 0,
                                     status: ["ANN", "ENC", "VRF"][n % 3]
                                 }
@@ -64,7 +64,7 @@ module.exports = function(schema) {
                                 _.each(res, function(e) {
                                     rtn.push({
                                         dt: month + (year * 100),
-                                        date: [_.padStart(month, 2, '0'), year % 2000].join('/'),
+                                        date: [_.padLeft(month, 2, '0'), year % 2000].join('/'),
                                         total: e.total,
                                         status: e._id.status
                                     })

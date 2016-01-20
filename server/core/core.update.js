@@ -30,7 +30,7 @@ module.exports = function(core) {
                             return reject(err);
                         }
                         for (k in nwData) {
-                            if (!(_.contains(['id', '_id', '__v'], k))) {
+                            if (!(_.includes(['id', '_id', '__v'], k))) {
                                 _old[k] = nwData[k];
                             }
                         }

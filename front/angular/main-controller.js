@@ -116,7 +116,7 @@ angular.module('edison').controller('MainController', function($timeout, LxNotif
 
     this.tabContainer = TabContainer;
     $scope.$on("$locationChangeStart", function(event) {
-        if (_.contains(["/intervention", '/devis', '/artisan', '/'], $location.path())) {
+        if (_.includes(["/intervention", '/devis', '/artisan', '/'], $location.path())) {
             return 0
         }
         TabContainer.add($location).order();

@@ -24,7 +24,7 @@ module.exports = {
                     "Edison Services";
             },
             demande: function(user, config, _moment) {
-                var _capitalize = require('lodash/capitalize')
+                var _ = require('lodash')
                 _moment = (_moment || moment);
                 this.mmt = _moment(this.date.intervention);
                 this.format = this.mmt.isSame(_moment(), 'day') ? "[aujourd'hui à ]HH[h]mm" : "[le ]DD[/]MM[ à ]HH[h]mm"
@@ -32,7 +32,7 @@ module.exports = {
                 console.log(this.mmt.toDate(), this.datePlain)
 
                 this.user = user;
-                this.user.pseudo = _capitalize(this.user.pseudo ||  "arnaud");
+                this.user.pseudo = _.capitalize(this.user.pseudo ||  "arnaud");
                 this.ligneDirect = user.ligne ? (user.ligne.match(/.{2}|.{1,2}/g).join('.')) :  "09.72.44.16.63";
                 this.categorieClean = config.categories[this.categorie].suffix + " " + config.categories[this.categorie].long_name.toLowerCase()
                 return "M. {{sst.representant.nom}},\n" +
