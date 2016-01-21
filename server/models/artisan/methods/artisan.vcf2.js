@@ -38,7 +38,7 @@ module.exports = function(schema) {
 
             var emails = _(edison.users.data)
                 .filter(function(e) {
-                    return e.service == 'PARTENARIAT' || e.service === 'INTERVENTION'
+                    return e.login == 'yohann_r' || e.service === 'INTERVENTION'
                 })
                 .map('email')
                 .compact()
