@@ -86,7 +86,7 @@
                 'email': _new.email
             }]
         }).then(function(resp) {
-            if (resp) {
+            if (_new.telephone.tel1 !== "0633138868" && resp) {
                 return callback("Le sous-traitant est déja dans la base");
             }
             return callback(null, _new);

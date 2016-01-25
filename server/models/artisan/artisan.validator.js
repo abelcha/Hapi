@@ -17,7 +17,6 @@ module.exports = function(schema) {
         if (sst.status === "POT" && _.get(d.contrat, 'ok') && _.get(d.cni, 'ok') && _.get(d.kbis, 'ok')) {
             return 'HOT';
         }
-
         if (res.inters_sp_regle >= 15) {
             return 'REG'
         }
@@ -116,19 +115,6 @@ module.exports = function(schema) {
         }
     });
     schema.post('save', function(doc) {
-        /*        db.model('intervention').update({
-                    'sst': doc.id
-                }, {
-                    $set: {
-                        'artisan.subStatus': doc.subStatus,
-                        'cache.f.ss': doc.subStatus
-                    }
-                }, {
-                    multi:true
-                }, function(err, resp) {
-                    console.log('-->', err, resp)
-                });
-        */
         if (!isWorker) {
             db.model('artisan').uniqueCacheReload(doc)
             if (envProd && (!doc.date.dump || moment().subtract(5000).isAfter(doc.date.dump))) {

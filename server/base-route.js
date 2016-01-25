@@ -63,7 +63,7 @@ module.exports = function(app, express) {
 
     app.use(require('connect-redis-sessions')({
         client: redis,
-        app: "EDISON".envify(),
+        app: "EDISON",
         ttl: 999999999
     }))
 
@@ -95,28 +95,35 @@ module.exports = function(app, express) {
 
 
     app.post('/login', function(req, res) {
-        try {
-            db.model('user').validateCredentials(req, res)
-                .then(function(user) {
-                    req.session.upgrade(user.login, function() {
-                        req.session.login = user.login
-                        req.session.ligne = user.ligne
-                        req.session.nom = user.nom;
-                        req.session.maxInterAverif = user.maxInterAverif;
-                        req.session.prenom = user.prenom;
-                        req.session.portable = user.portable;
-                        req.session.service = user.service;
-                        req.session.email = user.email;
-                        req.session.root = user.root;
-                        req.session.pseudo = user.pseudo;
+        console.log('HERE')
+        db.model('user').validateCredentials(req, res)
+            .then(function(user) {
+                console.log('ok')
+
+                req.session.upgrade(user.login, function() {
+                    req.session.login = user.login
+                    req.session.ligne = user.ligne
+                    req.session.nom = user.nom;
+                    req.session.maxInterAverif = user.maxInterAverif;
+                    req.session.prenom = user.prenom;
+                    req.session.portable = user.portable;
+                    req.session.service = user.service;
+                    req.session.email = user.email;
+                    req.session.root = user.root;
+                    req.session.pseudo = user.pseudo;
+                    console.log(req.body.redirect, req.body.redirect === '✓')
+                    if (req.body.redirect === '✓') {
                         return res.redirect(req.body.url || '/');
-                    });
-                }, function(err) {
+                    }
+                    return res.send('OK')
+                });
+            }, function(err) {
+                if (req.body.redirect === '✓') {
                     return res.redirect((req.body.url || '/'));
-                })
-        } catch (e) {
-            console.log('-->', e)
-        }
+                }
+                return res.status(400).send('KO')
+
+            })
     });
 
     var goodIP = function(ip) {
@@ -215,15 +222,10 @@ module.exports = function(app, express) {
     })
 
 
-    app.get('/api/block', function(req, res) {
-        for (var i = 0; i < 1000000000; i++) {
-            if (i % 1000000 == 0) {
-                console.log('-->', i)
-            }
-        };
-        res.send('ok')
+    app.get('/api/env', function(req, res) {
+        console.log(_.pick(process.env, 'APP_ENV'))
+        res.json(_.pick(process.env, 'APP_ENV'));
     })
-
 
     app.post('/api/bug/declare', function(req, res) {
         var textTemplate = requireLocal('config/textTemplate');

@@ -207,6 +207,7 @@ module.exports = function(db) {
                 },
                 text: String,
                 login: String,
+                messageID: String,
                 signe: Boolean
             }],
         },

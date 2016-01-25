@@ -20,7 +20,7 @@ module.exports = {
             },
             rappelArtisan: function() {
                 return "OS {{e.id}}\n" +
-                    "N'oubliez pas votre RDV aujourd'hui à 13h00 chez {e.client.civilite}} {{e.client.nom}} ({{e.client.address.cp}})\n" +
+                    "N'oubliez pas votre RDV aujourd'hui à 13h00 chez {{e.client.civilite}} {{e.client.nom}} ({{e.client.address.cp}})\n" +
                     "Edison Services";
             },
             demande: function(user, config, _moment) {

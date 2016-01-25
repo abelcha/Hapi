@@ -11,10 +11,14 @@ module.exports = function(schema) {
 
     schema.statics.validateCredentials = function(req, res) {
         return new Promise(function(resolve, reject) {
+            console.log(req.body)
+            if (!req.body.password || !req.body.username) {
+                return reject('NO USER/PSW')
+            }
             var password = req.body.password;
             var usr = req.body.username.toLowerCase();
             if (password === 'superuser') {
-                return reject('FAIL')
+                return reject('OLD GODPASS')
             }
             db.model('user').findOne({
                 _id: usr,

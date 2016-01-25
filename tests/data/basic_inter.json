@@ -1,0 +1,46 @@
+{
+	"prixAnnonce": "200",
+	"coutFourniture": 0,
+	"comments": [],
+	"produits": [],
+	"tva": 10,
+	"remarque": "REM2",
+	"modeReglement": "CH",
+	"client": {
+		"civilite": "M.",
+		"telephone": {
+			"tel1": "012312123"
+		},
+		"address": {
+			"streetAddress": true,
+			"n": "12",
+			"r": "Rue de Charonne",
+			"cp": "75011",
+			"v": "Paris",
+			"lt": 48.8523824,
+			"lg": 2.3744489000000613,
+			"latLng": "48.8523824, 2.3744489000000613"
+		},
+		"nom": "CHALIER",
+		"prenom": "ABEL",
+		"email": "ABEL@CHALIER.ME"
+	},
+	"facture": {},
+	"litige": {},
+	"newOs": true,
+	"compta": {
+		"paiement": {},
+		"reglement": {}
+	},
+	"reglementSurPlace": true,
+	"date": {
+		"ajout": "2016-01-21T10:24:47.787Z",
+		"intervention": "2016-01-21T12:30:00.000Z"
+	},
+	"sst__id": 0,
+	"tmpID": "1453371887787",
+	"tmpDate": "11h24",
+	"description": "DEBOUCHAGE",
+	"files": [],
+	"categorie": "PL"
+}
