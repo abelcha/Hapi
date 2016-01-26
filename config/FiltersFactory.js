@@ -454,6 +454,7 @@ FiltersFactory.prototype.list = {
         group: '$artisan.login.management',
         long_name: 'Verifs News',
         url: 'newVerif',
+        
         match: {
             'login.envoi': {
                 $exists: true
