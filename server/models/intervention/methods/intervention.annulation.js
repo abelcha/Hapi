@@ -60,7 +60,7 @@ module.exports = function(schema) {
                     From: "intervention@edison-services.fr",
                     ReplyTo: req.session.email,
                     To: inter.sst.email,
-                    Subject: "[ANNULATION] - " + req.session.email,
+                    Subject: "[ANNULATION] - OS" + inter.id ,
                     HtmlBody: _.template(textTemplate.sms.intervention.annulation)(inter)
                 });
             })
