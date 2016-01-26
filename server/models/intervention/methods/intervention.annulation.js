@@ -10,6 +10,17 @@ module.exports = function(schema) {
 
             var _ = require('lodash')
             return new Promise(function(resolve, reject) {
+                if (inter.status === 'ENC') {
+                    var textTemplate = requireLocal('config/textTemplate');
+                    mail.send({
+                        noBCC: true,
+                        From: "intervention@edison-services.fr",
+                        ReplyTo: req.session.email,
+                        To: inter.sst.email,
+                        Subject: "[ANNULATION] - OS" + inter.id,
+                        HtmlBody: _.template(textTemplate.sms.intervention.annulation)(inter)
+                    });
+                }
                 inter.date.annulation = new Date;
                 inter.date.envoi = undefined;
                 inter.compta.paiement.ready = false;
@@ -54,15 +65,7 @@ module.exports = function(schema) {
                         text: req.body.textSms,
                     })
                 }
-                var textTemplate = requireLocal('config/textTemplate');
-                mail.send({
-                    noBCC: true,
-                    From: "intervention@edison-services.fr",
-                    ReplyTo: req.session.email,
-                    To: inter.sst.email,
-                    Subject: "[ANNULATION] - OS" + inter.id ,
-                    HtmlBody: _.template(textTemplate.sms.intervention.annulation)(inter)
-                });
+
             })
         }
     }
