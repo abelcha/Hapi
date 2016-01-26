@@ -4,10 +4,7 @@ module.exports = function(schema) {
 	var moment = require('moment');
 	schema.statics.com = function(req, res) {
 		db.model('artisan').find({
-			nbrIntervention: {
-				$lte: 20,
-				$gt: 0
-			}
+		
 		}, {
 			status: 1,
 			nbrIntervention: 1,
