@@ -458,7 +458,12 @@ FiltersFactory.prototype.list = {
             'login.envoi': {
                 $exists: true
             },
-            'artisan.subStatus': 'NEW',
+            $or: [{
+                'artisan.subStatus': 'NEW',
+
+            }, {
+                'artisan.status': 'POT'
+            }],
             status: 'ENC',
             'date.intervention': {
                 $lt: new Date(Date.now() + ms.hours(1))

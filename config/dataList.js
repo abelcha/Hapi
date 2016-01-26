@@ -619,6 +619,11 @@ module.exports = {
             long_name: "<Quarantaine>",
             short_name: "QUA",
             color: 'red'
+        },
+        POT: {
+            long_name: "Potentiel",
+            short_name: "POT",
+            color: 'blue'
         }
     }
 }

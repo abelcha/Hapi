@@ -100,6 +100,9 @@ module.exports = function(schema) {
             }, function(err, result) {
                 _this.quarantained = result.quarantained;
                 _this.status = result.inters_all ? "ACT" : "POT";
+                if (_this.status === 'POT') {
+                    _this.subStatus = 'POT'
+                }
                 _this.subStatus = getSubStatus(_this, result);
                 _this.blocked = isBlocked(_this, result);
                 //if (_this.subStatus || _this.blocked)
