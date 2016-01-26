@@ -644,11 +644,17 @@ FiltersFactory.prototype.list = {
         group: '$artisan.login.management',
         long_name: 'Verifs News',
         url: 'newVerif',
+        
         match: {
             'login.envoi': {
                 $exists: true
             },
-            'artisan.subStatus': 'NEW',
+            $or: [{
+                'artisan.subStatus': 'NEW',
+
+            }, {
+                'artisan.status': 'POT'
+            }],
             status: 'ENC',
             'date.intervention': {
                 $lt: new Date(Date.now() + ms.hours(1))
@@ -1811,6 +1817,11 @@ module.exports = {
             long_name: "<Quarantaine>",
             short_name: "QUA",
             color: 'red'
+        },
+        POT: {
+            long_name: "Potentiel",
+            short_name: "POT",
+            color: 'blue'
         }
     }
 }
@@ -1912,7 +1923,7 @@ module.exports = {
                     options: options
                 })
             },
-            annulation: "L'intervention {{id}} chez {{client.civilite}} {{client.nom}} à {{client.address.v}} le {{datePlain}} a été annulé. \nMerci de ne pas intervenir. \nEdison Services",
+            annulation: "Bonjour,<br>L'intervention {{id}} chez {{client.civilite}} {{client.nom}} à {{client.address.v}} a été annulé. <br>Merci de ne pas intervenir. <br>Edison Services",
         }
     },
 
