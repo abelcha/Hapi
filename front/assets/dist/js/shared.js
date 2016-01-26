@@ -644,17 +644,13 @@ FiltersFactory.prototype.list = {
         group: '$artisan.login.management',
         long_name: 'Verifs News',
         url: 'newVerif',
-        
         match: {
             'login.envoi': {
                 $exists: true
             },
-            $or: [{
-                'artisan.subStatus': 'NEW',
-
-            }, {
-                'artisan.status': 'POT'
-            }],
+            'artisan.subStatus': {
+                $in: ['NEW', 'POT', 'HOT']
+            },
             status: 'ENC',
             'date.intervention': {
                 $lt: new Date(Date.now() + ms.hours(1))
