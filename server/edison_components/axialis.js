@@ -1,5 +1,14 @@
 var _ = require('lodash');
 
+var internationalize = function(tel) {
+    if (tel.length === 10) {
+        console.log('TEN')
+        return tel.replace('0', '33');
+    }
+    console.log('NOTEN')
+    return tel;
+}
+
 var request = function(query) {
     var response = _.pick(query, 'status_code', 'description', 'redirect_to');
     this.json(response);
@@ -191,7 +200,7 @@ module.exports = {
                         status_code: 200,
                         description: "OK",
                         id_intervention: intervention.id,
-                        redirect_to: intervention.client.telephone.tel1.replace('0', '33')
+                        redirect_to: internationalize(intervention.client.telephone.tel1)
                     });
                 }
             })
