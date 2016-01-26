@@ -291,7 +291,7 @@ angular.module('edison')
             if (!Intervention(_this).isEnvoyable()) {
                 return LxNotificationService.error("Vous ne pouvez pas envoyer cette intervention");
             }
-            var defaultText = textTemplate.sms.intervention.envoi.bind(_this)(user);
+            var defaultText = textTemplate.sms.intervention.envoi.bind(_this)(_.find(window.app_users, 'login', _this.login.ajout));
             dialog.envoiIntervention(_this, defaultText, function(err, text, file) {
                 if (err)
                     return cb && cb(err)
