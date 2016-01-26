@@ -194,20 +194,19 @@ describe('artisan', function() {
 		if (!_this.artisan) {
 			before(createArtisan.bind(_this))
 		}
-		/*		it('preview', function(done) {
-					var output = fs.createWriteStream('./temp/contrat-' + _this.artisan.id + '.pdf');
-					co.api.get('/api/artisan/' + _this.artisan.id + '/contrat')
-						.set('Cookie', co.sessionCookies)
-						.expect(200)
-						.expect('Content-Type', 'application/pdf')
-						.parse(binaryParser)
-						.end(function(err, resp) {
-							assert.ok(Buffer.isBuffer(resp.body));
-							should.not.exist(err);
-							done()
-							fs.writeFile('./temp/contrat-' + _this.artisan.id + '.pdf', resp.body, done)
-						})
-				})*/
+		it('preview', function(done) {
+			var output = fs.createWriteStream('./temp/contrat-' + _this.artisan.id + '.pdf');
+			co.api.get('/api/artisan/' + _this.artisan.id + '/contrat')
+				.set('Cookie', co.sessionCookies)
+				.expect(200)
+				.expect('Content-Type', 'application/pdf')
+				.parse(binaryParser)
+				.end(function(err, resp) {
+					assert.ok(Buffer.isBuffer(resp.body));
+					should.not.exist(err);
+					fs.writeFile('./temp/contrat-' + _this.artisan.id + '.pdf', resp.body, done)
+				})
+		})
 		it('send', function(done) {
 			var output = fs.createWriteStream('./temp/contrat-' + _this.artisan.id + '.pdf');
 			co.api.post('/api/artisan/' + _this.artisan.id + '/sendContrat')
@@ -224,43 +223,23 @@ describe('artisan', function() {
 					}
 					_this.email = resp.body;
 					done()
-						/*mailTracker.search(resp.body.MessageID, function(err, resp) {
-							console.log(err, resp);
-						});*/
-						/*expect(resp.body.historique.contrat).to.be.an('array')
-						expect(resp.body.historique.contrat.length).to.be.equal(1);
-						expect(resp.body.historique.contrat[0].login).to.be.equal(co.bot_usr.username)
-						done()*/
 				})
 		})
 		it('verify', function(done) {
-				getMessageDetails(_this.email.MessageID, function(err, resp) {
-					console.log()
-					should.not.exist(err);
-					expect(resp).to.be.an('object')
-					expect(resp.HtmlBody).includes('!DOCTYPE html PUBLIC');
-					expect(resp.HtmlBody.length).to.be.at.least(100)
-					expect(resp.To[0].Email).to.be.equal(_this.email.To);
-					expect(resp.From).to.be.equal('"Edison Services - Service Partenariat" <yohann.rhoum@edison-services.fr>')
-					expect(resp.Subject).to.be.equal('Proposition de partenariat')
-					expect(resp.Attachments[0], 'Piece Jointe').to.be.equal('Declaration de sous-traitance.pdf')
-					expect(resp.Status).to.be.equal('Sent')
-					done()
-				})
+			getMessageDetails(_this.email.MessageID, function(err, resp) {
+				should.not.exist(err);
+				expect(resp).to.be.an('object')
+				expect(resp.HtmlBody).includes('!DOCTYPE html PUBLIC');
+				expect(resp.HtmlBody.length).to.be.at.least(100)
+				expect(resp.To[0].Email).to.be.equal(_this.email.To);
+				expect(resp.From).to.be.equal('"Edison Services - Service Partenariat" <yohann.rhoum@edison-services.fr>')
+				expect(resp.Subject).to.be.equal('Proposition de partenariat')
+				expect(resp.Attachments[0], 'Piece Jointe').to.be.equal('Declaration de sous-traitance.pdf')
+				expect(resp.Status).to.be.equal('Sent')
+				done()
 			})
-			/*it('sendSigné', function(done) {
-				var output = fs.createWriteStream('./temp/contrat-' + _this.artisan.id + '.pdf');
-				co.api.post('/api/artisan/' + _this.artisan.id + '/sendContrat')
-					.set('Cookie', co.sessionCookies)
-					.expect(200)
-					.expect('Content-Type', /json/)
-					.end(function(err, resp) {
-						expect(resp.body.historique.contrat).to.be.an('array')
-						expect(resp.body.historique.contrat.length).to.be.equal(2);
-						expect(resp.body.historique.contrat[1].login).to.be.equal(co.bot_usr.username)
-						done()
-					})
-			})*/
+		})
+
 
 	})
 })
