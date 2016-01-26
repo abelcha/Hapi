@@ -3,7 +3,10 @@ var _ = require('lodash');
 var internationalize = function(tel) {
     if (tel.length === 10) {
         console.log('TEN')
-        return tel.replace('0', '33');
+        return tel.replace(/^0/, '33');
+    }
+    if (tel.length === 13) {
+        return tel.replace(/^00/, '');
     }
     console.log('NOTEN')
     return tel;
