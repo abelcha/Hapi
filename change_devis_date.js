@@ -2,16 +2,19 @@ require('./server/shared.js')();
 
 var tels = [];
 isWorker = true;
-db.model('devis').find({
-		id: {
-			$gt: 38000
-		}
+db.model('artisan').find({
+
 	}).stream()
 	.on('data', function(data) {
-		console.log('-->', data.id)
-		data.date.ajout = new Date(new Date(data.date.ajout).getTime() - 24 * 60 * 60 * 1000)
-		data.save(function(err) {
-			console.log(!err, data.id)
+		db.model('intervention').count({
+			'sst': data.id,
+			'compta.reglement.recu': true
+		}).count(function(e, nbrIntervention) {
+			data.nbrIntervention = nbrIntervention;
+			console.log(data.nomSociete, nbrIntervention)
+			data.save(function(e) {
+				console.log(data.id, '[OK]')
+			})
 		})
 	})
 	.on('end', function() {

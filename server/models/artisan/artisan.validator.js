@@ -90,6 +90,12 @@ module.exports = function(schema) {
                         }
                     }).count(cb)
                 },
+                nbrIntervention: function(cb) {
+                    db.model("intervention").count({
+                        'artisan.id': _this.id,
+                        'compta.reglement.recu': true
+                    }).count(cb)
+                },
                 quarantained: function(cb) {
                     db.model('signalement').count({
                         sst_id: _this.id,
@@ -98,6 +104,7 @@ module.exports = function(schema) {
                     }).count(cb)
                 },
             }, function(err, result) {
+                _this.nbrIntervention = result.nbrIntervention
                 _this.quarantained = result.quarantained;
                 _this.status = result.inters_all ? "ACT" : "POT";
                 if (_this.status === 'POT') {
