@@ -90,7 +90,7 @@ module.exports = {
                     options: options
                 })
             },
-            annulation: "L'intervention {{id}} chez {{client.civilite}} {{client.nom}} à {{client.address.v}} le {{datePlain}} a été annulé. \nMerci de ne pas intervenir. \nEdison Services",
+            annulation: "Bonjour,<br>L'intervention {{id}} chez {{client.civilite}} {{client.nom}} à {{client.address.v}} a été annulé. <br>Merci de ne pas intervenir. <br>Edison Services",
         }
     },
 

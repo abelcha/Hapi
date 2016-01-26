@@ -1,5 +1,6 @@
 module.exports = function(schema) {
 
+
     schema.statics.annulation = {
         unique: true,
         findBefore: true,
@@ -44,15 +45,6 @@ module.exports = function(schema) {
                     })
                 }
 
-                mail.send({
-                    noBCC: true,
-                    From: "intervention@edison-services.fr",
-                    ReplyTo: req.session.email,
-                    To: inter.sst.email,
-                    Subject: "[ANNULATION] - " + req.session.email,
-                    HtmlBody: "L'intervention " + inter.id + " est annulé, merci de ne pas intervenir.<br>Edison Services" ,
-                });
-
                 inter.save().then(resolve, reject)
                 if (req.body.sms) {
                     sms.send({
@@ -62,6 +54,15 @@ module.exports = function(schema) {
                         text: req.body.textSms,
                     })
                 }
+                var textTemplate = requireLocal('config/textTemplate');
+                mail.send({
+                    noBCC: true,
+                    From: "intervention@edison-services.fr",
+                    ReplyTo: req.session.email,
+                    To: inter.sst.email,
+                    Subject: "[ANNULATION] - " + req.session.email,
+                    HtmlBody: _.template(textTemplate.sms.intervention.annulation)(inter)
+                });
             })
         }
     }
