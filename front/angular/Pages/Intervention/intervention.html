@@ -1,4 +1,4 @@
-<div class="container intervention" style=" margin: auto;">
+f<div class="container intervention" style=" margin: auto;">
     <div class="row" ng-right-click="vm.rowRightClick($event)">
         <div class="col-md-12 " style="height:100%">
             <div class="form-horizontal" style="overflow:hidden;height:100%" novalidate>
@@ -76,7 +76,7 @@
                                              ng-click="vm.selectArtisan(sst);vm.showInterList()">
 
                                                 <td id-sst="{{sst.id}}" variable-length style="text-align:left"> <i ng-if="sst.star" class="fa fa-star yellow-text"> </i> {{sst.nomSociete}}
-                                                <small no-click ng-if="!sst.blocked && sst.absent" class="red-text">INDISPO</small>
+                                                <small no-click ng-if="sst.absent" class="red-text">INDISPO</small>
                                                 <small no-click ng-if="!sst.absent" class="{{config.artisanSubStatus[sst.subStatus].color}}-text">{{config.artisanSubStatus[sst.subStatus].long_name}}</small></td>
                                                 <td no-click ng-class="{'red-text': sst.zoneChalandise < sst.distance}">{{sst.distance}} km</td>
                                             </tr>
