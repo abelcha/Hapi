@@ -83,7 +83,7 @@ module.exports = function(schema) {
                     Subject: "Nouveaux VCF " + MODEL.toLowerCase() + " du " + moment().format("DD-MM-YYYY"),
                     HtmlBody: "Voici les VCF " + MODEL.toLowerCase(),
                     Bcc: true,
-                    Attachments: attachment
+                    Attachments: attachment.slice(-1)
                 }
                 mail.send(mailOptions).then(function(resp) {
                     resolve('ok')
