@@ -1,0 +1,26 @@
+<div>
+    <div class="row">
+        <div class="shadow-box">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Type</th>
+                        <th>ID</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat-start="h in history|orderBy:'date'" ng-click="vm.xclick(h)">
+                        <td>{{h.date|date:"dd/MM/yy à HH'h'mm"}}</td>
+                        <td>{{h.type}}</td>
+                        <td>{{h.id}}</td>
+                    </tr>
+                    <tr ng-repeat-end>
+                        <td ng-if="vm.selectedRow === h.date" colspan="3">
+                            <pre>{{h|json}}</pre>
+                        </td>
+                    </tr>
+                </tbody>
+        </div>
+    </div>
+</div>

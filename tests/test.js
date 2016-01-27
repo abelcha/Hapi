@@ -239,7 +239,27 @@ describe('artisan', function() {
 				done()
 			})
 		})
+	})
 
-
+	describe("comment", function() {
+		if (!_this.artisan) {
+			before(createArtisan.bind(_this))
+		}
+		it('should add comment', function(done) {
+			co.api.post('/api/artisan/' + _this.artisan.id + '/comment')
+				.send({
+					text: 'testcomment123456'
+				})
+				.set('Cookie', co.sessionCookies)
+				.expect(200)
+				.expect('Content-Type', /json/)
+				.end(function(err, resp) {
+					expect(resp.body.comments).to.be.an('array')
+					expect(resp.body.comments[0]).to.be.an('object')
+					expect(resp.body.comments[0].text).to.be.equal('testcomment123456');
+					expect(resp.body.comments[0].login).to.be.equal(co.bot_usr.username);
+					done()
+				})
+		})
 	})
 })

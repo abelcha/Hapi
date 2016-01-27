@@ -10,7 +10,7 @@ module.exports = function(schema) {
 
             var _ = require('lodash')
             return new Promise(function(resolve, reject) {
-                if (inter.status === 'ENC') {
+                if (inter.status === 'ENC' && inter.sst) {
                     var textTemplate = requireLocal('config/textTemplate');
                     mail.send({
                         noBCC: true,

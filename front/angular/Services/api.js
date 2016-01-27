@@ -6,6 +6,11 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
                 return $http.post('/api/bug/declare', params)
             },
         },
+        user: {
+            history: function(login) {
+                return $http.get('/api/user/' + login + '/history')
+            },
+        },
         product: {
             list: function() {
                 return $http.get('/api/product/list');
@@ -330,7 +335,7 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
             },
             update: function(task) {
                 return $http.post('/api/tasklist/', {
-                    task:task
+                    task: task
                 });
             }
         },

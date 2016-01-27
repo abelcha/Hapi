@@ -437,6 +437,12 @@ angular.module('edison').config(["$routeProvider", "$locationProvider", function
             controllerAs: 'vm',
             reloadOnSearch: false
         })
+          .when('/user/history', {
+            templateUrl: "Pages/User/historique.html",
+            controller: "userHistory",
+            controllerAs: 'vm',
+            reloadOnSearch: false
+        })
         .otherwise({
             redirectTo: '/dashboard'
         });
@@ -1950,6 +1956,11 @@ angular.module('edison').factory('edisonAPI', ["$http", "$location", "Upload", f
                 return $http.post('/api/bug/declare', params)
             },
         },
+        user: {
+            history: function(login) {
+                return $http.get('/api/user/' + login + '/history')
+            },
+        },
         product: {
             list: function() {
                 return $http.get('/api/product/list');
@@ -2274,7 +2285,7 @@ angular.module('edison').factory('edisonAPI', ["$http", "$location", "Upload", f
             },
             update: function(task) {
                 return $http.post('/api/tasklist/', {
-                    task:task
+                    task: task
                 });
             }
         },
@@ -6383,3 +6394,21 @@ var telephoneMatch = function(TabContainer, edisonAPI, $rootScope, $scope, $loca
 }
 telephoneMatch.$inject = ["TabContainer", "edisonAPI", "$rootScope", "$scope", "$location", "LxProgressService", "socket"];
 angular.module('edison').controller('telephoneMatch', telephoneMatch);
+
+var userHistory = function(TabContainer, edisonAPI, $rootScope, $scope, $location, LxNotificationService, socket) {
+	"use strict";
+	var _this = this;
+	_this.tab = TabContainer.getCurrentTab();
+	_this.tab.setTitle('User History');
+	edisonAPI.user.history($location.search().login).then(function(resp) {
+		$scope.history = resp.data
+	})
+	_this.xclick = function(h) {
+		_this.selectedRow = (_this.selectedRow == h.date ? null : h.date);
+	}
+
+
+}
+userHistory.$inject = ["TabContainer", "edisonAPI", "$rootScope", "$scope", "$location", "LxNotificationService", "socket"];
+
+angular.module('edison').controller('userHistory', userHistory);

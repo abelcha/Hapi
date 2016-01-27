@@ -240,6 +240,12 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
             controllerAs: 'vm',
             reloadOnSearch: false
         })
+          .when('/user/history', {
+            templateUrl: "Pages/User/historique.html",
+            controller: "userHistory",
+            controllerAs: 'vm',
+            reloadOnSearch: false
+        })
         .otherwise({
             redirectTo: '/dashboard'
         });

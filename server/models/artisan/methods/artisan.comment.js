@@ -6,7 +6,6 @@ module.exports = function(schema) {
         method: 'POST',
         fn: function(artisan, req, res) {
             return new Promise(function(resolve, reject) {
-                console.log(artisan.save)
                 artisan.comments.push({
                     text: req.body.text,
                     login: req.session.login,

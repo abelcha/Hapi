@@ -71,6 +71,7 @@
 		"lg": 2.3744489000000613
 	},
 	"interLimit": 30,
+	"nbrIntervention": 0,
 	"representant": {
 		"civilite": "M.",
 		"nom": "BT",

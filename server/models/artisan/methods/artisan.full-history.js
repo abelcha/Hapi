@@ -20,7 +20,6 @@ module.exports = function(schema) {
                     var pack = _.each(artisan.toObject().historique.pack, normalize('pack'))
                     var contrat = _.each(artisan.toObject().historique.contrat, normalize('contrat'))
                     var signs = _.each(signalements, normalize('signalement', 'date.ajout'));
-
                     var rtn = [];
                     rtn = rtn.concat(comments).concat(pack).concat(contrat).concat(signs);
                     rtn = _.sortBy(rtn, '_date').reverse()
