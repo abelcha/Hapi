@@ -5,7 +5,7 @@ module.exports = function(schema) {
         findBefore: true,
         method: 'GET',
         fn: function(user, req, res) {
-            if (!user.root) {
+            if (!req.session.root) {
                 res.json([])
             }
             console.log('here')
