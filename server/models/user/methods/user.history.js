@@ -5,6 +5,9 @@ module.exports = function(schema) {
         findBefore: true,
         method: 'GET',
         fn: function(user, req, res) {
+            if (!user.root) {
+                res.json([])
+            }
             console.log('here')
             db.model('event').find({
                 date: {
