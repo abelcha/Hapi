@@ -6,14 +6,10 @@ module.exports = function(schema) {
         method: 'GET',
         fn: function(user, req, res) {
             console.log('here')
-            console.log({
-                    $lt: moment().toDate(),
-                    $gt: moment().add(-24, 'hours').toDate()
-                })
             db.model('event').find({
                 date: {
                     $lt: moment().toDate(),
-                    $gt: moment().add(-24, 'hours').toDate()
+                    $gt: moment().startOf('day').toDate()
                 },
                 login: user.login
             }, function(err, resp) {
