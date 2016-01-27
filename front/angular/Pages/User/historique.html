@@ -10,7 +10,7 @@
                 </thead>
                 <tbody>
                     <tr ng-repeat-start="h in history|orderBy:'date'" ng-click="vm.xclick(h)">
-                        <td>{{h.date|date:"dd/MM/yy à HH'h'mm"}}</td>
+                        <td>{{h.date|date:"dd/MM/yy à HH'h'mm:ss"}}</td>
                         <td>{{h.type}} <strong>{{h.id}}</strong></td>
                     </tr>
                     <tr ng-repeat-end>
