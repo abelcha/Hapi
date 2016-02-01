@@ -60,6 +60,7 @@ module.exports = function(schema) {
             .then(function(resp) {
               //  console.log('-->', resp && resp.id)
               cb(null, {
+                ajout: resp.date.ajout,
                 ids: _.pluck(e, 'id'),
                 nbr: e.length,
                 com: Math.floor(e.length / 10),
@@ -70,7 +71,9 @@ module.exports = function(schema) {
               })
             })
         }, function(err, resp) {
-          resp = _(resp).toArray().sortBy('nbr').reverse().value()
+          resp = _(resp).toArray().filter(function(e) {
+            return new Date(e.ajout) > new Date(2016, 0, 1);
+          }).sortBy('nbr').reverse().value()
           cb(null, resp)
         })
       })
