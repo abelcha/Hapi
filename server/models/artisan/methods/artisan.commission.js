@@ -41,8 +41,8 @@ module.exports = function(schema) {
     var i = 0;
     var rtn = []
     db.model('intervention').find({
-        'compta.paiement.effectue': true,
-        'compta.paiement.date': db.utils.between(_from, _to)
+        'compta.reglement.recu': true,
+        'compta.reglement.date': db.utils.between(_from, _to)
       })
       .select('id sst')
       .stream()
