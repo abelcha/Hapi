@@ -3,19 +3,22 @@ require('./server/shared.js')();
 var tels = [];
 isWorker = true;
 db.model('artisan').find({
-
-	}).stream()
-	.on('data', function(data) {
-		db.model('intervention').count({
-			'sst': data.id,
-			'compta.reglement.recu': true
-		}).count(function(e, nbrIntervention) {
-			data.nbrIntervention = nbrIntervention;
-			console.log(data.nomSociete, nbrIntervention)
-			data.save(function(e) {
-				console.log(data.id, '[OK]')
-			})
-		})
-	})
-	.on('end', function() {
-	})
+    'date.ajout': {
+      $gt: new Date(2015, 11, 1)
+    },
+    'nbrIntervention': {
+      $gt: 10
+    },
+  }).stream()
+  .on('data', function(data) {
+		console.log('ok')
+    db.model('intervention').find({
+      'sst': data.id,
+      'compta.reglement.recu': true
+    }).then(function(resp) {
+      console.log('==>', data.id, data.nomSociete, resp.length)
+    })
+  })
+  .on('end', function() {
+    console.log('DONE')
+  })
