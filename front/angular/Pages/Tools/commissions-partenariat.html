@@ -14,7 +14,7 @@
               <td bold>Nbr</td>
               <td bold>Com.</td>
               <td bold>Palier</td>
-                <td bold>Interventions</td>
+              <td bold>Interventions</td>
             </tr>
             <tr ng-repeat="x in g">
               <td style="width:0px">
@@ -24,13 +24,17 @@
                 {{x.nbr}}
               </td>
               <td class="green-text">
-              <span ng-if="x.com"> +</span> {{x.com}}
+                <span ng-if="x.com"> +</span> {{x.com}}
               </td>
               <td>
                 -{{x.ceil}}
               </td>
               <td>
-                <span ng-repeat="i in x.ids"><a href="/intervention/{{i}}">{{i}} - </a></span>
+                <button class="btn btn-default btn-xs" ng-click="vm.selectedID = !vm.selectedID ? (x.date + x.sst) : null"> Détails</button>
+                <span ng-if="vm.selectedID === (x.date + x.sst)" ng-repeat="(k,i) in x.ids">
+                  <br ng-if="k % 2 === 0"> -
+                  <a href="/intervention/{{i}}">{{i}}</a>
+                </span>
               </td>
             </tr>
 
