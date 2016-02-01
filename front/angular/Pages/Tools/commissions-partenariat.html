@@ -6,7 +6,7 @@
           <table class="table table-bordered" style="width: 49px;">
             <tr>
               <td colspan="5">
-                <strong>{{g[0].date|date:"MMMM yyyy"}}</strong>
+                <strong text-xxl><center>{{g[0].date|date:"MMMM yyyy"}}</center></strong>
               </td>
             </tr>
             <tr>
@@ -18,7 +18,7 @@
             </tr>
             <tr ng-repeat="x in g">
               <td style="width:0px">
-                <a href="/artisan/{{x.sst}}/recap">{{x.nomSociete}} - {{x.sst}}</a>
+                <a href="/artisan/{{x.sst}}/recap">{{x.nomSociete.slice(0, 15)}}</a>
               </td>
               <td>
                 {{x.nbr}}
