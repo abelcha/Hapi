@@ -5,9 +5,16 @@
         <td ng-repeat="g in  vm.data" ng-if="g.length">
           <table class="table table-bordered" style="width: 49px;">
             <tr>
-              <td colspan="3">
+              <td colspan="5">
                 <strong>{{g[0].date|date:"MMMM yyyy"}}</strong>
               </td>
+            </tr>
+            <tr>
+              <td bold>Nom Societe</td>
+              <td bold>Nbr</td>
+              <td bold>Com.</td>
+              <td bold>Palier</td>
+                <td bold>Interventions</td>
             </tr>
             <tr ng-repeat="x in g">
               <td style="width:0px">
@@ -15,6 +22,12 @@
               </td>
               <td>
                 {{x.nbr}}
+              </td>
+              <td class="green-text">
+              <span ng-if="x.com"> +</span> {{x.com}}
+              </td>
+              <td>
+                -{{x.ceil}}
               </td>
               <td>
                 <span ng-repeat="i in x.ids"><a href="/intervention/{{i}}">{{i}} - </a></span>
