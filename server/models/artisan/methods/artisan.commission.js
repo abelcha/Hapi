@@ -44,7 +44,7 @@ module.exports = function(schema) {
         'compta.reglement.recu': true,
         'compta.reglement.date': db.utils.between(_from, _to)
       })
-      .select('id sst compta.regk')
+      .select('id sst compta.paiement')
       .stream()
       .on('data', function(data)  {
         rtn.push(data);
