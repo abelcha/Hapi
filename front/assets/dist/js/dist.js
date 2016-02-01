@@ -418,6 +418,11 @@ angular.module('edison').config(["$routeProvider", "$locationProvider", function
             controller: "editUsers",
             controllerAs: "vm",
         })
+        .when('/partenariat/comissions', {
+          templateUrl: "Pages/Tools/commissions-partenariat.html",
+          controller: "commissionsPartenariat",
+          controllerAs: 'vm',
+        })
         .when('/tools/commissions', {
             templateUrl: "Pages/Tools/commissions.html",
             controller: "CommissionsController",
@@ -448,6 +453,218 @@ angular.module('edison').config(["$routeProvider", "$locationProvider", function
         });
     // use the HTML5 History API
     $locationProvider.html5Mode(true);
+}]);
+
+angular.module("edison").filter('contactFilter', ["config", function(config) {
+    "use strict";
+
+    var clean = function(str) {
+        return _.deburr(str).toLowerCase();
+    }
+
+    var compare = function(a, b, strictMode) {
+        if (typeof a === "string") {
+            return clean(a).includes(b);
+        } else if (!strictMode) {
+            return clean(String(a)).startsWith(b);
+        } else {
+            return a === parseInt(b);
+        }
+    }
+    return function(dataContainer, input) {
+        var rtn = [];
+        input = clean(input);
+        _.each(dataContainer, function(data) {
+            if (!data.stringify)
+                data.stringify = clean(JSON.stringify(data))
+            if (!input || data.stringify.indexOf(input) >= 0) {
+                rtn.push(data);
+            } else {
+            }
+        })
+        return rtn;
+    }
+}]);
+
+angular.module('edison').filter('crlf', function() {
+	"use strict";
+    return function(text) {
+        return text.split(/\n/g).join('<br>');
+    };
+});
+
+ angular.module('edison').filter('frnbr', function() {
+ 	"use strict";
+ 	return function(num) {
+ 		var n = _.round((num || 0), 2).toString(),
+ 			p = n.indexOf('.');
+ 		return n.replace(/\d(?=(?:\d{3})+(?:\.|$))/g, function($0, i) {
+ 			return (p < 0 || i < p ? ($0 + ' ') : $0).replace('.', ',');
+ 		});
+ 	};
+ });
+
+angular.module('edison').filter('loginify', function() {
+    "use strict";
+    return function(obj) {
+        if (!obj)
+            return "";
+        return obj.slice(0, 1).toUpperCase() + obj.slice(1, -2)
+    };
+});
+
+angular.module('edison').filter('relativeDate', function() {
+    "use strict";
+    return function(date, smallWin) {
+        var d = moment((date + 137000000) * 10000);
+        var l = moment().subtract(4, 'days');
+        if (d < l) {
+            return smallWin ? d.format('DD/MM') : d.format('DD/MM/YY')
+        } else {
+            var x = d.fromNow().toString()
+            if (smallWin) {
+                x = x
+                    .replace('quelques secondes', '')
+                    .replace(' minutes', 'mn')
+                    .replace(' minute', 'mn')
+                    .replace(' une', '1')
+                    .replace(' heures', 'H')
+                    .replace(' heure', 'H')
+                    .replace(' jours', 'J')
+                    .replace(' jour', 'J')
+                    .replace('il y a', '-')
+                    .replace(' un', '1')
+                    .replace('dans ', '+')
+            }
+            return x;
+        }
+        // return moment((date + 1370000000) * 1000).fromNow(no).toString()
+    };
+});
+
+angular.module('edison').filter('reverse', function() {
+    "use strict";
+    return function(items) {
+        if (!items)
+            return [];
+        return items.slice().reverse();
+    };
+});
+
+angular.module("edison").filter('tableFilter', ["config", function(config) {
+    "use strict";
+
+    var clean = function(str) {
+        return _.deburr(str).toLowerCase();
+    }
+
+    var compare = function(a, b, strictMode) {
+        if (typeof a === "string") {
+            return clean(a).includes(b);
+        } else if (!strictMode) {
+            return clean(String(a)).startsWith(b);
+        } else {
+            return a === parseInt(b);
+        }
+    }
+    var compareCustom = function(key, data, input) {
+        if (key === '_categorie') {
+            var cell = config.categoriesHash()[data.c].long_name;
+            return compare(cell, input);
+        }
+        if (key === '_etat') {
+            var cell = config.etatsHash()[data.s].long_name
+            return compare(cell, input);
+        }
+        return true;
+
+    }
+    var compareDate = function(key, data, input) {
+        var md = (data[key] + 137000000) * 10000;
+        //console.log( input.start, input.end);
+        if (md > input.start.getTime() && md < input.end.getTime()) {
+            return true
+        }
+        return false;
+    }
+
+    var parseDate = function(e) {
+        if (!(/^[0-9\/]+$/).test(e) ||  _.endsWith(e, '/')) {
+            return undefined;
+        }
+        var x = e.split('/');
+        if (x.length === 1) {
+            var month = parseInt(x[0]);
+            var year = new Date().getFullYear();
+            return {
+                start: new Date(year, month - 1),
+                end: new Date(year, month)
+            }
+        } else if (x.length === 2)  {
+
+            if (x[1].length == 4) {
+                var month = parseInt(x[0]);
+                var year = parseInt(x[1]);
+                return {
+                    start: new Date(year, month - 1),
+                    end: new Date(year, month),
+                }
+            }
+
+            var day = parseInt(x[0]);
+            var month = parseInt(x[1]);
+            var year = new Date().getFullYear();
+            return {
+                start: new Date(year, month - 1, day),
+                end: new Date(year, month - 1, day + 1)
+            }
+        }
+        return undefined;
+    }
+
+
+    return function(dataContainer, inputs, strictMode) {
+        var rtn = [];
+        //console.time('fltr')
+        inputs = _.mapValues(inputs, clean);
+        _.each(inputs, function(e, k) {
+            if (k.charAt(0) === '∆') {
+                inputs[k] = parseDate(e);
+            }
+        })
+
+        _.each(dataContainer, function(data) {
+                if (data.id) {
+                    var psh = true;
+                    _.each(inputs, function(input, k) {
+                        if (input && _.size(input) > 0) {
+                            if (k.charAt(0) === '_') {
+                                if (!compareCustom(k, data, input)) {
+                                    psh = false;
+                                    return false
+                                }
+                            } else if (k.charAt(0) === '∆') {
+                                if (!compareDate(k.slice(1), data, input)) {
+                                    psh = false;
+                                    return false
+                                }
+                            } else {
+                                if (!compare(data[k], input, strictMode)) {
+                                    psh = false;
+                                    return false
+                                }
+                            }
+                        }
+                    });
+                    if (psh === true) {
+                        rtn.push(data);
+                    }
+                }
+            })
+            //console.timeEnd('fltr')
+
+        return rtn;
+    }
 }]);
 
  angular.module('edison').directive('absenceSst', ["edisonAPI", "LxNotificationService", "user", function(edisonAPI, LxNotificationService, user) {
@@ -1361,218 +1578,6 @@ angular.module('edison').directive('ngRightClick', ["$parse", function($parse) {
     }
  }]);
 
-angular.module("edison").filter('contactFilter', ["config", function(config) {
-    "use strict";
-
-    var clean = function(str) {
-        return _.deburr(str).toLowerCase();
-    }
-
-    var compare = function(a, b, strictMode) {
-        if (typeof a === "string") {
-            return clean(a).includes(b);
-        } else if (!strictMode) {
-            return clean(String(a)).startsWith(b);
-        } else {
-            return a === parseInt(b);
-        }
-    }
-    return function(dataContainer, input) {
-        var rtn = [];
-        input = clean(input);
-        _.each(dataContainer, function(data) {
-            if (!data.stringify)
-                data.stringify = clean(JSON.stringify(data))
-            if (!input || data.stringify.indexOf(input) >= 0) {
-                rtn.push(data);
-            } else {
-            }
-        })
-        return rtn;
-    }
-}]);
-
-angular.module('edison').filter('crlf', function() {
-	"use strict";
-    return function(text) {
-        return text.split(/\n/g).join('<br>');
-    };
-});
-
- angular.module('edison').filter('frnbr', function() {
- 	"use strict";
- 	return function(num) {
- 		var n = _.round((num || 0), 2).toString(),
- 			p = n.indexOf('.');
- 		return n.replace(/\d(?=(?:\d{3})+(?:\.|$))/g, function($0, i) {
- 			return (p < 0 || i < p ? ($0 + ' ') : $0).replace('.', ',');
- 		});
- 	};
- });
-
-angular.module('edison').filter('loginify', function() {
-    "use strict";
-    return function(obj) {
-        if (!obj)
-            return "";
-        return obj.slice(0, 1).toUpperCase() + obj.slice(1, -2)
-    };
-});
-
-angular.module('edison').filter('relativeDate', function() {
-    "use strict";
-    return function(date, smallWin) {
-        var d = moment((date + 137000000) * 10000);
-        var l = moment().subtract(4, 'days');
-        if (d < l) {
-            return smallWin ? d.format('DD/MM') : d.format('DD/MM/YY')
-        } else {
-            var x = d.fromNow().toString()
-            if (smallWin) {
-                x = x
-                    .replace('quelques secondes', '')
-                    .replace(' minutes', 'mn')
-                    .replace(' minute', 'mn')
-                    .replace(' une', '1')
-                    .replace(' heures', 'H')
-                    .replace(' heure', 'H')
-                    .replace(' jours', 'J')
-                    .replace(' jour', 'J')
-                    .replace('il y a', '-')
-                    .replace(' un', '1')
-                    .replace('dans ', '+')
-            }
-            return x;
-        }
-        // return moment((date + 1370000000) * 1000).fromNow(no).toString()
-    };
-});
-
-angular.module('edison').filter('reverse', function() {
-    "use strict";
-    return function(items) {
-        if (!items)
-            return [];
-        return items.slice().reverse();
-    };
-});
-
-angular.module("edison").filter('tableFilter', ["config", function(config) {
-    "use strict";
-
-    var clean = function(str) {
-        return _.deburr(str).toLowerCase();
-    }
-
-    var compare = function(a, b, strictMode) {
-        if (typeof a === "string") {
-            return clean(a).includes(b);
-        } else if (!strictMode) {
-            return clean(String(a)).startsWith(b);
-        } else {
-            return a === parseInt(b);
-        }
-    }
-    var compareCustom = function(key, data, input) {
-        if (key === '_categorie') {
-            var cell = config.categoriesHash()[data.c].long_name;
-            return compare(cell, input);
-        }
-        if (key === '_etat') {
-            var cell = config.etatsHash()[data.s].long_name
-            return compare(cell, input);
-        }
-        return true;
-
-    }
-    var compareDate = function(key, data, input) {
-        var md = (data[key] + 137000000) * 10000;
-        //console.log( input.start, input.end);
-        if (md > input.start.getTime() && md < input.end.getTime()) {
-            return true
-        }
-        return false;
-    }
-
-    var parseDate = function(e) {
-        if (!(/^[0-9\/]+$/).test(e) ||  _.endsWith(e, '/')) {
-            return undefined;
-        }
-        var x = e.split('/');
-        if (x.length === 1) {
-            var month = parseInt(x[0]);
-            var year = new Date().getFullYear();
-            return {
-                start: new Date(year, month - 1),
-                end: new Date(year, month)
-            }
-        } else if (x.length === 2)  {
-
-            if (x[1].length == 4) {
-                var month = parseInt(x[0]);
-                var year = parseInt(x[1]);
-                return {
-                    start: new Date(year, month - 1),
-                    end: new Date(year, month),
-                }
-            }
-
-            var day = parseInt(x[0]);
-            var month = parseInt(x[1]);
-            var year = new Date().getFullYear();
-            return {
-                start: new Date(year, month - 1, day),
-                end: new Date(year, month - 1, day + 1)
-            }
-        }
-        return undefined;
-    }
-
-
-    return function(dataContainer, inputs, strictMode) {
-        var rtn = [];
-        //console.time('fltr')
-        inputs = _.mapValues(inputs, clean);
-        _.each(inputs, function(e, k) {
-            if (k.charAt(0) === '∆') {
-                inputs[k] = parseDate(e);
-            }
-        })
-
-        _.each(dataContainer, function(data) {
-                if (data.id) {
-                    var psh = true;
-                    _.each(inputs, function(input, k) {
-                        if (input && _.size(input) > 0) {
-                            if (k.charAt(0) === '_') {
-                                if (!compareCustom(k, data, input)) {
-                                    psh = false;
-                                    return false
-                                }
-                            } else if (k.charAt(0) === '∆') {
-                                if (!compareDate(k.slice(1), data, input)) {
-                                    psh = false;
-                                    return false
-                                }
-                            } else {
-                                if (!compare(data[k], input, strictMode)) {
-                                    psh = false;
-                                    return false
-                                }
-                            }
-                        }
-                    });
-                    if (psh === true) {
-                        rtn.push(data);
-                    }
-                }
-            })
-            //console.timeEnd('fltr')
-
-        return rtn;
-    }
-}]);
-
 angular.module('edison').factory('TabContainer', ["$location", "$window", "$q", "edisonAPI", function($location, $window, $q, edisonAPI) {
     "use strict";
     var Tab = function(args, options, prevTab) {
@@ -1949,476 +1954,479 @@ angular.module('edison').factory('Address', function() {
 });
 
 angular.module('edison').factory('edisonAPI', ["$http", "$location", "Upload", function($http, $location, Upload) {
-    "use strict";
-    return {
-        bug: {
-            declare: function(params) {
-                return $http.post('/api/bug/declare', params)
-            },
-        },
-        user: {
-            history: function(login) {
-                return $http.get('/api/user/' + login + '/history')
-            },
-        },
-        product: {
-            list: function() {
-                return $http.get('/api/product/list');
-            },
-            save: function(data) {
-                return $http.post('/api/product/__save', data);
-            }
-        },
-        signal: {
-            list: function() {
-                return $http.get('/api/signal/list');
-            },
-            save: function(data) {
-                return $http.post('/api/signal/__save', data);
-            }
-        },
-        compte: {
-            list: function() {
-                return $http.get('/api/compte/list');
-            },
-            save: function(data) {
-                return $http.post('/api/compte/__save', data);
-            }
-        },
-        combo: {
-            list: function() {
-                return $http.get('/api/combo/list');
-            },
-            save: function(data) {
-                return $http.post('/api/combo/__save', data);
-            }
-        },
-        stats: {
-            telepro: function() {
-                return $http.get('/api/stats/telepro');
-            },
-            day: function() {
-                return $http.get('/api/stats/day');
-            }
-        },
-        users: {
-            logout: function() {
-                return $http.get('/logout');
-            },
-            save: function(data) {
-                return $http.post('/api/user/__save', data);
-            },
-            list: function() {
-                return $http.get('/api/user/list');
-            }
-        },
-        bfm: {
-            get: function() {
-                return $http.get('/api/bfm');
-            }
-        },
-        compta: {
-            lpa: function(data) {
-                return $http.get('/api/intervention/lpa?d=' + (data.d ||  ''));
-            },
-            flush: function(data) {
-                return $http.post('/api/intervention/flush', data);
-            },
-            flushMail: function(data) {
-                return $http.post('/api/intervention/flushMail', data);
-            },
-            archivesPaiement: function() {
-                return $http.get('/api/intervention/archivePaiement');
-            },
-            archivesReglement: function() {
-                return $http.get('/api/intervention/archiveReglement');
-            },
-            avoirs: function() {
-                return $http.get('/api/intervention/avoirs')
-            },
-            flushAvoirs: function(data) {
-                return $http.post('/api/intervention/flushAvoirs', data);
-            },
+  "use strict";
+  return {
+    bug: {
+      declare: function(params) {
+        return $http.post('/api/bug/declare', params)
+      },
+    },
+    user: {
+      history: function(login) {
+        return $http.get('/api/user/' + login + '/history')
+      },
+    },
+    product: {
+      list: function() {
+        return $http.get('/api/product/list');
+      },
+      save: function(data) {
+        return $http.post('/api/product/__save', data);
+      }
+    },
+    signal: {
+      list: function() {
+        return $http.get('/api/signal/list');
+      },
+      save: function(data) {
+        return $http.post('/api/signal/__save', data);
+      }
+    },
+    compte: {
+      list: function() {
+        return $http.get('/api/compte/list');
+      },
+      save: function(data) {
+        return $http.post('/api/compte/__save', data);
+      }
+    },
+    combo: {
+      list: function() {
+        return $http.get('/api/combo/list');
+      },
+      save: function(data) {
+        return $http.post('/api/combo/__save', data);
+      }
+    },
+    stats: {
+      telepro: function() {
+        return $http.get('/api/stats/telepro');
+      },
+      day: function() {
+        return $http.get('/api/stats/day');
+      }
+    },
+    users: {
+      logout: function() {
+        return $http.get('/logout');
+      },
+      save: function(data) {
+        return $http.post('/api/user/__save', data);
+      },
+      list: function() {
+        return $http.get('/api/user/list');
+      }
+    },
+    bfm: {
+      get: function() {
+        return $http.get('/api/bfm');
+      }
+    },
+    compta: {
+      lpa: function(data) {
+        return $http.get('/api/intervention/lpa?d=' + (data.d ||  ''));
+      },
+      flush: function(data) {
+        return $http.post('/api/intervention/flush', data);
+      },
+      flushMail: function(data) {
+        return $http.post('/api/intervention/flushMail', data);
+      },
+      archivesPaiement: function() {
+        return $http.get('/api/intervention/archivePaiement');
+      },
+      archivesReglement: function() {
+        return $http.get('/api/intervention/archiveReglement');
+      },
+      avoirs: function() {
+        return $http.get('/api/intervention/avoirs')
+      },
+      flushAvoirs: function(data) {
+        return $http.post('/api/intervention/flushAvoirs', data);
+      },
 
-        },
-        devis: {
-            saveTmp: function(data) {
-                return $http.post('/api/devis/temporarySaving', data);
-            },
-            getTmp: function(id) {
-                return $http.get('/api/devis/temporarySaving?id=' + id);
-            },
-            get: function(id, options) {
-                return $http({
-                    method: 'GET',
-                    cache: false,
-                    url: '/api/devis/' + id,
-                    params: options || {}
-                }).success(function(result) {
-                    return result;
-                });
-            },
-            save: function(params) {
-                if (!params.id) {
-                    return $http.post("/api/devis", params)
-                } else {
-                    return $http.post("/api/devis/" + params.id, params)
+    },
+    devis: {
+      saveTmp: function(data) {
+        return $http.post('/api/devis/temporarySaving', data);
+      },
+      getTmp: function(id) {
+        return $http.get('/api/devis/temporarySaving?id=' + id);
+      },
+      get: function(id, options) {
+        return $http({
+          method: 'GET',
+          cache: false,
+          url: '/api/devis/' + id,
+          params: options || {}
+        }).success(function(result) {
+          return result;
+        });
+      },
+      save: function(params) {
+        if (!params.id) {
+          return $http.post("/api/devis", params)
+        } else {
+          return $http.post("/api/devis/" + params.id, params)
 
-                }
-            },
-            envoi: function(id, options) {
-                return $http.post("/api/devis/" + id + "/envoi", options);
-            },
-            annulation: function(id, causeAnnulation) {
-                return $http.post("/api/devis/" + id + "/annulation");
-            },
-            list: function() {
-                return $http.get('api/devis/getCacheList')
-            },
-        },
-        intervention: {
-            dashboardStats: function(options) {
-                return $http.get('/api/intervention/dashboardStats', {
-                    params: options
-                });
-            },
-            getTelMatch: function(text) {
-                return $http.post('/api/intervention/telMatches', text);
-            },
-            saveTmp: function(data) {
-                return $http.post('/api/intervention/temporarySaving', data);
-            },
-            getTmp: function(id) {
-                return $http.get('/api/intervention/temporarySaving?id=' + id);
-            },
-            demarcher: function(id) {
-                return $http({
-                    method: 'POST',
-                    url: '/api/intervention/' + id + '/demarcher'
-                })
-            },
-            reactivation: function(id) {
-                return $http.post('api/intervention/' + id + '/reactivation')
-            },
-            list: function() {
-                return $http.get('api/intervention/getCacheList')
-            },
-            get: function(id, options) {
-                return $http({
-                    method: 'GET',
-                    cache: false,
-                    url: '/api/intervention/' + id,
-                    params: options || {}
-                }).success(function(result) {
-                    return result;
-                });
-            },
-            getCB: function(id) {
-                return $http.get("/api/intervention/" + id + "/CB");
-            },
-            save: function(params) {
-                if (!params.id) {
-                    return $http.post("/api/intervention", params)
-                } else {
-                    return $http.post("/api/intervention/" + params.id, params)
-
-                }
-            },
-            getFiles: function(id) {
-                return $http({
-                    method: 'GET',
-                    url: "/api/intervention/" + id + "/getFiles"
-                });
-            },
-            verification: function(id, options) {
-                return $http.post("/api/intervention/" + id + "/verification", options);
-            },
-            annulation: function(id, options) {
-                return $http.post("/api/intervention/" + id + "/annulation", options);
-            },
-            envoi: function(id, options) {
-                return $http.post("/api/intervention/" + id + "/envoi", options);
-            },
-            sendFacture: function(id, options) {
-                return $http.post("/api/intervention/" + id + "/sendFacture", options);
-            },
-            sendFactureAcquitte: function(id, options) {
-                return $http.post("/api/intervention/" + id + "/sendFactureAcquitte", options);
-            },
-            statsBen: function(options) {
-                return $http({
-                    method: 'GET',
-                    url: "/api/intervention/statsBen",
-                    params: options
-                });
-            },
-            statsBenYear: function(options) {
-                return $http({
-                    method: 'GET',
-                    url: "/api/intervention/statsBenYearly",
-                    params: options
-                });
-            },
-            commissions: function(options) {
-                return $http({
-                    method: 'GET',
-                    url: "/api/intervention/commissions",
-                    params: options
-                });
-            },
-            scan: function(id) {
-                return $http.post("/api/intervention/" + id + "/scan");
-            }
-        },
-        artisan: {
-            manage: function(id) {
-                return $http.post('/api/artisan/' + id + '/manage')
-            },
-            comment: function(id, text) {
-                return $http.post('/api/artisan/' + id + '/comment', {
-                    text: text
-                })
-            },
-            absence: function(id, absence) {
-                return $http.post('/api/artisan/' + id + '/absence', absence)
-            },
-            needFacturier: function(id) {
-                return $http.post('/api/artisan/' + id + '/needFacturier')
-            },
-            sendFacturier: function(id, facturier, deviseur) {
-                return $http.post('/api/artisan/' + id + '/sendFacturier', {
-                    facturier: facturier,
-                    deviseur: deviseur,
-                });
-            },
-            saveTmp: function(data) {
-                return $http.post('/api/artisan/temporarySaving', data);
-            },
-            fullHistory: function(id) {
-                return $http.get('/api/artisan/' + id + '/fullHistory');
-            },
-            getTmp: function(id) {
-                return $http.get('/api/artisan/temporarySaving?id=' + id);
-            },
-            getCompteTiers: function(id_sst) {
-                return $http.get(['/api/artisan', id_sst, 'compteTiers'].join('/'));
-            },
-            envoiContrat: function(id, options) {
-                return $http.post("/api/artisan/" + id + '/sendContrat', options)
-            },
-            upload: function(file, name, id) {
-                return Upload.upload({
-                    url: '/api/artisan/' + id + "/upload",
-                    fields: {
-                        name: name,
-                        id: id
-                    },
-                    file: file
-                })
-            },
-            getFiles: function(id) {
-                return $http({
-                    method: 'GET',
-                    url: "/api/artisan/" + id + "/getFiles"
-                });
-            },
-            extendedStats: function(id) {
-                return $http.get('/api/artisan/' + id + "/extendedStats")
-            },
-            statsMonths: function(id) {
-                return $http.get('/api/artisan/' + id + "/statsMonths")
-            },
-            save: function(params) {
-                if (!params.id) {
-                    return $http.post("/api/artisan", params)
-                } else {
-                    return $http.post("/api/artisan/" + params.id, params)
-
-                }
-            },
-            list: function(options) {
-                return $http.get('api/artisan/getCacheList')
-            },
-            lastInters: function(id) {
-                return $http({
-                    method: 'GET',
-                    url: '/api/artisan/' + id + '/lastInters',
-                })
-            },
-            get: function(id, options) {
-                return $http({
-                    method: 'GET',
-                    cache: false,
-                    url: '/api/artisan/' + id,
-                    params: options || {}
-                }).success(function(result) {
-                    return result;
-                });
-            },
-            getNearest: function(address, categorie) {
-                return $http({
-                    method: 'GET',
-                    url: "/api/artisan/rank",
-                    cache: false,
-                    params: {
-                        categorie: categorie,
-                        lat: address.lt,
-                        lng: address.lg,
-                        limit: 150,
-                        maxDistance: 100
-                    }
-                });
-            },
-            getStats: function(id_sst) {
-                return $http({
-                    method: 'GET',
-                    url: "/api/artisan/" + id_sst + "/stats"
-                });
-            },
-        },
-        tasklist: {
-            get: function(date, login) {
-                return $http.get('/api/tasklist/' + date + '/' + login);
-            },
-            check: function(listid, taskid) {
-                return $http.post('/api/tasklist/' + listid + '/check/' + taskid);
-            },
-            update: function(task) {
-                return $http.post('/api/tasklist/', {
-                    task: task
-                });
-            }
-        },
-        task: {
-            add: function(params) {
-                return $http.post('/api/task/add', params)
-            },
-            check: function(id) {
-                return $http.post('/api/task/' + id + '/check')
-            },
-            listRelevant: function(options) {
-                return $http.get('/api/task/relevant', {
-                    params: options
-                });
-            }
-        },
-        signalement: {
-            check: function(id, text) {
-                return $http.post('/api/signalement/' + id + '/check', {
-                    text: text
-                })
-            },
-            add: function(params) {
-                return $http.post('/api/signalement/add', params)
-            },
-            list: function(params) {
-                return $http.get('/api/signalement/list', {
-                    params: params
-                })
-            },
-            stats: function() {
-                return $http.get('/api/signalement/stats')
-            }
-        },
-        file: {
-            uploadScans: function(file, options) {
-                return Upload.upload({
-                    url: '/api/document/uploadScans',
-                    fields: options,
-                    file: file
-                })
-            },
-            upload: function(file, options) {
-                return Upload.upload({
-                    url: '/api/document/upload',
-                    fields: options,
-                    file: file
-                })
-            },
-            scan: function(options) {
-                return $http.post('/api/document/scan', options);
-            }
-        },
-        call: {
-            get: function(origin, link) {
-                return $http({
-                    method: 'GET',
-                    url: '/api/calls/get',
-                    params: {
-                        q: JSON.stringify({
-                            link: link
-                        })
-                    }
-                })
-            },
-            save: function(params) {
-                return $http.post('/api/calls', params);
-            },
-        },
-        sms: {
-            get: function(origin, link) {
-                return $http({
-                    method: 'GET',
-                    url: '/api/sms/get',
-                    params: {
-                        q: JSON.stringify({
-                            link: link,
-                            origin: origin
-                        })
-                    }
-                })
-            },
-            send: function(params) {
-                return $http.post("/api/sms/send", params)
-            },
-
-        },
-        getDistance: function(origin, destination) {
-            return $http({
-                method: 'GET',
-                cache: true,
-                url: '/api/mapGetDistance',
-                params: {
-                    origin: origin,
-                    destination: destination
-                }
-            })
-        },
-        request: function(options) {
-            return $http({
-                method: options.method || 'GET',
-                url: '/api/' + options.fn,
-                params: options.data
-            });
-        },
-        searchPhone: function(tel) {
-            return $http({
-                method: 'GET',
-                url: "api/arcep/" + tel + "/search"
-            });
-        },
-        getUser: function() {
-            return $http({
-                method: 'GET',
-                cache: true,
-                url: "/api/whoAmI"
-            });
-        },
-        searchText: function(text, options) {
-            return $http({
-                method: 'GET',
-                params: options,
-                url: ['api', 'search', text].join('/')
-            })
-        },
-        bigSearch: function(text, options) {
-            return $http({
-                method: 'GET',
-                params: options,
-                url: ['api', 'bigSearch', text].join('/')
-            })
         }
+      },
+      envoi: function(id, options) {
+        return $http.post("/api/devis/" + id + "/envoi", options);
+      },
+      annulation: function(id, causeAnnulation) {
+        return $http.post("/api/devis/" + id + "/annulation");
+      },
+      list: function() {
+        return $http.get('api/devis/getCacheList')
+      },
+    },
+    intervention: {
+      dashboardStats: function(options) {
+        return $http.get('/api/intervention/dashboardStats', {
+          params: options
+        });
+      },
+      getTelMatch: function(text) {
+        return $http.post('/api/intervention/telMatches', text);
+      },
+      saveTmp: function(data) {
+        return $http.post('/api/intervention/temporarySaving', data);
+      },
+      getTmp: function(id) {
+        return $http.get('/api/intervention/temporarySaving?id=' + id);
+      },
+      demarcher: function(id) {
+        return $http({
+          method: 'POST',
+          url: '/api/intervention/' + id + '/demarcher'
+        })
+      },
+      reactivation: function(id) {
+        return $http.post('api/intervention/' + id + '/reactivation')
+      },
+      list: function() {
+        return $http.get('api/intervention/getCacheList')
+      },
+      get: function(id, options) {
+        return $http({
+          method: 'GET',
+          cache: false,
+          url: '/api/intervention/' + id,
+          params: options || {}
+        }).success(function(result) {
+          return result;
+        });
+      },
+      getCB: function(id) {
+        return $http.get("/api/intervention/" + id + "/CB");
+      },
+      save: function(params) {
+        if (!params.id) {
+          return $http.post("/api/intervention", params)
+        } else {
+          return $http.post("/api/intervention/" + params.id, params)
+
+        }
+      },
+      getFiles: function(id) {
+        return $http({
+          method: 'GET',
+          url: "/api/intervention/" + id + "/getFiles"
+        });
+      },
+      verification: function(id, options) {
+        return $http.post("/api/intervention/" + id + "/verification", options);
+      },
+      annulation: function(id, options) {
+        return $http.post("/api/intervention/" + id + "/annulation", options);
+      },
+      envoi: function(id, options) {
+        return $http.post("/api/intervention/" + id + "/envoi", options);
+      },
+      sendFacture: function(id, options) {
+        return $http.post("/api/intervention/" + id + "/sendFacture", options);
+      },
+      sendFactureAcquitte: function(id, options) {
+        return $http.post("/api/intervention/" + id + "/sendFactureAcquitte", options);
+      },
+      statsBen: function(options) {
+        return $http({
+          method: 'GET',
+          url: "/api/intervention/statsBen",
+          params: options
+        });
+      },
+      statsBenYear: function(options) {
+        return $http({
+          method: 'GET',
+          url: "/api/intervention/statsBenYearly",
+          params: options
+        });
+      },
+      commissions: function(options) {
+        return $http({
+          method: 'GET',
+          url: "/api/intervention/commissions",
+          params: options
+        });
+      },
+      scan: function(id) {
+        return $http.post("/api/intervention/" + id + "/scan");
+      }
+    },
+    artisan: {
+      tableauCom: function() {
+        return $http.get('/api/artisan/tableauCom');
+      },
+      manage: function(id) {
+        return $http.post('/api/artisan/' + id + '/manage')
+      },
+      comment: function(id, text) {
+        return $http.post('/api/artisan/' + id + '/comment', {
+          text: text
+        })
+      },
+      absence: function(id, absence) {
+        return $http.post('/api/artisan/' + id + '/absence', absence)
+      },
+      needFacturier: function(id) {
+        return $http.post('/api/artisan/' + id + '/needFacturier')
+      },
+      sendFacturier: function(id, facturier, deviseur) {
+        return $http.post('/api/artisan/' + id + '/sendFacturier', {
+          facturier: facturier,
+          deviseur: deviseur,
+        });
+      },
+      saveTmp: function(data) {
+        return $http.post('/api/artisan/temporarySaving', data);
+      },
+      fullHistory: function(id) {
+        return $http.get('/api/artisan/' + id + '/fullHistory');
+      },
+      getTmp: function(id) {
+        return $http.get('/api/artisan/temporarySaving?id=' + id);
+      },
+      getCompteTiers: function(id_sst) {
+        return $http.get(['/api/artisan', id_sst, 'compteTiers'].join('/'));
+      },
+      envoiContrat: function(id, options) {
+        return $http.post("/api/artisan/" + id + '/sendContrat', options)
+      },
+      upload: function(file, name, id) {
+        return Upload.upload({
+          url: '/api/artisan/' + id + "/upload",
+          fields: {
+            name: name,
+            id: id
+          },
+          file: file
+        })
+      },
+      getFiles: function(id) {
+        return $http({
+          method: 'GET',
+          url: "/api/artisan/" + id + "/getFiles"
+        });
+      },
+      extendedStats: function(id) {
+        return $http.get('/api/artisan/' + id + "/extendedStats")
+      },
+      statsMonths: function(id) {
+        return $http.get('/api/artisan/' + id + "/statsMonths")
+      },
+      save: function(params) {
+        if (!params.id) {
+          return $http.post("/api/artisan", params)
+        } else {
+          return $http.post("/api/artisan/" + params.id, params)
+
+        }
+      },
+      list: function(options) {
+        return $http.get('api/artisan/getCacheList')
+      },
+      lastInters: function(id) {
+        return $http({
+          method: 'GET',
+          url: '/api/artisan/' + id + '/lastInters',
+        })
+      },
+      get: function(id, options) {
+        return $http({
+          method: 'GET',
+          cache: false,
+          url: '/api/artisan/' + id,
+          params: options || {}
+        }).success(function(result) {
+          return result;
+        });
+      },
+      getNearest: function(address, categorie) {
+        return $http({
+          method: 'GET',
+          url: "/api/artisan/rank",
+          cache: false,
+          params: {
+            categorie: categorie,
+            lat: address.lt,
+            lng: address.lg,
+            limit: 150,
+            maxDistance: 100
+          }
+        });
+      },
+      getStats: function(id_sst) {
+        return $http({
+          method: 'GET',
+          url: "/api/artisan/" + id_sst + "/stats"
+        });
+      },
+    },
+    tasklist: {
+      get: function(date, login) {
+        return $http.get('/api/tasklist/' + date + '/' + login);
+      },
+      check: function(listid, taskid) {
+        return $http.post('/api/tasklist/' + listid + '/check/' + taskid);
+      },
+      update: function(task) {
+        return $http.post('/api/tasklist/', {
+          task: task
+        });
+      }
+    },
+    task: {
+      add: function(params) {
+        return $http.post('/api/task/add', params)
+      },
+      check: function(id) {
+        return $http.post('/api/task/' + id + '/check')
+      },
+      listRelevant: function(options) {
+        return $http.get('/api/task/relevant', {
+          params: options
+        });
+      }
+    },
+    signalement: {
+      check: function(id, text) {
+        return $http.post('/api/signalement/' + id + '/check', {
+          text: text
+        })
+      },
+      add: function(params) {
+        return $http.post('/api/signalement/add', params)
+      },
+      list: function(params) {
+        return $http.get('/api/signalement/list', {
+          params: params
+        })
+      },
+      stats: function() {
+        return $http.get('/api/signalement/stats')
+      }
+    },
+    file: {
+      uploadScans: function(file, options) {
+        return Upload.upload({
+          url: '/api/document/uploadScans',
+          fields: options,
+          file: file
+        })
+      },
+      upload: function(file, options) {
+        return Upload.upload({
+          url: '/api/document/upload',
+          fields: options,
+          file: file
+        })
+      },
+      scan: function(options) {
+        return $http.post('/api/document/scan', options);
+      }
+    },
+    call: {
+      get: function(origin, link) {
+        return $http({
+          method: 'GET',
+          url: '/api/calls/get',
+          params: {
+            q: JSON.stringify({
+              link: link
+            })
+          }
+        })
+      },
+      save: function(params) {
+        return $http.post('/api/calls', params);
+      },
+    },
+    sms: {
+      get: function(origin, link) {
+        return $http({
+          method: 'GET',
+          url: '/api/sms/get',
+          params: {
+            q: JSON.stringify({
+              link: link,
+              origin: origin
+            })
+          }
+        })
+      },
+      send: function(params) {
+        return $http.post("/api/sms/send", params)
+      },
+
+    },
+    getDistance: function(origin, destination) {
+      return $http({
+        method: 'GET',
+        cache: true,
+        url: '/api/mapGetDistance',
+        params: {
+          origin: origin,
+          destination: destination
+        }
+      })
+    },
+    request: function(options) {
+      return $http({
+        method: options.method || 'GET',
+        url: '/api/' + options.fn,
+        params: options.data
+      });
+    },
+    searchPhone: function(tel) {
+      return $http({
+        method: 'GET',
+        url: "api/arcep/" + tel + "/search"
+      });
+    },
+    getUser: function() {
+      return $http({
+        method: 'GET',
+        cache: true,
+        url: "/api/whoAmI"
+      });
+    },
+    searchText: function(text, options) {
+      return $http({
+        method: 'GET',
+        params: options,
+        url: ['api', 'search', text].join('/')
+      })
+    },
+    bigSearch: function(text, options) {
+      return $http({
+        method: 'GET',
+        params: options,
+        url: ['api', 'bigSearch', text].join('/')
+      })
     }
+  }
 }]);
 
 angular.module('edison')
@@ -4343,46 +4351,6 @@ angular.module('edison').directive('mainNavbar', ["$q", "edisonAPI", "TabContain
 
 }]);
 
-var archiveReglementController = function(edisonAPI, TabContainer, $routeParams, $location, LxProgressService) {
-
-    var tab = TabContainer.getCurrentTab();
-    var _this = this;
-    _this.title = 'Archives Reglements'
-    tab.setTitle('archives RGL')
-    LxProgressService.circular.show('#5fa2db', '#globalProgress');
-    edisonAPI.compta.archivesReglement().success(function(resp) {
-        LxProgressService.circular.hide()
-        _this.data = resp
-    })
-    _this.moment = moment;
-    _this.openLink = function(link) {
-        $location.url(link)
-    }
-}
-archiveReglementController.$inject = ["edisonAPI", "TabContainer", "$routeParams", "$location", "LxProgressService"];
-
-angular.module('edison').controller('archivesReglementController', archiveReglementController);
-
-var archivesPaiementController = function(edisonAPI, TabContainer, $routeParams, $location, LxProgressService) {
-    var _this = this;
-    var tab = TabContainer.getCurrentTab();
-    _this.type = 'paiement'
-    _this.title = 'Archives Paiements'
-    tab.setTitle('archives PAY')
-    LxProgressService.circular.show('#5fa2db', '#globalProgress');
-    edisonAPI.compta.archivesPaiement().success(function(resp) {
-        LxProgressService.circular.hide()
-        _this.data = resp
-    })
-    _this.moment = moment;
-    _this.openLink = function(link) {
-        $location.url(link)
-    }
-}
-archivesPaiementController.$inject = ["edisonAPI", "TabContainer", "$routeParams", "$location", "LxProgressService"];
-
-angular.module('edison').controller('archivesPaiementController', archivesPaiementController);
-
  angular.module('edison').directive('artisanCategorie', ["config", function(config) {
      "use strict";
      return {
@@ -4527,6 +4495,46 @@ var ArtisanCtrl = function(IBAN, $timeout, $rootScope, $scope, edisonAPI, $locat
 }
 ArtisanCtrl.$inject = ["IBAN", "$timeout", "$rootScope", "$scope", "edisonAPI", "$location", "$routeParams", "ContextMenu", "LxProgressService", "LxNotificationService", "TabContainer", "config", "dialog", "artisanPrm", "Artisan"];
 angular.module('edison').controller('ArtisanController', ArtisanCtrl);
+
+var archiveReglementController = function(edisonAPI, TabContainer, $routeParams, $location, LxProgressService) {
+
+    var tab = TabContainer.getCurrentTab();
+    var _this = this;
+    _this.title = 'Archives Reglements'
+    tab.setTitle('archives RGL')
+    LxProgressService.circular.show('#5fa2db', '#globalProgress');
+    edisonAPI.compta.archivesReglement().success(function(resp) {
+        LxProgressService.circular.hide()
+        _this.data = resp
+    })
+    _this.moment = moment;
+    _this.openLink = function(link) {
+        $location.url(link)
+    }
+}
+archiveReglementController.$inject = ["edisonAPI", "TabContainer", "$routeParams", "$location", "LxProgressService"];
+
+angular.module('edison').controller('archivesReglementController', archiveReglementController);
+
+var archivesPaiementController = function(edisonAPI, TabContainer, $routeParams, $location, LxProgressService) {
+    var _this = this;
+    var tab = TabContainer.getCurrentTab();
+    _this.type = 'paiement'
+    _this.title = 'Archives Paiements'
+    tab.setTitle('archives PAY')
+    LxProgressService.circular.show('#5fa2db', '#globalProgress');
+    edisonAPI.compta.archivesPaiement().success(function(resp) {
+        LxProgressService.circular.hide()
+        _this.data = resp
+    })
+    _this.moment = moment;
+    _this.openLink = function(link) {
+        $location.url(link)
+    }
+}
+archivesPaiementController.$inject = ["edisonAPI", "TabContainer", "$routeParams", "$location", "LxProgressService"];
+
+angular.module('edison').controller('archivesPaiementController', archivesPaiementController);
 
 var AvoirsController = function(TabContainer, openPost, edisonAPI, $rootScope, LxProgressService, LxNotificationService, FlushList) {
     "use strict";
@@ -6033,6 +6041,21 @@ var StatsController = function(DateSelect, TabContainer, $routeParams, edisonAPI
 }
 StatsController.$inject = ["DateSelect", "TabContainer", "$routeParams", "edisonAPI", "$rootScope", "$scope", "$location", "LxProgressService", "socket"];
 angular.module('edison').controller('StatsController', StatsController);
+
+var commissionsPartenariat = function(MomentIterator, TabContainer, $routeParams, edisonAPI, $rootScope, $scope, $location, LxProgressService, socket) {
+  "use strict";
+  var _this = this;
+  _this.tab = TabContainer.getCurrentTab();
+  _this.tab.setTitle('Coms.');
+  LxProgressService.circular.show('#5fa2db', '#globalProgress');
+  edisonAPI.artisan.tableauCom().then(function(resp) {
+    LxProgressService.circular.hide()
+    console.log(resp.data)
+    _this.data = resp.data
+  })
+}
+commissionsPartenariat.$inject = ["MomentIterator", "TabContainer", "$routeParams", "edisonAPI", "$rootScope", "$scope", "$location", "LxProgressService", "socket"];
+angular.module('edison').controller('commissionsPartenariat', commissionsPartenariat);
 
 var CommissionsController = function(MomentIterator, TabContainer, $routeParams, edisonAPI, $rootScope, $scope, $location, LxProgressService, socket) {
     "use strict";

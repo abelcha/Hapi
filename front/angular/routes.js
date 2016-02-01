@@ -221,6 +221,11 @@ angular.module('edison').config(function($routeProvider, $locationProvider) {
             controller: "editUsers",
             controllerAs: "vm",
         })
+        .when('/partenariat/comissions', {
+          templateUrl: "Pages/Tools/commissions-partenariat.html",
+          controller: "commissionsPartenariat",
+          controllerAs: 'vm',
+        })
         .when('/tools/commissions', {
             templateUrl: "Pages/Tools/commissions.html",
             controller: "CommissionsController",

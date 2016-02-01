@@ -1,0 +1,29 @@
+<div class="row card" style="overflow: scroll;" style="min-height:599px">
+  <table class="table">
+    <tbody>
+      <tr>
+        <td ng-repeat="g in  vm.data" ng-if="g.length">
+          <table class="table table-bordered" style="width: 49px;">
+            <tr>
+              <td colspan="3">
+                <strong>{{g[0].date|date:"MMMM yyyy"}}</strong>
+              </td>
+            </tr>
+            <tr ng-repeat="x in g">
+              <td style="width:0px">
+                <a href="/artisan/{{x.sst}}/recap">{{x.nomSociete}} - {{x.sst}}</a>
+              </td>
+              <td>
+                {{x.nbr}}
+              </td>
+              <td>
+                <span ng-repeat="i in x.ids"><a href="/intervention/{{i}}">{{i}} - </a></span>
+              </td>
+            </tr>
+
+          </table>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
