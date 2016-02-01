@@ -62,7 +62,7 @@ module.exports = function(schema) {
               cb(null, {
                 ids: _.pluck(e, 'id'),
                 nbr: e.length,
-                com: Math.round(e.length / 10),
+                com: Math.floor(e.length / 10),
                 ceil: 10 - (e.length % 10),
                 date: date,
                 sst: resp.id,
