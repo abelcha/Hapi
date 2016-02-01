@@ -30,7 +30,7 @@ require('./error-route.js')(app)
 process.on('uncaughtException', __catch);
 console.log("WORKER_ID", cluster.worker.id)
 
-if (cluster.worker.id == 1 && process.env.PLATFORM === 'DIGITAL_OCEAN') {
+if (cluster.worker.id == 1/* && process.env.PLATFORM === 'DIGITAL_OCEAN'*/) {
 	console.log('TIMER')
     new edison.timer();
 }

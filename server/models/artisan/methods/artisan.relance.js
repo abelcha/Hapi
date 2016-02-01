@@ -9,8 +9,8 @@ module.exports = function(schema) {
 
 
     schema.statics.relanceFinDeMois = function(req, res) {
-        var to = moment().startOf('month').toDate();
-        var from = moment().add(-1, 'months').startOf('month').toDate();
+        var to = moment().add(-1, 'months').startOf('month').toDate();
+        var from = moment().add(-2, 'months').startOf('month').toDate();
 
         console.log(JSON.stringify({
             status: 'VRF',
@@ -18,7 +18,7 @@ module.exports = function(schema) {
             'compta.reglement.recu': false,
             'date.intervention': db.utils.between(from, to)
         }))
-
+        console.log('je')
         db.model('intervention').find({
             status: 'VRF',
             'reglementSurPlace': true,
@@ -27,9 +27,9 @@ module.exports = function(schema) {
         }).populate('sst').exec(function(err, resp) {
             var rtn = _.groupBy(resp, 'sst.id')
             async.eachLimit(_.values(rtn), 5, function(e, cb) {
-                if (e.length > 3) {
-                    return cb(null); 
-                }
+                // if (e.length > 3) {
+                //     return cb(null);
+                // }
                 var template = _.template(textTemplate.mail.intervention.relanceArtisanFinDeMois())({
                     options: {},
                     inters: e,

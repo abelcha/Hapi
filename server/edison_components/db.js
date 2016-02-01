@@ -4,8 +4,8 @@ module.exports = function() {
     var path = require('path');
     var _ = require('lodash');
 
-    mongoose.connect(process.env.MONGOLAB_URI || 'mongodb://localhost/EDISON');
-
+    mongoose.connect('mongodb://localhost/' + process.env.DB_NAME);
+    console.log('DB->',  process.env.DB_NAME)
     function getDirectories(srcpath) {
         return fs.readdirSync(srcpath).filter(function(file) {
             return fs.statSync(path.join(srcpath, file)).isDirectory();
