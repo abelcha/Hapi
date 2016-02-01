@@ -41,10 +41,10 @@ module.exports = function(schema) {
     var i = 0;
     var rtn = []
     db.model('intervention').find({
-        'compta.paiement.effectue': true,
-        'compta.paiement.date': db.utils.between(_from, _to)
+        'compta.reglement.recu': true,
+        'compta.reglement.date': db.utils.between(_from, _to)
       })
-      .select('id sst')
+      .select('id sst compta.regk')
       .stream()
       .on('data', function(data)  {
         rtn.push(data);
@@ -59,12 +59,15 @@ module.exports = function(schema) {
           db.model('artisan').findById(e[0].sst)
             .then(function(resp) {
               //  console.log('-->', resp && resp.id)
+              var payed = _.filter(e, function(e) {
+                return e.compta.paiement.effectue === true;
+              })
               cb(null, {
-								login: resp.login.ajout,
+                login: resp.login.ajout,
                 ajout: resp.date.ajout,
-                ids: _.pluck(e, 'id'),
+                ids: _.pluck(payed, 'id'),
                 nbr: e.length,
-                com: Math.floor(e.length / 10),
+                com: Math.floor(payed.length / 10),
                 ceil: 10 - (e.length % 10),
                 date: date,
                 sst: resp.id,

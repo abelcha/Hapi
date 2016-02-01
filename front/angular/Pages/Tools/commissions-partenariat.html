@@ -5,7 +5,10 @@
         <td ng-repeat="g in  vm.data" ng-if="g.length">
           <table class="table table-bordered" style="width: 49px;">
             <tr>
-              <td colspan="5">
+              <td colspan="3">
+                <input ng-model="vm.query[g[0].date]" type="text" placeholder="Rechercher..." class="form-control">
+              </td>
+              <td colspan="3">
                 <strong text-xxl><center>{{g[0].date|date:"MMMM yyyy"}}</center></strong>
               </td>
             </tr>
@@ -17,7 +20,7 @@
               <td bold>Palier</td>
               <td bold>Interventions</td>
             </tr>
-            <tr ng-repeat="x in g">
+            <tr ng-repeat="x in g|filter:vm.query[g[0].date]">
               <td>{{x.login}}</td>
               <td style="width:0px">
                 <a href="/artisan/{{x.sst}}/recap">{{x.nomSociete.slice(0, 15)}}</a>
