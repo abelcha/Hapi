@@ -60,6 +60,7 @@ module.exports = function(schema) {
             .then(function(resp) {
               //  console.log('-->', resp && resp.id)
               cb(null, {
+								login: resp.login.ajout,
                 ajout: resp.date.ajout,
                 ids: _.pluck(e, 'id'),
                 nbr: e.length,

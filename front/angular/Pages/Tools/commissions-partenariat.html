@@ -10,6 +10,7 @@
               </td>
             </tr>
             <tr>
+              <td bold>Ajouté par</td>
               <td bold>Nom Societe</td>
               <td bold>Nbr</td>
               <td bold>Com.</td>
@@ -17,6 +18,7 @@
               <td bold>Interventions</td>
             </tr>
             <tr ng-repeat="x in g">
+              <td>{{x.login}}</td>
               <td style="width:0px">
                 <a href="/artisan/{{x.sst}}/recap">{{x.nomSociete.slice(0, 15)}}</a>
               </td>
