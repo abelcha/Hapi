@@ -34,36 +34,70 @@ module.exports = function(schema) {
     })
   }
 
-  var getTableauComs = function(date, cb) {
+  var dateThreeshold = moment().add(-1, "months").startOf('month').toDate()
 
+
+
+
+
+  var getTableauComs = function(date, cb) {
+    var includeRemainder = moment().isSame(date, 'month') //only include remainde if its the current month
     var _from = moment(date).startOf('month').toDate();
     var _to = moment(date).endOf('month').toDate();
     var i = 0;
     var rtn = []
-    db.model('intervention').find({
+
+
+    if (!includeRemainder) {
+      var query = {
         'compta.paiement.effectue': true,
-        'compta.paiement.date': db.utils.between(_from, _to)
-      })
-      .select('id sst')
+        $or: [{
+          'compta.paiement.date': db.utils.between(_from, _to)
+        }, {
+          'date.commissionPartenariat': db.utils.between(_from, _to)
+        }]
+      }
+    } else {
+      var query = {
+        'compta.paiement.effectue': true,
+        $or: [{
+          'compta.paiement.date': db.utils.between(_from, _to)
+        }, {
+          'date.commissionPartenariat': {
+            $exists: false
+          },
+          'compta.paiement.date': {
+            $gt: dateThreeshold
+          }
+        }]
+      }
+    }
+    console.log(JSON.stringify(query, null, 2))
+    db.model('intervention').find(query)
+      .select('id sst compta')
       .stream()
       .on('data', function(data)  {
         rtn.push(data);
-        //  console.log('-->', data.id, i++)
+        //console.log('-->', data.id, i++)
       })
       .on('error', function(err) {
         //  console.log("=>", err)
       })
       .on('end', function(end) {
+        console.log('==>', rtn.length)
         var gp = _.groupBy(rtn, 'sst')
         async.mapLimit(gp, 1, function(e, cb) {
+          var retainer = _.filter(e, function(x) {
+            return !moment(x.compta.paiement.date).isBetween(_from, _to)
+          }).length
           db.model('artisan').findById(e[0].sst)
             .then(function(resp) {
-              //  console.log('-->', resp && resp.id)
               cb(null, {
-								login: resp.login.ajout,
+                login: resp.login.ajout,
                 ajout: resp.date.ajout,
                 ids: _.pluck(e, 'id'),
                 nbr: e.length,
+                retainer: retainer,
                 com: Math.floor(e.length / 10),
                 ceil: 10 - (e.length % 10),
                 date: date,
@@ -72,18 +106,68 @@ module.exports = function(schema) {
               })
             })
         }, function(err, resp) {
-          resp = _(resp).toArray().filter(function(e) {
-            return new Date(e.ajout) > new Date(2016, 0, 1);
-          }).sortBy('nbr').reverse().value()
+          resp = _(resp).toArray()
+            .filter(function(e) {
+              return ;
+              return new Date(e.ajout) > dateThreeshold;
+            })
+            .sortBy('nbr').reverse().value()
           cb(null, resp)
         })
       })
 
   }
 
+  schema.statics.setCommission = function(req, res) {
+    var _from = moment().add(-1, 'months').startOf('month').toDate();
+    var _to = moment().add(-1, 'months').endOf('month').toDate();
+    console.log(_from, _to)
+    db.model('intervention').find({
+      'compta.paiement.effectue': true,
+      'compta.paiement.date': {
+        $lt: _to,
+        $gt: _from
+      }
+    }).then(function(resp) {
+        console.log('-->', resp.length)
+        var toUpdate = _(resp).groupBy('sst')
+          .filter(function(e, k) {
+            return e.length >= 10
+          })
+          .map(function(e) {
+            var nbrToUpd = _.floor(e.length / 10) * 10
+            return _(e).slice(0, nbrToUpd).pluck('id').value()
+          })
+          .flatten()
+          .value()
+        console.log('==>', toUpdate)
+        var query = {
+          id: {
+            $in: toUpdate
+          }
+        }
+        var set = {
+          $set: {
+            'date.commissionPartenariat': moment().add('-4', 'days').toDate()
+          }
+        }
+        var multi = {
+          multi: true
+        }
+        db.model('intervention').update(query, set, multi).then(function(resp) {
+          console.log('=>', resp)
+        })
+      },
+      function(err) {
+        console.log('ERR', err)
+      })
+  }
+
   schema.statics.tableauCom = function(req, res) {
-    var range = momentIterator(moment().startOf('year').toDate(), new Date()).range('months')
-    var rtn = async.mapLimit(range, 1, getTableauComs, function(err, resp) {
+    var range = momentIterator(dateThreeshold, new Date()).range('months')
+      //  console.log(range)
+    async.mapLimit(range, 1, getTableauComs, function(err, resp) {
+        //console.log(resp);
         res.json(resp);
       })
       // getTableauComs(moment().add(-1, 'months').toDate(), function(err, resp) {

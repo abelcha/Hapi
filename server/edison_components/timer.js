@@ -27,12 +27,12 @@ var Timer = module.exports = function() {
   this.emitter.add("*/10 * * * *", "10 minutes")
   this.emitter.add("*/4 * * * *", "4 minutes")
   this.emitter.add("*/10 * * * *", "10 minutes")
-  this.emitter.add("*/10 * * * *", "end of month")
-  this.emitter.add("0 0 3 * *", "start of month")
+  this.emitter.add("0 0 1 * *", "start of month")
 
   if (envProd) {
 
     this.emitter.on("start of month", function() {
+      db.model('artisan').setCommission()
       db.model('artisan').relanceFinDeMois({}).then(function() {
         console.log('oK')
       })
@@ -147,21 +147,18 @@ var Timer = module.exports = function() {
       console.log(error, stdout, stderr);
     });
   })
+  console.log('ookok')
 
 
-  var test = function() {
-    console.log('ookok')
+  var test = function(exp) {
     var parser = require('cron-parser');
-    try {
-      var interval = parser.parseExpression("0 0 2 * *");
-      console.log('Date: ', interval.next().toString()); // Sat Dec 29 2012 00:44:00 GMT+0200 (EET)
-      console.log('Date: ', interval.next().toString()); // Sat Dec 29 2012 00:44:00 GMT+0200 (EET)
-      console.log('Date: ', interval.next().toString()); // Sat Dec 29 2012 00:44:00 GMT+0200 (EET)
-      console.log('Date: ', interval.next().toString()); // Sat Dec 29 2012 00:44:00 GMT+0200 (EET)
-      console.log('Date: ', interval.next().toString()); // Sat Dec 29 2012 00:44:00 GMT+0200 (EET)
-      console.log('Date: ', interval.next().toString()); // Sat Dec 29 2012 00:44:00 GMT+0200 (EET)
-    } catch (err) {
-      console.log('Error: ' + err.message);
-    }
+    var interval = parser.parseExpression(exp);
+    console.log('Date: ', interval.next().toString()); // Sat Dec 29 2012 00:44:00 GMT+0200 (EET)
+    console.log('Date: ', interval.next().toString()); // Sat Dec 29 2012 00:44:00 GMT+0200 (EET)
+    console.log('Date: ', interval.next().toString()); // Sat Dec 29 2012 00:44:00 GMT+0200 (EET)
+    console.log('Date: ', interval.next().toString()); // Sat Dec 29 2012 00:44:00 GMT+0200 (EET)
+    console.log('Date: ', interval.next().toString()); // Sat Dec 29 2012 00:44:00 GMT+0200 (EET)
+    console.log('Date: ', interval.next().toString()); // Sat Dec 29 2012 00:44:00 GMT+0200 (EET)
   }
+//  test("0 0 0 * *")
 }
