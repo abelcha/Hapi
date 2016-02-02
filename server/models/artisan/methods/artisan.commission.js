@@ -122,8 +122,8 @@ module.exports = function(schema) {
   }
 
   schema.statics.setCommission = function(req, res) {
-    var _from = moment().add(-1, 'months').startOf('month').toDate();
-    var _to = moment().add(-1, 'months').endOf('month').toDate();
+    var _from = moment().add(-2, 'months').startOf('month').toDate();
+    var _to = moment().add(-2, 'months').endOf('month').toDate();
     console.log(_from, _to)
     db.model('intervention').find({
       'compta.paiement.effectue': true,
