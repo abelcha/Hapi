@@ -108,7 +108,6 @@ module.exports = function(schema) {
         }, function(err, resp) {
           resp = _(resp).toArray()
             .filter(function(e) {
-              return ;
               return new Date(e.ajout) > dateThreeshold;
             })
             .sortBy('nbr').reverse().value()
