@@ -33,9 +33,7 @@ var Timer = module.exports = function() {
 
     this.emitter.on("start of month", function() {
       db.model('artisan').setCommission()
-      db.model('artisan').relanceFinDeMois({}).then(function() {
-        console.log('oK')
-      })
+      db.model('artisan').relanceFinDeMois()
     })
 
     this.emitter.on("everyday at 20", function() {
@@ -151,14 +149,14 @@ var Timer = module.exports = function() {
 
 
   var test = function(exp) {
-    var parser = require('cron-parser');
-    var interval = parser.parseExpression(exp);
-    console.log('Date: ', interval.next().toString()); // Sat Dec 29 2012 00:44:00 GMT+0200 (EET)
-    console.log('Date: ', interval.next().toString()); // Sat Dec 29 2012 00:44:00 GMT+0200 (EET)
-    console.log('Date: ', interval.next().toString()); // Sat Dec 29 2012 00:44:00 GMT+0200 (EET)
-    console.log('Date: ', interval.next().toString()); // Sat Dec 29 2012 00:44:00 GMT+0200 (EET)
-    console.log('Date: ', interval.next().toString()); // Sat Dec 29 2012 00:44:00 GMT+0200 (EET)
-    console.log('Date: ', interval.next().toString()); // Sat Dec 29 2012 00:44:00 GMT+0200 (EET)
-  }
-//  test("0 0 0 * *")
+      var parser = require('cron-parser');
+      var interval = parser.parseExpression(exp);
+      console.log('Date: ', interval.next().toString()); // Sat Dec 29 2012 00:44:00 GMT+0200 (EET)
+      console.log('Date: ', interval.next().toString()); // Sat Dec 29 2012 00:44:00 GMT+0200 (EET)
+      console.log('Date: ', interval.next().toString()); // Sat Dec 29 2012 00:44:00 GMT+0200 (EET)
+      console.log('Date: ', interval.next().toString()); // Sat Dec 29 2012 00:44:00 GMT+0200 (EET)
+      console.log('Date: ', interval.next().toString()); // Sat Dec 29 2012 00:44:00 GMT+0200 (EET)
+      console.log('Date: ', interval.next().toString()); // Sat Dec 29 2012 00:44:00 GMT+0200 (EET)
+    }
+    //  test("0 0 0 * *")
 }

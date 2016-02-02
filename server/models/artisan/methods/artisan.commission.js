@@ -55,6 +55,11 @@ module.exports = function(schema) {
           'compta.paiement.date': db.utils.between(_from, _to)
         }, {
           'date.commissionPartenariat': db.utils.between(_from, _to)
+        }, {
+
+          id: {
+            $in: [1821, 1987, 1950, 2004, 1903]
+          }
         }]
       }
     } else {
@@ -108,8 +113,7 @@ module.exports = function(schema) {
         }, function(err, resp) {
           resp = _(resp).toArray()
             .filter(function(e) {
-              console.log('>>>', _.includes([1821, 1987, 1950, 2004], e.sst))
-              return new Date(e.ajout) > dateThreeshold || _.includes([1821, 1987, 1950, 2004], e.sst);
+              return new Date(e.ajout) > dateThreeshold ||  _.includes([1821, 1987, 1950, 2004, 1903], e.sst);
             })
             .sortBy('nbr').reverse().value()
           cb(null, resp)
