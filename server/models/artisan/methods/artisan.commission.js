@@ -132,15 +132,15 @@ module.exports = function(schema) {
           $lt: _to,
           $gt: _from
         }
-      }, {
+      },/* {
         'artisan.id': {
           $in: [1821, 1987, 1950, 2004, 1903]
         },
-        'compta.paiement.date':{
-          $gt:new Date(2015, 11, 0),
-          $lt:new Date(2016, 0, 0),
+        'compta.paiement.date': {
+          $gt: new Date(2015, 11, 0),
+          $lt: new Date(2016, 0, 0),
         }
-      }]
+      }*/]
     }).then(function(resp) {
         console.log('-->', resp.length)
         try {

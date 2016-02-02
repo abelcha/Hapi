@@ -279,7 +279,7 @@ module.exports = {
         artisan: {
             rappelDocuments: function() {
                 return "<strong> OBJET: En attente de vos documents administratifs </strong>" +
-                    "<p>A l'attention de l’entreprise {{" + this.nomSociete + "}}</p><br>" +
+                    "<p>A l'attention de l’entreprise " + this.nomSociete + "</p><br>" +
                     "<p> Monsieur, </p>" +
                     "<p> Depuis plusieurs mois <b><u>vous intervenez régulièrement</u></b> auprès de nos clients." +
                     "<p> A chaque attestation de paiement reçu, nous vous avons transmis un <b><u>contrat de déclaration de sous-traitance</u></b> à remplir et à nous faire parvenir accompagné des documents administratifs obligatoires. </p>" +

@@ -3,7 +3,6 @@ module.exports = function(schema) {
   var _ = require('lodash')
   var async = require('async')
   var moment = require('moment')
-  var csv = require('express-csv')
 
   schema.statics.archivePaiement = function(req, res) {
     var _this = this;
