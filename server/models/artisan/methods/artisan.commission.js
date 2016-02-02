@@ -35,7 +35,7 @@ module.exports = function(schema) {
   }
 
   var dateThreeshold = moment().add(-1, "months").startOf('month').toDate()
-
+  console.log(dateThreeshold)
 
 
 
@@ -96,7 +96,7 @@ module.exports = function(schema) {
                 login: resp.login.ajout,
                 ajout: resp.date.ajout,
                 ids: _.pluck(e, 'id'),
-                nbr: e.length,
+                nbr: e.length - retainer,
                 retainer: retainer,
                 com: Math.floor(e.length / 10),
                 ceil: 10 - (e.length % 10),
@@ -108,7 +108,8 @@ module.exports = function(schema) {
         }, function(err, resp) {
           resp = _(resp).toArray()
             .filter(function(e) {
-              return new Date(e.ajout) > dateThreeshold;
+              console.log('>>>', _.includes([1821, 1987, 1950, 2004], e.sst))
+              return new Date(e.ajout) > dateThreeshold || _.includes([1821, 1987, 1950, 2004], e.sst);
             })
             .sortBy('nbr').reverse().value()
           cb(null, resp)
@@ -129,16 +130,22 @@ module.exports = function(schema) {
       }
     }).then(function(resp) {
         console.log('-->', resp.length)
-        var toUpdate = _(resp).groupBy('sst')
-          .filter(function(e, k) {
-            return e.length >= 10
-          })
-          .map(function(e) {
-            var nbrToUpd = _.floor(e.length / 10) * 10
-            return _(e).slice(0, nbrToUpd).pluck('id').value()
-          })
-          .flatten()
-          .value()
+        try {
+
+          var toUpdate = _(resp).groupBy('sst')
+            .filter(function(e, k) {
+              return e.length >= 10
+            })
+            .map(function(e) {
+              var nbrToUpd = _.floor(e.length / 10) * 10
+              console.log('==>', e[0].artisan.nomSociete, nbrToUpd, _(e).slice(0, nbrToUpd).pluck('id').value().length)
+              return _(e).slice(0, nbrToUpd).pluck('id').value()
+            })
+            .flatten()
+            .value()
+        } catch (e) {
+          console.log('=>', e)
+        }
         console.log('==>', toUpdate)
         var query = {
           id: {
