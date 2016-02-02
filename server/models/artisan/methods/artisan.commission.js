@@ -56,8 +56,7 @@ module.exports = function(schema) {
         }, {
           'date.commissionPartenariat': db.utils.between(_from, _to)
         }, {
-
-          id: {
+          'artisan.id': {
             $in: [1821, 1987, 1950, 2004, 1903]
           }
         }]
