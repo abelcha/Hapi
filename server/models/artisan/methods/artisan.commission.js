@@ -157,7 +157,7 @@ module.exports = function(schema) {
         }
         var set = {
           $set: {
-            'date.commissionPartenariat': moment().add(-1, "month").add('-4', 'days').toDate()
+            'date.commissionPartenariat': moment().add('-4', 'days').toDate()
           }
         }
         var multi = {
