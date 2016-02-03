@@ -36,6 +36,9 @@ module.exports = function(schema) {
       db.model('intervention')
         .aggregate()
         .match({
+          'compta.reglement.date': {
+            $exists: true
+          },
           'compta.reglement.recu': true
         })
         .group({
@@ -54,6 +57,9 @@ module.exports = function(schema) {
         })
 
       .exec(function(err, docs) {
+        if (err) {
+          return reject(err)
+        }
         resolve(docs)
 
       });
