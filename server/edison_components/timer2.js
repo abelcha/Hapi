@@ -230,6 +230,10 @@ var Timer = module.exports = function() {
 
 
     everyMinutes(4, function scanCheck() {
+      var req = {
+
+      }
+      
       if (moment().hour() > 7 && moment().hour() < 21) {
         db.model('document').check(req).then(function() {
           db.model('document').archiveScan(req).then(function() {
