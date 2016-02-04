@@ -3,11 +3,11 @@
 var cluster = require('cluster')
 
 if (cluster.isMaster) {
-    var cpuCount = require('os').cpus().length;
-    for (var i = 0; i < process.env.CLUSTER_PROCESS_NBR; i++) {
-        setTimeout(cluster.fork.bind(cluster), i * 1000)
-    }
-    return 0;
+  var cpuCount = require('os').cpus().length;
+  for (var i = 0; i < process.env.CLUSTER_PROCESS_NBR; i++) {
+    setTimeout(cluster.fork.bind(cluster), i * 1000)
+  }
+  return 0;
 }
 var express = require('express');
 var app = express();
@@ -30,18 +30,16 @@ require('./error-route.js')(app)
 process.on('uncaughtException', __catch);
 console.log("WORKER_ID", cluster.worker.id)
 
-if (cluster.worker.id == 1 && process.env.PLATFORM === 'DIGITAL_OCEAN') {
-	console.log('TIMER')
-    new edison.timer();
+if (cluster.worker.id == 1 && (process.env.PLATFORM === 'DIGITAL_OCEAN' || envDev)) {
+  console.log('TIMER')
+  var Timer = new edison.timer2
+  Timer.setTimer()
 }
 http.listen(port, function() {
-    console.log('listening on *:' + port);
-    return !envDev && edison.event('REBOOT').save()
+  console.log('listening on *:' + port);
+  return !envDev && edison.event('REBOOT').save()
 });
 
-process.on('SIGTERM', function() {
-	console.log('SIGTERMXXXX')
-})
 
 
 module.exports = app;

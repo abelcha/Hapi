@@ -17,7 +17,7 @@ var Timer = module.exports = function() {
 
   this.emitter.add(hour(18), "everyday at 20")
   this.emitter.add(hour(8), "everyday at 7")
-  this.emitter.add(hour(7), "everyday at 6")
+  this.emitter.add(hour(6), "everyday at 6")
   this.emitter.add(hour(14), "everyday at 14")
   this.emitter.add(hour(3), "3pm");
   this.emitter.add(hour(0), "midnight");
