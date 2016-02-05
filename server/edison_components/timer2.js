@@ -63,14 +63,16 @@ var Timer = module.exports = function() {
       console.log(ev.fn.name, ev.nextDate[0]);
       schedule.scheduleJob(ev.cronString, function() {
         console.log('JOB [' + ev.fn.name + ']')
+        if (ev.delay) {
 
-        mail.send({
-          noBCC: true,
-          From: "intervention@edison-services.fr",
-          To: 'abel.chalier@gmail.com',
-          Subject: "[EVENT-TRIGGER] - " + ev.fn.name,
-          HtmlBody: "<body>hello world</body>",
-        });
+          mail.send({
+            noBCC: true,
+            From: "intervention@edison-services.fr",
+            To: 'abel.chalier@gmail.com',
+            Subject: "[EVENT-TRIGGER] - " + ev.fn.name,
+            HtmlBody: "<body>hello world</body>",
+          });
+        }
 
         setTimeout(ev.fn, ev.delay)
       });
@@ -233,7 +235,7 @@ var Timer = module.exports = function() {
       var req = {
 
       }
-      
+
       if (moment().hour() > 7 && moment().hour() < 21) {
         db.model('document').check(req).then(function() {
           db.model('document').archiveScan(req).then(function() {
