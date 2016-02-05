@@ -29,6 +29,7 @@ var Timer = module.exports = function() {
         interval.next().toString(),
       ],
       cronString: cronString,
+      name: fn.name,
       fn: fn,
       delay: ms.minutes(delay)
     })
@@ -48,6 +49,7 @@ var Timer = module.exports = function() {
         interval.next().toString(),
         interval.next().toString(),
       ],
+      name: fn.name,
       cronString: cronString,
       fn: fn,
       delay: 0
@@ -63,16 +65,14 @@ var Timer = module.exports = function() {
       console.log(ev.fn.name, ev.nextDate[0]);
       schedule.scheduleJob(ev.cronString, function() {
         console.log('JOB [' + ev.fn.name + ']')
-        if (ev.delay) {
 
-          mail.send({
-            noBCC: true,
-            From: "intervention@edison-services.fr",
-            To: 'abel.chalier@gmail.com',
-            Subject: "[EVENT-TRIGGER] - " + ev.fn.name,
-            HtmlBody: "<body>hello world</body>",
-          });
-        }
+        mail.send({
+          noBCC: true,
+          From: "intervention@edison-services.fr",
+          To: 'abel.chalier@gmail.com',
+          Subject: "[EVENT-TRIGGER] - " + ev.fn.name,
+          HtmlBody: "<body>hello world</body>",
+        });
 
         setTimeout(ev.fn, ev.delay)
       });
@@ -104,19 +104,25 @@ var Timer = module.exports = function() {
 
 
 
-    everydayAt(5, function envoiVCF() {
+    everydayAt(5, function envoiVCFArtisan() {
+      db.model('artisan').vcf2().then(function() {
 
-      db.model('intervention').vcf2()
-        .then(function()  {
-          db.model('devis').vcf2()
-            .then(function() {
-              db.model('artisan').vcf2().then(function() {
-                console.lo('ok')
-              })
-            })
-        })
-
+      })
     })
+
+    everydayAt(5, function envoiVCFDevis() {
+      db.model('devis').vcf2().then(function() {
+
+      })
+    })
+
+
+    everydayAt(5, function envoiVCFIntervention() {
+      db.model('intervention').vcf2().then(function() {
+
+      })
+    })
+
 
 
 
@@ -231,7 +237,7 @@ var Timer = module.exports = function() {
     //
 
 
-    everyMinutes(4, function scanCheck() {
+    everyMinutes(15, function scanCheck() {
       var req = {
 
       }
@@ -296,23 +302,32 @@ var Timer = module.exports = function() {
   //
 
 
-  everyMinutes(20, function fullReload() {
+  everyMinutes(20, function artisanFullReload() {
+    db.model('artisan').fullReload().then(function() {})
+  })
+
+  everyMinutes(20, function artisanFullReload() {
+    db.model('intervention').fullReload().then(function() {})
+  })
+
+
+  everyMinutes(20, function artisanFullReload() {
+    db.model('devis').fullReload().then(function() {})
+  })
+
+  everyMinutes(20, function updateAVR() {
     if (moment().hour() > 7 && moment().hour() < 21) {
-      db.model('artisan').fullReload().then(function() {
-        db.model('intervention').update({
-          'cache.f.i_avr': 1,
-          'cache.s': 0
-        }, {
-          $set: {
-            'cache.s': 3
-          }
-        }, {
-          multi: true
-        }, function(a, b) {
-          console.log(a, b)
-          db.model('intervention').fullReload().then(function() {})
-          db.model('devis').fullReload().then(function() {})
-        })
+      db.model('intervention').update({
+        'cache.f.i_avr': 1,
+        'cache.s': 0
+      }, {
+        $set: {
+          'cache.s': 3
+        }
+      }, {
+        multi: true
+      }, function(a, b) {
+        console.log(a, b)
       })
     }
   })
