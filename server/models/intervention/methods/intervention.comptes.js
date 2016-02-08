@@ -19,6 +19,8 @@ module.exports = function(schema) {
       e.client.address.cp,
     ];
   }
+
+  
   schema.statics.comptes = function(req, res) {
     var _this = this;
     var dateRange = getMonthRange(req.query.m - 1, req.query.y)
