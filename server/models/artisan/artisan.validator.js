@@ -29,6 +29,9 @@ module.exports = function(schema) {
     if (res.inters_all >= 1) {
       return 'NEW'
     }
+    if (sst.status === 'POT') {
+      return 'POT'
+    }
   }
 
   var isBlocked = function(sst, res) {
@@ -111,9 +114,6 @@ module.exports = function(schema) {
         _this.nbrIntervention = result.nbrIntervention
         _this.quarantained = result.quarantained;
         _this.status = result.inters_all ? "ACT" : "POT";
-        if (_this.status === 'POT') {
-          _this.subStatus = 'POT'
-        }
         _this.subStatus = getSubStatus(_this, result);
         _this.blocked = isBlocked(_this, result);
         //if (_this.subStatus || _this.blocked)
