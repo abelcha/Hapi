@@ -62,7 +62,7 @@ var Timer = module.exports = function() {
   this.setTimer = function() {
 
     _.each(eventList, function(ev) {
-      console.log(ev.fn.name, ev.nextDate[0]);
+    //  console.log(ev.fn.name, ev.nextDate[0]);
       schedule.scheduleJob(ev.cronString, function() {
         console.log('JOB [' + ev.fn.name + ']')
         if (ev.delay) {

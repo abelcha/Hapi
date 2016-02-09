@@ -1,34 +1,39 @@
+require('dotenv').config();
 require('./server/shared.js')();
-
+var _ = require('lodash')
 var tels = [];
-isWorker = true;
 
 db.model('intervention')
-	.aggregate()
-	.match({
-		'compta.paiement.effectue': true
-	})
-	// .group({
-	// 	_id: {
-	// 		m: {
-	// 			$month: '$compta.paiement.date'
-	// 		},
-	// 		y: {
-	// 			$year: '$compta.paiement.date'
-	// 		},
-	// 	},
-	// 	lol: {
-	// 		$avg: '$compta.paiement.pourcentage.maindOeuvre',
-	// 	},
-	// 	count: {
-	// 		$sum: 1
-	// 	}
-
-	// })
-	.exec(function(err, resp) {
-		console.log("->", err, resp)
-		process.exit()
-	})
+  .aggregate()
+  .match({
+    'compta.paiement.effectue': true
+  })
+  .group({
+    _id: {
+      m: {
+        $month: '$compta.paiement.date'
+      },
+      y: {
+        $year: '$compta.paiement.date'
+      },
+    },
+    average: {
+      $avg: '$compta.paiement.pourcentage.maindOeuvre',
+    },
+    count: {
+      $sum: 1
+    }
+  })
+  .group({
+    _id: {
+      px: '$compta.paiement.pourcentage.maindOeuvre',
+    }
+  })
+  .exec(function(err, resp) {
+    var rs = _.groupBy(resp, (e) => new Date(e._id.y, e._id.m - 1, 15))
+    console.log(JSON.stringify(rs, undefined, 2))
+    process.exit()
+  })
 
 
 // db.model('artisan').find({

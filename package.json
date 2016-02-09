@@ -24,6 +24,7 @@
     "cron-emitter": "^0.2.2",
     "cron-parser": "^1.1.0",
     "crypto-js": "^3.1.6",
+    "dotenv": "^2.0.0",
     "dropbox": "^0.10.3",
     "edsx-mail": "^2.1.110",
     "ejs": "^2.3.4",

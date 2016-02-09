@@ -192,267 +192,273 @@ angular.module('edison').controller('MainController', ["$timeout", "LxNotificati
 }]);
 
 var getIntervention = function($route, $q, edisonAPI) {
-    "use strict";
-    var id = $route.current.params.id;
-    if ($route.current.params.d) {
-        var deferred = $q.defer();
-        $q.all([
-            edisonAPI.devis.get($route.current.params.d, {
-                select: 'date login produits tva client prixAnnonce categorie -_id'
-            }),
-            edisonAPI.intervention.getTmp(0)
-        ]).then(function(result) {
-            deferred.resolve(_.merge(result[1], result[0]));
-        })
-        return deferred.promise;
+  "use strict";
+  var id = $route.current.params.id;
+  if ($route.current.params.d) {
+    var deferred = $q.defer();
+    $q.all([
+      edisonAPI.devis.get($route.current.params.d, {
+        select: 'date login produits tva client prixAnnonce categorie -_id'
+      }),
+      edisonAPI.intervention.getTmp(0)
+    ]).then(function(result) {
+      deferred.resolve(_.merge(result[1], result[0]));
+    })
+    return deferred.promise;
 
-    } else if (id.length > 10) {
-        return edisonAPI.intervention.getTmp(id);
-    } else {
-        return edisonAPI.intervention.get(id, {
-            populate: 'sst'
-        });
-    }
+  } else if (id.length > 10) {
+    return edisonAPI.intervention.getTmp(id);
+  } else {
+    return edisonAPI.intervention.get(id, {
+      populate: 'sst'
+    });
+  }
 };
 getIntervention.$inject = ["$route", "$q", "edisonAPI"];
 
 var statsTelepro = function($route, $q, edisonAPI) {
-    return edisonAPI.stats.telepro()
+  return edisonAPI.stats.telepro()
 }
 statsTelepro.$inject = ["$route", "$q", "edisonAPI"];
 
 var getDevis = function($route, $q, edisonAPI) {
-    "use strict";
-    var id = $route.current.params.id;
-    if ($route.current.params.i) {
-        return edisonAPI.intervention.get($route.current.params.i, {
-            select: 'client categorie tva -_id conversations'
-        });
-    } else if (id.length > 10) {
-        return edisonAPI.devis.getTmp(id);
-    } else {
-        return edisonAPI.devis.get(id);
-    }
+  "use strict";
+  var id = $route.current.params.id;
+  if ($route.current.params.i) {
+    return edisonAPI.intervention.get($route.current.params.i, {
+      select: 'client categorie tva -_id conversations'
+    });
+  } else if (id.length > 10) {
+    return edisonAPI.devis.getTmp(id);
+  } else {
+    return edisonAPI.devis.get(id);
+  }
 };
 getDevis.$inject = ["$route", "$q", "edisonAPI"];
 var getArtisan = function($route, $q, edisonAPI) {
-    "use strict";
-    var id = $route.current.params.id;
-    if (id.length > 10) {
-        return edisonAPI.artisan.getTmp(id);
-    } else {
-        return edisonAPI.artisan.get(id);
-    }
+  "use strict";
+  var id = $route.current.params.id;
+  if (id.length > 10) {
+    return edisonAPI.artisan.getTmp(id);
+  } else {
+    return edisonAPI.artisan.get(id);
+  }
 }
 getArtisan.$inject = ["$route", "$q", "edisonAPI"];
 
 angular.module('edison').config(["$routeProvider", "$locationProvider", function($routeProvider, $locationProvider) {
-    "use strict";
-    $routeProvider
-        .when('/', {
-            redirectTo: '/dashboard',
-        })
-        .when('/intervention/list', {
-            templateUrl: "Pages/ListeInterventions/listeInterventions.html",
-            controller: "ListeInterventionController",
-            controllerAs: 'vm',
-            reloadOnSearch: false
+  "use strict";
+  $routeProvider
+    .when('/', {
+      redirectTo: '/dashboard',
+    })
+    .when('/intervention/list', {
+      templateUrl: "Pages/ListeInterventions/listeInterventions.html",
+      controller: "ListeInterventionController",
+      controllerAs: 'vm',
+      reloadOnSearch: false
 
-        })
-        .when('/intervention/list/:fltr', {
-            templateUrl: "Pages/ListeInterventions/listeInterventions.html",
-            controller: "ListeInterventionController",
-            controllerAs: 'vm',
-            reloadOnSearch: false
+    })
+    .when('/intervention/list/:fltr', {
+      templateUrl: "Pages/ListeInterventions/listeInterventions.html",
+      controller: "ListeInterventionController",
+      controllerAs: 'vm',
+      reloadOnSearch: false
 
-        })
-        .when('/intervention', {
-            redirectTo: function(routeParams, path, params) {
-                var url = params.devis ? "?d=" + params.devis : "";
-                return '/intervention/' + Date.now() + url;
-            }
-        })
-        .when('/intervention/:id', {
-            templateUrl: "Pages/Intervention/intervention.html",
-            controller: "InterventionController",
-            controllerAs: "vm",
-            reloadOnSearch: false,
-            resolve: {
-                interventionPrm: getIntervention,
-            }
-        })
-        .when('/devis/list', {
-            templateUrl: "Pages/ListeDevis/listeDevis.html",
-            controller: "ListeDevisController",
-            controllerAs: 'vm',
-            reloadOnSearch: false
+    })
+    .when('/intervention', {
+      redirectTo: function(routeParams, path, params) {
+        var url = params.devis ? "?d=" + params.devis : "";
+        return '/intervention/' + Date.now() + url;
+      }
+    })
+    .when('/intervention/:id', {
+      templateUrl: "Pages/Intervention/intervention.html",
+      controller: "InterventionController",
+      controllerAs: "vm",
+      reloadOnSearch: false,
+      resolve: {
+        interventionPrm: getIntervention,
+      }
+    })
+    .when('/devis/list', {
+      templateUrl: "Pages/ListeDevis/listeDevis.html",
+      controller: "ListeDevisController",
+      controllerAs: 'vm',
+      reloadOnSearch: false
 
-        })
-        .when('/devis/list/:fltr', {
-            templateUrl: "Pages/ListeDevis/listeDevis.html",
-            controller: "ListeDevisController",
-            controllerAs: "vm",
-            reloadOnSearch: false
+    })
+    .when('/devis/list/:fltr', {
+      templateUrl: "Pages/ListeDevis/listeDevis.html",
+      controller: "ListeDevisController",
+      controllerAs: "vm",
+      reloadOnSearch: false
 
-        })
-        .when('/devis', {
-            redirectTo: function(routeParams, path, params) {
-                var url = params.i ? "?i=" + params.i : "";
-                return '/devis/' + Date.now() + url;
-            }
-        })
-        .when('/devis/:id', {
-            templateUrl: "Pages/Intervention/devis.html",
-            controller: "DevisController",
-            controllerAs: "vm",
-            resolve: {
-                devisPrm: getDevis,
-            }
-        })
-        .when('/artisan/contact', {
-            templateUrl: "Pages/ListeArtisan/contactArtisan.html",
-            controller: "ContactArtisanController",
-            controllerAs: 'vm',
-            reloadOnSearch: false
-        })
-        .when('/artisan/:sstid/recap', {
-            templateUrl: "Pages/ListeArtisan/contactArtisan.html",
-            controller: "ContactArtisanController",
-            controllerAs: 'vm',
-            reloadOnSearch: false
+    })
+    .when('/devis', {
+      redirectTo: function(routeParams, path, params) {
+        var url = params.i ? "?i=" + params.i : "";
+        return '/devis/' + Date.now() + url;
+      }
+    })
+    .when('/devis/:id', {
+      templateUrl: "Pages/Intervention/devis.html",
+      controller: "DevisController",
+      controllerAs: "vm",
+      resolve: {
+        devisPrm: getDevis,
+      }
+    })
+    .when('/artisan/contact', {
+      templateUrl: "Pages/ListeArtisan/contactArtisan.html",
+      controller: "ContactArtisanController",
+      controllerAs: 'vm',
+      reloadOnSearch: false
+    })
+    .when('/artisan/:sstid/recap', {
+      templateUrl: "Pages/ListeArtisan/contactArtisan.html",
+      controller: "ContactArtisanController",
+      controllerAs: 'vm',
+      reloadOnSearch: false
 
-        })
-        .when('/artisan/list', {
-            templateUrl: "Pages/ListeArtisan/listeArtisan.html",
-            controller: "ListeArtisanController",
-            controllerAs: 'vm',
-            reloadOnSearch: false
+    })
+    .when('/artisan/list', {
+      templateUrl: "Pages/ListeArtisan/listeArtisan.html",
+      controller: "ListeArtisanController",
+      controllerAs: 'vm',
+      reloadOnSearch: false
 
-        })
-        .when('/artisan/list/:fltr', {
-            templateUrl: "Pages/ListeArtisan/listeArtisan.html",
-            controller: "ListeArtisanController",
-            controllerAs: "vm",
-            reloadOnSearch: false
+    })
+    .when('/artisan/list/:fltr', {
+      templateUrl: "Pages/ListeArtisan/listeArtisan.html",
+      controller: "ListeArtisanController",
+      controllerAs: "vm",
+      reloadOnSearch: false
 
-        })
-        .when('/artisan', {
-            redirectTo: function() {
-                return '/artisan/' + Date.now();
-            }
-        })
-        .when('/artisan/:id', {
-            templateUrl: "Pages/Artisan/artisan.html",
-            controller: "ArtisanController",
-            controllerAs: "vm",
-            resolve: {
-                artisanPrm: getArtisan,
-            }
-        })
-        .when('/dashboard', {
-            controller: 'DashboardController',
-            templateUrl: "Pages/Dashboard/dashboard.html",
-            controllerAs: "vm",
-            resolve: {
-                statsTelepro: statsTelepro
-            }
-        })
-        .when('/search/:query', {
-            templateUrl: "Pages/Search/search.html",
-            controller: "SearchController",
-            controllerAs: "vm",
-        })
-        .when('/compta/lpa', {
-            templateUrl: "Pages/LPA/LPA.html",
-            controller: "LpaController",
-            controllerAs: "vm",
-        })
-        .when('/compta/avoirs', {
-            templateUrl: "Pages/Avoirs/avoirs.html",
-            controller: "avoirsController",
-            controllerAs: "vm",
-        })
-        .when('/compta/archivesPaiement', {
-            templateUrl: "Pages/Archives/archives.html",
-            controller: "archivesPaiementController",
-            controllerAs: "vm",
-        })
-        .when('/compta/archivesReglement', {
-            templateUrl: "Pages/Archives/archives.html",
-            controller: "archivesReglementController",
-            controllerAs: "vm",
-        })
-        .when('/tools/telephoneMatch', {
-            templateUrl: "Pages/Tools/telephoneMatch.html",
-            controller: "telephoneMatch",
-            controllerAs: "vm",
-        })
-        .when('/tools/editProducts', {
-            templateUrl: "Pages/Tools/edit-products.html",
-            controller: "editProducts",
-            controllerAs: "vm",
-        })
-        .when('/tools/editSignalements', {
-            templateUrl: "Pages/Tools/edit-signalements.html",
-            controller: "editSignalements",
-            controllerAs: "vm",
-        })
-        .when('/listeSignalements', {
-            templateUrl: "Pages/ListeSignalements/liste-signalements.html",
-            controller: "listeSignalements",
-            controllerAs: "vm",
-            // reloadOnSearch: false
-        })
-        .when('/tools/editComptes', {
-            templateUrl: "Pages/Tools/edit-comptes.html",
-            controller: "editComptes",
-            controllerAs: "vm",
-        })
-        .when('/tools/editCombos', {
-            templateUrl: "Pages/Tools/edit-combos.html",
-            controller: "editCombos",
-            controllerAs: "vm",
-        })
-        .when('/tools/editUsers', {
-            templateUrl: "Pages/Tools/edit-users.html",
-            controller: "editUsers",
-            controllerAs: "vm",
-        })
-        .when('/partenariat/comissions', {
-          templateUrl: "Pages/Tools/commissions-partenariat.html",
-          controller: "commissionsPartenariat",
-          controllerAs: 'vm',
-        })
-        .when('/tools/commissions', {
-            templateUrl: "Pages/Tools/commissions.html",
-            controller: "CommissionsController",
-            controllerAs: "vm",
-            reloadOnSearch: false
+    })
+    .when('/artisan', {
+      redirectTo: function() {
+        return '/artisan/' + Date.now();
+      }
+    })
+    .when('/artisan/:id', {
+      templateUrl: "Pages/Artisan/artisan.html",
+      controller: "ArtisanController",
+      controllerAs: "vm",
+      resolve: {
+        artisanPrm: getArtisan,
+      }
+    })
+    .when('/dashboard', {
+      controller: 'DashboardController',
+      templateUrl: "Pages/Dashboard/dashboard.html",
+      controllerAs: "vm",
+      resolve: {
+        statsTelepro: statsTelepro
+      }
+    })
+    .when('/search/:query', {
+      templateUrl: "Pages/Search/search.html",
+      controller: "SearchController",
+      controllerAs: "vm",
+    })
+    .when('/compta/lpa', {
+      templateUrl: "Pages/LPA/LPA.html",
+      controller: "LpaController",
+      controllerAs: "vm",
+    })
+    .when('/compta/avoirs', {
+      templateUrl: "Pages/Avoirs/avoirs.html",
+      controller: "avoirsController",
+      controllerAs: "vm",
+    })
+    .when('/compta/archivesPaiement', {
+      templateUrl: "Pages/Archives/archives.html",
+      controller: "archivesPaiementController",
+      controllerAs: "vm",
+    })
+    .when('/compta/archivesReglement', {
+      templateUrl: "Pages/Archives/archives.html",
+      controller: "archivesReglementController",
+      controllerAs: "vm",
+    })
+    .when('/tools/telephoneMatch', {
+      templateUrl: "Pages/Tools/telephoneMatch.html",
+      controller: "telephoneMatch",
+      controllerAs: "vm",
+    })
+    .when('/tools/editProducts', {
+      templateUrl: "Pages/Tools/edit-products.html",
+      controller: "editProducts",
+      controllerAs: "vm",
+    })
+    .when('/tools/editSignalements', {
+      templateUrl: "Pages/Tools/edit-signalements.html",
+      controller: "editSignalements",
+      controllerAs: "vm",
+    })
+    .when('/listeSignalements', {
+      templateUrl: "Pages/ListeSignalements/liste-signalements.html",
+      controller: "listeSignalements",
+      controllerAs: "vm",
+      // reloadOnSearch: false
+    })
+    .when('/tools/editComptes', {
+      templateUrl: "Pages/Tools/edit-comptes.html",
+      controller: "editComptes",
+      controllerAs: "vm",
+    })
+    .when('/tools/editCombos', {
+      templateUrl: "Pages/Tools/edit-combos.html",
+      controller: "editCombos",
+      controllerAs: "vm",
+    })
+    .when('/tools/editUsers', {
+      templateUrl: "Pages/Tools/edit-users.html",
+      controller: "editUsers",
+      controllerAs: "vm",
+    })
+    .when('/partenariat/comissions', {
+      templateUrl: "Pages/Tools/commissions-partenariat.html",
+      controller: "commissionsPartenariat",
+      controllerAs: 'vm',
+    })
+    .when('/tools/commissions', {
+      templateUrl: "Pages/Tools/commissions.html",
+      controller: "CommissionsController",
+      controllerAs: "vm",
+      reloadOnSearch: false
 
-        })
-        .when('/stats/:type', {
-            templateUrl: "Pages/Stats/stats.html",
-            controller: "StatsController",
-            controllerAs: 'vm',
-            reloadOnSearch: false
-        })
-         .when('/statsnew/:type', {
-            templateUrl: "Pages/Stats/stats-new.html",
-            controller: "StatsNewController",
-            controllerAs: 'vm',
-            reloadOnSearch: false
-        })
-          .when('/user/history', {
-            templateUrl: "Pages/User/historique.html",
-            controller: "userHistory",
-            controllerAs: 'vm',
-            reloadOnSearch: false
-        })
-        .otherwise({
-            redirectTo: '/dashboard'
-        });
-    // use the HTML5 History API
-    $locationProvider.html5Mode(true);
+    })
+    .when('/stats/:type', {
+      templateUrl: "Pages/Stats/stats.html",
+      controller: "StatsController",
+      controllerAs: 'vm',
+      reloadOnSearch: false
+    })
+    .when('/statsnew/:type', {
+      templateUrl: "Pages/Stats/stats-new.html",
+      controller: "StatsNewController",
+      controllerAs: 'vm',
+      reloadOnSearch: false
+    })
+    .when('/gstats/:type', {
+      templateUrl: "Pages/Stats/gstats.html",
+      controller: "GStatsController",
+      controllerAs: 'vm',
+      reloadOnSearch: false
+    })
+    .when('/user/history', {
+      templateUrl: "Pages/User/historique.html",
+      controller: "userHistory",
+      controllerAs: 'vm',
+      reloadOnSearch: false
+    })
+    .otherwise({
+      redirectTo: '/dashboard'
+    });
+  // use the HTML5 History API
+  $locationProvider.html5Mode(true);
 }]);
 
  angular.module('edison').directive('absenceSst', ["edisonAPI", "LxNotificationService", "user", function(edisonAPI, LxNotificationService, user) {
@@ -2154,6 +2160,13 @@ angular.module('edison').factory('edisonAPI', ["$http", "$location", "Upload", f
         return $http({
           method: 'GET',
           url: "/api/intervention/statsBen",
+          params: options
+        });
+      },
+      gstats: function(options) {
+        return $http({
+          method: 'GET',
+          url: "/api/intervention/gstats",
           params: options
         });
       },
@@ -4351,6 +4364,46 @@ angular.module('edison').directive('mainNavbar', ["$q", "edisonAPI", "TabContain
 
 }]);
 
+var archiveReglementController = function(edisonAPI, TabContainer, $routeParams, $location, LxProgressService) {
+
+    var tab = TabContainer.getCurrentTab();
+    var _this = this;
+    _this.title = 'Archives Reglements'
+    tab.setTitle('archives RGL')
+    LxProgressService.circular.show('#5fa2db', '#globalProgress');
+    edisonAPI.compta.archivesReglement().success(function(resp) {
+        LxProgressService.circular.hide()
+        _this.data = resp
+    })
+    _this.moment = moment;
+    _this.openLink = function(link) {
+        $location.url(link)
+    }
+}
+archiveReglementController.$inject = ["edisonAPI", "TabContainer", "$routeParams", "$location", "LxProgressService"];
+
+angular.module('edison').controller('archivesReglementController', archiveReglementController);
+
+var archivesPaiementController = function(edisonAPI, TabContainer, $routeParams, $location, LxProgressService) {
+    var _this = this;
+    var tab = TabContainer.getCurrentTab();
+    _this.type = 'paiement'
+    _this.title = 'Archives Paiements'
+    tab.setTitle('archives PAY')
+    LxProgressService.circular.show('#5fa2db', '#globalProgress');
+    edisonAPI.compta.archivesPaiement().success(function(resp) {
+        LxProgressService.circular.hide()
+        _this.data = resp
+    })
+    _this.moment = moment;
+    _this.openLink = function(link) {
+        $location.url(link)
+    }
+}
+archivesPaiementController.$inject = ["edisonAPI", "TabContainer", "$routeParams", "$location", "LxProgressService"];
+
+angular.module('edison').controller('archivesPaiementController', archivesPaiementController);
+
  angular.module('edison').directive('artisanCategorie', ["config", function(config) {
      "use strict";
      return {
@@ -4495,46 +4548,6 @@ var ArtisanCtrl = function(IBAN, $timeout, $rootScope, $scope, edisonAPI, $locat
 }
 ArtisanCtrl.$inject = ["IBAN", "$timeout", "$rootScope", "$scope", "edisonAPI", "$location", "$routeParams", "ContextMenu", "LxProgressService", "LxNotificationService", "TabContainer", "config", "dialog", "artisanPrm", "Artisan"];
 angular.module('edison').controller('ArtisanController', ArtisanCtrl);
-
-var archiveReglementController = function(edisonAPI, TabContainer, $routeParams, $location, LxProgressService) {
-
-    var tab = TabContainer.getCurrentTab();
-    var _this = this;
-    _this.title = 'Archives Reglements'
-    tab.setTitle('archives RGL')
-    LxProgressService.circular.show('#5fa2db', '#globalProgress');
-    edisonAPI.compta.archivesReglement().success(function(resp) {
-        LxProgressService.circular.hide()
-        _this.data = resp
-    })
-    _this.moment = moment;
-    _this.openLink = function(link) {
-        $location.url(link)
-    }
-}
-archiveReglementController.$inject = ["edisonAPI", "TabContainer", "$routeParams", "$location", "LxProgressService"];
-
-angular.module('edison').controller('archivesReglementController', archiveReglementController);
-
-var archivesPaiementController = function(edisonAPI, TabContainer, $routeParams, $location, LxProgressService) {
-    var _this = this;
-    var tab = TabContainer.getCurrentTab();
-    _this.type = 'paiement'
-    _this.title = 'Archives Paiements'
-    tab.setTitle('archives PAY')
-    LxProgressService.circular.show('#5fa2db', '#globalProgress');
-    edisonAPI.compta.archivesPaiement().success(function(resp) {
-        LxProgressService.circular.hide()
-        _this.data = resp
-    })
-    _this.moment = moment;
-    _this.openLink = function(link) {
-        $location.url(link)
-    }
-}
-archivesPaiementController.$inject = ["edisonAPI", "TabContainer", "$routeParams", "$location", "LxProgressService"];
-
-angular.module('edison').controller('archivesPaiementController', archivesPaiementController);
 
 var AvoirsController = function(TabContainer, openPost, edisonAPI, $rootScope, LxProgressService, LxNotificationService, FlushList) {
     "use strict";
@@ -5780,6 +5793,43 @@ var SearchController = function(edisonAPI, TabContainer, $routeParams, $location
 SearchController.$inject = ["edisonAPI", "TabContainer", "$routeParams", "$location", "LxProgressService", "config"];
 
 angular.module('edison').controller('SearchController', SearchController);
+
+var GStatsController = function(MomentIterator, TabContainer, $routeParams, edisonAPI, $rootScope, $scope, $location, LxProgressService, socket) {
+  "use strict";
+  edisonAPI.intervention.gstats().then(function(resp) {
+    console.log(resp.data)
+    $('#chartContainer').highcharts({
+      chart: {
+        type: 'column'
+      },
+      title: {
+        text: 'Stacked column chart'
+      },
+      xAxis: {
+        categories:[]
+      },
+      yAxis: {
+        min: 0,
+        title: {
+          text: 'Total fruit consumption'
+        }
+      },
+      tooltip: {
+        pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b> ({point.percentage:.0f}%)<br/>',
+        shared: true
+      },
+      plotOptions: {
+        column: {
+          stacking: 'percent'
+        }
+      },
+      series: resp.data.series
+    })
+    console.log('okok')
+  })
+}
+GStatsController.$inject = ["MomentIterator", "TabContainer", "$routeParams", "edisonAPI", "$rootScope", "$scope", "$location", "LxProgressService", "socket"];
+angular.module('edison').controller('GStatsController', GStatsController);
 
 var StatsNewController = function(MomentIterator, TabContainer, $routeParams, edisonAPI, $rootScope, $scope, $location, LxProgressService, socket) {
     "use strict";

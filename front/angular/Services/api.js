@@ -202,6 +202,13 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
           params: options
         });
       },
+      gstats: function(options) {
+        return $http({
+          method: 'GET',
+          url: "/api/intervention/gstats",
+          params: options
+        });
+      },
       statsBenYear: function(options) {
         return $http({
           method: 'GET',
