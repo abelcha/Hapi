@@ -5803,10 +5803,10 @@ var GStatsController = function(MomentIterator, TabContainer, $routeParams, edis
         type: 'column'
       },
       title: {
-        text: 'Stacked column chart'
+        text: 'Pourcentage de paiements'
       },
       xAxis: {
-        categories:[]
+        categories:resp.data.categories
       },
       yAxis: {
         min: 0,

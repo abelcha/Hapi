@@ -37,7 +37,7 @@ module.exports = function(schema) {
           return e
         })
 
-        var keys = _(resp).groupBy('_id.px').map((e, k) => k).value()
+        var keys = _(resp).groupBy('_id.px').map((e, k) => k).sort().value()
           // var rs = _(resp)
           //   .groupBy(e => new Date(e._id.y, e._id.m - 1, 15))
           //   //      .map(e => _.groupBy(e, '_id.px'))
@@ -58,8 +58,12 @@ module.exports = function(schema) {
               })
           }
         })
+        rtn.categories = momentIterator(new Date(2013, 8, 14), new Date()).range('month', {
+          format:'MM/YY'
+        })
+        console.log('-->', rtn.dates)
 
-        console.log(rtn)
+
         res.json(rtn);
       })
   }
