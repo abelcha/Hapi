@@ -31,8 +31,10 @@ module.exports = function(schema) {
             e._id.px = '0-30';
           } else if (e._id.px <= 45) {
             e._id.px = '30-45';
+          } else if (e._id.px <= 70) {
+            e._id.px = '45-70';
           } else {
-            e._id.px = '45-100';
+            e._id.px = '70-100';
           }
           return e
         })
