@@ -26,7 +26,7 @@ module.exports = function(schema) {
         }
       }).then(function(docs) {
 
-        async.eachLimit(docs, 100, function(e, big_callback) {
+        async.eachLimit(docs, 10, function(e, big_callback) {
             e = JSON.parse(JSON.stringify(e))
             var paiementsst = _.find(data, 'id', e.id);
             if (paiementsst.list.__list[0].mode === 'VIR') {
@@ -52,7 +52,7 @@ module.exports = function(schema) {
             }
 
             clean(paiementsst, "CHQ");
-            async.eachLimit(paiementsst.interventions, 100, function(inter, small_callback) {
+            async.eachLimit(paiementsst.interventions, 10, function(inter, small_callback) {
               db.model('intervention').findOne({
                 id: inter.id
               }).populate('sst').then(function(doc) {
