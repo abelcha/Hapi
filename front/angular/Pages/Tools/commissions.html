@@ -17,7 +17,7 @@
             <div class="col-sm-6 col-sm-offset-1">
                 <table class="table table-bordered">
                     <tbody>
-                        <tr ng-repeat="l in list">
+                        <tr ng-repeat="l in list" ng-class="{'success' : l.exception1, 'warning' : l.exception2}">
                             <td><a href="/intervention/{{l.id}}">{{l.id}}</td>
                             <td>{{l.categorie}}</td>
                             <td>{{l.compta.reglement.montant}}</td>

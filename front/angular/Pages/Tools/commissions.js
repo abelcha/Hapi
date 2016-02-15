@@ -1,10 +1,22 @@
 var CommissionsController = function(MomentIterator, TabContainer, $routeParams, edisonAPI, $rootScope, $scope, $location, LxProgressService, socket) {
     "use strict";
+
+    // harald - Grand Compte - 1 janvier 2016 => 2%
+
     var _this = this;
     _this.tab = TabContainer.getCurrentTab();
     _this.tab.setTitle('Coms.');
 
     _this.xcalc = function(e) {
+        if ((new Date(e.date.ajout)).getFullYear() >= 2016 && e.facture && e.facture.payeur === 'GRN' && e.login.ajout === 'harald_x' ) {
+          e.exception1 = true
+          return _.round((e.compta.reglement.montant || e.compta.paiement.base || e.prixFinal) * 0.02, 2);
+        }
+        if ((new Date(e.date.ajout)).getFullYear() >= 2016 && e.categorie === 'VT' && (e.login.ajout === 'maxime_s' || e.login.ajout === 'gregoire_e') ) {
+          e.exception2 = true
+          console.log('-->', e)
+          return _.round((e.compta.reglement.montant || e.compta.paiement.base || e.prixFinal) * 0.005, 2);
+        }
         return e.categorie === 'VT' ? 1.5 : _.round((e.compta.reglement.montant || e.compta.paiement.base || e.prixFinal) * 0.01, 2);
     }
 
