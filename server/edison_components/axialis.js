@@ -35,9 +35,11 @@ var request = function(query) {
         resp.save(function(err, resp) {
           console.log("==>", query._type, query._type === 'CALLBACK')
           if (query._type === 'CALLBACK') {
-            var template = "le client {{id}} ({{client.civilite}} {{client.nom}}) rappel le {{artisan.nomSociete}}"
+            var template =
+              "le client {{id}} ({{client.civilite}} {{client.nom}}) rappel le {{artisan.nomSociete}}"
           } else {
-            var template = "{{artisan.nomSociete}} appel le client {{id}} ({{client.civilite}} {{client.nom}})"
+            var template =
+              "{{artisan.nomSociete}} appel le client {{id}} ({{client.civilite}} {{client.nom}})"
           }
           edison.event('INTER_CALL_' + query._type)
             .id(resp.id)
@@ -45,7 +47,8 @@ var request = function(query) {
             .self()
             .icon('phone')
             .color('green')
-            .message(_.template("{{artisan.nomSociete}} appel le client {{id}} ({{client.civilite}} {{client.nom}})")(resp))
+            .message(_.template(
+              "{{artisan.nomSociete}} appel le client {{id}} ({{client.civilite}} {{client.nom}})")(resp))
             .send()
             .save()
         });
@@ -56,7 +59,9 @@ var request = function(query) {
             .self()
             .icon('phone')
             .color('green')
-            .message(_.template("La conversation téléphonique du client {{id}} ({{client.civilite}} {{client.nom}}) a été upload")(resp))
+            .message(_.template(
+              "La conversation téléphonique du client {{id}} ({{client.civilite}} {{client.nom}}) a été upload"
+            )(resp))
             .send()
             .save()
           db.model('axialis').get.fn(query.call_id);
@@ -134,10 +139,11 @@ module.exports = {
     })
   },
   contact: function(req, res) {
+    var moment = require('moment');
     var _ = require('lodash');
     var q = req.query;
     console.log('==>', req.query)
-
+    var twoDaysAgo = moment().add(-1, 'days').toDate()
     if (req.query.api_key !== 'F8v0x13ftadh89rm0e9x18b62ZqgEl47') {
       return res.sendStatus(401)
     }
@@ -186,6 +192,9 @@ module.exports = {
         status: {
           $in: ['ENC', 'VRF']
         },
+        'date.intervention': {
+          $gt: twoDaysAgo
+        }
       }).then(function(intervention) {
         if (!intervention || !intervention.artisan  || intervention.artisan.id !== doc.id) {
           return request.bind(res)({
