@@ -47,7 +47,7 @@
                                 <span bold>{{_.capitalize(root.displayUser.login)}}</span>
                             </a>
                             <ul ng-class="{'display-block' : userDropdown}" class="dropdown-menu open">
-                                <li ng-repeat="u in root.app_users" ng-click="changeUser(u)">
+                                <li ng-repeat="u in root.app_users| filter: { active: true }" ng-click="changeUser(u)">
                                     <a href="#">
                                         <span class="badge badge-primary pull-right"></span> {{_.capitalize(u.login)}}
                                     </a>
@@ -66,4 +66,3 @@
     </div>
     <!-- / .navbar-inner -->
 </div>
-

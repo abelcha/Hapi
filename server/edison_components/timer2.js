@@ -111,14 +111,14 @@ var Timer = module.exports = function() {
       })
     })
 
-    everydayAt(5, function envoiVCFDevis() {
+    everydayAt(14, function envoiVCFDevis() {
       db.model('devis').vcf2().then(function() {
 
       })
     })
 
 
-    everydayAt(5, function envoiVCFIntervention() {
+    everydayAt(14, function envoiVCFIntervention() {
       db.model('intervention').vcf2().then(function() {
 
       })
