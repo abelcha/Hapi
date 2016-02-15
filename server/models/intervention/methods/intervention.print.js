@@ -72,7 +72,9 @@ module.exports = function(schema) {
                         if (!op.length) {
                             return res.send('Pas de Documents')
                         }
+                        console.log('TOBUFFER')
                         PDF(op).toBuffer(function(err, buffer) {
+                          console.log('OKBUFFER')
                             res.contentType('application/pdf')
                             res.send(buffer);
                         })
