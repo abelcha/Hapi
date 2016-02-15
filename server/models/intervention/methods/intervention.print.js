@@ -52,7 +52,7 @@ module.exports = function(schema) {
                         }
 
                         clean(paiementsst, "CHQ");
-                        async.eachLimit(paiementsst.interventions, 1, function(inter, small_callback) {
+                        async.eachLimit(paiementsst.interventions, 10, function(inter, small_callback) {
                             db.model('intervention').findOne({
                                 id: inter.id
                             }).populate('sst').then(function(doc) {
