@@ -143,7 +143,7 @@ module.exports = {
     var _ = require('lodash');
     var q = req.query;
     console.log('==>', req.query)
-    var twoDaysAgo = moment().add(-1, 'days').toDate()
+    var twoDaysAgo = moment().add(-2, 'days').toDate()
     if (req.query.api_key !== 'F8v0x13ftadh89rm0e9x18b62ZqgEl47') {
       return res.sendStatus(401)
     }
