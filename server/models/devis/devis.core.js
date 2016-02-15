@@ -53,7 +53,7 @@
             c: e.categorie,
             cx: config.categories[e.categorie || 'PL'].long_name,
             id: e._id,
-            n: e.client.civilite + " " + e.client.nom + ' ' + e.client.prenom,
+            n: e.client.civilite + " " + e.client.nom + ' ' + (e.client.prenom || ''),
             s: e.status,
             sx: config.etatsDevis[e.status].long_name,
             cp: e.client.address.cp,
