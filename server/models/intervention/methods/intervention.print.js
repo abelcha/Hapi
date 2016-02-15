@@ -26,7 +26,7 @@ module.exports = function(schema) {
                 }
             }).then(function(docs) {
 
-                async.eachLimit(docs, 1, function(e, big_callback) {
+                async.eachLimit(docs, 10, function(e, big_callback) {
                         e = JSON.parse(JSON.stringify(e))
                         var paiementsst = _.find(data, 'id', e.id);
                         if (paiementsst.list.__list[0].mode === 'VIR') {
