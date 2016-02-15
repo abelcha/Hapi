@@ -152,8 +152,10 @@
         </div>
     </div>
     <footer class="footer sticky-footer">
+      <i class="fa fa-arrow-left" style="position:absolute;margin-top:7px" ng-click="bfmOffset = [0, 6]"></i>
+      <i class="fa fa-arrow-right" style="float:right;margin-top:7px" ng-click="bfmOffset = [6, 12]"></i>
         <ul list-justify>
-            <li style="margin:0px 10px;padding:5px" ng-repeat="(key, value) in vm.statsTeleproBfm">
+            <li style="margin:0px 10px;padding:5px" ng-repeat="(key, value) in vm.statsTeleproBfm.slice(bfmOffset[0], bfmOffset[1])">
                 <span class="badge white black-text" style="font-size:15px">{{_.capitalize(value.login).slice(0, -2)}}</span>
                 <a href="/intervention/list/ajd#{{value.login}}"><span class="badge">{{value.total}} Points</span></a>
                 <span ng-if="!smallWin">

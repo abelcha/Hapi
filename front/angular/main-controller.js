@@ -71,7 +71,7 @@ angular.module('edison').controller('MainController', function($timeout, LxNotif
                 date: moment().startOf('day').toDate()
             })
             .then(function(resp) {
-                _this.statsTeleproBfm = _.sortBy(resp.data.weekStats, 'total').reverse().slice(0, 6)
+                _this.statsTeleproBfm = _.sortBy(resp.data.weekStats, 'total').reverse()
             });
 
     };
