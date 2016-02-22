@@ -79,6 +79,7 @@
 
 
        return new Promise(function(resolve, reject) {
+           console.log('heererere')
            document.list('/SCAN').then(function(dbl) {
              dbl = _(dbl).filter(function(e) {
                return e.length === 23 && _.endsWith(e, '.pdf') && e[4] === '-'
@@ -89,7 +90,7 @@
                }
              }).value();
 
-
+             console.log('>>>', dbl)
              var i = 0;
              var limit = req.query.limit || 100;
              edison.v1.get("SELECT * FROM scanner WHERE moved='0' AND checked='0' ORDER BY id ASC LIMIT " +
