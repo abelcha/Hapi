@@ -275,7 +275,7 @@
                 n: e.client.civilite + ' ' + e.client.nom + ' ' + e.client.prenom,
                 a: e.artisan.nomSociete && e.artisan.nomSociete.slice(0, 14) || '',
                 pa: e.prixFinal || e.prixAnnonce,
-                ss: e.artisan.subStatus,
+                ss: e.artisan.subStatus || '',
                 da: d(e.date.ajout),
                 di: d(e.date.intervention),
                 rc: e.compta.reglement.recu ? 1 : 0,
