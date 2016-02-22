@@ -26,8 +26,10 @@ module.exports = function(schema) {
                 return total + e.list.__list.length
             }, 0)
             var data = _.groupBy(req.body, 'id');
-            async.eachLimit(data, 3, function(sst, cb) {
+            console.log('GOT', data.length, "Artisans")
+            async.eachLimit(data, 1, function(sst, cb) {
                 var k = Object.keys(data)[i++]
+                console.log('-=====->', i + '/' + data.length)
                     // global.currenWorkerJob.progress(i, req.body.length);
                 async.waterfall([
                     function(callback) {
@@ -54,6 +56,7 @@ module.exports = function(schema) {
                     function(artisan, callback) {
                         var autofactures = [];
                         async.each(_.filter(artisan.interventions, 'mode', 'VIR'), function(inter, small_cb) {
+                          console.log('SEARCH FOR OS ' + inter.id)
                             db.model('intervention')
                                 .findOne({
                                     id: inter.id
@@ -68,6 +71,7 @@ module.exports = function(schema) {
                                         model: 'auto-facture',
                                         options: resp
                                     })
+                                    console.log('GOT OS ' + resp.id)
                                     small_cb(null);
                                 })
                         }, function() {
@@ -88,7 +92,7 @@ module.exports = function(schema) {
                          }*/
                         var textTemplate = requireLocal('config/textTemplate.js');
                         var virement = artisan.interventions[0].mode === 'VIR';
-                        consolE.log('-->', artisan.id)
+                        console.log('SENDINGMAIL-->', artisan.id)
                         mail.send({
                             From: "comptabilite@edison-services.fr",
                             ReplyTo: "comptabilite@edison-services.fr",
