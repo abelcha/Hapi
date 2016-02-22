@@ -92,7 +92,7 @@
 
              console.log('>>>', dbl)
              var i = 0;
-             var limit = req && req.query.limit || 100;
+             var limit = req && req.query &&  req.query.limit || 100;
              edison.v1.get("SELECT * FROM scanner WHERE moved='0' AND checked='0' ORDER BY id ASC LIMIT " +
                limit,
                function(err, resp)  {
