@@ -92,10 +92,13 @@
 
              console.log('>>>', dbl)
              var i = 0;
+             console.log('BBBB')
              var limit = req && req.query &&  req.query.limit || 100;
-             edison.v1.get("SELECT * FROM scanner WHERE moved='0' AND checked='0' ORDER BY id ASC LIMIT " +
-               limit,
-               function(err, resp)  {
+             console.log('CCC')
+             try {
+
+             edison.v1.get("SELECT * FROM scanner WHERE moved='0' AND checked='0' ORDER BY id ASC LIMIT " + limit, function(err, resp)  {
+                 console.log('DDDD')
                  console.log('--===============>', resp.length)
                  limit = resp.length;
                  async.eachLimit(resp, 20, function(row, cb) {
@@ -123,6 +126,9 @@
                    resolve('ok');
                  })
                })
+             } catch(e) {
+               console.log('=>', e)
+             }
            }, function(err) {
              console.log('-->', err)
            })
