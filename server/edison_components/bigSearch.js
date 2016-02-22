@@ -46,9 +46,9 @@ var interQuery = function(rgx, _int, callback) {
 		}, {
 			'facture.address.cp': rgx,
 		}, {
-			'facture.tel1': rgx,
+			'facture.tel': rgx,
 		}, {
-			'facture.tel1': rgx,
+			'facture.tel2': rgx,
 		}, {
 			'description': rgx,
 		}, {
