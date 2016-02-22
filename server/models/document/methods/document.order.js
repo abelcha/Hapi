@@ -17,7 +17,7 @@
            }
 
            return new Promise(function(resolve, reject) {
-               var limit = req && req.query && req.query.limit || 100;
+               var limit = req && req.query && req.query.limit || 1000;
                var i = 0;
                edison.v1.get("SELECT * FROM scanner WHERE archived=1 AND moved=1 and ordered='0' LIMIT " + limit, function(err, resp) {
                    async.eachLimit(resp, 5, function(e, cb) {
