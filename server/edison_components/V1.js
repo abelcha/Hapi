@@ -21,6 +21,7 @@ module.exports = {
         cb = cb || function() {}
         var key = requireLocal('config/_keys');
         var request = require('request');
+        console.log(url, query, key.alvin.pass)
         request.get({
             url: 'http://electricien13003.com/alvin/query.php',
             qs: {
