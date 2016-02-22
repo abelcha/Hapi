@@ -127,7 +127,7 @@ angular.module('edison').controller('MainController', ["$timeout", "LxNotificati
         console.log(new Date, "notif test", data)
     })
     socket.on('notification', function(data) {
-        console.log('NOTIF', data)
+//        console.log('NOTIF', data)
 
         if (data.dest === $rootScope.user.login && (data.dest !== data.origin || data.self)) {
             LxNotificationService.notify(data.message, data.icon || 'android', false, data.color);
@@ -1895,6 +1895,7 @@ angular.module('edison').factory('Address', function() {
     "use strict";
 
     var Address = function(place, copyContructor) {
+      console.log('=>', place, copyContructor)
         if (place.lat && place.lng) {
             this.lt = place.lat;
             this.lg = place.lng;
@@ -1927,7 +1928,7 @@ angular.module('edison').factory('Address', function() {
         this.v = a[2] && a[2].short_name;
     }
 
-    Address.prototype.getAddressProprieties = function(address) { 
+    Address.prototype.getAddressProprieties = function(address) {
         this.n = address.n;
         this.r = address.r;
         this.cp = address.cp;

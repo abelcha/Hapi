@@ -106,9 +106,9 @@ gulp.task('vendor-js', function() {
         .on('error', gutil.log)
         .pipe(sourcemaps.write('./'))
         .pipe(gulp.dest(paths.dist.js))
-        .pipe(notify({
-            message: 'VendorJs task complete'
-        }));
+        //.pipe(notify({
+        //    message: 'VendorJs task complete'
+        //}));
 
 })
 
@@ -122,9 +122,9 @@ gulp.task('vendor-css', function() {
         }))
         .pipe(minifycss())
         .pipe(gulp.dest(paths.dist.css))
-        .pipe(notify({
-            message: 'VendorCss task complete'
-        }))
+        //.pipe(notify({
+        //    message: 'VendorCss task complete'
+        //}))
 })
 
 // Scripts
@@ -146,9 +146,9 @@ gulp.task('scripts', function() {
         .on('error', gutil.log)
         .pipe(sourcemaps.write('./'))
         .pipe(gulp.dest(paths.dist.js))
-        .pipe(notify({
-            message: 'Scripts task complete'
-        }));
+        //.pipe(notify({
+        //    message: 'Scripts task complete'
+        //}));
 });
 
 
@@ -188,9 +188,9 @@ gulp.task('styles', function() {
         }))
         .pipe(minifycss())
         .pipe(gulp.dest(paths.dist.css))
-        .pipe(notify({
-            message: 'Styles task complete'
-        }))
+        //.pipe(notify({
+        //    message: 'Styles task complete'
+        //}))
 });
 
 gulp.task('clean:js', function() {
