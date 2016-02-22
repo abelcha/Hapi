@@ -26,10 +26,10 @@ module.exports = function(schema) {
                 return total + e.list.__list.length
             }, 0)
             var data = _.groupBy(req.body, 'id');
-            console.log('GOT', data.length, "Artisans")
+            console.log('GOT', _.size(data), "Artisans")
             async.eachLimit(data, 1, function(sst, cb) {
                 var k = Object.keys(data)[i++]
-                console.log('-=====->', i + '/' + data.length)
+                console.log('-=====->', i + '/' + _.size(data))
                     // global.currenWorkerJob.progress(i, req.body.length);
                 async.waterfall([
                     function(callback) {

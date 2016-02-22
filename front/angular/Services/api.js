@@ -228,8 +228,12 @@ angular.module('edison').factory('edisonAPI', ['$http', '$location', 'Upload', f
       }
     },
     artisan: {
-      tableauCom: function() {
-        return $http.get('/api/artisan/tableauCom');
+      tableauCom: function(date) {
+        return $http.get('/api/artisan/tableauCom', {
+          params: {
+            date: date
+          }
+        });
       },
       manage: function(id) {
         return $http.post('/api/artisan/' + id + '/manage')

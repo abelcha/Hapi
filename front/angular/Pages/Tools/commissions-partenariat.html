@@ -1,15 +1,11 @@
 <div class="row card" style="overflow: scroll;" style="min-height:599px">
-  <table class="table">
-    <tbody>
-      <tr>
-        <td ng-repeat="g in  vm.data" ng-if="g.length">
+  <select style="width:400px" ng-change="vm.changeSelectedDate()" class="form-control" ng-model="vm.selectedDate" ng-options="v.date as v.name  for v in vm.dateSelectList" >
+  </select>
           <table class="table table-bordered" style="width: 49px;">
             <tr>
+
               <td colspan="3">
-                <input ng-model="vm.query[g[0].date]" type="text" placeholder="Rechercher..." class="form-control">
-              </td>
-              <td colspan="3">
-                <strong text-xxl><center>{{g[0].date|date:"MMMM yyyy"}}</center></strong>
+                <strong text-xxl><center>{{vm.selectedDate|date:"MMMM yyyy"}}</center></strong>
               </td>
             </tr>
             <tr>
@@ -20,7 +16,7 @@
               <td bold>Com.</td>
               <td bold>Interventions</td>
             </tr>
-            <tr ng-repeat="x in g|filter:vm.query[g[0].date]">
+            <tr ng-repeat="x in vm.data">
               <td>{{x.login}}</td>
               <td style="width:0px">
                 <a href="/artisan/{{x.sst}}/recap">{{x.nomSociete.slice(0, 15)}}</a>
@@ -44,8 +40,4 @@
             </tr>
 
           </table>
-        </td>
-      </tr>
-    </tbody>
-  </table>
 </div>

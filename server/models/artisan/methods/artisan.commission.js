@@ -77,7 +77,7 @@ module.exports = function(schema) {
         }]
       }
     }
-    console.log(JSON.stringify(query, null, 2))
+    //console.log(JSON.stringify(query, null, 2))
     db.model('intervention').find(query)
       .select('id sst compta')
       .stream()
@@ -129,19 +129,21 @@ module.exports = function(schema) {
     db.model('intervention').find({
       'compta.paiement.effectue': true,
       $or: [{
-        'compta.paiement.date': {
-          $lt: _to,
-          $gt: _from
-        }
-      },/* {
-        'artisan.id': {
-          $in: [1821, 1987, 1950, 2004, 1903]
-        },
-        'compta.paiement.date': {
-          $gt: new Date(2015, 11, 0),
-          $lt: new Date(2016, 0, 0),
-        }
-      }*/]
+          'compta.paiement.date': {
+            $lt: _to,
+            $gt: _from
+          }
+      },
+        /* {
+                'artisan.id': {
+                  $in: [1821, 1987, 1950, 2004, 1903]
+                },
+                'compta.paiement.date': {
+                  $gt: new Date(2015, 11, 0),
+                  $lt: new Date(2016, 0, 0),
+                }
+              }*/
+        ]
     }).then(function(resp) {
         console.log('-->', resp.length)
         try {
@@ -152,7 +154,8 @@ module.exports = function(schema) {
             })
             .map(function(e) {
               var nbrToUpd = _.floor(e.length / 10) * 10
-              console.log('==>', e[0].artisan.nomSociete, nbrToUpd, _(e).slice(0, nbrToUpd).pluck('id').value().length)
+              console.log('==>', e[0].artisan.nomSociete, nbrToUpd, _(e).slice(0, nbrToUpd).pluck('id').value()
+                .length)
               return _(e).slice(0, nbrToUpd).pluck('id').value()
             })
             .flatten()
@@ -186,12 +189,11 @@ module.exports = function(schema) {
   schema.statics.tableauCom = function(req, res) {
     var range = momentIterator(dateThreeshold, new Date()).range('months')
       //  console.log(range)
-    async.mapLimit(range, 1, getTableauComs, function(err, resp) {
-        //console.log(resp);
-        res.json(resp);
-      })
-      // getTableauComs(moment().add(-1, 'months').toDate(), function(err, resp) {
-      //   console.log(err, resp)
-      // })
+    getTableauComs(new Date(req.query.date), function(err, resp) {
+      if (err) {
+        res.status(500).json(err);
+      }
+      res.json(resp)
+    })
   }
 }
