@@ -43,7 +43,8 @@
            min = e;
          }
        })
-       if ((min.diff > 0 && min.diff < 15000) || (min.diff < 0 && min.diff > -1000)) {
+       console.log('==========>',x, min)
+       if ((min.diff > 0 && min.diff < 15000) || (min.diff < 0 && min.diff > -15000)) {
          return min
        }
        return null
@@ -93,7 +94,7 @@
              console.log('>>>', dbl)
              var i = 0;
              console.log('BBBB')
-             var limit = req && req.query &&  req.query.limit || 100;
+             var limit = req && req.query &&  req.query.limit || 1000;
              console.log('CCC')
              try {
 
@@ -114,11 +115,14 @@
                        var q = _.template(
                          "UPDATE scanner SET diff='{{diff}}', name='{{name}}', checked='1',  moved='1' WHERE id='{{id}}'"
                        )(mrg)
+                       console.log('YEAH')
                        edison.v1.set(q, function(err, resp) {
                          cb(null, 'ok')
                        })
                      })
                    } else {
+                     console.log('NOPE')
+
                      edison.v1.set(_.template("UPDATE scanner SET checked='0' WHERE id='{{id}}'")(row),
                        cb)
                    }
