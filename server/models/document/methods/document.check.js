@@ -13,7 +13,7 @@
 
      schema.statics.test = function(req, res) {
        try {
-
+         var req = {}
          if (moment().hour() > 7 && moment().hour() < 21) {
            db.model('document').check(req).then(function() {
              db.model('document').archiveScan(req).then(function() {
