@@ -273,7 +273,7 @@
                 s: config.etats[e._status].order,
                 c: config.categories[e.categorie].order,
                 n: e.client.civilite + ' ' + e.client.nom + ' ' + e.client.prenom,
-                a: e.artisan.nomSociete && e.artisan.nomSociete.slice(0, 14),
+                a: e.artisan.nomSociete && e.artisan.nomSociete.slice(0, 14) || '',
                 pa: e.prixFinal || e.prixAnnonce,
                 ss: e.artisan.subStatus,
                 da: d(e.date.ajout),
