@@ -106,16 +106,42 @@
 
     }
 
+
+    var relanceFourniture = function(inter) {
+      db.model('artisan').findOne({
+        _id: inter.artisan.id
+      }).then(function(sst) {
+        sms.send({
+          type: "RELANCE_FOURNITURE",
+          dest: sst.nomSociete,
+          to: sst.telephone.tel1,
+          text: 'Bonjour,\n' +
+            "Merci de transmettre le cout de fourniture pour l'OS n°" + inter.id +
+            " au service Comptabilité 0972452709"
+        })
+      })
+    }
+
+
     module.exports.preUpdate = function(_old, _new, session, callback) {
       if (_new.artisan && _new.artisan.id && _new.artisan.id !== _old.artisan.id) {
         _old.status = 'APR';
       }
+
+
+
+
+
+
       if (_new.compta.reglement.recu && !_old.compta.reglement.recu) {
         _new.status = 'VRF';
         _new.compta.reglement.historique.push({
           login: session.login,
           montant: _new.compta.reglement.avoir.montant,
         })
+        if (_new.compta.info.fournitureNC && _new.compta.info.fournitureSMS) {
+          relanceFourniture(_new)
+        }
         if (!_new.compta.reglement.date) {
           _new.compta.reglement.date = Date.now()
           _new.compta.reglement.login = session.login
@@ -148,20 +174,10 @@
         }
 
       }
+      console.log('-->', _new.compta.info)
       if (_new.compta.paiement.ready && !_old.compta.paiement.ready) {
-        if (_new.compta.info.fournitureNC) {
-          db.model('artisan').findOne({
-            _id: _new.artisan.id
-          }).then(function(sst) {
-            sms.send({
-              type: "RELANCE_FOURNITURE",
-              dest: sst.nomSociete,
-              to: sst.telephone.tel1,
-              text: 'Bonjour,\n' +
-                "Merci de transmettre le cout de fourniture pour l'OS n°" + _new.id +
-                " au service Comptabilité 0972452709"
-            })
-          })
+        if (_new.compta.info.fournitureNC && _new.compta.info.fournitureSMS) {
+          relanceFourniture(_new)
         }
 
         _new.compta.paiement.login = session.login

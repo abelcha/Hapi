@@ -368,6 +368,7 @@ module.exports = function(db) {
         tvaNC: Boolean, // attestation de tva (si tva=10%)
         devisNC: Boolean, // devis (> 150)
         fournitureNC: Boolean,
+        fournitureSMS:Boolean
 
       },
     },
