@@ -44,7 +44,7 @@
                         </li>
                         <li class="dropdown" ng-click="userDropdown = !userDropdown">
                             <a class="dropdown-toggle user-menu" data-toggle="dropdown">
-                                <img ng-click="root.displayUser = root.user;userDropdown = !userDropdown" src="/img/profile/default.jpg">
+                                <img ng-click="root.displayUser = root.user;userDropdown = !userDropdown" src="/api/user/{{root.displayUser.login}}/profile">
                                 <span bold>{{_.capitalize(root.displayUser.login)}}</span>
                             </a>
                             <ul ng-class="{'display-block' : userDropdown}" class="dropdown-menu open">

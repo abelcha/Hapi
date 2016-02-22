@@ -4565,6 +4565,55 @@ var ArtisanCtrl = function(IBAN, $timeout, $rootScope, $scope, edisonAPI, $locat
 ArtisanCtrl.$inject = ["IBAN", "$timeout", "$rootScope", "$scope", "edisonAPI", "$location", "$routeParams", "ContextMenu", "LxProgressService", "LxNotificationService", "TabContainer", "config", "dialog", "artisanPrm", "Artisan"];
 angular.module('edison').controller('ArtisanController', ArtisanCtrl);
 
+var AvoirsController = function(TabContainer, openPost, edisonAPI, $rootScope, LxProgressService, LxNotificationService, FlushList) {
+    "use strict";
+    var _this = this
+    var tab = TabContainer.getCurrentTab();
+    tab.setTitle('Avoirs')
+    _this.loadData = function(prevChecked) {
+        LxProgressService.circular.show('#5fa2db', '#globalProgress');
+        edisonAPI.compta.avoirs().then(function(result) {
+            console.log(result)
+            $rootScope.avoirs = result.data
+            LxProgressService.circular.hide()
+        })
+    }
+    if (!$rootScope.avoirs)
+        _this.loadData()
+
+    _this.reloadAvoir = function() {
+        _this.loadData()
+    }
+
+    _this.print = function(type) {
+        openPost('/api/intervention/printAvoir', {
+            data: $rootScope.avoirs
+        });
+    }
+    _this.printChq = function(type) {
+        openPost('/api/intervention/printAvoirChq', {
+            data: $rootScope.avoirs
+        });
+    }
+
+    _this.flush = function() {
+        var list = _.filter($rootScope.avoirs, {
+            checked: true
+        })
+        edisonAPI.compta.flushAvoirs(list).then(function(resp) {
+            LxNotificationService.success(resp.data);
+            _this.reloadAvoir()
+        }).catch(function(err) {
+            LxNotificationService.error(err.data);
+        })
+    }
+
+}
+AvoirsController.$inject = ["TabContainer", "openPost", "edisonAPI", "$rootScope", "LxProgressService", "LxNotificationService", "FlushList"];
+
+
+angular.module('edison').controller('avoirsController', AvoirsController);
+
 var ContactArtisanController = function($scope, $timeout, TabContainer, LxProgressService, FiltersFactory, ContextMenu, edisonAPI, DataProvider, $routeParams, $location, $q, $rootScope, $filter, config, ngTableParams) {
     "use strict";
     var _this = this;
@@ -4741,120 +4790,79 @@ var ContactArtisanController = function($scope, $timeout, TabContainer, LxProgre
 ContactArtisanController.$inject = ["$scope", "$timeout", "TabContainer", "LxProgressService", "FiltersFactory", "ContextMenu", "edisonAPI", "DataProvider", "$routeParams", "$location", "$q", "$rootScope", "$filter", "config", "ngTableParams"];
 angular.module('edison').controller('ContactArtisanController', ContactArtisanController);
 
-var AvoirsController = function(TabContainer, openPost, edisonAPI, $rootScope, LxProgressService, LxNotificationService, FlushList) {
-    "use strict";
-    var _this = this
-    var tab = TabContainer.getCurrentTab();
-    tab.setTitle('Avoirs')
-    _this.loadData = function(prevChecked) {
-        LxProgressService.circular.show('#5fa2db', '#globalProgress');
-        edisonAPI.compta.avoirs().then(function(result) {
-            console.log(result)
-            $rootScope.avoirs = result.data
-            LxProgressService.circular.hide()
-        })
+var DashboardController = function($rootScope, statsTelepro, dialog, user, edisonAPI, $scope, $filter, TabContainer,
+  NgTableParams, $routeParams, $location, LxProgressService) {
+  var _this = this;
+  $scope._ = _;
+  $scope.root = $rootScope;
+
+  _this.openLink = function(link) {
+    $location.url(link)
+  }
+
+
+  _this.addTask = function() {
+    edisonAPI.task.add(_this.newTask).then(_.partial(_this.reloadTask, _this.newTask.to));
+  }
+
+  _this.check = function(task) {
+    edisonAPI.task.check(task._id).then(_.partial(_this.reloadTask, _this.newTask.to))
+  }
+
+  edisonAPI.intervention.dashboardStats({
+      date: moment().startOf('day').toDate()
+    })
+    .then(function(resp) {
+      _this.statsTeleproBfm = _.sortBy(resp.data.weekStats, 'total').reverse()
+    });
+
+
+
+  _this.reloadTask = function(usr) {
+    _this.newTask = {
+      to: usr,
+      from: user.login
     }
-    if (!$rootScope.avoirs)
-        _this.loadData()
+    edisonAPI.task.listRelevant({
+      login: usr
+    }).then(function(resp) {
+      _this.taskList = resp.data;
+    })
+  }
 
-    _this.reloadAvoir = function() {
-        _this.loadData()
-    }
+  _this.reloadTask(user.login);
 
-    _this.print = function(type) {
-        openPost('/api/intervention/printAvoir', {
-            data: $rootScope.avoirs
-        });
-    }
-    _this.printChq = function(type) {
-        openPost('/api/intervention/printAvoirChq', {
-            data: $rootScope.avoirs
-        });
-    }
+  _this.reloadDashboardStats = function(date) {
 
-    _this.flush = function() {
-        var list = _.filter($rootScope.avoirs, {
-            checked: true
-        })
-        edisonAPI.compta.flushAvoirs(list).then(function(resp) {
-            LxNotificationService.success(resp.data);
-            _this.reloadAvoir()
-        }).catch(function(err) {
-            LxNotificationService.error(err.data);
-        })
-    }
-
-}
-AvoirsController.$inject = ["TabContainer", "openPost", "edisonAPI", "$rootScope", "LxProgressService", "LxNotificationService", "FlushList"];
-
-
-angular.module('edison').controller('avoirsController', AvoirsController);
-
-var DashboardController = function($rootScope, statsTelepro, dialog, user, edisonAPI, $scope, $filter, TabContainer, NgTableParams, $routeParams, $location, LxProgressService) {
-    var _this = this;
-    $scope._ = _;
-    $scope.root = $rootScope;
-
-    _this.openLink = function(link) {
-        $location.url(link)
-    }
-
-
-    _this.addTask = function() {
-        edisonAPI.task.add(_this.newTask).then(_.partial(_this.reloadTask, _this.newTask.to));
-    }
-
-    _this.check = function(task) {
-        edisonAPI.task.check(task._id).then(_.partial(_this.reloadTask, _this.newTask.to))
-    }
-
-
-
-    _this.reloadTask = function(usr) {
-        _this.newTask = {
-            to: usr,
-            from: user.login
+    edisonAPI.intervention.dashboardStats(date).then(function(resp) {
+      _this.tableParams = new NgTableParams({
+        count: resp.data.weekStats.length,
+        sorting: {
+          total: 'desc'
         }
-        edisonAPI.task.listRelevant({
-            login: usr
-        }).then(function(resp) {
-            _this.taskList = resp.data;
-        })
-    }
+      }, {
+        counts: [],
+        data: resp.data.weekStats
+      });
+      _this.stats = resp.data
+    })
+  }
 
-    _this.reloadTask(user.login);
-
-    _this.reloadDashboardStats = function(date) {
-
-        edisonAPI.intervention.dashboardStats(date).then(function(resp) {
-            _this.tableParams = new NgTableParams({
-                count: resp.data.weekStats.length,
-                sorting: {
-                    total: 'desc'
-                }
-            }, {
-                counts: [],
-                data: resp.data.weekStats
-            });
-            _this.stats = resp.data
-        })
-    }
-
-    _this.dateSelect = [{
-        nom: 'Du jour',
-        date: moment().startOf('day').toDate()
+  _this.dateSelect = [{
+    nom: 'Du jour',
+    date: moment().startOf('day').toDate()
     }, {
-        nom: 'De la semaine',
-        date: moment().startOf('week').toDate()
+    nom: 'De la semaine',
+    date: moment().startOf('week').toDate()
     }, {
-        nom: 'Du mois',
-        date: moment().startOf('month').toDate()
+    nom: 'Du mois',
+    date: moment().startOf('month').toDate()
     }, {
-        nom: "De l'année",
-        date: moment().startOf('year').toDate()
+    nom: "De l'année",
+    date: moment().startOf('year').toDate()
     }]
-    _this.dateChoice = _this.dateSelect[1];
-    this.reloadDashboardStats(_this.dateChoice);
+  _this.dateChoice = _this.dateSelect[1];
+  this.reloadDashboardStats(_this.dateChoice);
 
 }
 DashboardController.$inject = ["$rootScope", "statsTelepro", "dialog", "user", "edisonAPI", "$scope", "$filter", "TabContainer", "NgTableParams", "$routeParams", "$location", "LxProgressService"];
@@ -6121,6 +6129,24 @@ var StatsController = function(DateSelect, TabContainer, $routeParams, edisonAPI
 StatsController.$inject = ["DateSelect", "TabContainer", "$routeParams", "edisonAPI", "$rootScope", "$scope", "$location", "LxProgressService", "socket"];
 angular.module('edison').controller('StatsController', StatsController);
 
+var userHistory = function(TabContainer, edisonAPI, $rootScope, $scope, $location, LxNotificationService, socket) {
+	"use strict";
+	var _this = this;
+	_this.tab = TabContainer.getCurrentTab();
+	_this.tab.setTitle('User History');
+	edisonAPI.user.history($location.search().login).then(function(resp) {
+		$scope.history = resp.data
+	})
+	_this.xclick = function(h) {
+		_this.selectedRow = (_this.selectedRow == h.date ? null : h.date);
+	}
+
+
+}
+userHistory.$inject = ["TabContainer", "edisonAPI", "$rootScope", "$scope", "$location", "LxNotificationService", "socket"];
+
+angular.module('edison').controller('userHistory', userHistory);
+
 var commissionsPartenariat = function(MomentIterator, TabContainer, $routeParams, edisonAPI, $rootScope, $scope, $location, LxProgressService, socket) {
   "use strict";
   var _this = this;
@@ -6508,21 +6534,3 @@ var telephoneMatch = function(TabContainer, edisonAPI, $rootScope, $scope, $loca
 }
 telephoneMatch.$inject = ["TabContainer", "edisonAPI", "$rootScope", "$scope", "$location", "LxProgressService", "socket"];
 angular.module('edison').controller('telephoneMatch', telephoneMatch);
-
-var userHistory = function(TabContainer, edisonAPI, $rootScope, $scope, $location, LxNotificationService, socket) {
-	"use strict";
-	var _this = this;
-	_this.tab = TabContainer.getCurrentTab();
-	_this.tab.setTitle('User History');
-	edisonAPI.user.history($location.search().login).then(function(resp) {
-		$scope.history = resp.data
-	})
-	_this.xclick = function(h) {
-		_this.selectedRow = (_this.selectedRow == h.date ? null : h.date);
-	}
-
-
-}
-userHistory.$inject = ["TabContainer", "edisonAPI", "$rootScope", "$scope", "$location", "LxNotificationService", "socket"];
-
-angular.module('edison').controller('userHistory', userHistory);
