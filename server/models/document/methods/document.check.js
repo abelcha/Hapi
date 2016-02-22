@@ -13,9 +13,8 @@
 
      schema.statics.test = function(req, res) {
        try {
-         var req = {}
          if (moment().hour() > 7 && moment().hour() < 21) {
-           db.model('document').check(req).then(function() {
+           db.model('document').check({}).then(function() {
              db.model('document').archiveScan(req).then(function() {
                db.model('document').order(req).then(function() {})
              })
@@ -92,7 +91,7 @@
 
              console.log('>>>', dbl)
              var i = 0;
-             var limit = req.query.limit || 100;
+             var limit = req && req.query.limit || 100;
              edison.v1.get("SELECT * FROM scanner WHERE moved='0' AND checked='0' ORDER BY id ASC LIMIT " +
                limit,
                function(err, resp)  {
