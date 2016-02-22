@@ -95,6 +95,7 @@
              edison.v1.get("SELECT * FROM scanner WHERE moved='0' AND checked='0' ORDER BY id ASC LIMIT " +
                limit,
                function(err, resp)  {
+                 try {
                  console.log('--===============>', resp.length)
                  limit = resp.length;
                  async.eachLimit(resp, 20, function(row, cb) {
@@ -122,6 +123,10 @@
                    resolve('ok');
                  })
                })
+               catch(e) {
+                 console.log('==========', e)
+               }
+
            }, function(err) {
              console.log('-->', err)
            })
