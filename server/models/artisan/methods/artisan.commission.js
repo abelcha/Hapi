@@ -56,7 +56,7 @@ module.exports = function(schema) {
         }, {
           'date.commissionPartenariat': db.utils.between(_from, _to)
         }, {
-          'compta.paiement.date': db.utils.between(_from, _to),
+          'compta.paiement.date': db.utils.between(new Date(2015, 0, 0), new Date(2016, 1, 0)),
           'artisan.id': {
             $in: [1821, 1987, 1950, 2004, 1903]
           },
@@ -129,21 +129,19 @@ module.exports = function(schema) {
     db.model('intervention').find({
       'compta.paiement.effectue': true,
       $or: [{
-          'compta.paiement.date': {
-            $lt: _to,
-            $gt: _from
-          }
-      },
-        /* {
-                'artisan.id': {
-                  $in: [1821, 1987, 1950, 2004, 1903]
-                },
-                'compta.paiement.date': {
-                  $gt: new Date(2015, 11, 0),
-                  $lt: new Date(2016, 0, 0),
-                }
-              }*/
-        ]
+        'compta.paiement.date': {
+          $lt: _to,
+          $gt: _from
+        }
+      },/* {
+        'artisan.id': {
+          $in: [1821, 1987, 1950, 2004, 1903]
+        },
+        'compta.paiement.date': {
+          $gt: new Date(2015, 11, 0),
+          $lt: new Date(2016, 0, 0),
+        }
+      }*/]
     }).then(function(resp) {
         console.log('-->', resp.length)
         try {
@@ -154,8 +152,7 @@ module.exports = function(schema) {
             })
             .map(function(e) {
               var nbrToUpd = _.floor(e.length / 10) * 10
-              console.log('==>', e[0].artisan.nomSociete, nbrToUpd, _(e).slice(0, nbrToUpd).pluck('id').value()
-                .length)
+              console.log('==>', e[0].artisan.nomSociete, nbrToUpd, _(e).slice(0, nbrToUpd).pluck('id').value().length)
               return _(e).slice(0, nbrToUpd).pluck('id').value()
             })
             .flatten()
