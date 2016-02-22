@@ -1,5 +1,5 @@
 angular.module('edison').directive('infoCompta',
-    function(config, Paiement, Intervention) {
+    function(config, Paiement, Intervention, textTemplate) {
         "use strict";
         return {
             restrict: 'E',
@@ -13,6 +13,7 @@ angular.module('edison').directive('infoCompta',
             },
             link: function(scope, element, attrs) {
                 scope.config = config
+                scope.textTemplate = textTemplate;
                 scope.Intervention = Intervention
                 if (scope.displayReglement) {
                     scope.showPaiement = true

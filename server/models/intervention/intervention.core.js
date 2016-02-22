@@ -115,9 +115,7 @@
           type: "RELANCE_FOURNITURE",
           dest: sst.nomSociete,
           to: sst.telephone.tel1,
-          text: 'Bonjour,\n' +
-            "Merci de transmettre le cout de fourniture pour l'OS n°" + inter.id +
-            " au service Comptabilité 0972452709"
+          text: inter.compta.info.fournitureSmsText
         })
       })
     }
@@ -131,14 +129,14 @@
 
 
 
-
-
+      console.log('--->',_new.compta.reglement.recu,  !_old.compta.reglement.recu)
       if (_new.compta.reglement.recu && !_old.compta.reglement.recu) {
         _new.status = 'VRF';
         _new.compta.reglement.historique.push({
           login: session.login,
           montant: _new.compta.reglement.avoir.montant,
         })
+        console.log('=======>', _new.compta.info.fournitureNC ,  _new.compta.info.fournitureSMS)
         if (_new.compta.info.fournitureNC && _new.compta.info.fournitureSMS) {
           relanceFourniture(_new)
         }

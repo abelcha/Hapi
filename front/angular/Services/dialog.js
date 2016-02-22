@@ -103,7 +103,7 @@ angular.module('edison').factory('dialog', function(openPost, $mdDialog, edisonA
         },
         validationPaiement: function(inter, cb) {
             $mdDialog.show({
-                controller: function DialogController($scope, $mdDialog) {
+                controller: function DialogController($scope, $mdDialog, textTemplate) {
                     $scope.data = inter
                     Mousetrap.bind(['command+k', 'ctrl+k', 'command+f1', 'ctrl+f1'], function() {
                         $window.open("appurl:", '_self');
@@ -113,6 +113,7 @@ angular.module('edison').factory('dialog', function(openPost, $mdDialog, edisonA
                         })
                         return false;
                     });
+                    $scope.textTemplate = textTemplate;
                     $scope.data.compta.paiement.ready = true;
                     $scope.preview = function() {
                         openPost('/api/intervention/autofacture', {

@@ -29,16 +29,20 @@
                     </md-checkbox>
                 </div>
                 <div class="col-md-3" ng-if="data.reglementSurPlace">
-                  <md-checkbox ng-model="data.compta.info.fournitureSMS" aria-label="_" class="md-warn">
-                    Envoyer SMS de fourniture manquante
-                  </md-checkbox>
-                </div>
-                <div class="col-md-3" ng-if="data.reglementSurPlace">
                     <md-checkbox ng-model="data.compta.info.factureNC" aria-label="_" class="md-warn">
                         Facture non conforme
                     </md-checkbox>
                 </div>
             </div>
+        </div>
+
+        <div class="card" style="padding:30px" ng-if="data.compta.info.fournitureNC" ng-init="data.compta.info.fournitureSmsText = textTemplate.sms.intervention.relanceFourniture(data)">
+          <textarea  style="width:300px;display:inline" name="name" ng-model="data.compta.info.fournitureSmsText" class='form-control' rows="8" cols="40"></textarea>
+          <div class="col-md-3" ng-if="data.reglementSurPlace">
+            <md-checkbox ng-model="data.compta.info.fournitureSMS" aria-label="_" class="md-warn">
+              Envoyer SMS de fourniture manquante
+            </md-checkbox>
+          </div>
         </div>
     </md-dialog-content>
     <div class="md-actions card" layout="row">

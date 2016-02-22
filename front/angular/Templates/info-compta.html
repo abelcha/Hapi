@@ -64,17 +64,20 @@
                     </md-checkbox>
                 </div>
                 <div class="col-md-3" ng-if="data.reglementSurPlace">
-                  <md-checkbox ng-model="data.compta.info.fournitureSMS" aria-label="_" class="md-warn">
-                    Envoyer SMS de fourniture manquante
-                  </md-checkbox>
-                </div>
-                <div class="col-md-3" ng-if="data.reglementSurPlace">
-                    <md-checkbox ng-model="data.compta.info.factureNC" aria-label="_" class="md-warn">
+                    <md-checkbox ng-model="data.info.factureNC" aria-label="_" class="md-warn">
                         Facture non conforme
                     </md-checkbox>
                 </div>
             </div>
             <br>
+            <div class="card" style="padding:30px" ng-if="data.compta.info.fournitureNC" ng-init="data.compta.info.fournitureSmsText = textTemplate.sms.intervention.relanceFourniture(data)">
+              <textarea  style="width:300px;display:inline" name="name" ng-model="data.compta.info.fournitureSmsText" class='form-control' rows="8" cols="40"></textarea>
+              <div class="col-md-3" ng-if="data.reglementSurPlace">
+                <md-checkbox ng-model="data.compta.info.fournitureSMS" aria-label="_" class="md-warn">
+                  Envoyer SMS de fourniture manquante
+                </md-checkbox>
+              </div>
+            </div>
             <h4 ng-click="regdisplayHistorique = !regdisplayHistorique"> > Historique ({{data.compta.reglement.historique.length}})</h4>
             <pre ng-if="regdisplayHistorique"><h4>{{data.compta.reglement.historique|json}}</h4></pre>
             <br>
