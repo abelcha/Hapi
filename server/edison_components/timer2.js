@@ -62,7 +62,7 @@ var Timer = module.exports = function() {
   this.setTimer = function() {
 
     _.each(eventList, function(ev) {
-    //  console.log(ev.fn.name, ev.nextDate[0]);
+      //  console.log(ev.fn.name, ev.nextDate[0]);
       schedule.scheduleJob(ev.cronString, function() {
         console.log('JOB [' + ev.fn.name + ']')
         if (ev.delay) {
@@ -86,7 +86,7 @@ var Timer = module.exports = function() {
 
 
 
-  if (envProd ||  envDev) {
+  if (envProd) {
     //
     // this.emitter.on("start of month", function() {
     //    db.model('artisan').setCommission()
@@ -243,19 +243,30 @@ var Timer = module.exports = function() {
     //
 
 
-    everyMinutes(15, function scanCheck() {
-      var req = {
-
-      }
-
+    everyMinutes(5, function scanCheck() {
       if (moment().hour() > 7 && moment().hour() < 21) {
-        db.model('document').check(req).then(function() {
-          db.model('document').archiveScan(req).then(function() {
-            db.model('document').order(req).then(function() {})
-          })
+        db.model('document').check({}).then(function() {
+
         })
       }
     })
+
+    everyMinutes(5, function scanArchive() {
+      if (moment().hour() > 7 && moment().hour() < 21) {
+        db.model('document').archiveScan({}).then(function() {
+
+        })
+      }
+    })
+
+    everyMinutes(5, function scanOrder() {
+      if (moment().hour() > 7 && moment().hour() < 21) {
+        db.model('document').order({}).then(function() {})
+      }
+    })
+
+
+
 
 
 
