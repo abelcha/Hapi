@@ -20,6 +20,21 @@ angular.module('edison').factory('dialog', function(openPost, $mdDialog, edisonA
             });
         },
 
+        getPassword: function(cb) {
+            $mdDialog.show({
+                controller: function($scope, $mdDialog, config) {
+
+                    $scope.answer = function(cancel) {
+                        if ($scope.password === 'lecielestgris') {
+                          $mdDialog.hide();
+                          return cb(null, "OK")
+                        }
+                    }
+                },
+                templateUrl: '/DialogTemplates/get-password.html',
+            });
+        },
+
         verification: function(inter, cb) {
             $mdDialog.show({
                 controller: function DialogController($scope, $mdDialog, config) {

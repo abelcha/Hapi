@@ -1,4 +1,4 @@
-<div class="card">
+<div class="card" ng-if="showAll">
     <div class="row">
         <div style="padding:40px" class="col-sm-3">
             <select class="form-control" ng-model="selectedDate" ng-options="ds as ds.t for ds in vm.dateSelect">
@@ -36,6 +36,6 @@
             <div id="chartContainer3">
             </div>
         </div>
-      
+
     </div>
 </div>
