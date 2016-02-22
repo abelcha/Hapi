@@ -26,7 +26,7 @@ module.exports = function(schema) {
                       console.log(err, resp)
                   });*/
             var i = 0;
-            var limit = req.query.limit || 100;
+            var limit = req && req.query && req.query.limit || 100;
             var archiveFile = function(file, cb) {
                 //console.log(String(i++) + '/' + String(limit))
                 document.move('/SCAN/' + file.name, '/SCAN_ARCHIVES/' + file.name)
