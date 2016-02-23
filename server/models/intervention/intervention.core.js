@@ -172,7 +172,7 @@
       }
       console.log('-->', _new.compta.info)
       if (_new.compta.paiement.ready && !_old.compta.paiement.ready) {
-        if (_new.compta.info.fournitureNC && _new.compta.info.fournitureSMS) {
+        if (_new.compta.info && _new.compta.info.fournitureNC && _new.compta.info.fournitureSMS) {
           relanceFourniture(_new)
         }
 
