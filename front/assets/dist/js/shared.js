@@ -624,11 +624,12 @@ FiltersFactory.prototype.list = {
         short_name: 'i_nwno',
         long_name: 'New nocontact',
         url: 'newNoContact',
-        match: {//qsddqs
+        match: {
             'newOs': true,
             'appels': {
                 $size: 0
             },
+            'status':'ENC',
             'artisan.subStatus': 'NEW'
         },
     }, {
