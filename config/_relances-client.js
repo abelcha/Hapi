@@ -206,7 +206,7 @@
     var fs = require('fs')
     var scissors = require('scissors');
     var pageNumber = PDF('facture', this.doc).getHTML().split('</page>').length
-    var p1 = scissors(filename).pages(1) // select or reorder individual pages 
+    var p1 = scissors(filename).pages(1) // select or reorder individual pages
     var p2 = scissors(filename).range(2, pageNumber + 1);
     var blank = scissors(process.cwd() + '/front/assets/pdf/blank.pdf').pages(1);
     var stream = scissors.join(p1, blank, p2).pdfStream()

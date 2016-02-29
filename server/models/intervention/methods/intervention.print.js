@@ -39,6 +39,7 @@ module.exports = function(schema) {
                 qrcodeText2: e.id + ' - ' + e.nomSociete.slice(0, 10),
                 address: e.address,
                 dest: e.representant,
+                nomSociete:e.nomSociete,
                 text: textTemplate.lettre.artisan.rappelDocuments.bind(e)(),
                 title: ""
               }
