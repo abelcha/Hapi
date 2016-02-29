@@ -620,6 +620,17 @@ FiltersFactory.prototype.list = {
                 $size: 0
             }
         },
+    },{
+        short_name: 'i_nwno',
+        long_name: 'New nocontact',
+        url: 'newNoContact',
+        match: {//qsddqs
+            'newOs': true,
+            'appels': {
+                $size: 0
+            },
+            'artisan.subStatus': 'NEW'
+        },
     }, {
         short_name: 'i_newapr',
         long_name: 'News à envoyer',
@@ -16164,7 +16175,7 @@ module.exports = MomentIterator
 
 },{"moment":17}],17:[function(require,module,exports){
 //! moment.js
-//! version : 2.11.1
+//! version : 2.11.2
 //! authors : Tim Wood, Iskren Chernev, Moment.js contributors
 //! license : MIT
 //! momentjs.com
@@ -17981,7 +17992,7 @@ module.exports = MomentIterator
     }
 
     // ASP.NET json date format regex
-    var aspNetRegex = /(\-)?(?:(\d*)[. ])?(\d+)\:(\d+)(?:\:(\d+)\.?(\d{3})?)?/;
+    var aspNetRegex = /^(\-)?(?:(\d*)[. ])?(\d+)\:(\d+)(?:\:(\d+)\.?(\d{3})?\d*)?$/;
 
     // from http://docs.closure-library.googlecode.com/git/closure_goog_date_date.js.source.html
     // somewhat more in line with 4.4.3.2 2004 spec, but allows decimal anywhere
@@ -19736,7 +19747,7 @@ module.exports = MomentIterator
     // Side effect imports
 
 
-    utils_hooks__hooks.version = '2.11.1';
+    utils_hooks__hooks.version = '2.11.2';
 
     setHookCallback(local__createLocal);
 

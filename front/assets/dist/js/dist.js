@@ -461,6 +461,917 @@ angular.module('edison').config(["$routeProvider", "$locationProvider", function
   $locationProvider.html5Mode(true);
 }]);
 
+ angular.module('edison').directive('absenceSst', ["edisonAPI", "LxNotificationService", "user", function(edisonAPI, LxNotificationService, user) {
+    "use strict";
+    return {
+        replace: false,
+        restrict: 'E',
+        templateUrl: '/Templates/absence-sst.html',
+        scope: {
+            data: '=',
+            exit: '&',
+        },
+        link: function(scope, elem) {
+            scope.absence = {
+                start: moment().add(-1, 'hours').toDate(),
+                end: moment().hour(23).minute(43).toDate()
+            }
+            scope.save = function() {
+                edisonAPI.artisan.absence(scope.data.id, scope.absence).then(function() {
+                    LxNotificationService.success("L'absence à été enregistrer");
+                    (scope.exit || _.noop)();
+                })
+            }
+        }
+    }
+ }]);
+
+angular.module('edison').directive('allowPattern', [allowPatternDirective]);
+
+function allowPatternDirective() {
+    return {
+        restrict: "A",
+        compile: function(tElement, tAttrs) {
+            return function(scope, element, attrs) {
+                // I handle key events
+                element.bind("keypress", function(event) {
+                    var keyCode = event.which || event.keyCode; // I safely get the keyCode pressed from the event.
+                    var keyCodeChar = String.fromCharCode(keyCode); // I determine the char from the keyCode.
+
+                    // If the keyCode char does not match the allowed Regex Pattern, then don't allow the input into the field.
+                    if (!keyCodeChar.match(new RegExp(attrs.allowPattern, "i"))) {
+                        event.preventDefault();
+                        return false;
+                    }
+
+                });
+            };
+        }
+    };
+}
+
+angular.module('edison').directive('capitalize', function() {
+    "use strict";
+    return {
+        require: 'ngModel',
+        link: function(scope, element, attrs, modelCtrl) {
+            modelCtrl.$parsers.push(function(input) {
+                return typeof input === "string" ? input.toUpperCase() : "";
+            });
+            element.css("text-transform", "uppercase");
+        }
+    };
+});
+
+
+angular.module('edison').directive('creditcard', function() {
+    "use strict";
+    return {
+        require: 'ngModel',
+        scope: {
+            inline: "=",
+        },
+        link: function(scope, element, attrs, modelCtrl) {
+            modelCtrl.$parsers.push(function(input) {
+                return input.replace('x', 'AAA')
+            });
+        }
+    };
+});
+
+angular.module('edison').directive('dropdownRow', ["Devis", "productsList", "edisonAPI", "config", "$q", "$timeout", "Intervention", function(Devis, productsList, edisonAPI, config, $q, $timeout, Intervention) {
+    "use strict";
+
+    return {
+        restrict: 'E',
+        replace: true,
+        templateUrl: '/Directives/dropdown-row.html',
+        scope: {
+            model: "@",
+            row: '=',
+        },
+        link: function(scope, element, attrs) {
+            scope._ = _;
+            scope.Intervention = Intervention
+            scope.Devis = Devis
+            scope._model = scope.model || "intervention"
+
+            scope.expendedStyle = {
+                height: 0,
+                overflow: 'hidden'
+            };
+            scope.expendedReady = false;
+            scope.data = {};
+            scope.config = config
+            if (scope._model === "intervention") {
+                edisonAPI.intervention.get(scope.row.id, {
+                    populate: ['sst', 'devisOrigine'].join(',')
+                }).then(function(result) {
+                    scope.data = result.data;
+                    if (scope.data.produits) {
+                        scope.produits = new productsList(scope.data.produits);
+                    }
+                    scope.client = scope.data.client;
+                    scope.address = scope.client.address;
+
+                })
+
+            } else if (scope._model === "devis") {
+                var pAll = [
+                    edisonAPI.devis.get(scope.row.id, {
+                        populate: 'transfertId'
+                    }),
+                ]
+                var pThen = function(result) {
+                    scope.data = result[0].data;
+                    scope.produits = new productsList(scope.data.produits);
+                    scope.hist = scope.data.historique
+                    scope.client = scope.data.client;
+                    scope.address = scope.client.address;
+                }
+            } else if (scope._model === 'artisan') {
+
+
+
+
+                scope.loadPanel = function(id) {
+                    edisonAPI.artisan.getStats(id).then(function(resp) {
+                        new Chartist.Pie('.ct-chart', {
+                            series: [{
+                                value: resp.data.envoye.total,
+                                name: 'En cours',
+                                className: 'ct-orange',
+                                meta: 'Meta One'
+                            }, {
+                                value: resp.data.annule.total,
+                                name: 'annulé',
+                                className: 'ct-red',
+                                meta: 'Meta One'
+                            }, {
+                                value: resp.data.paye.total,
+                                name: 'payé',
+                                className: 'ct-green',
+                                meta: 'Meta One'
+                            }]
+                        }, {
+                            total: resp.data.annule.total + resp.data.paye.total + resp.data.envoye.total,
+                            donut: true,
+                            startAngle: 270,
+                            donutWidth: 62,
+                        });
+                        scope.stats = resp.data
+                    })
+
+                }
+
+                scope.loadPanel(scope.row.id)
+
+
+                pAll = [
+                    edisonAPI.artisan.get(scope.row.id),
+                    edisonAPI.artisan.getStats(scope.row.id)
+                ]
+                pThen = function(result) {
+                    scope.data = result[0].data;
+                    scope.artisan = scope.data;
+                    scope.artisan.stats = result[1].data;
+                    scope.address = scope.artisan.address
+                }
+            }
+
+            $q.all(pAll).then(pThen)
+            scope.getStaticMap = function() {
+                var q = "?format=jpg&width=411&height=210px&precision=0&origin=" + scope.address.lt + ", " + scope.address.lg;
+                if (_.get(scope, 'data.artisan.address.lt'))
+                    q += "&destination=" + scope.data.artisan.address.lt + ", " + scope.data.artisan.address.lg;
+                else
+                    q += "&zoom=15";
+                return "/api/mapGetStatic" + q;
+            }
+
+        }
+    };
+}]);
+
+angular.module('edison').directive('elastic', ["$timeout", function($timeout) {
+        return {
+            restrict: 'A',
+            link: function($scope, element) {
+                $scope.initialHeight = $scope.initialHeight || element[0].style.height;
+                var resize = function() {
+                    element[0].style.height = $scope.initialHeight;
+                    element[0].style.height = "" + element[0].scrollHeight + "px";
+                };
+                element.on("input change", resize);
+                $timeout(resize, 0);
+            }
+        };
+    }
+]);
+angular.module('edison').directive('ngEnter', function () {
+    "use strict";
+    return function (scope, element, attrs) {
+        element.bind("keydown keypress", function (event) {
+            if(event.which === 13) {
+                scope.$apply(function (){
+                    scope.$eval(attrs.ngEnter);
+                });
+
+                event.preventDefault();
+            }
+        });
+    };
+});
+angular.module('edison').directive('historiquePaiementSst', ["edisonAPI", "FlushList", function(edisonAPI, FlushList) {
+    "use strict";
+
+    return {
+        restrict: 'E',
+        replace: true,
+        templateUrl: '/Templates/historique-paiement-sst.html',
+        scope: {
+            data: "=",
+            exit: '&'
+        },
+        link: function(scope, element, attrs) {
+            var reload = function() {
+                if (!scope.data || !scope.data.id) {
+                    return 0;
+                }
+                var getPaiement = function(x) {
+                    console.log('-->', x);
+                }
+                scope.getTotal = function(arr) {
+                    var rtn = 0;
+                    _.each(arr, function(e) {
+                        rtn += e.original.compta.paiement.historique.final
+                    })
+                    return _.round(rtn, 2);
+                }
+                edisonAPI.artisan.getCompteTiers(scope.data.id).then(function(resp) {
+                    scope.historiquePaiement = _.map(resp.data, function(e) {
+                        e.flushList = new FlushList(e.list, _.map(e.list, '_id'))
+                        _.map(e.flushList.getList() , function(x) {
+                            x.original = _.find(e.list, 'id', x.id)
+                        })
+                        return e;
+                    })
+                })
+            }
+
+            scope.$watch('data.id', reload)
+            scope.check = function(sign) {
+                /*  if (sign.ok)
+                      return 0;*/
+                edisonAPI.signalement.check(sign._id, sign.text).then(function(resp) {
+                    sign = _.merge(sign, resp.data);
+                })
+                scope.exit && scope.exit();
+                console.log('=>', sign)
+            }
+            scope.comment = function() {
+                edisonAPI.artisan.comment(scope.data.id, scope.comm).then(reload)
+                scope.comm = ""
+            }
+        }
+    };
+}]);
+
+angular.module('edison').directive('historiqueSst', ["edisonAPI", function(edisonAPI) {
+    "use strict";
+
+    return {
+        restrict: 'E',
+        replace: true,
+        templateUrl: '/Templates/historique-sst.html',
+        scope: {
+            data: "=",
+            exit: '&'
+        },
+        link: function(scope, element, attrs) {
+            var reload = function() {
+                if (!scope.data || !scope.data.id) {
+                    return 0;
+                }
+                edisonAPI.artisan.fullHistory(scope.data.id).then(function(resp) {
+                    scope.hist = resp.data;
+                })
+            }
+
+            scope.$watch('data.id', reload)
+            scope.check = function(sign) {
+                /*  if (sign.ok)
+                      return 0;*/
+                edisonAPI.signalement.check(sign._id, sign.text).then(function(resp) {
+                    sign = _.merge(sign, resp.data);
+                })
+                scope.exit && scope.exit();
+            }
+            scope.comment = function() {
+                edisonAPI.artisan.comment(scope.data.id, scope.comm).then(reload)
+                scope.comm = ""
+            }
+        }
+    };
+}]);
+
+ angular.module('edison').directive('infoComment', ["user", function(user) {
+     "use strict";
+     return {
+         replace: false,
+         restrict: 'E',
+         templateUrl: '/Templates/info-comment.html',
+         scope: {
+             data: '=',
+         },
+         link: function(scope, elem, attr) {
+             scope.height = attr.height ||  216;
+             scope.user = user;
+             scope.addComment = function() {
+                 scope.data.comments.push({
+                     login: user.login,
+                     text: scope.commentText,
+                     date: new Date()
+                 })
+                 scope.commentText = "";
+             }
+         }
+     }
+ }]);
+
+ angular.module('edison').directive('infoLitige', function() {
+     "use strict";
+     return {
+         replace: false,
+         restrict: 'E',
+         templateUrl: '/Templates/info-litige.html',
+         scope: {
+             data: '=',
+         },
+         link: function(scope, elem) {
+             scope.$watch('data.litige.description', function(curr, prev) {
+                 if (scope.data.litige && !scope.data.litige.closed && scope.data.litige.description)
+                     scope.data.litige.open = true
+                 if (scope.data.litige && !scope.data.litige.description) {
+                     scope.data.litige.open = false
+                 }
+             })
+         }
+     }
+ });
+
+ angular.module('edison').directive('infoPaiement', ["config", function(config) {
+     "use strict";
+     return {
+         replace: false,
+         restrict: 'E',
+         templateUrl: '/Templates/info-paiement.html',
+         scope: {
+             data: '=',
+             artisans: '='
+         },
+         link: function(scope, elem) {
+            scope.config = config;
+         }
+     }
+ }]);
+
+ angular.module('edison').directive('infoSav', ["config", function(config) {
+     "use strict";
+     return {
+         replace: false,
+         restrict: 'E',
+         templateUrl: '/Templates/info-sav.html',
+         scope: {
+             data: '=',
+             artisans: '='
+         },
+         link: function(scope, elem) {
+            scope.config = config;
+         }
+     }
+ }]);
+
+ var Controller = function($timeout, TabContainer, FiltersFactory, user, ContextMenu, LxProgressService, edisonAPI, DataProvider, $routeParams, $location, $rootScope, $filter, config, ngTableParams, MomentIterator) {
+    var _this = this;
+    _this._ = _;
+    LxProgressService.circular.show('#5fa2db', '#globalProgress');
+    var currentFilter;
+    var currentHash = $location.hash();
+    var dataProvider = new DataProvider(_this.model, $routeParams.hashModel);
+    var filtersFactory = new FiltersFactory(_this.model)
+
+
+    if ($routeParams.fltr) {
+        currentFilter = filtersFactory.getFilterByUrl($routeParams.fltr)
+    }
+    var end = new Date();
+    var start = moment().add(-13, 'month').toDate()
+    _this.dateSelectList = MomentIterator(start, end).range('month').map(function(e) {
+        return {
+            ts:e.unix(),
+            t: e.format('MMM YYYY'),
+            m: e.month() + 1,
+            y: e.year(),
+        }
+    })
+
+    _this.routeParamsFilter = $routeParams.fltr;
+    if (_this.embedded) {
+        _this.$watch('filter', function() {
+            if (_.size(_this.filter)) {
+                _this.customFilter = function(inter) {
+                    for (var i in _this.filter) {
+                        if (_this.filter[i] !== inter[i])
+                            return false
+                    }
+                    return true
+                }
+                if (_this.tableParams) {
+                    dataProvider.applyFilter({}, _this.tab.hash, _this.customFilter);
+                    _this.tableParams.reload();
+                }
+            }
+        })
+
+    }
+
+    _this.displaySubRow = function(inter) {
+        return _this.expendedRow && _this.expendedRow === inter.id;
+    }
+
+    _this.smallWin = window.innerWidth < 1400
+    $(window).resize(function() {
+        _this.smallWin = window.innerWidth < 1400
+    })
+
+    _this.tab = TabContainer.getCurrentTab();
+    _this.tab.hash = currentHash;
+    _this.config = config;
+    var title = currentFilter ? currentFilter.long_name : _this.model;
+    if ($routeParams.sstid) {
+        var id = parseInt($routeParams.sstid)
+        _this.customFilter = function(inter) {
+            return inter.ai === id;
+        }
+    } else {
+        _this.tab.setTitle(title, currentHash);
+    }
+    if ($routeParams.sstids_in) {
+        _this.customFilter = function(inter) {
+            return _.includes($routeParams.sstids_in, inter.id);
+        }
+    }
+    if ($routeParams.ids_in) {
+        var tab = JSON.parse($routeParams.ids_in)
+        _this.customFilter = function(inter) {
+            return _.includes(tab, inter.id);
+        }
+    }
+
+
+    _this.$watch(function() {
+        return $location.search()
+    }, _.after(2, function(nw, old) {
+        _this.tableParams.filter(_.omit(nw, 'hashModel', 'page', 'sstid', 'ids_in'))
+    }), true)
+
+    _this.$watch(function() {
+        return $location.hash()
+    }, function(nw, old) {
+        if (_this.tableParams) {
+            dataProvider.applyFilter(currentFilter, nw, _this.customFilter);
+            _this.tableParams.reload()
+        }
+    }, true)
+
+
+    var actualiseUrl = function(fltrs, page) {
+        $location.search('page', page !== 1 ? page : undefined);
+        _.each(fltrs, function(e, k) {
+            if (!e) e = undefined;
+            if (e !== "hashModel") {
+                $location.search(k, e);
+
+            } else {}
+        })
+    }
+
+    var sortBy = (currentFilter && currentFilter.sortBy) ||  {
+        id: 'desc'
+    }
+    dataProvider.init(function(err, resp) {
+
+
+        dataProvider.applyFilter(currentFilter, _this.tab.hash, _this.customFilter);
+        var tableParameters = {
+            page: $location.search()['page'] ||  1,
+            total: dataProvider.filteredData.length,
+            filter: _this.embedded ? {} : _.omit($location.search(), 'hashModel', 'page', 'sstid', 'ids_in'),
+            sorting: sortBy,
+            count: _this.limit || 100
+        };
+        var tableSettings = {
+            total: dataProvider.filteredData,
+            getData: function($defer, params) {
+                var data = dataProvider.filteredData;
+                if (!_this.embedded) {
+                    data = $filter('tableFilter')(data, params.filter());
+                }
+                _this.currentFilter = _.clone(params.filter());
+                params.total(data.length);
+                data = $filter('orderBy')(data, params.orderBy());
+                $defer.resolve(data.slice((params.page() - 1) * params.count(), params.page() * params.count()));
+            },
+            filterDelay: 100
+        }
+        _this.tableParams = new ngTableParams(tableParameters, tableSettings);
+        LxProgressService.circular.hide()
+    })
+
+    var lastChange = 0;
+    $rootScope.$on(_this.model.toUpperCase() + '_CACHE_LIST_CHANGE', function(event, newData) {
+        if (TabContainer.getCurrentTab() && _this.tab.fullUrl === TabContainer.getCurrentTab().fullUrl) {
+            dataProvider.applyFilter(currentFilter, _this.tab.hash, _this.customFilter);
+            _this.tableParams.reload();
+        }
+    })
+
+
+    _this.contextMenu = new ContextMenu(_this.model)
+
+
+    if (user.service === 'COMPTABILITE') {
+        var subs = _.findIndex(_this.contextMenu.list, "title", "Appels");
+        if (subs) {
+            var tmp = _this.contextMenu.list[subs]
+            _this.contextMenu.list.splice(subs, 1);
+            _this.contextMenu.list.push(tmp);
+        }
+    }
+    _this.rowRightClick = function($event, inter) {
+        edisonAPI[_this.model].get(inter.id, {
+                populate: 'sst'
+            })
+            .then(function(resp) {
+                _this.contextMenu.setData(resp.data);
+                _this.contextMenu.setPosition($event.pageX - (($routeParams.sstid ||  _this.embedded) ? 50 : 0), $event.pageY + ($routeParams.sstid ||  _this.embedded ? 0 : 200))
+                _this.contextMenu.open();
+            })
+    }
+
+    _this.rowClick = function($event, inter) {
+        if (_this.contextMenu.active)
+            return _this.contextMenu.close();
+        if ($event.metaKey || $event.ctrlKey) {
+            TabContainer.addTab('/' + _this.model + '/' + inter.id, {
+                title: ('#' + inter.id),
+                setFocus: false,
+                allowDuplicates: false
+            });
+        } else {
+            if (_this.expendedRow === inter.id) {
+                _this.expendedRow = undefined;
+            } else {
+                _this.expendedRow = inter.id
+            }
+        }
+    }
+ }
+
+
+
+ angular.module('edison').directive('lineupIntervention', ["$timeout", "TabContainer", "FiltersFactory", "user", "ContextMenu", "LxProgressService", "edisonAPI", "DataProvider", "$routeParams", "$location", "$rootScope", "$filter", "config", "ngTableParams", "MomentIterator", function($timeout, TabContainer, FiltersFactory, user, ContextMenu, LxProgressService, edisonAPI, DataProvider, $routeParams, $location, $rootScope, $filter, config, ngTableParams, MomentIterator) {
+    "use strict";
+    var arg = arguments;
+    return {
+        replace: false,
+        restrict: 'E',
+        templateUrl: '/Templates/lineup-intervention.html',
+        scope: {
+            limit: '=',
+            embedded: '=',
+            filter: '=',
+        },
+        controller: ["$scope", function($scope) {
+
+            $scope.model = 'intervention'
+            Controller.apply($scope, arg)
+        }]
+    }
+ }]);
+
+ angular.module('edison').directive('lineupDevis', ["$timeout", "TabContainer", "FiltersFactory", "user", "ContextMenu", "LxProgressService", "edisonAPI", "DataProvider", "$routeParams", "$location", "$rootScope", "$filter", "config", "ngTableParams", "MomentIterator", function($timeout, TabContainer, FiltersFactory, user, ContextMenu, LxProgressService, edisonAPI, DataProvider, $routeParams, $location, $rootScope, $filter, config, ngTableParams, MomentIterator) {
+    "use strict";
+    var arg = arguments;
+    return {
+        replace: false,
+        restrict: 'E',
+        templateUrl: '/Templates/lineup-devis.html',
+        scope: {
+            filter: '=',
+        },
+        controller: ["$scope", function($scope) {
+            $scope.model = 'devis'
+            Controller.apply($scope, arg)
+        }]
+    }
+ }]);
+
+ angular.module('edison').directive('lineupArtisan', ["$timeout", "TabContainer", "FiltersFactory", "user", "ContextMenu", "LxProgressService", "edisonAPI", "DataProvider", "$routeParams", "$location", "$rootScope", "$filter", "config", "ngTableParams", "MomentIterator", function($timeout, TabContainer, FiltersFactory, user, ContextMenu, LxProgressService, edisonAPI, DataProvider, $routeParams, $location, $rootScope, $filter, config, ngTableParams, MomentIterator) {
+    "use strict";
+    var arg = arguments;
+    return {
+        replace: false,
+        restrict: 'E',
+        templateUrl: '/Templates/lineup-artisan.html',
+        scope: {
+
+        },
+        controller: ["$scope", function($scope) {
+            $scope.model = 'artisan'
+
+            Controller.apply($scope, arg)
+        }]
+    }
+ }]);
+
+angular.module('edison').directive('ngRightClick', ["$parse", function($parse) {
+    "use strict";
+    return function(scope, element, attrs) {
+        element.bind('contextmenu', function(event) {
+            if (!(event.altKey ||  event.ctrlKey || event.shiftKey ||  ["INPUT", "TEXTAREA"].indexOf(event.target.nodeName) >= 0)) {
+                scope.$apply(function() {
+                    event.preventDefault();
+                    $parse(attrs.ngRightClick)(scope, {
+                        $event: event
+                    });
+                });
+            }
+        });
+    };
+}]);
+
+ angular.module('edison').directive('link', ["FiltersFactory", "$rootScope", function(FiltersFactory, $rootScope) {
+     "use strict";
+     return {
+         restrict: 'AE',
+         replace: true,
+         template: '<li>' +
+             '      <a href="{{fullUrl}}" >' +
+             '            <i ng-if="icon" class = "menu-icon fa fa-{{icon}}"> </i>' +
+             '            <span ng-class="{bold : bold, textWhite: textWhite}" class="mm-text">{{title || exFltr.long_name}}</span>' +
+             '            <span ng-if="total"class="label label-{{_color}}">{{total}}</span>' +
+             '        </a>' +
+             '      </li>',
+         scope: {
+             fltr: '@',
+             login: '@',
+             today: '@',
+             icon: '@',
+             title: '@',
+             url: '@',
+             textWhite: '@',
+             model: '@',
+             bold: '@',
+             count: '@',
+             noCounter: '@',
+             color: '@',
+             hashModel: '@'
+         },
+         link: function(scope, element, attrs) {
+             var findTotal = function() {
+                if (scope.count) {
+                    return scope.count
+                }
+                 if (scope.noCounter)
+                     return undefined;
+                 var total = 0;
+                 if (scope.login) {
+                     var t = _.find($rootScope.interventionsStats, function(e) {
+                         return e.login === scope.login;
+                     })
+                     total += _.get(t, scope.fltr + '.total', 0);
+                 } else {
+                     _.each($rootScope.interventionsStats, function(t) {
+                         total += _.get(t, scope.fltr + '.total', 0);
+                     })
+                 }
+                 return total;
+             }
+             $rootScope.$watch('interventionsStats', function() {
+                 scope.total = findTotal();
+             })
+             scope.$watch('login', function(current, prev) {
+                 scope._color = (scope.color || 'success')
+                 scope._model = scope.model || 'intervention';
+                 var filtersFactory = new FiltersFactory(scope._model);
+                 scope.exFltr = filtersFactory.getFilterByName(scope.fltr);
+                 scope.total = findTotal();
+                 scope.exFltr = scope.exFltr ||  {
+                     url: ''
+                 };
+                 scope._url = scope.exFltr.url.length ? "/" + scope.exFltr.url : scope.exFltr.url;
+                 scope._login = scope.login && !scope.hashModel ? ("#" + scope.login) : '';
+                 scope._hashModel = scope.hashModel ? ("?" + scope.hashModel + "=" + scope.login) : '';
+                 scope.fullUrl = scope.url ||  ('/' + scope._model + '/list' + scope._url + scope._hashModel + scope._login)
+             })
+
+         }
+     };
+ }]);
+
+ angular.module('edison').directive('simpleLink', ["FiltersFactory", "$rootScope", function(FiltersFactory, $rootScope) {
+     "use strict";
+     return {
+         restrict: 'AE',
+         replace: true,
+         template: '<li>' +
+             '      <a href="{{url}}"  target="{{target}}">' +
+             '            <i ng-if="icon" class = "menu-icon fa fa-{{icon}}"> </i>' +
+             '            <span class="mm-text">{{title}}</span>' +
+             '        </a>' +
+             '      </li>',
+         scope: {
+             icon: '@',
+             title: '@',
+             url: '@',
+         },
+         link: function(scope, element, attrs) {
+             scope.target = (typeof attrs.extern === 'string' ? '_blank' : '')
+         }
+     };
+ }]);
+
+
+ angular.module('edison').directive('linkSeparator', function() {
+     "use strict";
+     return {
+         restrict: 'AE',
+         replace: true,
+         template: '<li>' +
+             '      <a>' +
+             '            <i ng-if="icon" class = "menu-icon fa fa-{{icon}}"> </i>' +
+             '            <strong><span class="mm-text">{{title}}</span></strong>' +
+             '        </a>' +
+             '      </li>',
+         scope: {
+             icon: '@',
+             title: '@',
+         },
+         link: function(scope, element, attrs) {
+
+         }
+     };
+ });
+
+
+ angular.module('edison').service('sidebarSM', function() {
+
+     var C = function() {
+         this.display = false;
+     };
+     C.prototype.set = function(name, value) {
+         this[name] = value;
+     }
+     return new C();
+
+ });
+
+
+
+ angular.module('edison').directive('sideBar', ["sidebarSM", function(sidebarSM) {
+     "use strict";
+     return {
+         replace: false,
+         restrict: 'E',
+         templateUrl: '/Directives/side-bar.html',
+         transclude: true,
+         scope: {},
+         link: function(scope, element, attrs) {
+             scope.sidebarSM = sidebarSM;
+         }
+     }
+ }]);
+
+ angular.module('edison').directive('dropDown', ["config", "sidebarSM", "$timeout", function(config, sidebarSM, $timeout) {
+     "use strict";
+
+
+     return {
+         replace: true,
+         restrict: 'E',
+         templateUrl: '/Directives/dropdown.html',
+         transclude: true,
+         scope: {
+             title: '@',
+             icon: '@',
+             isOpen: '@',
+             openDefault: '&'
+         },
+         link: function(scope, element, attrs) {
+             scope.openDefault = scope.$eval(scope.openDefault)
+             scope.isopen = scope.openDefault
+             scope.toggleSidebar = function($event, $elem) {
+                 var $ul = $(element).find('>ul')
+                 if ($('#main-menu').width() > 200) {
+                     if (scope.isopen) {
+                         $ul.velocity({
+                             height: 0
+                         }, 200, function() {
+                             scope.$apply(function() {
+                                 scope.isopen = false;
+                             })
+                         });
+                     } else {
+                         $ul.css('height', '100%')
+                         scope.isopen = true
+                     }
+                 } else {
+
+                     $('#mmc-ul > .mmc-wrapper').html($ul.find('> *'));
+                     sidebarSM.set("display", true);
+                     $timeout(function checkHover() {
+                         if (!$('#mmc-ul').is(":hover")) {
+                             sidebarSM.set("display", false);
+                             $ul.html($('#mmc-ul > .mmc-wrapper').find(">*"))
+                             $('#mmc-ul > .mmc-wrapper').html('');
+                         } else {
+                             $timeout(checkHover, 1000);
+                         }
+                     }, 1000)
+                 }
+             }
+         }
+     };
+ }]);
+
+ angular.module('edison').directive('signalement', ["edisonAPI", "LxNotificationService", function(edisonAPI, LxNotificationService) {
+    "use strict";
+    return {
+        replace: false,
+        restrict: 'E',
+        templateUrl: '/Templates/signalement.html',
+        scope: {
+            data: '=',
+            exit: '&',
+        },
+        link: function(scope, elem) {
+            scope.setSelectedSubType = function(subType) {
+                scope.selectedSubType = scope.selectedSubType === subType ? null : subType
+            }
+            edisonAPI.signal.list().then(function(resp) {
+                scope.signalementsGrp = _.groupBy(resp.data, 'subType');
+            })
+            scope.hide = function(signal) {
+
+                edisonAPI.signalement.add(_.merge(signal, {
+                    inter_id: scope.data.id || scope.data.tmpID,
+                    sst_id: scope.data.sst && scope.data.sst.id,
+                    sst_nom: scope.data.sst && scope.data.sst.nomSociete
+                })).then(function() {
+                    LxNotificationService.success("Le service " + signal.service.toLowerCase() + " en a été notifié");
+                })
+                return scope.exit && scope.exit()
+            }
+        }
+    }
+ }]);
+
+ angular.module('edison').directive('trello', ["user", "edisonAPI", function(user, edisonAPI) {
+    "use strict";
+    return {
+        replace: false,
+        restrict: 'E',
+        templateUrl: '/Templates/trello.html',
+        scope: {
+            data: '=',
+        },
+        link: function(scope, elem) {
+
+            var xmap = function(e) {
+                e.checked = e.state === 'complete';
+                return e;
+            }
+            scope.reload = function() {
+                edisonAPI.tasklist.get(moment().format('DD-MM-YYYY'), user.login).then(function(resp) {
+                    scope.tasklist = resp.data
+                    resp.data.checkItems = resp.data.checkItems.map(xmap)
+                })
+            }
+            scope.reload()
+            scope.check = function(task) {
+                task.listID = scope.tasklist.id;
+                task.cardID = scope.tasklist.cardID;
+                edisonAPI.tasklist.update(_.clone(task)).then(function(resp) {
+                    task = xmap(resp.data)
+                })
+                task.checked = !task.checked;
+            }
+        }
+    }
+ }]);
+
 angular.module("edison").filter('contactFilter', ["config", function(config) {
     "use strict";
 
@@ -3474,957 +4385,6 @@ angular.module('edison').directive('mainNavbar', ["$q", "edisonAPI", "TabContain
 
 }]);
 
- angular.module('edison').directive('absenceSst', ["edisonAPI", "LxNotificationService", "user", function(edisonAPI, LxNotificationService, user) {
-    "use strict";
-    return {
-        replace: false,
-        restrict: 'E',
-        templateUrl: '/Templates/absence-sst.html',
-        scope: {
-            data: '=',
-            exit: '&',
-        },
-        link: function(scope, elem) {
-            scope.absence = {
-                start: moment().add(-1, 'hours').toDate(),
-                end: moment().hour(23).minute(43).toDate()
-            }
-            scope.save = function() {
-                edisonAPI.artisan.absence(scope.data.id, scope.absence).then(function() {
-                    LxNotificationService.success("L'absence à été enregistrer");
-                    (scope.exit || _.noop)();
-                })
-            }
-        }
-    }
- }]);
-
-angular.module('edison').directive('allowPattern', [allowPatternDirective]);
-
-function allowPatternDirective() {
-    return {
-        restrict: "A",
-        compile: function(tElement, tAttrs) {
-            return function(scope, element, attrs) {
-                // I handle key events
-                element.bind("keypress", function(event) {
-                    var keyCode = event.which || event.keyCode; // I safely get the keyCode pressed from the event.
-                    var keyCodeChar = String.fromCharCode(keyCode); // I determine the char from the keyCode.
-
-                    // If the keyCode char does not match the allowed Regex Pattern, then don't allow the input into the field.
-                    if (!keyCodeChar.match(new RegExp(attrs.allowPattern, "i"))) {
-                        event.preventDefault();
-                        return false;
-                    }
-
-                });
-            };
-        }
-    };
-}
-
-angular.module('edison').directive('capitalize', function() {
-    "use strict";
-    return {
-        require: 'ngModel',
-        link: function(scope, element, attrs, modelCtrl) {
-            modelCtrl.$parsers.push(function(input) {
-                return typeof input === "string" ? input.toUpperCase() : "";
-            });
-            element.css("text-transform", "uppercase");
-        }
-    };
-});
-
-
-angular.module('edison').directive('creditcard', function() {
-    "use strict";
-    return {
-        require: 'ngModel',
-        scope: {
-            inline: "=",
-        },
-        link: function(scope, element, attrs, modelCtrl) {
-            modelCtrl.$parsers.push(function(input) {
-                return input.replace('x', 'AAA')
-            });
-        }
-    };
-});
-
-angular.module('edison').directive('dropdownRow', ["Devis", "productsList", "edisonAPI", "config", "$q", "$timeout", "Intervention", function(Devis, productsList, edisonAPI, config, $q, $timeout, Intervention) {
-    "use strict";
-
-    return {
-        restrict: 'E',
-        replace: true,
-        templateUrl: '/Directives/dropdown-row.html',
-        scope: {
-            model: "@",
-            row: '=',
-        },
-        link: function(scope, element, attrs) {
-            scope._ = _;
-            scope.Intervention = Intervention
-            scope.Devis = Devis
-            scope._model = scope.model || "intervention"
-
-            scope.expendedStyle = {
-                height: 0,
-                overflow: 'hidden'
-            };
-            scope.expendedReady = false;
-            scope.data = {};
-            scope.config = config
-            if (scope._model === "intervention") {
-                edisonAPI.intervention.get(scope.row.id, {
-                    populate: ['sst', 'devisOrigine'].join(',')
-                }).then(function(result) {
-                    scope.data = result.data;
-                    if (scope.data.produits) {
-                        scope.produits = new productsList(scope.data.produits);
-                    }
-                    scope.client = scope.data.client;
-                    scope.address = scope.client.address;
-
-                })
-
-            } else if (scope._model === "devis") {
-                var pAll = [
-                    edisonAPI.devis.get(scope.row.id, {
-                        populate: 'transfertId'
-                    }),
-                ]
-                var pThen = function(result) {
-                    scope.data = result[0].data;
-                    scope.produits = new productsList(scope.data.produits);
-                    scope.hist = scope.data.historique
-                    scope.client = scope.data.client;
-                    scope.address = scope.client.address;
-                }
-            } else if (scope._model === 'artisan') {
-
-
-
-
-                scope.loadPanel = function(id) {
-                    edisonAPI.artisan.getStats(id).then(function(resp) {
-                        new Chartist.Pie('.ct-chart', {
-                            series: [{
-                                value: resp.data.envoye.total,
-                                name: 'En cours',
-                                className: 'ct-orange',
-                                meta: 'Meta One'
-                            }, {
-                                value: resp.data.annule.total,
-                                name: 'annulé',
-                                className: 'ct-red',
-                                meta: 'Meta One'
-                            }, {
-                                value: resp.data.paye.total,
-                                name: 'payé',
-                                className: 'ct-green',
-                                meta: 'Meta One'
-                            }]
-                        }, {
-                            total: resp.data.annule.total + resp.data.paye.total + resp.data.envoye.total,
-                            donut: true,
-                            startAngle: 270,
-                            donutWidth: 62,
-                        });
-                        scope.stats = resp.data
-                    })
-
-                }
-
-                scope.loadPanel(scope.row.id)
-
-
-                pAll = [
-                    edisonAPI.artisan.get(scope.row.id),
-                    edisonAPI.artisan.getStats(scope.row.id)
-                ]
-                pThen = function(result) {
-                    scope.data = result[0].data;
-                    scope.artisan = scope.data;
-                    scope.artisan.stats = result[1].data;
-                    scope.address = scope.artisan.address
-                }
-            }
-
-            $q.all(pAll).then(pThen)
-            scope.getStaticMap = function() {
-                var q = "?format=jpg&width=411&height=210px&precision=0&origin=" + scope.address.lt + ", " + scope.address.lg;
-                if (_.get(scope, 'data.artisan.address.lt'))
-                    q += "&destination=" + scope.data.artisan.address.lt + ", " + scope.data.artisan.address.lg;
-                else
-                    q += "&zoom=15";
-                return "/api/mapGetStatic" + q;
-            }
-
-        }
-    };
-}]);
-
-angular.module('edison').directive('elastic', ["$timeout", function($timeout) {
-        return {
-            restrict: 'A',
-            link: function($scope, element) {
-                $scope.initialHeight = $scope.initialHeight || element[0].style.height;
-                var resize = function() {
-                    element[0].style.height = $scope.initialHeight;
-                    element[0].style.height = "" + element[0].scrollHeight + "px";
-                };
-                element.on("input change", resize);
-                $timeout(resize, 0);
-            }
-        };
-    }
-]);
-angular.module('edison').directive('ngEnter', function () {
-    "use strict";
-    return function (scope, element, attrs) {
-        element.bind("keydown keypress", function (event) {
-            if(event.which === 13) {
-                scope.$apply(function (){
-                    scope.$eval(attrs.ngEnter);
-                });
-
-                event.preventDefault();
-            }
-        });
-    };
-});
-angular.module('edison').directive('historiquePaiementSst', ["edisonAPI", "FlushList", function(edisonAPI, FlushList) {
-    "use strict";
-
-    return {
-        restrict: 'E',
-        replace: true,
-        templateUrl: '/Templates/historique-paiement-sst.html',
-        scope: {
-            data: "=",
-            exit: '&'
-        },
-        link: function(scope, element, attrs) {
-            var reload = function() {
-                if (!scope.data || !scope.data.id) {
-                    return 0;
-                }
-                var getPaiement = function(x) {
-                    console.log('-->', x);
-                }
-                scope.getTotal = function(arr) {
-                    var rtn = 0;
-                    _.each(arr, function(e) {
-                        rtn += e.original.compta.paiement.historique.final
-                    })
-                    return _.round(rtn, 2);
-                }
-                edisonAPI.artisan.getCompteTiers(scope.data.id).then(function(resp) {
-                    scope.historiquePaiement = _.map(resp.data, function(e) {
-                        e.flushList = new FlushList(e.list, _.map(e.list, '_id'))
-                        _.map(e.flushList.getList() , function(x) {
-                            x.original = _.find(e.list, 'id', x.id)
-                        })
-                        return e;
-                    })
-                })
-            }
-
-            scope.$watch('data.id', reload)
-            scope.check = function(sign) {
-                /*  if (sign.ok)
-                      return 0;*/
-                edisonAPI.signalement.check(sign._id, sign.text).then(function(resp) {
-                    sign = _.merge(sign, resp.data);
-                })
-                scope.exit && scope.exit();
-                console.log('=>', sign)
-            }
-            scope.comment = function() {
-                edisonAPI.artisan.comment(scope.data.id, scope.comm).then(reload)
-                scope.comm = ""
-            }
-        }
-    };
-}]);
-
-angular.module('edison').directive('historiqueSst', ["edisonAPI", function(edisonAPI) {
-    "use strict";
-
-    return {
-        restrict: 'E',
-        replace: true,
-        templateUrl: '/Templates/historique-sst.html',
-        scope: {
-            data: "=",
-            exit: '&'
-        },
-        link: function(scope, element, attrs) {
-            var reload = function() {
-                if (!scope.data || !scope.data.id) {
-                    return 0;
-                }
-                edisonAPI.artisan.fullHistory(scope.data.id).then(function(resp) {
-                    scope.hist = resp.data;
-                })
-            }
-
-            scope.$watch('data.id', reload)
-            scope.check = function(sign) {
-                /*  if (sign.ok)
-                      return 0;*/
-                edisonAPI.signalement.check(sign._id, sign.text).then(function(resp) {
-                    sign = _.merge(sign, resp.data);
-                })
-                scope.exit && scope.exit();
-            }
-            scope.comment = function() {
-                edisonAPI.artisan.comment(scope.data.id, scope.comm).then(reload)
-                scope.comm = ""
-            }
-        }
-    };
-}]);
-
- angular.module('edison').directive('infoComment', ["user", function(user) {
-     "use strict";
-     return {
-         replace: false,
-         restrict: 'E',
-         templateUrl: '/Templates/info-comment.html',
-         scope: {
-             data: '=',
-         },
-         link: function(scope, elem, attr) {
-             scope.height = attr.height ||  216;
-             scope.user = user;
-             scope.addComment = function() {
-                 scope.data.comments.push({
-                     login: user.login,
-                     text: scope.commentText,
-                     date: new Date()
-                 })
-                 scope.commentText = "";
-             }
-         }
-     }
- }]);
-
- angular.module('edison').directive('infoLitige', function() {
-     "use strict";
-     return {
-         replace: false,
-         restrict: 'E',
-         templateUrl: '/Templates/info-litige.html',
-         scope: {
-             data: '=',
-         },
-         link: function(scope, elem) {
-             scope.$watch('data.litige.description', function(curr, prev) {
-                 if (scope.data.litige && !scope.data.litige.closed && scope.data.litige.description)
-                     scope.data.litige.open = true
-                 if (scope.data.litige && !scope.data.litige.description) {
-                     scope.data.litige.open = false
-                 }
-             })
-         }
-     }
- });
-
- angular.module('edison').directive('infoPaiement', ["config", function(config) {
-     "use strict";
-     return {
-         replace: false,
-         restrict: 'E',
-         templateUrl: '/Templates/info-paiement.html',
-         scope: {
-             data: '=',
-             artisans: '='
-         },
-         link: function(scope, elem) {
-            scope.config = config;
-         }
-     }
- }]);
-
- angular.module('edison').directive('infoSav', ["config", function(config) {
-     "use strict";
-     return {
-         replace: false,
-         restrict: 'E',
-         templateUrl: '/Templates/info-sav.html',
-         scope: {
-             data: '=',
-             artisans: '='
-         },
-         link: function(scope, elem) {
-            scope.config = config;
-         }
-     }
- }]);
-
- var Controller = function($timeout, TabContainer, FiltersFactory, user, ContextMenu, LxProgressService, edisonAPI, DataProvider, $routeParams, $location, $rootScope, $filter, config, ngTableParams, MomentIterator) {
-    var _this = this;
-    _this._ = _;
-    LxProgressService.circular.show('#5fa2db', '#globalProgress');
-    var currentFilter;
-    var currentHash = $location.hash();
-    var dataProvider = new DataProvider(_this.model, $routeParams.hashModel);
-    var filtersFactory = new FiltersFactory(_this.model)
-
-
-    if ($routeParams.fltr) {
-        currentFilter = filtersFactory.getFilterByUrl($routeParams.fltr)
-    }
-    var end = new Date();
-    var start = moment().add(-13, 'month').toDate()
-    _this.dateSelectList = MomentIterator(start, end).range('month').map(function(e) {
-        return {
-            ts:e.unix(),
-            t: e.format('MMM YYYY'),
-            m: e.month() + 1,
-            y: e.year(),
-        }
-    })
-
-    _this.routeParamsFilter = $routeParams.fltr;
-    if (_this.embedded) {
-        _this.$watch('filter', function() {
-            if (_.size(_this.filter)) {
-                _this.customFilter = function(inter) {
-                    for (var i in _this.filter) {
-                        if (_this.filter[i] !== inter[i])
-                            return false
-                    }
-                    return true
-                }
-                if (_this.tableParams) {
-                    dataProvider.applyFilter({}, _this.tab.hash, _this.customFilter);
-                    _this.tableParams.reload();
-                }
-            }
-        })
-
-    }
-
-    _this.displaySubRow = function(inter) {
-        return _this.expendedRow && _this.expendedRow === inter.id;
-    }
-
-    _this.smallWin = window.innerWidth < 1400
-    $(window).resize(function() {
-        _this.smallWin = window.innerWidth < 1400
-    })
-
-    _this.tab = TabContainer.getCurrentTab();
-    _this.tab.hash = currentHash;
-    _this.config = config;
-    var title = currentFilter ? currentFilter.long_name : _this.model;
-    if ($routeParams.sstid) {
-        var id = parseInt($routeParams.sstid)
-        _this.customFilter = function(inter) {
-            return inter.ai === id;
-        }
-    } else {
-        _this.tab.setTitle(title, currentHash);
-    }
-    if ($routeParams.sstids_in) {
-        _this.customFilter = function(inter) {
-            return _.includes($routeParams.sstids_in, inter.id);
-        }
-    }
-    if ($routeParams.ids_in) {
-        var tab = JSON.parse($routeParams.ids_in)
-        _this.customFilter = function(inter) {
-            return _.includes(tab, inter.id);
-        }
-    }
-
-
-    _this.$watch(function() {
-        return $location.search()
-    }, _.after(2, function(nw, old) {
-        _this.tableParams.filter(_.omit(nw, 'hashModel', 'page', 'sstid', 'ids_in'))
-    }), true)
-
-    _this.$watch(function() {
-        return $location.hash()
-    }, function(nw, old) {
-        if (_this.tableParams) {
-            dataProvider.applyFilter(currentFilter, nw, _this.customFilter);
-            _this.tableParams.reload()
-        }
-    }, true)
-
-
-    var actualiseUrl = function(fltrs, page) {
-        $location.search('page', page !== 1 ? page : undefined);
-        _.each(fltrs, function(e, k) {
-            if (!e) e = undefined;
-            if (e !== "hashModel") {
-                $location.search(k, e);
-
-            } else {}
-        })
-    }
-
-    var sortBy = (currentFilter && currentFilter.sortBy) ||  {
-        id: 'desc'
-    }
-    dataProvider.init(function(err, resp) {
-
-
-        dataProvider.applyFilter(currentFilter, _this.tab.hash, _this.customFilter);
-        var tableParameters = {
-            page: $location.search()['page'] ||  1,
-            total: dataProvider.filteredData.length,
-            filter: _this.embedded ? {} : _.omit($location.search(), 'hashModel', 'page', 'sstid', 'ids_in'),
-            sorting: sortBy,
-            count: _this.limit || 100
-        };
-        var tableSettings = {
-            total: dataProvider.filteredData,
-            getData: function($defer, params) {
-                var data = dataProvider.filteredData;
-                if (!_this.embedded) {
-                    data = $filter('tableFilter')(data, params.filter());
-                }
-                _this.currentFilter = _.clone(params.filter());
-                params.total(data.length);
-                data = $filter('orderBy')(data, params.orderBy());
-                $defer.resolve(data.slice((params.page() - 1) * params.count(), params.page() * params.count()));
-            },
-            filterDelay: 100
-        }
-        _this.tableParams = new ngTableParams(tableParameters, tableSettings);
-        LxProgressService.circular.hide()
-    })
-
-    var lastChange = 0;
-    $rootScope.$on(_this.model.toUpperCase() + '_CACHE_LIST_CHANGE', function(event, newData) {
-        if (TabContainer.getCurrentTab() && _this.tab.fullUrl === TabContainer.getCurrentTab().fullUrl) {
-            dataProvider.applyFilter(currentFilter, _this.tab.hash, _this.customFilter);
-            _this.tableParams.reload();
-        }
-    })
-
-
-    _this.contextMenu = new ContextMenu(_this.model)
-
-
-    if (user.service === 'COMPTABILITE') {
-        var subs = _.findIndex(_this.contextMenu.list, "title", "Appels");
-        if (subs) {
-            var tmp = _this.contextMenu.list[subs]
-            _this.contextMenu.list.splice(subs, 1);
-            _this.contextMenu.list.push(tmp);
-        }
-    }
-    _this.rowRightClick = function($event, inter) {
-        edisonAPI[_this.model].get(inter.id, {
-                populate: 'sst'
-            })
-            .then(function(resp) {
-                _this.contextMenu.setData(resp.data);
-                _this.contextMenu.setPosition($event.pageX - (($routeParams.sstid ||  _this.embedded) ? 50 : 0), $event.pageY + ($routeParams.sstid ||  _this.embedded ? 0 : 200))
-                _this.contextMenu.open();
-            })
-    }
-
-    _this.rowClick = function($event, inter) {
-        if (_this.contextMenu.active)
-            return _this.contextMenu.close();
-        if ($event.metaKey || $event.ctrlKey) {
-            TabContainer.addTab('/' + _this.model + '/' + inter.id, {
-                title: ('#' + inter.id),
-                setFocus: false,
-                allowDuplicates: false
-            });
-        } else {
-            if (_this.expendedRow === inter.id) {
-                _this.expendedRow = undefined;
-            } else {
-                _this.expendedRow = inter.id
-            }
-        }
-    }
- }
-
-
-
- angular.module('edison').directive('lineupIntervention', ["$timeout", "TabContainer", "FiltersFactory", "user", "ContextMenu", "LxProgressService", "edisonAPI", "DataProvider", "$routeParams", "$location", "$rootScope", "$filter", "config", "ngTableParams", "MomentIterator", function($timeout, TabContainer, FiltersFactory, user, ContextMenu, LxProgressService, edisonAPI, DataProvider, $routeParams, $location, $rootScope, $filter, config, ngTableParams, MomentIterator) {
-    "use strict";
-    var arg = arguments;
-    return {
-        replace: false,
-        restrict: 'E',
-        templateUrl: '/Templates/lineup-intervention.html',
-        scope: {
-            limit: '=',
-            embedded: '=',
-            filter: '=',
-        },
-        controller: ["$scope", function($scope) {
-
-            $scope.model = 'intervention'
-            Controller.apply($scope, arg)
-        }]
-    }
- }]);
-
- angular.module('edison').directive('lineupDevis', ["$timeout", "TabContainer", "FiltersFactory", "user", "ContextMenu", "LxProgressService", "edisonAPI", "DataProvider", "$routeParams", "$location", "$rootScope", "$filter", "config", "ngTableParams", "MomentIterator", function($timeout, TabContainer, FiltersFactory, user, ContextMenu, LxProgressService, edisonAPI, DataProvider, $routeParams, $location, $rootScope, $filter, config, ngTableParams, MomentIterator) {
-    "use strict";
-    var arg = arguments;
-    return {
-        replace: false,
-        restrict: 'E',
-        templateUrl: '/Templates/lineup-devis.html',
-        scope: {
-            filter: '=',
-        },
-        controller: ["$scope", function($scope) {
-            $scope.model = 'devis'
-            Controller.apply($scope, arg)
-        }]
-    }
- }]);
-
- angular.module('edison').directive('lineupArtisan', ["$timeout", "TabContainer", "FiltersFactory", "user", "ContextMenu", "LxProgressService", "edisonAPI", "DataProvider", "$routeParams", "$location", "$rootScope", "$filter", "config", "ngTableParams", "MomentIterator", function($timeout, TabContainer, FiltersFactory, user, ContextMenu, LxProgressService, edisonAPI, DataProvider, $routeParams, $location, $rootScope, $filter, config, ngTableParams, MomentIterator) {
-    "use strict";
-    var arg = arguments;
-    return {
-        replace: false,
-        restrict: 'E',
-        templateUrl: '/Templates/lineup-artisan.html',
-        scope: {
-
-        },
-        controller: ["$scope", function($scope) {
-            $scope.model = 'artisan'
-
-            Controller.apply($scope, arg)
-        }]
-    }
- }]);
-
-angular.module('edison').directive('ngRightClick', ["$parse", function($parse) {
-    "use strict";
-    return function(scope, element, attrs) {
-        element.bind('contextmenu', function(event) {
-            if (!(event.altKey ||  event.ctrlKey || event.shiftKey ||  ["INPUT", "TEXTAREA"].indexOf(event.target.nodeName) >= 0)) {
-                scope.$apply(function() {
-                    event.preventDefault();
-                    $parse(attrs.ngRightClick)(scope, {
-                        $event: event
-                    });
-                });
-            }
-        });
-    };
-}]);
-
- angular.module('edison').directive('link', ["FiltersFactory", "$rootScope", function(FiltersFactory, $rootScope) {
-     "use strict";
-     return {
-         restrict: 'AE',
-         replace: true,
-         template: '<li>' +
-             '      <a href="{{fullUrl}}" >' +
-             '            <i ng-if="icon" class = "menu-icon fa fa-{{icon}}"> </i>' +
-             '            <span ng-class="{bold : bold, textWhite: textWhite}" class="mm-text">{{title || exFltr.long_name}}</span>' +
-             '            <span ng-if="total"class="label label-{{_color}}">{{total}}</span>' +
-             '        </a>' +
-             '      </li>',
-         scope: {
-             fltr: '@',
-             login: '@',
-             today: '@',
-             icon: '@',
-             title: '@',
-             url: '@',
-             textWhite: '@',
-             model: '@',
-             bold: '@',
-             count: '@',
-             noCounter: '@',
-             color: '@',
-             hashModel: '@'
-         },
-         link: function(scope, element, attrs) {
-             var findTotal = function() {
-                if (scope.count) {
-                    return scope.count
-                }
-                 if (scope.noCounter)
-                     return undefined;
-                 var total = 0;
-                 if (scope.login) {
-                     var t = _.find($rootScope.interventionsStats, function(e) {
-                         return e.login === scope.login;
-                     })
-                     total += _.get(t, scope.fltr + '.total', 0);
-                 } else {
-                     _.each($rootScope.interventionsStats, function(t) {
-                         total += _.get(t, scope.fltr + '.total', 0);
-                     })
-                 }
-                 return total;
-             }
-             $rootScope.$watch('interventionsStats', function() {
-                 scope.total = findTotal();
-             })
-             scope.$watch('login', function(current, prev) {
-                 scope._color = (scope.color || 'success')
-                 scope._model = scope.model || 'intervention';
-                 var filtersFactory = new FiltersFactory(scope._model);
-                 scope.exFltr = filtersFactory.getFilterByName(scope.fltr);
-                 scope.total = findTotal();
-                 scope.exFltr = scope.exFltr ||  {
-                     url: ''
-                 };
-                 scope._url = scope.exFltr.url.length ? "/" + scope.exFltr.url : scope.exFltr.url;
-                 scope._login = scope.login && !scope.hashModel ? ("#" + scope.login) : '';
-                 scope._hashModel = scope.hashModel ? ("?" + scope.hashModel + "=" + scope.login) : '';
-                 scope.fullUrl = scope.url ||  ('/' + scope._model + '/list' + scope._url + scope._hashModel + scope._login)
-             })
-
-         }
-     };
- }]);
-
- angular.module('edison').directive('simpleLink', ["FiltersFactory", "$rootScope", function(FiltersFactory, $rootScope) {
-     "use strict";
-     return {
-         restrict: 'AE',
-         replace: true,
-         template: '<li>' +
-             '      <a href="{{url}}"  target="{{target}}">' +
-             '            <i ng-if="icon" class = "menu-icon fa fa-{{icon}}"> </i>' +
-             '            <span class="mm-text">{{title}}</span>' +
-             '        </a>' +
-             '      </li>',
-         scope: {
-             icon: '@',
-             title: '@',
-             url: '@',
-         },
-         link: function(scope, element, attrs) {
-             scope.target = (typeof attrs.extern === 'string' ? '_blank' : '')
-         }
-     };
- }]);
-
-
- angular.module('edison').directive('linkSeparator', function() {
-     "use strict";
-     return {
-         restrict: 'AE',
-         replace: true,
-         template: '<li>' +
-             '      <a>' +
-             '            <i ng-if="icon" class = "menu-icon fa fa-{{icon}}"> </i>' +
-             '            <strong><span class="mm-text">{{title}}</span></strong>' +
-             '        </a>' +
-             '      </li>',
-         scope: {
-             icon: '@',
-             title: '@',
-         },
-         link: function(scope, element, attrs) {
-
-         }
-     };
- });
-
-
- angular.module('edison').service('sidebarSM', function() {
-
-     var C = function() {
-         this.display = false;
-     };
-     C.prototype.set = function(name, value) {
-         this[name] = value;
-     }
-     return new C();
-
- });
-
-
-
- angular.module('edison').directive('sideBar', ["sidebarSM", function(sidebarSM) {
-     "use strict";
-     return {
-         replace: false,
-         restrict: 'E',
-         templateUrl: '/Directives/side-bar.html',
-         transclude: true,
-         scope: {},
-         link: function(scope, element, attrs) {
-             scope.sidebarSM = sidebarSM;
-         }
-     }
- }]);
-
- angular.module('edison').directive('dropDown', ["config", "sidebarSM", "$timeout", function(config, sidebarSM, $timeout) {
-     "use strict";
-
-
-     return {
-         replace: true,
-         restrict: 'E',
-         templateUrl: '/Directives/dropdown.html',
-         transclude: true,
-         scope: {
-             title: '@',
-             icon: '@',
-             isOpen: '@',
-             openDefault: '&'
-         },
-         link: function(scope, element, attrs) {
-             scope.openDefault = scope.$eval(scope.openDefault)
-             scope.isopen = scope.openDefault
-             scope.toggleSidebar = function($event, $elem) {
-                 var $ul = $(element).find('>ul')
-                 if ($('#main-menu').width() > 200) {
-                     if (scope.isopen) {
-                         $ul.velocity({
-                             height: 0
-                         }, 200, function() {
-                             scope.$apply(function() {
-                                 scope.isopen = false;
-                             })
-                         });
-                     } else {
-                         $ul.css('height', '100%')
-                         scope.isopen = true
-                     }
-                 } else {
-
-                     $('#mmc-ul > .mmc-wrapper').html($ul.find('> *'));
-                     sidebarSM.set("display", true);
-                     $timeout(function checkHover() {
-                         if (!$('#mmc-ul').is(":hover")) {
-                             sidebarSM.set("display", false);
-                             $ul.html($('#mmc-ul > .mmc-wrapper').find(">*"))
-                             $('#mmc-ul > .mmc-wrapper').html('');
-                         } else {
-                             $timeout(checkHover, 1000);
-                         }
-                     }, 1000)
-                 }
-             }
-         }
-     };
- }]);
-
- angular.module('edison').directive('signalement', ["edisonAPI", "LxNotificationService", function(edisonAPI, LxNotificationService) {
-    "use strict";
-    return {
-        replace: false,
-        restrict: 'E',
-        templateUrl: '/Templates/signalement.html',
-        scope: {
-            data: '=',
-            exit: '&',
-        },
-        link: function(scope, elem) {
-            scope.setSelectedSubType = function(subType) {
-                scope.selectedSubType = scope.selectedSubType === subType ? null : subType
-            }
-            edisonAPI.signal.list().then(function(resp) {
-                scope.signalementsGrp = _.groupBy(resp.data, 'subType');
-            })
-            scope.hide = function(signal) {
-
-                edisonAPI.signalement.add(_.merge(signal, {
-                    inter_id: scope.data.id || scope.data.tmpID,
-                    sst_id: scope.data.sst && scope.data.sst.id,
-                    sst_nom: scope.data.sst && scope.data.sst.nomSociete
-                })).then(function() {
-                    LxNotificationService.success("Le service " + signal.service.toLowerCase() + " en a été notifié");
-                })
-                return scope.exit && scope.exit()
-            }
-        }
-    }
- }]);
-
- angular.module('edison').directive('trello', ["user", "edisonAPI", function(user, edisonAPI) {
-    "use strict";
-    return {
-        replace: false,
-        restrict: 'E',
-        templateUrl: '/Templates/trello.html',
-        scope: {
-            data: '=',
-        },
-        link: function(scope, elem) {
-
-            var xmap = function(e) {
-                e.checked = e.state === 'complete';
-                return e;
-            }
-            scope.reload = function() {
-                edisonAPI.tasklist.get(moment().format('DD-MM-YYYY'), user.login).then(function(resp) {
-                    scope.tasklist = resp.data
-                    resp.data.checkItems = resp.data.checkItems.map(xmap)
-                })
-            }
-            scope.reload()
-            scope.check = function(task) {
-                task.listID = scope.tasklist.id;
-                task.cardID = scope.tasklist.cardID;
-                edisonAPI.tasklist.update(_.clone(task)).then(function(resp) {
-                    task = xmap(resp.data)
-                })
-                task.checked = !task.checked;
-            }
-        }
-    }
- }]);
-
-var archiveReglementController = function(edisonAPI, TabContainer, $routeParams, $location, LxProgressService) {
-
-    var tab = TabContainer.getCurrentTab();
-    var _this = this;
-    _this.title = 'Archives Reglements'
-    tab.setTitle('archives RGL')
-    LxProgressService.circular.show('#5fa2db', '#globalProgress');
-    edisonAPI.compta.archivesReglement().success(function(resp) {
-        LxProgressService.circular.hide()
-        _this.data = resp
-    })
-    _this.moment = moment;
-    _this.openLink = function(link) {
-        $location.url(link)
-    }
-}
-archiveReglementController.$inject = ["edisonAPI", "TabContainer", "$routeParams", "$location", "LxProgressService"];
-
-angular.module('edison').controller('archivesReglementController', archiveReglementController);
-
-var archivesPaiementController = function(edisonAPI, TabContainer, $routeParams, $location, LxProgressService) {
-    var _this = this;
-    var tab = TabContainer.getCurrentTab();
-    _this.type = 'paiement'
-    _this.title = 'Archives Paiements'
-    tab.setTitle('archives PAY')
-    LxProgressService.circular.show('#5fa2db', '#globalProgress');
-    edisonAPI.compta.archivesPaiement().success(function(resp) {
-        LxProgressService.circular.hide()
-        _this.data = resp
-    })
-    _this.moment = moment;
-    _this.openLink = function(link) {
-        $location.url(link)
-    }
-}
-archivesPaiementController.$inject = ["edisonAPI", "TabContainer", "$routeParams", "$location", "LxProgressService"];
-
-angular.module('edison').controller('archivesPaiementController', archivesPaiementController);
-
  angular.module('edison').directive('artisanCategorie', ["config", function(config) {
      "use strict";
      return {
@@ -4569,6 +4529,46 @@ var ArtisanCtrl = function(IBAN, $timeout, $rootScope, $scope, edisonAPI, $locat
 }
 ArtisanCtrl.$inject = ["IBAN", "$timeout", "$rootScope", "$scope", "edisonAPI", "$location", "$routeParams", "ContextMenu", "LxProgressService", "LxNotificationService", "TabContainer", "config", "dialog", "artisanPrm", "Artisan"];
 angular.module('edison').controller('ArtisanController', ArtisanCtrl);
+
+var archiveReglementController = function(edisonAPI, TabContainer, $routeParams, $location, LxProgressService) {
+
+    var tab = TabContainer.getCurrentTab();
+    var _this = this;
+    _this.title = 'Archives Reglements'
+    tab.setTitle('archives RGL')
+    LxProgressService.circular.show('#5fa2db', '#globalProgress');
+    edisonAPI.compta.archivesReglement().success(function(resp) {
+        LxProgressService.circular.hide()
+        _this.data = resp
+    })
+    _this.moment = moment;
+    _this.openLink = function(link) {
+        $location.url(link)
+    }
+}
+archiveReglementController.$inject = ["edisonAPI", "TabContainer", "$routeParams", "$location", "LxProgressService"];
+
+angular.module('edison').controller('archivesReglementController', archiveReglementController);
+
+var archivesPaiementController = function(edisonAPI, TabContainer, $routeParams, $location, LxProgressService) {
+    var _this = this;
+    var tab = TabContainer.getCurrentTab();
+    _this.type = 'paiement'
+    _this.title = 'Archives Paiements'
+    tab.setTitle('archives PAY')
+    LxProgressService.circular.show('#5fa2db', '#globalProgress');
+    edisonAPI.compta.archivesPaiement().success(function(resp) {
+        LxProgressService.circular.hide()
+        _this.data = resp
+    })
+    _this.moment = moment;
+    _this.openLink = function(link) {
+        $location.url(link)
+    }
+}
+archivesPaiementController.$inject = ["edisonAPI", "TabContainer", "$routeParams", "$location", "LxProgressService"];
+
+angular.module('edison').controller('archivesPaiementController', archivesPaiementController);
 
 var AvoirsController = function(TabContainer, openPost, edisonAPI, $rootScope, LxProgressService, LxNotificationService, FlushList) {
     "use strict";
