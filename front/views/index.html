@@ -79,6 +79,11 @@
                     <link fltr="i_paenv" color="primary"  icon="th-list" hash-model="ev" login="{{displayUser.login}}"></link>
                     <link fltr="i_tut" icon="th-list"></link>
                     <link fltr="i_hist" icon="history" title="Historique" no-counter="true"></link>
+                    <drop-down ng-if="signalementStats" icon="briefcase" title="Signalement">
+                        <link icon="warning" title="Level 0" url="/listeSignalements?&service={{displayUser.service}}&ok=false&level=0">
+                        <link icon="warning" title="Level 1" url="/listeSignalements?&service={{displayUser.service}}&ok=false&level=1">
+                        <link icon="warning" title="Level 2" url="/listeSignalements?&service={{displayUser.service}}&ok=false&level=2">
+                    </drop-down>
                 </drop-down>
                 <drop-down icon="briefcase" title="Management">
                     <drop-down ng-if="signalementStats" icon="briefcase" title="Signalement">
@@ -119,6 +124,11 @@
                 <simple-link icon="tags" title="Avoirs" url="/compta/avoirs"></simple-link>
                 <simple-link icon="database" title="Archives Reglements Clt." url="/compta/archivesReglement"></simple-link>
                 <simple-link icon="database" title="Archive Paiements Sst." url="/compta/archivesPaiement"></simple-link>
+                <drop-down ng-if="signalementStats" icon="briefcase" title="Signalement">
+                    <link icon="warning" title="Level 0" url="/listeSignalements?&service={{displayUser.service}}&ok=false&level=0">
+                    <link icon="warning" title="Level 1" url="/listeSignalements?&service={{displayUser.service}}&ok=false&level=1">
+                    <link icon="warning" title="Level 2" url="/listeSignalements?&service={{displayUser.service}}&ok=false&level=2">
+                </drop-down>
                 <link icon="dollar" title="Intervenant à payer" fltr="i_iar"></link>
             </drop-down>
             <drop-down title="Outils" icon="circle">
