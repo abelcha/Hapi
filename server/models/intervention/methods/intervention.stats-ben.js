@@ -6,7 +6,7 @@ module.exports = function(schema) {
         return new Promise(function(resolve, reject) {
             var q = {};
             var options = {};
-
+            req.query.year = parseInt(req.query.year);
 
             //date
 
@@ -143,6 +143,7 @@ module.exports = function(schema) {
 
 
             options.match['date.ajout'] = options.dateRange
+            console.log(options)
             db.model('intervention').aggregate()
                 .match(options.match)
                 .group(divider[req.query.divider].project())

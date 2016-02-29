@@ -4,18 +4,14 @@ var StatsNewController = function(dialog, MomentIterator, TabContainer, $routePa
   var _this = this;
   _this.tab = TabContainer.getCurrentTab();
   _this.tab.setTitle('Stats');
-  $scope.showAll = false
-
-
-
-
-  dialog.getPassword(function(err, resp) {
-    console.log('==>', resp, resp === "OK")
-    if (resp === "OK") {
-      $scope.showAll = true
-    }
-  })
-
+  $scope.showAll = window.app_env === 'DEVELOPMENT'
+  if (!$scope.showAll) {
+    dialog.getPassword(function(err, resp) {
+      if (resp === "OK") {
+        $scope.showAll = true
+      }
+    })
+  }
 
 
   var end = new Date();
@@ -28,10 +24,10 @@ var StatsNewController = function(dialog, MomentIterator, TabContainer, $routePa
     }
   }).reverse()
   var dateTarget = _.pick(_this.dateSelect[0], 'm', 'y');
-
-  _this.yearSelect = MomentIterator(start, end).range('year', {
-    format: 'YYYY'
+  _this.yearSelect = MomentIterator(start, moment(end).add(1,'year')).range('year', {
+    format: 'YYYY',
   }).map(function(e) {
+    //console.log('==>', e)
     return parseInt(e)
   })
 
@@ -85,7 +81,6 @@ var StatsNewController = function(dialog, MomentIterator, TabContainer, $routePa
     }
   }
 
-
   _this.typeSelect = [
         'column',
         'areaspline',
@@ -124,6 +119,7 @@ var StatsNewController = function(dialog, MomentIterator, TabContainer, $routePa
       model: 'ca',
       divider: $scope.selectedDivider,
     }).then(function(resp) {
+      console.log('==>', resp)
       setTotal(resp.data);
       var d = resp.data;
       $('#chartContainer2').highcharts(getChart($scope.selectedType, d.title, d.series, d.categories));
@@ -155,6 +151,7 @@ var StatsNewController = function(dialog, MomentIterator, TabContainer, $routePa
       potentiel: 0,
     }
     _.times(data.categories.length, function(i) {
+//      console.log(i, '-->', data.series[0].name, data.series[0].data[i])
       $scope.totalYear[data.series[0].name] += data.series[0].data[i]
       $scope.totalYear[data.series[1].name] += data.series[1].data[i]
     })
