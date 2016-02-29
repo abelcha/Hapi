@@ -430,6 +430,17 @@ FiltersFactory.prototype.list = {
                 $size: 0
             }
         },
+    },{
+        short_name: 'i_nwno',
+        long_name: 'New nocontact',
+        url: 'newNoContact',
+        match: {//qsddqs
+            'newOs': true,
+            'appels': {
+                $size: 0
+            },
+            'artisan.subStatus': 'NEW'
+        },
     }, {
         short_name: 'i_newapr',
         long_name: 'News à envoyer',
