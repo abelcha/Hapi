@@ -9,11 +9,15 @@ var commissionsPartenariat = function(MomentIterator, TabContainer, $routeParams
       name: moment(e).format("MM[/]YYYY")
     }
   })
+
+  _this.xsort = function(sb) {
+    _this.sb = sb
+  }
+
   _this.changeSelectedDate = function() {
     LxProgressService.circular.show('#5fa2db', '#globalProgress');
     edisonAPI.artisan.tableauCom(_this.selectedDate).then(function(resp) {
       LxProgressService.circular.hide()
-      console.log(resp.data)
       _this.data = resp.data
     })
   }

@@ -1,6 +1,7 @@
 module.exports = function(schema) {
   var V1 = requireLocal('config/_convert_artisan_V1.js');
   var moment = require('moment');
+  var _ = require('lodash')
 
   var getSubStatus = function(sst, res) {
     var _ = require('lodash');
@@ -110,7 +111,30 @@ module.exports = function(schema) {
             ok: false
           }).count(cb)
         },
+
+        oldStep:function(cb) {
+          db.model('intervention').count({
+            sst:  _this.id,
+            'compta.paiement.effectue': true,
+            'compta.paiement.date': {
+              $lt: moment().add(-1, 'months').startOf('month').toDate()
+            }
+          }).count(cb)
+        },
+        currentStep:function(cb) {
+          db.model('intervention').count({
+            sst: _this.id,
+            'compta.paiement.effectue': true,
+            'compta.paiement.date': {
+              $gte: moment().add(-1, 'months').startOf('month').toDate(),
+              $lte: moment().startOf('month').toDate()
+            }
+          }).count(cb)
+        }
       }, function(err, result) {
+        _this.nbrComissionPaye = result.oldStep;
+        _this.nbrComissionImpaye = result.currentStep;
+        console.log('===>',_this.nbrStep, _this.nbrComissionPaye)
         _this.nbrIntervention = result.nbrIntervention
         _this.quarantained = result.quarantained;
         _this.status = result.inters_all ? "ACT" : "POT";

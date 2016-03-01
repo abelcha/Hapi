@@ -1,43 +1,30 @@
-<div class="row card" style="overflow: scroll;" style="min-height:599px">
-  <select style="width:400px" ng-change="vm.changeSelectedDate()" class="form-control" ng-model="vm.selectedDate" ng-options="v.date as v.name  for v in vm.dateSelectList" >
-  </select>
-          <table class="table table-bordered" style="width: 49px;">
-            <tr>
+<div class="row card" style="overflow: scroll;" style="min-height:599px;margin:100px">
+  <div class="col-sm-3 col-sm-offset-1" style="margin:70px;">
+    <table class="table table-striped table-bordered" ng-init="vm.sb = '-step'">
+      <thead>
+        <tr>
+          <td>Société</td>
+          <td ng-click="vm.xsort('-oldStep')">Step</td>
+          <td ng-click="vm.xsort('-nbrComissionImpaye')">Com. non-payés</td>
+          <td ng-click="vm.xsort('-nbrComissionPaye')">Retenu</td>
+          <td ng-click="vm.xsort('-totalImpaye')">Total Com. non-payé</td>
+          <td ng-click="vm.xsort('-step')">Comission</td>
+        </tr>
+      </thead>
+      <tbody>
 
-              <td colspan="3">
-                <strong text-xxl><center>{{vm.selectedDate|date:"MMMM yyyy"}}</center></strong>
-              </td>
-            </tr>
-            <tr>
-              <td bold>Ajouté par</td>
-              <td bold>Nom Societe</td>
-              <td bold>Nbr</td>
-              <td bold>Retenu</td>
-              <td bold>Com.</td>
-              <td bold>Interventions</td>
-            </tr>
-            <tr ng-repeat="x in vm.data">
-              <td>{{x.login}}</td>
-              <td style="width:0px">
-                <a href="/artisan/{{x.sst}}/recap">{{x.nomSociete.slice(0, 15)}}</a>
-              </td>
-              <td>
-                {{x.nbr}}
-              </td>
-              <td>
-                {{x.retainer}}
-              </td>
-              <td class="green-text">
-                <span ng-if="x.com"> +</span> {{x.com}}
-              </td>
-              <td>
-                <button class="btn btn-default btn-xs" ng-click="vm.selectedID = !vm.selectedID ? (x.date + x.sst) : null"> Détails</button>
-                <span ng-if="vm.selectedID === (x.date + x.sst)" ng-repeat="(k,i) in x.ids">
-                  <br ng-if="k % 2 === 0"> -
-                  <a href="/intervention/{{i}}">{{i}}</a>
-                </span>
-              </td>
-            </tr>
-
-          </table>
+        <tr ng-repeat="sst in vm.data|orderBy:vm.sb">
+          <td>{{sst.nomSociete}}</td>
+          <td>{{sst.totalPaye / 10}}</td>
+          <td>{{sst.nbrComissionImpaye}}</td>
+          <td>{{sst.nbrComissionPaye % 10}}</td>
+          <td>{{sst.totalImpaye}}</td>
+          <td>{{sst.step}}</td>
+        </tr>
+      </tbody>
+    </table>
+    <br>
+    <br>
+    <a target="_blank" href="/api/artisan/getStep?download=true" download > <button style="" class="btn btn-success">Exporter en CSV</button></a>
+  </div>
 </div>
