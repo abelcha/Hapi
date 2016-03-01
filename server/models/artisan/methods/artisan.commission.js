@@ -3,197 +3,115 @@ module.exports = function(schema) {
   var _ = require('lodash');
   var moment = require('moment');
   var momentIterator = require('moment-iterator');
-  schema.statics.com = function(req, res) {
-    db.model('artisan').find({
-      nbrIntervention: {
-        $lte: 20,
-        $gt: 0
-      },
-      'date.ajout': {
-        $gt: new Date(2015, 11, 1)
+
+  var stepQuery = {
+    nbrIntervention: {
+      $exists: true,
+      $gt: 0
+    },
+    $or: [
+      {
+        id: {
+          $in: [1821, 1987, 1950, 2004, 1903, 1990, 1901, 1993, 1910, 1981, 2020, 2014, 2007, 1989, 1986,
+              1978, 1945, 1940, 2012]
+        }
+        },
+      {
+        'date.ajout': {
+          $gt: new Date(2016, 0, 0)
+        }
       }
-    }, {
-      status: 1,
-      nbrIntervention: 1,
-      nomSociete: 1
-    }).then(function(resp) {
-      var rtn = _(resp).groupBy('nbrIntervention')
-        .value()
-      var x = _.map(rtn, function(e, k) {
-          return {
-            nbrInter: k,
-            total_actif: _.filter(e, 'status', 'ACT').length,
-            total_archive: _.filter(e, 'status', 'ARC').length
-          }
-        })
-        /*x = _.map(x, function(e) {
-        	return (_.toArray(e))
-        })*/
-      res.xtable(x);
-      //console.log(x)
+      ]
+  }
+
+  schema.statics.getStep = function(req, res) {
+
+    db.model('artisan').find(stepQuery, function(err, resp) {
+      var result = _.map(resp, function(e) {
+        var rtn = {
+          nbrComissionImpaye: e.nbrComissionImpaye,
+          nbrComissionPaye: e.nbrComissionPaye,
+          nomSociete: e.nomSociete,
+          nbrIntervention: e.nbrIntervention,
+          id: e.id
+        }
+        rtn.totalPaye = e.nbrComissionPaye - e.nbrComissionPaye % 10
+        rtn.totalImpaye = e.nbrComissionImpaye + (e.nbrComissionPaye % 10)
+        rtn.step = _.floor(rtn.totalImpaye / 10)
+        return rtn;
+      })
+      if (!req.query.download) {
+        return res.json(result)
+      }
+      var rs = result.map((e) => _.values(e))
+      rs.unshift(_.keys(result[0]))
+      res.contentType('text/csv');
+      res.setHeader('Content-disposition', 'attachment; filename=' + "commissionPartenariat-" + new Date()+ ".csv");
+      res.send(rs.map(e => e.join(';')).join('\n'))
     })
+
   }
 
-  var dateThreeshold = moment().add(-1, "months").startOf('month').toDate()
-  console.log(dateThreeshold)
 
-
-
-
-  var getTableauComs = function(date, cb) {
-    var includeRemainder = moment().isSame(date, 'month') //only include remainde if its the current month
-    var _from = moment(date).startOf('month').toDate();
-    var _to = moment(date).endOf('month').toDate();
-    var i = 0;
-    var rtn = []
-
-
-    if (!includeRemainder) {
-      var query = {
-        'compta.paiement.effectue': true,
-        $or: [{
-          'compta.paiement.date': db.utils.between(_from, _to)
-        }, {
-          'date.commissionPartenariat': db.utils.between(_from, _to)
-        }, {
-          'compta.paiement.date': db.utils.between(new Date(2015, 0, 0), new Date(2016, 1, 0)),
-          'artisan.id': {
-            $in: [1821, 1987, 1950, 2004, 1903]
-          },
-        }]
-      }
-    } else {
-      var query = {
-        'compta.paiement.effectue': true,
-        $or: [{
-          'compta.paiement.date': db.utils.between(_from, _to)
-        }, {
-          'date.commissionPartenariat': {
-            $exists: false
-          },
-          'compta.paiement.date': {
-            $gt: dateThreeshold
-          }
-        }]
-      }
-    }
-    //console.log(JSON.stringify(query, null, 2))
-    db.model('intervention').find(query)
-      .select('id sst compta')
+  schema.statics.setStep = function(req, res) {
+    var rtn = [];
+    var date = moment().add(-1, 'months').startOf('month').toDate();
+    db.model('artisan').find(stepQuery).select('_id')
       .stream()
-      .on('data', function(data)  {
-        rtn.push(data);
-        //console.log('-->', data.id, i++)
-      })
-      .on('error', function(err) {
-        //  console.log("=>", err)
-      })
-      .on('end', function(end) {
-        console.log('==>', rtn.length)
-        var gp = _.groupBy(rtn, 'sst')
-        async.mapLimit(gp, 1, function(e, cb) {
-          var retainer = _.filter(e, function(x) {
-            return !moment(x.compta.paiement.date).isBetween(_from, _to)
-          }).length
-          db.model('artisan').findById(e[0].sst)
-            .then(function(resp) {
-              cb(null, {
-                login: resp.login.ajout,
-                ajout: resp.date.ajout,
-                ids: _.pluck(e, 'id'),
-                nbr: e.length - retainer,
-                retainer: retainer,
-                com: Math.floor(e.length / 10),
-                ceil: 10 - (e.length % 10),
-                date: date,
-                sst: resp.id,
-                nomSociete: resp.nomSociete
-              })
-            })
-        }, function(err, resp) {
-          resp = _(resp).toArray()
-            .filter(function(e) {
-              return new Date(e.ajout) > dateThreeshold ||  _.includes([1821, 1987, 1950, 2004, 1903], e.sst);
-            })
-            .sortBy('nbr').reverse().value()
-          cb(null, resp)
-        })
-      })
+      .on('data', function(e) {
 
-  }
 
-  schema.statics.setCommission = function(req, res) {
-    var _from = moment().add(-1, 'months').startOf('month').toDate();
-    var _to = moment().add(-1, 'months').endOf('month').toDate();
-    console.log(_from, _to)
-    db.model('intervention').find({
-      'compta.paiement.effectue': true,
-      $or: [{
+
+
+        db.model('intervention').count({
+          sst: e._id,
+          'compta.paiement.effectue': true,
           'compta.paiement.date': {
-            $lt: _to,
-            $gt: _from
+            $gte: date
           }
-      },
-        /* {
-                'artisan.id': {
-                  $in: [1821, 1987, 1950, 2004, 1903]
-                },
-                'compta.paiement.date': {
-                  $gt: new Date(2015, 11, 0),
-                  $lt: new Date(2016, 0, 0),
-                }
-              }*/
-        ]
-    }).then(function(resp) {
-        console.log('-->', resp.length)
-        try {
-
-          var toUpdate = _(resp).groupBy('sst')
-            .filter(function(e, k) {
-              return e.length >= 10
-            })
-            .map(function(e) {
-              var nbrToUpd = _.floor(e.length / 10) * 10
-              console.log('==>', e[0].artisan.nomSociete, nbrToUpd, _(e).slice(0, nbrToUpd).pluck('id').value()
-                .length)
-              return _(e).slice(0, nbrToUpd).pluck('id').value()
-            })
-            .flatten()
-            .value()
-        } catch (e) {
-          console.log('=>', e)
-        }
-        console.log('==>', toUpdate)
-        var query = {
-          id: {
-            $in: toUpdate
-          }
-        }
-        var set = {
-          $set: {
-            'date.commissionPartenariat': moment().add('-4', 'days').toDate()
-          }
-        }
-        var multi = {
-          multi: true
-        }
-        db.model('intervention').update(query, set, multi).then(function(resp) {
-          console.log('=>', resp)
+        }).count(function(err, resp) {
+          var _this = this;
+          _this.nbrComissionImpaye = resp;
+          db.model('artisan').update({
+            _id: e._id
+          }, {
+            $set: {
+              nbrComissionImpaye: _this.nbrComissionImpaye
+            }
+          }, function(err, resp) {
+            console.log('==>', e._id, err, resp, _this.nbrComissionImpaye)
+          })
         })
-      },
-      function(err) {
-        console.log('ERR', err)
-      })
-  }
 
-  schema.statics.tableauCom = function(req, res) {
-    var range = momentIterator(dateThreeshold, new Date()).range('months')
-      //  console.log(range)
-    getTableauComs(new Date(req.query.date), function(err, resp) {
-      if (err) {
-        res.status(500).json(err);
-      }
-      res.json(resp)
+
+
+
+
+        db.model('intervention').count({
+          sst: e._id,
+          'compta.paiement.effectue': true,
+          'compta.paiement.date': {
+            $lt: date
+          }
+        }).count(function(err, resp) {
+          var _this = this;
+          _this.nbrStep = _.floor(resp / 10)
+          _this.nbrComissionPaye = resp;
+          db.model('artisan').update({
+            _id: e._id
+          }, {
+            $set: {
+              nbrStep: _this.nbrStep,
+              nbrComissionPaye: _this.nbrComissionPaye
+            }
+          }, function(err, resp) {
+            console.log('==>', e._id, err, resp, _this.nbrComissionPaye, _this.nbrStep)
+          })
+        })
+
+      })
+    .on('end', function(e) {
+      return res.send('ok')
     })
   }
 }
