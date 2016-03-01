@@ -32,8 +32,8 @@ var Timer = module.exports = function() {
   if (envProd) {
 
     this.emitter.on("start of month", function() {
-      // db.model('artisan').setCommission()
-      // db.model('artisan').relanceFinDeMois()
+       db.model('artisan').setCommission()
+       db.model('artisan').relanceFinDeMois()
     })
 
     this.emitter.on("everyday at 20", function() {
