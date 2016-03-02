@@ -104,7 +104,7 @@ module.exports = {
       });
     }
 
-    req.query.call_origin = req.query.call_origin.replace('0033', '0');
+    req.query.call_origin = req.query.call_origin.replace('0033', '0').replace(' 33', '0').replace('033', '0')
     db.model('intervention').findOne({
       $or: [{
         'client.telephone.tel1': req.query.call_origin
@@ -157,7 +157,7 @@ module.exports = {
         description: "Client inconnu"
       });
     }
-    q.call_origin = q.call_origin && q.call_origin.replace('330', '0')
+    q.call_origin = q.call_origin && q.call_origin.replace('0033', '0').replace(' 33', '0').replace('033', '0')
 
 
     db.model('artisan').findOne({
