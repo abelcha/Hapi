@@ -83,7 +83,7 @@ try {
         }
 
 
-        jobs.process('db', 5, function(job, done) {
+        jobs.process('db', 1, function(job, done) {
             __log(job.data._id, 'PROCESSED');
             console.log('[', 'DB', job.data.model, job.data.method, '][' + job.id + '] - [LAUNCH]')
             job.done = done;
@@ -97,7 +97,7 @@ try {
 
 
 
-        jobs.process('db_id', 5, function(job, done) {
+        jobs.process('db_id', 1, function(job, done) {
             __log(job.data._id, 'PROCESSED');
             console.log('[', 'DB_ID', job.data.model, job.data.method, '][' + job.id + '] - [LAUNCH]')
             job.done = done;

@@ -3,10 +3,18 @@ module.exports = function(schema) {
   var moment = require('moment')
   var PDF = require('edsx-mail')
   var Paiement = requireLocal('config/Paiement.js')
+  var md5 = require('md5')
+  var fs = require('fs');
   var async = require('async')
 
 
   var getDocs = function(req, res, data) {
+    // var filename = process.env.CACHE_PATH + "/" + md5(JSON.stringify(data)) + ".pdf"
+    // console.log('==>', filename, fs.existsSync(filename))
+    // if (fs.existsSync(filename)) {
+    //   return res.sendFile(filename);
+    // }
+
     var textTemplate = requireLocal('config/textTemplate');
     return new Promise(function(resolve, reject) {
       var op = [];
@@ -25,7 +33,7 @@ module.exports = function(schema) {
           $in: ids
         }
       }).then(function(docs) {
-
+        console.log('==>', docs.length)
         async.eachLimit(docs, 1, function(e, big_callback) {
             e = JSON.parse(JSON.stringify(e))
             var paiementsst = _.find(data, 'id', e.id);
@@ -74,12 +82,27 @@ module.exports = function(schema) {
               return res.send('Pas de Documents')
             }
             console.log('TOBUFFER')
+
+            try {
+            console.time('OKBUFFER')
+            console.log('==>', op.length)
             PDF(op).toBuffer(function(err, buffer) {
-              console.log('OKBUFFER')
+              if (err) {
+                return res.json(err);
+              }
+              console.timeEnd('OKBUFFER')
           //    res.setHeader('Content-disposition', 'attachment; filename=document-RDC-' + moment().format('DDMMYYYY') + '.pdf');
               res.contentType('application/pdf')
               res.send(buffer);
+          //    console.log('=>', process.env.CACHE_PATH + "/" + md5(JSON.stringify(data)) + ".pdf", buffer)
+          // console.log('==>', filename, buffer)
+          //     fs.writeFile(filename, buffer, function(err, resp) {
+          //       console.log('oookko', err, resp)
+          //     });
             })
+          } catch(e) {
+            console.log('==>', e)
+          }
           });
       }, reject)
     })
