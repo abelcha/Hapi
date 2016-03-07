@@ -6,11 +6,11 @@
           <td>Société</td>
 
 
-          <td ng-click="vm.xsort('-nbrComissionPotentiel')">Potentiel</td>
           <td ng-click="vm.xsort('-nbrIntervention')">Nombre d'inters total</td>
           <td ng-click="vm.xsort('-oldStep')">Comission Payés</td>
           <td ng-click="vm.xsort('-step')">Intervention avec comission à payer</td>
           <td ng-click="vm.xsort('-step')">Comission</td>
+          <td ng-click="vm.xsort('-nbrComissionPotentiel')">Potentiel</td>
         </tr>
       </thead>
       <tbody>
@@ -19,11 +19,11 @@
           <td>{{sst.nomSociete}}</td>
 
 
-          <td>{{sst.nbrComissionPotentiel}}</td>
-          <td>{{sst.nbrIntervention}}</td>
+          <td><a href="/artisan/{{sst.id}}">{{sst.nbrIntervention}} </a> </td>
           <td>{{sst.totalPaye / 10}}</td>
           <td>{{sst.nbrComissionImpaye + (sst.nbrComissionPaye % 10)}}</td>
           <td>{{sst.step}}</td>
+          <td class="blue">{{sst.nbrComissionPotentiel}}</td>
         </tr>
       </tbody>
     </table>
