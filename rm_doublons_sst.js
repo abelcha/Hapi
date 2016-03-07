@@ -13,7 +13,8 @@ db.model('artisan').find({
     console.log('-->', data.id)
     db.model("intervention").count({
       'artisan.id': data.id,
-      'compta.paiement.effectue': true
+      'compta.paiement.effectue': false,
+      status: 'VRF'
     }).count(function(er, r) {
       console.log('==->', er, r)
       if (r === 0) {
@@ -24,7 +25,7 @@ db.model('artisan').find({
         id: data.id,
       }, {
         $set: {
-          nbrIntervention: r
+          nbrComissionPotentiel: r
         }
       }, function(err, resp) {
         console.log('->', err, resp)

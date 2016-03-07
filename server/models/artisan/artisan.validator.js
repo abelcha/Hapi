@@ -135,7 +135,7 @@ module.exports = function(schema) {
           db.model('intervention').count({
             sst: _this.id,
             'compta.paiement.effectue': false,
-            'status': ['VRF']
+            'status': 'VRF'
           }).count(cb)
         }
       }, function(err, result) {
