@@ -78,7 +78,7 @@ module.exports = function(schema) {
           data: rs
         }]);
       mail.send({
-          From: "partenariat@edison-services.fr",
+          From: "comptabilite@edison-services.fr",
           To: "abel.chalier@gmail.com",
           Subject: 'Comission partenariat ' +  moment().format('LL') + '.xlsx',
           Attachments:[{
