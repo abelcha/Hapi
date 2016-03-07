@@ -50,60 +50,64 @@ module.exports = function(schema) {
   }
 
   schema.statics.sendComissionsRecap = function(req, res) {
-    db.model('artisan').getStep().then(function(result) {
-      var rs = result.filter(function(e) {
-          return e.step
-        })
-        .sort(function(a, b) {
-          return a.step < b.step
-        })
-        .map(function(e) {
-          return [e.nomSociete, e.step, 15, e.step * 15];
-        })
+    return new Promise(function(resolve) {
 
-      rs.push([], [], ["Total", '', '', _.reduce(rs, (total, e) => total + e[3], 0)])
-      if (req.query.download) {
-        return res.xls({
-          data: rs,
-          name: 'Comission du ' + moment().format('LL'),
-        })
-      }
+      db.model('artisan').getStep().then(function(result) {
+        var rs = result.filter(function(e) {
+            return e.step
+          })
+          .sort(function(a, b) {
+            return a.step < b.step
+          })
+          .map(function(e) {
+            return [e.nomSociete, e.step, 15, e.step * 15];
+          })
 
-      var xlsx = require('node-xlsx');
+        rs.push([], [], ["Total", '', '', _.reduce(rs, (total, e) => total + e[3], 0)])
+        // if (req.query.download) {
+        //   return res.xls({
+        //     data: rs,
+        //     name: 'Comission du ' + moment().format('LL'),
+        //   })
+        // }
+
+        var xlsx = require('node-xlsx');
 
 
-      try {
-        var file = xlsx.build([{
-          name: 'Comission du ' + moment().format('LL'),
-          data: rs
+        try  {
+          var file = xlsx.build([{
+            name: 'Comission du ' + moment().format('LL'),
+            data: rs
         }]);
-      mail.send({
-          From: "comptabilite@edison-services.fr",
-          To: "abel.chalier@gmail.com",
-          Subject: 'Comission partenariat ' +  moment().format('LL') + '.xlsx',
-          Attachments:[{
+          mail.send({
+            From: "comptabilite@edison-services.fr",
+            To: "abel.chalier@gmail.com",
+            Subject: 'Comission partenariat ' + moment().format('LL') + '.xlsx',
+            Attachments: [{
               Content: file.toString('base64'),
-              Name:  'Comission du ' + moment().format('LL') + '.xlsx',
+              Name: 'Comission du ' + moment().format('LL') + '.xlsx',
               ContentType: 'application/xls',
           }],
-          TextBody:"Ci-joint le montant des comissions de partenariat"
-      }).then(function(resp ) {
-        console.log('====>', resp)
-      }, function(err) {
-        console.log(err);
-      })
-      document.upload({
-        filename: '/CommissionsPartenariat/' + 'Comission du ' + moment().format('LL') + '.xlsx',
-        data: file
-      }).then(function(resp) {
-        console.log('-->', resp)
-      }, function(err)  {
-        console.log('==>', err)
-      })
+            TextBody: "Ci-joint le montant des comissions de partenariat"
+          }).then(function(resp) {
+            console.log('====>', resp)
+          }, function(err) {
+            console.log(err);
+          })
+          document.upload({
+            filename: '/CommissionsPartenariat/' + 'Comission du ' + moment().format('LL') + '.xlsx',
+            data: file
+          }).then(function(resp) {
+            console.log('-->', resp)
+          }, function(err)  {
+            console.log('==>', err)
+          })
 
-    } catch(e) {
-      console.log(e)
-    }
+        } catch (e) {
+          console.log(e)
+        }
+        resolve('ok')
+      })
 
     })
 
@@ -167,7 +171,7 @@ module.exports = function(schema) {
 
       })
       .on('end', function(e) {
-        return res.send('ok')
+        //return res.send('ok')
       })
   }
 }

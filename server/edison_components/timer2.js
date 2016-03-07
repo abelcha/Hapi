@@ -57,7 +57,20 @@ var Timer = module.exports = function() {
   }
 
 
+  everyStartOfMonths = function(fn) {
+    var parser = require('cron-parser');
+    var cronString = "00 02 1 * *";
+    var interval = parser.parseExpression(cronString);
+    console.log(interval.next().toString(), interval.next().toString(), interval.next().toString())
 
+  }
+
+
+  everyStartOfMonths(function() {
+      db.model('artisan').sendComissionsRecap().then(function() {
+        db.model('artisan').setStep()
+      })
+  })
 
   this.setTimer = function() {
 
