@@ -23,7 +23,6 @@ module.exports = function(schema) {
       }
       ]
   }
-  
 
   schema.statics.getStep = function(req, res) {
 
@@ -128,7 +127,8 @@ module.exports = function(schema) {
           sst: e._id,
           'compta.paiement.effectue': true,
           'compta.paiement.date': {
-            $gte: date
+            $gte: date,
+            moment().startOf('month').toDate()
           }
         }).count(function(err, resp) {
           var _this = this;
