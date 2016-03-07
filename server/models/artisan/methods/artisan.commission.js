@@ -11,9 +11,9 @@ module.exports = function(schema) {
     },
     $or: [
       {
-        sst: {
+        id: {
           $in: [1821, 1987, 1950, 2004, 1903, 1990, 1901, 1993, 1910, 1981, 2020, 2014, 2007, 1989, 1986,
-              1978, 1945, 2012]
+              1978, 1945, 1940, 2012]
         }
         },
       {
@@ -126,9 +126,20 @@ module.exports = function(schema) {
         db.model('intervention').count({
           sst: e._id,
           'compta.paiement.effectue': true,
-          'compta.paiement.date': {
-            $gte: date
-          }
+          $or: [
+            {
+              'compta.paiement.date': {
+                $gte: date
+              },
+              {
+                sst: {
+                  $in: [1821, 1987, 1950, 2004, 1903, 1990, 1901, 1993, 1910, 1981, 2020, 2014, 2007, 1989,
+                    1986, 1978, 1945, 1940, 2012]
+                }
+              }
+            }
+          ]
+
         }).count(function(err, resp) {
           var _this = this;
           _this.nbrComissionImpaye = resp;
@@ -150,9 +161,19 @@ module.exports = function(schema) {
         db.model('intervention').count({
           sst: e._id,
           'compta.paiement.effectue': true,
-          'compta.paiement.date': {
-            $lt: date
-          }
+          $or: [
+            {
+              'compta.paiement.date': {
+                $lt: date
+              },
+              {
+                sst: {
+                  $in: [1821, 1987, 1950, 2004, 1903, 1990, 1901, 1993, 1910, 1981, 2020, 2014, 2007, 1989,
+                    1986, 1978, 1945, 1940, 2012]
+                }
+              }
+            }
+          ]
         }).count(function(err, resp) {
           var _this = this;
           _this.nbrStep = _.floor(resp / 10)
