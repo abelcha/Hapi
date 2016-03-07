@@ -65,19 +65,46 @@ module.exports = function(schema) {
       if (req.query.download) {
         return res.xls({
           data: rs,
-          name: 'Comission du ' + moment().format('LL')
+          name: 'Comission du ' + moment().format('LL'),
         })
       }
+
       var xlsx = require('node-xlsx');
-      console.log('UPLOAD')
+
+
+      try {
+        var file = xlsx.build([{
+          name: 'Comission du ' + moment().format('LL'),
+          data: rs
+        }]);
+      mail.send({
+          From: "partenariat@edison-services.fr",
+          To: "abel.chalier@gmail.com",
+          Subject: 'Comission partenariat ' +  moment().format('LL') + '.xlsx',
+          Attachments:[{
+              Content: file.toString('base64'),
+              Name:  'Comission du ' + moment().format('LL') + '.xlsx',
+              ContentType: 'application/xls',
+          }],
+          TextBody:"Ci-joint le montant des comissions de partenariat"
+      }).then(function(resp ) {
+        console.log('====>', resp)
+      }, function(err) {
+        console.log(err);
+      })
       document.upload({
         filename: '/CommissionsPartenariat/' + 'Comission du ' + moment().format('LL') + '.xlsx',
-        data: xlsx.build(xlsfile)
+        data: file
       }).then(function(resp) {
         console.log('-->', resp)
-      }, function(err) {
+      }, function(err)  {
         console.log('==>', err)
       })
+
+    } catch(e) {
+      console.log(e)
+    }
+
     })
 
   }
