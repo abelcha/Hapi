@@ -10,11 +10,13 @@ db.model('artisan').find({
   .sort('id')
   .stream()
   .on('data', function(data) {
+    console.log('-->', data.id)
     db.model('intervention').count({
       sst: data.id,
       'compta.paiement.effectue': false,
       'status': ['VRF']
     }).count(function(er, r) {
+      console.log('==->', er, r)
       if (r === 0) {
         return 0;
       }
