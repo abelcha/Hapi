@@ -101,7 +101,7 @@ module.exports = function(schema) {
         nbrIntervention: function(cb) {
           db.model("intervention").count({
             'artisan.id': _this.id,
-            'compta.reglement.recu': true
+            'compta.paiement.effectue': true
           }).count(cb)
         },
         quarantained: function(cb) {

@@ -1,4 +1,4 @@
-//process.env.DB_NAME = "EDISON-BACKUP-2016-03-01--00h10"
+process.env.DB_NAME = "EDISON"
 require('./server/shared.js')();
 var async = require('async')
 var tels = [];
@@ -11,10 +11,9 @@ db.model('artisan').find({
   .stream()
   .on('data', function(data) {
     console.log('-->', data.id)
-    db.model('intervention').count({
-      sst: data.id,
-      'compta.paiement.effectue': false,
-      'status': ['VRF']
+    db.model("intervention").count({
+      'artisan.id': _this.id,
+      'compta.paiement.effectue': true
     }).count(function(er, r) {
       console.log('==->', er, r)
       if (r === 0) {
@@ -25,7 +24,7 @@ db.model('artisan').find({
         id: data.id,
       }, {
         $set: {
-          nbrComissionPotentiel: r
+          nbrIntervention: r
         }
       }, function(err, resp) {
         console.log('->', err, resp)
