@@ -25,9 +25,9 @@
         if (!req.files || !req.files.file || !req.files.file.buffer || !req.files.file.extension) {
           return reject("Invalid File");
         }
-        if (req.files.file.size > 50000000)
-          return reject("File is too big");
-
+        // if (req.files.file.size > 50000000)
+        //   return reject("File is too big");
+        //
 
         var fs = require('fs')
         var uuid = require('uuid')
