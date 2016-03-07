@@ -130,11 +130,19 @@ module.exports = function(schema) {
               $lte: moment().startOf('month').toDate()
             }
           }).count(cb)
+        },
+        potentialStep:function(cb) {
+          db.model('intervention').count({
+            sst: _this.id,
+            'compta.paiement.effectue': false,
+            'status': ['VRF']
+          }).count(cb)
         }
       }, function(err, result) {
+        _this.nbrComissionPotentiel = result.potentialStep;
         _this.nbrComissionPaye = result.oldStep;
         _this.nbrComissionImpaye = result.currentStep;
-        console.log('===>',_this.nbrStep, _this.nbrComissionPaye)
+        console.log('===>',_this.nbrStep, _this.nbrComissionPaye, _this.nbrComissionPotentiel)
         _this.nbrIntervention = result.nbrIntervention
         _this.quarantained = result.quarantained;
         _this.status = result.inters_all ? "ACT" : "POT";

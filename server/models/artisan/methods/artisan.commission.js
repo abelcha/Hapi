@@ -26,32 +26,61 @@ module.exports = function(schema) {
 
   schema.statics.getStep = function(req, res) {
 
-    db.model('artisan').find(stepQuery, function(err, resp) {
-      var result = _.map(resp, function(e) {
-        var rtn = {
-          nbrComissionImpaye: e.nbrComissionImpaye,
-          nbrComissionPaye: e.nbrComissionPaye,
-          nomSociete: e.nomSociete,
-          nbrIntervention: e.nbrIntervention,
-          id: e.id
-        }
-        rtn.totalPaye = e.nbrComissionPaye - e.nbrComissionPaye % 10
-        rtn.totalImpaye = e.nbrComissionImpaye + (e.nbrComissionPaye % 10)
-        rtn.step = _.floor(rtn.totalImpaye / 10)
-        return rtn;
+    return new Promise(function(resolve, reject) {
+      db.model('artisan').find(stepQuery, function(err, resp) {
+        var result = _.map(resp, function(e) {
+          var rtn = {
+            nbrIntervention: e.nbrIntervention,
+            nbrComissionPotentiel: e.nbrComissionPotentiel,
+            nbrComissionImpaye: e.nbrComissionImpaye,
+            nbrComissionPaye: e.nbrComissionPaye,
+            nomSociete: e.nomSociete,
+            nbrIntervention: e.nbrIntervention,
+            id: e.id
+          }
+          rtn.totalPaye = e.nbrComissionPaye - e.nbrComissionPaye % 10
+          rtn.totalImpaye = e.nbrComissionImpaye + (e.nbrComissionPaye % 10)
+          rtn.step = _.floor(rtn.totalImpaye / 10)
+          return rtn;
+        })
+        resolve(result)
       })
-      if (!req.query.download) {
-        return res.json(result)
-      }
-      var rs = result.map((e) => _.values(e))
-      rs.unshift(_.keys(result[0]))
-      res.contentType('text/csv');
-      res.setHeader('Content-disposition', 'attachment; filename=' + "commissionPartenariat-" + new Date()+ ".csv");
-      res.send(rs.map(e => e.join(';')).join('\n'))
     })
 
   }
 
+  schema.statics.sendComissionsRecap = function(req, res) {
+    db.model('artisan').getStep().then(function(result) {
+      var rs = result.filter(function(e) {
+          return e.step
+        })
+        .sort(function(a, b) {
+          return a.step < b.step
+        })
+        .map(function(e) {
+          return [e.nomSociete, e.step, 15, e.step * 15];
+        })
+
+      rs.push([], [], ["Total", '', '', _.reduce(rs, (total, e) => total + e[3], 0)])
+      if (req.query.download) {
+        return res.xls({
+          data: rs,
+          name: 'Comission du ' + moment().format('LL')
+        })
+      }
+      var xlsx = require('node-xlsx');
+      console.log('UPLOAD')
+      document.upload({
+        filename: '/CommissionsPartenariat/' + 'Comission du ' + moment().format('LL') + '.xlsx',
+        data: xlsx.build(xlsfile)
+      }).then(function(resp) {
+        console.log('-->', resp)
+      }, function(err) {
+        console.log('==>', err)
+      })
+    })
+
+  }
 
   schema.statics.setStep = function(req, res) {
     var rtn = [];
@@ -110,8 +139,8 @@ module.exports = function(schema) {
         })
 
       })
-    .on('end', function(e) {
-      return res.send('ok')
-    })
+      .on('end', function(e) {
+        return res.send('ok')
+      })
   }
 }
