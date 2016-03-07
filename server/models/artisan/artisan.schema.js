@@ -241,6 +241,10 @@ module.exports = function(db) {
       type: Number,
       default: 0
     },
+    nbrComissionPotentiel: {
+      type: Number,
+      default: 0
+    },
     nbrStep: Number,
     siret: String,
     cache: {}

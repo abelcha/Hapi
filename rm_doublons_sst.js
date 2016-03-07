@@ -1,59 +1,35 @@
+process.env.DB_NAME = "EDISON-BACKUP-2016-03-01--00h10"
 require('./server/shared.js')();
-
+var async = require('async')
 var tels = [];
-
-db.model('artisan').find({}, {
-		'telephone': 1
-	}).stream()
-	.on('data', function(data) {
-		console.log('-->', data.nomSociete)
-		if (data.telephone.tel1) {
-			tels.push(data.telephone.tel1)
-		}
-		if (data.telephone.tel2) {
-			tels.push(data.telephone.tel2)
-		}
-	})
-	.on('end', function() {
-		console.log(tels)
-
-		db.model('intervention').update({
-			'client.telephone.tel1': {
-				$in: tels
-			}
-		}, {
-			$set: {
-				'client.telephone.tel1': '0000000000'
-			}
-		}, {
-			multi: true
-		}, function(err, resp) {
-			console.log('-->', err, resp)
-		})
-		db.model('intervention').update({
-			'client.telephone.tel2': {
-				$in: tels
-			}
-		}, {
-			$set: {
-				'client.telephone.tel2': '0000000000'
-			}
-		}, {
-			multi: true
-		}, function(err, resp) {
-			console.log('-->', err, resp)
-		})
-		db.model('intervention').update({
-			'client.telephone.tel3': {
-				$in: tels
-			}
-		}, {
-			$set: {
-				'client.telephone.tel3': '0000000000'
-			}
-		}, {
-			multi: true
-		}, function(err, resp) {
-			console.log('-->', err, resp)
-		})
-	})
+db.model('artisan').find({
+    nbrIntervention: {
+      $gt: 0
+    }
+  })
+  .sort('id')
+  .stream()
+  .on('data', function(data) {
+    db.model('intervention').count({
+      sst: data.id,
+      'compta.paiement.effectue': false,
+      'status': ['VRF']
+    }).count(function(er, r) {
+      if (r === 0) {
+        return 0;
+      }
+      console.log(data.id)
+      db.model('artisan').update({
+        id: data.id,
+      }, {
+        $set: {
+          nbrComissionPotentiel: r
+        }
+      }, function(err, resp) {
+        console.log('->', err, resp)
+      })
+    })
+  })
+  .on('end', function() {
+    console.log('ok')
+  })
