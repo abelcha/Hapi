@@ -16,10 +16,10 @@
       <tbody>
 
         <tr ng-repeat="sst in vm.data|orderBy:vm.sb">
-          <td>{{sst.nomSociete}}</td>
+          <td><a href="/artisan/{{sst.id}}">{{sst.nomSociete}} </a> </td>
 
 
-          <td><a href="/artisan/{{sst.id}}">{{sst.nbrIntervention}} </a> </td>
+          <td>{{sst.nbrIntervention}}</td>
           <td>{{sst.totalPaye / 10}}</td>
           <td>{{sst.nbrComissionImpaye + (sst.nbrComissionPaye % 10)}}</td>
           <td>{{sst.step}}</td>
