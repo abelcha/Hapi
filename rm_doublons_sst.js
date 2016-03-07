@@ -1,4 +1,4 @@
-process.env.DB_NAME = "EDISON-BACKUP-2016-03-01--00h10"
+//process.env.DB_NAME = "EDISON-BACKUP-2016-03-01--00h10"
 require('./server/shared.js')();
 var async = require('async')
 var tels = [];
