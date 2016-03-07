@@ -12,7 +12,7 @@ db.model('artisan').find({
   .on('data', function(data) {
     console.log('-->', data.id)
     db.model("intervention").count({
-      'artisan.id': _this.id,
+      'artisan.id': data.id,
       'compta.paiement.effectue': true
     }).count(function(er, r) {
       console.log('==->', er, r)
