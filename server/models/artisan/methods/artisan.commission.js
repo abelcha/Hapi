@@ -115,32 +115,10 @@ module.exports = function(schema) {
 
   schema.statics.setStep = function(req, res) {
     var rtn = [];
-    var date = moment().add(-1, 'months').startOf('month').toDate();
+    var date = moment().add(0, 'months').startOf('month').toDate();
     db.model('artisan').find(stepQuery).select('_id')
       .stream()
       .on('data', function(e) {
-
-
-
-        db.model('intervention').count({
-          sst: e._id,
-          'compta.paiement.effectue': true,
-          'compta.paiement.date': {
-            $gte: moment().startOf('month').toDate(),
-          }
-        }).count(function(err, resp) {
-          var _this = this;
-          _this.nbrComissionPotentiel = resp;
-          db.model('artisan').update({
-            _id: e._id
-          }, {
-            $set: {
-              nbrComissionPotentiel: _this.nbrComissionPotentiel
-            }
-          }, function(err, resp) {
-            console.log('==>', e._id, err, resp, _this.nbrComissionPotentiel)
-          })
-        })
 
 
         db.model('intervention').count({
@@ -148,7 +126,6 @@ module.exports = function(schema) {
           'compta.paiement.effectue': true,
           'compta.paiement.date': {
             $gte: date,
-            $lt:moment().startOf('month').toDate()
           }
         }).count(function(err, resp) {
           var _this = this;
