@@ -11,9 +11,9 @@ module.exports = function(schema) {
     },
     $or: [
       {
-        id: {
+        sst: {
           $in: [1821, 1987, 1950, 2004, 1903, 1990, 1901, 1993, 1910, 1981, 2020, 2014, 2007, 1989, 1986,
-              1978, 1945, 1940, 2012]
+              1978, 1945, 2012]
         }
         },
       {
@@ -64,12 +64,12 @@ module.exports = function(schema) {
           })
 
         rs.push([], [], ["Total", '', '', _.reduce(rs, (total, e) => total + e[3], 0)])
-        // if (req.query.download) {
-        //   return res.xls({
-        //     data: rs,
-        //     name: 'Comission du ' + moment().format('LL'),
-        //   })
-        // }
+          // if (req.query.download) {
+          //   return res.xls({
+          //     data: rs,
+          //     name: 'Comission du ' + moment().format('LL'),
+          //   })
+          // }
 
         var xlsx = require('node-xlsx');
 
