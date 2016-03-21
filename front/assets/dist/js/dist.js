@@ -1892,72 +1892,81 @@ angular.module('edison').factory('TabContainer', ["Tab", "$location", function(T
 }]);
 
 angular.module('edison').factory('Address', function() {
-    "use strict";
+  "use strict";
 
-    var Address = function(place, copyContructor) {
-      console.log('=>', place, copyContructor)
-        if (place.lat && place.lng) {
-            this.lt = place.lat;
-            this.lg = place.lng;
-        } else if (copyContructor) {
-            this.getAddressProprieties(place);
-            this.streetAddress = true;
-        } else if (this.isStreetAddress(place)) {
-            this.getPlaceProprieties(place);
-        } else if (this.isLocalityAddress(place)) {
-            this.getPlaceLocalityProprieties(place);
-        }
-        if (place.geometry) {
-            this.lt = place.geometry.location.lat();
-            this.lg = place.geometry.location.lng();
-        }
-        this.latLng = this.lt + ', ' + this.lg;
-    };
-
-    Address.prototype.getPlaceLocalityProprieties = function(place) {
-        var a = place.address_components;
-        this.cp = a[1] && a[1].short_name;
-        this.v = a[0] && a[0].short_name;
+  var Address = function(place, copyContructor) {
+    if (place.lat && place.lng) {
+      this.lt = place.lat;
+      this.lg = place.lng;
+    } else if (copyContructor) {
+      this.getAddressProprieties(place);
+      this.streetAddress = true;
+    } else if (this.isStreetAddress(place)) {
+      this.getPlaceProprieties(place);
+    } else if (this.isLocalityAddress(place)) {
+      this.getPlaceLocalityProprieties(place);
+    } else if (place.types[0] === 'route') {
+      this.getRouteProprieties(place);
     }
-
-    Address.prototype.getPlaceProprieties = function(place) {
-        var a = place.address_components;
-        this.n = a[0] && a[0].short_name;
-        this.r = a[1] && a[1].short_name;
-        this.cp = a[6] && a[6].short_name;
-        this.v = a[2] && a[2].short_name;
+    if (place.geometry) {
+      this.lt = place.geometry.location.lat();
+      this.lg = place.geometry.location.lng();
     }
+    this.latLng = this.lt + ', ' + this.lg;
+  };
 
-    Address.prototype.getAddressProprieties = function(address) {
-        this.n = address.n;
-        this.r = address.r;
-        this.cp = address.cp;
-        this.v = address.v;
-        this.lt = address.lt;
-        this.lg = address.lg;
-        this.code = address.code;
-        this.etage = address.etage;
-        this.batiment = address.batiment;
-    }
+  Address.prototype.getRouteProprieties = function(place) {
+    var a = place.address_components;
+    this.n = 1;
+    this.r = a[1] && a[0].short_name;
+    this.cp = a[5] && a[5].short_name;
+    this.v = a[1] && a[1].short_name;
+  }
 
-    Address.prototype.isLocalityAddress = function(place) {
-        this.localityAddress = (place.types.indexOf("locality") >= 0);
-        return this.localityAddress;
-    }
+  Address.prototype.getPlaceLocalityProprieties = function(place) {
+    var a = place.address_components;
+    this.cp = a[1] && a[1].short_name;
+    this.v = a[0] && a[0].short_name;
+  }
 
-    Address.prototype.isStreetAddress = function(place) {
-        var noStreet = ["locality", "country", "postal_code", "route", "sublocality"];
-        this.streetAddress = (noStreet.indexOf(place.types[0]) < 0);
-        return (this.streetAddress);
-    }
+  Address.prototype.getPlaceProprieties = function(place) {
+    var a = place.address_components;
+    this.n = a[0] && a[0].short_name;
+    this.r = a[1] && a[1].short_name;
+    this.cp = a[6] && a[6].short_name;
+    this.v = a[2] && a[2].short_name;
+  }
 
-    Address.prototype.toString = function() {
-        return (this.n + " " + this.r + " " + this.cp + ", " + this.v + ", France")
-    }
+  Address.prototype.getAddressProprieties = function(address) {
+    this.n = address.n;
+    this.r = address.r;
+    this.cp = address.cp;
+    this.v = address.v;
+    this.lt = address.lt;
+    this.lg = address.lg;
+    this.code = address.code;
+    this.etage = address.etage;
+    this.batiment = address.batiment;
+  }
 
-    return (function(place, copyContructor) {
-        return new Address(place, copyContructor);
-    })
+  Address.prototype.isLocalityAddress = function(place) {
+    this.localityAddress = (place.types.indexOf("locality") >= 0);
+    return this.localityAddress;
+  }
+
+  Address.prototype.isStreetAddress = function(place) {
+    var noStreet = ["locality", "country", "postal_code", "route", "sublocality"];
+    this.streetAddress = (noStreet.indexOf(place.types[0]) < 0);
+    return (this.streetAddress);
+  }
+
+  Address.prototype.toString = function() {
+    return (this.n + " " + this.r + " " + this.cp + ", " + this.v + ", France")
+  }
+
+  return (function(place, copyContructor) {
+    return new Address(place, copyContructor);
+  })
 });
 
 angular.module('edison').factory('edisonAPI', ["$http", "$location", "Upload", function($http, $location, Upload) {
@@ -5598,6 +5607,8 @@ InterventionCtrl.$inject = ["Description", "Signalement", "ContextMenu", "$windo
 
 angular.module('edison').controller('InterventionController', InterventionCtrl);
 
+angular.module('edison').controller('ListeArtisanController', _.noop);
+
 var LpaController = function(user, openPost, socket, ContextMenu, $location, $window, TabContainer, edisonAPI, $rootScope, LxProgressService, LxNotificationService, FlushList) {
     "use strict";
     var _this = this
@@ -5776,8 +5787,6 @@ LpaController.$inject = ["user", "openPost", "socket", "ContextMenu", "$location
 
 
 angular.module('edison').controller('LpaController', LpaController);
-
-angular.module('edison').controller('ListeArtisanController', _.noop);
 
 angular.module('edison').controller('ListeDevisController', _.noop);
 
