@@ -344,7 +344,7 @@ module.exports = function(schema) {
                         inter.categoriePlain = c.suffix + ' ' + c.long_name.toLowerCase();
                         inter.fileSupp = req.body.file;
                         inter.__login = user.pseudo || 'Arnaud';
-                        inter.datePlain = moment.tz(new Date(inter.date.intervention), "Europe/Paris").format('DD/MM/YYYY à HH\\hmm')
+                        inter.datePlain = moment.tz(new Date(inter.date.intervention), "Europe/Paris").format('DD/MM/YYYY à HH[h]mm')
                         var text = template.mail.intervention.os(user)
                         text = _.template(text)(inter).replaceAll('\n', '<br>')
 
