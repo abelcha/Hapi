@@ -2,6 +2,7 @@ angular.module('edison').factory('Address', function() {
   "use strict";
 
   var Address = function(place, copyContructor) {
+    console.log(place)
     if (place.lat && place.lng) {
       this.lt = place.lat;
       this.lg = place.lng;
@@ -14,6 +15,8 @@ angular.module('edison').factory('Address', function() {
       this.getPlaceLocalityProprieties(place);
     } else if (place.types[0] === 'route') {
       this.getRouteProprieties(place);
+    } else if (place.types[0] === 'postal_code') {
+      this.getCpProprieties(place);
     }
     if (place.geometry) {
       this.lt = place.geometry.location.lat();
@@ -21,6 +24,12 @@ angular.module('edison').factory('Address', function() {
     }
     this.latLng = this.lt + ', ' + this.lg;
   };
+
+  Address.prototype.getCpProprieties = function(place) {
+    var a = place.address_components;
+    this.cp = a[0] && a[0].short_name;
+    this.v = a[1] && a[1].short_name;
+  }
 
   Address.prototype.getRouteProprieties = function(place) {
     var a = place.address_components;
