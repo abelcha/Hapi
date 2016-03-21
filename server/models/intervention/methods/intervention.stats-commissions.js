@@ -11,7 +11,7 @@ module.exports = function(schema) {
       'harald_x') {
       return _.round(pf * 0.02, 2);
     } else if ((new Date(e.date.ajout)).getFullYear() >= 2016 && e.categorie === 'VT' && (e.login.ajout ===
-        'maxime_s' || e.login.ajout === 'gregoire_e')) {
+        'adrien_c' || e.login.ajout === 'gregoire_e')) {
       return _.round(pf * 0.005, 2);
     } else {
       return e.categorie === 'VT' ? 1.5 : _.round(pf * 0.01, 2);

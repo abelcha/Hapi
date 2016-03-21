@@ -6177,7 +6177,7 @@ var CommissionsController = function(MomentIterator, TabContainer, $routeParams,
           e.exception1 = true
           return _.round((e.compta.reglement.montant || e.compta.paiement.base || e.prixFinal) * 0.02, 2);
         }
-        if ((new Date(e.date.ajout)).getFullYear() >= 2016 && e.categorie === 'VT' && (e.login.ajout === 'maxime_s' || e.login.ajout === 'gregoire_e') ) {
+        if ((new Date(e.date.ajout)).getFullYear() >= 2016 && e.categorie === 'VT' && (e.login.ajout === 'adrien_c' || e.login.ajout === 'gregoire_e') ) {
           e.exception2 = true
           console.log('-->', e)
           return _.round((e.compta.reglement.montant || e.compta.paiement.base || e.prixFinal) * 0.005, 2);
