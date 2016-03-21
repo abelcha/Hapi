@@ -15,7 +15,6 @@
         finalBuffer.push(data);
       }).on('end', function() {
         console.log('EN DATA')
-
         return cb(null, Buffer.concat(finalBuffer))
       })
     }
