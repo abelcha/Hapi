@@ -1,7 +1,7 @@
 module.exports = function(schema) {
     var moment = require('moment')
     var async = require('async')
-    var PDF = require('edsx-mail')
+    var PDF = requireLocal('pdf-mail')
     var _ = require('lodash')
     var textTemplate = requireLocal('config/textTemplate');
     var RelanceClient = requireLocal('config/_relances-client');

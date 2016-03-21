@@ -2,7 +2,7 @@ module.exports = function(schema) {
     var Paiement = requireLocal('config/Paiement.js')
 
     schema.statics.autofacture = function(req, res) {
-        var PDF = require('edsx-mail');
+        var PDF = requireLocal('pdf-mail');
         var _this = this;
         try {
             var doc = JSON.parse(req.body.data);

@@ -1,0 +1,37 @@
+<style type="text/css">
+.letter-full-width {
+    height: 3.5cm;
+    margin-bottom: 1.5cm;
+}
+</style>
+<page size="A4">
+    <div class="border"></div>
+    <div class="container">
+        <div>
+            <img class="logo" src="data:image/png;base64,{{logo}}" />
+            <div class="code">
+                <div class="bar-code-text" style="margin-bottom: -28px;"> {{qrcodeText1}} </div> {{qrcode}}
+                <div class="bar-code-text"> {{qrcodeText2}} </div>
+            </div>
+        </div>
+        <header>
+            <p>{{dest.civilite}} {{dest.prenom}} {{dest.nom}} </p>
+            <% if ( typeof nomSociete !== 'undefined' ) { %>
+                     <p style="margin-top: -6px">Soc. {{nomSociete}} </p>
+            <% } %>
+            <p style="margin-top: -6px"> {{address.n}} {{address.r}} </p>
+            <p style="margin-top: -6px"> {{address.cp}} {{address.v}} </p>
+            <div class="spacer-sm"></div>
+            <p>Paris, le {{datePlain}} </p>
+        </header>
+        <div class="letter-full-width text-center">
+            <h1>{{title}}</h1>
+        </div>
+        <div class="body" style="white-space: pre-line;">{{text}}</div>
+    </div>
+</page>
+<footer>
+    <small>
+        {{footer}}
+    </small>
+</footer>

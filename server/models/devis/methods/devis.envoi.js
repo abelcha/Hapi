@@ -1,7 +1,7 @@
 module.exports = function(schema) {
     var _ = require('lodash')
     var moment = require('moment-timezone')
-    var PDF = require('edsx-mail')
+    var PDF = requireLocal('pdf-mail')
 
     schema.statics.envoi = {
 

@@ -1,5 +1,5 @@
 module.exports = function(schema) {
-    var PDF = require('edsx-mail')
+    var PDF = requireLocal('pdf-mail')
     var _ = require('lodash')
     schema.statics.contrat = {
         unique: true,

@@ -1,7 +1,7 @@
 module.exports = function(schema) {
   var _ = require('lodash')
   var moment = require('moment')
-  var PDF = require('edsx-mail')
+  var PDF = requireLocal('pdf-mail')
   var Paiement = requireLocal('config/Paiement.js')
   var md5 = require('md5')
   var fs = require('fs');
@@ -33,7 +33,6 @@ module.exports = function(schema) {
           $in: ids
         }
       }).then(function(docs) {
-        console.log('==>', docs.length)
         async.eachLimit(docs, 1, function(e, big_callback) {
             e = JSON.parse(JSON.stringify(e))
             var paiementsst = _.find(data, 'id', e.id);
@@ -142,7 +141,6 @@ module.exports = function(schema) {
   }
 
 
-
   var getVirements = function(data) {
     var rtn = [];
     _.each(data, function(sst) {
@@ -170,12 +168,10 @@ module.exports = function(schema) {
         var xpdf = PDF(op)
         xpdf._html = xpdf._html.replace("</style>", " div#cheque { right:" + -offsetX + "mm; bottom:" +
           offsetY + "mm; }</style>");
-
         if (req.query.pdf || true) {
           if (!op.length) {
             return resolve('Pas de documents')
           }
-
           xpdf.toBuffer(function(err, buffer) {
             res.contentType('application/pdf')
             res.send(buffer);
@@ -184,7 +180,6 @@ module.exports = function(schema) {
           res.send(xpdf.html());
         }
       }
-
       var op = [];
       _.each(data, function(e, k) {
         if (!e.total.final)
@@ -194,7 +189,6 @@ module.exports = function(schema) {
           mode: 'CHQ'
         }) ? 'CHQ' : 'VIR';
         clean(e, mode);
-
         if ((req.body.type === 'recap' && mode !== 'CHQ') ||
           (req.body.type === 'lettreCheques' && mode == 'CHQ')) {
           op.push({
@@ -203,9 +197,8 @@ module.exports = function(schema) {
           })
         }
       })
-      resend(op, req.query.pdf)
+      resend(op, req.query.pdf);
     })
-
   }
 
   schema.statics.print = function(req, res) {

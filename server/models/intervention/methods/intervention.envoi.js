@@ -1,6 +1,6 @@
 module.exports = function(schema) {
     var _ = require('lodash')
-    var PDF = require('edsx-mail');
+    var PDF = requireLocal('pdf-mail');
     var mime = require('mime')
     var moment = require('moment-timezone');
     var template = requireLocal('config/textTemplate');

@@ -1,0 +1,45 @@
+<style type="text/css">
+.letter-full-width {
+    height: 3.5cm;
+    margin-bottom: 1.5cm;
+}
+.list-ok {
+    position: absolute;
+    margin-left: -12px;
+    margin-top: 2px;
+    font-size: 10px;
+}
+</style>
+<page size="A4">
+    <div class="border"></div>
+    <div class="container">
+        <div>
+            <img class="logo" src="data:image/png;base64,{{logo}}" />
+            <div class="code"> {{qrcode}} <div class="text">  </div> </div>
+        </div>
+        <header>
+            <p>{{sst.soc}}</p>
+            <p style="margin-top: -6px">{{sst.representant.civilite}} {{sst.representant.prenom}} {{sst.representant.nom}} </p>
+            <p style="margin-top: -6px"> &nbsp; </p>
+            <p style="margin-top: -6px"> {{sst.address.n}} {{sst.address.r}} </p>
+            <p style="margin-top: -6px"> {{sst.address.cp}} {{sst.address.v}} </p>
+            <div class="spacer"></div>
+            <div class="spacer"></div>
+            <p>Paris, le {{datePlain}} </p>
+        </header>
+
+            <div class="letter-full-width text-center">
+                <h1>{{title}}</h1>
+            </div>
+
+        <div class="spacer"></div>
+
+        <div class="body" style="white-space: pre-line;">{{text}}</div>
+
+    </div>
+</page>
+<footer>
+    <small>
+        {{footer}}
+    </small>
+</footer>

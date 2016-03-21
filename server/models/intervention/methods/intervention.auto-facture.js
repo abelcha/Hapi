@@ -11,7 +11,7 @@ module.exports = function(schema) {
 					return res.status(400).send("L'artisan n'es pas payé")
 				} 
 				intervention = intervention.toObject()
-				var PDF = require('edsx-mail')
+				var PDF = requireLocal('pdf-mail')
 				var Paiement = requireLocal('config/Paiement');
 				intervention.paiement = new Paiement(intervention);
 				console.log('plpl')

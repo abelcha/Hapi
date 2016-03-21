@@ -1,0 +1,256 @@
+<style type="text/css">
+body {
+    background: rgb(204, 204, 204);
+}
+
+th.facture-th {
+    border: 1px solid white;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 5px;
+}
+
+.facture-head-left {
+    width: 40%;
+    float: left;
+    margin-left: 10px;
+}
+
+.facture-head-right {
+    width: 39%;
+    font-weight: lighter;
+    float: right;
+}
+
+.facture-payed-stamp {
+    margin-left: 100px;
+    border-radius: 15px;
+    border: 5px solid red;
+    width: 135px;
+    height: 14px;
+    padding: 16px 9px;
+    margin-left: 23%;
+    margin-top: -5px;
+}
+
+.facture-head-right2 {
+    margin-bottom: 30px;
+    margin-top: 45px;
+    width: 53%;
+    float: right;
+    border-top: 1.7px solid rgb(143, 188, 47);
+    border-bottom: 1.7px solid rgb(143, 188, 47);
+}
+
+footer.facture-footer {
+    position: absolute;
+    bottom: 0;
+}
+
+.text-sm {
+    font-size: 9px;
+}
+
+.text-md {
+    font-size: 13px;
+}
+
+.facture-title {
+    font-size: 40px;
+    font-weight: 200;
+    color: black;
+    height: 22px;
+    margin-top: 10px;
+}
+
+page[type="facture"] > * > p {
+    margin-top: -12px;
+    font-size: 15px;
+}
+
+.facture-normalize {
+    text-transform: uppercase;
+    font-weight: normal!important;
+}
+
+.facture-container {
+    padding: 15px;
+}
+</style>
+
+<body>
+    <%
+    var maxLines = 27
+    var maxEnd = 27
+    var pagesNbr = _.ceil(lines.length / maxLines)
+    _.forEach(_.range(pagesNbr), function(x, k) {
+        var pos = x * maxLines;
+        var nextPos = _.min([lines.length, (x + 1) * maxLines])
+        %>
+        <page size="A4" type="facture" style="overflow:hidden">
+            <div class="facture-container">
+                <% if (k === 0) { %>
+                    <div class="facture-head-left">
+                        <img style="width: 330px;" src="data:image/png;base64,{{logo_old}}">
+                        <br>
+                        <div style="margin-left:5px">
+                            <h4 style="color:rgb(143,188,47);font-weight:900">S.A.R.L Edison Services</h4>
+
+                            <% if (type.toLowerCase() === 'devis') { %>
+                                <p style="margin:0px;"> Mail: {{user.email}} </p>
+                                <p style="margin:0px;"> {{user.pseudo}} : {{user.ligne}} </p>
+                                <p style="margin:0px;"> Ligne Atelier : 09.72.42.30.00 </p>
+                            <% } else { %>
+                                <p style="margin:0px;">Mail : sav@edison-services.fr</p>
+                                <p style="margin:0px;">Ligne : 09.72.44.88.62</p>
+                            <% } %>
+                            <p style="margin:0px;">Fax : 09.72.39.33.46</p>
+
+                        </div>
+                    </div>
+                    <div class="facture-head-right">
+                        <h3 class="facture-title">{{type}}</h3>
+                        <table cellpadding="0" style="margin:0px;">
+                            <tr>
+                                <td><p close style="margin-bottom: 5px;">{{type}} N°</p></td>
+                                <td><p close style="margin-bottom: 5px;">{{id}}</p></td>
+                            </tr>
+                            <tr>
+                                <td><p close>Date : </p></td>
+                                <td><p close>{{datePlain}}</p></td>
+                            </tr>
+                        </table>
+                    </div>
+                    <br>
+                    <br>
+                    <div class="facture-head-right2">
+                        <p style="color:rgb(143,188,47);font-weight:bold;margin-top:6px">Pour : </p>
+                        <div style="margin-bottom:6px;margin-top:-30px;margin-left:80px;">
+                            <p style="margin:0px;">
+                                {{facture.civilite}} {{facture.prenom}} {{facture.nom}}
+                            </p>
+                            <p style="margin:0px;">
+                                {{facture.address.n}} {{facture.address.r}}
+                            </p>
+                            <p style="margin:0px;">
+                                {{facture.address.cp}} {{facture.address.v}}
+                            </p>
+                            <p style="margin:0px;">
+                                {{facture.tel ||client.telephone.tel1}}
+                            </p>
+                        </div>
+                    </div>
+                    <% } %>
+                        <table cellspacing="0" style="margin-top: 10px; width: 100%; border: solid 1px transparent; font-size: 10pt;background: rgb(143,188,47)!important; text-align:center;">
+                            <tr>
+                                <th class="facture-th" style="width: 12%">Référence</th>
+                                <th class="facture-th" style="width: 50%">Désignation</th>
+                                <th class="facture-th" style="width: 12%;">Quantité</th>
+                                <th class="facture-th" style="width: 13%;">P.U HT</th>
+                                <th class="facture-th" style="width: 13%;">Montant</th>
+                            </tr>
+                        </table>
+                        <table cellspacing="0" style="width: 100%;text-align: center; font-size: 10pt;">
+                            <tr></tr>
+                            <% _.forEach(lines.slice(pos, nextPos), function(n, k) { %>
+                                <tr class="facture-normalize">
+                                    <td style="width: 12%;text-align:left;">
+                                        {{n.ref || ''}}
+                                    </td>
+                                    <td style="width: 52%;text-align:left;padding-left:18px;">
+                                        {{n.line || ''}}
+                                    </td>
+                                    <td style="width: 10%;">
+                                        {{n.quantite || ''}}
+                                    </td>
+                                    <td style="width: 13%;">
+                                        {{n.pu || ''}}
+                                        <% if (n.pu) { %>
+                                            €
+                                            <% } %>
+                                    </td>
+                                    <td style="width: 13%;">
+                                        {{n.montant || ''}}
+                                        <% if (n.montant) { %>
+                                            €
+                                            <% } %>
+                                    </td>
+                                </tr>
+                                <% }); %>
+                        </table>
+            </div>
+            <% if (nextPos === lines.length) {  %>
+                <% if (nextPos - pos > maxEnd) { %>
+        </page>
+        <page size="A4">
+            <% } %>
+                <footer class="facture-footer">
+                    <table cellspacing="0">
+                        <tr>
+                            <td style="height:15px;"></td>
+                        </tr>
+                        <tr>
+                            <td id="bottom_left" style="padding-left: 29px;padding-right: 11px;padding-top: 21px;border-right:1px solid rgb(143,188,47);height:210px;width:52%;">
+                                <p class="text-sm justify" style="margin-top: -24px; font-size: 11px;">
+                                    Pour un reglement par virement :
+                                    <br> RIB: 30004 01557 00010041423 30
+                                    <br> IBAN: FR76 3000 4015 5700 0100 4142 330
+                                    <br> BIC: BNPAFRPPPRG
+                                    <br>
+                                </p>
+                                <p class="text-sm justify" style="margin-top: -5px;font-size: 10px;">
+                                    Nos factures sont payables au comptant, sauf dérogation, et sans escompte. Le taux des pénalités de retard exigibles le jour suivant la date limite de règlement est égal au taux d'intérêt appliqué par la BCE à son opération de refinancement la plus récente, majorité de 10 points de % ou de 8 points de % pour une commande publique. Tout professionnel ou acheteur public en retard de paiement est débiteur d'une indemnité forfaitaire pour frais de recouvrement de 40 euros. Clause de réserve de propriété.
+                                    <br> Article L. 441-6, I, 12
+                                    <sup>e</sup> alinéa du Code du commerce.
+                                    <br> Voir nos conditions générales de vente au dos.
+                                </p>
+                                <div style="text-align: left">
+                                    <p style="margin: 0px; margin-top:5px; font-size: 11px;">Durée de validité : 15 jours</p>
+                                    <p style="margin:0px; margin-bottom: 10px; font-size: 11px;">PAIEMENT : 40% à la signature du devis</p>
+                                </div>
+                            </td>
+                            <td id="bottom_right" style="width: 299px;float:left;padding-left: 26px;padding-top:15px;border-top: 1px solid rgb(143,188,47);">
+                                <table cellpadding="4">
+                                    <tbody style="text-align: right;font-size:15px">
+                                        <tr>
+                                            <td width="40%">Total H.T.</td>
+                                            <td>{{total.HT}} €</td>
+                                        </tr>
+                                        <tr>
+                                            <td>TVA ({{tva}}%)</td>
+                                            <td>{{total.TVA}} €</td>
+                                        </tr>
+                                        
+                                        <tr style="color:rgb(143,188,47)">
+                                            <td>Total T.T.C.</td>
+                                            <td>{{total.TTC}} €</td>
+                                        </tr>
+                                        <% if (type.toLowerCase() == 'facture') { %>
+                                        <tr style="color:rgb(143,188,47)">
+                                            <td>Payé</td>
+                                            <td> {{total.PAYE}} €</td>
+                                        </tr>
+                                        <tr style="color:rgb(143,188,47)">
+                                            <td>Net à payer</td>
+                                            <td> {{total.NET}} €</td>
+                                        </tr>
+                                        <% } %>
+                                    </tbody>
+                                </table>
+                                <div id="signature_client" style="height:100px;width:310px;border:1px solid rgb(112,112,112);text-align:center; margin-left: -10px; margin-top: 10px;">
+                                    <p style="font-size:11px;font-weight:bold;margin-top:5px;">Signature précédée de la mention <br> "BON POUR ACCORD"</p>
+                                    <% if (acquitte) {%>
+                                        <div class="facture-payed-stamp">
+                                            <p style="color:red;font-size:40px;margin-top: -14px;">PAYÉ</p>
+                                        </div>
+                                        <% } %>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                    <p style="font-size:9px;margin-top:12px;text-align:center;color:rgb(185,185,185);margin-bottom: 0.5cm;">Siège social : S.A.R.L Edison Services, 32 rue Fernand Pelloutier 92110 Clichy - 753 805 035 - 4321A - FR88753805035 - Au capital de 4000 euros</p>
+                </footer>
+                <% } %>
+        </page>
+                {{conditions}}
+        <% }) %>

@@ -1,6 +1,6 @@
 module.exports = function(schema) {
     var _ = require('lodash')
-    var PDF = require('edsx-mail')
+    var PDF = requireLocal('pdf-mail')
     var Paiement = requireLocal('config/Paiement.js')
     var config = requireLocal('config/dataList.js');
     var async = require('async')

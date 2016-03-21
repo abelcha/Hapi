@@ -3,7 +3,7 @@ module.exports = function(schema) {
     var async = require('async');
     var moment = require('moment');
     var Paiement = requireLocal('config/Paiement');
-    var PDF = require('edsx-mail')
+    var PDF = requireLocal('pdf-mail')
 
 
 

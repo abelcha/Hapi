@@ -1,6 +1,6 @@
  var moment = require('moment')
  var async = require('async')
- var PDF = require('edsx-mail')
+ var PDF = requireLocal('pdf-mail')
  var _ = require('lodash')
  var textTemplate = requireLocal('config/textTemplate');
  require('nodeify').extend();

@@ -2,7 +2,7 @@ module.exports = function(schema) {
     var ejs = require("ejs");
     var fs = require("fs")
     var moment = require('moment');
-    var PDF = require('edsx-mail')
+    var PDF = requireLocal('pdf-mail')
     moment.locale('fr');
     var textTemplate = requireLocal('config/textTemplate');
     var _ = require('lodash')
