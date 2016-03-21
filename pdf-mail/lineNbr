@@ -1,1 +1,0 @@
-cat front/angular/*/*/*.js front/angular/*/*.js front/angular/*.js front/views/*  config/*.js *.js *.json server/*.js server/*/*.js server/*/*/*.js server/*/*/*/*.js|wc -l
