@@ -1,1 +1,0 @@
-db.interventions.aggregate([{"$match":{status:{$in:['ENC', 'VRF']}}}, {"$group" : {_id:{day:{$dayOfMonth:"$date.ajout"}, month:{$month:'$date.ajout'}, year:{$year:'$date.ajout'}, telepro:'$login.ajout'}, count:{$sum:1}}}]).toArray().sort(function(a, b) { return a.count > b.count})
